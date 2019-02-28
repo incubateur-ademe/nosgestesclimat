@@ -100,7 +100,7 @@
       - si: type = 'électricité'
         alors: 0.059 
 
-  notes: | 
+  note: | 
     La base carbone de l'ADEME ne permet malheureusement pas de faire des liens profonds vers les chiffres utilisés. 
     Pour l'électricité, nous retenons le chiffre de l'ADEME "Electricité - 2016 - usage : Eau Chaude Sanitaire - consommation".
 
@@ -155,7 +155,7 @@
 - nom: transport
 - espace: transport
   nom: mode
-  notes: >-
+  note: |
     Attention, il faut vérifier si les chiffres incluent la construction du
     véhicule lui-même, et pas seulement le carburant.
   question: Comment vous déplacez-vous ?
@@ -362,10 +362,70 @@
   par défaut: 300
   
 - espace: transport
-  nom: impact de l'avion
+  nom: avion
+
+- espace: transport . avion
+  nom: impact
   titre: Mes voyages en avion
   icônes: 🛫
+  formule: impact par km * distance de vol
 
+- espace: transport . avion
+  nom: distance de vol
+  question: Quelle est la distance parcourue en avion ?
+  format: nombre
+  par défaut: 1000
+
+- espace: transport . avion
+  nom: impact par km
+  unité: kgCO2eq / km / personne
+  description: | 
+    L'impact d'un vol par km parcourus dépend notamment de la distance : la phase de décollage est coûteuse en énergie.
+  note: | 
+    Attention : pour l'instant, ces données n'incluent que le CO2, pas le bilan en amont du vol ni le forçage radiatif. 
+
+    Nous prenons une version simplifiée des données présentées sur le [calculateur aviation-civile.gouv.fr](https://eco-calculateur.dta.aviation-civile.gouv.fr/autres-trajets).
+    Nous simplifions pour l'instant les données en ignorant la taille de l'avion.
+  références: 
+    calculateur aviation-civile.gouv.fr: https://eco-calculateur.dta.aviation-civile.gouv.fr/autres-trajets
+  formule: 
+    barème linéaire: 
+      assiette: distance de vol
+      tranches:
+        - en-dessous de: 1000
+          montant: 0.139
+        - de: 1000
+          à: 2000
+          montant: 0.125
+        - de: 2000
+          à: 3000
+          montant: 0.083
+        - de: 3000
+          à: 4000
+          montant: 0.084
+        - de: 4000
+          à: 5000
+          montant: 0.102
+        - de: 5000
+          à: 6000
+          montant: 0.093
+        - de: 6000
+          à: 7000
+          montant: 0.075
+        - de: 7000
+          à: 8000
+          montant: 0.074
+        - de: 8000
+          à: 9000
+          montant: 0.076
+        - de: 9000
+          à: 10000
+          montant: 0.065
+        - de: 10000
+          à: 11000
+          montant: 0.078
+        - au-dessus de: 11000
+          montant: 0.078
 
 - espace: logement
   nom: impact
