@@ -1,0 +1,373 @@
+
+- nom: douche
+  icônes: 🚿
+
+- espace: douche
+  nom: impact
+  titre: Mes douches
+  icônes: 🚿
+  période: flexible
+  unité: kgCO2eq
+  formule: impact par douche * douche . nombre 
+
+- espace: douche
+  nom: nombre
+  période: flexible
+  question: Combien prenez-vous de douches ?
+  format: nombre
+  par défaut: 30
+  suggestions:
+    Une par jour: 30
+
+- espace: douche
+  nom: impact par douche
+  formule: impact par litre * litres d'eau
+
+- espace: douche
+  nom: impact par litre
+  formule: eau . impact par litre froid + chauffage . impact par litre
+
+
+- espace: douche
+  icônes: 🇱
+  nom: litres d'eau
+  formule: 
+    durée de la douche * litres par minute
+
+- espace: douche
+  nom: litres par minute
+  formule: 
+    variations: 
+      - si: pomme de douche économe
+        alors: 9
+      - sinon: 18
+  références: 
+    économise l'eau: https://www.jeconomiseleau.org/index.php/particuliers/economies-par-usage/la-douche-et-le-bain  
+
+
+- espace: douche
+  nom: pomme de douche économe
+  question: Utilisez-vous une pomme de douche économe ?
+  par défaut: non
+
+
+- nom: eau
+  icônes: 💧
+
+- espace: eau
+  nom: impact par litre froid
+  unité:  kgCO2eq/l
+  formule: 0.000132
+
+
+- nom: chauffage
+  icônes: 🔥
+
+
+- espace: chauffage
+  nom: type
+  question: Votre eau est chauffée comment ?
+  formule: 
+    une possibilité: 
+      choix obligatoire: oui 
+      possibilités:
+        - gaz
+        - fioul
+        - électricité
+  par défaut: gaz
+
+- espace: chauffage . type
+  nom: gaz
+  icônes: 🔵
+- espace: chauffage . type
+  nom: fioul
+  icônes: 🛢️
+- espace: chauffage . type
+  nom: électricité
+  icônes: ⚡
+
+# définir ces éléments un par un
+
+- espace: chauffage
+  nom: impact par kWh
+  unité: kgCO2eq/kWh PCI
+  formule: 
+    variations: 
+      - si: type = 'gaz'
+        alors: 0.227
+      - si: type = 'fioul'
+        alors: 0.324
+      - si: type = 'électricité'
+        alors: 0.059 
+
+  notes: | 
+    La base carbone de l'ADEME ne permet malheureusement pas de faire des liens profonds vers les chiffres utilisés. 
+    Pour l'électricité, nous retenons le chiffre de l'ADEME "Electricité - 2016 - usage : Eau Chaude Sanitaire - consommation".
+
+  références: 
+    base carbone ADEME: http://www.bilans-ges.ademe.fr/fr/accueil 
+    électricité: https://www.electricitymap.org/?page=country&solar=false&remote=true&wind=false&countryCode=FR
+    électricité sur Décrypter l'Energie: https://decrypterlenergie.org/decryptage-quel-est-le-contenu-en-co2-du-kwh-electrique
+
+- espace: chauffage
+  nom: énergie consommée par litre
+  formule: 0.0325
+  unité: kWh
+  références: 
+    analyse du prix d'une douche: https://www.econologie.com/forums/plomberie-et-sanitaire/prix-reel-d-un-bain-ou-d-une-douche-pour-l-eau-et-chauffage-t12727.html
+  
+
+- espace: chauffage
+  nom: impact par litre
+  formule: impact par kWh * énergie consommée par litre 
+
+# Meilleure syntaxe : nouveau mécanisme correspondance
+# mais où désigne-t-on ce sur quoi la correspondance se fait ? Est-ce implicite ? Ici le chauffage.
+# formule: 
+#    correspondance: 
+      #      gaz: 30
+      #      fioul: 50
+      #      électricité: 2
+
+
+- espace: douche
+  nom: durée de la douche
+  question: Combien de temps dure votre douche en général ?
+  format: nombre
+  par défaut: 5
+  suggestions: 
+    expresse: 5
+    moyenne: 10
+    lente: 20
+
+
+
+
+
+
+
+
+
+
+
+
+    
+- nom: transport
+- espace: transport
+  nom: mode
+  notes: >-
+    Attention, il faut vérifier si les chiffres incluent la construction du
+    véhicule lui-même, et pas seulement le carburant.
+  question: Comment vous déplacez-vous ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - voiture
+        - train
+        - métro
+        - bus
+        - tram
+        - vélo
+        - à pieds
+  par défaut: voiture . essence ou diesel
+  références:
+    RATP: 'https://www.ratp.fr/node/2581'
+- espace: transport . mode
+  nom: bus
+- espace: transport . mode
+  icônes: 🚗
+  nom: voiture
+- espace: transport . mode
+  icônes: 🚋
+  nom: tram
+- espace: transport . mode
+  icônes: 🚇
+  nom: métro
+- espace: transport . mode
+  icônes: 🚴
+  nom: vélo
+- espace: transport . mode
+  icônes: 🚶
+  nom: à pieds
+- espace: transport . voiture
+  nom: gabarit
+  question: Quel est la taille de votre voiture ?
+  applicable si: mode = 'voiture'
+  par défaut: moyenne
+  formule: 
+    une possibilité: 
+      choix obligatoire: oui
+      possibilités: 
+      - petite
+      - moyenne
+      - berline
+      - SUV
+
+- espace: transport . voiture . gabarit
+  nom: petite
+  description: Par exemple, une Peugeot 205 ou une Renault Twingo. 
+- espace: transport . voiture . gabarit
+  nom: moyenne
+  description: Par exemple, une Renault Clio.
+- espace: transport . voiture . gabarit
+  nom: berline
+  description: De longues voitures confortables.
+- espace: transport . voiture . gabarit
+  nom: SUV
+  description: Ce sont des grosses voitures qui se vendent beaucoup récemment. Par exemple, une Peugeot 3008.
+- espace: transport . voiture
+  nom: type
+  question: Quel propulsion ?
+  applicable si: mode = 'voiture'
+  par défaut: essence
+  formule: 
+    une possibilité: 
+      choix obligatoire: oui
+      possibilités: 
+      - essence
+      - diesel
+      - électrique
+  références:
+    IFP: >-
+      http://www.smartgrids-cre.fr/index.php?p=vehicules-electriques-bilan-carbone
+    source belge: >-
+      https://www.delijn.be/fr/overdelijn/organisatie/zorgzaam-ondernemen/milieu/co2-uitstoot-voertuigen.html
+- espace: transport . voiture . type
+  icônes: ⚡
+  nom: électrique
+- espace: transport . voiture . type
+  icônes: 🛢️
+  nom: essence
+- espace: transport . voiture . type
+  icônes: 🛢️
+  nom: diesel
+- espace: transport . mode
+  nom: train
+  formule:
+    une possibilité:
+      - TGV
+      - TER
+      - Intercité
+      - Transilien
+  références:
+    chiffres SNCF: >-
+      https://www.oui.sncf/aide/calcul-des-emissions-de-co2-sur-votre-trajet-en-train
+- espace: transport . mode . train
+  icônes: 🚄
+  nom: TGV
+- espace: transport . mode . train
+  nom: Intercité
+- espace: transport . mode . train
+  nom: TER
+- espace: transport . mode . train
+  nom: Transilien
+
+- espace: transport
+  nom: impact par km
+  formule: 
+    variations: 
+      - si: mode = 'voiture' 
+        alors: voiture par personne
+      - si: mode = 'train . Intercité'
+        alors: 0.0118
+      - si: mode = 'train . TGV'
+        alors: 0.0032
+      - si: mode = 'train . Transilien'
+        alors:  0.0064
+      - si: mode = 'train . TER'
+        alors:  0.0292
+      - si: mode = 'bus'
+        alors: 0.095
+      - si: mode = 'métro'
+        alors: 0.0038
+      - si: mode = 'tram'
+        alors: 0.0031
+      - sinon: 0
+   
+- espace: transport . voiture
+  nom: passagers
+  question: Combien de personnes voyagent dans votre voiture en moyenne (vous compris) ?
+  format: nombre
+  par défaut: 1
+
+- espace: transport
+  nom: voiture
+
+- espace: transport . impact par km 
+  nom: voiture par personne
+  description: |
+    Une voiture approche en général une tonne. Quel que soit le mode de propulsion, déplacer une personne de quelques dizaines de kilo, l'autosoliste, dans un véhicule qui fait 10 fois son poids ne sera jamais écologique.
+
+  formule: impact par km . voiture / voiture . passagers
+
+
+- espace: transport . impact par km 
+  nom: voiture
+  formule: 
+    variations: 
+      - si: voiture . type = 'essence'
+        alors: diesel * 0.8
+      - si: voiture . type = 'diesel'
+        alors: diesel
+      - si: voiture . type = 'électrique'
+        alors: 0.015
+
+- espace: transport . impact par km
+  nom: diesel
+  note: Ces chiffres ne sont que de grossières estimations. 
+  formule:
+    variations: 
+      - si: voiture . gabarit = 'petite'
+        alors: 0.2
+      - si: voiture . gabarit = 'moyenne'
+        alors: 0.25
+      - si: voiture . gabarit = 'berline'
+        alors: 0.35
+      - si: voiture . gabarit = 'SUV'
+        alors: 0.4
+
+ #mécanisme correspondance à ajouter
+ #formule: 
+  #  correspondance: 
+   #   sur: mode
+    #  table: 
+     #   voiture . essence ou diesel: 0.206
+      #  voiture . électrique: 0.015
+       # bus: 0.095
+        #train . Intercité:  0.0118
+        #train . TER; 0.0292
+        #train . transilien: 0.0064
+        #train . TGV: 0.0032
+        #métro: 0.0038
+        #tram: 0.0031
+        #vélo: 0
+        #à pieds: 0
+        
+- espace: transport
+  icônes: 🚶‍♀️ 🚲 🚆
+  titre: Mes déplacements quotidiens
+  nom: impact 
+  période: flexible
+  formule: impact par km * km parcourus
+  unité: kgCO2eq
+  
+
+- espace: transport
+  nom: km parcourus
+  icônes: 🗺️
+  période: mois
+  question: Combien de kilomètres parcourez-vous ?
+  format: km
+  par défaut: 300
+  
+- espace: transport
+  nom: impact de l'avion
+  titre: Mes voyages en avion
+  icônes: 🛫
+
+
+- espace: logement
+  nom: impact
+  titre: Mon logement
+  icônes: 🏡
