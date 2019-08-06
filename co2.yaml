@@ -22,6 +22,8 @@
   exposé: oui
   icônes: 🚿
   nom: impact par douche
+  description: | 
+    Pensée de douche : est-ce qu'une douche est mauvaise pour la planète ?
   titre: Une douche
   formule: impact par litre * litres d'eau
 
@@ -36,7 +38,7 @@
 
 - espace: douche
   nom: litres par minute
-  unité: L
+  unité: l/minute
   formule:
     variations:
       - si: pomme de douche économe
@@ -55,7 +57,7 @@
 
 - espace: eau
   nom: impact par litre froid
-  unité: kgCO₂e / l
+  unité: kgCO₂e/l
   formule: 0.000132
 
 - nom: chauffage
@@ -87,7 +89,7 @@
 
 - espace: chauffage
   nom: impact par kWh
-  unité: kgCO₂e / kWh
+  unité: kgCO₂e/kWh
   formule:
     variations:
       - si: type = 'gaz'
@@ -130,7 +132,7 @@
   nom: durée de la douche
   question: Combien de temps dure votre douche en général (en minutes) ?
   par défaut: 5
-  unité: minutes
+  unité: minute
   suggestions:
     expresse: 5
     moyenne: 10
@@ -248,7 +250,7 @@
   nom: Transilien
 
 - espace: transport
-  nom: impact par km
+  nom: impact unitaire
   formule:
     variations:
       - si: mode = 'voiture'
@@ -283,14 +285,14 @@
 - espace: transport
   nom: voiture
 
-- espace: transport . impact par km
+- espace: transport . impact unitaire
   nom: voiture par personne
   description: |
     Une voiture approche en général une tonne. Quel que soit le mode de propulsion, déplacer une personne de quelques dizaines de kilo, l'autosoliste, dans un véhicule qui fait 10 fois son poids ne sera jamais écologique.
 
-  formule: impact par km . voiture / voiture . passagers
+  formule: impact unitaire . voiture / voiture . passagers
 
-- espace: transport . impact par km
+- espace: transport . impact unitaire
   nom: voiture
   formule:
     variations:
@@ -301,7 +303,7 @@
       - si: voiture . type = 'électrique'
         alors: 0.015
 
-- espace: transport . impact par km
+- espace: transport . impact unitaire
   nom: diesel
   note: Ces chiffres ne sont que de grossières estimations.
   formule:
@@ -334,13 +336,17 @@
 - espace: transport
   icônes: 🚶‍♀️ 🚲 🚆
   titre: Un déplacement
-  nom: impact
+  nom: impact à l'usage
+  description: | 
+    Déplacer un corps de plusieurs dizaines de kilos aura forcément un impact, en fonction du véhicule utilisé. Mais entre un vélo et un SUV, l'ordre de grandeur est très variable.
+  note: |
+    Nous ne prenons en compte ici que l'impact à l'usage du véhicule : on ignore l'impact de la construction de ce véhicule, ainsi que celui des infrastructures. Notons aussi que l'impact construction et infrastructure des transports en commun est bien plus faible que celui des véhicules individuels, car beaucoup mieux rentabilisé (ils roulent toute la journée, remplis au maximum).
   exposé: oui
-  formule: impact par km * km parcourus
+  formule: impact unitaire * distance parcourue
   unité: kgCO₂e
 
 - espace: transport
-  nom: km parcourus
+  nom: distance parcourue
   icônes: 🗺️
   question: Quelle distance avez-vous parcouru ?
   unité: km
@@ -355,7 +361,7 @@
   icônes: 🛫
   exposé: oui
   unité: kgCO₂e
-  formule: distance de vol * impact par km
+  formule: distance de vol * impact unitaire
 
 - espace: transport . avion
   nom: distance de vol
@@ -377,8 +383,8 @@
   par défaut: 1000
 
 - espace: transport . avion
-  nom: impact par km
-  formule: impact carbone par km * coefficient de forçage radiatif
+  nom: impact unitaire
+  formule: impact carbone unitaire * coefficient de forçage radiatif
   références:
     - https://fr.m.wikipedia.org/wiki/Impact_climatique_du_transport_aérien
 
@@ -393,7 +399,7 @@
     - https://www.carbonindependent.org/sources_aviation.html
 
 - espace: transport . avion
-  nom: impact carbone par km
+  nom: impact carbone unitaire
   unité: kgCO₂e/km
   description: |
     L'impact d'un vol par km parcourus dépend notamment de la distance : la phase de décollage est coûteuse en énergie.
@@ -473,6 +479,7 @@
 
 - espace: nourriture
   nom: un avocat
+  description: L'avocat est un fruit très prisé aujourd'hui dans la cuisine occidentale, notamment dans les régimes végétariens.
   exposé: oui
   icônes: 🥑
   formule: impact au kilo * poids d'un avocat
@@ -494,7 +501,7 @@
   formule: 0
   exposé: oui
   description: |
-    Le composte peut émettre deux types de gaz : des gaz comme *le méthane* produits en condition anaérobie (quand l'oxygène de l'air n'est pas dispo), et *du CO₂* émis par les agents qui produisent le compost. 
+    Le compost peut émettre deux types de gaz : des gaz comme *le méthane* produits en condition anaérobie (quand l'oxygène de l'air n'est pas dispo), et *du CO₂* émis par les agents qui produisent le compost. 
 
     D'après [cet article](http://ecoleau.canalblog.com/archives/2008/10/01/10970927.html) du blog ecoleau, le méthane n'est relâché qu'en cas de retournement du compost, et disparaît sinon, transformé notamment en CO₂. Un bon compost doit donc paradoxalement être retourné régulièrement d'après [cet article](http://www.passerelleco.info/article.php?id_article=1365) avant que ces gaz ne se forment ! Nous voilà rassurés, car le méthane a la particularité d'avoir un potentiel de réchauffement 40 fois plus élevé que le CO₂. Ce dernier ne poserait pas non plus problème : il a déjà été séquestré lors de la croissance de la nourriture en question, le bilan est donc nul.
 
@@ -879,7 +886,7 @@
 
 - espace: transport . trottinette électrique partagée
   nom: impact
-  titre: impact par km
+  titre: impact unitaire
   description: |
     On constate qu'avec le peu d'information dont on dispose, le bilan des trottinettes électriques en partage est loin d'être vert. À ses débuts aussi mauvais qu'une voiture, il semble que [la durée de vie](impact/usage total/durée de vie) allongée des nouvelles générations de trotinettes sauve quelque peu la mise. 
     
@@ -932,7 +939,7 @@
 
 - espace: transport . trottinette électrique partagée . impact . fabrication
   nom: trottinette sans batterie
-  note: Pour une trottinette de l'ordre de 8kg sans la batterie. La Base Carbone de l’ADEME a un facteur d’émissions pour les « machines », de l’ordre de 5,5 kg CO2e / kg de machine.
+  note: Pour une trottinette de l'ordre de 8kg sans la batterie. La Base Carbone de l’ADEME a un facteur d’émissions pour les « machines », de l’ordre de 5,5 kg CO2e/kg de machine.
   unité: kgCO₂e
   formule: 45
 
