@@ -251,7 +251,12 @@
 
 - espace: transport
   nom: impact unitaire
+  note: |
+    Pour les transport en commun, les données sont celles de la RATP, le réseau parisien. Particulièrement fréquenté et donc rentabilisé, son impact est remarquablement bas.
+
+    Il serait intéressant d'ajouter les chiffres d'un réseau de transport plus représentatif d'une ville française moyenne, et vérifier que les chiffres intègrent bien tout le cycle de vie.
   formule:
+    # le mécanisme "correspondance" serait adapté ici mais il faut lui permettre de gérer des variables
     variations:
       - si: mode = 'voiture'
         alors: voiture par personne
@@ -269,7 +274,20 @@
         alors: 0.0038
       - si: mode = 'tram'
         alors: 0.0031
+      - si: mode = 'à pieds'
+        alors: impact marche ou vélo
+      - si: mode = 'vélo'
+        alors: impact marche ou vélo
       - sinon: 0
+  références: 
+   - https://www.ratp.fr/categorie-faq/5041?faqid=1616
+
+- espace: transport
+  nom: impact marche ou vélo
+  formule: 0.0205
+  unité: kgCO₂e/km
+  références: 
+    Life Cycle Assessment  of  Transportation Options for Commuters - page 11: http://seeds4green.org/sites/default/files/Pietzo_LCAwhitepaper.pdf
 
 - espace: transport . voiture
   nom: passagers
