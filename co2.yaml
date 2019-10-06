@@ -92,16 +92,23 @@
       - si: type = 'fioul'
         alors: 0.324
       - si: type = 'électricité'
-        alors: 0.059
-  note: >
-    La base carbone de l'ADEME ne permet malheureusement pas de faire des liens
-    profonds vers les chiffres utilisés. 
+        alors: électricité
+  note: |
+    La base carbone de l'ADEME ne permet malheureusement pas de faire des liens profonds vers les chiffres utilisés.
+  références:
+    - http://www.bilans-ges.ademe.fr/fr/accueil
+    - https://decrypterlenergie.org/decryptage-quel-est-le-contenu-en-co2-du-kwh-electrique
 
+- espace: chauffage . impact par kWh
+  nom: électricité
+  formule: 0.059
+  unité: kgCO₂e/kWh
+  note: |
     Pour l'électricité, nous retenons le chiffre de l'ADEME "Electricité - 2016 - usage : Eau Chaude Sanitaire - consommation".
   références:
     - http://www.bilans-ges.ademe.fr/fr/accueil
     - https://www.electricitymap.org/?page=country&solar=false&remote=true&wind=false&countryCode=FR
-    - https://decrypterlenergie.org/decryptage-quel-est-le-contenu-en-co2-du-kwh-electrique
+
 - espace: chauffage
   nom: énergie consommée par litre
   formule: 0.0325
@@ -1023,8 +1030,84 @@
   unité: kg/l
   formule: 1.030
   description: Un litre de lait entier correspond à 1030 grammes.
-  références: 
+  références:
     - https://fr.m.wikipedia.org/wiki/Masse_volumique#Liquides
+
+- espace: nourriture . lait
+  icônes: ☕🍫
+  nom: chocolat chaud
+  titre: un chocolat chaud
+  exposé: oui
+  formule:
+    somme:
+      - une tasse de lait
+      - chauffage
+      - chocolat . dose
+
+- espace: nourriture . lait . chocolat chaud
+  nom: chauffage
+  formule: impact chauffage litre de lait * contenance tasse
+
+- espace: nourriture
+  nom: chocolat
+
+- espace: nourriture . chocolat
+  nom: dose
+  titre: une dose de chocolat
+  formule: impact * portion
+
+- espace: nourriture . chocolat
+  nom: impact
+  formule: 3.8
+  unité: kgCO₂e/kg
+  note: Attention, la source parle de matière brute. Il faudrait ajouter l'emballage, la distribution en supermarché, etc.
+  références:
+    - http://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?produits_vegetaux.htm
+
+- espace: nourriture . chocolat
+  nom: portion
+  formule: 0.06
+  description: 200g de cacao pour un litre de lait, donc 70g de cacao pour une tasse de 30cl de lait.
+  unité: kg
+
+- espace: nourriture . lait
+  nom: chauffage litre de lait en joules
+  note: Ici on prend pour simplifier une masse volumique du lait de 1.
+  formule: delta température * chaleur spécifique
+
+- espace: nourriture . lait
+  nom: chauffage litre de lait
+  unité: kWh/l
+  description: 1 kWh = 3600 kJ
+  formule: chauffage litre de lait en joules / 3600000
+
+- espace: nourriture . lait
+  nom: chauffage litre de lait final
+  formule: chauffage litre de lait / chauffage . efficacité microondes
+
+- espace: nourriture . lait
+  nom: impact chauffage litre de lait
+  description: Chauffé dans un micro-ondes.
+  formule: chauffage litre de lait final * chauffage . impact par kWh . électricité
+
+- espace: chauffage
+  nom: efficacité microondes
+  formule: 2 / 3
+  références:
+    - https://e-rse.net/comment-chauffer-eau-ecologie-energie-270031/#gs.7vibnn
+
+- espace: nourriture . lait
+  nom: delta température
+  description: La température de la pièce est de 20° et la température à laquelle on chauffe le lait est d'environ 80.
+  unité: K
+  formule: 80 - 20
+
+- espace: nourriture . lait
+  nom: chaleur spécifique
+  formule: 3800
+  unité: J/kg-K
+  références:
+    - https://hal.archives-ouvertes.fr/hal-00928930/document
 
 - espace: nourriture . lait
   icônes: 🥛
@@ -1041,7 +1124,7 @@
   description: Une tasse bien remplie ou un grand verre.
   formule: 0.3
   unité: l
-  
+
 - espace: nourriture . lait
   nom: lait de brebis
   icônes: 🐑
