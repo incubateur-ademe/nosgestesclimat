@@ -1,6 +1,6 @@
 # Contribuer 
 
-Ce dépot contient des modèles d'empreinte carbone de nos gestes quotidiens écrits en YAML dans un fichier unique, co2.yaml. 
+Bienvenue 👋 ! Ce dépôt contient des modèles d'empreinte carbone de nos gestes quotidiens écrits en YAML dans un fichier unique, co2.yaml. 
 
 ## 💾 Les modèles carbone
 
@@ -52,7 +52,7 @@ git clone git@github.com:laem/futureco-data.git
 
 Il vous suffit ensuite de modifier le fichier `co2.yaml`, et les changements seront automatiquement pris en compte sur `http://localhost:8080/publicodes`. 
 
-Il peut être difficile de s'y retrouver dans le fichier YAML unique, l'astuce est alors de s'aider de la page `/documentation` qui liste tous les modèles. Elle est accessible sur les pages `/simulation` en tapant `Ctrl-K`.
+Il peut être difficile de s'y retrouver dans le fichier YAML unique, l'astuce est alors de s'aider de la page [`/documentation`](https://futur.eco/documentation) qui liste tous les modèles. Elle est accessible sur les pages `/simulation` en tapant `Ctrl-K`.
 
 Une PR sur laem/futureco-data permettra finalement d'intégrer ces changements sur https://futur.eco.
 
