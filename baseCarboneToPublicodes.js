@@ -37,7 +37,7 @@ fs.createReadStream("base carbone v16.1.csv")
         let update = results.find(
           r => r.nom === rule.nom && r.espace === rule.espace
         );
-        return { ...rule, ...update };
+        return { icônes: "", ...rule, ...update };
       });
       fs.writeFile("./co2.yaml", yaml.stringify(updatedRules), function(err) {
         if (err) {
