@@ -4,6 +4,7 @@ const results = [];
 const yaml = require("yaml");
 
 fs.createReadStream("base carbone v16.1.csv")
+  // get this file here : https://github.com/laem/futureco-data/issues/50
   .pipe(csv())
   .on("data", data => {
     let {
