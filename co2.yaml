@@ -1,12 +1,1451 @@
+- nom: douche
+  icônes: 🚿
+
+- espace: douche
+  nom: impact
+  titre: Mes douches
+  icônes: 🚿
+  période: flexible
+  unité: kgCO₂e
+  formule: impact par douche * douche . nombre
+
+- espace: douche
+  nom: nombre
+  période: mois
+  question: Combien prenez-vous de douches ?
+  unité: douches
+  par défaut: 30
+  suggestions:
+    Une par jour: 30
+
+- espace: douche
+  exposé: oui
+  icônes: 🚿
+  nom: impact par douche
+  description: |
+    Pensée de douche : est-ce qu'une douche est mauvaise pour la planète ?
+  titre: Une douche
+  formule: impact par litre * litres d'eau
+
+- espace: douche
+  nom: impact par litre
+  formule: eau . impact par litre froid + chauffage . impact par litre
+
+- espace: douche
+  icônes: 🇱
+  nom: litres d'eau
+  formule: durée de la douche * litres par minute
+
+- espace: douche
+  nom: litres par minute
+  unité: l/minute
+  formule:
+    variations:
+      - si: pomme de douche économe
+        alors: 9
+      - sinon: 18
+  références:
+    - https://www.jeconomiseleau.org/index.php/particuliers/economies-par-usage/la-douche-et-le-bain
+
+- espace: douche
+  nom: pomme de douche économe
+  question: Utilisez-vous une pomme de douche économe ?
+  par défaut: non
+
+- nom: eau
+  icônes: 💧
+
+- espace: eau
+  nom: impact par litre froid
+  unité: kgCO₂e/l
+  formule: eau potable + traitement eau usée
+  références:
+    - http://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?boissons.htm
+
+- espace: eau . impact par litre froid
+  nom: eau potable
+  unité: kgCO₂e/l
+  formule: 0.000132
+- espace: eau . impact par litre froid
+  nom: traitement eau usée
+  unité: kgCO₂e/l
+  formule: 0.000262
+
+- nom: chauffage
+  icônes: 🔥
+
+- espace: chauffage
+  nom: type
+  question: Votre eau est chauffée comment ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - gaz
+        - fioul
+        - électricité
+  par défaut: gaz
+
+- espace: chauffage . type
+  nom: gaz
+  icônes: 🔵
+- espace: chauffage . type
+  nom: fioul
+  icônes: 🛢️
+- espace: chauffage . type
+  nom: électricité
+  icônes: ⚡
+
+# définir ces éléments un par un
+
+- espace: chauffage
+  nom: impact par kWh
+  unité: kgCO₂e/kWh
+  formule:
+    variations:
+      - si: type = 'gaz'
+        alors: 0.227
+      - si: type = 'fioul'
+        alors: 0.324
+      - si: type = 'électricité'
+        alors: 0.059
+
+  note: |
+    La base carbone de l'ADEME ne permet malheureusement pas de faire des liens profonds vers les chiffres utilisés. 
+    Pour l'électricité, nous retenons le chiffre de l'ADEME "Electricité - 2016 - usage : Eau Chaude Sanitaire - consommation".
+
+  références:
+    - http://www.bilans-ges.ademe.fr/fr/accueil
+    - https://www.electricitymap.org/?page=country&solar=false&remote=true&wind=false&countryCode=FR
+    - https://decrypterlenergie.org/decryptage-quel-est-le-contenu-en-co2-du-kwh-electrique
+
+- espace: chauffage
+  nom: énergie consommée par litre
+  formule: 0.0325
+  unité: kWh
+  références:
+    - https://www.econologie.com/forums/plomberie-et-sanitaire/prix-reel-d-un-bain-ou-d-une-douche-pour-l-eau-et-chauffage-t12727.html
+
+- espace: chauffage
+  nom: impact par litre
+  titre: impact par litre chauffé
+  formule: impact par kWh * énergie consommée par litre
+
+# Meilleure syntaxe : nouveau mécanisme correspondance
+# mais où désigne-t-on ce sur quoi la correspondance se fait ? Est-ce implicite ? Ici le chauffage.
+# formule:
+#    correspondance:
+#      gaz: 30
+#      fioul: 50
+#      électricité: 2
+
+- espace: douche
+  nom: durée de la douche
+  question: Combien de temps dure votre douche en général (en minutes) ?
+  par défaut: 5
+  unité: minute
+  suggestions:
+    expresse: 5
+    moyenne: 10
+    lente: 20
+
+- nom: transport
+- espace: transport
+  nom: mode
+  note: |
+    Attention, il faut vérifier si les chiffres incluent la construction du
+    véhicule lui-même, et pas seulement le carburant.
+  question: Comment vous déplacez-vous ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - voiture
+        - train
+        - métro
+        - bus
+        - tram
+        - vélo
+        - à pieds
+  par défaut: voiture
+  références:
+    - https://www.ratp.fr/node/2581
+- espace: transport . mode
+  nom: bus
+- espace: transport . mode
+  icônes: 🚗
+  nom: voiture
+- espace: transport . mode
+  icônes: 🚋
+  nom: tram
+- espace: transport . mode
+  icônes: 🚇
+  nom: métro
+- espace: transport . mode
+  icônes: 🚴
+  nom: vélo
+- espace: transport . mode
+  icônes: 🚶
+  nom: à pieds
+- espace: transport . voiture
+  nom: gabarit
+  question: Quel est la taille de votre voiture ?
+  applicable si: mode = 'voiture'
+  par défaut: moyenne
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - petite
+        - moyenne
+        - berline
+        - SUV
+
+- espace: transport . voiture . gabarit
+  nom: petite
+  description: Par exemple, une Peugeot 205 ou une Renault Twingo.
+- espace: transport . voiture . gabarit
+  nom: moyenne
+  description: Par exemple, une Renault Clio.
+- espace: transport . voiture . gabarit
+  nom: berline
+  description: De longues voitures confortables.
+- espace: transport . voiture . gabarit
+  nom: SUV
+  description: |
+    Des grosses voitures assez hautes, et donc lourdes et peu efficaces. Par exemple, une Peugeot 3008.
+
+    > Ces dernières années, les ventes de SUV ont explosé.
+- espace: transport . voiture
+  nom: type
+  question: Quel propulsion ?
+  applicable si: mode = 'voiture'
+  par défaut: essence
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - essence
+        - diesel
+        - électrique
+  références:
+    - http://www.smartgrids-cre.fr/index.php?p=vehicules-electriques-bilan-carbone
+    - https://www.delijn.be/fr/overdelijn/organisatie/zorgzaam-ondernemen/milieu/co2-uitstoot-voertuigen.html
+- espace: transport . voiture . type
+  icônes: ⚡
+  nom: électrique
+- espace: transport . voiture . type
+  icônes: 🛢️
+  nom: essence
+- espace: transport . voiture . type
+  icônes: 🛢️
+  nom: diesel
+- espace: transport . mode
+  nom: train
+  formule:
+    une possibilité:
+      - TGV
+      - TER
+      - Intercité
+      - Transilien
+  références:
+    - https://www.oui.sncf/aide/calcul-des-emissions-de-co2-sur-votre-trajet-en-train
+- espace: transport . mode . train
+  icônes: 🚄
+  nom: TGV
+- espace: transport . mode . train
+  nom: Intercité
+- espace: transport . mode . train
+  nom: TER
+- espace: transport . mode . train
+  nom: Transilien
+
+- espace: transport
+  nom: impact unitaire
+  note: |
+    Pour les transport en commun, les données sont celles de la RATP, le réseau parisien. Particulièrement fréquenté et donc rentabilisé, son impact est remarquablement bas.
+
+    Il serait intéressant d'ajouter les chiffres d'un réseau de transport plus représentatif d'une ville française moyenne, et vérifier que les chiffres intègrent bien tout le cycle de vie.
+  formule:
+    # le mécanisme "correspondance" serait adapté ici mais il faut lui permettre de gérer des variables
+    variations:
+      - si: mode = 'voiture'
+        alors: voiture par personne
+      - si: mode = 'train . Intercité'
+        alors: 0.0118
+      - si: mode = 'train . TGV'
+        alors: 0.0032
+      - si: mode = 'train . Transilien'
+        alors: 0.0064
+      - si: mode = 'train . TER'
+        alors: 0.0292
+      - si: mode = 'bus'
+        alors: 0.095
+      - si: mode = 'métro'
+        alors: 0.0038
+      - si: mode = 'tram'
+        alors: 0.0031
+      - si: mode = 'à pieds'
+        alors: impact marche ou vélo
+      - si: mode = 'vélo'
+        alors: impact marche ou vélo
+      - sinon: 0
+  références:
+    - https://www.ratp.fr/categorie-faq/5041?faqid=1616
+
+- espace: transport
+  nom: impact marche ou vélo
+  formule: 0.0205
+  unité: kgCO₂e/km
+  références:
+    Life Cycle Assessment  of  Transportation Options for Commuters - page 11: http://seeds4green.org/sites/default/files/Pietzo_LCAwhitepaper.pdf
+
+- espace: transport . voiture
+  nom: passagers
+  question: Combien de personnes voyagent dans votre voiture en moyenne (vous compris) ?
+  unité: personnes
+  par défaut: 1
+  suggestions:
+    je suis seul: 1
+    deux: 2
+    trois: 3
+    quatre: 4
+
+- espace: transport
+  nom: voiture
+
+- espace: transport . impact unitaire
+  nom: voiture par personne
+  description: |
+    Une voiture approche en général une tonne. Quel que soit le mode de propulsion, déplacer une personne de quelques dizaines de kilo, l'autosoliste, dans un véhicule qui fait 10 fois son poids ne sera jamais écologique.
+
+  formule: impact unitaire . voiture / voiture . passagers
+
+- espace: transport . impact unitaire
+  nom: voiture
+  formule:
+    variations:
+      - si: voiture . type = 'essence'
+        alors: diesel * 0.8
+      - si: voiture . type = 'diesel'
+        alors: diesel
+      - si: voiture . type = 'électrique'
+        alors: 0.015
+
+- espace: transport . impact unitaire
+  nom: diesel
+  note: Ces chiffres ne sont que de grossières estimations.
+  formule:
+    variations:
+      - si: voiture . gabarit = 'petite'
+        alors: 0.2
+      - si: voiture . gabarit = 'moyenne'
+        alors: 0.25
+      - si: voiture . gabarit = 'berline'
+        alors: 0.35
+      - si: voiture . gabarit = 'SUV'
+        alors: 0.4
+
+  #mécanisme correspondance à ajouter
+  #formule:
+  #  correspondance:
+  #   sur: mode
+  #  table:
+  #   voiture . essence ou diesel: 0.206
+  #  voiture . électrique: 0.015
+  # bus: 0.095
+  #train . Intercité:  0.0118
+  #train . TER; 0.0292
+  #train . transilien: 0.0064
+  #train . TGV: 0.0032
+  #métro: 0.0038
+  #tram: 0.0031
+  #vélo: 0
+  #à pieds: 0
+- espace: transport
+  icônes: 🚶‍♀️ 🚲 🚆
+  titre: Un déplacement
+  nom: impact à l'usage
+  description: |
+    Déplacer notre corps de plusieurs dizaines de kilos a forcément un impact. Mais entre un vélo, un train et une grosse voiture, l'ordre de grandeur est très variable.
+  note: |
+    Nous ne prenons en compte ici que l'impact à l'usage du véhicule : on ignore l'impact de la construction de ce véhicule, ainsi que celui des infrastructures. Notons aussi que l'impact construction et infrastructure des transports en commun est bien plus faible que celui des véhicules individuels, car beaucoup mieux rentabilisé (ils roulent toute la journée, remplis au maximum).
+  exposé: oui
+  formule: impact unitaire * distance parcourue
+  unité: kgCO₂e
+
+- espace: transport
+  nom: distance parcourue
+  icônes: 🗺️
+  question: Quelle distance avez-vous parcouru ?
+  suggestions:
+    traverser la ville: 10
+    le département: 100
+    la France: 1000
+  unité: km
+  par défaut: 10
+
+- espace: transport
+  nom: avion
+
+- espace: transport . avion
+  nom: impact
+  titre: Un vol aller-retour
+  icônes: 🛫
+  exposé: oui
+  unité: kgCO₂e
+  formule: distance de vol * impact unitaire
+  références:
+    - https://shameplane.com
+    - https://www.qqf.fr/infographie/48/des-vacances-au-kilometre
+
+- espace: transport . avion
+  nom: distance de vol
+  formule: distance de vol aller * 2
+
+- espace: transport . avion
+  nom: distance de vol aller
+  question: Quel est votre trajet en avion ?
+  unité: km
+  suggestions:
+    Paris Toulouse: 589
+    Paris Tunis: 1741
+    Paris N-Y: 5834
+    Paris Pérou: 10248
+    Paris N-Z: 18942
+  par défaut: 1000
+
+- espace: transport . avion
+  nom: impact unitaire
+  formule: impact carbone unitaire * coefficient de forçage radiatif
+  références:
+    - https://fr.m.wikipedia.org/wiki/Impact_climatique_du_transport_aérien
+
+- espace: transport . avion
+  nom: coefficient de forçage radiatif
+  description: |
+    Le forçage radiatif, c'est la capacité d'une émission de gaz à rechauffer la terre.
+    Un vol émet du CO₂, mais aussi d'autres gaz, ainsi que de la vapeur libérée en haute altitude. Le forçage radiatif de ces émissions est conséquent et doit donc être pris en compte, mais c'est une estimation très compliquée.
+    L'effet de la vapeur d'eau est temporaire : elle disparaît à court-terme par rapport au CO₂ qui reste très longtemps présent. Son effet n'en reste pas moins massif.
+  formule: 2
+  références:
+    - https://www.carbonindependent.org/sources_aviation.html
+
+- espace: transport . avion
+  nom: impact carbone unitaire
+  unité: kgCO₂e/km
+  description: |
+    L'impact d'un vol par km parcourus dépend notamment de la distance : la phase de décollage est coûteuse en énergie.
+  note: |
+    On utilise une version simplifiée du calcul décrit sur le [calculateur aviation-civile.gouv.fr](https://eco-calculateur.dta.aviation-civile.gouv.fr/autres-trajets).
+    Notamment, pour l'instant nous ignorons la taille de l'avion.
+    Il faudrait aussi appliquer un facteur en fonction du type de siège, éco ou luxe.
+  références:
+    - https://eco-calculateur.dta.aviation-civile.gouv.fr/autres-trajets
+  formule:
+    barème linéaire:
+      assiette: distance de vol aller
+      tranches:
+        - en-dessous de: 1000
+          montant: 0.139
+        - de: 1000
+          à: 2000
+          montant: 0.125
+        - de: 2000
+          à: 3000
+          montant: 0.083
+        - de: 3000
+          à: 4000
+          montant: 0.084
+        - de: 4000
+          à: 5000
+          montant: 0.102
+        - de: 5000
+          à: 6000
+          montant: 0.093
+        - de: 6000
+          à: 7000
+          montant: 0.075
+        - de: 7000
+          à: 8000
+          montant: 0.074
+        - de: 8000
+          à: 9000
+          montant: 0.076
+        - de: 9000
+          à: 10000
+          montant: 0.065
+        - de: 10000
+          à: 11000
+          montant: 0.078
+        - au-dessus de: 11000
+          montant: 0.078
+
+- espace: logement
+  nom: impact
+  titre: Mon logement
+  icônes: 🏡
+
+- nom: nourriture
+  icônes: 🍴
+
+- espace: nourriture
+  nom: steak frites
+  titre: un steak frites
+  icônes: 🐄🍟
+  exposé: oui
+  formule: steak + portion de frites
+  références:
+    - https://m.huffingtonpost.fr/2016/11/14/cop22-combien-de-co2-dans-vos-assiettes_a_21600349/
+
+- espace: nourriture
+  nom: steak
+  icônes: 🐄
+  formule: 4
+
+- espace: nourriture
+  icônes: 🍟
+  nom: portion de frites
+  formule: 0.045
+
+- espace: nourriture
+  nom: un avocat
+  description: L'avocat est un fruit très prisé aujourd'hui dans la cuisine occidentale, notamment dans les régimes végétariens.
+  exposé: oui
+  icônes: 🥑
+  formule: impact au kilo * poids d'un avocat
+
+- espace: nourriture . un avocat
+  nom: impact au kilo
+  formule: 1.3
+  références:
+    - https://m.huffingtonpost.fr/2016/11/14/cop22-combien-de-co2-dans-vos-assiettes_a_21600349/
+
+- espace: nourriture . un avocat
+  nom: poids d'un avocat
+  formule: 0.170
+  références:
+    - https://www.livescience.com/45209-avocado-nutrition-facts.html
+
+- nom: compost
+  titre: mon compost
+  icônes: 🗑️🌱🐛
+  formule: 0
+  exposé: oui
+  description: |
+    Le compost peut émettre deux types de gaz : des gaz comme *le méthane* produits en condition anaérobie (quand l'oxygène de l'air n'est pas dispo), et *du CO₂* émis par les agents qui produisent le compost. 
+
+    D'après [cet article](http://ecoleau.canalblog.com/archives/2008/10/01/10970927.html) du blog ecoleau, le méthane n'est relâché qu'en cas de retournement du compost, et disparaît sinon, transformé notamment en CO₂. Un bon compost doit donc paradoxalement être retourné régulièrement d'après [cet article](http://www.passerelleco.info/article.php?id_article=1365) avant que ces gaz ne se forment ! Nous voilà rassurés, car le méthane a la particularité d'avoir un potentiel de réchauffement 40 fois plus élevé que le CO₂. Ce dernier ne poserait pas non plus problème : il a déjà été séquestré lors de la croissance de la nourriture en question, le bilan est donc nul.
+
+    D'après [cet article](https://www.sciencepresse.qc.ca/actualite/detecteur-rumeurs/2017/03/02/composter-pour-reduire-gaz-effet-serre-vrai) de l'Agence Science-Presse du Québec, le compostage a même un bilan positif en comparaison de l'enfouissement des déchets organiques, qui emet du méthane. C'est en partie contradictoire avec le premier lien, mais la conclusion est la même.
+
+    Quid du lombricompost ? Visiblement, leur contribution au cycle du carbone est majeur, et leur contribution positive ou négative aux gaz à effet de serre est [un sujet de controverse](https://www.futura-sciences.com/planete/actualites/climatologie-vers-terre-accuses-tort-emettre-trop-gaz-effet-serre-49650/) ! 
+
+    **Bilan : composter ses déchets, c'est mieux que les jeter à la poubelle.**
+
+- nom: finances
+
+- espace: finances
+  nom: mon épargne
+  icônes: 💰
+  exposé: non
+  note: Cette rubrique est désactivée, le calcul n'étant pas considéré comme assez fiable. il semble en plus être un double comptage.
+  description: |
+    L'argent placé sur un livret ou un autre produit financier ne dort par ! Il est investi dans l'économie, et il a donc un impact.
+  formule: impact par euro * épargne
+
+- espace: finances
+  nom: épargne
+  question: Combien d'argent avez-vous mis de côté ?
+  par défaut: 0
+  unité: €
+  suggestions:
+    1 000 €: 1000
+    20 000 €: 20000
+    100 000 €: 100000
+    1 000 000 €: 1000000
+
+- espace: finances
+  nom: impact par euro
+  unité: kgCO₂e/€
+  description: |
+    Les Amis de la Terre ont publié un rapport qui donne l'impact de chaque euro investi dans les principales banques françaises.
+
+    Pourquoi une telle différence entre les banques ? Principalement parce que les grandes banques historiques mettent notre argent dans le développement de projets d'énergie fossile (charbon, pétrole, gaz), par un investissement direct (actionnariat par exemple) ou indirect (via les marchés financiers).
+
+    Attention : si vous investissez via la BNB dans l'entreprise Total, et que vous prenez un avion qui vole au kérosène vendu par Total, il se peut que la somme des deux estimations d'impact aboutisse à un double comptage.
+  formule:
+    correspondance:
+      variable: banque
+      tableau:
+        la Nef: 0.200
+        Crédit Coopératif: 0.425
+        La Banque Postale: 0.480
+        BPCE: 0.540
+        Crédit Mutuel: 0.620
+        Société Générale: 0.890
+        BNP Paribas: 0.905
+        Crédit Agricole: 1.070
+  note: |
+    Il serait bon de trouver d'autres rapports indépendants de celui-ci pour confirmer ou infirmer ces chiffres fracassants. 
+    Voir peut-être si c'est mentionné dans le livre "How bad is a banan" de Mike Berners-Lee ?
+  références:
+    - http://www.epargneclimat.com/documents/Classement.pdf
+
+- espace: finances
+  nom: banque
+  question: Dans quelle banque se trouve votre argent ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - la Nef
+        - Société Générale
+        - BPCE
+        - Crédit Mutuel
+        - BNP Paribas
+        - Crédit Agricole
+        - Crédit Coopératif
+        - La Banque Postale
+  par défaut: BNP Paribas
+
+- espace: finances . banque
+  nom: la Nef
+- espace: finances . banque
+  nom: Société Générale
+- espace: finances . banque
+  nom: BPCE
+- espace: finances . banque
+  nom: Crédit Mutuel
+- espace: finances . banque
+  nom: BNP Paribas
+- espace: finances . banque
+  nom: Crédit Agricole
+- espace: finances . banque
+  nom: Crédit Coopératif
+- espace: finances . banque
+  nom: La Banque Postale
+
+- nom: électronique
+  note: |
+    Ces données sont issues de l'article du magazine 60 millions de consommateurs qui reprend les données du rapport de l'ADEME.
+    A priori ce ne sont pas des données annuelles, mais sur la durée de vie du produit, car l'essentiel est dans sa fabrication, surtout en France où l'électricité est peu carbonée. Il faudrait trouver pour quelle durée de vie ces chiffres sont valables.
+  références:
+    - https://www.60millions-mag.com/kiosque/high-tech-les-marques-les-plus-fiables
+    - https://www.ademe.fr/modelisation-evaluation-impacts-environnementaux-produits-consommation-biens-dequipement
+
+- espace: électronique
+  nom: téléphone
+  icônes: 🤙📱
+  question: Quel téléphone avez-vous ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - mobile basique
+        - smartphone moins de 5 pouces
+        - smartphone plus de 5 pouces
+  par défaut: smartphone moins de 5 pouces
+
+- espace: électronique . téléphone
+  nom: impact
+  icônes: 🤙📱
+  titre: mon téléphone
+  description: |
+    Les téléphones, et particulièrement les smartphones récents, sont le symbole par excellence de la *high-tech*, qui est réputée consommer beaucoup de ressources.
+
+    La question est d'autant plus importante qu'ils sont souvent renouvelés régulièrement, par exemple à chaque sortie annuelle du nouvel iPhone.
+  exposé: oui
+  unité: kgCO₂e
+  formule:
+    correspondance:
+      variable: téléphone
+      tableau:
+        mobile basique: 16
+        smartphone moins de 5 pouces: 32
+        smartphone plus de 5 pouces: 38
+
+- espace: électronique . téléphone
+  nom: mobile basique
+- espace: électronique . téléphone
+  nom: smartphone moins de 5 pouces
+- espace: électronique . téléphone
+  nom: smartphone plus de 5 pouces
+
+- espace: électronique
+  nom: ordinateur
+  icônes: 💻
+  note: Ajouter l'ordi de bureau.
+  question: Avez-vous un ordinateur ou une tablette ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - ordinateur portable
+        - tablette
+  par défaut: ordinateur portable
+
+- espace: électronique . ordinateur
+  note: Besoin de préciser quelle taille d'écran.
+  nom: ordinateur portable
+
+- espace: électronique . ordinateur
+  nom: tablette
+  note: Chercher la différence entre tablette Apple, Samsung, etc. ?
+  description: Une tablette de 9 à 10 pouces.
+
+- espace: électronique . ordinateur
+  nom: impact
+  icônes: 💻
+  exposé: oui
+  titre: mon ordinateur
+  formule:
+    correspondance:
+      variable: ordinateur
+      tableau:
+        ordinateur portable: 169
+        tablette: 70
+
+- espace: électronique
+  nom: imprimante
+  titre: une imprimante
+  exposé: oui
+  description: Imprimante jet d'encre
+  icônes: 🖨️
+  formule: 106
+
+- espace: électronique
+  nom: console de jeux
+  titre: une console
+  exposé: oui
+  icônes: 🎮
+  formule: 102
+
+- espace: électronique
+  nom: liseuse
+  titre: une liseuse
+  exposé: oui
+  icônes: 📚🔌
+  formule: 50
+  références:
+    - https://profilebooks.com/how-bad-are-bananas.html
+
+- espace: électronique
+  nom: box internet
+  icônes: 🌐
+  question: Quel type de box avez-vous ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - box ADSL
+        - box fibre
+  par défaut: box ADSL
+
+- espace: électronique . box internet
+  nom: box ADSL
+
+- espace: électronique . box internet
+  nom: box fibre
+
+- espace: électronique . box internet
+  nom: impact
+  icônes: 🌐
+  exposé: oui
+  titre: ma box internet
+  description: Une box internet a la particularité de souvent rester allumée toute la journée, et de ne pas être aussi économe qu'un smartphone.
+  formule:
+    correspondance:
+      variable: box internet
+      tableau:
+        box ADSL: 83
+        box fibre: 115
+
+- espace: électronique
+  nom: télévision
+  icônes: 📺
+
+- espace: électronique . télévision
+  nom: taille
+  question: Quelle est la taille de votre télé ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - moyenne 30 à 40 pouces
+        - grande 40 à 49 pouces
+        - énorme plus de 49 pouces
+  par défaut: moyenne 30 à 40 pouces
+
+- espace: électronique . télévision . taille
+  nom: moyenne 30 à 40 pouces
+- espace: électronique . télévision . taille
+  nom: grande 40 à 49 pouces
+- espace: électronique . télévision . taille
+  nom: énorme plus de 49 pouces
+
+- espace: électronique . télévision
+  nom: impact
+  icônes: 📺
+  exposé: oui
+  titre: ma télé
+  formule:
+    correspondance:
+      variable: taille
+      tableau:
+        moyenne 30 à 40 pouces: 371
+        grande 40 à 49 pouces: 422
+        énorme plus de 49 pouces: 568
+
+- nom: bière
+
+- espace: bière
+  nom: impact
+  titre: Une bière
+  icônes: 🍺
+  exposé: oui
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - locale
+            - pression ou consignée
+        alors: 0.3
+      - si:
+          une de ces conditions:
+            - locale
+            - pression ou consignée
+        alors: 0.5
+      - sinon: 0.9
+  note: |
+    Ce calcul provient d'une des seules ressources sur le sujet, l'article du guardian ci-dessous. Il n'est pas très détaillé, c'est donc une estimation grossière de l'impact. Par exemple, il manque le degré d'alcool, qui provient du sucre, donc d'une matière première émettrice de CO₂.
+
+    On peut même aller plus loin : consommez-vous cette pinte sur une terrasse extérieure chauffée ?
+  références:
+    - https://www.theguardian.com/environment/green-living-blog/2010/jun/04/carbon-footprint-beer
+
+- espace: bière
+  nom: locale
+  question: La bière est-elle brassée localement ?
+  description: |
+    Par exemple, si vous la consommez à Paris, est-elle brassée en Île-de-France ? On peut alors considérer qu'elle a fait très peu de chemin jusqu'à votre bouche. En effet, une bière c'est lourd à transporter, et donc très émetteur de CO₂.
+  par défaut: non
+
+- espace: bière
+  nom: pression ou consignée
+  question: Est-ce une bière pression (ou une bouteille consignée) ?
+  note: Il faudrait ajouter le cas de la bière en cannette, l'impact d'une bouteille en fonction de la taille (une bière de 75cl en bouteille devrait mobiliser moins de verre que 3 petites bouteilles de 25cl), etc.
+  description: |
+    Les bières pression dans les bars proviennent de futs consignés, et sont servies dans des verres qui ne seront pas refondus mais simplement lavés derrière le comptoir.
+
+    Certains pays, comme l'Allemagne, consignent le verre. Une bouteille consignée peut être utilisée jusqu'à vingt fois ! Dans un pays comme la France, le verre est recyclé, mais ce recyclage est très groumand en énergie : pour le réutiliser, il faut fondre le verre à des températures très importantes.
+  par défaut: non
+
+- nom: livre
+  titre: Un livre
+  exposé: oui
+  icônes: 📖
+  description: |
+    Impact d'un livre de 500g produit en finlande.
+
+    Il est important de noter que lors de la lecture d'un livre, on reste assis en général à ne rien faire, donc contrairement à la conduite, la télé etc. on ne consomme aucune énergie à part celle de notre corps.
+  formule: 1.2
+  note: |
+    Il faudrait intégrer le poids, la couverture en carton dur, le recyclage du papier, la proportion du stock imprimé qui a été vendue, etc. C'est en partie fait dans "How bad are bananas", mais le résultat est aggregé et donc difficilement exploitable. 
+
+  références:
+    - https://papierenkarton.nl/wp-content/uploads/2018/10/VTT-book_cf_2010.pdf
+    - https://profilebooks.com/how-bad-are-bananas.html
+
+- nom: arbre
+- nom: impact
+  icônes: 🌳
+  espace: arbre
+  titre: planter un arbre
+  exposé: oui
+  description: |
+    Planter des arbres est la façon la plus évidente de compenser nos émissions. Or, il est très difficile d'en estimer l'efficacité réelle de cette action :
+    - ce calcul est fait sur la vie de l'arbre, l'absorption n'est évidemment pas immédiate. Les premières années, quand l'arbre est petit, elle est même presque nulle. Pour compenser sans attendre un vol d'avion,  il faudrait donc planter 30 fois plus d'arbres, voir en planter des milliers dès aujourd'hui pour compenser en direct nos émissions
+    - la trajectoire actuelle des émissions nous amène à un réchauffement de plusieurs degrés. Comme on le constate [déjà aujourd'hui](https://fr.m.wikipedia.org/wiki/Incendies_de_2018_en_Californie) il n'est pas du tout exclu que nos forêts, et donc les arbres que l'on plante dans l'espoir qu'ils absorbent les émissions, ne brûlent pas avant d'avoir atteint leur maturité...
+    - l'arbre absorbe uniquement le CO₂... or c'est loin d'être le seul gaz qui réchauffe notre climat
+    - si l'arbre planté remplace une prairie naturelle, le geste est au mieux neutre car une prairie absorbe elle aussi beaucoup de CO₂ : il vaut mieux convertir une zone agricole ou construite en forêt
+    - la décomposition en fin de vie de l'arbre peut rejeter du CO₂, mais c'est un [sujet controversé](https://uanews.arizona.edu/story/dead-forests-release-less-carbon-into-atmosphere-than-expected)
+    - autre exemple d'intéraction surprenante : l'albedo d'un arbre, c'est-à-dire sa capacité à renvoyer la lumière du soleil, est plus faible que celle d'une terre agricole. Dans certains pays, il n'est donc pas évident que la plantation d'un arbre diminue le réchauffement climatique. En France, comme expliqué à la fin de [cet article](https://jancovici.com/changement-climatique/gaz-a-effet-de-serre-et-cycle-du-carbone/ne-suffit-il-pas-de-planter-des-arbres-pour-compenser-les-emissions/), planter un arbre resterait une bonne affaire
+  formule: 0 - GES absorbé
+  références:
+    - http://forestlearning.edu.au/images/resources/How carbon is stored in trees and wood products.pdf
+    - https://e-rse.net/arbres-stocke-carbone-combien-27079/#gs.dlkz1k
+    - https://jancovici.com/changement-climatique/gaz-a-effet-de-serre-et-cycle-du-carbone/ne-suffit-il-pas-de-planter-des-arbres-pour-compenser-les-emissions/
+
+- espace: arbre
+  nom: GES absorbé
+  formule: masse de carbone * 3.67
+
+- espace: arbre
+  nom: masse de carbone
+  formule: masse sèche * 50%
+
+- espace: arbre
+  nom: masse sèche
+  formule: masse * 65%
+
+- espace: arbre
+  nom: masse
+  formule: émergée + racines
+
+- espace: arbre . masse
+  nom: émergée
+  formule: 700
+  note: |
+    Pour un eucalyptus de 700kg ([source](https://e-rse.net/arbres-stocke-carbone-combien-27079/#gs.dm1qbs)).
+
+    Il faut trouver une table de la masse moyenne des essences les plus répandues en France : hêtre, chêne, sapin, bouleau, etc.
+
+    Ou mieux, l'estimer en fonction de la hauteur, de la circonférence, du poids des branches, de la masse volumique, une donnée que l'on trouvera plus facilement sur les fiches des arbres.
+  références:
+    - https://www.explic.com/educatif/quel-est-le-poids-d-un-arbre-moyen-type-sapin
+    - https://fr.m.wikipedia.org/wiki/Masse_volumique#Bois
+
+- espace: arbre . masse
+  nom: racines
+  formule: émergée * 20%
+
+- espace: transport
+  nom: trottinette électrique partagée
+  description: |
+    Les trottinettes électriques partagées ont envahi les grandes villes européennes en 2019, et enflammé les débats à Paris. En règle générale, la mise en commun d'un matériel permet de maximiser son utilisation, et donc d'amortir le coût élevé de sa fabrication.
+
+    Pour le moment, c'est pourtant l'inverse qui se passe, ces trotinettes ayant un impact proche de celui d'un automobiliste tout seul dans sa voiture thermique ! 
+
+    Une trotinette individuelle sera en effet beaucoup plus économe, car elle durera plusieurs années.
+
+    On peut aussi noter que la trotinette [ne remplace pas dans 90% des cas](http://transports.blog.lemonde.fr/2019/06/06/enquete-inedite-utilisateurs-trottinettes-electriques) l'usage de la voiture, mais plutôt la marche et les transports en commun.
+  exposé: oui
+  note: Implémenter la trotinette individuelle.
+  icônes: 🛴
+  formule: distance * impact
+
+- espace: transport . trottinette électrique partagée
+  nom: impact
+  titre: impact unitaire
+  description: |
+    On constate qu'avec le peu d'information dont on dispose, le bilan des trottinettes électriques en partage est loin d'être vert. À ses débuts aussi mauvais qu'une voiture, il semble que [la durée de vie](impact/usage total/durée de vie) allongée des nouvelles générations de trotinettes sauve quelque peu la mise. 
+
+    Peut beaucoup mieux faire, donc ! Augmenter la durée de vie, réparer le matériel, augmenter l'usage journalier, ou encore s'assurer que la trottinette ne remplace pas que la marche et le vélo, par exemple via une régulation publique...
+  note: |
+
+    Il faudrait aussi prendre en compte l'impact :
+      - de la consommation d'électricité de la trottinette elle-même
+      - de la flotte de recharge et de déplacement en fonction de la demande, souvent faite par une vieille camionette
+      - du transport de la trottinette en France
+      - de l'infrastructure numérique derrière (serveurs, usage du smarpthone)
+
+    Le site Chester Energy and Policy ci-dessous est une analyse plus détaillée. la fabrication reste de loin le poste le plus important.
+
+  formule: fabrication / usage total
+  références:
+    - https://www.linkedin.com/feed/update/activity:6537001253883518976/
+    - https://chesterenergyandpolicy.com/2019/01/28/its-a-bird-its-a-lime-its-dockless-scooters-but-can-these-electric-powered-mobility-options-be-considered-sustainable-using-life-cycle-analysis/
+
+- espace: transport . trottinette électrique partagée . impact
+  nom: fabrication
+  formule: batterie + trottinette sans batterie
+
+- espace: transport . trottinette électrique partagée . impact . fabrication
+  nom: batterie
+  unité: kgCO₂e
+  formule: capacité * impact par kWh
+
+- espace: transport . trottinette électrique partagée . impact . fabrication . batterie
+  nom: capacité
+  unité: kWh
+  note: Il y a une incertitude sur la taille de la batterie.
+  formule: 0.360
+
+- espace: transport . trottinette électrique partagée . impact . fabrication . batterie
+  nom: impact par kWh
+  unité: kgCO₂e/kWh
+  formule: 200
+  note: En l'absence de donnée précise fournie par les marques, nous prenons le pire des cas, sur la fourchette de 150-200kg donnée par l'étude ci-dessous.
+  références:
+    - https://www.automobile-propre.com/voiture-electrique-impact-carbone-batteries/
+
+- espace: transport . trottinette électrique partagée . impact . fabrication . batterie
+  nom: capacité
+  note: 36V * 10Ah
+  unité: kWh
+  formule: 360
+  références:
+    commentaire Linkedin: https://www.linkedin.com/feed/update/urn:li:activity:6537001253883518976?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A6537001253883518976%2C6538002988328337408%29
+
+- espace: transport . trottinette électrique partagée . impact . fabrication
+  nom: trottinette sans batterie
+  note: Pour une trottinette de l'ordre de 8kg sans la batterie. La Base Carbone de l’ADEME a un facteur d’émissions pour les « machines », de l’ordre de 5,5 kg CO2e/kg de machine.
+  unité: kgCO₂e
+  formule: 45
+
+- espace: transport . trottinette électrique partagée . impact
+  nom: usage total
+  formule: durée de vie * usage par jour
+
+- espace: transport . trottinette électrique partagée . impact . usage total
+  nom: durée de vie
+  unité: jour
+  description: |
+    La première investigation indépendante sur la durée de vie des trottinettes la chiffrait à 29 jours. Depuis, le Los Angeles Times estime celle des trotinettes Bird à 126 jours.
+
+    Dans l'absence d'informations plus précises, notamment des autres marques, nous prenons la moyenne de ces deux estimations.
+    # bientôt formule: (29 + 126) / 2
+  formule: 77.5
+  références:
+    - https://www.liberation.fr/planete/2019/03/07/une-trottinette-partagee-a-une-duree-de-vie-de-28-jours_1713419
+    - https://www.latimes.com/business/technology/la-fi-tn-bird-scooters-money-profit-strategy-20190505-story.html
+
+- espace: transport . trottinette électrique partagée . impact . usage total
+  nom: usage par jour
+  formule: locations par jour * distance par location
+
+- espace: transport . trottinette électrique partagée . impact . usage total
+  nom: locations par jour
+  unité: /jour
+  formule: 10
+
+- espace: transport . trottinette électrique partagée . impact . usage total
+  nom: distance par location
+  description: D'après le rapport de l'entreprise Lime, la distance moyenne est de 1.06 miles. On ne sait pas cependant si c'est la distance pour leurs vélos électriques ou leurs trottinettes.
+  unité: km
+  formule: 1.7
+  références:
+    - https://www.li.me/second-street/lime-one-year-report-scooter-bike-sharing
+
+- espace: transport . trottinette électrique partagée
+  nom: distance
+  question: Quelle est la distance du trajet ?
+  suggestions:
+    traverser le quartier: 2
+    traverser la ville: 10
+  par défaut: 2
+  unité: km
+
+- espace: transport
+  nom: fabrication d'un vélo
+  titre: Un vélo neuf
+  icônes: 🚴✨
+  exposé: oui
+  description: Impact de la fabrication d'un vélo neuf.
+  formule: 240
+  unité: kgCO₂e
+  note: Un vélo électrique sera en moyenne plus cher et plus lourd. Implémenter le calcul en prenant en compte notamment la batterie.
+  références:
+    - http://www.slate.fr/story/42539/velo-vraiment-vert-empreinte-carbone
+
+- espace: transport . voiture
+  nom: impact fabrication
+  titre: Une voiture neuve
+  icônes: 🚗✨
+  exposé: oui
+  description: |
+
+    Impact de la fabrication d'une voiture neuve. 
+
+    Une voiture, c'est une tonne de matériaux. La chaîne complète de fabrication émet une très grande quantité de gaz à effet de serre. 
+
+    Il faut noter que c'est aussi le cas avec la voiture électrique, et même pire aujourd'hui car la batterie s'ajoute au calcul.
+  formule: 0.72 * prix
+  unité: kgCO₂e
+  note: |
+    Notre calcul est pour l'instant simpliste : on part du principe que pour 1000€ dépensés dans la fabrication de la voiture, 720g de CO2 sont émis. 
+    L'accès à des bilans carbones sérieux pour les voitures les plus vendues ne semble pas évident aujourd'hui. Peut-être chercher du côté des études de l'ADEME, par exemple celle de 2018 sur les voitures électriques ?
+  références:
+    - https://www.caradisiac.com/prime-a-la-casse-produire-une-nouvelle-voiture-pollue-plus-que-garder-une-ancienne-168187.htm
+
+- espace: transport . voiture
+  nom: prix
+  question: Quel est le prix d'achat de la voiture neuve ?
+  unité: €
+  par défaut: 15000
+  suggestions:
+    Twingo: 11000
+    Clio / 208 / C3: 15000
+    SUV: 28000
+  références:
+    - https://www.automobile-magazine.fr/toute-l-actualite/article/25564-match-les-prix-des-nouvelles-peugeot-208-renault-clio-5-citroen-c3-et-vw-polo-compares
+
+- espace: nourriture
+  nom: lait
+  icônes: 🥛
+  références:
+    - http://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?produits_laitiers.htm
+
+- espace: nourriture . lait
+  nom: lait de vache
+  icônes: 🐄
+  formule: 0.94
+  unité: kgCO₂e/kg
+- espace: nourriture . lait
+  nom: lait de brebis
+  icônes: 🐑
+  formule: 1.54
+  unité: kgCO₂e/kg
+- espace: nourriture . lait
+  nom: lait de chèvre
+  icônes: 🐐
+  formule: 0.8
+  unité: kgCO₂e/kg
+
+- espace: nourriture
+  icônes: 🧀
+  nom: fromage
+  références:
+    - http://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?produits_laitiers.htm
+    - https://fr.m.wikipedia.org/wiki/Types_de_pâtes_de_fromage
+
+- espace: nourriture . fromage
+  nom: fromage à pâte dure
+  unité: kgCO₂e/kg
+  description: |
+    Il faut environ 11,5 litres de lait pour faire un kg de fromage à pâte dure. En négligeant l'énergie de chauffe (très secondaire devant les émissions provenant du lait), on obtient un facteur d'émissions de 12,6 kgCO2e / kg de fromage à pâte dure.
+  formule: 12.6
+
+- espace: nourriture . fromage
+  nom: fromage à pâte molle
+  unité: kgCO₂e/kg
+  description: |
+    Il faut environ 6 litres de lait pour 1kg de fromage à pâte molle. Sur la base du calcul précédent,  on obtient un facteur d'émissions de 6,6 kgCO2e / kg de fromage à pâte molle.
+  formule: 6.6
+
+- espace: nourriture . fromage
+  nom: yaourts et fromages frais
+  icônes:
+  unité: kgCO₂e/kg
+  description: |
+    Il faut un peu plus d'un litre de lait pour faire un kg de yaourt. Avec l'énergie de chauffe (non négligeable ici), les transports et les emballages nous prendrons comme approximation un doublement du facteur d’émission du lait, ce qui amène à  2,2 kgCO2e / kg de yaourt. Ce facteur d’émission s’applique aussi au fromage frais en première approximation.
+  formule: 2.2
+
+- espace: nourriture
+  nom: fondue savoyarde
+  titre: une fondue savoyarde
+  exposé: oui
+  icônes: 🧀👥🗻
+  description: La fondue est un plat traditionnel savoyarde très apprécié en France. Une fondue requiert beaucoup de lait de vache, ce qui rend son impact climatique important.
+  note: |
+    Il semble que la fondue soit constituée en général de fromages à pâte dure, par exemple beaufort, comté et tomme de savoie.
+
+    Il faudrait étudier les possibilités pour réduire son impact, le facteur principal étant les émissions des bêtes ayant fourni le lait. [D'après l'ADEME](http://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?produits_laitiers.htm), le lait de vache biologique serait moins polluant.
+
+    Pour préciser le calcul, il faudrait ajouter les autres postes d'une fondue : 
+    - le trajet en voiture pour aller acheter son fromage à la fromagerie, 10km donc ~2kg / 4 personnes
+    - l'alcool en gel si le caquelon n'est pas électrique ([recette](http://wiki.scienceamusante.net/index.php/Alcool_g%C3%A9lifi%C3%A9) et [bilan de l'éthanol](http://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?boissons.htm))
+    - les autres ingrédients (pain, [vin](http://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?boissons.htm))
+    - le caquelon en fonte ([bilan de l'acier](http://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?acier.htm) probablement négligeable car utilisé 2 fois pour 4 personnes chaque année pendant 20 ans)
+  formule: poids de fromage * fromage . fromage à pâte dure
+  références:
+    - https://fr.m.wikipedia.org/wiki/Fondue_savoyarde
+
+- espace: nourriture . fondue savoyarde
+  nom: poids de fromage
+  description: Poids de fromage par personne pour une bonne fondue hivernale.
+  unité: kg
+  formule: 0.300
+  références:
+    - https://www.marmiton.org/recettes/recette_veritable-fondue-savoyarde_34077.aspx
+
+- espace: nourriture
+  nom: vin
+- espace: nourriture . vin
+  icônes: 🍷
+  nom: bouteille
+  titre: Une bouteille de vin
+  description: Une bouteille de 75cl de vin français.
+  note: Calcul réalisé pour les vins de Bordeauux, Bourgogne et Champagne. L'incertitude de l'estimation est de ±50%.
+  exposé: oui
+  références:
+    - http://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?boissons.htm
+  unité: kgCO₂e
+  formule:
+    variations:
+      - si: grand vin ou champagne
+        alors: 2.2
+      - sinon: 1.1
+- espace: nourriture . vin
+  nom: grand vin ou champagne
+  question: Est-ce un grand vin français ou encore un champagne ?
+  par défaut: non
+
+# ajoutez ici vos nouvelles règles
+
+- espace: eau
+  nom: boire un verre d'eau
+  icônes: 🥛💧
+  exposé: oui
+  description: |
+    Parmi tous les gestes de la vie d'un individu, s'il est un besoin primaire,
+    c'est boire de l'eau.
+
+    L'eau minérale en bouteille (ici une bouteille d'1.5 L) a un impact largement supérieur à celui de l'eau en robinet.
+
+  formule:
+    variations:
+      - si: distribution = 'robinet'
+        alors: impact par litre froid * contenance petit verre d'eau
+      - si: distribution = 'bouteille minérale'
+        alors: impact litre minérale * contenance petit verre d'eau
+- espace: eau
+  nom: distribution
+  question: |
+    Est-ce un verre au robinet, ou un verre provenant d'une bouteille d'eau
+    minérale ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - robinet
+        - bouteille minérale
+  par défaut: robinet
+- espace: eau . distribution
+  nom: robinet
+- espace: eau . distribution
+  nom: bouteille minérale
+- espace: eau
+  nom: impact litre minérale
+  unité: kgCO₂e/l
+  note: |
+    Nous ne considérons pour l'instant que l'impact de la bouteille qui contient l'eau minérale. Il faut ajouter au moins : 
+    - le transport de la bouteille pleine qui est lourde
+    - la production de l'eau minérale
+
+    Nous n'avons pour l'instant pas trouvé d'étude de cycle de vie d'une bouteille minérale.
+  formule:
+    somme:
+      - transport de la bouteille
+      - plastique . impact grande bouteille / 1.5
+
+- espace: eau
+  nom: transport de la bouteille
+  description: Une bouteille d'1L ayant voyagé 500km.
+  unité: kgCO₂e/kg
+  note: |
+    Le calcul est basé sur l'estimation du livre How bad are bananas de Mike Berners-Lee : une bouteille de 500ml qui voyage sur 600 miles (~ 1000km) par la route émet pour son transport 115g.
+  formule: 0.115
+
+- espace: eau
+  nom: contenance petit verre d'eau
+  unité: l
+  formule: 0.125
+
+- nom: plastique
+
+- espace: plastique
+  nom: impact grande bouteille
+  formule: poids grande bouteille * impact PET
+  note: Certains fabricants semblent faire des efforts notamment sur le poids et le recyclage des bouteilles, comme ici [Cristaline](https://www.moneaucristaline.fr/cristalinesengage/). Si ces améliorations peuvent réduire le bilan, elles ne changent cependant pas l'ordre de grandeur.
+
+- espace: plastique
+  nom: poids grande bouteille
+  description: Bouteille d'1.5 L
+  unité: kg
+  formule: 0.030
+
+- espace: plastique
+  nom: impact PET
+  unité: kgCO₂e/kg
+  formule: 3.410
+  note: On retient le chiffre "PET qualité bouteille"
+  références:
+    - http://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?produits_en_caoutchouc_et_en_p.htm
+
+- nom: maison
+
+- espace: maison
+  nom: construction
+  titre: une maison neuve
+  icônes: 🏠✨
+  exposé: oui
+  références:
+    - https://www.theguardian.com/environment/green-living-blog/2010/oct/14/carbon-footprint-house
+  description: |
+    La construction d'une maison basse consommation avec deux chambres à l'étage, deux autres pièce et une cuisine en bas.
+
+    Attention, l'impact de l'entretien et des factures mensuelles de la maison n'est pas inclus.
+  note: |
+    Étude pour une maison conforme au *Scottish Code for Sustainable Homes Level 5 that demanded 'carbon neutrality'*.
+
+    Prochaine étape : faire varier cet impact e' fonction de la taille et des matériaux de construction, notamment le bois qui pourrait bien avoir un impact neutre.
+  formule: impact / occupants
+  unité: kgCO₂e
+
+- espace: maison
+  nom: occupants
+  question: Combien de personnes vivent dans cette maison ?
+  description: Attention, les fantômes ne comptent pas.
+  unité: personnes
+  par défaut: 3
+
+- espace: maison . construction
+  nom: impact
+  formule: 80000
+  unité: kgCO₂e
+
+- nom: vêtements
+
+- espace: vêtements
+  nom: pull
+  unité: kgCO₂e
+  exposé: oui
+  icônes: 👕🌡️
+  formule:
+    correspondance:
+      variable: matière
+      tableau:
+        laine: 54
+        acrylique: 26
+        coton: 29
+        coton recyclé: 10
+        polaire plastique recyclé: 25
+
+  références:
+    - https://www.ademe.fr/modelisation-evaluation-impacts-environnementaux-produits-consommation-biens-dequipement
+
+- espace: vêtements . pull
+  nom: matière
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - laine
+        - acrylique
+        - coton
+        - coton recyclé
+        - polaire plastique recyclé
+  par défaut: coton
+
+- espace: vêtements . pull . matière
+  nom: acrylique
+- espace: vêtements . pull . matière
+  description: Une polaire en PES recyclé
+  nom: polaire plastique recyclé
+- espace: vêtements . pull . matière
+  nom: laine
+- espace: vêtements . pull . matière
+  nom: coton recyclé
+- espace: vêtements . pull . matière
+  nom: coton
+
+- espace: vêtements
+  nom: t shirt
+  unité: kgCO₂e
+  exposé: oui
+  icônes: 👕
+  description: Qu'il soit en coton ou en polyester, le t-shirt semble avoir à peu près la même empreinte.
+  formule:
+    variations:
+      - si: polo
+        alors: 8
+      - sinon: 6
+  références:
+    - https://www.ademe.fr/modelisation-evaluation-impacts-environnementaux-produits-consommation-biens-dequipement
+
+- espace: vêtements . t shirt
+  nom: polo
+  question: Est-ce un polo ?
+  par défaut: non
+
+- espace: vêtements
+  nom: veste
+  unité: kgCO₂e
+  exposé: oui
+  icônes: 🧥
+  formule:
+    correspondance:
+      variable: type
+      tableau:
+        manteau: 88
+        anorak: 39
+        faux cuir: 24
+  références:
+    - https://www.ademe.fr/modelisation-evaluation-impacts-environnementaux-produits-consommation-biens-dequipement
+
+- espace: vêtements . veste
+  nom: type
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - manteau
+        - anorak
+        - faux cuir
+  par défaut: anorak
+
+- espace: vêtements . veste . type
+  nom: manteau
+- espace: vêtements . veste . type
+  nom: anorak
+- espace: vêtements . veste . type
+  nom: faux cuir
+
+- espace: vêtements
+  nom: chemise
+  unité: kgCO₂e
+  exposé: oui
+  icônes: 👔
+  description: Qu'elle soit en coton ou en viscose, la chemise semble avoir à peu près la même empreinte.
+  formule: 11
+  références:
+    - https://www.ademe.fr/modelisation-evaluation-impacts-environnementaux-produits-consommation-biens-dequipement
+
+- espace: vêtements
+  nom: jean
+  unité: kgCO₂e
+  exposé: oui
+  icônes: 👖
+  description: Un jean en coton.
+  formule: 24
+  références:
+    - https://www.ademe.fr/modelisation-evaluation-impacts-environnementaux-produits-consommation-biens-dequipement
+
+- espace: vêtements
+  nom: robe
+  unité: kgCO₂e
+  exposé: oui
+  icônes: 👗
+  formule:
+    correspondance:
+      variable: matière
+      tableau:
+        polyester: 53
+        coton: 52
+        viscose: 48
+  références:
+    - https://www.ademe.fr/modelisation-evaluation-impacts-environnementaux-produits-consommation-biens-dequipement
+
+- espace: vêtements . robe
+  nom: matière
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - polyester
+        - coton
+        - viscose
+  par défaut: coton
+
+- espace: vêtements . robe . matière
+  nom: polyester
+- espace: vêtements . robe . matière
+  nom: coton
+- espace: vêtements . robe . matière
+  nom: viscose
+
 - nom: nourriture
   description: Presque toutes les entrées concernant la nourriture sont issues de la catégorie "Plats préparés" de la base [Bilan GES](http://www.bilans-ges.ademe.fr/) de l'ADEME.
-  références: 
+  références:
     - http://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
 - icônes: 🍌🍫
   espace: nourriture
   nom: Banana Split
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,283"
   formule: 0.807
   unité: kgCO₂e
@@ -14,7 +1453,8 @@
   espace: nourriture
   nom: Beurre doux
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,01"
   formule: 0.0949
   unité: kgCO₂e
@@ -22,7 +1462,8 @@
   espace: nourriture
   nom: Blanquette de veau
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,473"
   formule: 4.52
   unité: kgCO₂e
@@ -30,7 +1471,8 @@
   espace: nourriture
   nom: Boeuf bourguignon
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,308"
   formule: 4.16
   unité: kgCO₂e
@@ -38,7 +1480,8 @@
   espace: nourriture
   nom: Bol de céréales
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,337"
   formule: 0.293
   unité: kgCO₂e
@@ -46,7 +1489,8 @@
   espace: nourriture
   nom: Bol de lait
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,404"
   formule: 0.494
   unité: kgCO₂e
@@ -54,7 +1498,8 @@
   espace: nourriture
   nom: Brandade de morue
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,329"
   formule: 1.43
   unité: kgCO₂e
@@ -62,7 +1507,8 @@
   espace: nourriture
   nom: Brownie - aux noix entière
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,148"
   formule: 0.631
   unité: kgCO₂e
@@ -70,7 +1516,8 @@
   espace: nourriture
   nom: Cannelé
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,072"
   formule: 0.157
   unité: kgCO₂e
@@ -78,7 +1525,8 @@
   espace: nourriture
   nom: Cassoulet
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,37"
   formule: 2.37
   unité: kgCO₂e
@@ -86,7 +1534,8 @@
   espace: nourriture
   nom: Cheese cake
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,217"
   formule: 0.764
   unité: kgCO₂e
@@ -94,7 +1543,8 @@
   espace: nourriture
   nom: Chili con carne
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,249"
   formule: 3.93
   unité: kgCO₂e
@@ -102,7 +1552,8 @@
   espace: nourriture
   nom: Chips
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,196"
   formule: 0.348
   unité: kgCO₂e
@@ -110,7 +1561,8 @@
   espace: nourriture
   nom: Chocolat
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,02"
   formule: 0.0975
   unité: kgCO₂e
@@ -118,7 +1570,8 @@
   espace: nourriture
   nom: Choucroute
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,47"
   formule: 0.725
   unité: kgCO₂e
@@ -126,7 +1579,8 @@
   espace: nourriture
   nom: Clafoutis aux cerises
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,14"
   formule: 0.291
   unité: kgCO₂e
@@ -134,7 +1588,8 @@
   espace: nourriture
   nom: Coquilette au jambon
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,535"
   formule: 1.36
   unité: kgCO₂e
@@ -142,7 +1597,8 @@
   espace: nourriture
   nom: Côte de boeuf
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,31"
   formule: 10.8
   unité: kgCO₂e
@@ -150,7 +1606,8 @@
   espace: nourriture
   nom: Couscous
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,82"
   formule: 4.92
   unité: kgCO₂e
@@ -158,7 +1615,8 @@
   espace: nourriture
   nom: Crème brûlée
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,187"
   formule: 0.543
   unité: kgCO₂e
@@ -166,7 +1624,8 @@
   espace: nourriture
   nom: Crêpes
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,284"
   formule: 0.387
   unité: kgCO₂e
@@ -174,7 +1633,8 @@
   espace: nourriture
   nom: Crêpes - galette au sarasin
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,284"
   formule: 0.387
   unité: kgCO₂e
@@ -182,7 +1642,8 @@
   espace: nourriture
   nom: Curry au poulet avec riz
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,567"
   formule: 1.19
   unité: kgCO₂e
@@ -190,7 +1651,8 @@
   espace: nourriture
   nom: Éclair au chocolat
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,114"
   formule: 0.243
   unité: kgCO₂e
@@ -198,7 +1660,8 @@
   espace: nourriture
   nom: Endives au jambon
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,295"
   formule: 1.01
   unité: kgCO₂e
@@ -206,7 +1669,8 @@
   espace: nourriture
   nom: Far breton
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,219"
   formule: 0.315
   unité: kgCO₂e
@@ -214,7 +1678,8 @@
   espace: nourriture
   nom: Filet mignon de porc
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,193"
   formule: 0.965
   unité: kgCO₂e
@@ -222,7 +1687,8 @@
   espace: nourriture
   nom: Fondant au chocolat
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,086"
   formule: 0.342
   unité: kgCO₂e
@@ -230,7 +1696,8 @@
   espace: nourriture
   nom: Gigot d'agneau
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,156"
   formule: 5.55
   unité: kgCO₂e
@@ -238,7 +1705,8 @@
   espace: nourriture
   nom: Glace à la Vanille
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,125"
   formule: 0.189
   unité: kgCO₂e
@@ -246,7 +1714,8 @@
   espace: nourriture
   nom: Gratin dauphinois
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,461"
   formule: 0.648
   unité: kgCO₂e
@@ -254,7 +1723,8 @@
   espace: nourriture
   nom: Gratin de choux fleur sauce béchamel
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,707"
   formule: 0.746
   unité: kgCO₂e
@@ -262,7 +1732,8 @@
   espace: nourriture
   nom: Hachis parmentier
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,557"
   formule: 6.15
   unité: kgCO₂e
@@ -270,7 +1741,8 @@
   espace: nourriture
   nom: Hamburger
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,279"
   formule: 4.06
   unité: kgCO₂e
@@ -278,7 +1750,8 @@
   espace: nourriture
   nom: Île flottante
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,163"
   formule: 0.269
   unité: kgCO₂e
@@ -286,7 +1759,8 @@
   espace: nourriture
   nom: Lapin à la moutarde
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,357"
   formule: 2.28
   unité: kgCO₂e
@@ -294,7 +1768,8 @@
   espace: nourriture
   nom: Lasagnes - à la viande
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,594"
   formule: 2.91
   unité: kgCO₂e
@@ -302,7 +1777,8 @@
   espace: nourriture
   nom: Lasagnes - végétarienne
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,714"
   formule: 1.15
   unité: kgCO₂e
@@ -310,7 +1786,8 @@
   espace: nourriture
   nom: Lentille saucisse
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,329"
   formule: 0.506
   unité: kgCO₂e
@@ -318,7 +1795,8 @@
   espace: nourriture
   nom: Magret de canard
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,244"
   formule: 2.34
   unité: kgCO₂e
@@ -326,7 +1804,8 @@
   espace: nourriture
   nom: Moules-frites
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,504"
   formule: 3.71
   unité: kgCO₂e
@@ -334,7 +1813,8 @@
   espace: nourriture
   nom: Mousse au chocolat
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,091"
   formule: 0.351
   unité: kgCO₂e
@@ -342,7 +1822,8 @@
   espace: nourriture
   nom: Omelette
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,121"
   formule: 0.4
   unité: kgCO₂e
@@ -350,7 +1831,8 @@
   espace: nourriture
   nom: Orange - fraîche
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,12"
   formule: 0.102
   unité: kgCO₂e
@@ -358,7 +1840,8 @@
   espace: nourriture
   nom: Paëlla
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,446"
   formule: 1.66
   unité: kgCO₂e
@@ -366,7 +1849,8 @@
   espace: nourriture
   nom: Pain
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,04"
   formule: 0.0609
   unité: kgCO₂e
@@ -374,7 +1858,8 @@
   espace: nourriture
   nom: Panacotta
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,164"
   formule: 0.639
   unité: kgCO₂e
@@ -382,7 +1867,8 @@
   espace: nourriture
   nom: Pavé de saumon grillé
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,127"
   formule: 0.796
   unité: kgCO₂e
@@ -390,7 +1876,8 @@
   espace: nourriture
   nom: Pizza
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,143"
   formule: 0.731
   unité: kgCO₂e
@@ -398,7 +1885,8 @@
   espace: nourriture
   nom: Poire belle hélène - poire de Belgique
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,416"
   formule: 0.208
   unité: kgCO₂e
@@ -406,7 +1894,8 @@
   espace: nourriture
   nom: Pomme
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,146"
   formule: 0.0389
   unité: kgCO₂e
@@ -414,7 +1903,8 @@
   espace: nourriture
   nom: Pommes de terre au confit de canard
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,407"
   formule: 1.96
   unité: kgCO₂e
@@ -422,7 +1912,8 @@
   espace: nourriture
   nom: Pot au feu
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,601"
   formule: 5.06
   unité: kgCO₂e
@@ -430,7 +1921,8 @@
   espace: nourriture
   nom: Poulet frites - frites surgelés
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,564"
   formule: 2.48
   unité: kgCO₂e
@@ -438,7 +1930,8 @@
   espace: nourriture
   nom: Profiteroles
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,115"
   formule: 0.271
   unité: kgCO₂e
@@ -446,7 +1939,8 @@
   espace: nourriture
   nom: Quatre quarts
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,093"
   formule: 0.46
   unité: kgCO₂e
@@ -454,7 +1948,8 @@
   espace: nourriture
   nom: Quiche lorraine
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,238"
   formule: 1.02
   unité: kgCO₂e
@@ -462,7 +1957,8 @@
   espace: nourriture
   nom: Raclette
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,681"
   formule: 1.53
   unité: kgCO₂e
@@ -470,7 +1966,8 @@
   espace: nourriture
   nom: Ratatouille de saison - de saison
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,322"
   formule: 0.241
   unité: kgCO₂e
@@ -478,7 +1975,8 @@
   espace: nourriture
   nom: Salade de fruits - fruits de saison
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,106"
   formule: 0.072
   unité: kgCO₂e
@@ -486,7 +1984,8 @@
   espace: nourriture
   nom: Salade de tomates - d'Espagne
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,149"
   formule: 0.142
   unité: kgCO₂e
@@ -494,7 +1993,8 @@
   espace: nourriture
   nom: Salade de tomates - de saison
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,149"
   formule: 0.103
   unité: kgCO₂e
@@ -502,7 +2002,8 @@
   espace: nourriture
   nom: Salade de tomates - hors saison, France
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,149"
   formule: 0.35
   unité: kgCO₂e
@@ -510,7 +2011,8 @@
   espace: nourriture
   nom: Salade de tomates mozzarella - de saison
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,224"
   formule: 0.366
   unité: kgCO₂e
@@ -518,7 +2020,8 @@
   espace: nourriture
   nom: Salade niçoise
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,576"
   formule: 1.08
   unité: kgCO₂e
@@ -526,7 +2029,8 @@
   espace: nourriture
   nom: Salade verte - avec sauce
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,052"
   formule: 0.078
   unité: kgCO₂e
@@ -534,7 +2038,8 @@
   espace: nourriture
   nom: Soupe à l'oignon
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,581"
   formule: 0.552
   unité: kgCO₂e
@@ -542,7 +2047,8 @@
   espace: nourriture
   nom: Spaghetti à la bolognaise
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,682"
   formule: 4.14
   unité: kgCO₂e
@@ -550,7 +2056,8 @@
   espace: nourriture
   nom: Steak-frites
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,223"
   formule: 5.88
   unité: kgCO₂e
@@ -558,7 +2065,8 @@
   espace: nourriture
   nom: Sushis
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,633"
   formule: 1.44
   unité: kgCO₂e
@@ -566,7 +2074,8 @@
   espace: nourriture
   nom: Tagliatelles à la carbonara
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,419"
   formule: 0.616
   unité: kgCO₂e
@@ -574,7 +2083,8 @@
   espace: nourriture
   nom: Tajine d'agneau
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,574"
   formule: 8.58
   unité: kgCO₂e
@@ -582,7 +2092,8 @@
   espace: nourriture
   nom: Tartare de boeuf
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,279"
   formule: 6.03
   unité: kgCO₂e
@@ -590,7 +2101,8 @@
   espace: nourriture
   nom: Tarte aux fraises - de saison
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,139"
   formule: 0.345
   unité: kgCO₂e
@@ -598,7 +2110,8 @@
   espace: nourriture
   nom: Tarte aux fraises - hors saison
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,139"
   formule: 0.579
   unité: kgCO₂e
@@ -606,7 +2119,8 @@
   espace: nourriture
   nom: Tarte aux pommes
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,18"
   formule: 0.283
   unité: kgCO₂e
@@ -614,7 +2128,8 @@
   espace: nourriture
   nom: Tarte tatin
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,262"
   formule: 0.478
   unité: kgCO₂e
@@ -622,7 +2137,8 @@
   espace: nourriture
   nom: Tartiflette
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,472"
   formule: 0.899
   unité: kgCO₂e
@@ -630,7 +2146,8 @@
   espace: nourriture
   nom: Tasse de café
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,253"
   formule: 0.0503
   unité: kgCO₂e
@@ -638,7 +2155,8 @@
   espace: nourriture
   nom: Tasse de thé
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,25"
   formule: 0.0123
   unité: kgCO₂e
@@ -646,7 +2164,8 @@
   espace: nourriture
   nom: Tiramisu
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,13"
   formule: 0.452
   unité: kgCO₂e
@@ -654,7 +2173,8 @@
   espace: nourriture
   nom: Tomates farcies - de saison
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,343"
   formule: 0.655
   unité: kgCO₂e
@@ -662,7 +2182,8 @@
   espace: nourriture
   nom: Tomates farcies - hors saison
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,343"
   formule: 1.04
   unité: kgCO₂e
@@ -672,9 +2193,9 @@
   exposé: oui
   description: |
     On suppose que c'est d'un croissant que l'ADEME parle ici. 
-    
+
     Titre original : `Viennoiserie brioche - type brioche`.
-    
+
     Masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,05"
   formule: 0.143
@@ -683,7 +2204,8 @@
   espace: nourriture
   nom: Viennoiserie pain au chocolat - type pain au chocolat
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,05"
   formule: 0.114
   unité: kgCO₂e
@@ -691,7 +2213,8 @@
   espace: nourriture
   nom: Yaourt
   exposé: oui
-  description: "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
+  description:
+    "masse d'ingrédients consommables dans l'assiette pour une portion (kg) :
     0,125"
   formule: 0.36
   unité: kgCO₂e
