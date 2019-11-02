@@ -26,23 +26,28 @@ fs.createReadStream('base carbone v16.1.csv')
 				nom: nom + (attribut ? ' - ' + attribut : ''),
 				exposé: 'oui',
 				description: data['Commentaire français'],
-				formule: +co2e,
-				unité: 'kgCO₂e'
+				formule: +co2e.replace(',', '.'),
+				unité: 'kgCO₂e',
+				références: [
+					'http://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23'
+				]
 			})
 	})
 	.on('end', () => {
 		// We'll now update, not replace, the current publicodes file
-		fs.readFile('./nourriture.yaml', 'utf8', (err, data) => {
+		fs.readFile('./co2.yaml', 'utf8', (err, data) => {
 			let rules = yaml.parse(data)
 			let updatedRules = rules.map(rule => {
 				let update = results.find(
 					r => r.nom === rule.nom && r.espace === rule.espace
 				)
-				return { icônes: '', ...rule, ...update }
+				return {
+					...(rule.exposé === 'oui' && !rule.icônes ? { icônes: '' } : {}),
+					...rule,
+					...update
+				}
 			})
-			fs.writeFile('./nourriture.yaml', yaml.stringify(updatedRules), function(
-				err
-			) {
+			fs.writeFile('./co2.yaml', yaml.stringify(updatedRules), function(err) {
 				if (err) {
 					return console.log(err)
 				}
