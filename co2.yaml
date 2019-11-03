@@ -92,16 +92,23 @@
       - si: type = 'fioul'
         alors: 0.324
       - si: type = 'électricité'
-        alors: 0.059
-  note: >
-    La base carbone de l'ADEME ne permet malheureusement pas de faire des liens
-    profonds vers les chiffres utilisés. 
+        alors: électricité
+  note: |
+    La base carbone de l'ADEME ne permet malheureusement pas de faire des liens profonds vers les chiffres utilisés.
+  références:
+    - http://www.bilans-ges.ademe.fr/fr/accueil
+    - https://decrypterlenergie.org/decryptage-quel-est-le-contenu-en-co2-du-kwh-electrique
 
+- espace: chauffage . impact par kWh
+  nom: électricité
+  formule: 0.059
+  unité: kgCO₂e/kWh
+  note: |
     Pour l'électricité, nous retenons le chiffre de l'ADEME "Electricité - 2016 - usage : Eau Chaude Sanitaire - consommation".
   références:
     - http://www.bilans-ges.ademe.fr/fr/accueil
     - https://www.electricitymap.org/?page=country&solar=false&remote=true&wind=false&countryCode=FR
-    - https://decrypterlenergie.org/decryptage-quel-est-le-contenu-en-co2-du-kwh-electrique
+
 - espace: chauffage
   nom: énergie consommée par litre
   formule: 0.0325
@@ -1017,6 +1024,158 @@
   icônes: 🐄
   formule: 0.94
   unité: kgCO₂e/kg
+
+- espace: nourriture . lait
+  nom: masse volumique
+  unité: kg/l
+  formule: 1.030
+  description: Un litre de lait entier correspond à 1030 grammes.
+  références:
+    - https://fr.m.wikipedia.org/wiki/Masse_volumique#Liquides
+
+- espace: nourriture . lait
+  icônes: ☕🍫
+  nom: chocolat chaud
+  titre: un chocolat chaud
+  exposé: oui
+  description: La production d'un litre de lait émet tellement de gaz à effet de serre que le chauffage du lait est presque insignifiant.
+  formule:
+    somme:
+      - une tasse de lait
+      - chauffage
+      - chocolat . dose
+
+- espace: nourriture . lait . chocolat chaud
+  nom: chauffage
+  formule: impact chauffage litre de lait * contenance tasse
+
+- espace: nourriture
+  nom: chocolat
+
+- espace: nourriture . chocolat
+  nom: dose
+  titre: une dose de chocolat
+  formule: impact * portion
+
+- espace: nourriture . chocolat
+  nom: impact
+  formule: 4.7
+  unité: kgCO₂e/kg
+  description: Chocolat en poudre non sucré, en magasin.
+  note: La plupart des chocolats chauds contiennent du sucre, sont faits à partir d'une préparation "boisson instantanée", mais nous n'avons pas sont impact pour l'instant.
+  références:
+    - http://www.bilans-ges.ademe.fr
+
+- espace: nourriture . chocolat
+  nom: portion
+  formule: 0.010
+  note: La question de la dose de chocolat par tasse est compliquée, voir [cette discussion](https://github.com/laem/futureco-data/pull/48#discussion_r331799099) qui prend une mesure rélle, à défaut d'une moyenne sur plusieurs consommateurs.
+  unité: kg
+
+- espace: nourriture . lait
+  nom: chauffage litre de lait en joules
+  note: Ici on prend pour simplifier une masse volumique du lait de 1.
+  formule: delta température * chaleur spécifique
+
+- espace: nourriture . lait
+  nom: chauffage litre de lait
+  unité: kWh/l
+  description: 1 kWh = 3600 kJ
+  formule: chauffage litre de lait en joules / 3600000
+
+- espace: nourriture . lait
+  nom: chauffage litre de lait final
+  formule: chauffage litre de lait / chauffage . efficacité microondes
+
+- espace: nourriture . lait
+  nom: impact chauffage litre de lait
+  description: Chauffé dans un micro-ondes.
+  note: On devrait ajouter le chauffage sur plaque de gaz, qui devrait multiplier par ~3 l'impact climat.
+  formule: chauffage litre de lait final * chauffage . impact par kWh . électricité
+
+- espace: chauffage
+  nom: efficacité microondes
+  formule: 2 / 3
+  références:
+    - https://e-rse.net/comment-chauffer-eau-ecologie-energie-270031/#gs.7vibnn
+
+- espace: nourriture . lait
+  nom: delta température
+  description: La température de la pièce est de 20°C et la température à laquelle on chauffe le lait est d'environ 80°C.
+  unité: K
+  formule: température max atteinte - température lait froid
+
+- espace: nourriture . lait
+  nom: température lait froid
+  note: La température de la pièce est de ~20°C, mais une fois ouverte, la bouteille de lait est conservée au frigo, à ~6°C. On retient la moyenne.
+  formule: (20 + 6) / 2
+
+- espace: nourriture . lait
+  nom: température max atteinte
+  formule:
+    correspondance:
+      variable: chauffe
+      tableau:
+        ébullition: 95
+        très chaud: 60
+        tiède: 40
+        froid: 13
+  note: |
+    Pour la température "très chaud" : 
+    > En Europe de manière générale, et dans le nord du continent américain, les températures avoisinnent en général les 60°C pour les boissons chaudes.
+    [Source](https://www.rtbf.be/info/societe/onpdp/detail_boissons-chaudes-attention-a-la-chaleur?id=9433212).
+
+    Pour [l'ébullition](https://www.produits-laitiers.com/question-pas-bete-pourquoi-le-lait-deborde-t-il-quand-il-bout/), on choisit `95` car au-delà ça finit sur les plaques de cuisson :-)
+
+    > Pour la température `froid`, il faudrait utiliser la variable `température lait froid` mais aujourd'hui ce n'est pas possible de faire une référence à une variable dans une `correspondance`.
+  références:
+
+- espace: nourriture . lait
+  nom: chauffe
+  question: Comment chauffez-vous votre lait ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - ébullition
+        - très chaud
+        - tiède
+        - froid
+  par défaut: ébullition
+- espace: nourriture . lait . chauffe
+  nom: ébullition
+  titre: Je le porte à ébullition puis j'attends
+- espace: nourriture . lait . chauffe
+  nom: très chaud
+- espace: nourriture . lait . chauffe
+  nom: tiède
+
+- espace: nourriture . lait . chauffe
+  nom: froid
+
+- espace: nourriture . lait
+  nom: chaleur spécifique
+  formule: 3800
+  unité: J/kg-K
+  références:
+    - https://hal.archives-ouvertes.fr/hal-00928930/document
+
+- espace: nourriture . lait
+  icônes: 🥛
+  nom: une tasse de lait
+  exposé: oui
+  formule: impact par litre * contenance tasse
+
+- espace: nourriture . lait
+  nom: impact par litre
+  formule: lait de vache * masse volumique
+
+- espace: nourriture
+  nom: contenance tasse
+  description: Une tasse bien remplie ou un grand verre.
+  formule: 0.3
+  unité: l
+
 - espace: nourriture . lait
   nom: lait de brebis
   icônes: 🐑
