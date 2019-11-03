@@ -1038,6 +1038,7 @@
   nom: chocolat chaud
   titre: un chocolat chaud
   exposé: oui
+  description: La production d'un litre de lait émet tellement de gaz à effet de serre que le chauffage du lait est presque insignifiant.
   formule:
     somme:
       - une tasse de lait
@@ -1088,6 +1089,7 @@
 - espace: nourriture . lait
   nom: impact chauffage litre de lait
   description: Chauffé dans un micro-ondes.
+  note: On devrait ajouter le chauffage sur plaque de gaz, qui devrait multiplier par ~3 l'impact climat.
   formule: chauffage litre de lait final * chauffage . impact par kWh . électricité
 
 - espace: chauffage
@@ -1098,9 +1100,50 @@
 
 - espace: nourriture . lait
   nom: delta température
-  description: La température de la pièce est de 20° et la température à laquelle on chauffe le lait est d'environ 80.
+  description: La température de la pièce est de 20°C et la température à laquelle on chauffe le lait est d'environ 80°C.
   unité: K
-  formule: 80 - 20
+  formule: température max atteinte - 20
+
+- espace: nourriture . lait
+  nom: température max atteinte
+  formule:
+    correspondance:
+      variable: chauffe
+      tableau:
+        ébullition: 95
+        très chaud: 60
+        tiède: 40
+        froid: 20
+  note: |
+    Pour la température "très chaud" : 
+    > En Europe de manière générale, et dans le nord du continent américain, les températures avoisinnent en général les 60°C pour les boissons chaudes.
+    [Source](https://www.rtbf.be/info/societe/onpdp/detail_boissons-chaudes-attention-a-la-chaleur?id=9433212).
+
+    Pour [l'ébullition](https://www.produits-laitiers.com/question-pas-bete-pourquoi-le-lait-deborde-t-il-quand-il-bout/), on choisit `95` car au-delà ça finit sur les plaques de cuisson :-)
+  références:
+
+- espace: nourriture . lait
+  nom: chauffe
+  question: Comment chauffez-vous votre lait ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - ébullition
+        - très chaud
+        - tiède
+        - froid
+  par défaut: ébullition
+- espace: nourriture . lait . chauffe
+  nom: ébullition
+  titre: Je le porte à ébullition puis j'attends
+- espace: nourriture . lait . chauffe
+  nom: très chaud
+- espace: nourriture . lait . chauffe
+  nom: tiède
+
+- espace: nourriture . lait . chauffe
+  nom: froid
 
 - espace: nourriture . lait
   nom: chaleur spécifique
