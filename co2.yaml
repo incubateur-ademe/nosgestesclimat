@@ -2277,12 +2277,6 @@ terrasse chauffée . puissance d'un chauffage:
   formule: 3
   note: La puissance est variable, 3000 W semble être une bonne moyenne.
 
-terrasse chauffée . impact électricité:
-  note: en France
-  unité: kgCO2e/kWh
-  formule: 0.078
-  références:
-    - https://electricitymap.org
 
 terrasse chauffée . énergie . totale:
   unité: kWh
@@ -2301,4 +2295,99 @@ terrasse chauffée . impact:
     En 2019, le gachis d'énergie qu'entraîne le chauffage d'extérieur fait débat, au point que [la ville de Rennes décide de les interdire](https://mobile.twitter.com/nathalieappere/status/1143267851375140866), la question [se posant alors à Paris](https://www.bfmtv.com/planete/faut-il-interdire-les-terrasses-chauffees-a-paris-1812718.html) où elles sont très répandues.
 
     ⚠️ Attention, le calcul est pour l'instant fait pour un chauffage électrique, pas un chauffage au gaz.
-  formule: énergie . par personne * impact électricité
+  formule: énergie . par personne * empreinte du mix électrique
+
+
+
+numérique:
+numérique . vidéo:
+  titre: Une vidéo en ligne
+  exposé: oui
+  icônes: 📼📱💻
+  formule: énergie * empreinte du mix électrique
+  description: |
+    Quelle est l'empreinte climat d'une **vidéo d'une heure en haute qualité** visionnée sur un smartphone ou un ordinateur portable ?
+
+    Le numérique est aujourd'hui pointé du doigt pour son empreinte importante malgré l'impression de dématérialisation qu'il donne. Une large partie du trafic d'internet est généré par les vidéos, dont la qualité augmente régulièrement. 
+
+  note: |
+    Pour aller plus loin, il faudrait : 
+
+    - poser la question de la durée de la vidéo avec des suggestions (épisode de sérié, saison entière, film)
+    - illustrer l'impact du choix d'une qualité inférieure (de la 144p de Youtube à la 4k)
+    - permettre à l'usager de choisir le support vs smartphone vs télé 20 pouces vs télé ultra grand écran en incluant la fabrication de ces appareils
+  
+    L'empreinte du numérique par kWh est calculée ici avec la valeur moyenne du mix électrique français. On pourrait aussi la calculer avec d'autres méthodes, par exemple la méthode [par usage](https://fr.wikipedia.org/wiki/Empreinte_carbone_de_l'%C3%A9lectricit%C3%A9#Les_contenus_CO2_par_usage_%E2%80%93_La_m%C3%A9thode_EDF-ADEME_(2005_r%C3%A9vis%C3%A9e_2011).
+
+empreinte du mix électrique: 
+  unité: kgCO2e/kWh
+  description: Empreinte moyenne du mix électrique français.
+  formule: 0.078
+  références:
+    - https://electricitymap.org
+    - https://fr.wikipedia.org/wiki/Empreinte_carbone_de_l'%C3%A9lectricit%C3%A9#Les_contenus_CO2_par_usage_%E2%80%93_La_m%C3%A9thode_EDF-ADEME_(2005_r%C3%A9vis%C3%A9e_2011)
+    - 
+
+numérique . vidéo . énergie:
+  formule: 
+    somme:
+      - serveurs
+      - réseau
+      - appareil
+  note: Nous utilisons le '1byte model' du [Shift Project](https://theshiftproject.org), dont une partie de l'implémentation est dans [ce tableur](https://theshiftproject.org/wp-content/uploads/2019/07/Video-Materials-1byte-Model-applied-to-video-traffic-2019.xlsx).
+
+numérique . vidéo . durée: 
+  unité: minute
+  formule: 60
+  note: Une durée approximative, entre le film et l'épisode de série.
+numérique . vidéo . poids:
+  unité: octet
+  formule: 1 * giga
+  note: C'est un ordre de grandeur d'une vidéo plutôt haute qualité.
+giga: 
+  formule: 1000 * 1000 * 1000
+
+numérique . serveurs :
+  formule: intensité * vidéo . poids
+  description: |
+    Titre original : "Energy Impact due to Data Centers (in kWh/byte)"
+numérique . serveurs . intensité:
+  unité: kWh/octet
+  formule: 0.000000000072
+  description: |
+    Titre original : "Energy Impact due to Data Centers (in kWh/byte)"
+
+numérique . réseau:
+  formule: intensité * vidéo . poids
+numérique . réseau . intensité:
+  formule: (filaire + wifi + mobile) / 3
+
+numérique . réseau . intensité . filaire:
+  unité: kWh/octet
+  formule: 0.000000000429
+  description: |
+    Titre original : "FAN Wired"
+numérique . réseau . intensité . wifi:
+  unité: kWh/octet
+  formule: 0.000000000152
+  description: |
+    Titre original : "FAN WIFI"
+numérique . réseau . intensité . mobile:
+  unité: kWh/octet
+  formule: 0.000000000884
+  description: |
+    Titre original : "Mobile Network"
+
+numérique . appareil:
+  formule: intensité * vidéo . durée
+
+numérique . appareil . intensité:
+  formule: (smartphone + ordinateur portable) / 2
+  description: |
+    Titre original : "Energy Impact (in kWh/min)" 
+numérique . appareil . intensité . smartphone:
+  unité: kWh/minute
+  formule: 0.00011
+numérique . appareil . intensité . ordinateur portable:
+  unité: kWh/minute
+  formule: 0.00032
