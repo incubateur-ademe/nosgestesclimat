@@ -1,5 +1,8 @@
 # futureco-data
 
+💬 Venez discuter du projet sur [ce salon public](https://matrix.to/#/!fsVPsWWOjvdAvfuTMn:matrix.org?via=matrix.org).
+
+
 Ici résident les modèles de calcul de https://futur.eco.
 
 Ils sont écrits dans un français le plus lisible possible : 
