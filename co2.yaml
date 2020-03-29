@@ -2417,3 +2417,165 @@ numérique . téléphone journée . matériel:
 numérique . téléphone journée . matériel . durée de vie:
   note: Première estimation à 2 ans par téléphone.
   formule: 2
+
+
+
+micmac:
+  titre: Votre bilan carbone personnel
+  exposé: oui
+  formule: 
+    somme: 
+      - logement
+      - transport
+  références: 
+    - http://avenirclimatique.org/les-outils
+
+micmac . logement:
+  formule: impact / habitants
+
+micmac . logement . impact:
+  formule: 
+    somme: 
+      - construction
+      - électricité
+      - gaz
+      - fioul
+micmac . logement . habitants: 
+  question: Combien de personnes vivent chez vous ?
+  par défaut: 2
+  unité: personnes
+
+micmac . logement . surface: 
+  question: Quelle est la surface de votre logement ?
+  par défaut: 70
+  unité: m²
+
+micmac . logement . construction . facteur:
+  formule:  17.5   
+  unité: kgCO2e/m²
+  
+micmac . logement . construction:
+  formule: surface * facteur
+  unité: kgCO2e
+
+micmac . logement . électricité:
+  formule: consommation * intensité carbone
+
+micmac . logement . électricité . consommation:
+  icônes: ⚡
+  question: Quelle est votre consommation d'éléctricité annuelle ?
+  unité: kWh
+  par défaut: 0
+  description: |
+    Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
+    Si vous utilisez plusieurs logements (par exemple une residence secondaire) il faut se debrouiller à "ramener" ces consommations dans celles du logement principal.
+
+
+micmac . logement . électricité . intensité carbone:
+  formule:  0.057
+  unité: kgCO2e/kWh
+  note: La v2.4 de MicMac donne une valeur de 12.4gCO2e/kWh pour les fournisseurs d'électricité "verte", mais cette valeur semble correspondre à un calcul théorique sur l'année, et non pas à un calcul réel, minute par minute.
+  
+
+micmac . logement . gaz:
+  formule: consommation * intensité carbone
+micmac . logement . gaz . consommation:
+  icônes: 🔥
+  question: Quelle est votre consommation annuelle de gaz ?
+  par défaut: 0
+  unité: kWh
+  description: |
+    Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
+    Si vous utilisez plusieurs logements (par exemple une residence secondaire) il faut se debrouiller à "ramener" ces consommations dans celles du logement principal.
+
+micmac . logement . gaz . intensité carbone:
+  formule:  0.227
+  unité: kgCO2e/kWh
+
+
+micmac . logement . fioul:
+  titre: Fioul domestique
+  formule: consommation * intensité carbone
+micmac . logement . fioul . consommation:
+  icônes: 🛢
+  question: Quelle est votre consommation annuelle de fioul domestique ?
+  unité: kWh
+  description: |
+    Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
+    Si vous utilisez plusieurs logements (par exemple une residence secondaire) il faut se debrouiller à "ramener" ces consommations dans celles du logement principal.
+
+  par défaut: 0
+micmac . logement . fioul . intensité carbone:
+  formule:  0.324
+  unité: kgCO2e/kWh
+
+
+micmac . transport:
+  formule: 
+    somme: 
+      - voiture
+      - avion
+      - train
+
+micmac . transport . voiture . voyageurs:
+  question: Quel est le nombre de voyageurs moyen dans la voiture ?
+  par défaut: 1
+  unité: voyageurs
+
+micmac . transport . voiture . km:
+  question: Quelle distance parcourez-vous en voiture à l'année ?
+  par défaut: 2000
+  unité: km
+micmac . transport . voiture . consommation:
+  question: Quelle est la consommation moyenne de votre voiture ?
+  par défaut: 8
+  unité: l/100km
+micmac . transport . voiture . consommation par km:
+  formule: consommation / 100
+
+micmac . transport . voiture . impact usage:
+  formule: (km * consommation par km * intensité) / voyageurs
+
+micmac . transport . voiture . intensité:
+  formule: 2.9
+  unité: kgCO2e/l
+
+micmac . transport . voiture . construction:
+  formule: 7000
+  unité: kgCO2e
+micmac . transport . voiture . âge:
+  question: Quelle est l'age de votre voiture ?
+  unité: années
+  par défaut: 10
+micmac . transport . voiture . construction amortie:
+  formule: construction / âge
+  unité: kgCO2e
+
+micmac . transport . voiture:
+  non applicable si: km = 0
+  formule: construction amortie + impact usage
+
+micmac . transport . avion:
+  formule: heures de vol * impact par heure
+
+micmac . transport . avion . impact par heure:
+  formule:  188
+  unité: kgCO2e/h
+micmac . transport . avion . heures de vol:
+  question: Combien d'heures passez-vous annuellement dans un avion ?
+  unité: h
+  par défaut: 3
+
+
+micmac . transport . train:
+  formule: km * impact par km
+
+micmac . transport . train . impact par km:
+  formule: 0.0056
+  unité: kgCO2e/km
+micmac . transport . train . km:
+  question: Combien de kilomètres parcourez-vous en train par an ?
+  unité: km
+  par défaut: 3
+
+
