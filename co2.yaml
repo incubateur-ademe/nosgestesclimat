@@ -226,7 +226,23 @@ transport . voiture . km:
     traverser la France: 2000
     10km par jour: 3600
     20km par jour: 7000
-transport . voiture . consommation:
+
+
+transport . voiture . motorisation: 
+  question: Quel type de voiture utilisez-vous ?
+  par défaut: thermique
+  formule: 
+    une possibilité: 
+      choix obligatoire: oui
+      possibilités:
+        - thermique
+        - hybride
+        - électrique
+transport . voiture . motorisation . thermique:
+transport . voiture . motorisation . électrique:
+transport . voiture . motorisation . hybride:
+  
+transport . voiture . thermique . consommation aux 100:
   question: Quelle est la consommation moyenne de votre voiture ?
   par défaut: 8
   unité: l/100km
@@ -236,32 +252,51 @@ transport . voiture . consommation:
     moyenne: 7
     berline: 9
     SUV: 11
-transport . voiture . consommation par km:
-  formule: consommation / 100
+
+transport . voiture . thermique . consommation au kilomètre:
+  formule: consommation aux 100 / 100
+
+transport . voiture . thermique . empreinte au kilomètre:
+  formule: consommation au kilomètre * empreinte au litre
+
+transport . voiture . électrique . empreinte au kilomètre:
+  formule: 0.020
+  unité: kgCO2e/km
+  note: Pas de variations en fonction de la taille de la voiture, il nous faudra trouver ces donnnées
 
 transport . voiture . impact usage:
-  formule: (km * consommation par km * intensité) / voyageurs
+  formule: (km * empreinte au kilomètre) / voyageurs
 
-transport . voiture . hybride: 
-  question: Est-ce une voiture hybride ?
-  par défaut: non
-
-transport . voiture . intensité:
+transport . voiture . empreinte au kilomètre: 
   formule: 
     variations: 
-      - si: hybride
-        alors: 0.85 * intensité thermique
-      - sinon: intensité thermique
-transport . voiture . intensité thermique:
+      - si: motorisation = 'thermique'
+        alors: thermique . empreinte au kilomètre
+      - si: motorisation = 'hybride'
+        alors: thermique . empreinte au kilomètre * 0.85
+      - sinon: électrique . empreinte au kilomètre
+
+
+transport . voiture . thermique . empreinte au litre:
   formule: 2.9
   unité: kgCO2e/l
 
 transport . voiture . construction:
-  formule: 7000
+  formule: 
+    correspondance: 
+      variable: motorisation
+      tableau: 
+        thermique: 7000
+        hybride: 7000
+        électrique: 12000
   unité: kgCO2e
+  note: Il nous faudra trouver les variations d'empreinte de la construction, c'est surement significatif, au moin pour l'électrique.
+
 transport . voiture . âge:
   question: Quelle est l'age de votre voiture ?
   description: | 
+    Nous vous attribuons toute l'empreinte de la construction de la voiture.
+
     Si vous êtes deux à utiliser deux voitures, essayez de répondre en faisant une moyenne de l'âge et du gabarit des deux voitures.
 
     Si vous possédez plusieurs voitures utilisées par vous même uniquement, ~~vendez au moins la deuxième~~ ce cas n'est pas encore prévu.
