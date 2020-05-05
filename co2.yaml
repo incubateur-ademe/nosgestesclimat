@@ -221,17 +221,38 @@ transport . voiture . km:
   question: Quelle distance parcourez-vous en voiture à l'année ?
   par défaut: 2000
   unité: km
+  suggestions: 
+    zéro: 0
+    traverser la France: 2000
+    10km par jour: 3600
+    20km par jour: 7000
 transport . voiture . consommation:
   question: Quelle est la consommation moyenne de votre voiture ?
   par défaut: 8
   unité: l/100km
+  note: Les suggestions sont à la louche, à préciser et sourcer.
+  suggestions: 
+    petite: 6
+    moyenne: 7
+    berline: 9
+    SUV: 11
 transport . voiture . consommation par km:
   formule: consommation / 100
 
 transport . voiture . impact usage:
   formule: (km * consommation par km * intensité) / voyageurs
 
+transport . voiture . hybride: 
+  question: Est-ce une voiture hybride ?
+  par défaut: non
+
 transport . voiture . intensité:
+  formule: 
+    variations: 
+      - si: hybride
+        alors: 0.85 * intensité thermique
+      - sinon: intensité thermique
+transport . voiture . intensité thermique:
   formule: 2.9
   unité: kgCO2e/l
 
@@ -243,8 +264,12 @@ transport . voiture . âge:
   description: Si c'est une voiture de location, passez la question. 
   unité: années
   par défaut: 10
+  suggestions: 
+    neuve: 1
+    5 ans: 5
+    10 ans: 10
 transport . voiture . construction amortie:
-  formule: construction / âge
+  formule: construction / (âge + 0.1)
   unité: kgCO2e
 
 transport . voiture:
