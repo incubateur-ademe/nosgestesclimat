@@ -22,8 +22,7 @@ logement . impact:
     somme: 
       - construction
       - électricité
-      - gaz
-      - fioul
+      - chauffage autres
 logement . habitants: 
   question: Combien de personnes vivent chez vous ?
   par défaut: 2
@@ -62,9 +61,22 @@ logement . électricité . intensité carbone:
   note: |
     La v2.6 de MicMac donne une valeur de 12.4gCO2e/kWh pour les fournisseurs d'électricité "verte", mais cette valeur semble correspondre à un calcul théorique sur l'année, et non pas à un calcul réel, minute par minute.
   
+logement . chauffage autres: 
+  formule: gaz + fioul + bois
+
+logement . bois: 
+  formule: 0
+
+
 
 logement . gaz:
+  applicable si: chauffage au gaz
   formule: consommation * intensité carbone
+
+logement . gaz . chauffage au gaz: 
+  question: Votre logement est-il chauffé au gaz ? 
+  par défaut: non
+
 logement . gaz . consommation:
   icônes: 🔥
   question: Quelle est votre consommation annuelle de gaz ?
@@ -78,10 +90,15 @@ logement . gaz . intensité carbone:
   formule:  0.227
   unité: kgCO2e/kWh
 
-
 logement . fioul:
+  applicable si: chauffage au fioul
   titre: Fioul domestique
   formule: consommation * intensité carbone
+
+logement . fioul . chauffage au fioul: 
+  question: Votre logement est-il chauffé au fioul ? 
+  par défaut: non
+
 logement . fioul . consommation:
   icônes: 🛢
   question: Quelle est votre consommation annuelle de fioul domestique ?
