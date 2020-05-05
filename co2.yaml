@@ -74,7 +74,70 @@ logement . chauffage autres:
   formule: gaz + fioul + bois
 
 logement . bois: 
-  formule: 0
+  applicable si: chauffage au bois
+  formule: consommation * facteur d'émission
+
+logement . bois . chauffage au bois: 
+  question: Votre logement est-il chauffé au bois ?
+  par défaut: non
+
+logement . bois . consommation: 
+  formule: 
+    variations: 
+      - si: type = 'bûche'
+        alors: bûche
+      - sinon: granulés
+
+logement . bois . consommation . granulés: 
+  question: Quelle est votre consommation de bois en granulés ?
+  unité: kWh
+  aide: estimation via le coût
+  par défaut: 10000
+
+logement . bois . consommation . granulés . estimation via le coût:
+  question: Pas de facture ? Entrez vos dépenses approximatives
+  unité: €/kWh
+  formule: 0.072
+  description: |
+    Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois. 
+    Voir l'onglet "Calcul consommation Energie" du [tableur MicMac](https://avenirclimatique.org/wp-content/uploads/2020/04/2020-04-12_MicMac_V2.6.xlsx)
+
+
+logement . bois . consommation . bûche: 
+  question: Quelle est votre consommation de bois en bûches ?
+  aide: estimation via le coût
+  unité: kWh
+  par défaut: 10000
+
+logement . bois . consommation . bûche . estimation via le coût:
+  question: Pas de facture ? Entrez vos dépenses approximatives
+  unité: €/kWh
+  formule: 0.043
+  description: |
+    Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois. 
+    Voir l'onglet "Calcul consommation Energie" du [tableur MicMac](https://avenirclimatique.org/wp-content/uploads/2020/04/2020-04-12_MicMac_V2.6.xlsx)
+
+logement . bois . facteur d'émission: 
+  unité: kgCO2e/kWh
+  formule: 
+    correspondance: 
+      variable: type
+      tableau: 
+        bûche:  0.0295
+        granulés: 0.0304
+
+logement . bois . type:
+  titre: type de bois
+  question: Quel type de bois utilisez-vous ?
+  formule: 
+    une possibilité: 
+      choix obligatoire: oui
+      possibilités: 
+        - bûche
+        - granulés
+  par défaut: bûche
+logement . bois . type . bûche: 
+logement . bois . type . granulés: 
 
 logement . gaz:
   applicable si: chauffage au gaz
@@ -82,13 +145,13 @@ logement . gaz:
 
 logement . gaz . chauffage au gaz: 
   question: Votre logement est-il chauffé au gaz ? 
-  aide: estimation via le coût
   par défaut: non
 
 logement . gaz . chauffage au gaz . estimation via le coût: 
   question: Pas de facture ? Entrez vos dépenses approximatives
   unité: €/kWh
   formule: 0.074
+  aide: estimation via le coût
   description: |
     Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois. 
     Voir l'onglet "Calcul consommation Energie" du [tableur MicMac](https://avenirclimatique.org/wp-content/uploads/2020/04/2020-04-12_MicMac_V2.6.xlsx)
