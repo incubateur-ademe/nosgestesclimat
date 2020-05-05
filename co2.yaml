@@ -211,6 +211,8 @@ transport:
       - voiture
       - avion
       - train
+      - métro ou tram
+      - bus
 
 transport . voiture . voyageurs:
   question: Quel est le nombre moyen de voyageurs dans la voiture ?
@@ -336,7 +338,46 @@ transport . train . impact par km:
 transport . train . km:
   question: Combien de kilomètres parcourez-vous en train par an ?
   unité: km
+  par défaut: 1000
+
+transport . métro ou tram:
+  formule: heures par semaine * impact par heure * nombre de semaines
+
+transport . métro ou tram . impact par heure:
+  formule: 0.17
+  unité: kgCO2e/heures
+  note: Nous avons confondu tram et métro, alors que le modèle MicMac v2.6 ne parle que de métro. 
+  description: |
+    Sur la base de 6,63 gCO2e/(passager.km) et de 25 km/h de vitesse moyenne. Base Carbone consultée le 22/06/19- Métro/tram/Trolley, réseaux urbains Classe 1 - amont et combustion ; transports.blog.lemonde.fr, consulté le 05/09/2014
+  références: 
+   - http://transports.blog.lemonde.fr/2013/03/11/les-petits-secrets-de-la-ratp-reveles-au-public/
+    - http://www.bilans-ges.ademe.fr/
+
+transport . métro ou tram . heures par semaine:
+  question: Combien d'heures passez-vous par semaine en métro ou en tram ?
+  unité: heures
   par défaut: 3
+
+transport . bus:
+  formule: heures par semaine * impact par heure * nombre de semaines
+
+nombre de semaines: 
+  formule: 52
+
+transport . bus . impact par heure:
+  formule: 1.99
+  unité: kgCO2e/heure
+  description: | 
+    Sur la base de 166 gCO2e/(passager.km) et de 12 km/h de vitesse moyenne - Base Carbone consultée le 22/06/19 - Bus, moyen, réseaux urbains Classe 2 (zone urbaine et interurbaine) - amont et combustion ; Mairie de Paris pour la vitesse des bus, consulté le 05/09/2014
+  références: 
+    - http://www.paris.fr/pratique/deplacements-voirie/transports-en-commun/promouvoir-les-transports-collectifs/rub_385_stand_10755_port_1208
+    - http://www.bilans-ges.ademe.fr/
+
+transport . bus . heures par semaine:
+  question: Combien d'heures passez-vous dans un bus par semaine ?
+  unité: heures
+  par défaut: 3
+
 
 
 services publics: 
