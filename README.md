@@ -1,9 +1,7 @@
-# futureco-data
+# Ecolab-data
 
-💬 Venez discuter du projet sur [ce salon public](https://matrix.to/#/!fsVPsWWOjvdAvfuTMn:matrix.org?via=matrix.org).
+Ici résident les modèles de calcul et les données de de https://ecolab.ademe.fr.
 
-
-Ici résident les modèles de calcul de https://futur.eco.
 
 Ils sont écrits dans un français le plus lisible possible : 
 
@@ -34,8 +32,8 @@ transport . avion . coefficient de forçage radiatif:
 
 :pen: Voici [un petit guide pour contribuer](https://github.com/laem/futureco-data/blob/master/CONTRIBUTING.md).
 
-Tous les modèles sont dans le [fichier co2.yaml](https://github.com/laem/futureco-data/blob/master/co2.yaml).
+Tous les modèles sont pour l'instant dans le [fichier co2.yaml](https://github.com/laem/futureco-data/blob/master/co2.yaml).
 
-Les modèles sont écrits dans le langage https://publi.codes.
+Les modèles sont écrits dans le langage https://publi.codes, dont la documentation est sur le site.
 
-Le code source (qui fait tourner les modèles et les présente sur un site) est lui aussi [ouvert et participatif](https://github.com/laem/futureco).
+Le code source (qui fait tourner les modèles et les présente sur un site) sera lui aussi [ouvert et participatif](https://github.com/betagouv/ecolab-climat).
