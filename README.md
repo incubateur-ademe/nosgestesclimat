@@ -2,6 +2,10 @@
 
 Ici résident les modèles de calcul et les données de de https://ecolab.ademe.fr.
 
+:light_bulb: Pour l'instant, vous n'y trouverez que les modèles de simulation climat personnelle annuelle. Ils sont en cours de développement, pas encore validés.
+
+Suivront les données de ecolab-transport, et éventuellement les données de la base agribalyse nouvelle génération.
+
 
 Ils sont écrits dans un français le plus lisible possible : 
 
