@@ -5,11 +5,18 @@ Ici résident les modèles de calcul et les données de de https://ecolab.ademe.
 :bulb: Pour l'instant, vous n'y trouverez que les modèles de simulation climat personnelle annuelle. Ils sont en cours de développement, pas encore validés. Suivront les données de ecolab-transport, et éventuellement les données de la base agribalyse nouvelle génération.
 
 ## ecolab-climat
-Le modèle est déployé à chaque changement sur :anchor: l'adresse de démo [ecolab-climat.netlify.app](https://ecolab-climat.netlify.app/), et le code du simulateur est pour l'instant sur un autre dépôt [ici](https://github.com/laem/futureco/pull/65), il sera bientôt transféré sur `betagouv/ecolab-climat`.
 
+Le modèle est déployé à chaque changement sur :anchor: l'adresse de démo [ecolab-climat.netlify.app](https://ecolab-climat.netlify.app/).
 
+### code de l'interface
 
-Ils sont écrits dans un français le plus lisible possible : 
+Le code du simulateur est pour l'instant sur un autre dépôt [ici](https://github.com/laem/futureco/pull/65).  Il sera bientôt transféré sur `betagouv/ecolab-climat`. C'est un clone de laem/futureco, lui-même un clone de betagouv/mon-entreprise. 
+
+Il repose sur le nouveau langage de programmation `publicodes` documenté sur https://publi.codes, qui est en mai 2020 en train d'être publié comme une bibliothèque à part entière indépendante de mon-entreprise.fr.
+
+## Ecriture des modèles du simulateur
+
+Le modèle climat est écrit dans un français le plus lisible possible : 
 
 ```yaml
 # Premier extrait 
@@ -38,8 +45,5 @@ transport . avion . coefficient de forçage radiatif:
 
 :pen: Voici [un petit guide pour contribuer](https://github.com/laem/futureco-data/blob/master/CONTRIBUTING.md).
 
-Tous les modèles sont pour l'instant dans le [fichier co2.yaml](https://github.com/laem/futureco-data/blob/master/co2.yaml).
+Tous les modèles sont pour l'instant dans le [fichier co2.yaml](https://github.com/betagouv/ecolab-climat/blob/master/co2.yaml).
 
-Les modèles sont écrits dans le langage https://publi.codes, dont la documentation est sur le site.
-
-Le code source (qui fait tourner les modèles et les présente sur un site) sera lui aussi [ouvert et participatif](https://github.com/betagouv/ecolab-climat).
