@@ -623,11 +623,75 @@ numérique . vidéoprojecteur:
 
 
 
-
-
 alimentation: 
   couleur: '#e58e26'
   icônes: 🍽
+  formule: plats + boisson
+
+alimentation . boisson: 
+  icônes: 🍺
+  formule: 
+    somme: 
+      - sucrées
+      - alcool
+      - eau en bouteille
+
+alimentation . boisson . eau en bouteille:
+  applicable si: affirmatif
+  formule: 430.3
+  note: | 
+    Eau - en bouteille PET, plate, 0,5L - en magasin, prêt à consommer 0.393 kgCO2e/litre de liquide. 
+
+    Sur la base de 1,5L par jour. 
+
+    Base carbone consultée le 22/06/19.
+
+  références: 
+    - http://www.bilans-ges.ademe.fr/
+
+alimentation . boisson . eau en bouteille . affirmatif:
+  question: Buvez-vous votre eau en bouteille ?
+  par défaut: non
+  
+
+
+alimentation . boisson . sucrées: 
+  unité: gCO2e
+  formule: litres * nombre de semaines * facteur
+
+alimentation . boisson . sucrées . facteur: 
+  formule: 1.1
+  note: Cette valeur est bien sûr très approximative.
+
+alimentation . boisson . sucrées . litres: 
+  question: Quelle est votre consommation par semaine de sodas, jus de fruit, sirops, etc. ?
+  suggestions: 
+    nulle: 0
+    modérée: 1
+    importante: 5
+  unité: l/semaine
+  par défaut: 2
+
+alimentation . boisson . alcool: 
+  unité: gCO2e
+  formule: litres * nombre de semaines * facteur
+
+alimentation . boisson . alcool . facteur: 
+  formule: 2
+  note: Le vin n'a pas la même empreinte que la bière au litre, c'est une grosse simplification.
+
+alimentation . boisson . alcool . litres: 
+  question: Quelle est votre consommation par semaine d'alcool (vin, bière, etc.) ?
+  suggestions: 
+    nulle: 0
+    modérée: .5
+    importante: 2
+  unité: l/semaine
+  par défaut: 1
+
+
+
+alimentation . plats: 
   formule:
     correspondance: 
       variable: régime
