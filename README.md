@@ -37,7 +37,7 @@ transport . avion . coefficient de forçage radiatif:
 
 ```
 
-:pen: Voici [un guide pour contribuer](https://github.com/laem/futureco-data/blob/master/CONTRIBUTING.md).
+:pen: Suivez [le guide pour contribuer](https://github.com/betagouv/ecolab-data/blob/master/CONTRIBUTING.md).
 
 Tous les modèles sont pour l'instant dans le [fichier co2.yaml](https://github.com/betagouv/ecolab-climat/blob/master/co2.yaml).
 
