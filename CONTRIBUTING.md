@@ -30,10 +30,17 @@ Le langage est décrit sur https://publi.codes. Il est développé par l'Etat da
 
 ## 🏗️ En pratique
 
+### Si vous voulez laisser une remarque ouverte en 2 minutes
 
 Si vous avez un compte Github, [créez simplement une issue](https://github.com/laem/ecolab-data/issues/new) qui parle de votre idée ou correction et qui contient le calcul ou les interrogations en français.
 
 Sinon, écrivez-nous à contact@ecolab.beta.gouv.fr.
+
+### Si vous voulez modifier un texte
+
+Tous les textes, par exemple le texte d'une question ou le texte d'une suggestion de saisie, sont dans un gros fichier YAML. C'est un langage très accessible que vous pouvez modifier directement. Pour cela il vous faut un compte Github, qui peut se créer gratuitement en 2-3 minutes.
+
+Ensuite, rendez-vous sur le fichier en question [ici](https://github.com/betagouv/ecolab-data/blob/master/co2.yaml). Il vous suffit de faire Ctrl-F (pour lancer une recherche), chercher le texte à modifier (par exemple "Quel est l'age de votre smartphone"), puis cliquer sur l'icône ✏ en haut à droite, changer le texte (corriger "age" en "âge"), puis cliquer sur le bouton vert `Propose file change`. L'équipe verra votre contribution et on va la valider si elle est parfaite, en discuter ensemble sinon 🙂.
 
 ### Vous êtes développeur - vous voulez découvrir le langage de publication
 
