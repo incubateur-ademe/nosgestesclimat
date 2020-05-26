@@ -1,10 +1,14 @@
-# Contribuer 
+# Contribuer à ecolab-data
 
-Bienvenue 👋 ! Ce dépôt contient un modèle d'empreinte carbone personnelle annuellede, écrit en YAML dans un fichier unique, co2.yaml. 
+Bienvenue 👋 ! 
+
+Ce dépôt contient un modèle d'empreinte carbone personnelle annuelle, écrit en YAML dans un fichier unique, co2.yaml. 
+
+L'objectif de ce modèle est de poser des questions sur les aspects de la vie d'un individu qui émettent le plus de carbone. L'objectif n'est pas d'en faire une comptabilité parfaite, mais la plus représentative en posant un nombre de question qui reste acceptable pour tous, à hauteur de l'engagement personnel moyen aujourd'hui en 2020.
 
 ## 💾 Les modèles carbone
 
-Peu importe la qualité des contributions, nous acceuillons tout : un brouillon de calcul en français peut suffire... tant que les modèles carbone proposés *reposent sur données sourcées*. 
+Peu importe la qualité des contributions, nous accueillons tout : un brouillon de calcul en français peut suffire... tant que les modèles carbone proposés *reposent sur données sourcées*. 
 
 
 Par exemple, pour créer un modèle pour la trottinette électrique partagée, il faudrait idéalement réaliser une analyse de cycle de vie complète qui comprendrait : 
@@ -33,8 +37,8 @@ Sinon, écrivez-nous à contact@ecolab.beta.gouv.fr.
 
 ### Vous êtes développeur - vous voulez découvrir le langage de publication
 
-Nous travaillons à un environnement Web de développement, vous pouvez en avoir un avant goût sur le [studio publicodes](publi.codes/studio). 
+Nous travaillons à un environnement Web de développement, vous pouvez en avoir un avant goût sur le [studio publicodes](https://publi.codes/studio). 
 
-Une PR sur laem/futureco-data permettra finalement d'intégrer ces changements sur https://futur.eco.
+Une PR sur ce dépôt betagouv/ecolab-data permettra finalement d'intégrer ces changements sur https://ecolab-climat.netlify.app.
 
-Bientôt, nous mettrons ici les instructions pour faire tourner le modèle de calcul en local dans l'interface de simulation, qui sera publiée sur github.
+En attendant, pour travailler sur ces modèles YAML et voir voir vos changements mettre à jour l'interface de simulation (sans F5, c'est magique), il faut cloner ce dépôt vers un dossier nommé "data", puis cloner [ecolab-climat](https://github.com/betagouv/ecolab-climat) à la même racine, entrer dans ecolab-climat et faire `yarn && yarn start`.
