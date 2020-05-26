@@ -48,4 +48,4 @@ Nous travaillons à un environnement Web de développement, vous pouvez en avoir
 
 Une PR sur ce dépôt betagouv/ecolab-data permettra finalement d'intégrer ces changements sur https://ecolab-climat.netlify.app.
 
-En attendant, pour travailler sur ces modèles YAML et voir voir vos changements mettre à jour l'interface de simulation (sans F5, c'est magique), il faut cloner ce dépôt vers un dossier nommé "data", puis cloner [ecolab-climat](https://github.com/betagouv/ecolab-climat) à la même racine, entrer dans ecolab-climat et faire `yarn && yarn start`.
+En attendant, pour travailler sur ces modèles YAML et voir voir vos changements mettre à jour l'interface de simulation (sans F5, c'est magique), il faut cloner ce dépôt vers un dossier nommé "ecolab-data", puis cloner [ecolab-climat](https://github.com/betagouv/ecolab-climat) à la même racine, entrer dans ecolab-climat et faire `yarn && yarn start`.
