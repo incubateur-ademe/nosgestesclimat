@@ -1,19 +1,21 @@
 micmac:
-  titre: Votre bilan carbone personnel
+  titre: Votre bilan climat personnel
   exposé: oui
+
   formule: 
     somme: 
       - logement
       - transport
-      - services publics
+      - alimentation
       - finance
       - numérique
-      - alimentation
+      - biens divers
+      - services publics
   références: 
     - http://avenirclimatique.org/les-outils
 
 logement:
-  couleur: '#079992'
+  couleur: '#04a4ac'
   icônes: 🏘
   formule: impact / habitants
 
@@ -49,7 +51,7 @@ logement . électricité . consommation:
   icônes: ⚡
   question: Quelle est votre consommation d'éléctricité annuelle ?
   unité: kWh
-  par défaut: 0
+  par défaut: 11000
   aide: estimation via le coût
   description: |
     Astuce : vous trouverez votre consommation annuelle d'électricité sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
@@ -160,7 +162,7 @@ logement . gaz . chauffage au gaz . estimation via le coût:
 logement . gaz . consommation:
   icônes: 🔥
   question: Quelle est votre consommation annuelle de gaz ?
-  par défaut: 0
+  par défaut: 3000
   unité: kWh
   description: |
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
@@ -221,7 +223,7 @@ transport . voiture . voyageurs:
 
 transport . voiture . km:
   question: Quelle distance parcourez-vous en voiture à l'année ?
-  par défaut: 2000
+  par défaut: 8000
   unité: km
   suggestions: 
     zéro: 0
@@ -390,7 +392,7 @@ services publics:
   unité: kgCO2e
 
 finance:
-  couleur: '#0a3d62'
+  couleur: '#5b9741'
   icônes: 💸
   description: |
     Il faut estimer ici la valeur de vos actifs financiers (divisez par 2 si vous êtes en couple avec communauté réduite aux acquets).
@@ -409,42 +411,70 @@ finance . intensité responsable:
   unité: kgCO2e/€
 
 finance . actifs classiques: 
-  question: Quel est votre épargne dans les actifs classiques ? 
+  question: Quelle est votre épargne dans les actifs classiques ? 
   unité: €
   par défaut: 20000
   suggestions: 
     aucune: 0
     20 000 €: 20000
-    50 000 €: 30000
+    50 000 €: 50000
     cent patates: 100000
     un million: 1000000
 
 
 finance . actifs responsables: 
-  question: Quel est votre épargne dans les actifs dits "responsables" ? 
+  question: Quelle est votre épargne dans les actifs dits "responsables" ? 
   unité: €
   par défaut: 0
   suggestions: 
-    rien: 0
-    20 000 €: 10000
-    50 000 €: 30000
+    aucune: 0
+    20 000 €: 20000
+    50 000 €: 50000
     cent patates: 100000
     un million: 1000000
 
 
 numérique:
-  couleur: '#5758BB'
+  couleur: '#B53471'
   icônes: 📺
   formule: 
     somme: 
-      - 150
+      - téléphone
+      - TV
+      - ordinateur
+      - internet
+      - tablette
+      - vidéoprojecteur
       - appareil photo
       - home cinéma
+
+numérique . internet: 
+  formule: 0.010 * durée journalière * 365
+numérique . internet . durée journalière: 
+  question: Combien d'heures passez-vous par jour sur internet (envoi de mail, surf Web, streaming vidéo, etc.) ?
+  unité: heures/jour
+  par défaut: 2
+  suggestions: 
+    zéro: 0
+    modérément: 2
+    je ne décroche pas: 8
+  note: |
+    Voir comment les calculs en source pondèrent les usages. Est-ce une estimation de consommation de données par heure d'usage ? 
+  références: 
+    - https://www.carbonbrief.org/factcheck-what-is-the-carbon-footprint-of-streaming-video-on-netflix
+
+    
+
+
+
+
+  
+
 
 numérique . appareil photo . présent:
   note: On range l'appareil photo dans la catégorie numérique vu la rareté des appareils argentiques aujourd'hui.
   question: Utilisez-vous un appareil photo ?
-  par défaut: oui
+  par défaut: non
 numérique . appareil photo . durée:
   question: Quel âge a-t-il ? 
   unité: ans
@@ -467,21 +497,235 @@ numérique . home cinéma:
   unité: kgCO2e
 
 
+numérique . ordinateur . présent:
+  question: Utilisez-vous un ordinateur ?
+  par défaut: oui
+numérique . ordinateur . durée:
+  question: Quel âge a-t-il ? 
+  unité: ans
+  par défaut: 4
+numérique . ordinateur:
+  note: |
+    Pour l'instant, l'utilisateur a un ordinateur fixe avec écran, un portable sans écran, ou rien.
+
+    Or il peut avoir un fixe et un portable. Ou un portable avec écran fixe.
+
+  applicable si: présent
+  formule: facteur / durée
+  unité: kgCO2e
+numérique . ordinateur . facteur: 
+  formule:
+    variations: 
+      - si: fixe
+        alors: 296 + écran fixe
+      - sinon: 156
+
+numérique . ordinateur . fixe: 
+  question: Est-ce un ordinateur fixe (avec une tour détachée de l'écran) ?
+  par défaut: non
+  note: |
+    Le modèle MicMac parle d'ordinateur fixe haute performance ou d'ordinateur portable. 
+    C'est perturbant pour l'utilisateur, car l'option ordinateur fixe pas haute performance n'est pas proposée. 
+    Nous avons donc confondu fixe et fixe haute performance.
+numérique . ordinateur . écran fixe: 
+  formule: 222
+  note: Valeur pour un écran de 21 pouces.
+
+
+
+
+numérique . téléphone . type:
+  icônes: 🤙📱
+  question: Quel téléphone avez-vous ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - mobile basique
+        - smartphone moins de 4,5 pouces
+        - smartphone moins de 5 pouces
+        - smartphone plus de 5 pouces
+  par défaut: smartphone moins de 5 pouces
+
+numérique . téléphone:
+  formule: impact / durée
+
+numérique . téléphone . durée:
+  question: Quel âge a-t-il ? 
+  unité: ans
+  par défaut: 2
+
+numérique . téléphone . impact:
+  icônes: 📱✨
+  description: >
+    Les téléphones, et particulièrement les smartphones récents, sont le symbole
+    par excellence de la *high-tech*, qui est réputée consommer beaucoup de
+    ressources.
+
+    La question est d'autant plus importante qu'ils sont souvent renouvelés régulièrement, par exemple à chaque sortie annuelle du nouvel iPhone.
+
+    En réalité, notamment en comparaison du nombre d'heures que nous passons sur ces petits objets, leur empreinte climat pourrait être compatible avec un style de vie durable. Illustration : 
+
+    Un téléphone haut de gamme (iPhone X) c'est < 100kgCO2e. En supposant qu'on achète ce smartphone dernier cri tous les 2 ans, on a < 50kgCO2e/an.
+    Cela représente un demi-pourcent de l'empreinte moyenne d'un français (11 tonnes). Et 2.5% d'une empreinte durable de 2 tonnes / an.
+  exposé: oui
+  unité: kgCO₂e
+  références: 
+    - https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=Smartphone
+    - https://www.apple.com/environment/pdf/products/iphone/iPhone_11_PER_sept2019.pdf
+  note: Les données semblent sous-estimées par l'ADEME pour les smartphones de plus de 5 pouces, quand on sait que l'empreinte d'un iPhone 11 estimée par Apple elle-même est de 72kg de CO2e, dont 79% donc ~57kg juste pour la production. A moins que le périmètre des études ne soit pas le même, mais un périmètre plus important pris par l'entreprise que par l'authorité environnementale est pour le moins étonnant !
+  formule:
+    correspondance:
+      variable: type
+      tableau:
+        mobile basique: 16.5
+        smartphone moins de 4,5 pouces: 27.6
+        smartphone moins de 5 pouces: 32.8
+        smartphone plus de 5 pouces: 39.1
+numérique . téléphone . type . mobile basique:
+numérique . téléphone . type . smartphone moins de 4,5 pouces:
+numérique . téléphone . type . smartphone moins de 5 pouces:
+numérique . téléphone . type . smartphone plus de 5 pouces:
+
+
+numérique . tablette . présent:
+  question: Utilisez-vous une tablette ?
+  par défaut: non
+numérique . tablette . durée:
+  question: Quel âge a-t-elle ? 
+  unité: ans
+  par défaut: 4
+numérique . tablette:
+  applicable si: présent
+  formule: 63 / durée
+  unité: kgCO2e
+
+numérique . TV . présent:
+  question: Utilisez-vous une TV ?
+  par défaut: oui
+numérique . TV . durée:
+  question: Quel âge a-t-elle ? 
+  unité: ans
+  par défaut: 4
+numérique . TV:
+  applicable si: présent
+  formule: 63 / durée
+  unité: kgCO2e
+  note: |
+    Valeur pour 40-49 pouces.
+    
+    La taille étant très variable, il serait mieux d'en faire des variations. 
+
+    Notons aussi : 
+      - la résolution (empreinte d'une 8k ?)
+      - la technologie d'affichage (LED, plasma, etc.)
+
+
+numérique . vidéoprojecteur . présent:
+  question: Utilisez-vous une vidéoprojecteur ?
+  par défaut: non
+numérique . vidéoprojecteur . durée:
+  question: Quel âge a-t-il ? 
+  unité: ans
+  par défaut: 4
+numérique . vidéoprojecteur:
+  applicable si: présent
+  formule: 94 / durée
+  unité: kgCO2e
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 alimentation: 
   couleur: '#e58e26'
   icônes: 🍽
-  formule: par jour * 365
+  formule: plats + boisson
 
-alimentation . par jour:
+alimentation . boisson: 
+  icônes: 🍺
   formule: 
+    somme: 
+      - sucrées
+      - alcool
+      - eau en bouteille
+
+alimentation . boisson . eau en bouteille:
+  applicable si: affirmatif
+  formule: 430.3
+  note: | 
+    Eau - en bouteille PET, plate, 0,5L - en magasin, prêt à consommer 0.393 kgCO2e/litre de liquide. 
+
+    Sur la base de 1,5L par jour. 
+
+    Base carbone consultée le 22/06/19.
+
+  références: 
+    - http://www.bilans-ges.ademe.fr/
+
+alimentation . boisson . eau en bouteille . affirmatif:
+  question: Buvez-vous votre eau en bouteille ?
+  par défaut: non
+  
+
+
+alimentation . boisson . sucrées: 
+  unité: gCO2e
+  formule: litres * nombre de semaines * facteur
+
+alimentation . boisson . sucrées . facteur: 
+  formule: 1.1
+  note: Cette valeur est bien sûr très approximative.
+
+alimentation . boisson . sucrées . litres: 
+  question: Quelle est votre consommation par semaine de sodas, jus de fruit, sirops, etc. ?
+  suggestions: 
+    nulle: 0
+    modérée: 1
+    importante: 5
+  unité: l/semaine
+  par défaut: 2
+
+alimentation . boisson . alcool: 
+  unité: gCO2e
+  formule: litres * nombre de semaines * facteur
+
+alimentation . boisson . alcool . facteur: 
+  formule: 2
+  note: Le vin n'a pas la même empreinte que la bière au litre, c'est une grosse simplification.
+
+alimentation . boisson . alcool . litres: 
+  question: Quelle est votre consommation par semaine d'alcool (vin, bière, etc.) ?
+  suggestions: 
+    nulle: 0
+    modérée: .5
+    importante: 2
+  unité: l/semaine
+  par défaut: 1
+
+
+
+alimentation . plats: 
+  formule:
     correspondance: 
       variable: régime
       tableau: 
-        viande une fois par jour: 2.2
-        boeuf une fois par semaine: 1.2
-        végétarien: 0.9
-        végétarien sans produits laitiers: 0.5
-        végétalien bio local de saison: 0.3
+        viande une fois par jour: 2200
+        boeuf une fois par semaine: 1200
+        végétarien: 900
+        végétarien sans produits laitiers: 500
+        végétalien bio local de saison: 300
   note: |
     Pour l'instant, nous simplifions les saisies utilisateur en lui proposant un jeu de régimes possibles.
     Il est en effet possible de demander exactement les gr de viande par repas, ou le type exact de viande, mais ça lui demande une rigueur exemplaire dans le suivi de son régime.
@@ -512,3 +756,47 @@ alimentation . régime . végétarien sans produits laitiers:
   icônes: 🥗🐟
 alimentation . régime . végétalien bio local de saison:
   icônes: 🥗
+
+
+biens divers: 
+  couleur: '#0984e3'
+  formule: 
+    somme:
+      - textile
+      - électroménager
+      - autres produits
+
+biens divers . textile: 
+  icônes: 👗
+  formule:  0.3 * montant  
+  unité: kgCO2e/€
+biens divers . textile . montant: 
+  question: Combien dépensez-vous par an en textiles achetés hors seconde main (friperies, récupération, occasion…) ? 
+  unité: €/an
+  par défaut: 1000
+
+biens divers . électroménager: 
+  icônes: 👗
+  formule: 1 * montant  
+  unité: kgCO2e/€
+
+biens divers . électroménager . montant: 
+  question: Combien dépensez-vous par an en électroménager acheté hors seconde main (récupération, occasion…) ? 
+  unité: €/an
+  par défaut: 500
+
+biens divers . autres produits: 
+  icônes: 👗
+  formule: 0.055 * montant  
+  unité: kgCO2e/€
+
+biens divers . autres produits . montant: 
+  question: Combien dépensez-vous par an en produits manufacturés (mobilier, livres, etc.) ? 
+  unité: €/an
+  note: Cette catégorie est assez vague, il faudrait au moins donner plus d'exemples.
+  par défaut: 100
+
+
+
+
+
