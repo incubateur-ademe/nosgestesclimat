@@ -6,7 +6,7 @@ Ici résident les modèles de calcul et les données de de https://ecolab.ademe.
 
 ## ecolab-climat 🌍🥵
 
-Le modèle est déployé à chaque changement sur :anchor: l'adresse de démo [ecolab-climat.netlify.app](https://ecolab-climat.netlify.app/).
+Le modèle est déployé à chaque changement à l'adresse https://ecolab.ademe.fr/apps/micmac
 
 ### Ecriture des modèles du simulateur
 
