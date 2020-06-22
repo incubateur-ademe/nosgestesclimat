@@ -30,22 +30,27 @@ Le langage est décrit sur https://publi.codes. Il est développé par l'Etat da
 
 ## 🏗️ En pratique
 
-### Si vous voulez laisser une remarque ouverte en 2 minutes
+### Si vous n'avez que 2 minutes pour faire une remarque
 
 Si vous avez un compte Github, [créez simplement une issue](https://github.com/laem/ecolab-data/issues/new) qui parle de votre idée ou correction et qui contient le calcul ou les interrogations en français.
 
 Sinon, écrivez-nous à contact@ecolab.beta.gouv.fr.
 
-### Si vous voulez modifier un texte
+### Si vous voulez participer à l'amélioration du modèle
 
-Tous les textes, par exemple le texte d'une question ou le texte d'une suggestion de saisie, sont dans un gros fichier texte. C'est un langage très accessible que vous pouvez modifier directement. Pour cela il vous faut un compte Github, qui peut se créer gratuitement en 2-3 minutes.
+Tous les textes, par exemple le texte d'une question ou le texte d'une suggestion de saisie, sont stockés dans un fichier texte, gros mais facile à lire. C'est un langage très accessible que vous pouvez modifier directement. Pour cela il vous faut un compte Github, qui peut se créer gratuitement en 2-3 minutes.
+ 
+Puis suivez ces étapes : 
 
-Rendez-vous sur le fichier en question [ici](https://github.com/betagouv/ecolab-data/blob/master/co2.yaml). Cliquer sur l'icône ✏ en haut à droite, puis tapez Ctrl-F (pour lancer une recherche), cherchez le texte à modifier (par exemple "Quel est l'age de votre smartphone"), modifiez directement le texte sur cette page (corriger "age" en "âge"), puis cliquez sur le bouton vert `Propose file change`. Sur la page qui s'affiche intitulée "Comparing changes", cliquez sur le bouton vert `Create pull request`. 🎉 Bravo, l'équipe verra votre contribution et la validera si elle est parfaite. Sinon, on en discutera ensemble 🙂.
+- rendez-vous sur le fichier texte en question [ici](https://github.com/betagouv/ecolab-data/blob/master/co2.yaml). Cliquez sur l'icône ✏ en haut à droite, vous êtes en mode édition
+- cliquez n'importe où dans le contenu du fichier, puis tapez Ctrl-F (pour lancer une recherche), cherchez le texte à modifier (par exemple "Quel est l'age de votre smartphone"), modifiez directement le texte sur cette page (corriger "age" en "âge")
+- puis cliquez sur le bouton vert 🟩 `Propose file change`. Sur la page qui s'affiche intitulée "Comparing changes", cliquez sur le bouton vert `Create pull request`
+- 🎉 Bravo, l'équipe verra votre contribution et la validera si elle est parfaite. Sinon, on en discutera ensemble 🙂.
+
+- Ce n'est pas tout ! Vous pouvez maintenant tester le site comme si vos changements avaient été validés 😎 : une fois votre pull request (PR) créée, allez sur https://ecolab.ademe.fr/apps/micmac, ajoutez à la fin de l'adresse dans votre navigateur `?branch=X` où X est le nom de la branche de votre pull request.
 
 ### Vous êtes développeur - vous voulez découvrir le langage de publication
 
 Nous travaillons à un environnement Web de développement, vous pouvez en avoir un avant goût sur le [studio publicodes](https://publi.codes/studio). 
 
-Une PR sur ce dépôt betagouv/ecolab-data permettra finalement d'intégrer ces changements sur https://ecolab-climat.netlify.app.
-
-En attendant, pour travailler sur ces modèles YAML et voir voir vos changements mettre à jour l'interface de simulation (sans F5, c'est magique), il faut cloner ce dépôt vers un dossier nommé "ecolab-data", puis cloner [ecolab-climat](https://github.com/betagouv/ecolab-climat) à la même racine, entrer dans ecolab-climat et faire `yarn && yarn start`.
+Pour travailler sur ces modèles YAML et voir vos changements mettre à jour l'interface de simulation (sans F5, c'est magique), il faut cloner ce dépôt vers un dossier nommé "ecolab-data", puis cloner [ecolab-climat](https://github.com/betagouv/ecolab-climat) à la même racine, entrer dans ecolab-climat et faire `yarn && yarn start`.
