@@ -36,8 +36,18 @@ logement . habitants:
 
 logement . surface: 
   question: Quelle est la surface de votre logement ?
-  par défaut: 70
+  par défaut: 80
+  note: |
+    Valeur par défaut obtenue dans [ce rapport de l'INSEE](https://www.insee.fr/fr/statistiques/2586377).
+
+    > Les logements ont une surface moyenne d’un peu plus de 80 m2.
+  suggestions: 
+    studio: 25
+    2 pièces: 70
+    maison: 150
+    château 🏰: 1000
   unité: m²
+
 
 logement . construction . facteur:
   formule:  17.5   
@@ -153,11 +163,10 @@ logement . gaz . chauffage au gaz:
   question: Votre logement est-il chauffé au gaz ? 
   par défaut: non
 
-logement . gaz . chauffage au gaz . estimation via le coût: 
+logement . gaz . estimation via le coût: 
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
   unité: €/kWh
   formule: 0.074
-  aide: estimation via le coût
   description: |
     Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois. 
     Voir l'onglet "Calcul consommation Energie" du [tableur MicMac](https://avenirclimatique.org/wp-content/uploads/2020/04/2020-04-12_MicMac_V2.6.xlsx)
@@ -168,6 +177,7 @@ logement . gaz . consommation:
   question: Quelle est votre consommation annuelle de gaz ?
   par défaut: 3000
   unité: kWh
+  aide: estimation via le coût
   description: |
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
     Si vous utilisez plusieurs logements (par exemple une residence secondaire) il faut se debrouiller à "ramener" ces consommations dans celles du logement principal.
@@ -202,14 +212,18 @@ logement . fioul . consommation:
   description: |
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
     Si vous utilisez plusieurs logements (par exemple une residence secondaire) il faut se debrouiller à "ramener" ces consommations dans celles du logement principal.
-
   par défaut: 0
+  aide: estimation via le coût
+
 logement . fioul . intensité carbone:
   formule:  0.324
   unité: kgCO2e/kWh
 
 
 transport:
+  description: |
+    Sans surprise, le transport et avant tout le transport basé sur le pétrole constitue une part très importante de notre empreinte.
+
   couleur: '#b71540'
   icônes: 🚗
   formule: 
@@ -231,8 +245,11 @@ transport . voiture . voyageurs:
 
 transport . voiture . km:
   question: Quelle distance parcourez-vous en voiture à l'année ?
+  description: |
+    Ne comptez que les km de déplacement personnel et de déplacement domicile travail pour rejoindre votre lieu de travail habituel.
+    Par exemple, si vous êtes en mission professionnelle dans un autre département ou un autre pays cela rentre dans la comptabilité de votre entreprise.
   par défaut: 8000
-  unité: km
+  unité: km/an
   suggestions: 
     zéro: 0
     traverser la France: 2000
@@ -305,7 +322,7 @@ transport . voiture . construction:
   note: Il nous faudra trouver les variations d'empreinte de la construction, c'est surement significatif, au moin pour l'électrique.
 
 transport . voiture . âge:
-  question: Quelle est l'age de votre voiture ?
+  question: Quelle est l'âge de votre voiture ?
   description: | 
     Nous vous attribuons toute l'empreinte de la construction de la voiture.
 
@@ -313,15 +330,30 @@ transport . voiture . âge:
 
     Si vous possédez plusieurs voitures utilisées par vous même uniquement, ~~vendez au moins la deuxième~~ ce cas n'est pas encore prévu.
   unité: années
-  par défaut: 10
+  par défaut: 9
   suggestions: 
     neuve: 1
     5 ans: 5
     10 ans: 10
 transport . voiture . construction amortie:
-  formule: construction / (âge + 1)
+  formule: 
+    variations: 
+      - si: propriétaire
+        alors: construction / (âge + 1)
+      - sinon: construction / (9 * 2)
   unité: kgCO2e
-  note: âge + 1 pour éviter de faire une division par 0
+  note: |
+    Nous considérons qu'une voiture est utilisé en moyenne 9 ans [source](https://fr.wikipedia.org/wiki/Parc_automobile_fran%C3%A7ais#Anciennet%C3%A9).
+
+    Explication de la division par `9 * 2` pour le cas `location uniquement` : faute de données précises, nous considérons qu'une voiture de location dure elle aussi 9 ans (elle sera en général vendue dès qu'elle n'a plus l'aspect neuf, mais continuera d'être utilisée), mais qu'elle est deux fois plus utilisée en moyenne qu'une voiture personnelle, donc sa construction est deux fois plus amortie. C'est une grossière estimation qui nécessitera d'être corrigée.
+
+    > âge + 1 pour éviter de faire une division par 0 😁.
+
+transport . voiture . propriétaire:
+  question: Avez-vous votre propre voiture individuelle ?
+  description: |
+    Par opposition à l'utilisation exclusive de voitures de location, partagées par d'autres personnes le reste du temps.
+  par défaut: oui
 
 transport . voiture:
   non applicable si: km = 0
@@ -335,13 +367,18 @@ transport . avion . impact par heure:
   unité: kgCO2e/h
 transport . avion . heures de vol:
   question: Combien d'heures passez-vous annuellement dans un avion ?
-  description: Les suggestions sont basées sur la durée minimum arrondie de vol constatée dans les moteurs de recherche, doublée pour considérer un aller-retour.
+  description: | 
+    Les suggestions sont basées sur la durée minimum arrondie de vol constatée dans les moteurs de recherche, doublée pour considérer un aller-retour.
+
+    💡 Ne comptez que les km de déplacement personnel et de déplacement domicile travail pour rejoindre votre lieu de travail habituel.
+    Par exemple, si vous êtes en mission professionnelle dans un autre pays, cela rentre dans la comptabilité de votre entreprise.
   suggestions:
-    Paris↔Toulouse: 3
-    Brest↔Nice: 4
-    Paris↔New York: 20
-    Paris↔Sidney: 50
-  unité: h
+    🚫✈️: 0
+    Paris🔁Toulouse: 3
+    Brest🔁Nice: 4
+    Paris🔁New York: 20
+    Paris🔁Sidney: 50
+  unité: h/an
   par défaut: 3
 
 
@@ -355,10 +392,10 @@ transport . train . km:
   question: Combien de kilomètres parcourez-vous en train par an ?
   description: Les suggestions sont basées sur la distance à vol d'oiseau doublée pour considérer un aller-retour.
   suggestions: 
-    traverser la région: 300
+    traversée d'une région: 300
     Paris↔Lyon: 800
     Brest↔Nice: 2400 
-  unité: km
+  unité: km/an
   par défaut: 1000
 
 transport . métro ou tram:
@@ -380,7 +417,7 @@ transport . métro ou tram . heures par semaine:
     zéro: 0
     1h / jour: 7
     2h / jour: 14
-  unité: heures
+  unité: heures/semaine
   par défaut: 3
 
 transport . bus:
@@ -404,7 +441,7 @@ transport . bus . heures par semaine:
     zéro: 0
     1h / jour: 7
     2h / jour: 14
-  unité: heures
+  unité: heures/semaine
   par défaut: 3
 
 
@@ -424,7 +461,23 @@ finance:
   description: |
     Il faut estimer ici la valeur de vos actifs financiers (divisez par 2 si vous êtes en couple avec communauté réduite aux acquets).
 
-    L'empreinte carbone est différente entre les placements classiques et les placements responsables. Lorsque votre épargne ""travaille"", votre banque investit dans des projets qui peuvent plus ou moins avoir d'impact carbone en fonction de votre banque.
+    L'empreinte carbone est différente entre les placements classiques et les placements responsables. Lorsque votre épargne ""travaille"", votre banque investit dans des projets qui peuvent avoir plus ou moins d'impact climat.
+
+  note: |
+    Notons que la prise en compte de l'empreinte de votre épargne peut entraîner ce que l'on appelle un *double comptage*.
+
+    Par exemple : 
+      - j'ai de l'argent dans une banque française, et l'on suspecte que cet argent finance une compagnie pétrolière => on m'attribue une partie de l'impact de la production ou de la combustion de l'essence
+      - si je conduis ma voiture sur 1000km, on m'attribue l'ensemble des émissions des 70l d'essence
+    
+    Mon bilan est donc surestimé, car la même émission de CO2 a été comptée deux fois.
+
+    Nous sommes bien conscients de cet écueil, mais avons décidé de le garder pour les raisons suivantes : 
+      - le calcul de l'empreinte est complexe, et nous sous-estimons à l'inverse beaucoup d'autres postes qui "passent sous le radar"
+      - l'influence de notre argent en banque est réel, la liquidité étant un ingrédient essentiel d'une exploitation industrielle
+      - ce modèle d'empreinte climat est avant tout destiné à donner des ordres de grandeur, pas une empreinte à 100kg près
+
+
   formule: 
     somme: 
       - actifs classiques * intensité classique
@@ -479,6 +532,7 @@ numérique . internet:
   formule: 0.010 * durée journalière * 365
 numérique . internet . durée journalière: 
   question: Combien d'heures passez-vous par jour sur internet hors bureau (envoi de mail, surf Web, streaming vidéo, etc.) ?
+  description: Comptez seulement une estimation à la louche de vos heures hors bureau, car ce que vous faites au boulot entre dans la comptabilité de votre entreprise ou organisation.
   unité: heures/jour
   par défaut: 2
   suggestions: 
@@ -678,6 +732,14 @@ numérique . vidéoprojecteur:
 alimentation: 
   couleur: '#e58e26'
   icônes: 🍽
+  description: | 
+    Ce que l'on mange, et dans une moindre mesure ce que l'on boit, influence largement notre empreinte climat. 
+
+    La premier facteur est la quantité de viande et de laitages : 
+      - la production d'un kilo de viande émet du CO2, mais aussi d'autres gaz (comme le méthane) qui réchauffent le climat bien plus rapidement
+      - il faut nourrir les animaux avec des productions céréalières que l'on aurait pu manger nous-même, souvent issues de la déforestation.
+
+    Contrairement à ce que l'on entend souvent, la distance parcourue par nos aliments et la quantité d'emballages plastique sont au second plan.
   formule: 
     somme:
       - plats
@@ -709,10 +771,16 @@ alimentation . boisson . eau en bouteille . affirmatif:
   titre: Eau en bouteille
   question: Buvez-vous votre eau en bouteille ?
   par défaut: non
-  
+  note: | 
+    Les français boivent en moyenne entre 100 et 150 litres d'eau en bouteille par an [source](https://www.planetoscope.com/consommation-eau/854-litres-d-eau-en-bouteille-vendus-en-france.html), soit environ un tiers de nos besoins de 1-1,5l par jour [source](https://www.mangerbouger.fr/Le-Mag/Bien-etre/L-eau-indispensable-a-notre-bonne-sante).
 
+    Nous avons considéré que la valeur par défaut était donc "non".
 
 alimentation . boisson . sucrées: 
+  description: |
+    Notons que des alternatives au soda, très simples à préparer maison, sont possibles : c'est le cas du [kéfir](https://fr.wikipedia.org/wiki/K%C3%A9fir) ou [Kombucha](https://fr.wikipedia.org/wiki/Kombucha).
+
+    Nous n'avons pas évalué les gains d'empreinte offerts par ces alternatives, mais la préparation locale pour cet aliment très lourd, qui évite transports et emballages est sans doutes significative.
   unité: gCO2e
   formule: litres * nombre de semaines * facteur
 
@@ -732,6 +800,14 @@ alimentation . boisson . sucrées . litres:
 
 alimentation . boisson . alcool: 
   unité: gCO2e
+  description: |
+    Étonnamment, notre consommation d'alcool prend un rôle important dans notre empreinte. 
+
+    La bonne nouvelle, c'est que nous pouvons l'améliorer de façon très simple : plus que l'alimentation, une boisson est lourde, voyage beaucoup, et son emballage a une empreinte significative. 
+
+    > Prenons l'exemple d'une 🍺 bière de 25cl : brassée au bout du monde, elle a voyagé des milliers de kilomètres et son contenu (la boisson) est emballé dans un contenant qui fait presque le même poids (200g de verre). 
+
+    > En privilégiant une bière brassée localement, servie à la pression (le fût étant réutilisé des années), on peut réduire drastiquement l'empreinte sans changer la consommation.
   formule: litres * nombre de semaines * facteur
 
 alimentation . boisson . alcool . facteur: 
@@ -768,7 +844,12 @@ alimentation . plats:
 
 alimentation . régime: 
   question: Quel régime vous correspond le plus ?
-  description: Il existe une variété infinie de régimes. Nous en avons sélectionné quelques uns pour que vous obteniez une réponse facilement.
+  description: |
+    Il existe une variété infinie de régimes. Nous en avons sélectionné quelques uns pour que vous obteniez une réponse facilement.
+
+    Bientôt : 
+      - nous allons ajouter des options, comme le régime [planétaire](https://www.culture-nutrition.com/2019/01/28/modele-alimentaire-regime-planetaire/) ou le régime végétarien sans lait mais avec fromage
+      - vous pourrez définir votre propre régime ;)
   par défaut: viande une fois par jour
   formule:
     une possibilité: 
@@ -785,31 +866,51 @@ alimentation . régime . viande une fois par jour:
 alimentation . régime . boeuf une fois par semaine:
   icônes: 🐄
 alimentation . régime . végétarien:
-  icônes: 🥗🐟🧀
+  icônes: 🥗🧀
 alimentation . régime . végétarien sans produits laitiers:
-  icônes: 🥗🐟
+  icônes: 🥗
 alimentation . régime . végétalien bio local de saison:
   icônes: 🥗
 
 
 alimentation . déchets: 
-  formule: inévitables + évitables
+  formule: facteur * base
 
 alimentation . déchets . base: 
   formule: 200
   références: 
     - https://jancovici.com/changement-climatique/les-ges-et-nous/combien-de-gaz-a-effet-de-serre-dans-notre-poubelle/
-alimentation . déchets . évitables:
-  non applicable si: engagement zéro
-  formule: base * (2 / 3)
-alimentation . déchets . inévitables:
-  formule: base * (1 / 3)
-alimentation . déchets . engagement zéro: 
+
+alimentation . déchets . niveau d'engagement: 
   titre: Engagement zéro déchet
   question: Êtes-vous engagé dans une démarche zéro déchet ?
-  par défaut: non
-  description: Nous considérons qu'en cas d'engagement "zéro déchet", la quantité de gaz à effet de serre émis par personne est divisée par 3.
+  description: |
+    Nous considérons qu'en cas d'engagement "zéro déchet", la quantité de gaz à effet de serre émis par personne est divisée par 3. 
+
+    En effet, il est très difficile de se débarrasser d'une base minimale de déchets qui nous est imposée et souvent invisible.
+
+    Pour un engagement "en partie", en cours de transition vers cet idéal difficile à atteindre, nous prenons les 2/3 de l'empreinte moyenne.
   note: Il faudrait détailler ce calcul.
+  par défaut: pas du tout
+  formule:
+    une possibilité: 
+      choix obligatoire: oui
+      possibilités: 
+        - pas du tout
+        - en partie
+        - oui
+alimentation . déchets . niveau d'engagement . pas du tout: 
+alimentation . déchets . niveau d'engagement . en partie: 
+alimentation . déchets . niveau d'engagement . oui: 
+
+alimentation . déchets . facteur: 
+  formule: 
+    correspondance: 
+      variable: niveau d'engagement
+      tableau: 
+        pas du tout: 1
+        en partie: 0.6
+        oui: 0.3
 
 
 
@@ -827,7 +928,8 @@ biens divers . textile:
   formule:  0.3 * montant  
   unité: kgCO2e/€
 biens divers . textile . montant: 
-  question: Combien dépensez-vous par an en textiles achetés hors seconde main (friperies, récupération, occasion…) ? 
+  question: Combien dépensez-vous par an en textiles acheté neuf ?
+  description: Nous excluons du calcul l'achat en friperies, la récupération, l'occasion.
   unité: €/an
   par défaut: 1000
 
@@ -837,7 +939,8 @@ biens divers . électroménager:
   unité: kgCO2e/€
 
 biens divers . électroménager . montant: 
-  question: Combien dépensez-vous par an en électroménager acheté hors seconde main (récupération, occasion…) ? 
+  question: Combien dépensez-vous par an en électroménager acheté neuf ? 
+  description: Nous excluons du calcul la récupération et l'occasion.
   unité: €/an
   par défaut: 500
 
