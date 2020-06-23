@@ -815,23 +815,43 @@ alimentation . régime . végétalien bio local de saison:
 
 
 alimentation . déchets: 
-  formule: inévitables + évitables
+  formule: facteur * base
 
 alimentation . déchets . base: 
   formule: 200
   références: 
     - https://jancovici.com/changement-climatique/les-ges-et-nous/combien-de-gaz-a-effet-de-serre-dans-notre-poubelle/
-alimentation . déchets . évitables:
-  non applicable si: engagement zéro
-  formule: base * (2 / 3)
-alimentation . déchets . inévitables:
-  formule: base * (1 / 3)
-alimentation . déchets . engagement zéro: 
+
+alimentation . déchets . niveau d'engagement: 
   titre: Engagement zéro déchet
   question: Êtes-vous engagé dans une démarche zéro déchet ?
   par défaut: non
-  description: Nous considérons qu'en cas d'engagement "zéro déchet", la quantité de gaz à effet de serre émis par personne est divisée par 3.
+  description: |
+    Nous considérons qu'en cas d'engagement "zéro déchet", la quantité de gaz à effet de serre émis par personne est divisée par 3. 
+
+    En effet, il est très difficile de se débarrasser d'une base minimale de déchets qui nous est imposée et souvent invisible.
+
+    Pour un engagement "en partie", en cours de transition vers cet idéal difficile à atteindre, nous prenons les 2/3 de l'empreinte moyenne.
   note: Il faudrait détailler ce calcul.
+  formule:
+    une possibilité: 
+      choix obligatoire: oui
+      possibilités: 
+        - pas du tout
+        - en partie
+        - oui
+alimentation . déchets . niveau d'engagement . pas du tout: 
+alimentation . déchets . niveau d'engagement . en partie: 
+alimentation . déchets . niveau d'engagement . oui: 
+
+alimentation . déchets . facteur: 
+  formule: 
+    correspondance: 
+      variable: niveau d'engagement
+      tableau: 
+        pas du tout: 1
+        en partie: 0.6
+        oui: 0.3
 
 
 
