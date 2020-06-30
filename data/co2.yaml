@@ -344,14 +344,20 @@ transport . voiture . construction amortie:
     variations: 
       - si: propriétaire
         alors: construction / (âge + 1)
-      - sinon: construction / (9 * 2)
+      - sinon: construction / (9 * facteur location)
   unité: kgCO2e
   note: |
     Nous considérons qu'une voiture est utilisé en moyenne 9 ans [source](https://fr.wikipedia.org/wiki/Parc_automobile_fran%C3%A7ais#Anciennet%C3%A9).
 
-    Explication de la division par `9 * 2` pour le cas `location uniquement` : faute de données précises, nous considérons qu'une voiture de location dure elle aussi 9 ans (elle sera en général vendue dès qu'elle n'a plus l'aspect neuf, mais continuera d'être utilisée), mais qu'elle est deux fois plus utilisée en moyenne qu'une voiture personnelle, donc sa construction est deux fois plus amortie. C'est une grossière estimation qui nécessitera d'être corrigée.
 
     > âge + 1 pour éviter de faire une division par 0 😁.
+
+transport . voiture . construction amortie . facteur location: 
+  formule: 16300 / 13000
+  note: |
+    Faute de données précises, nous considérons qu'une voiture de location dure elle aussi 9 ans (elle sera en général vendue dès qu'elle n'a plus l'aspect neuf, mais continuera d'être utilisée), mais qu'elle est x fois plus utilisée en moyenne qu'une voiture personnelle, x étant le rapport entre les km parcourus par une voiture de location en moyenne et ceux par une voiture particulière. Voir le document en référence, page 150 et page 190.
+  références: 
+    - https://www.ademe.fr/sites/default/files/assets/documents/enquete-autopartage-2019-rapport.pdf
 
 transport . voiture . propriétaire:
   question: Avez-vous votre propre voiture individuelle ?
@@ -367,8 +373,22 @@ transport . avion:
   formule: heures de vol * impact par heure
 
 transport . avion . impact par heure:
-  formule:  188
+  formule:  vitesse moyenne * empreinte par km
   unité: kgCO2e/h
+transport . avion . vitesse moyenne:
+  formule: 750
+  unité: km/h
+  note: |
+    Nous utilisons la vitesse moyenne de vol du modèle MicMac v2.6, déterminée selon [ces données](http://www.abm.fr/voyager-en-avion-le-guide-du-passager/en-complement/distances-et-durees-de-vol.html).
+transport . avion . empreinte par km:
+  formule: 0.178
+  note: |
+    Nous utilisons le facteur d'émission de la tranche de distance 3000-3500 km (aller) de [ecolab-transport](https://github.com/betagouv/ecolab-transport/blob/master/ges-transport.yaml#L13).
+    
+    Dans un second temps, il faudra faire varier ce facteur d'émission en fonction de la distance du vol.
+  unité: kgCO2e/km
+
+
 transport . avion . heures de vol:
   question: Combien d'heures passez-vous annuellement dans un avion ?
   description: | 
@@ -376,12 +396,13 @@ transport . avion . heures de vol:
 
     💡 Ne comptez que les km de déplacement personnel et de déplacement domicile travail pour rejoindre votre lieu de travail habituel.
     Par exemple, si vous êtes en mission professionnelle dans un autre pays, cela rentre dans la comptabilité de votre entreprise.
+
   suggestions:
     🚫✈️: 0
     Paris🔁Toulouse: 3
     Brest🔁Nice: 4
-    Paris🔁New York: 20
-    Paris🔁Sidney: 50
+    Paris🔁New York: 17
+    Paris🔁Sidney: 52
   unité: h/an
   par défaut: 3
 
