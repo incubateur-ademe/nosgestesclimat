@@ -1,0 +1,201 @@
+logement:
+  couleur: '#04a4ac'
+  icônes: 🏘
+  formule: impact / habitants
+
+logement . impact:
+  formule: 
+    somme: 
+      - construction
+      - électricité
+      - chauffage autres
+logement . habitants: 
+  question: Combien de personnes vivent chez vous ?
+  par défaut: 2
+  unité: personnes
+
+logement . surface: 
+  question: Quelle est la surface de votre logement ?
+  par défaut: 80
+  note: |
+    Valeur par défaut obtenue dans [ce rapport de l'INSEE](https://www.insee.fr/fr/statistiques/2586377).
+
+    > Les logements ont une surface moyenne d’un peu plus de 80 m2.
+  suggestions: 
+    studio: 25
+    2 pièces: 70
+    maison: 150
+    château 🏰: 1000
+  unité: m²
+
+
+logement . construction . facteur:
+  formule:  17.5   
+  unité: kgCO2e/m²
+  
+logement . construction:
+  formule: surface * facteur
+  unité: kgCO2e
+
+logement . électricité:
+  formule: consommation * intensité carbone
+
+
+logement . électricité . consommation:
+  icônes: ⚡
+  question: Quelle est votre consommation d'éléctricité annuelle ?
+  unité: kWh
+  par défaut: 11000
+  aide: estimation via le coût
+  description: |
+    Astuce : vous trouverez votre consommation annuelle d'électricité sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
+
+    Si vous vivez dans plusieurs logements (par exemple, si vous avez une residence secondaire), essayez de "ramener" ces consommations dans celles du logement principal afin d'avoir l'estimation la plus juste possible.
+
+logement . électricité . estimation via le coût:
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  unité: €/kWh
+  formule: 0.15
+  description: |
+    Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût 15 centimes par mois sur 12 mois. 
+    Voir l'onglet "Calcul consommation Energie" du [tableur MicMac](https://avenirclimatique.org/wp-content/uploads/2020/04/2020-04-12_MicMac_V2.6.xlsx)
+
+logement . électricité . intensité carbone:
+  formule:  0.057
+  unité: kgCO2e/kWh
+  note: |
+    La v2.6 de MicMac donne une valeur de 12.4gCO2e/kWh pour les fournisseurs d'électricité "verte", mais cette valeur semble correspondre à un calcul théorique sur l'année, et non pas à un calcul réel, minute par minute.
+  
+logement . chauffage autres: 
+  formule: gaz + fioul + bois
+
+logement . bois: 
+  applicable si: chauffage au bois
+  formule: consommation * facteur d'émission
+
+logement . bois . chauffage au bois: 
+  question: Votre logement est-il chauffé au bois ?
+  par défaut: non
+
+logement . bois . consommation: 
+  formule: 
+    variations: 
+      - si: type = 'bûche'
+        alors: bûche
+      - sinon: granulés
+
+logement . bois . consommation . granulés: 
+  question: Quelle est votre consommation de bois en granulés ?
+  unité: kWh
+  aide: estimation via le coût
+  par défaut: 10000
+
+logement . bois . consommation . granulés . estimation via le coût:
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  unité: €/kWh
+  formule: 0.072
+  description: |
+    Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois. 
+    Voir l'onglet "Calcul consommation Energie" du [tableur MicMac](https://avenirclimatique.org/wp-content/uploads/2020/04/2020-04-12_MicMac_V2.6.xlsx)
+
+
+logement . bois . consommation . bûche: 
+  question: Quelle est votre consommation de bois en bûches ?
+  aide: estimation via le coût
+  unité: kWh
+  par défaut: 10000
+
+logement . bois . consommation . bûche . estimation via le coût:
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  unité: €/kWh
+  formule: 0.043
+  description: |
+    Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois. 
+    Voir l'onglet "Calcul consommation Energie" du [tableur MicMac](https://avenirclimatique.org/wp-content/uploads/2020/04/2020-04-12_MicMac_V2.6.xlsx)
+
+logement . bois . facteur d'émission: 
+  unité: kgCO2e/kWh
+  formule: 
+    correspondance: 
+      variable: type
+      tableau: 
+        bûche:  0.0295
+        granulés: 0.0304
+
+logement . bois . type:
+  titre: type de bois
+  question: Quel type de bois utilisez-vous ?
+  formule: 
+    une possibilité: 
+      choix obligatoire: oui
+      possibilités: 
+        - bûche
+        - granulés
+  par défaut: bûche
+logement . bois . type . bûche: 
+logement . bois . type . granulés: 
+
+logement . gaz:
+  applicable si: chauffage au gaz
+  formule: consommation * intensité carbone
+
+logement . gaz . chauffage au gaz: 
+  question: Votre logement est-il chauffé au gaz ? 
+  par défaut: non
+
+logement . gaz . estimation via le coût: 
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  unité: €/kWh
+  formule: 0.074
+  description: |
+    Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois. 
+    Voir l'onglet "Calcul consommation Energie" du [tableur MicMac](https://avenirclimatique.org/wp-content/uploads/2020/04/2020-04-12_MicMac_V2.6.xlsx)
+
+
+logement . gaz . consommation:
+  icônes: 🔥
+  question: Quelle est votre consommation annuelle de gaz ?
+  par défaut: 3000
+  unité: kWh
+  aide: estimation via le coût
+  description: |
+    Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
+    Si vous utilisez plusieurs logements (par exemple une residence secondaire) il faut se debrouiller à "ramener" ces consommations dans celles du logement principal.
+
+logement . gaz . intensité carbone:
+  formule:  0.227
+  unité: kgCO2e/kWh
+
+logement . fioul:
+  applicable si: chauffage au fioul
+  titre: Fioul domestique
+  formule: consommation * intensité carbone
+
+logement . fioul . chauffage au fioul: 
+  question: Votre logement est-il chauffé au fioul ? 
+  aide: estimation via le coût
+  par défaut: non
+
+logement . fioul . estimation via le coût: 
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  unité: €/kWh
+  formule: 0.07
+  description: |
+    Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois. 
+    Voir l'onglet "Calcul consommation Energie" du [tableur MicMac](https://avenirclimatique.org/wp-content/uploads/2020/04/2020-04-12_MicMac_V2.6.xlsx)
+
+
+logement . fioul . consommation:
+  icônes: 🛢
+  question: Quelle est votre consommation annuelle de fioul domestique ?
+  unité: kWh
+  description: |
+    Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
+    Si vous utilisez plusieurs logements (par exemple une residence secondaire) il faut se debrouiller à "ramener" ces consommations dans celles du logement principal.
+  par défaut: 0
+  aide: estimation via le coût
+
+logement . fioul . intensité carbone:
+  formule:  0.324
+  unité: kgCO2e/kWh
+
