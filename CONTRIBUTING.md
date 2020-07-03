@@ -30,6 +30,10 @@ Le langage est décrit sur https://publi.codes. Il est développé par l'Etat da
 
 ## 🏗️ En pratique
 
+### Avant tout : vérifier que votre question n'est pas déjà posée
+
+Il y a de grandes chances que ce soit déjà le cas : direction [l'onglet *issues*](https://github.com/betagouv/ecolab-data/issues), déjà bien rempli :)
+
 ### Si vous n'avez que 2 minutes pour faire une remarque
 
 Si vous avez un compte Github, [créez simplement une issue](https://github.com/laem/ecolab-data/issues/new) qui parle de votre idée ou correction et qui contient le calcul ou les interrogations en français.
