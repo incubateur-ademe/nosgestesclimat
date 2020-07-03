@@ -1,0 +1,185 @@
+
+alimentation: 
+  couleur: '#e58e26'
+  icônes: 🍽
+  description: | 
+    Ce que l'on mange, et dans une moindre mesure ce que l'on boit, influence largement notre empreinte climat. 
+
+    La premier facteur est la quantité de viande et de laitages : 
+      - la production d'un kilo de viande émet du CO2, mais aussi d'autres gaz (comme le méthane) qui réchauffent le climat bien plus rapidement
+      - il faut nourrir les animaux avec des productions céréalières que l'on aurait pu manger nous-même, souvent issues de la déforestation.
+
+    Contrairement à ce que l'on entend souvent, la distance parcourue par nos aliments et la quantité d'emballages plastique sont au second plan.
+  formule: 
+    somme:
+      - plats
+      - boisson
+      - déchets
+
+alimentation . boisson: 
+  icônes: 🍺
+  formule: 
+    somme: 
+      - sucrées
+      - alcool
+      - eau en bouteille
+
+alimentation . boisson . eau en bouteille:
+  applicable si: affirmatif
+  formule: 430.3
+  note: | 
+    Eau - en bouteille PET, plate, 0,5L - en magasin, prêt à consommer 0.393 kgCO2e/litre de liquide. 
+
+    Sur la base de 1,5L par jour. 
+
+    Base carbone consultée le 22/06/19.
+
+  références: 
+    - http://www.bilans-ges.ademe.fr/
+
+alimentation . boisson . eau en bouteille . affirmatif:
+  titre: Eau en bouteille
+  question: Buvez-vous votre eau en bouteille ?
+  par défaut: non
+  note: | 
+    Les français boivent en moyenne entre 100 et 150 litres d'eau en bouteille par an [source](https://www.planetoscope.com/consommation-eau/854-litres-d-eau-en-bouteille-vendus-en-france.html), soit environ un tiers de nos besoins de 1-1,5l par jour [source](https://www.mangerbouger.fr/Le-Mag/Bien-etre/L-eau-indispensable-a-notre-bonne-sante).
+
+    Nous avons considéré que la valeur par défaut était donc "non".
+
+alimentation . boisson . sucrées: 
+  description: |
+    Notons que des alternatives au soda, très simples à préparer maison, sont possibles : c'est le cas du [kéfir](https://fr.wikipedia.org/wiki/K%C3%A9fir) ou [Kombucha](https://fr.wikipedia.org/wiki/Kombucha).
+
+    Nous n'avons pas évalué les gains d'empreinte offerts par ces alternatives, mais la préparation locale pour cet aliment très lourd, qui évite transports et emballages est sans doutes significative.
+  unité: gCO2e
+  formule: litres * nombre de semaines * facteur
+
+alimentation . boisson . sucrées . facteur: 
+  formule: 1.1
+  note: Cette valeur est bien sûr très approximative.
+
+alimentation . boisson . sucrées . litres: 
+  titre: Consommation de boissons sucrées
+  question: Quelle est votre consommation par semaine de sodas, jus de fruit, sirops, etc. ?
+  suggestions: 
+    nulle: 0
+    modérée: 1
+    importante: 5
+  unité: l/semaine
+  par défaut: 2
+
+alimentation . boisson . alcool: 
+  unité: gCO2e
+  description: |
+    Étonnamment, notre consommation d'alcool prend un rôle important dans notre empreinte. 
+
+    La bonne nouvelle, c'est que nous pouvons l'améliorer de façon très simple : plus que l'alimentation, une boisson est lourde, voyage beaucoup, et son emballage a une empreinte significative. 
+
+    > Prenons l'exemple d'une 🍺 bière de 25cl : brassée au bout du monde, elle a voyagé des milliers de kilomètres et son contenu (la boisson) est emballé dans un contenant qui fait presque le même poids (200g de verre). 
+
+    > En privilégiant une bière brassée localement, servie à la pression (le fût étant réutilisé des années), on peut réduire drastiquement l'empreinte sans changer la consommation.
+  formule: litres * nombre de semaines * facteur
+
+alimentation . boisson . alcool . facteur: 
+  formule: 2
+  note: Le vin n'a pas la même empreinte que la bière au litre, c'est une grosse simplification.
+
+alimentation . boisson . alcool . litres: 
+  titre: Consommation d'alcool
+  question: Quelle est votre consommation par semaine d'alcool (vin, bière, etc.) ?
+  suggestions: 
+    nulle: 0
+    modérée: .5
+    importante: 2
+  unité: l/semaine
+  par défaut: 1
+
+
+
+alimentation . plats: 
+  formule:
+    correspondance: 
+      variable: régime
+      tableau: 
+        viande une fois par jour: 2200
+        boeuf une fois par semaine: 1200
+        végétarien: 900
+        végétarien sans produits laitiers: 500
+        végétalien bio local de saison: 300
+  note: |
+    Pour l'instant, nous simplifions les saisies utilisateur en lui proposant un jeu de régimes possibles.
+    Il est en effet possible de demander exactement les gr de viande par repas, ou le type exact de viande, mais ça lui demande une rigueur exemplaire dans le suivi de son régime.
+  références: 
+    - https://www.resistanceclimatique.org/livre
+
+alimentation . régime: 
+  question: Quel régime vous correspond le plus ?
+  description: |
+    Il existe une variété infinie de régimes. Nous en avons sélectionné quelques uns pour que vous obteniez une réponse facilement.
+
+    Bientôt : 
+      - nous allons ajouter des options, comme le régime [planétaire](https://www.culture-nutrition.com/2019/01/28/modele-alimentaire-regime-planetaire/) ou le régime végétarien sans lait mais avec fromage
+      - vous pourrez définir votre propre régime ;)
+  par défaut: viande une fois par jour
+  formule:
+    une possibilité: 
+      choix obligatoire: oui
+      possibilités: 
+        - viande une fois par jour
+        - boeuf une fois par semaine
+        - végétarien
+        - végétarien sans produits laitiers
+        - végétalien bio local de saison
+
+alimentation . régime . viande une fois par jour:
+  icônes: 🍖
+alimentation . régime . boeuf une fois par semaine:
+  icônes: 🐄
+alimentation . régime . végétarien:
+  icônes: 🥗🧀
+alimentation . régime . végétarien sans produits laitiers:
+  icônes: 🥗
+alimentation . régime . végétalien bio local de saison:
+  icônes: 🥗
+
+
+alimentation . déchets: 
+  formule: facteur * base
+
+alimentation . déchets . base: 
+  formule: 200
+  références: 
+    - https://jancovici.com/changement-climatique/les-ges-et-nous/combien-de-gaz-a-effet-de-serre-dans-notre-poubelle/
+
+alimentation . déchets . niveau d'engagement: 
+  titre: Engagement zéro déchet
+  question: Êtes-vous engagé dans une démarche zéro déchet ?
+  description: |
+    Nous considérons qu'en cas d'engagement "zéro déchet", la quantité de gaz à effet de serre émis par personne est divisée par 3. 
+
+    En effet, il est très difficile de se débarrasser d'une base minimale de déchets qui nous est imposée et souvent invisible.
+
+    Pour un engagement "en partie", en cours de transition vers cet idéal difficile à atteindre, nous prenons les 2/3 de l'empreinte moyenne.
+  note: Il faudrait détailler ce calcul.
+  par défaut: pas du tout
+  formule:
+    une possibilité: 
+      choix obligatoire: oui
+      possibilités: 
+        - pas du tout
+        - en partie
+        - affirmatif
+alimentation . déchets . niveau d'engagement . pas du tout: 
+alimentation . déchets . niveau d'engagement . en partie: 
+alimentation . déchets . niveau d'engagement . affirmatif:
+  titre: oui
+
+alimentation . déchets . facteur: 
+  formule: 
+    correspondance: 
+      variable: niveau d'engagement
+      tableau: 
+        pas du tout: 1
+        en partie: 0.6
+        affirmatif: 0.3
+
