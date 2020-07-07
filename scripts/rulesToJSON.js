@@ -1,11 +1,11 @@
 let yaml = require('yaml')
 let fs = require('fs')
 
-fs.readdir('../data/', 'utf8', (err, filenames) => {
+fs.readdir('./data/', 'utf8', (err, filenames) => {
 	if (err) console.error(err)
 
 	const rules = filenames.reduce((memo, filename) => {
-		const data = fs.readFileSync('../data/' + filename, 'utf8')
+		const data = fs.readFileSync('./data/' + filename, 'utf8')
 		const rules = yaml.parse(data)
 		return { ...memo, ...rules }
 	}, {})
