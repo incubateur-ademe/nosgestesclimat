@@ -39,7 +39,7 @@ transport . avion . coefficient de forçage radiatif:
 
 :pen: Suivez [le guide pour contribuer](https://github.com/betagouv/ecolab-data/blob/master/CONTRIBUTING.md).
 
-Tous les modèles sont pour l'instant dans le [fichier co2.yaml](https://github.com/betagouv/ecolab-climat/blob/master/co2.yaml).
+Tous les modèles sont dans [le dossier `data`](https://github.com/betagouv/ecolab-data/tree/master/data).
 
 
 
