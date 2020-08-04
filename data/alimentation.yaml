@@ -111,9 +111,18 @@ alimentation . boisson . alcool . litres:
 
 
 alimentation . déjeuner et dîner:
-  formule: plats
+  formule: par semaine * 52
+alimentation . déjeuner et dîner . par semaine:
+  formule: plats * 2
 
 alimentation . plats:
+  titre: Empreinte de 7 repas
+  description: |
+      A choisir : 7 plats types pour représenter une semaine complète de repas midi et soir (donc, petit-déjeuner non inclus). 
+
+      Pourquoi pas 14 (7 midis et 7 soirs) ? Nous pensons que la diversité du régime peut être représentée en 7 choix, ce qui est plus rapide que d'en renseigner 14 😊.
+      
+      Ceci est la somme de l'empreinte de ces 7 plats.
   formule: 
     somme:
       - viande 1
@@ -131,6 +140,7 @@ alimentation . plats:
         #      - peu de viande boeuf
         #      - peu de viande poulet
     note: |
+      
       Nous limitons le choix pour l'instant à 4 régimes. Ils sont basés sur les régimes représentatifs [documentés par l'ADEME](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm).
       
       Les repas viande ne sont déclinés qu'avec une quantité "classique" de viande.
@@ -157,6 +167,8 @@ alimentation . plats . végétarien:
   formule: empreinte * nombre
   icônes: 🥗🍳🧀
   description: |
+    Repas sans chair animale.
+
     Voici le menu type utilisé pour notre calcul.
 
     | Ingrédients  | Qte (g)  | Kcal  | Protéines (g)  | Lipides (g)  | gCO2e /kg  | gCO2e   |
@@ -179,49 +191,49 @@ alimentation . plats . végétarien . empreinte:
 
 alimentation . plats . végétarien . nombre:
   question: Nombre de plats végétariens par semaine
-  par défaut: 1
+  par défaut: 2
   période: semaine
 
 alimentation . plats . viande 1:
   titre: Animal impactant
   icônes: 🥩
   description: Repas contenant une pièce de boeuf, veau, ou agneau.
-  note: Les viandes chiffrées à plus de 20 kgC02e/kg ingéré.
+  note: Les viandes chiffrées à plus de 20 kg CO2e par kg ingéré.
   formule: empreinte * nombre
 alimentation . plats . viande 1 . empreinte:
   formule: 6.290
   note: C'est le "Repas classique 2 (avec bœuf)" [ici](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm).
 alimentation . plats . viande 1 . nombre:
-  question: Nombre de plats super boeuf par semaine
-  par défaut: 1
+  question: Nombre de plats types
+  par défaut: 2
   période: semaine
 
 alimentation . plats . viande 2:
   titre: Animal moins impactant
   icônes: 🍣🐚
   description: Repas contenant poisson, crustacés, lapin, ou canard.
-  note: Les viandes chiffrées à 6 - 10 kgC02e/kg ingéré.
+  note: Les viandes chiffrées à 6 - 10 kg CO2e par kg ingéré.
   formule: empreinte * nombre
 alimentation . plats . viande 2 . empreinte:
   formule: 666
 	note: Pas implémenté encore, non activité.
 alimentation . plats . viande 2 . nombre:
-  question: Nombre de plats super boeuf par semaine
-  par défaut: 1
+  question: Nombre de plats types
+  par défaut: 0
   période: semaine
   
 alimentation . plats . viande 3:
   titre: Animal peu impactant
   icônes: 🥓🍗🧀
   description: Repas contenant une pièce de poulet, porc, ou fromage.
-  note: Les viandes chiffrées à 5-6 kgC02e/kg ingéré.
+  note: Les viandes chiffrées à 5-6 kg CO2e par kg ingéré.
   formule: empreinte * nombre
 alimentation . plats . viande 3 . empreinte:
   formule: 1.350
   note: C'est le "Repas classique 1 (avec poulet)" [ici](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm).
 alimentation . plats . viande 3 . nombre:
-  question: Nombre de plats super boeuf par semaine
-  par défaut: 1
+  question: Nombre de plats types
+  par défaut: 2
   période: semaine
 
 alimentation . déjeuner et dîner 0: 
@@ -242,36 +254,6 @@ alimentation . déjeuner et dîner 0:
   références: 
     - https://www.resistanceclimatique.org/livre
 
-alimentation . régime: 
-  titre: Régime midi et soir
-  question: Pour vos repas du midi et du soir, quel régime vous correspond le plus ?
-  description: |
-    Il existe une variété infinie de régimes. Nous en avons sélectionné quelques uns pour que vous obteniez une réponse facilement.
-
-    Bientôt : 
-      - nous allons ajouter des options, comme le régime [planétaire](https://www.culture-nutrition.com/2019/01/28/modele-alimentaire-regime-planetaire/) ou le régime végétarien sans lait mais avec fromage
-      - vous pourrez définir votre propre régime ;)
-  par défaut: viande blanche une fois par jour
-  formule:
-    une possibilité: 
-      choix obligatoire: oui
-      possibilités: 
-        - viande rouge une fois par jour
-        - viande blanche une fois par jour
-        - viande rouge une fois par semaine
-        - viande blanche une fois par semaine
-        - végétarien
-        - végétarien sans laitages
-        - végétalien bio local de saison
-
-alimentation . régime . viande rouge une fois par jour:
-  icônes: 7️⃣/7️⃣ 🐄
-alimentation . régime . viande blanche une fois par jour:
-  icônes: 7️⃣/7️⃣ 🍖
-alimentation . régime . viande rouge une fois par semaine:
-  icônes: 1️⃣/7️⃣ 🐄
-alimentation . régime . viande blanche une fois par semaine:
-  icônes: 1️⃣/7️⃣ 🍖
 alimentation . régime . planétaire: 
   icônes: 🥗
   description: |
@@ -282,18 +264,6 @@ alimentation . régime . planétaire:
     Contrairement au vague régime "flexitarien", le régime planétaire est [décrit très précisément](https://www.culture-nutrition.com/2019/01/28/modele-alimentaire-regime-planetaire/).
 
     ![](https://eatforum.org/content/uploads/2019/02/EAT-Lancet_PHD_Plate_RGB-02.png)
-alimentation . régime . végétarien:
-  icônes: 🥗🧀
-  description: | 
-    TODO C'est quoi un régime végétarien ? Pas de poisson ? Oeuf ? 
-alimentation . régime . végétarien sans laitages:
-  icônes: 🥗
-  description: | 
-    TODO
-alimentation . régime . végétalien bio local de saison:
-  icônes: 🥗
-  description: |
-    TODO : ne pas mélanger le régime, le bio, le local et la saison.
 
 alimentation . petit déjeuner: 
   formule:
