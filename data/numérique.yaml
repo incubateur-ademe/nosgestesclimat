@@ -13,28 +13,34 @@ numérique:
       - home cinéma
 
 numérique . internet: 
-  formule: 0.010 * durée journalière * 365
+  formule: empreinte horaire * durée journalière * 365
+  unité: kgCO2e
+numérique . internet . consommation horaire:
+  formule: (0.12 + 0.24) / 2
+  unité: kWh/h
+  note: |
+    Ce chiffre a été retenu dans le calculateur MicMac version 2.6. La source est un article de CarbonBrief utilisant des données AIE, et critiquant les calculs du Shift Project.
+
+    > Taken together, my analysis suggests that streaming a Netflix video in 2019 typically consumed 0.12-0.24kWh of electricity per hour.
+
+    A faire : comment les calculs en source pondèrent-ils les usages (streaming, navigation Web, etc.) ? Est-ce une estimation de consommation de données par heure d'usage ? 
+  références: 
+    - https://www.carbonbrief.org/factcheck-what-is-the-carbon-footprint-of-streaming-video-on-netflix
+numérique . internet . empreinte horaire:
+  formule: consommation horaire * logement . électricité . intensité carbone
+  unité: kgCO2e/heure
+
 numérique . internet . durée journalière: 
   question: Combien d'heures passez-vous par jour sur internet hors bureau (envoi de mail, surf Web, streaming vidéo, etc.) ?
   description: Comptez seulement une estimation à la louche de vos heures hors bureau, car ce que vous faites au boulot entre dans la comptabilité de votre entreprise ou organisation.
-  unité: heures/jour
+  unité: heure
   par défaut: 2
   suggestions: 
     zéro: 0
     modérément: 2
     je ne décroche pas: 8
-  note: |
-    Voir comment les calculs en source pondèrent les usages. Est-ce une estimation de consommation de données par heure d'usage ? 
-  références: 
-    - https://www.carbonbrief.org/factcheck-what-is-the-carbon-footprint-of-streaming-video-on-netflix
 
     
-
-
-
-
-  
-
 
 numérique . appareil photo . présent:
   note: On range l'appareil photo dans la catégorie numérique vu la rareté des appareils argentiques aujourd'hui.
@@ -46,8 +52,9 @@ numérique . appareil photo . durée:
   par défaut: 4
 numérique . appareil photo:
   applicable si: présent
-  formule: 30 / durée
+  formule: 30 / (durée + 1)
   unité: kgCO2e
+  note: Nous estimons que l'appareil va durer un an de plus que l'âge renseigné au moment de l'estimation.
 
 numérique . home cinéma . présent:
   question: Utilisez-vous un home cinéma ?
@@ -58,8 +65,9 @@ numérique . home cinéma . durée:
   par défaut: 4
 numérique . home cinéma:
   applicable si: présent
-  formule: 133 / durée
+  formule: 133 / (durée + 1)
   unité: kgCO2e
+  note: Nous estimons que l'appareil va durer un an de plus que l'âge renseigné au moment de l'estimation.
 
 
 numérique . ordinateur . présent:
@@ -74,9 +82,11 @@ numérique . ordinateur:
     Pour l'instant, l'utilisateur a un ordinateur fixe avec écran, un portable sans écran, ou rien.
 
     Or il peut avoir un fixe et un portable. Ou un portable avec écran fixe.
+  
+    Nous estimons que l'appareil va durer un an de plus que l'âge renseigné au moment de l'estimation.
 
   applicable si: présent
-  formule: facteur / durée
+  formule: facteur / (durée + 1)
   unité: kgCO2e
 numérique . ordinateur . facteur: 
   formule:
@@ -113,7 +123,8 @@ numérique . téléphone . type:
   par défaut: smartphone moins de 5 pouces
 
 numérique . téléphone:
-  formule: impact / durée
+  formule: impact / (durée + 1)
+  note: Nous estimons que l'appareil va durer un an de plus que l'âge renseigné au moment de l'estimation.
 
 numérique . téléphone . durée:
   question: Quel âge a-t-il ? 
@@ -162,8 +173,9 @@ numérique . tablette . durée:
   par défaut: 4
 numérique . tablette:
   applicable si: présent
-  formule: 63 / durée
+  formule: 63 / (durée + 1)
   unité: kgCO2e
+  note: Nous estimons que l'appareil va durer un an de plus que l'âge renseigné au moment de l'estimation.
 
 numérique . TV . présent:
   question: Utilisez-vous une TV ?
@@ -174,10 +186,12 @@ numérique . TV . durée:
   par défaut: 4
 numérique . TV:
   applicable si: présent
-  formule: 63 / durée
+  formule: 63 / (durée + 1)
   unité: kgCO2e
   note: |
     Valeur pour 40-49 pouces.
+    
+    Nous estimons que l'appareil va durer un an de plus que l'âge renseigné au moment de l'estimation.
     
     La taille étant très variable, il serait mieux d'en faire des variations. 
 
@@ -195,7 +209,7 @@ numérique . vidéoprojecteur . durée:
   par défaut: 4
 numérique . vidéoprojecteur:
   applicable si: présent
-  formule: 94 / durée
+  formule: 94 / (durée + 1)
   unité: kgCO2e
 
 
