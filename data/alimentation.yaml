@@ -12,8 +12,9 @@ alimentation:
     Contrairement à ce que l'on entend souvent, la distance parcourue par nos aliments et la quantité d'emballages plastique sont au second plan.
   formule: 
     somme:
+      - petit déjeuner annuel
       - déjeuner et dîner
-      - petit déjeuner
+        #      - boissons chaudes
       - boisson
       - déchets
         # à venir peut-être dans une prochaine version
@@ -42,6 +43,7 @@ alimentation . boisson:
 alimentation . boisson . eau en bouteille:
   applicable si: affirmatif
   formule: 430.3
+  unité: kgCO2e
   note: | 
     Eau - en bouteille PET, plate, 0,5L - en magasin, prêt à consommer 0.393 kgCO2e/litre de liquide. 
 
@@ -119,7 +121,7 @@ alimentation . déjeuner et dîner . par semaine:
 alimentation . plats:
   titre: Empreinte de 7 repas
   description: |
-      A choisir : 7 plats types pour représenter une semaine complète de repas midi et soir (donc, petit-déjeuner non inclus). 
+      A choisir : 7 plats types pour représenter une semaine complète de repas midi et soir (donc, petit déjeuner non inclus). 
 
       Pourquoi pas 14 (7 midis et 7 soirs) ? Nous pensons que la diversité du régime peut être représentée en 7 choix, ce qui est plus rapide que d'en renseigner 14 😊.
       
@@ -316,23 +318,6 @@ alimentation . plats . viande 2 . nombre:
   par défaut: 2
   période: semaine
 
-alimentation . déjeuner et dîner 0: 
-  formule:
-    correspondance: 
-      variable: régime
-      tableau: 
-        viande rouge une fois par jour: 2200
-        viande blanche une fois par jour: 1200
-        viande rouge une fois par semaine: 1200
-        viande blanche une fois par semaine: 1000
-        végétarien: 900
-        végétarien sans laitages: 500
-        végétalien bio local de saison: 300
-  note: |
-    Pour l'instant, nous simplifions les saisies utilisateur en lui proposant un jeu de régimes possibles.
-    Il est en effet possible de demander exactement les gr de viande par repas, ou le type exact de viande, mais ça lui demande une rigueur exemplaire dans le suivi de son régime.
-  références: 
-    - https://www.resistanceclimatique.org/livre
 
 alimentation . régime . planétaire: 
   icônes: 🥗
@@ -345,20 +330,23 @@ alimentation . régime . planétaire:
 
     ![](https://eatforum.org/content/uploads/2019/02/EAT-Lancet_PHD_Plate_RGB-02.png)
 
+alimentation . petit déjeuner annuel: 
+  titre: Petit déjeuner
+  formule: petit déjeuner * 365
+
 alimentation . petit déjeuner: 
   formule:
-    correspondance: 
-      variable: type
-      tableau: 
-        français: français
-        britannique: britannique
+    variations: 
+      - si: type = 'français'
+        alors: français
+      - sinon: lait céréales
 
 alimentation . petit déjeuner . type: 
   question: Quel petit déjeuner vous correspond le plus ?
   description: |
     Il existe une variété infinie de petit déjeuners. Nous en avons sélectionné quelques uns pour que vous obteniez une réponse facilement.
 
-    Il manque votre petit-déjeuner et vous pensez ne pas pas être le seul à l'apprécier ? [Écrivez-nous](/contribuer).
+    Il manque votre petit déjeuner et vous pensez ne pas pas être le seul à l'apprécier ? [Écrivez-nous](/contribuer).
 
   par défaut: français
   formule:
@@ -370,6 +358,8 @@ alimentation . petit déjeuner . type:
         - lait céréales
           # - lait végétal céréales
 alimentation . petit déjeuner . lait céréales: 
+  note: | 
+    Vérifier ces proportions issues de FoodGES : correspondent-elles à un petit déjeuner moyen ?
   formule: 
     somme: 
       - lait
@@ -397,38 +387,74 @@ alimentation . céréales . empreinte:
 
 alimentation . céréales . poids: 
   formule: 0.135
-  note: Pourquoi dans FoodGES la masse d'ingrédient "consommables" est-elle très supérieure à la masse "sortie de magasin" ?
+  note: Pourquoi dans FoodGES la masse d'ingrédient "consommables" est-elle très supérieure à la masse "sortie de magasin" dans l'onglet details_Plats ?
 
 alimentation . petit déjeuner . français: 
+  note: |
+    Vérifier ces proportions issues de FoodGES : correspondent-elles à un petit déjeuner moyen ?
   formule:
     somme:
       - pain
       - viennoiserie
       - orange
-      - beurre
-      - confiture
+      - beurre doux
+        # Pas de facteur d'émission pour la confiture dans FoodGES
+        # - confiture
+
+alimentation . viennoiserie:
+  formule: 0.114
+  icônes: 🥐
+  description: Viennoiserie de type pain au chocolat. 
+  note: Il n'est pas détaillé dans FoodGES si le chocolat est pris en compte, et donc si cette viennoiserie est représentative du croissant.
 
 alimentation . pain:
+  icônes: 🥖
   formule: empreinte * poids
 alimentation . pain . empreinte:
-  formule: 1.5
+  formule: 1.52
   unité: kgCO2e/kg
   références: 
     - https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
 alimentation . pain . poids:
-  formule: 1000
+  formule: 0.040
+  unité: kg
+alimentation . beurre doux:
+  icônes: 🧈
+  formule: empreinte * poids
+alimentation . beurre doux . empreinte:
+  formule: 9.5
+  unité: kgCO2e/kg
+  références: 
+    - https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
+alimentation . beurre doux . poids:
+  formule: 0.010
   unité: kg
 
+alimentation . orange:
+  formule: 0.1
+  unité: kgCO2e
+  description: Orange fraîche. Production Espagne, Afrique du Sud et États Unis - pourcentage de production inclus.
+  références: 
+    - https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
 
 
 
 
+
+alimentation . petit déjeuner . type . lait céréales:
+  icônes: 🥣🎑
+  description: |
+    Un bol de lait de vâche et céréales.
 alimentation . petit déjeuner . type . français:
   icônes: 🥐🥖
   titre: Viennoiserie baguette
   description: |
     Il ne semble pas exister de petit déjeuner standard français (pas de page Wikipedia).  
+
+    Il semble proche du petit-déjeuner appelé ["continental"](https://fr.wikipedia.org/wiki/Déjeuner#Repas_de_type_continental).
+
     Ceci est une proposition parmi d'autres possibilités, qui peut bien sûr ne pas correspondre au votre.
+
   note: |
     Faut-il inclure du beurre, confiture ? Un pain au chocolat ? 
 
@@ -447,6 +473,7 @@ alimentation . déchets:
 
 alimentation . déchets . base: 
   formule: 734
+  unité: kgCO2e
   références: 
     - https://jancovici.com/changement-climatique/les-ges-et-nous/combien-de-gaz-a-effet-de-serre-dans-notre-poubelle/
 
