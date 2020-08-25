@@ -13,10 +13,11 @@ alimentation:
   formule: 
     somme:
       - déjeuner et dîner
-      - laitages
       - petit déjeuner
       - boisson
       - déchets
+        # à venir peut-être dans une prochaine version
+        # - laitages
 
 alimentation . laitages: 
   description: Cette question est importante au moins en France, où l'on consomme beaucoup de lait de vache et dont la gastronomie est renommée pour son fromage. 
@@ -349,13 +350,15 @@ alimentation . petit déjeuner:
     correspondance: 
       variable: type
       tableau: 
-        français: 6666
-        anglais: 6666
+        français: français
+        britannique: britannique
 
 alimentation . petit déjeuner . type: 
   question: Quel petit déjeuner vous correspond le plus ?
   description: |
     Il existe une variété infinie de petit déjeuners. Nous en avons sélectionné quelques uns pour que vous obteniez une réponse facilement.
+
+    Il manque votre petit-déjeuner et vous pensez ne pas pas être le seul à l'apprécier ? [Écrivez-nous](/contribuer).
 
   par défaut: français
   formule:
@@ -363,20 +366,76 @@ alimentation . petit déjeuner . type:
       choix obligatoire: oui
       possibilités: 
         - français
-        - anglais
+          #        - britannique
+        - lait céréales
+          # - lait végétal céréales
+alimentation . petit déjeuner . lait céréales: 
+  formule: 
+    somme: 
+      - lait
+      - céréales
+
+alimentation . lait: 
+  formule: empreinte * poids
+  références: 
+    - https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
+alimentation . lait . empreinte: 
+  formule: 1.2
+alimentation . lait . poids: 
+  formule: 0.202
+  note: FoodGES donne cette quantité de lait, la source ci-dessous donne un peu plus, 25cl.
+  références: 
+    - https://www.enviedebienmanger.fr/fiche-recette/recette-bol-de-lait-aux-muesli-et-fruits-rouges
+
+alimentation . céréales: 
+  formule: empreinte * poids
+  références: 
+    - https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
+
+alimentation . céréales . empreinte: 
+  formule: 0.34
+
+alimentation . céréales . poids: 
+  formule: 0.135
+  note: Pourquoi dans FoodGES la masse d'ingrédient "consommables" est-elle très supérieure à la masse "sortie de magasin" ?
+
+alimentation . petit déjeuner . français: 
+  formule:
+    somme:
+      - pain
+      - viennoiserie
+      - orange
+      - beurre
+      - confiture
+
+alimentation . pain:
+  formule: empreinte * poids
+alimentation . pain . empreinte:
+  formule: 1.5
+  unité: kgCO2e/kg
+  références: 
+    - https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
+alimentation . pain . poids:
+  formule: 1000
+  unité: kg
+
+
+
+
 
 alimentation . petit déjeuner . type . français:
-  icônes: 🥐
-  titre: Croissant baguette confiture
+  icônes: 🥐🥖
+  titre: Viennoiserie baguette
   description: |
     Il ne semble pas exister de petit déjeuner standard français (pas de page Wikipedia).  
     Ceci est une proposition parmi d'autres possibilités, qui peut bien sûr ne pas correspondre au votre.
   note: |
-    Faut-il inclure du beurre ? Un pain au chocolat ? 
+    Faut-il inclure du beurre, confiture ? Un pain au chocolat ? 
 
     On résoudra cette question en proposant plus de choix, sans noyer l'utilisateur.
 
-alimentation . petit déjeuner . type . anglais:
+alimentation . petit déjeuner . type . britannique:
+  titre: Britannique salé
   icônes: 🍳🥓
   description: |
     Le traditionnel déjeuner anglais ou irlandais : toasts, oeufs, bacon, baked beans, saucisses, tomates, champignons, pommes de terre. 
