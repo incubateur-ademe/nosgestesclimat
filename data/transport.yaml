@@ -14,7 +14,7 @@ transport:
 
 transport . voiture . voyageurs:
   question: Quel est le nombre moyen de voyageurs dans la voiture ?
-  par défaut: 1
+  par défaut: 1.2
   unité: voyageurs
   suggestions:  
     seul: 1
@@ -26,7 +26,7 @@ transport . voiture . km:
   description: |
     Ne comptez que les km de déplacement personnel et de déplacement domicile travail pour rejoindre votre lieu de travail habituel.
     Par exemple, si vous êtes en mission professionnelle dans un autre département ou un autre pays cela rentre dans la comptabilité de votre entreprise.
-  par défaut: 8000
+  par défaut: 11000
   unité: km/an
   suggestions: 
     zéro: 0
@@ -51,7 +51,7 @@ transport . voiture . motorisation . hybride:
   
 transport . voiture . thermique . consommation aux 100:
   question: Quelle est la consommation moyenne de votre voiture ?
-  par défaut: 8
+  par défaut: 6.5
   unité: l/100km
   note: Les suggestions sont à la louche, à préciser et sourcer.
   suggestions: 
@@ -118,7 +118,7 @@ transport . voiture . construction amortie:
     variations: 
       - si: propriétaire
         alors: construction / (âge + 1)
-      - sinon: construction / (9 * facteur location)
+      - sinon: (construction / 9) * facteur location
   unité: kgCO2e
   note: |
     Nous considérons qu'une voiture est utilisé en moyenne 9 ans [source](https://fr.wikipedia.org/wiki/Parc_automobile_fran%C3%A7ais#Anciennet%C3%A9).
@@ -127,9 +127,9 @@ transport . voiture . construction amortie:
     > âge + 1 pour éviter de faire une division par 0 😁.
 
 transport . voiture . construction amortie . facteur location: 
-  formule: 16300 / 13000
+  formule: km / 16300
   note: |
-    Faute de données précises, nous considérons qu'une voiture de location dure elle aussi 9 ans (elle sera en général vendue dès qu'elle n'a plus l'aspect neuf, mais continuera d'être utilisée), mais qu'elle est x fois plus utilisée en moyenne qu'une voiture personnelle, x étant le rapport entre les km parcourus par une voiture de location en moyenne et ceux par une voiture particulière. Voir le document en référence, page 150 et page 190.
+    Faute de données précises, nous considérons qu'une voiture de location dure elle aussi 9 ans. Cependant, on attribue à l'utilisateur l'impact de la construction au pro rata de son utilisation par rapport au km parcourus par la voiture sur une année.  
   références: 
     - https://www.ademe.fr/sites/default/files/assets/documents/enquete-autopartage-2019-rapport.pdf
 
