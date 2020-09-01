@@ -12,12 +12,53 @@ alimentation:
     Contrairement à ce que l'on entend souvent, la distance parcourue par nos aliments et la quantité d'emballages plastique sont au second plan.
   formule: 
     somme:
-      - plats
+      - petit déjeuner annuel
+      - déjeuner et dîner
+        #      - boissons chaudes
       - boisson
       - déchets
+        # à venir peut-être dans une prochaine version
+        # - laitages
+
+alimentation . laitages: 
+  description: Cette question est importante au moins en France, où l'on consomme beaucoup de lait de vache et dont la gastronomie est renommée pour son fromage. 
+  note: |
+    On trouve dans MicMac les quantités suivantes.
+
+    > Portion fromage : 0,05kg Portion laitages : 0,125 kg.
+
+    Ensuite les quantités de 3 catégories sont demandées en kg/semaine : fromage et beurre, laitages, lait.
+
+
+
 
 alimentation . boisson: 
-  icônes: 🍺
+  icônes: 🚰
+  formule: froide + chaude
+  
+alimentation . boisson . chaude: 
+  formule:
+    multiplication:
+      assiette: tasse de thé + tasse de café
+      facteur: 365
+	note: Nous faisons une moyenne très grossière, en attendant de poser la question de la consommation individuelle.
+
+alimentation . boisson . tasse de thé:
+  icônes: 🍵
+  formule: 0.0123
+  unité: kgCO2e
+  références:
+    - http://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
+
+alimentation . boisson . tasse de café:
+  icônes: ☕
+  formule: 0.0503
+  unité: kgCO2e
+  références:
+    - http://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
+
+alimentation . boisson . froide: 
+  icônes: 🍺🥤🧴
   formule: 
     somme: 
       - sucrées
@@ -27,6 +68,7 @@ alimentation . boisson:
 alimentation . boisson . eau en bouteille:
   applicable si: affirmatif
   formule: 430.3
+  unité: kgCO2e
   note: | 
     Eau - en bouteille PET, plate, 0,5L - en magasin, prêt à consommer 0.393 kgCO2e/litre de liquide. 
 
@@ -96,66 +138,395 @@ alimentation . boisson . alcool . litres:
 
 
 
-alimentation . plats: 
-  formule:
-    correspondance: 
-      variable: régime
-      tableau: 
-        viande rouge une fois par jour: 2200
-        viande blanche une fois par jour: 1200
-        viande rouge une fois par semaine: 1200
-        viande blanche une fois par semaine: 1000
-        végétarien: 900
-        végétarien sans produits laitiers: 500
-        végétalien bio local de saison: 300
-  note: |
-    Pour l'instant, nous simplifions les saisies utilisateur en lui proposant un jeu de régimes possibles.
-    Il est en effet possible de demander exactement les gr de viande par repas, ou le type exact de viande, mais ça lui demande une rigueur exemplaire dans le suivi de son régime.
-  références: 
-    - https://www.resistanceclimatique.org/livre
+alimentation . déjeuner et dîner:
+  formule: par semaine * 52
+alimentation . déjeuner et dîner . par semaine:
+  formule: plats
 
-alimentation . régime: 
-  question: Quel régime vous correspond le plus ?
+alimentation . plats:
+  titre: Empreinte de 14 repas
   description: |
-    Il existe une variété infinie de régimes. Nous en avons sélectionné quelques uns pour que vous obteniez une réponse facilement.
+      A choisir : 14 plats types pour représenter une semaine complète de repas midi et soir (donc, petit déjeuner non inclus). 
 
-    Bientôt : 
-      - nous allons ajouter des options, comme le régime [planétaire](https://www.culture-nutrition.com/2019/01/28/modele-alimentaire-regime-planetaire/) ou le régime végétarien sans lait mais avec fromage
-      - vous pourrez définir votre propre régime ;)
-  par défaut: viande blanche une fois par jour
+      Ceci est la somme de l'empreinte de ces 14 plats.
+  formule: 
+    somme:
+      - viande 1
+      #  à venir dans une v2
+      #  - viande 2
+      - viande 2
+      - végétalien
+      - végétarien
+      # Dans une v4, nous allons introduire ce régime flexitarien bien documenté
+      # - planétaire 
+        # A venir dans une v3
+        #      - beaucoup de viande poulet
+        #      - classique boeuf
+        #      - classique poulet
+        #      - peu de viande boeuf
+        #      - peu de viande poulet
+    note: |
+      
+      Nous limitons le choix pour l'instant à 4 régimes. Ils sont basés sur les régimes représentatifs [documentés par l'ADEME](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm).
+      
+      Les repas viande ne sont déclinés qu'avec une quantité "classique" de viande.
+      
+      Nous y ajoutons le régime végétalien, variation du végétarien.
+
+
+références: 
+  - https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
+
+alimentation . plats . végétalien:
+  formule: empreinte * nombre
+  icônes: 🌾🥜🥗
+  description: |
+    Repas sans produits animaux.
+
+    Voici le menu type utilisé pour notre calcul.
+
+    | Ingrédients  | Qte (g)  | Kcal  | Protéines (g)  | Lipides (g)  | gCO2e /kg  | gCO2e   |
+    |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+    |      Entrée : salade de légumes  |  |  |  |  |  |  |
+    | 200g légumes de saison  | 200  | 60  | 3  | 0  | 267  | 53.4  |
+    | noix françaises de saison | 10  | 71  | 1,3  | 6,7  | 1327  | 13,3  |
+    | huile (1/2 c.s.)  | 7  | 63  | 0  | 7  | 2153  | 15,1  |
+    |      Plat principal : tofu mariné, pommes de terre et oignons  |  |  |  |  |  |  |
+    | tofu  | 150  | 128  | 16  | 8  | 982  | 147,3  |
+    | pommes de terre  | 200  | 170  | 3  | 0,2  | 77  | 15.5  |
+    | huile (1/2 c.s.)  | 7  | 63  | 0  | 7  | 2153  | 17,1  |
+    |      Dessert : salade de fruits  |  |  |  |  |  |  |
+    | fruits de saison  | 200  | 100  | 2  | 0  | 267  | 53.4  |
+    | Pain  | 50  | 125  | 4  | 0,6  | 1520  | 76  |
+    | Total  |    | 776  | 29,3  | 29,5  |    | 393,9 |
+alimentation . plats . végétalien . empreinte:
+  formule: 0.394 
+  unité: kgCO2e
+  note: |
+    Pour l'instant, en l'absence de repas type végétalien dans la [base carbone](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm), nous prenons l'empreinte du repas végétarien, dans lequel nous substituons les 2 oeufs par du tofu et des noix dans l'entrée qui devient alors une salade, en gardant approximativement les mêmes quantités de calories et de protéines. 
+    > Note : on peut se demander pourquoi la recette fait mention d'une omelette aux oignons sans inclure les oignons. Négligeables ?
+
+    #### Ajout du tofu
+
+    Nous nous basons pour le tofu sur l'étude [Greenhouse Gas Emissions Generated by Tofu Production: A Case Study](https://www.researchgate.net/publication/317987931_Greenhouse_Gas_Emissions_Generated_by_Tofu_Production_A_Case_Study#read). La concordance des deux méthodes d'évaluation de l'empreinte reste à vérifier, et notons que l'étude elle-même metionne d'autres études évaluant une empreinte 2 fois plus importante (ce qui reste beaucoup moins que les produits animaux). L'étude nous dit les choses suivantes : 
+
+    > Total CO2e from packaged tofu were 982 g/kg, 9820 g/kg of protein, 1150 g/1000 calories, and 336 g/retail packet of 396g. 
+    > our tofu contained 850 kcal and 109 g protein per kilogram. 
+
+    Nous considérons que le tofu contient 5g de lipides pour 100g.
+
+    Notons finalement que le tofu considéré ici pourrait être remplacé par du soja français et une fabrication du tofu française décarbonée, notamment pour éviter la déforestation et réduire encore plus les émissions, donnant lieu à un régime végétalien local. Voir [ce papier](https://www.nature.com/articles/s43016-020-0106-x) à ce propos du soja et de la déforestation.
+
+    #### Ajout des noix
+    
+    Pour les noix, nous ajoutons 1 cerneau (10g sans la coquille), et nous utilisons l'empreinte climat de la base [FoodGES](https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23) de l'ADEME, `1,3kgCO2e/kg ingéré`, et les valeurs nutritives de [la page Wikipedia](https://fr.wikipedia.org/wiki/Noix#Valeur_nutritive). 
+alimentation . plats . végétalien . nombre:
+  question: Nombre de plats végétaliens par semaine
+  par défaut: 2
+  période: semaine
+
+alimentation . plats . végétarien:
+  formule: empreinte * nombre
+  icônes: 🥗🍳🧀
+  description: |
+    Repas sans chair animale, avec des oeufs ou un peu de fromage.
+
+    Voici le menu type utilisé pour notre calcul.
+
+    | Ingrédients  | Qte (g)  | Kcal  | Protéines (g)  | Lipides (g)  | gCO2e /kg  | gCO2e   |
+    |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+    |      Entrée : soupe de légumes  |  |  |  |  |  |  |
+    | 200g légumes de saison  | 200  | 60  | 3  | 0  | 267  | 53.4  |
+    | huile (1/2 c.s.)  | 7  | 63  | 0  | 7  | 2153  | 15,1  |
+    |      Plat principal : omelette aux pommes de terre et aux oignons  |  |  |  |  |  |  |
+    | 2 œufs  | 106  | 195  | 16  | 11  | 2610  | 276,7  |
+    | pommes de terre  | 200  | 170  | 3  | 0,2  | 77  | 15.5  |
+    | huile (1/2 c.s.)  | 7  | 63  | 0  | 7  | 2153  | 17,1  |
+    |      Dessert : salade de fruits  |  |  |  |  |  |  |
+    | fruits de saison  | 200  | 100  | 2  | 0  | 267  | 53.4  |
+    | Pain  | 50  | 125  | 4  | 0,6  | 1520  | 76  |
+    | Total  |    | 776  | 28  | 25,8  |    | 510 |
+
+alimentation . plats . végétarien . empreinte:
+  formule: 0.510
+  unité: kgCO2e
+  note: C'est le "Repas végétarien 1" [ici](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm).
+
+alimentation . plats . végétarien . nombre:
+  question: Nombre de plats végétariens par semaine
+  par défaut: 4
+  période: semaine
+
+
+  #alimentation . plats . viande 2:
+  #  titre: Animal moins impactant
+  #  icônes: 🍣🐚
+  #  description: Repas contenant poisson, crustacés, lapin, ou canard.
+  #  note: Les viandes chiffrées à 6 - 10 kg CO2e par kg ingéré.
+  #  formule: empreinte * nombre
+  #alimentation . plats . viande 2 . empreinte:
+  #  formule: 666
+  #	note: Pas implémenté encore, non activité.
+  #alimentation . plats . viande 2 . nombre:
+  #  question: Nombre de plats types
+  #  par défaut: 0
+  #  période: semaine
+  
+alimentation . plats . viande 1:
+  titre: Viande 1
+  icônes: 🍗🥓🧀
+  description: |
+    Repas contenant une pièce de poulet, porc, ou fromage.
+
+    Des viandes chiffrées à 5-6 kg CO2e par kg ingéré.
+
+    | Types de repas  | Qte (g)  | Kcal  | Protéines (g)  | Lipides (g)  | gCO2e /kg  | gCO2e   |
+    |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+    |      Entrée : légumes à la grecque  |  |  |  |  |  |  |
+    | légumes de saison  | 200  | 60  | 3  | 0  | 267  | 53,4  |
+    | huile d'olive (1/2 c.s.)  | 7  | 63  | 0  | 7  | 2600  | 18,2  |
+    |      Plat principal : poulet au riz  |  |  |  |  |  |  |
+    | poulet  | 150  | 225  | 30  | 10,5  | 5160  | 774  |
+    | riz  | 60  | 214  | 5  | 1  | 1410  | 84,6  |
+    | beurre  | 10  | 76  | 1  | 8,4  | 9490  | 94,9  |
+    |      Plateau de fromages  |  |  |  |  |  |  |
+    | fromage à pâte molle  | 25  | 68  | 5  | 5  | 4280  | 107  |
+    | fromage à pâte dure  | 25  | 100  | 7  | 7,5  | 5600  | 140  |
+    | Pain  | 50  | 125  | 4  | 0,6  | 1520  | 76  |
+    | Total  |    | 931  | 55  | 40  |    | 1350 |
+  note: C'est le "Repas classique 1 (avec poulet)" [ici](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm).
+  formule: empreinte * nombre
+alimentation . plats . viande 1 . empreinte:
+  formule: 1.350
+  unité: kgCO2e
+alimentation . plats . viande 1 . nombre:
+  question: Nombre de plats types
+  par défaut: 4
+  période: semaine
+
+alimentation . plats . viande 2:
+  titre: viande 2
+  icônes: 🥩🍖
+  description: |
+    Repas contenant une pièce de boeuf, veau, ou agneau. 
+
+    Les viandes chiffrées à plus de 20 kg CO2e par kg ingéré.
+
+    | Types de repas  | Qte (g)  | Kcal  | Protéines (g)  | Lipides (g)  | gCO2e /kg  | gCO2e   |
+    |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+    |      Entrée : tzatziki  |  |  |  |  |  |  |
+    | yaourt  | 125  | 75  | 5  | 4,4  | 2880  | 360  |
+    | concombre  | 75  |    | 1  |    | 1720  | 129  |
+    | huile d'olive (1/2 c.s.)  | 7  | 63  | 0  | 9  | 2600  | 18,2  |
+    |      Plat principal : bifteck - frites  |  |  |  |  |  |  |
+    | bifteck  | 150  | 222  | 37,5  | 6  | 35800  | 5370  |
+    | frites  | 200  | 228  | 4,6  | 7,3  | 1300  | 260  |
+    |      Dessert : tarte aux poires  |  |  |  |  |  |  |
+    | farine  | 40  | 136  | 4,8  | 0,8  | 1170  | 46,8  |
+    | poires  | 100  | 60  | 0,4  | 0  | 709,5  | 71  |
+    | huile (1 c.s.)  | 15  | 135  | 0  | 15  | 2153  | 32,3  |
+    | Total  |    | 919  | 53,3  | 42,5  |    | 6290 |
+  note: |
+
+    C'est le repas "classique 2" de la [base carbone](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm).
+
+    Notons que cette catégorie ne correspond pas à la définition vague de la viande rouge, qui peut par exemple inclure le porc ([source](https://fr.wikipedia.org/wiki/Viande_rouge#Eléments_de_définition)).
+  formule: empreinte * nombre
+alimentation . plats . viande 2 . empreinte:
+  formule: 6.290
+  unité: kgCO2e
+  note: C'est le "Repas classique 2 (avec bœuf)" [ici](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm).
+alimentation . plats . viande 2 . nombre:
+  question: Nombre de plats types
+  par défaut: 4
+  période: semaine
+
+
+alimentation . régime . planétaire: 
+  icônes: 🥗
+  description: |
+    Un régime décrit en 2019 pour concilier santé et environnement.
+
+    Enormément de légumes et de fruits, beaucoup de céréales complètes, protéines et huiles végétales, un peu de lait et fromage, un peu de viande et de poisson, et un peu de sucres ajoutés.
+
+    Contrairement au vague régime "flexitarien", le régime planétaire est [décrit très précisément](https://www.culture-nutrition.com/2019/01/28/modele-alimentaire-regime-planetaire/).
+
+    ![](https://eatforum.org/content/uploads/2019/02/EAT-Lancet_PHD_Plate_RGB-02.png)
+
+alimentation . petit déjeuner annuel: 
+  titre: Petit déjeuner
+  formule: petit déjeuner * 365
+
+alimentation . petit déjeuner: 
+  formule:
+    variations: 
+      - si: type = 'français'
+        alors: français
+      - si: type = 'lait céréales'
+        alors: lait céréales
+      - sinon: 0
+
+alimentation . petit déjeuner . type: 
+  question: Quel petit déjeuner vous correspond le plus ?
+  description: |
+    Il existe une variété infinie de petit déjeuners. Nous en avons sélectionné quelques uns pour que vous obteniez une réponse facilement.
+
+    Il manque votre petit déjeuner et vous pensez ne pas pas être le seul à l'apprécier ? [Écrivez-nous](/contribuer).
+
+  par défaut: français
   formule:
     une possibilité: 
       choix obligatoire: oui
       possibilités: 
-        - viande rouge une fois par jour
-        - viande blanche une fois par jour
-        - viande rouge une fois par semaine
-        - viande blanche une fois par semaine
-        - végétarien
-        - végétarien sans produits laitiers
-        - végétalien bio local de saison
+        - français
+          #        - britannique
+        - lait céréales
+          # - lait végétal céréales
+        - aucun
+alimentation . petit déjeuner . lait céréales: 
+  note: | 
+    Vérifier ces proportions issues de FoodGES : correspondent-elles à un petit déjeuner moyen ?
+  formule: 
+    somme: 
+      - lait
+      - céréales
 
-alimentation . régime . viande rouge une fois par jour:
-  icônes: 7️⃣/7️⃣ 🐄
-alimentation . régime . viande blanche une fois par jour:
-  icônes: 7️⃣/7️⃣ 🍖
-alimentation . régime . viande rouge une fois par semaine:
-  icônes: 1️⃣/7️⃣ 🐄
-alimentation . régime . viande blanche une fois par semaine:
-  icônes: 1️⃣/7️⃣ 🍖
-alimentation . régime . végétarien:
-  icônes: 🥗🧀
-alimentation . régime . végétarien sans produits laitiers:
-  icônes: 🥗
-alimentation . régime . végétalien bio local de saison:
-  icônes: 🥗
+alimentation . lait: 
+  formule: empreinte * poids
+alimentation . lait . empreinte: 
+  formule: 
+    variations: 
+      - si: lait végétal
+        alors: 0.950
+      - sinon: 1.390
+  unité: kgCO2e/kg
+  note: |
+    Pour le lait, en l'asbsence de données dans FoodGES pour le lait de soja, nous utilisons cette étude [Comparison between cow milk and soy milk combining nutritional values and GHG data](https://www.researchgate.net/publication/317600130_Comparison_between_cow_milk_and_soy_milk_combining_nutritional_values_and_GHG_data). 
 
+    Notons que l'empreinte du lait de vache estimée dans FoodGES est inférieure à celle de cette étude, mais dans le cadre de cette question nous préférons comparer deux empreintes obtenues par la même méthode.
+
+    La base agribalyse v3, qui sera disponible en octobre 2020, pourrait consolider ces données.
+
+alimentation . lait . lait végétal:
+  question: Est-ce du lait végétal, plutôt que du lait de vache ? 
+  description: |
+    Par lait végétal, nous entendons par exemple du lait de soja. 
+
+    > En comparaison au reste du poste "alimentation" pour les valeurs moyennes en France, la différence entre lait de soja et lait de vache peut sembler invisible, elle est pourtant significative.
+  par défaut: non
+
+alimentation . lait . poids: 
+  formule: 0.202
+  unité: kg
+  note: FoodGES donne cette quantité de lait, la source ci-dessous donne un peu plus, 25cl.
+  références: 
+    - https://www.enviedebienmanger.fr/fiche-recette/recette-bol-de-lait-aux-muesli-et-fruits-rouges
+
+alimentation . céréales: 
+  formule: empreinte * poids
+  références: 
+    - https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
+
+alimentation . céréales . empreinte: 
+  formule: 0.34
+  unité: kgCO2e/kg
+
+alimentation . céréales . poids: 
+  formule: 0.135
+  unité: kg
+  note: Pourquoi dans FoodGES la masse d'ingrédient "consommables" est-elle très supérieure à la masse "sortie de magasin" dans l'onglet details_Plats ?
+
+alimentation . petit déjeuner . français: 
+  note: |
+    Vérifier ces proportions issues de FoodGES : correspondent-elles à un petit déjeuner moyen ?
+  formule:
+    somme:
+      - pain
+      - viennoiserie
+      - orange
+      - beurre doux
+        # Pas de facteur d'émission pour la confiture dans FoodGES
+        # - confiture
+
+alimentation . viennoiserie:
+  formule: 0.114
+  icônes: 🥐
+  description: Viennoiserie de type pain au chocolat. 
+  note: Il n'est pas détaillé dans FoodGES si le chocolat est pris en compte, et donc si cette viennoiserie est représentative du croissant.
+
+alimentation . pain:
+  icônes: 🥖
+  formule: empreinte * poids
+alimentation . pain . empreinte:
+  formule: 1.52
+  unité: kgCO2e/kg
+  références: 
+    - https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
+alimentation . pain . poids:
+  formule: 0.040
+  unité: kg
+alimentation . beurre doux:
+  icônes: 🧈
+  formule: empreinte * poids
+alimentation . beurre doux . empreinte:
+  formule: 9.5
+  unité: kgCO2e/kg
+  références: 
+    - https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
+alimentation . beurre doux . poids:
+  formule: 0.010
+  unité: kg
+
+alimentation . orange:
+  formule: 0.1
+  unité: kgCO2e
+  description: Orange fraîche. Production Espagne, Afrique du Sud et États Unis - pourcentage de production inclus.
+  références: 
+    - https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
+
+
+
+
+
+alimentation . petit déjeuner . type . aucun:
+  titre: Pas de petit-dej'
+  description: |
+    Vous ne mangez rien au petit déjeuner (mais vous pouvez boire un café ou un thé).
+
+    À noter : nous intégrons automatiquement un café et un thé par jour dans le calcul. Vous pourrez bientôt nous en dire plus sur votre consommation personnelle.
+alimentation . petit déjeuner . type . lait céréales:
+  icônes: 🥣🎑
+  description: |
+    Un bol de lait céréales. Le lait peut être animal ou végétal. 
+alimentation . petit déjeuner . type . français:
+  icônes: 🥐🥖
+  titre: Viennoiserie baguette
+  description: |
+    Il ne semble pas exister de petit déjeuner standard français (pas de page Wikipedia).  
+
+    Il semble proche du petit-déjeuner appelé ["continental"](https://fr.wikipedia.org/wiki/Déjeuner#Repas_de_type_continental).
+
+    Ceci est une proposition parmi d'autres possibilités, qui peut bien sûr ne pas correspondre au votre.
+
+  note: |
+    Faut-il inclure du beurre, confiture ? Un pain au chocolat ? 
+
+    On résoudra cette question en proposant plus de choix, sans noyer l'utilisateur.
+
+alimentation . petit déjeuner . type . britannique:
+  titre: Britannique salé
+  icônes: 🍳🥓
+  description: |
+    Le traditionnel déjeuner anglais ou irlandais : toasts, oeufs, bacon, baked beans, saucisses, tomates, champignons, pommes de terre. 
+  références: 
+    - https://fr.wikipedia.org/wiki/Petit_déjeuner_anglais
 
 alimentation . déchets: 
   formule: facteur * base
 
 alimentation . déchets . base: 
   formule: 734
+  unité: kgCO2e
   références: 
     - https://jancovici.com/changement-climatique/les-ges-et-nous/combien-de-gaz-a-effet-de-serre-dans-notre-poubelle/
 
