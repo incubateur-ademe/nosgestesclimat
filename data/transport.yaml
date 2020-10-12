@@ -133,17 +133,45 @@ transport . voiture . âge:
   unité: années
   par défaut: 9
   suggestions: 
-    neuve: 1
+    6 mois: 0.5 
+    1 an et demi: 1.5
     5 ans: 5
     10 ans: 10
 transport . voiture . construction amortie:
   formule: 
     variations: 
       - si: propriétaire
-        alors: construction / (âge + 1)
+        alors: construction * amortissement particulier
       - sinon: (construction / durée de vie) * facteur location
   unité: kgCO2e
   note: On fait âge + 1 pour éviter de faire une division par 0 😁.
+
+transport . voiture . amortissement particulier:
+  description: |
+    Quand on achète une voiture, on fait émettre une quantité donnée de GES. Disons par exemple, 10 tonnes, pour une durée de vie de la voiture de 10 ans. Ces gaz sont émis l'année de l'achat, ou plus ou moins (certains composants auront déjà été produits). 
+
+    Il serait donc logique du point de vue de l'empreinte sur le climat, d'attribuer les émissions de la construction à la 1ère année. 
+
+    Sauf que beaucoup de voitures sont achetées par des entreprises avant d'être vendues d'occasion aux particuliers, ou entre particuliers. Il semble donc légitime de distribuer l'attribution dans le temps, donc au fur et à mesure des propriétaires. De la même façon, il faut aussi penser aux utilisateurs qui découvrivraient cet outil seulement l'année suivant l'achat d'une voiture : il est légitime de leur réserver une partie des émissions émises.
+
+    Deuxièmement, en attribuant toute l'empreinte à l'achat, on enverrait un signal fort qui désavantagerait le choix d'une voiture électrique par rapport à une thermique, alors qu'en France les émissions de cette dernière rattrapent la première dès les premières années d'usage.
+
+    D'où le choix d'amortir l'achat sur les 10 premières années (la durée de vie moyenne d'une voiture), avec un taux dégressif, en s'assurant bien que la somme de la part de chaque année donne 100%.
+    
+    Pour voir la réflexion ayant mené à cette méthode, voir [cette discussion](https://github.com/betagouv/ecolab-data/issues/225#issuecomment-689472950).
+  note: |
+    Quand on aura mis à jour le code avec la dernière version de publi.codes, on pourra utiliser le [mécanisme `grille`](https://publi.codes/mécanismes#grille) qui fait exactement ça.
+  formule: 
+    variations: 
+      - si: âge < 1
+        alors: 40%
+      - si: âge < 2
+        alors: 20%
+      - si: âge < 3
+        alors: 10%
+      - si: âge < 10
+        alors: 5%
+      - sinon: 0%
 
 transport . voiture . durée de vie: 
   formule: 10
