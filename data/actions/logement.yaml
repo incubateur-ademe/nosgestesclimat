@@ -44,7 +44,7 @@ logement . part chauffage . fioul:
 
 
 logement . éteindre appareils: 
-  formule: 33
+  formule: empreinte du foyer / habitants
   unité: kgCO2e
   titre: Eteindre mes appareils en veille
   icônes: 🏠📺
@@ -56,4 +56,29 @@ logement . éteindre appareils:
     Les veilles ont fait des progrès et consomment individuellement moins que par le passé : une directive européenne applicable depuis janvier 2017 limite leur puissance. Elle est de 0,5 W pour un certain nombre de catégories d’appareil, mais de 3 W pour les appareils qui restent connectés à Internet ou à des réseaux de donnée.
 
   note: |
-    Source : Guide pratique ADEME (page 18) [Réduire sa facture d'électricité](https://www.ademe.fr/sites/default/files/assets/documents/guide-pratique-reduire-facture-electricite.pdf).
+    Source : Guide pratique ADEME [Réduire sa facture d'électricité](https://www.ademe.fr/sites/default/files/assets/documents/guide-pratique-reduire-facture-electricite.pdf), page 18.
+
+logement . éteindre appareils . empreinte du foyer:
+  formule: énergie de veille * électricité . intensité carbone
+
+logement . énergie de veille: 
+  formule: puissance * temps d'absence 
+  unité: kWh
+
+logement . énergie de veille . puissance: 
+  formule: 0.050
+  description: |
+    > La puissance totale de ces veilles pour un ménage dépasse souvent 50 
+  note: |
+    Il est bien possible que l'on sous-estime le nombre de Watt en veille. Notamment, il apparait que les box internet et TV à elle-seules en consomme plus que 50. 
+
+    > La « box » est un équipement de plus en plus courant, qui reste souvent allumé 24 h sur 24 et qui génère une consommation pou-vant dépasser 200 kWh / an, soit autant que le lave-linge. Sa consommation totale sur un an se situe entre 150 et 300 kWh* : c'est autant qu'un grand réfrigérateur 
+
+  unité: kW
+logement . énergie de veille . temps d'absence: 
+  formule: 365 * journalier 
+  unité: h
+logement . énergie de veille . temps d'absence . journalier: 
+  formule: 12
+  unité: h
+  description: On suppose qu'en moyenne, on n'est pas présent chez soi la moitié du temps, ou on dort. La nuit (8h) et en moyenne 4h en journée, pour prendre en compte les weekends qui compensent les journées de travail de 8h, et le fait que tout le monde dans le foyer n'est pas absent au même moment.
