@@ -1,27 +1,241 @@
-réduire viande:
+### Réduction de la viande par 4 ###
 
-remplacer viande rouge . par viande blanche:
-  titre: Je remplace la viande rouge par de la viande blanche
-  formule: 180 # chiffre au pif, à personnaliser
-  icônes: 🍽🍖 #ajouter icone poulet
-réduire viande . par deux:
-  titre: Diviser ma consommation de viande par 2
-  formule: 500 # chiffre au pif, à personnaliser
-  icônes: 🍽🍖
-réduire viande . par quatre:
-  titre: Diviser ma consommation de viande par 4
-  formule: 1000 # chiffre au pif, à personnaliser
-  icônes: 🍽🍖
+alimentation . réduire viande . par quatre:
+  applicable si: nombre de plats viande > 0
+  titre: Manger 4 fois moins de viande
+  formule: par semaine * 52
+  icônes: 🍖📉
+    description: | #message informatif de la fiche
+      L’impact CO2 de notre alimentation est directement corrélé à notre consommation de produits carnés. En effet, la production d’1 kg de viande émet
+      de 5 à 10 fois plus de gaz à effet de serre que celle d’1 kg de céréale. De plus, notre consommation de produits carnés participe à mobiliser 
+      très fortement les sols et ce n’est pas moins de 80 % des surfaces agricoles qui sont dédiées à l’alimentation animale en France. 
+      Si vous souhaitez en savoir plus sur le poids carbone de l’alimentation animale consultez la rubrique en savoir plus
+    
+  #Budget
+  #Sur la base d’une famille constituée de 2 adultes et 2 enfants :
+      #Alimentation classique = 187 euros/semaine               Source : Vers une alimentation bas carbone, saine et abordable. Rapport WWF, 2017
+      #Alimentation faiblement carnée = 147 euros/semaine
 
-mode de vie:
+  #chiffres clefs  
+  #En France, 80 % des surfaces agricoles sont dédiées à l’alimentation animales : Scénario Afterres 2050, version 2016, Solagro
+  #1 kg de viande émet de 5 à 10 fois plus de gaz à effet de serre que celle d’1 kg de céréale
+      #Source : Manger mieux, gaspiller moins. Pour alimentation saine et durable, Ademe, septembre 2019.
+  
+alimentation . réduire viande . par quatre . par semaine:
+  formule: plats - nouveau régime
+  
+alimentation . réduire viande . par quatre . par semaine . nouveau régime:
+  formule: #J'ai du mal à comprendre comment cette formule réoriente le nombre de plats viande vers plats végé + je pense que le nombre réorienté est faux mais copié/adapté Mael
+    somme: 
+      - plats . viande 1 / 4
+      - plats . viande 2 / 4
+      - plats . végétalien
+      - plats . végétarien
+      - plats . végétarien + (nombre de plats viande / 4)
+      
+### Réduction produits animaux par 2 ###
 
-lutte gaspi alimentaire:
-  titre : Je réduis mon gaspillage alimentaire
-  formule : 31 # chiffre générique issu étude Ademe. 
-               # Essayer de pondérer (25% 50% 75% de la réduc) avec une question type "Gaspillez vous de la nourriture ?" à tt les repas ; svt ; parfois ; jms
-  icônes : 🍽 # rajoutez un icone poubelle avec celui de l'assiette
-réduire emballage alimentaire:
+# A discuter de la formule mais il me parait pertinent de proposer cette action
+
+alimentation . réduire végétarien . par deux:
+  applicable si: plats . végétarien . nombre > 0
+  titre: Je divise par 2 les oeufs et les produits laitiers que je consomme 
+  formule: par semaine * 52
+  icônes: 🧀📉
+  
+alimentation . réduire végétarien . par deux . par semaine:
+  formule: plats - nouveau régime
+  
+alimentation . réduire végétarien . par deux . par semaine . nouveau régime:
+  formule: #J'ai du mal à comprendre comment cette formule réoriente le nombre de plats végétarien vers plats végétalien + je pense que le nombre réorienté est faux mais copié/adapté Mael
+    somme: 
+      - plats . viande 1
+      - plats . viande 2
+      - plats . végétalien  + (plats . végétarien . nombre / 2)
+      - plats . végétarien / 2
+
+### Modification alimentation carné ###
+
+alimentation . modification viande:
+  applicable si: plats . viande 2 . nombre > 0  
+  titre: Je modifie mon apport carné pour privilégier la viande blanche
+  formule: par semaine * 52
+  icônes: 🥩➡️🍗
+  description: | #message informatif de la fiche
+    L’impact CO2 de notre alimentation est directement corrélé à notre consommation de produits carnés. Cependant, toutes les viandes n’ont pas le même 
+    impact climat. Certaines contribuent à émettre, lors de leur élevage, plus de GES que d’autres. C’est le cas du bœuf pour lequel il faut 11 calories
+    d'origine végétale pour produire en produire 1 de boeuf contre 4 calories d'origine végétale pour produire 1 calorie de porc ou de volaille.
+    
+  #chiffres clefs  
+  #En France, 80 % des surfaces agricoles sont dédiées à l’alimentation animales : Scénario Afterres 2050, version 2016, Solagro
+  #Il faut 11 calories d'origine végétale pour produire 1 calorie de bœuf, ou de mouton et 4 calories d'origine végétale pour produire 1 calorie de porc ou de volaille
+      #Source : Une voie étroite pour la sécurité alimentaire d'ici à 2050. Philippe Collomb / Le défi alimentaire à l’horizon 2050. Rapport d’information, 11 mai 2020, Sénat
+      
+      
+alimentation . modification viande . par semaine:
+  formule: plats - nouveau régime
+
+alimentation . modification viande . par semaine . nouveau régime:
+  formule: #J'ai du mal à comprendre comment cette formule réoriente le nombre de plats viande 2 vers plats viande1 mais copié/adapté de Mael
+    somme: 
+      - plats . viande 1 + plats . viande 2 . nombre 
+      - plats . végétalien
+      - plats . végétarien
+
+### Alimentation de saison ###
+
+# A faire : Déterminer la formule pour évaluer l'action
+
+alimentation . saison :
+  titre : Je consomme des produits de saison 
+  icônes : 🍅☀️ 
+  description: | #message informatif de la fiche
+    De nos jours, il devient même de plus en plus difficile de connaître avec exactitude la saisonnalité des produits que l’on mange et parfois même 
+    leur provenance. Cette prolifération d’aliments hors saisonnalité et lointains contribue malheureusement à majorer fortement l’empreinte carbone de 
+    notre alimentation. Ainsi la production de légumes sous serres chauffées nécessite une consommation d’énergie 10 fois supérieure et émet 10 à 20 fois 
+    plus de gaz à effet de serre qu’une culture en plein champ. Choisir des fruits et légumes locaux et de saison participe donc à la fois à réduire 
+    les transports intermédiaires, à diminuer l’énergie nécessaire pour faire pousser fruits et légumes  et à soutenir l’économie locale.
+
+  #chiffres clefs  
+  #Une tomate (consommée hors saison) et provenant du Maroc c’est 4 fois plus d’eau utilisée qu’une tomate française de plein champ consommée en pleine saison
+      #Source : Alimentation et environnement, champs d’actions pour les professionnels, Octobre 2016, Ademe
+  #La production de légumes sous serres chauffées émet 10 à 20 fois plus de gaz à effet de serre qu’une culture en plein champ
+      #Source : Manger mieux, gaspiller moins. Pour alimentation saine et durable, Ademe, septembre 2019.
+
+  question: A quelle fréquence consommez-vous des produits de saison ?
+  par défaut: souvent
+  une possibilité: 
+      choix obligatoire: oui
+      possibilités: 
+        - tout le temps
+        - très fréquemment
+        - souvent
+        - épisodiquement
+        - jamais
+  formule:
+    variations:
+      - si: saison = 'tout le temps'
+         alors: #à déterminer ! sur le même type que réduction des déchets et gaspi alimentaire ?
+       - si: saison = 'très fréquemment'
+         alors: #à déterminer ! sur le même type que réduction des déchets et gaspi alimentaire ?
+       - si: #etc.
+
+### Alimentation locale ###
+
+# A faire : Déterminer la formule pour évaluer l'action
+
+alimentation . locale:
+  titre : Je consomme des produits locaux en privilégiant le circuit court #Attention au dernier km
+  icônes : 🍅🍄🇫🇷 
+  description: | #message informatif de la fiche
+    De nos jours, il devient même de plus en plus difficile de connaître avec exactitude la saisonnalité des produits que l’on mange et parfois même 
+    leur provenance. Cette prolifération d’aliments hors saisonnalité et lointains contribue malheureusement à majorer fortement l’empreinte carbone 
+    et l'impact environnemental de notre alimentation. Ainsi Une tomate (consommée hors saison) et provenant du Maroc c’est 4 fois plus d’eau utilisée 
+    qu’une tomate française de plein champ consommée en pleine saison. Choisir des fruits et légumes locaux  permet donc de réduire 
+    les transports intermédiaires tout en soutenant l’économie locale.
+
+  #chiffres clefs  
+  #Une tomate (consommée hors saison) et provenant du Maroc c’est 4 fois plus d’eau utilisée qu’une tomate française de plein champ consommée en pleine saison
+      #Source : Alimentation et environnement, champs d’actions pour les professionnels, Octobre 2016, Ademe
+
+  question: A quelle fréquence consommez-vous des produits locaux ?
+  par défaut: souvent
+  une possibilité: 
+      choix obligatoire: oui
+      possibilités: 
+        - tout le temps
+        - très fréquemment
+        - souvent
+        - épisodiquement
+        - jamais
+  formule:
+    variations:
+      - si: locale = 'tout le temps'
+         alors: #à déterminer ! sur le même type que réduction des déchets et gaspi alimentaire ?
+       - si: locale = 'très fréquemment'
+         alors: #à déterminer ! sur le même type que réduction des déchets et gaspi alimentaire ?
+       - si: #etc.
+
+### Réduction des emballages alimentaires ###
+
+alimentation . déchets . réduire:
   titre : Je contribue à réduire les emballages alimentaires
-  formule : 133 # chiffre générique issu MicMac (Jean Co).
-                # Essayer de pondérer (25% 50% 75% de la réduc) avec une question "Essayez vous de réduire les emballages alimentaires ?" démarche zéro déchets;svt;parfois;jms
-  icônes : 🍽 # remplacer par un icone sac plastique
+  icônes : ❌🛍️
+  description: | #message informatif de la fiche
+    Les emballages alimentaires font partis intégrantes de nos modes de vies et de notre alimentation. C’est ainsi que 85% des emballages jetés par 
+    les ménages sont des emballages alimentaires et que, chaque année, en Europe, 25,8 millions de tonnes de déchets plastique sont ainsi produites, 
+    dont 60% proviennent seulement, là encore, des emballages alimentaires. Depuis la généralisation du plastique dans les années 60 il est, en effet,
+    très rare de trouver un produit non emballé dans du plastique. Produit de la pétrochimie, l’utilisation de cette matière plastique contribue à émettre 
+    des gaz à effet de serre et son recyclage est extrêmement difficile. Œuvrer à réduire l’utilisation des emballages permet donc à la fois de limiter 
+    notre impact sur le climat et de réduire la pollution plastique des milieux naturels. 
+   
+  formule:
+    variations:
+      - si: niveau d'engagement = 'pas du tout'
+         alors: déchets - (déchets * 0.3)  #impact action = passer de 734 kgCO2 (pas du tout) à 734*0.3 kgCO2 (oui)
+       - si: niveau d'engagement = 'en partie'
+         alors: (déchets * 0.6) - (déchets * 0.3) #impact action = passer de 734*0.6 kgCO2 (en partie) à 734*0.3 kgCO2 (oui)
+         
+  #chiffres clefs  
+  #85% des emballages jetés par les ménages sont des emballages alimentaires. Source : http://multimedia.ademe.fr/animations/alimentation/
+  #En Europe, chaque année, 25,8 millions de tonnes de déchets plastique sont ainsi produites, dont 60% proviennent des emballages : zerowastefrance.org/demarche-zero-waste/reduire-le-jetable/
+
+### Réduction du gaspillage alimentaire ###
+
+alimentation . gaspi alimentaire:
+  question: A quelle fréquence jetez-vous des aliments (qu'ils aient été cuisiné ou non) ?
+  unité: kgCO2e
+  par défaut: souvent
+  une possibilité: 
+      choix obligatoire: oui
+      possibilités: 
+        - presque tout le temps: 60
+        - très fréquemment: 51.5
+        - souvent: 44
+        - épisodiquement: 36.5
+        - jamais: 29
+
+alimentation . gaspi alimentaire . reduction:
+  titre : Je réduis mon gaspillage alimentaire
+  icônes : 🍽❌🚮
+  description: | #message informatif de la fiche
+    Le gaspillage alimentaire s’élève, en France, à environ 32 kg jetés par personne et par an dont 7 kg d’aliments encore emballés. Si l’on considère 
+    l’ensemble de la chaîne de valeur (du champ à l’assiette) c’est environ 10 millions de tonnes d'aliments qui sont gaspillées par an, 
+    soit 150 kg par habitant. Mettre en place des gestes simples pour réduire le gaspillage alimentaire permet donc d’éviter de produire pour jeter,
+    réduisant, par conséquent, les tensions sur les ressources et notre impact sur le climat. 
+    Pour en savoir plus sur les gestes que vous pouvez mettre en place, consultez la rubrique en savoir plus
+   
+  #budget
+  #Le gaspillage alimentaire représente de 100 à 160 euros par personne et par an dépensé inutilement : casuffitlegachis.fr Ademe, novembre 2019
+  
+  #chiffres clefs    
+  #En France, environ 32 kg de déchets alimentaires jetés par personne et par an dont 7 kg d’aliments encore emballés : même source
+  #En France, si l’on considère l’ensemble de la chaîne de valeur (du champ à l’assiette) c’est environ 10 millions de tonnes d'aliments qui sont gaspillées 
+  #par an, soit 150 kg par habitant : même source 
+  #Dans le monde, environ 1/3 des aliments destinés à la consommation humaine est perdue tout au long de la chaîne alimentaire (perte alimentaire entre la 
+  #récolte et la vente au détail + gaspillage alimentaire) soit 1.3 milliard de tonnes par an : Pertes et gaspillages alimentaires dans le monde, ONU pour l’alimentation et l’agriculture, 2011
+  
+  formule:
+    variations:
+      - si: gaspi alimentaire = 'presque tout le temps'
+         alors: 60 - 29
+       - si: gaspi alimentaire = 'fréquemment'
+         alors: 51.5 - 29
+       - si: gaspi alimentaire = 'souvent'
+         alors: 44 - 29
+       - si: gaspi alimentaire = 'épisodiquement'
+         alors: 36.5 - 29      
+         
+
+### Se passer de produits surgelés ###
+
+# A faire : Déterminer la formule pour évaluer l'action. 
+# Faire éventuellement comme pour l'action 'réduction emb alimentaires' avec un ratio (fonction de sa conso de surgelés) appliqué à une réduction moyenne
+
+titre : Je me passe de produits surgelés
+  icônes : 🍽🧊
+  description: | #message informatif de la fiche
+
+
+### Se passer de produits transformés ###    Attention car tout les produits transformés ne sont pas à banir
+ 
