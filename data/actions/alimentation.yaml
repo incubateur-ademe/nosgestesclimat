@@ -1,14 +1,38 @@
-réduire viande:
+alimentation . réduire viande:
 
-réduire viande . par quatre:
-  titre: Diviser ma consommation de viande par 4
-  formule: 1000 # chiffre au pif, à personnaliser
-  icônes: 🍽🍖
+alimentation . réduire viande . par deux:
+  applicable si: nombre de plats viande > 0
+  titre: Manger 2 fois moins de viande
+  formule: par semaine * 52
+  icônes: 🍖📉
+  description: |
+    Il est tout à fait possible de réduire significativement l'empreinte de son alimentation, sans devenir strictement végétarien.
+
+    Sur ce geste, on remplace la moitié de vos repas avec viande par des repas végétarien.
+alimentation . réduire viande . par deux . par semaine:
+  formule: plats - nouveau régime
+alimentation . réduire viande . par deux . par semaine . nouveau régime:
+  formule: 
+    somme: 
+      - plats . viande 1 / 2
+      - plats . viande 2 / 2
+      - plats . végétalien
+      - plats . végétarien
+      - compensation végétarienne
+
+
+alimentation . réduire viande . par deux . par semaine . nouveau régime . compensation végétarienne:
+  formule: plats . végétarien . empreinte * (nombre de plats viande / 2)
+  description: On compense la division par 2 des plats de viande par des plats végétariens.
 
 alimentation . devenir végétarien:
+  applicable si: nombre de plats viande > 0
   formule: par semaine * 52
   icônes: 🥗🧀
-  description: Adopter un régime végétarien, donc sans viande (mais avec des oeufs, du lait).
+  description: |
+    Adopter un régime végétarien, donc sans viande ni poisson (mais avec des oeufs, du lait, du fromage, des yaourts).
+
+    Moins fort que le régime végétalien, il permet déjà une réduction très importante de l'empreinte sur le climat.
 
 alimentation . devenir végétarien . par semaine:
   titre: Différence par semaine
@@ -19,9 +43,10 @@ alimentation . une semaine végétarienne:
 
 
 alimentation . devenir végétalien:
+  applicable si: plats . végétarien . nombre > 0
   formule: par semaine * 52
   icônes: 🥗🌾
-  description: Adopter un régime végétarien, donc sans viande (mais avec des oeufs, du lait).
+  description: Adopter un régime végétalien, donc sans produits animaux.
 
 alimentation . devenir végétalien . par semaine:
   titre: Différence par semaine
@@ -29,3 +54,11 @@ alimentation . devenir végétalien . par semaine:
 
 alimentation . une semaine végétalien:
   formule: 14 * plats . végétalien . empreinte
+
+
+alimentation . gaspillage alimentaire:
+  titre: Réduire mon gaspillage alimentaire
+  note: Dans le document en référence, page 7 pour l'empreinte du gaspillage et page 36 pour la réduction moyenne.
+  références: 
+    - https://www.ademe.fr/operation-foyers-temoins-estimer-impacts-gaspillage-alimentaire-menages
+
