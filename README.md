@@ -1,6 +1,6 @@
 # ecolab-data
 
-Ici résident les modèles de calcul et les données de de https://ecolab.ademe.fr.
+Ici résident les modèles de calcul et les données de https://ecolab.ademe.fr.
 
 :bulb: Pour l'instant, vous n'y trouverez que les modèles de simulation climat personnelle annuelle. Ils sont en cours de développement, pas encore validés. Suivront les données de ecolab-transport, et éventuellement les données de la base agribalyse nouvelle génération.
 
