@@ -79,6 +79,7 @@ prix . avocat:
   
 ``` 
 
+> 💡 Pour faciliter la relecture par les autres contributeurs et l'équipe, la discussion et les itérations, mieux vaut faire une PR (*Pull request*, proposition de changements) par sujet. Par exemple, faite une PR pour votre proposition "ajouter la moto au simulateur". Faites-en une autre pour votre proposition "amélioration des données d'empreinte de construction des véhicules électriques".
 
 ### Vous voulez devenir un pro des modèles carbone
 
