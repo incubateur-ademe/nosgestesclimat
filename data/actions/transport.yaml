@@ -108,14 +108,28 @@ transport . empreinte au km covoiturage: 0.2 kgCO2e/km
 
 
 transport . teletravail: 
-  titres: Si mon métier le permet je mets en place le télétravail
+  titre: Si mon métier le permet je mets en place le télétravail
   icônes: 🏠💻
   # formule: km domicile travail * voiture . empreinte au kilomètre * 60%   # 60% = 2j/sem de TT
   # Trouver images/infographies/graphes pertinent. Le graph GES sur le Drive partagé n'est pas des plus pertinents pour cette action
-  titres: Infos clefs
   description: |  
     Trouver chiffres du télétravail
-    
+  
+  applicable si: compatible
+  formule:
+    variations:
+      - si: jours = 1
+        alors: boulot . distance . année * voiture . empreinte au kilomètre * 80 %
+      - si: jours = 2
+        alors: boulot . distance . année * voiture . empreinte au kilomètre * 60 %
+      - si: jours = 3
+        alors: boulot . distance . année * voiture . empreinte au kilomètre * 40 %
+      - si: jours = 4
+        alors: boulot . distance . année * voiture . empreinte au kilomètre * 20 %
+      - si: jours = 5
+        alors: boulot . distance . année * voiture .  empreinte au kilomètre * 0 %
+   
+transport . teletravail . jours:
   question: Combien de jours de télétravail pourriez-vous mettre en place ?
   par défaut: 1
   une possibilité: 
@@ -126,31 +140,15 @@ transport . teletravail:
         - 3
         - 4
         - 5
-  formule: 
-    variations:
-      - si: compatible = 'oui'
-         alors si: teletravail = '1' 
-           alors: km domicile travail * voiture . empreinte au kilomètre * 80%
-      - si: compatible = 'oui'
-         alors si: teletravail = '2' 
-           alors: km domicile travail * voiture . empreinte au kilomètre * 60%
-      - si: compatible = 'oui'
-         alors si: teletravail = '3' 
-           alors: km domicile travail * voiture . empreinte au kilomètre * 40%
-      - si: compatible = 'oui'
-         alors si: teletravail = '4' 
-           alors: km domicile travail * voiture . empreinte au kilomètre * 20%
-      - si: compatible = 'oui'
-         alors si: teletravail = '5' 
-           alors: km domicile travail * voiture . empreinte au kilomètre * 0%          
 
-transport. teletravail . compatible 
+transport . teletravail . compatible: 
   question: Votre travail est-il totalement ou en partie compatible avec le télétravail ?
-  une possibilité: 
-      choix obligatoire: oui
-      possibilités:
-      - oui
-      - non 
-
+  par défaut: non
+  formule:
+    une possibilité: 
+        choix obligatoire: oui
+        possibilités:
+          - oui
+          - non 
 
 
