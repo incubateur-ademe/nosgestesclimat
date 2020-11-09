@@ -106,10 +106,8 @@ transport . boulot . distance:
 
 transport . empreinte au km covoiturage: 0.2 kgCO2e/km
 
-
-
 transport . commun domicile travail :
-  titres: Pour me rendre au travail je prends les transports en commun
+  titre: Pour me rendre au travail je prends les transports en commun
   icônes: 🚗➡️🚌🚆
   description: | #message informatif de la fiche
     70% des déplacements domicile-travail sont réalisés avec des véhicules individuels, la plupart seul dans sa voiture. C'est ce qu'on appelle l'auto-solisme.
@@ -119,40 +117,54 @@ transport . commun domicile travail :
     à son travail permet donc de réduire significativement notre empreinte sur le climat tout en décongestionnant les voies urbaines et en améliorant la qualité 
     de l’air de nos villes moins saturées en polluants atmosphériques.
   # 163 heures : https://www.tomtom.com/en_gb/traffic-index/paris-traffic/
-  # 70% des déplacements en autosolisme  https://www.ecologie-solidaire.gouv.fr/covoiturage-en-france-avantages-et-reglementationen-vigueur 
-
+  # 70% des déplacements en autosolisme  https://www.ecologie-solidaire.gouv.fr/covoiturage-en-france-avantages-et-reglementationen-vigueur
+    
+  formule: 
+    variations:
+      - si: typecommun = bus
+        alors: boulot . distance . année * voiture . empreinte au kilomètre - boulot . distance . année * bus . empreinte au kilomètre
+      - si: typecommun = tramway
+        alors: boulot . distance . année * voiture . empreinte au kilomètre - boulot . distance . année * tramway . empreinte au kilomètre
+      - si: typecommun = métro
+        alors: boulot . distance . année * voiture . empreinte au kilomètre - boulot . distance . année * métro . empreinte au kilomètre
+      - si: typecommun = TER
+        alors: boulot . distance . année * voiture . empreinte au kilomètre - boulot . distance . année * TER . empreinte au kilomètre
+  
+transport . typecommun:
   question: Si vous deviez ne plus prendre votre voiture pour vous rendre au travail quel type de transport en commun pourriez-vous utiliser ?
-  note: Une seule réponse possible #pour l'instant pour une 1ère version
-  par défaut: bus
+  note: Une seule réponse possible 
+  par défaut: bus  #dans le bac à sable n'arrive pas à prendre en compte bus comme valeur par défaut. Le par défaut ne marche qu'avec des chiffres
   une possibilité: 
       choix obligatoire: oui
       possibilités: 
         - bus
-        - tram
+        - tramway
         - métro
         - TER
-  formule: 
-    variations:
-      - si: commun domicile travail = 'bus'
-         alors: km domicile travail * voiture . empreinte au kilomètre - km domicile travail * bus . empreinte au kilomètre
-      - si: commun domicile travail = 'tram'
-         alors: km domicile travail * voiture . empreinte au kilomètre - km domicile travail * tram . empreinte au kilomètre
-      - si: commun domicile travail = 'métro'
-         alors: km domicile travail * voiture . empreinte au kilomètre - km domicile travail * métro . empreinte au kilomètre
-      - si: commun domicile travail = 'TER'
-         alors: km domicile travail * voiture . empreinte au kilomètre - km domicile travail * TER . empreinte au kilomètre
+        
+#####     Je crée ces variables car sinon ca ne fonctionne pas dans le bac à sable. Je ne pense pas qu'on doive les garder.
+transport . bus:
+transport . tramway:
+transport . métro:
+transport . TER:
+transport . voiture:
+#####
 
 transport . bus . empreinte au kilomètre:
   formule: 0.129
-  unité: kgCO2e/(passager.km) #Base Carbone consultée le 02/10/20 Autobus moyen - Agglomération de plus de 250 000 habitants
+  unité: kgCO2e/km #Base Carbone consultée le 02/10/20 Autobus moyen - Agglomération de plus de 250 000 habitants
 
 transport . TER . empreinte au kilomètre:
   formule: 0.0248
-  unité: kgCO2e/(passager.km) #Base Carbone consultée le 02/10/20 TER - 2019 - Traction moyenne 
+  unité: kgCO2e/km #Base Carbone consultée le 02/10/20 TER - 2019 - Traction moyenne 
+  
+transport . métro . empreinte au kilomètre:
+  formule: 0.0025
+  unité: kgCO2e/km #Base Carbone consultée le 02/10/20 Métro - 2019 - Ile de France 
 
 transport . tramway . empreinte au kilomètre:
   formule: 0.0022
-  unité: kgCO2e/(passager.km) #Base Carbone consultée le 02/10/20 Tramway - 2019 - Ile de France 
+  unité: kgCO2e/km #Base Carbone consultée le 02/10/20 Tramway - 2019 - Ile de France 
 
 #transport. commun bus domicile travail: 
 #  titres: Pour me rendre au travail je prends le bus
