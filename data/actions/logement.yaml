@@ -7,6 +7,7 @@ logement . baisse 1 degré:
     Baisser la température d'un ou deux degrés peut être un moyen de réduire son empreinte.
     
     Source : ADEME - [40 trucs et astuces pour économiser l'eau et l'énergie](https://www.ademe.fr/40-trucs-astuces-economiser-leau-lenergie)
+  applicable si: température > 19
   formule: gains 1 degré * empreinte chauffage
   note: Pour une prochaine version, on pourrait poser la question de la température actuelle de son logement à l'utilisateur. Puis proposer une réduction de la température si > 20.
 
@@ -18,6 +19,28 @@ logement . baisse 1 degré . gains 1 degré:
     Nous retenons l'estimation donnée dans le [guide ADEME](https://www.ademe.fr/40-trucs-astuces-economiser-leau-lenergie) "40 trucs pour économiser l'eau et l'énergie".
   note: |
     Où est la source pour ces 7% ? Peut-on décliner ce chiffre pour chaque type d'énergie (bois, gaz, etc.) ? Quelle est la sensibilité de ce chiffre au type de logement, son isolation, etc. ?
+
+logement . baisse 2 degrés:
+  titre: Réduire mon chauffage de 2 degrés
+  icônes: 🏠🌡
+  description: |
+    Le logement et en particulier son chauffage (au fioul ou au gaz) a un impact sur le climat important.
+
+    Baisser la température d'un ou deux degrés peut être un moyen de réduire son empreinte.
+    
+    Source : ADEME - [40 trucs et astuces pour économiser l'eau et l'énergie](https://www.ademe.fr/40-trucs-astuces-economiser-leau-lenergie)
+  applicable si: température > 20
+  formule: gains 2 degrés * empreinte chauffage
+  note: Pour une prochaine version, on pourrait poser la question de la température actuelle de son logement à l'utilisateur. Puis proposer une réduction de la température si > 20.
+
+logement . baisse 2 degrés . gains 2 degrés:
+  formule: 14%
+  description: |
+    C'est la baisse estimée de dépense d'énergie quand on baisse la température de notre foyer chauffé de 2°C dans la gamme de température usuelle (autour de 20°).
+
+    Nous retenons l'estimation donnée dans le [guide ADEME](https://www.ademe.fr/40-trucs-astuces-economiser-leau-lenergie) "40 trucs pour économiser l'eau et l'énergie".
+  note: |
+    Où est la source pour ces 7% (x2) ? Peut-on décliner ce chiffre pour chaque type d'énergie (bois, gaz, etc.) ? Quelle est la sensibilité de ce chiffre au type de logement, son isolation, etc. ?
 
 logement . empreinte chauffage:
   formule:
@@ -44,28 +67,33 @@ logement . part chauffage . bois:
 logement . part chauffage . fioul:
   formule: 37.8 / 43.3
   
+logement . température:
+  question: A quelle température chauffez-vous votre logement ?
+  icônes: 🌡
+  par défaut: 20
+  unité: degré
   
-    # Mettre histogramme qui compare les réduction GES associées à -1°C, -2°C. Voir le fichier Excel de calcul sur le drive partagé
+# Mettre histogramme qui compare les réduction GES associées à -1°C, -2°C. Voir le fichier Excel de calcul sur le drive partagé
 
-logement. électricité . reduction2°:
-  titres: J'enfile un pull plutôt que de tourner le thermostat (19°C) 
+logement . électricité . reduction2°:
+  titre: J'enfile un pull plutôt que de tourner le thermostat (19°C) 
   icônes: 🏠🌡
+  applicable si: température > 20
   formule: (logement . électricité . consommation2° - logement . électricité . consommation) * logement . électricité . intensité carbone
-  titres: Infos clefs
   description: |
     Baisser le chauffage d’1°C dans son logement c’est 7% d’économie d’énergie.
   
-  logement . électricité . consommation2°: 
+logement . électricité . consommation2°: 
   formule: logement . électricité . consommation * 66% * 14% 
   # 66% = conso spécifique dédié au chauffage (Ademe) et 14% = 2*7% = économie d'énergie générée par une baisse 1°C
   # Mettre histogramme qui compare les réduction GES associées à -1°C, -2°C. Voir le fichier Excel de calcul sur le drive partagé   
 
 # Chauffage Fioul # (A proposer à un utilisateur qui se chauffe au fioul)
-logement. fioul . reduction1°:
-  titres: Je chauffe mon logement de manière raisonnable (20°C)
+logement . fioul . reduction1°:
+  titre: Je chauffe mon logement de manière raisonnable (20°C)
   icônes: 🏠🌡
+  applicable si: température > 19
   formule: (logement . fioul . consommation1° - logement . fioul . consommation) * logement . fioul . intensité carbone
-  titres: Infos clefs
   description: |
     Baisser le chauffage d’1°C dans son logement c’est 7% d’économie d’énergie.
   
@@ -74,11 +102,11 @@ logement. fioul . reduction1°:
   # 66% = conso spécifique dédié au chauffage (Ademe) et 7% = économie d'énergie générée par une baisse 1°C
   # Mettre histogramme qui compare les réduction GES associées à -1°C, -2°C. Voir le fichier Excel de calcul sur le drive partagé
 
-logement. fioul . reduction2°:
-  titres: J'enfile un pull plutôt que de tourner le thermostat (19°C) 
+logement . fioul . reduction2°:
+  titre: J'enfile un pull plutôt que de tourner le thermostat (19°C) 
   icônes: 🏠🌡
+  applicable si: température > 20
   formule: (logement . fioul . consommation2° - logement . fioul . consommation) * logement . fioul . intensité carbone
-  titres: Infos clefs
   description: |
     Baisser le chauffage d’1°C dans son logement c’est 7% d’économie d’énergie.
   
@@ -88,11 +116,11 @@ logement. fioul . reduction2°:
   # Mettre histogramme qui compare les réduction GES associées à -1°C, -2°C. Voir le fichier Excel de calcul sur le drive partagé   
 
 # Chauffage Gaz # (A proposer à un utilisateur qui se chauffe au gaz)
-logement. gaz . reduction1°:
-  titres: Je chauffe mon logement de manière raisonnable (20°C)
+logement . gaz . reduction1°:
+  titre: Je chauffe mon logement de manière raisonnable (20°C)
   icônes: 🏠🌡
+  applicable si: température > 19
   formule: (logement . gaz . consommation1° - logement . gaz . consommation) * logement . gaz . intensité carbone
-  titres: Infos clefs
   description: |
     Baisser le chauffage d’1°C dans son logement c’est 7% d’économie d’énergie.
   
@@ -101,11 +129,11 @@ logement. gaz . reduction1°:
   # 66% = conso spécifique dédié au chauffage (Ademe) et 7% = économie d'énergie générée par une baisse 1°C
   # Mettre histogramme qui compare les réduction GES associées à -1°C, -2°C. Voir le fichier Excel de calcul sur le drive partagé
 
-logement. gaz . reduction2°:
-  titres: J'enfile un pull plutôt que de tourner le thermostat (19°C) 
+logement . gaz . reduction2°:
+  titre: J'enfile un pull plutôt que de tourner le thermostat (19°C) 
   icônes: 🏠🌡
+  applicable si: température > 20
   formule: (logement . gaz . consommation2° - logement . gaz . consommation) * logement . gaz . intensité carbone
-  titres: Infos clefs
   description: |
     Baisser le chauffage d’1°C dans son logement c’est 7% d’économie d’énergie.
   
