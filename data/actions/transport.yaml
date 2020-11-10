@@ -118,22 +118,28 @@ transport . boulot . commun:
 
     > A titre d'exemple les bouchons représentent en Île-de-France par an et par personne [163 heures perdues](https://www.tomtom.com/en_gb/traffic-index/paris-traffic) soit environ 6 jours. 
 
-  formule: 
+  non applicable si: voiture . km = 0
+  formule: boulot . distance . année * gain empreinte au km
+transport . boulot . commun . gain empreinte au km:
+  formule: voiture . empreinte au kilomètre - empreinte
+transport . boulot . commun . empreinte:
+  titre: Empreinte transport en commun choisi
+  formule:
     variations:
-      - si: type = bus
-        alors: boulot . distance . année * voiture . empreinte au kilomètre - boulot . distance . année * bus . empreinte au kilomètre
-      - si: type = tramway
-        alors: boulot . distance . année * voiture . empreinte au kilomètre - boulot . distance . année * tramway . empreinte au kilomètre
-      - si: type = métro
-        alors: boulot . distance . année * voiture . empreinte au kilomètre - boulot . distance . année * métro . empreinte au kilomètre
-      - si: type = TER
-        alors: boulot . distance . année * voiture . empreinte au kilomètre - boulot . distance . année * TER . empreinte au kilomètre
+      - si: type = 'bus'
+        alors: bus . empreinte
+      - si: type = 'tramway'
+        alors: tramway . empreinte
+      - si: type = 'TER'
+        alors: TER . empreinte
+      - si: type = 'métro'
+        alors: métro . empreinte
   
 transport . boulot . commun . type:
   question: Si vous deviez ne plus prendre votre voiture pour vous rendre au travail quel type de transport en commun pourriez-vous utiliser ?
-  note: Une seule réponse possible 
-  par défaut: bus  #dans le bac à sable n'arrive pas à prendre en compte bus comme valeur par défaut. Le par défaut ne marche qu'avec des chiffres
-  une possibilité: 
+  par défaut: bus
+  formule: 
+    une possibilité: 
       choix obligatoire: oui
       possibilités: 
         - bus
@@ -141,61 +147,24 @@ transport . boulot . commun . type:
         - métro
         - TER
         
-#####     Je crée ces variables car sinon ca ne fonctionne pas dans le bac à sable. Je ne pense pas qu'on doive les garder.
-transport . bus:
-transport . tramway:
-transport . métro:
-transport . TER:
-transport . voiture:
-#####
+transport . boulot . commun . type . bus:
+transport . boulot . commun . type . métro:
+transport . boulot . commun . type . tramway:
+transport . boulot . commun . type . TER:
 
-transport . bus . empreinte au kilomètre:
+transport . bus . empreinte:
   formule: 0.129
   unité: kgCO2e/km #Base Carbone consultée le 02/10/20 Autobus moyen - Agglomération de plus de 250 000 habitants
 
-transport . TER . empreinte au kilomètre:
+transport . TER . empreinte:
   formule: 0.0248
   unité: kgCO2e/km #Base Carbone consultée le 02/10/20 TER - 2019 - Traction moyenne 
   
-transport . métro . empreinte au kilomètre:
+transport . métro . empreinte:
   formule: 0.0025
   unité: kgCO2e/km #Base Carbone consultée le 02/10/20 Métro - 2019 - Ile de France 
 
-transport . tramway . empreinte au kilomètre:
+transport . tramway . empreinte:
   formule: 0.0022
   unité: kgCO2e/km #Base Carbone consultée le 02/10/20 Tramway - 2019 - Ile de France 
-
-#transport. commun bus domicile travail: 
-#  titres: Pour me rendre au travail je prends le bus
-#  icônes: 🚗➡️🚌
-#  formule: km domicile travail * voiture . empreinte au kilomètre - km domicile travail * bus . empreinte au kilomètre    
-#  # Est-ce possible (et pertinent) de mettre histogramme GES qui compare les GES issus des déplacements D-T de l'utilisateur en voiture vs les GES s'il a fait ce même trajet D-T avec bus/TER/métro. 
-#  # Voir le fichier Excel de calcul sur le drive partagé
-#  titres: Infos clefs
-#  description: |
-#    70% des déplacements domicile-travail sont réalisés avec des véhicules individuels, la plupart en auto-solisme.
-#    Les bouchons représentent, à l’échelle de l’Ile de France, un temps perdu de 163 heures soit 6 jours et 19 minutes 
-
-#transport. commun TER domicile travail: 
-#  titres: Pour me rendre au travail je prends le train
-#  icônes: 🚗➡️🚆
-#  formule: km domicile travail * voiture . empreinte au kilomètre - km domicile travail * TER . empreinte au kilomètre    
-#  # Est-ce possible (et pertinent) de mettre histogramme GES qui compare les GES issus des déplacements D-T de l'utilisateur en voiture vs les GES s'il a fait ce même trajet D-T avec bus/TER/métro. 
-#  # Voir le fichier Excel de calcul sur le drive partagé
-#  titres: Infos clefs
-#  description: |
-#    70% des déplacements domicile-travail sont réalisés avec des véhicules individuels, la plupart en auto-solisme.
-#    Les bouchons représentent, à l’échelle de l’Ile de France, un temps perdu de 163 heures soit 6 jours et 19 minutes
-
-#transport. commun tramway domicile travail: 
-#  titres: Pour me rendre au travail je prends le train
-#  icônes: 🚗➡️🚆
-#  formule: km domicile travail * voiture . empreinte au kilomètre - km domicile travail * tramway . empreinte au kilomètre    
-#  # Est-ce possible (et pertinent) de mettre histogramme GES qui compare les GES issus des déplacements D-T de l'utilisateur en voiture vs les GES s'il a fait ce même trajet D-T avec bus/TER/métro. 
-#  # Voir le fichier Excel de calcul sur le drive partagé
-#  titres: Infos clefs
-#  description: |
-#    70% des déplacements domicile-travail sont réalisés avec des véhicules individuels, la plupart en auto-solisme.
-#    Les bouchons représentent, à l’échelle de l’Ile de France, un temps perdu de 163 heures soit 6 jours et 19 minutes
-
 
