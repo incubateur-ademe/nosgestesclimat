@@ -75,7 +75,10 @@ transport . réduction covoiturage:
     - https://www.sciencedirect.com/science/article/pii/S1361920918303201
 
 transport . boulot . distance . année:
-  formule: 47 * hebdomadaire
+  formule: semaines * hebdomadaire
+
+transport . boulot . semaines: 
+  formule: 47
   description: 47 semaines, plutôt que 52 pour prendre en compte les 5 semaines de congés.
 
 transport . boulot . distance . hebdomadaire:
@@ -96,6 +99,8 @@ transport . boulot . distance:
   question: A quelle distance de chez vous se situe votre travail ?
   unité: km
   description: |
+    Nous parlons ici de la distance *aller*, avec le mode de transport que vous privilégiez.
+    
     70% des travailleurs en France travaillent à moins de 15km de chez eux.
 
     57% travaillent à moins de 10km et 78% à moins de 20km. 
@@ -107,48 +112,35 @@ transport . boulot . distance:
 transport . empreinte au km covoiturage: 0.2 kgCO2e/km
 
 
-transport . teletravail: 
-  titre: Si mon métier le permet je mets en place le télétravail
+transport . boulot . télétravail: 
+  titre: Faire du télétravail
   icônes: 🏠💻
-  # formule: km domicile travail * voiture . empreinte au kilomètre * 60%   # 60% = 2j/sem de TT
-  # Trouver images/infographies/graphes pertinent. Le graph GES sur le Drive partagé n'est pas des plus pertinents pour cette action
   description: |  
-    Trouver chiffres du télétravail
-  
+    Le télétravail permet d'éviter des déplacements journaliers pour se rendre au boulot.
+
+    Il n'est évidemment pas possible pour de nombreux salariés, mais la crise sanitaire de 2020 a montré que beaucoup de métiers sont effectivement télétravaillables.
+
+    Dans ce calcul, nous ne prenons en compte que les jours télétravaillés qui évitent un déplacement en voiture individuelle.
   applicable si: compatible
-  formule:
-    variations:
-      - si: jours = 1
-        alors: boulot . distance . année * voiture . empreinte au kilomètre * 80 %
-      - si: jours = 2
-        alors: boulot . distance . année * voiture . empreinte au kilomètre * 60 %
-      - si: jours = 3
-        alors: boulot . distance . année * voiture . empreinte au kilomètre * 40 %
-      - si: jours = 4
-        alors: boulot . distance . année * voiture . empreinte au kilomètre * 20 %
-      - si: jours = 5
-        alors: boulot . distance . année * voiture .  empreinte au kilomètre * 0 %
-   
-transport . teletravail . jours:
-  question: Combien de jours de télétravail pourriez-vous mettre en place ?
+  non applicable si: voiture . km = 0
+  formule: empreinte jour voiture * jours télétravaillés * 47
+
+transport . boulot . empreinte jour voiture: 
+  formule: (distance * 2) * voiture . empreinte au kilomètre
+  unité: kgCO2e/jours
+
+transport . boulot . jours télétravaillés:
+  question: Combien de jours de télétravail pourriez-vous faire ?
   par défaut: 1
-  une possibilité: 
-      choix obligatoire: oui
-      possibilités: 
-        - 1
-        - 2
-        - 3
-        - 4
-        - 5
+  unité: jours
+  suggestions: 
+    1: 1
+    2: 2
+    3: 3
+    4: 4
+    5: 5
 
-transport . teletravail . compatible: 
+transport . boulot . télétravail . compatible:
   question: Votre travail est-il totalement ou en partie compatible avec le télétravail ?
-  par défaut: non
-  formule:
-    une possibilité: 
-        choix obligatoire: oui
-        possibilités:
-          - oui
-          - non 
-
+  par défaut: oui
 
