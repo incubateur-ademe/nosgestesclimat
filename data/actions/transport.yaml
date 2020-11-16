@@ -29,7 +29,23 @@ transport . arrêter l'avion:
 
     Deuxièmement, on ne peut comparer la voiture et l'avion simplement parce qu'un trajet en avion est en général bien plus long. Quand il s'agit de choisir la destination des vacances par exemple, un trajet en voiture a donc toutes les chances d'être beaucoup moins polluant. Cela dit, notons aussi que nos kilométrages en voiture sont tels que le match est relancé quand on regarde l'empreinte à l'année.
 
-
+transport . arrêter l'avion court: 
+  titre: Privilégier le train au lieu de l'avion
+  icônes: 🛬🚆
+  formule: transport . avion . court courrier
+  # Mettre histogramme GES qui compare les trajets train vs avion. Voir le fichier Excel de calcul sur le drive partagé
+  description: |
+    L’avion a bouleversé nos modes de vies et nos façons de voyager. Nous pouvons maintenant aller plus loin, plus vite, plus fréquemment. L’accélération de nos
+    modes de vie que permet l’avion n’est malheureusement pas sans contrepartie sur notre empreinte carbone et sur le climat en général. En effet, il existe
+    notamment un rapport de 100 entre les facteurs d’émissions (quantité de CO2 émise par km parcouru) d’un avion et celui d’un train. A titre d’exemple, un 
+    aller-retour Paris-Marseille émet environ 250 kgCO2eq en avion contre seulement 3 kgCO2eq en train. C’est pourquoi adapter nos week-ends et nos vacances 
+    en nous tournant vers des offres de mobilités bas carbone et/ou en repensant notre manière de voyager est donc essentiel si l’on souhaite tant à 
+    l’échelle individuelle qu’à l’échelle de la société réduire notre impact sur le climat
+    [Comparer les modes de transport ici](https://ecolab.ademe.fr/apps/transport) 
+    
+  #chiffres clefs
+   #Un aller-retour Paris-Marseille émet environ 250 kgCO2eq en avion contre seulement 3 kgCO2eq en train (source Base Carbone)
+   #Choisir de se rendre, depuis Paris, à Barcelone (en train) plutôt qu’à Marrakech (en avion) permettra d’éviter d’émettre 781 kg de CO2eq (source Base Carbone)
 
 transport . éco-conduite: 
   titre: Faire de l'éco-conduite
@@ -75,7 +91,10 @@ transport . réduction covoiturage:
     - https://www.sciencedirect.com/science/article/pii/S1361920918303201
 
 transport . boulot . distance . année:
-  formule: 47 * hebdomadaire
+  formule: semaines * hebdomadaire
+
+transport . boulot . semaines: 
+  formule: 47
   description: 47 semaines, plutôt que 52 pour prendre en compte les 5 semaines de congés.
 
 transport . boulot . distance . hebdomadaire:
@@ -96,6 +115,8 @@ transport . boulot . distance:
   question: A quelle distance de chez vous se situe votre travail ?
   unité: km
   description: |
+    Nous parlons ici de la distance *aller*, avec le mode de transport que vous privilégiez.
+    
     70% des travailleurs en France travaillent à moins de 15km de chez eux.
 
     57% travaillent à moins de 10km et 78% à moins de 20km. 
@@ -105,6 +126,7 @@ transport . boulot . distance:
   par défaut: 10
 
 transport . empreinte au km covoiturage: 0.2 kgCO2e/km
+
 
 transport . boulot . commun:
   titre: Aller au travail en transport en commun
@@ -175,4 +197,38 @@ transport . tramway . empreinte:
   unité: kgCO2e/km 
   description: |
     Base Carbone consultée le 02/10/20 Tramway - 2019 - Île-de-France
+
+transport . boulot . télétravail: 
+  titre: Faire du télétravail
+  icônes: 🏠💻
+  description: |  
+    Le télétravail permet d'éviter des déplacements journaliers pour se rendre au boulot.
+
+    Il n'est évidemment pas possible pour de nombreux salariés, mais la crise sanitaire de 2020 a montré que beaucoup de métiers sont effectivement télétravaillables.
+
+    Dans ce calcul, nous ne prenons en compte que les jours télétravaillés qui évitent un déplacement en voiture individuelle.
+  applicable si: compatible
+  non applicable si: voiture . km = 0
+  formule: empreinte jour voiture * jours télétravaillés * 47
+
+transport . boulot . empreinte jour voiture: 
+  formule: (distance * 2) * voiture . empreinte au kilomètre
+  unité: kgCO2e/jours
+
+transport . boulot . jours télétravaillés:
+  question: Combien de jours de télétravail par semaine pourriez-vous faire ?
+  par défaut: 1
+  unité: jours
+  suggestions: 
+    1: 1
+    2: 2
+    3: 3
+    4: 4
+    5: 5
+# TODO introduire des contrôles (mise à jour de publicodes nécessaire) ici : pas de jours de télétravail supplémentaires à 
+  
+
+transport . boulot . télétravail . compatible:
+  question: Votre travail est-il totalement ou en partie compatible avec le télétravail ?
+  par défaut: oui
 
