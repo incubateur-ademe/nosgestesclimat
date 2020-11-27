@@ -163,9 +163,7 @@ logement . gaz . chaudierebois:
 logement . gaz . PAC: 
 
 
-### Renovation energetique ### AFFINER LE RATIO (66%) AVEC LES CHIFFRES DU CIREN (conso energie parc residentiel)
-
-#prérequis : que l'utilisateur soit propriétaire --> envisager de créer une question post-calculateur : "Etes vous propriétaire de votre logement"  
+### Rénovation Energétique ###
 
 logement . propriétaire:
   question: Etes-vous propriétaire de votre logement ?
@@ -202,16 +200,27 @@ logement . gain rénovation BBC:
   note: 30% = 1 - 70% ; avec 70% étant le gain énergétique maximal atteinte après une rénovation BBC (source)
 
 ### Eclairage ### 
-logement . électricité . LED:
-  titres: J'installe des ampoules basses consommations dans mon logement
+logement . éclairage LED:
+  titre: J'installe des ampoules LED dans mon logement
   icônes: 🏠💡
-  formule: (logement . électricité . consommation * 5.6% * logement . électricité . intensité carbone) - ((logement . électricité . consommation * 5.6% / 6) * logement . électricité . intensité carbone) 
-  # 5.6 % = part de la conso d'élec dédiée à l'éclairage (source RTE) ; /6 car lampes LED consomme 6 moins
-  # Mettre histogramme  qui compare les émissions GES annuelles entre ampoules classiques et LED (chiffre Ademe)
-  titres: Infos clefs
+  formule: empreinte éclairage * gains LED
   description: |
-    Les lampes LED consomment peu d’électricité et ont une très longue durée de vie (jusqu’à 40 000 heures) 
-    contre 8000 heures pour les lampes fluocompactes (LFC) et environ 200 h pour les lampes halogènes
+    Les lampes LED consomment très peu d’électricité et ont une très longue durée de vie (jusqu’à 40 000 heures) ce qui compensent leur prix plus élevé à l'achat.
+    Pour faire le bon choix en matière d'éclairage, aidez-vous de l'étiquette énergétique et n'hésitez pas à consulter ce petit guide :
+    https://www.ademe.fr/sites/default/files/assets/documents/guide-pratique-choisir-son-eclairage.pdf
+      
+logement . gains LED:
+  formule: 80%
+  note: réduction de consommation induite par une LED (vis à vis d'une ampoule normale)
+  https://www.ademe.fr/sites/default/files/assets/documents/guide-pratique-reduire-facture-electricite.pdf
+
+logement . empreinte éclairage:
+  formule: électricité * part éclairage
+
+logement . part éclairage:
+  formule: 5.6%
+  note: coeff 5.6 tiré de p3 https://www.ademe.fr/sites/default/files/assets/documents/guide-pratique-reduire-facture-electricite.pdf depuis les données RTE
+
 ### Sèche linge ### 
 
 #prérequis : que l'utilisateur soit propriétaire --> envisager de créer une question post-calculateur : "Etes vous propriétaire de votre logement"  
