@@ -85,6 +85,6 @@ prix . avocat:
 
 Nous travaillons à un environnement Web de développement, vous pouvez en avoir un avant goût sur le [studio publicodes](https://publi.codes/studio). 
 
-En attendant, pour travailler sur ces modèles YAML et voir vos changements mettre à jour l'interface de simulation (sans F5, c'est magique), il faut suivre adopter la méthode de travail d'un développeur Web.
+En attendant, pour travailler sur ces modèles YAML et voir vos changements mettre à jour l'interface de simulation (sans F5, c'est magique), il faut adopter la méthode de travail d'un développeur Web.
 
 Il va falloir se documenter pour comprendre ce qu'est [*git*](https://openclassrooms.com/fr/courses/1233741-gerez-vos-codes-source-avec-git), cloner ce dépôt vers un dossier nommé "ecolab-data", puis cloner [ecolab-climat](https://github.com/betagouv/ecolab-climat) à la même racine, entrer dans ecolab-climat et faire `yarn && yarn start`. Vous pourrez alors modifier les fichiers .yaml et voir en temps réel les résultats des calculs changer, et les simulations poser de nouvelles questions :sparkles: .
