@@ -8,26 +8,24 @@ let glob = require('glob')
 glob('data/**/*.yaml', (err, files) => {
 	const rules = files.reduce((memo, filename) => {
 		const data = fs.readFileSync('./' + filename, 'utf8')
-		console.log('---------=-==================', filename)
-		console.log(data)
 		const rules = yaml.parse(data)
-		return {...memo, ...rules}
+		return { ...memo, ...rules }
 	}, {})
-	glob('data/actions/*.md', (err2, mdFiles) => {
+	glob('data/actions/plus/*.md', (err2, mdFiles) => {
 		const rulesPlus = mdFiles.reduce((memo, filename) => {
 			const data = fs.readFileSync('./' + filename, 'utf8')
+			const dottedName = filename.replace(/(data\/actions\/plus\/|\.md)/g, '')
 
-
-			const dottedName = filename.replace(/(\.\/|\.md)/g, '')
-
-			return {...memo, [dottedName]: {...memo[dottedName], plus: data}}
+			return { ...memo, [dottedName]: { ...memo[dottedName], plus: data } }
 		}, rules)
 
-
-		fs.writeFile('./public/co2.json', JSON.stringify(rulesPlus), function (err) {
-			if (err) return console.error(err)
-			console.log('Les règles en JSON ont été écrites avec succès, bravo !')
-		})
-
+		fs.writeFile(
+			'./public/co2.json',
+			JSON.stringify(rulesPlus),
+			function (err) {
+				if (err) return console.error(err)
+				console.log('Les règles en JSON ont été écrites avec succès, bravo !')
+			}
+		)
 	})
 })
