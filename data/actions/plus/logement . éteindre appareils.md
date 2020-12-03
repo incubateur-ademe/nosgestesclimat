@@ -1,4 +1,4 @@
-# Action : Maîtriser la consommation électrique de son logement
+# Maîtriser la consommation électrique de son logement
 
 ### Contexte de l’action
 Box internet, téléviseur, tablettes numériques, cafetière, gros électroménager, … Les appareils électriques sont maintenant partie intégrante de nos modes de vies. Leur consommation d’électricité participe à augmenter notre impact carbone, même avec une électricité peu carbonée. D’appareils restant en veille pendant notre absence à l’impact de l'éclairage de notre logement (qui représente en moyenne 10 % de notre consommation électrique (3)), essayer de maîtriser sa consommation électrique par le biais de très nombreux éco-gestes faciles à mettre en place, c’est donc essayer de réduire son impact sur le climat.
@@ -40,7 +40,7 @@ Le faible contenu carbone du mix énergétique français fait que le poste logem
 Ainsi, de nombreux éco-gestes existent et permettent de mieux maîtriser la consommation électrique de son logement. L’ADEME a d’ailleurs publié plusieurs guides Grand Public destinés à tous les répertorier. A titre d’exemple, éteindre la veille des équipements électriques la nuit ou lorsque l’on quitte son domicile permet d’éviter une consommation électrique superflue. En plus d’une économie estimée à environ 80 € par an, éteindre les veilles permet de réduire son empreinte carbone individuelle d’environ 33 kgCO2eq. Quant à l’éclairage de son logement, remplacer les ampoules classiques par des ampoules basse consommation de type LED permet de diviser par 6 sa consommation électrique liée à l’éclairage (450 kWh par an pour 10 ampoules classiques 60 W contre 70 kWh par an pour 10 ampoules LED). Ces ampoules consomment très peu d’électricité et ont une très longue durée de vie (jusqu’à 40 000 heures pour les catégories A++) permettant ainsi de contrebalancer leur prix d’achat. D’autres lampes à faible consommation existent comme les lampes fluocompactes (LFC) mais leur durée de vie est bien plus faible (environ 8 000 h). Ainsi, la très faible consommation des ampoules LED permet d’envisager une réduction d’environ 22 kgCO2eq par an de l’empreinte carbone d’un individu (dans le cas de 10 ampoules – équivalent 60 W – cf. Figure 1).
 
 ### Sources
-(1) : https://www.electricitymap.org/map au 24 juillet 2020 
+(1) : https://www.electricitymap.org/map au 24 juillet 2020
 (2) : Isoler sa maison, Septembre 2018, ADEME
 (3) : Choisir son éclairage, Septembre 2018, ADEME
 (4) : Réduire sa facture d’électricité, Juin 2019, ADEME
