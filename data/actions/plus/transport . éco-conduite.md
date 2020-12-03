@@ -10,7 +10,7 @@ Les deux principaux contributeurs à l’empreinte carbone de notre mobilité so
 ### Contexte de l’action
 Les déplacements quotidiens des Français, qu’il s’agisse des trajets domicile-travail ou bien de trajets personnels se font très majoritairement en voiture. - C’est ainsi 77 % des trajets quotidiens qui sont effectués en voiture [1]. Adapter une éco-conduite et des pratiques éco-responsables au volant permet de diminuer l’empreinte carbone de nos déplacements et de limiter les émissions de GES.
 
-### Impact GES de l’action :
+### Impact GES moyen de l’action :
 De manière générale, l’éco-conduite permet une réduction de sa consommation de carburant d’en moyenne 15 % [2]. Ainsi à titre d’exemple :
 
 - Paris-Marseille en adoptant une éco-conduite : - 24 kgCO2eq
