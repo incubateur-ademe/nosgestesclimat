@@ -31,8 +31,11 @@ La loi d’orientation des mobilités (loi LOM) donne une place importante au co
 
 ### Explications
 La voiture occupe une place prépondérante, voir quasi exclusive, pour les déplacements domicile-travail d’un très grand nombre de français. Sans remettre en cause la nécessité réelle de ce besoin pour nombre de français, ces trajets quotidiens se font souvent seul en voiture. On appelle cela l’autosolisme. Cette pratique contribue fortement à augmenter notre empreinte carbone individuelle et plus généralement notre impact sur le climat. 
+
 A l’inverse, covoiturer avec une ou plusieurs personnes permet de réduire son empreinte carbone tout en réalisant des économies financières. En effet, lors d’un covoiturage, l’impact GES du déplacement est alloué entre les différents personnes concernées par le déplacement. Ainsi, plus grand est le nombre de covoitureurs, plus forte est la réduction de son empreinte carbone individuelle et plus fortes sont les économies financières générées. 
+
 Ainsi, un salarié devant parcourir 20 km pour se rendre sur son lieu de travail (soit 40 km aller-retour) pourra, s’il pratique le covoiturage, réduire son empreinte carbone de presque 1.2 tonne de GES par an s’il effectue du covoiturage avec 2 autres personnes (Figure 1).
+
 A ce jour, il reste encore beaucoup de travail à faire pour démocratiser cette pratique : encore 70 % des déplacements domicile-travail sont réalisés avec des véhicules individuels en autosolisme et on estime à 3 % seulement la part du covoiturage quotidien. C’est pourquoi, le gouvernement via la loi d’Orientation des Mobilités (loi LOM) souhaite développer le covoiturage en permettant notamment aux employeurs (public comme privé) et aux collectivités de soutenir financièrement cette pratique. L’objectif final est de tripler le nombre de trajets en covoiturage d’ici 2024 pour atteindre 3 millions de trajets quotidiens.
 
 ### Sources
