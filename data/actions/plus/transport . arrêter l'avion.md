@@ -10,9 +10,11 @@ Nos vacances et nos weekends s’articulent très souvent autour de la voiture e
 
 ### Ordre de grandeur GES
 
-Figure 1 :  Impact GES pour différents types de trajets, de modes de transports et en fonction du nombre de passage (pour l’avion et le train)*
+![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/alternative-bas-carbone-fig1.jpg]
 
-*facteurs d'émission issu de la base carbone*
+```Figure 1 :  Impact GES pour différents types de trajets, de modes de transports et en fonction du nombre de passage (pour l’avion et le train)```
+
+
 
 ### Budget :
 Le cout financier des actions proposées peut varier très fortement à la hausse comme à la baisse. Ainsi, le covoiturage permettra des économies de plusieurs dizaines d’euros par trajet tandis que remplacer l’avion par le train peut s’avérer souvent plus couteux au vu des prix d’appel des compagnies aériennes low-cost.
