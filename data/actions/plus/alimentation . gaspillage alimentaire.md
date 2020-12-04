@@ -17,7 +17,6 @@ Impact GES de l’action
 
 ```Figure 1 : Impact GES des gestes pour lutter contre le gaspillage alimentaire pour une personne par an [2]```
 
-
 ### Budget
 * Le gaspillage alimentaire représente de 100 à 160 euros par personne et par an dépensé inutilement [5].
 Chiffres clés à retenir
@@ -37,7 +36,7 @@ Le quart des émissions de gaz à effet de serre en France provient de nos assie
 Le gaspillage alimentaire, quant à lui, s’observe à tous les stades de la chaîne alimentaire et concerne tous les acteurs : producteurs, transformateurs, distributeurs, restaurateurs, transporteurs... sans oublier le consommateur même s’il n’a pas toujours l’impression de gaspiller. En France, ce gaspillage alimentaire représente 32 kg de déchets alimentaires jetés par personne et par an, dont 7 kg d’aliments encore emballés.
 Produire pour jeter génère des impacts et des émissions de GES superflues, tout en contribuant aux tensions sur les ressources naturelles. Il est donc nécessaire de lutter contre le gaspillage alimentaire et de nombreux gestes existent pour s’en prémunir :
  
-![](https://)
+![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/gaspi-alimentaire-tab2.jpg)
 ```Figure 2 : Exemples de gestes pour réduire le gaspillage alimentaire```
 
 ### Sources
