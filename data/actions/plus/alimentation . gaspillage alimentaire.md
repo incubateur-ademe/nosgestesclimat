@@ -37,6 +37,7 @@ Le gaspillage alimentaire, quant à lui, s’observe à tous les stades de la ch
 Produire pour jeter génère des impacts et des émissions de GES superflues, tout en contribuant aux tensions sur les ressources naturelles. Il est donc nécessaire de lutter contre le gaspillage alimentaire et de nombreux gestes existent pour s’en prémunir :
  
 ![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/gaspi-alimentaire-tab2.jpg)
+
 ```Figure 2 : Exemples de gestes pour réduire le gaspillage alimentaire```
 
 ### Sources
