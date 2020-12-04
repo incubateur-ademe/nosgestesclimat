@@ -8,9 +8,10 @@ L’analyse de l’empreinte carbone d’un français moyen montre notamment l�
 
 ### Contexte de l’action
 En moyenne, l’alimentation représente le ¼ de notre empreinte carbone individuelle et plus largement entre 20 et 50 % de l’empreinte environnementale des Français. De la consommation d’énergie directe et indirecte à la consommation d’eau en passant par la pollution de certains milieux naturels, la production, la transformation et le conditionnement de nos aliments génèrent des impacts sur notre environnement et sur les ressources naturelles. 
-Lutter contre le gaspillage alimentaire, c’est donc diminué les tensions sur ces ressources. 
-Impact GES de l’action
-**Réduire le gaspillage alimentaire : -31 kgCO2eq/an/personne**
+Lutter contre le gaspillage alimentaire, c’est donc diminué les tensions sur ces ressources.
+
+### Impact GES de l’action
+Réduire le gaspillage alimentaire : **-31 kgCO2eq/an/personne**
 
 ### Ordre de grandeur GES 
 ![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/gaspi-alimentaire-fig1.jpg) 
@@ -19,7 +20,8 @@ Impact GES de l’action
 
 ### Budget
 * Le gaspillage alimentaire représente de 100 à 160 euros par personne et par an dépensé inutilement [5].
-Chiffres clés à retenir
+
+### Chiffres clés à retenir
 * En France, environ 32 kg de déchets alimentaires sont jetés par personne et par an [2], dont 7 kg d’aliments encore emballés [5].
 * En France, si l’on considère l’ensemble de la chaîne de valeur (du champ à l’assiette), c’est environ 10 millions de tonnes d'aliments qui sont gaspillées par an, soit 150 kg par habitant [5].
 * En France, le gaspillage alimentaire représente 10% des Ordures Ménagères Résiduelles (OMR) [6].
@@ -30,8 +32,9 @@ Chiffres clés à retenir
     *	50 % fruits et légumes (31% de légumes et 19 % de fruits),
     *	24 % liquides,
     *	12 % riz, pâtes et céréales. 
-* En France, l’objectif fixé par tous les acteurs de l’agroalimentaire et la restauration, et les pouvoirs publics est de réduire de 50 % le gaspillage sur l’ensemble de la chaîne alimentaire avant 2025 .
-### Détails
+* En France, l’objectif fixé par tous les acteurs de l’agroalimentaire et la restauration, et les pouvoirs publics est de réduire de 50 % le gaspillage sur l’ensemble de la chaîne alimentaire avant 2025.
+
+### Explication
 Le quart des émissions de gaz à effet de serre en France provient de nos assiettes, à travers la production des aliments, leur transport, leur stockage, leur distribution et leur préparation. Elles contribuent en outre à la pollution de l’air et de l’eau, à une forte consommation d’énergie et plus largement, à une mise en tension des ressources naturelles.
 Le gaspillage alimentaire, quant à lui, s’observe à tous les stades de la chaîne alimentaire et concerne tous les acteurs : producteurs, transformateurs, distributeurs, restaurateurs, transporteurs... sans oublier le consommateur même s’il n’a pas toujours l’impression de gaspiller. En France, ce gaspillage alimentaire représente 32 kg de déchets alimentaires jetés par personne et par an, dont 7 kg d’aliments encore emballés.
 Produire pour jeter génère des impacts et des émissions de GES superflues, tout en contribuant aux tensions sur les ressources naturelles. Il est donc nécessaire de lutter contre le gaspillage alimentaire et de nombreux gestes existent pour s’en prémunir :
