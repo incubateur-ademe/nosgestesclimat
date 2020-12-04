@@ -5,12 +5,14 @@ La dépendance à la voiture individuelle dans nos déplacements quotidiens est 
 
 ### Impact GES moyen de l’action
 Sur la base des données de l’Enquête Nationale Transport et Déplacements (1)  , en considérant les déplacements (hors domicile-travail) de moins de 5 km seul en voiture :
-- Utiliser le vélo plutôt que la voiture pour les trajets de moins 5 km :  -5 MtCO2eq/an à l’échelle nationale, soit un peu plus que les émissions de GES de la Communauté Urbaine de Bordeaux (4,76 MtCO2eq (2) )
-- Ramené à l’échelle individuelle en considérant 38 millions de conducteur en France, cela représente 122 kg CO2eq/an 
+- Utiliser le vélo plutôt que la voiture pour les trajets de moins 5 km :  **-5 MtCO2eq/an** à l’échelle nationale, soit un peu plus que les émissions de GES de la Communauté Urbaine de Bordeaux (4,76 MtCO2eq (2) )
+- Ramené à l’échelle individuelle (en considérant 38 millions de conducteur en France), cela représente **122 kg CO2eq/an** 
 
 ### Ordre de grandeur GES 
  
-Figure 2 :  Impact CO2 d'un déplacement d’un km pour différent moyen de transport - Source Base Carbone® 
+![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/velo-voiture-5km-fig1.jpg) 
+ 
+```Figure 1 :  Impact CO2 d'un déplacement d’un km pour différent moyen de transport - Source Base Carbone®```
 
 ### Budget
 Même s’il est difficile d’estimer précisément les économies générées lorsqu’on privilégie la mobilité active pour les courts trajets, il est certain que ces économies sont non négligeables. De la simple économie de carburant à la possible remise en cause de la nécessité de posséder sa voiture, ces économies peuvent donc varier de quelques dizaines à plusieurs centaines d’euros.
