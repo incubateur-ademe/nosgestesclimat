@@ -5,8 +5,8 @@ Les vêtements que nous portons, notre mobilier d’intérieur, nos appareils é
 
 ### Impact GES moyen de l’action
 Il est difficile de quantifier l’impact de cette action à l’échelle individuelle. Néanmoins, en France, sur une année et de manière globale (i.e. portant sur les déchets des ménages, des entreprises et des collectivités), le recyclage (qu’il s’agisse de réemploi, de valorisation matière ou de valorisation énergétique) a contribué à (1) :
-- éviter les émissions de 23 millions de tonnes de CO2,
-- éviter la consommation de 64 TWh d’énergie soit l’équivalent de la production annuelle de trois à quatre centrales nucléaires (le parc français en compte 19)
+- éviter les émissions de **23 millions de tonnes de CO2**,
+- éviter la consommation de **64 TWh** d’énergie soit l’équivalent de la production annuelle de trois à quatre centrales nucléaires (le parc français en compte 19)
 
 Recycler, même à son échelle, c’est donc participer à cette économie de matière et d’énergie.
 
