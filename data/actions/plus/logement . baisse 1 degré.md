@@ -5,17 +5,19 @@
 
 ### Impact GES moyen de l’action et ordre de grandeur
 
+![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/temperature-logement-fig1.jpg)
 
 ```Figure 1 : Impact GES  (réduction des émissions GES) sur une année d’une baisse de la température par rapport à une température initiale de 23°C pour une consommation initiale de 10 000 kWh/an ```
 
 ### Budget
 Les économies d’énergie sont très variables d’un type d’énergie à l’autre et sont bien évidement d’autant plus importantes que la diminution en température est grande. Comme le monte la Figure 2 elles peuvent aller de quelques dizaines d’euros à plus de 100 euros par an.
 
+![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/temperature-logement-fig2.jpg)
 
 ```Figure 2 : Economies (en €) sur une année en fonction d’une baisse de la température par rapport à une température initiale de 23°C et pour une consommation initiale de 10 000 kWh/an ```
 
 ### Chiffres clés à retenir
-- Baisser le chauffage d’1°C dans son logement, c’est 7% d’économie d’énergie.
+- Baisser le chauffage d’1°C dans son logement, c’est **7% d’économie d’énergie.**
 - Dans un souci de simplification on considère que 66 % de la consommation énergétique d’un foyer est dédiée au chauffage et 11 % à l’eau chaude sanitaire (3). Néanmoins cette moyenne cache de grande disparité entre les modes de chauffage. Ainsi, la part dédiée au chauffage représente :
 	- 24 % de la consommation d’énergie d’un foyer se chauffant à l’électrique
 	- 82 % % de la consommation d’énergie d’un foyer se chauffant au gaz
