@@ -19,7 +19,6 @@ De manière générale, l’éco-conduite permet une réduction de sa consommati
 ```Figure 1 :  Impact GES avec et sans éco-conduite pour un trajet de 1000 km```
 
 
-
 ### Budget
 Au-delà de l’impact sur le climat, c’est aussi sur votre budget que cette action va influer. En économisant un à deux litres de carburant pour 100 kilomètres, on peut réaliser des économies substantielles. Sur une base de 15 000 kilomètres par an, l’économie peut atteindre environ 300 € pour un véhicule diesel et 400 € pour un véhicule à essence (pour un prix du gasoil à 1,,20 € le litre et un prix du super sans plomb à 1,32 € le litre - données novembre  2020) [2]
 
