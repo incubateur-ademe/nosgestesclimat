@@ -10,7 +10,7 @@ Nos vacances et nos weekends s’articulent très souvent autour de la voiture e
 
 ### Ordre de grandeur GES
 
-![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/alternative-bas-carbone-fig1.jpg]
+![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/alternative-bas-carbone-fig1.jpg)
 
 ```Figure 1 :  Impact GES pour différents types de trajets, de modes de transports et en fonction du nombre de passage (pour l’avion et le train)```
 
