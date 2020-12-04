@@ -13,7 +13,8 @@ Impact GES de l’action
 **Réduire le gaspillage alimentaire : -31 kgCO2eq/an/personne**
 
 ### Ordre de grandeur GES 
-![](https://) 
+![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/gaspi-alimentaire-fig1.jpg) 
+
 ```Figure 1 : Impact GES des gestes pour lutter contre le gaspillage alimentaire pour une personne par an [2]```
 
 
