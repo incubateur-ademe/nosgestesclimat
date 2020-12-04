@@ -10,6 +10,8 @@ Je bois l’eau du robinet plutôt que de l’eau en bouteille : **- 215 kg CO2e
 
 ### Ordre de grandeur GES
 
+![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eau-bouteille-fig1.jpg)
+
 ```Figure 1 : Impact GES de la consommation d’un litre d’eau - Source Base Carbone®```
 
 **Attention** : les facteurs d’émission donnés ne concernent que l’aspect consommation. L’impact GES de la fin de vie des bouteilles n’est donc pas pris en compte. Suivant les modes de valorisation des bouteilles (recyclage, incinération, etc.) l’impact GES peut varier à la hausse comme à la baisse. Néanmoins l’ordre de grandeur restera le même (rapport de 1000).
