@@ -12,6 +12,8 @@ Recycler, même à son échelle, c’est donc participer à cette économie de m
 
 ### Ordre de grandeur GES
  
+ ![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/trier-dechets-consommation-fig1.jpg)
+ 
 ```Figure 1 : Impact GES de la réincorporation d’une tonne de matériaux (source (2))```
 
 ### Chiffres clés à retenir
@@ -28,7 +30,7 @@ Recycler, même à son échelle, c’est donc participer à cette économie de m
 	- 68 % vers de la valorisation énergétique ou incinération, 
 	- 24 % vers un centre de stockage, 
 	- 8 % en compostage ou méthanisation,
- Tandis que le contenu de nos poubelles de collecte séparée est envoyé à : 
+- Tandis que le contenu de nos poubelles de collecte séparée est envoyé à : 
 	- 83 % vers un centre de tri ou de recyclage,
 	- 14 % vers de la valorisation organique, 
 	- le reste est éliminé en stockage ou incinéré.
