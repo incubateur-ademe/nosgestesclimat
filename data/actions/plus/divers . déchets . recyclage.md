@@ -53,12 +53,12 @@ Par ailleurs, apporter les biens et équipements dont nous ne voulons plus en PA
 ### Passer à l’action
 Pour connaitre les Points d’Apports Volontaires (PAV) les plus près de chez soi :
 - Textiles, Linges de maison et Chaussures (TLC) : 
-https://refashion.fr/citoyen/fr/je-d%C3%A9pose
+![refashion.fr](https://refashion.fr/citoyen/fr/je-d%C3%A9pose)
 - Mobiliers et biens d’ameublement : 
-https://www.eco-mobilier.fr/vos-points-de-collecte-dedies-b2c/ 
+![www.eco-mobilier.fr](https://www.eco-mobilier.fr/vos-points-de-collecte-dedies-b2c/)
 - Déchets d’Equipement Electriques et Electroniques :
-https://www.ecosystem.eco/fr/recherche-point-de-collecte
-https://www.ecologic-france.com/citoyens/ou-deposer-mes-dechets.html
+![www.ecosystem.eco](https://www.ecosystem.eco/fr/recherche-point-de-collecte)
+![www.ecologic-france.com](https://www.ecologic-france.com/citoyens/ou-deposer-mes-dechets.html)
 
 ### Sources
 (1) : L’empreinte carbone des Français reste stable, janvier 2020, Commissariat général au développement durable
