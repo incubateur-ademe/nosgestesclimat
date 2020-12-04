@@ -5,13 +5,14 @@
 La dépendance à la voiture individuelle dans nos déplacements quotidiens est telle qu’elle s’est imposée comme une évidence dans nos déplacements domicile-travail. Sans remettre en cause la nécessité réelle de ce besoin pour nombre de français, ces déplacements quotidiens en voiture ne sont pas sans impact sur le climat et contribuent à majorer fortement nos empreintes carbone individuelles. Sans remettre en cause la réalisation du déplacement, privilégier le covoiturage pour les trajets domicile-travail permet de réduire significativement son empreinte carbone individuelle tout en participant à plus large échelle à la réduction de l’empreinte carbone de notre mobilité.  
 
 ### Impact GES moyen de l’action
-- Privilégier le covoiturage pour les trajets domicile-travail : de **-850 à -1200 kgCO2eq/an** pour une distance de 40 km aller-retour (cf. Figure 1)
 
-
-Figure 1 : Réduction annuelle des émissions de GES en fonction du nombre de covoitureurs pour un déplacement domicile-travail de 40 km aller-retour (base de 226 jours ouvrés) : source Base Carbone®
+En considérant un trajet domicile-travail de 40 km aller-retour :
+- Covoiturer avec un 1 autre passager : -850 kgCO2eq/an 
+- Covoiturer avec 2 autres passagers : -1200 kgCO2eq/an
 
 ### Ordre de grandeur GES
 
+![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/covoiturage-d-t-fig2.jpg)
 
 Figure 2 :  Impact GES d'un déplacement de 40 km aller-retour pour différents types de véhicules et en fonction du nombre de passager 
 
