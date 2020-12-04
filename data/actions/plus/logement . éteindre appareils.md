@@ -17,6 +17,8 @@ Eco-gestes	Impacts
 **Mettre image du tableau**
 
 ### Ordre de grandeur GES 
+
+![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/maitrise-conso-elec-logement-fig1.jpg)
  
 ```Figure 1 : Impact GES associé à la consommation électrique sur une année d'ampoules classiques et d’ampoules basses consommation de type LED  ```
 
