@@ -14,6 +14,7 @@ De manière générale, l’éco-conduite permet une réduction de sa consommati
 
 ### Ordre de grandeur GES
 
+![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eco-conduite-fig1.jpg)
 Figure 1 :  Impact GES avec et sans éco-conduite pour un trajet de 1000 km*
 
 *Calculé sur la base d’une voiture essence consommant 7l/100 km et une réduction de 15 % de la consommation par une éco-conduite. Facteur d’émission issu de la Base Carbone®*
