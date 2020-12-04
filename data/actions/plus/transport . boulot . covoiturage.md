@@ -7,14 +7,14 @@ La dépendance à la voiture individuelle dans nos déplacements quotidiens est 
 ### Impact GES moyen de l’action
 
 En considérant un trajet domicile-travail de 40 km aller-retour :
-- Covoiturer avec un 1 autre passager : -850 kgCO2eq/an 
-- Covoiturer avec 2 autres passagers : -1200 kgCO2eq/an
+- Covoiturer avec un 1 autre passager : **-850 kgCO2eq/an**
+- Covoiturer avec 2 autres passagers : **-1200 kgCO2eq/an**
 
 ### Ordre de grandeur GES
 
 ![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/covoiturage-d-t-fig2.jpg)
 
-Figure 2 :  Impact GES d'un déplacement de 40 km aller-retour pour différents types de véhicules et en fonction du nombre de passager 
+```Figure 2 :  Impact GES d'un déplacement de 40 km aller-retour pour différents types de véhicules et en fonction du nombre de passager```
 
 ### Budget
 Un.e salarié.e  automobiliste qui habite à 30 km de son lieu de travail et qui covoiture quotidiennement en alternance avec un.e voisin.e ou un.e collègue économise près de 2 000 € chaque année (1).
