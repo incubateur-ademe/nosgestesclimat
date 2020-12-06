@@ -3,7 +3,7 @@
 ### Contexte de l’action
 Il semble contre-intuitif que nos meubles puissent participer à augmenter l’empreinte carbone de notre consommation étant donné qu’il s’agit de produits figés ne consommant aucune énergie. Mais c’est oublier l’ensemble des procédés nécessaires à leur fabrication et à leur acheminement jusqu’au lieu de vente. A cela il faut aussi prendre en compte l’impact de la ressource si cette dernière n’est pas gérée durablement (pour le bois notamment). Acheter ses meubles de seconde main ou éco-conçus permet donc de réduire fortement notre impact sur le climat.
 
-### Impact GES de l’action
+### Impact GES moyen de l’action
 J'achète une table et 4 chaises en bois d’occasion (au lieu de neufs): **- 35 kg CO2eq**
 J'équipe mon (petit) appartement avec du mobilier de 2nd main (au lieu de neufs) : **- 587 kg CO2eq**
 
