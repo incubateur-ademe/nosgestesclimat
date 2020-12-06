@@ -3,7 +3,7 @@
 ### Contexte
 De l’électroménager à la dernière tablette numérique, les équipements électriques et électroniques font maintenant partie intégrante de notre quotidien. Malheureusement, la production et le fonctionnement de ces biens ne sont pas sans impact sur le climat et sur l'environnement. De l’extraction de la matière première aux transports dans nos magasins, sans oublier leur fonctionnement quotidien, ce sont des quantités toujours plus importantes de matières et d’énergie à mobiliser. C’est pourquoi, acheter des équipements électriques et électroniques reconditionnés et/ou à faible consommation d’énergie et/ou éco-conçus permet de réduire fortement son impact sur le climat
 
-### Impact GES de l’action
+### Impact GES moyen de l’action
 - Acheter une machine à laver reconditionnée au lieu d’une neuve : **≈ 275 kg CO2eq évités** (cf. Figure 2)
 - Acheter un smartphone reconditionné au lieu d’un neuf **≈ 40 kg CO2eq évités** (cf. Figure 1)
 - Fonctionnement d’appareils efficaces vs appareils peu efficaces : **- 36 kg CO2eq/an**
