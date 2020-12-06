@@ -32,7 +32,6 @@ L’achat de meuble d’occasion permet également d’éviter la phase de trans
 
 L’autre manière de réduire l’impact GES associé à nos achats de meubles est de s’assurer de l’éco-conception et du caractère durable des biens achetés. Les produits durables utiliseront très certainement du bois issu de forêts gérées durablement. Cette gestion durable est un enjeu majeur pour les produits bois étant donné qu’un produit en bois qui n’est pas issu de ce genre de forêts peut être plus impactant qu’un produit issu de matière fossile. C’est pourquoi, plusieurs labels s’emploient maintenant à garantir la traçabilité des  approvisionnements en bois comme notamment le label PEFC (Programme de Reconnaissance des Certifications Forestière), ou FSC (Forest Stewardship Council). Cette traçabilité sur l’origine du bois permet donc, grâce à la captation de CO2 lors de la pousser des arbres, de réduire l’impact GES de la phase de production de la matière première (comme expliqué plus haut). L’éco-conception permettra également de maximiser la durée de vie du produit. Cette dernière joue un rôle important dans l’impact GES final de notre consommation : un produit impactant mais qui a une longue durée de vie peut concurrencer un produit moins impactant mais avec une faible durée de vie.
 
-Les deux logos à chercher quand vous acheter des meubles en bois
 
 ### Passer à l’action
 Pour acheter de seconde main : 
