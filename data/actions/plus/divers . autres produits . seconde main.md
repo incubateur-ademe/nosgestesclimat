@@ -11,11 +11,11 @@ J'équipe mon (petit) appartement avec du mobilier de 2nd main (au lieu de neufs
 
 ![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/meubles-2nd-main-fig1.jpg)
 
-```Figure 1 : Impact GES des phases amont et aval pour plusieurs produits d’habillement (données élaborées depuis l’étude (3))```
+```Figure 1 : Impact GES des phases amont et aval pour plusieurs biens d'ameublement (données élaborées depuis l’étude [3])```
 
 ![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/meubles-2nd-main-fig2.jpg)
 
-```Figure 2 : Impact GES pour plusieurs produits d’habillement neufs et de seconde main (données élaborées depuis l’étude (3))```
+```Figure 2 : Impact GES pour plusieurs biens d'ameublement neufs et de seconde main (données élaborées depuis l’étude (3))```
 
 ### Budget
 Que vous cherchiez de la marque ou non, le prix final payé  pour un meuble de seconde main est toujours bien moins élevé que pour du mobilier neuf. En revanche, pour des produits éco-conçus et dont le bois provient de forêts gérées durablement, il est fort probable qu’ils soient plus chers à l’achat.
