@@ -1,18 +1,18 @@
 # Rénover énergétiquement son logement
 
-### Contexte de l’action
+## Contexte de l’action
 2/3 de la consommation d’énergie d’un ménage est consacrée au chauffage (3). Cette consommation d’énergie, en plus d’avoir un coût financier non négligeable, participe à augmenter l’empreinte carbone des ménages. 
 Cette forte consommation énergétique s’explique souvent par des logements énergivores où l’isolation thermique est mauvaise voire inexistante. En effet, les 2/3 des logements en France ont été construits avant 1974 (2), période où il n’y avait aucune réglementation thermique en vigueur et où les économies d’énergie n’étaient pas une priorité. Rénover énergétiquement son logement permet donc de contribuer à réduire massivement la consommation d’énergie liée au chauffage et de fait, son empreinte sur le climat.
 
 ![](https://sendeyo.com/up/d/3f6bb1a5b0)
 
-### Impact GES moyen de l’action et ordre de grandeur
+## Impact GES moyen de l’action et ordre de grandeur
 
 ![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/renovation-energetique-fig1.jpg)
 
 ```Figure 1 : Impact GES  (réduction des émissions GES) sur une année pour différents types de rénovation et pour différents systèmes de chauffage pour une consommation initiale de 10 000 kWh/an ```
 
-### Budget
+## Budget
 
 ![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/renovation-energetique-fig2.jpg)
 
@@ -33,7 +33,7 @@ https://www.faire.gouv.fr/aides-de-financement/aides-nationales
 
 Enfin, le guide ADEME Grand Public « Aides financières » (10) (ainsi que les autres listés dans la section Passage à l’action) sont aussi des ressources utiles et pour comprendre les enjeux techniques et financiers de la rénovation de son système de chauffage.
 
-### Chiffres clés à retenir
+## Chiffres clés à retenir
 - Dans un souci de simplification on considère que 66 % de la consommation énergétique d’un foyer est dédiée au chauffage et 11 % à l’eau chaude sanitaire (3). Néanmoins cette moyenne cache de grande disparité entre les modes de chauffage. Ainsi, la part dédiée au chauffage représente :
 	- 24 % de la consommation d’énergie d’un foyer se chauffant à l’électrique
 	- 82 % % de la consommation d’énergie d’un foyer se chauffant au gaz
@@ -43,7 +43,7 @@ Enfin, le guide ADEME Grand Public « Aides financières » (10) (ainsi que les 
 - En France, le nombre de passoires énergétiques (logements aux étiquettes énergétiques de classe F ou G) dépasse les 7 millions de logements, soit près de 30% des résidences principales (9) ;
 - La Loi pour la Transition Energétique et la Croissance Verte (LTECV) fixe l’objectif ambitieux de 500 000 rénovations énergétique par an avec l’objectif d’un parc bâtiment au niveau BBC (Bâtiment Basse Consommation) en 2050.
 
-### Explication
+## Explication
 Le parc immobilier français est très énergivore et peu efficace d’un point de vue énergétique. En 2012, plus de la moitié des résidences principales possédaient ainsi des étiquettes D ou E (entre 151 et 330 kWhep/m2.an) (7) et on estime même à 30% (où approximativement 7.4 millions de logements (8)) le nombre de passoires énergétiques en France (c’est-à-dire des logements de catégorie F ou G). En effet, les 2/3 des logements en France ont été construits avant 1974 (2) période où les réglementations thermiques étaient inexistantes et où les économies d’énergie n’étaient pas une priorité. Ainsi, pour un logement ancien, les pertes de chaleur sont multiples comme le montre la figure suivante : 
 
 ```Figure 3 : Pertes de chaleur moyennes pour une maison construite avant 1974 et non isolée (2)```
@@ -58,14 +58,14 @@ Ainsi, le réseaux ANAH (Agence National pour l’Amélioration de l’Habitat) 
 
 La rénovation énergétique de son logement est un enjeu fondamental pour la transition écologique à l’échelle nationale mais elle revêt un caractère essentiel pour les logements équipés de systèmes de chauffage fonctionnant au fioul et au gaz étant donné que les réductions d’émissions de GES et les économies financières possibles sont extrêmement conséquentes.
 
-### Passer à l’action
+## Passer à l’action
 Pour en savoir plus sur les techniques de rénovation comprendre laquelle est la mieux adaptée à votre logement, n’hésitez pas à consulter les guides ADEME Grand Public :
 - Isoler sa maison
 - Se chauffer mieux et moins cher
 - Aides financières
 
 
-### Sources
+## Sources
 (1) : https://www.electricitymap.org/map au 24 juillet 2020 
 (2) : Isoler sa maison, Septembre 2018, ADEME
 (3) : Secteur résidentiel – Suivi du par cet des consommations d’énergie, juillet 2017, CEREN

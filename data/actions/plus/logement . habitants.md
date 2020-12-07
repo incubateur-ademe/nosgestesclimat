@@ -1,16 +1,16 @@
 # Mutualiser son logement
 
-### Contexte de l’action
+## Contexte de l’action
 Du partage de nombreux équipements et biens de consommation, à une consommation d’énergie unique en passant par le regroupement de certains travaux (pour les très grands habitats partagés), mutualiser son logement permet d’attribuer l’ensemble des impacts de ce poste entre les différents habitants et/ou colocataires. Néanmoins, l’enjeu principal de l’habitat partagé est la diminution des tensions sur notre environnement et plus particulièrement la réduction de l'artificialisation des sols. En effet, vivre seul dans un habitat individuel étend les besoins de logement, là où, à l’inverse, vivre en habitats partagés réduit les besoins en constructions neuves (et donc l’étalement urbain) tout en mutualisant de nombreux impacts GES.
 
-### Impact GES moyen de l’action
+## Impact GES moyen de l’action
 Il est difficile de quantifier l’impact de cette action à titre individuel étant donné les nombreux paramètres à prendre en compte (quel logement ? quelle taille ? combien de colocataires ? etc.). Néanmoins mutualiser son logement permet de mutualiser les impacts GES de ce poste et donc  de réduire, in fine, notre empreinte carbone individuelle.
 A cela s’ajoute l’impact indirect et non quantifiable de la “non demande” en habitat individuel qui réduit l’étalement urbain et donc  l’artificialisation des sols (cf. Explication).
 
-### Budget
+## Budget
 Selon LOCService.fr le loyen moyen (charges incluses) d’une chambre en colocation s’élève à 421 € contre 501 € pour un studio classique, soit 19 % de plus (3)
 
-### Chiffres clés à retenir
+## Chiffres clés à retenir
 - 52 % des colocataires sont étudiants, 43 % actifs et 5 % retraités (ou sans activité) (4)
 - 76 % des colocataires ont moins de 30 ans et 6 % plus de 50 ans. (4)
 - 70 % des Français déclarent avoir une bonne image de la colocation, ceux qui en ont fait l’expérience, d’autant plus (5). Ce pourcentage monte à 82 % pour ceux ayant déjà vécu en colocation
@@ -21,7 +21,7 @@ Selon LOCService.fr le loyen moyen (charges incluses) d’une chambre en colocat
 - En France, entre 20 000 et 30 000 hectares sont artificialisés chaque année. Cette artificialisation augmente presque 4 fois plus vite que la population (6)
 - Avec son  Plan Biodiversité de 2018 le gouvernement s’est fixé un objectif de « zéro artificialisation nette à terme”. Néanmoins les modalités de mises en oeuvre de cet objectif restent encore à définir au niveau local comme nationale (7)
 
-### Explication
+## Explication
 Vivre seul dans son logement c’est se voir imputer l’ensemble des impacts du poste logement à son empreinte carbone. A l’inverse, et même si les consommations d'énergie augmentent avec le nombre d’habitants d’un logement, vivre à plusieurs permet de mettre en commun de nombreux équipements et biens de consommation (réfrigérateur, box internet, lave-linge, outils, éclairage, chauffage, etc.). Cette mise en commun permet donc, lors du calcul de son empreinte carbone, de mutualiser les impacts GES du poste logement contribuant ainsi à réduire son empreinte.
 
 De plus, mutualiser son logement permet également de réduire la demande en habitat individuel. Depuis les années 70, en France, de par des changements dans les modes de vie (hausse des séparations, diminution des familles nombreuses, etc.) la taille des ménages diminue, entraînant, en retour, une augmentation de leur nombre (+ 4,2 millions depuis 1999 (10)). Cette augmentation couplée à la demande d’habitat individuel contribue chaque année à la construction de plusieurs centaines de milliers de logements (+172 500 logements neufs individuels en 2018 (12)) qui faute de place sont construits en périphérie des villes. C’est ce qu’on appelle  l’étalement urbain. Cet étalement engendre une destruction des espaces naturels via une artificialisation des sols, phénomène qui consiste à transformer un sol naturel, agricole ou forestier, par des opérations d’aménagement pouvant entraîner une imperméabilisation partielle ou totale, afin de les affecter notamment à des fonctions urbaines. Mutualiser son logement permet donc, de manière indirecte, de réduire l'artificialisation des sols.
@@ -34,7 +34,7 @@ Cette artificialisation est préjudiciable à la biodiversité, au climat et à 
 - Elle accroît les dépenses liées aux réseaux. En effet, tout nouveau terrain (artificialisé) demande des aménagements structurels afin de le rendre viable (routes, électricité, assainissement)
 - Elle contribue à l’amplification de la fracture territoriale. L’étalement urbain (des habitants comme des zones commerciales) vers des périphéries éloignées déplace une partie des habitants à l’écart des centre-villes provoquant une désertification et une dévalorisation des petits commerces.
 
-### Sources
+## Sources
 (1) : https://www.electricitymap.org/map au 24 juillet 2020 
 (2) : Isoler sa maison, Septembre 2018, Ademe
 (3) : https://blog.locservice.fr/observatoire-2019-colocation-locservice-5742.html 

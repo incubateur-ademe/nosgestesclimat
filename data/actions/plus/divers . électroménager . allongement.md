@@ -1,9 +1,9 @@
 # Augmenter la durée de vie de ses équipements électriques et électroniques
 
-### Contexte de l’action
+## Contexte de l’action
 De l’électroménager à la dernière tablette numérique, les équipements électriques et électroniques font maintenant partie intégrante de notre quotidien. Leur essor s’est malheureusement accompagné d’une stratégie d’obsolescence programmée (technique comme culturelle) afin d’augmenter les taux de renouvellement et ainsi les volumes de ventes. Certains de ces biens sont même devenus des biens de consommation classique. Ces renouvellements prématurés conduisent malheureusement à des tensions toujours plus grandes sur les ressources et augmentent les besoins en énergie. C’est préserver et allonger la durée de vie de nos équipements électriques et électroniques est un geste fort pour réduire notre empreinte sur le climat et sur l’environnement. 
 
-### Impact GES moyen de l’action
+## Impact GES moyen de l’action
 Je répare mes appareils électroménager quand ceux-ci tombe en panne (à leur demi-vie) :
 - **384 kgCO2eq évités** soit 1490 km en voiture (en considérant une TV, un lave-vaisselle, un lave-linge, un réfrigérateur et un aspirateur).
 
@@ -14,7 +14,7 @@ J’allonge la durée d’usage totale de mes équipements (4) :
 - en les conservant 2 ans de plus (au lieu de les remplacer) : **374 kgCO2eq évités** (229 kgCO2eq pour les équipements multimédia du salon et 145 kgCO2eq pour les équipements électroménager).
 - en les conservant 3 ans de plus (au lieu de les remplacer) : **560 kgCO2eq évités** (343 kgCO2eq pour les équipements multimédia du salon et 217 kgCO2eq pour les équipements électroménager).
 
-### Ordre de grandeur GES
+## Ordre de grandeur GES
 
 ![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eee-2nd-main-fig1.jpg)
 
@@ -24,7 +24,7 @@ J’allonge la durée d’usage totale de mes équipements (4) :
 
 ```Figure 2 : Impact GES des phases amont et aval pour plusieurs équipements électroménager (données élaborées depuis l’étude (5))```
 
-### Budget
+## Budget
 Allonger la durée de vie des produits permet aussi de réaliser des économies. L’ADEME met en évidence (6) qu’il est toujours économiquement favorable  pour le consommateur de :
 - ne pas remplacer un équipement pour des raisons d’obsolescence perçue (c’est-à-dire une volonté de changer alors que l’équipement fonctionne toujours). Cela permet une économie de 
 	- 112€/an pour un ordinateur portable (soit 336 € sur sa durée de vie complète restante),
@@ -38,7 +38,7 @@ Allonger la durée de vie des produits permet aussi de réaliser des économies.
 
 Si un foyer français allonge d’un an (au lieu de les remplacer) la durée d’usage totale de ces équipements multimédia et électroménager, chacun des foyers pourrait économiser 963 € (4).
 
-### Chiffres clés à retenir
+## Chiffres clés à retenir
 - 88 % des Français changent de téléphone portable alors que le précédent fonctionne (7)
 - La plupart des pannes sont évitables. 1 appareil sur 2 rapporté au SAV souffre juste d’un défaut d’entretien et ne nécessite aucune pièce de rechange (c’est même 60 % des cas pour le gros électroménager !) (8)
 - Un foyer français estime posséder 34 équipements électriques et électroniques alors qu’il en possède en réalité en moyenne 99, dont 6 ne sont jamais utilisés ! (9)
@@ -50,7 +50,7 @@ Si un foyer français allonge d’un an (au lieu de les remplacer) la durée d�
 	- 63 % des téléviseurs tombés en panne ont été remplacés et seulement 29 % réparés (auto-réparation et professionnel) (12)
 
 
-### Explication
+## Explication
 La liste des équipements électriques et électroniques qui composent notre foyer est longue, très longue même. Alors que les Français pensent posséder environ 34 équipements électriques et électroniques par foyer, ils en possèdent en réalité 99 (7).
 
 Poussés par des stratégies marketing toujours plus performantes nous accumulons de plus en plus de biens électriques et électroniques. Ces stratégies ont même réussi à transformer ces équipements en biens de consommation ordinaires que nous remplaçons facilement. Malheureusement, la production de ces biens n’est pas sans conséquence sur l’environnement. De l’extraction des matières premières au fonctionnement des usines sans oublier le transport ce sont de très grande quantité d’énergie et de matière qu’il faut mobiliser. Pour les produits à forte composante électronique c’est cette phase amont du cycle de vie du produit qui contribue très majoritairement à leurs impacts GES (cf Figure 1). Pour certains produits comme les télévisions ou les smartphones, la phase d’extraction de la matière première représente même plus de 80 % des impacts GES sur l'ensemble du cycle de vie (5). Même si cette tendance est moins marquée pour les produits à faible composante électronique (i.e. électroménager) étant donné que la phase d’utilisation est souvent la plus impactante, il n’en reste pas moins que le renouvellement prématuré des équipements contribue à augmenter significativement les émissions de GES et les pollutions (de l’air, de l’eau et du sol). 
@@ -67,7 +67,7 @@ Pour réaliser vos réparations plusieurs solutions s’offrent à vous. Vous po
 
 De plus, sachez qu’afin de vous aidez dans d’éventuelles réparations, la loi oblige depuis 2015 (15) les vendeurs de bien neufs de produire une information sur la durée de disponibilité des pièces détachées. 
 
-### Passer à l’action
+## Passer à l’action
 Les ateliers de réparation, d’upcycling et de customisation vous aideront à réparer, transformer ou créer à partir d’objets de récupération. Pour trouver les Repair Cafés® proches de chez vous, consultez le site de l’association : ![www.repaircafe.org](www.repaircafe.org/fr)
 
 Pour consulter les notices et manuels d’utilisation des différents produits, échanger sur un forum d’entraide et dialoguer directement avec les fabricants : www.apreslachat.com
@@ -83,7 +83,7 @@ Pour partager des conseils et des astuces sur la réparation des biens : www.com
 Les Amis de la Terre proposent des adresses près de chez vous pour donner une seconde vie à vos objets : ![www.produitspourlavie.org](www.produitspourlavie.org/guideReparationReemploi/Guide_Reemploi_Cartes.php)
 
 
-### Sources
+## Sources
 (1) : L’empreinte carbone des Français reste stable, janvier 2020, Commissariat général au développement durable
 (2) : Empreinte carbone d’un français moyen en 2010,  Carbone 4 et Terra Eco
 (3) : Bien d’équipements, les bénéfices environnementaux d’allonger leur durée de vie, infographie, 2019, ADEME

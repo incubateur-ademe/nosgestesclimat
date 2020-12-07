@@ -1,14 +1,14 @@
 # Faire ses courses en vrac et essayer de réduire les emballages alimentaires 
 
-### Contexte de l’action
+## Contexte de l’action
 Emballage, suremballage, usage unique : ces pratiques de conditionnement de notre alimentation sont relativement “récentes” et ont notamment vu le jour avec la généralisation après-guerre d’un produit dérivé du pétrole : le plastique. Les emballages alimentaires plastifiés sont maintenant devenus la base du conditionnement alimentaire. Cette pratique, en plus associée de manière quasi systématique à la pratique du « tout jetable », induit des pollutions significatives en terme de GES (tout emballage à usage unique doit être traité en tant que déchet mais également reproduit) et en terme de matière où la pollution plastique est visible et bien connue de tous.
 
 ![](https://sendeyo.com/up/d/be3e2c0f1c)
 
-### Impact GES moyen de l’action
+## Impact GES moyen de l’action
 Réduire les emballages alimentaires en faisant ses courses en vrac : **-35 kgCO2eq/an**
 
-### Chiffres clés à retenir
+## Chiffres clés à retenir
 - 70 % du marché de l’emballage en France concerne l’alimentation (1)
 - 85% des emballages jetés par les ménages sont des emballages alimentaires (1)
 - En Europe, chaque année, 25,8 millions de tonnes de déchets plastique sont produites, dont 60% proviennent des emballages (2)
@@ -17,7 +17,7 @@ Réduire les emballages alimentaires en faisant ses courses en vrac : **-35 kgCO
 - Chaque année, entre 8 et 12 millions de tonnes de plastique finissent dans les océans (4)
 - On estime que le “7e continent de plastique” flottant au large de l’Océan Pacifique contiendrait environ 80 000 tonnes de déchets plastique et s’étendrait sur une surface d’environ 1.6 millions de km2 (soit plus de 3 fois la surface de la France métropolitaine) (6)
 
-### Explication
+## Explication
 Les emballages alimentaires font partie intégrante de la chaîne de valeur de l’alimentation. Depuis la généralisation du plastique dans les années 60, il est très rare de trouver un produit non emballé dans du plastique (film PET, Polyester, etc.). Cette consommation accrue de matière s’est également couplée à une mutation des comportements poussée par la pratique du tout jetable et ce, même pour les autres types d’emballages (cartons, verres, aluminium, etc.). C’est ainsi que 85 % des emballages jetés par les ménages sont des emballages alimentaires et que le volume des ordures ménagères des ménages a doublé en France en 40 ans (même si ce dernier diminue depuis maintenant plus de 10 ans). Aujourd’hui, un français génère 254 kg/an d’ordure ménagère (7). Même si le secteur des déchets ne compte que pour 3% des émissions de GES nationales (14 MtCO2eq), la fabrication des produits d’emballage et leur gestion une fois le statut de déchets acquis (transports, transformation, incinération, stockage) contribuent donc à émettre des GES.
 
 A cette problématique GES, s’ajoute surtout une problématique matière notamment pour le plastique. En effet, son taux de collecte est incertain et son taux de recyclage réel assez faible. Ainsi, seul 25 % des déchets plastiques jetés sont collectés et seulement 13 % sont recyclés (5-Annexe 8) au sens large, car comme nous allons le voir, le terme recyclage regroupe beaucoup de pratiques et sa réussite varie fortement d’un type de plastique à l’autre. 
@@ -30,7 +30,7 @@ Enfin, il est important de savoir qu’une part significative de nos déchets ne
 
 **Le meilleur des déchets reste donc celui qu’on ne produit pas**. C’est pourquoi réduire la quantité d’emballages alimentaires que l’on utilise, faire ses courses en vrac (ou même tendre vers une démarche zéro déchet – à ce sujet, consultez la fiche dédiée “Je réduis la taille de ma poubelle et je tends vers un mode de vie zéro déchets”) permet de préserver les ressources naturelles et d’éviter les émissions de GES et les pollutions associées à la production de matières premières et à la fin de vie des déchets.
 
-### Sources
+## Sources
 (1) : Infographie : Mieux manger, Moins gaspiller, Moins polluer, ADEME
 (2) : www.zerowastefrance.org
 (3) : Haut Conseil pour le Climat. La position du Haut Conseil pour le Climat. Juin 2019

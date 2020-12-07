@@ -1,14 +1,14 @@
 # Acheter (si cela vous est nécessaire) des meubles de 2nd main ou éco-conçus
 
-### Contexte de l’action
+## Contexte de l’action
 Il semble contre-intuitif que nos meubles puissent participer à augmenter l’empreinte carbone de notre consommation étant donné qu’il s’agit de produits figés ne consommant aucune énergie. Mais c’est oublier l’ensemble des procédés nécessaires à leur fabrication et à leur acheminement jusqu’au lieu de vente. A cela il faut aussi prendre en compte l’impact de la ressource si cette dernière n’est pas gérée durablement (pour le bois notamment). Acheter ses meubles de seconde main ou éco-conçus permet donc de réduire fortement notre impact sur le climat.
 
-### Impact GES moyen de l’action
+## Impact GES moyen de l’action
 J'achète une table et 4 chaises en bois d’occasion (au lieu de neufs): **- 35 kg CO2eq**
 
 J'équipe mon (petit) appartement avec du mobilier de 2nd main (au lieu de neufs) : **- 587 kg CO2eq**
 
-### Ordre de grandeur GES
+## Ordre de grandeur GES
 
 ![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/meubles-2nd-main-fig1.jpg)
 
@@ -18,17 +18,17 @@ J'équipe mon (petit) appartement avec du mobilier de 2nd main (au lieu de neufs
 
 ```Figure 2 : Impact GES pour plusieurs biens d'ameublement neufs et de seconde main (données élaborées depuis l’étude (3))```
 
-### Budget
+## Budget
 Que vous cherchiez de la marque ou non, le prix final payé  pour un meuble de seconde main est toujours bien moins élevé que pour du mobilier neuf. En revanche, pour des produits éco-conçus et dont le bois provient de forêts gérées durablement, il est fort probable qu’ils soient plus chers à l’achat.
 
-### Chiffres clés à retenir
+## Chiffres clés à retenir
 - En 2019, les ventes de meubles neufs en France ont atteint 13.4 milliards d'euros (4).
 - Chaque logement possède en moyenne 61 meubles (5).
 - On estime à 1,2 million de tonnes la quantité de meubles usagés dont nous nous séparons chaque année : c’est l’équivalent de 120 fois le poids de la Tour Eiffel (6)
 - Le matériau utilisé pour la fabrication de nos meubles est important. Ainsi, un salon de jardin en bois aura une empreinte carbone moyenne deux fois moindre qu’un salon de jardin en métal (respectivement 103 kg CO2eq contre 224 kg CO2eq).
 - Chaque année 7 milliard de grands arbres sont abattus pour un besoin économique immédiat sans être remplacés, ce qui représente 200 000 km² de forêt coupée (la surface de la Guyane !)”.
 
-### Explication
+## Explication
 Les produits d’ameublement, à l’inverse d’autres biens de consommation comme l'électronique, l’électroménager ou bien même les vêtements (par leur lavage régulier) n’émettront pas de gaz à effet de serre durant leur période d’utilisation. Néanmoins, cela ne veut pas dire que l’impact de nos meubles n'existe pas. En effet, si l’on considère l’ensemble de leur cycle de vie, plusieurs phases ont des impacts GES significatifs. Les trois phases de cycle de vie les plus contributrices sont la phase d’assemblage/distribution, la phase de production des matières premières et la phase de fin de vie.
 
 Il y a donc plusieurs moyens de réduire l’impact GES associé à l’achat de biens d’ameublement. La première manière est d’acheter ses meubles d’occasion/2nd main. Cela permet d’éviter toutes les pollutions et les émissions de GES liées aux processus de fabrication dits “amont” des cycles de vie, c'est-à-dire la production de la matière première, l'approvisionnement, la mise en forme et l’assemblage. Cette réduction des impacts est d’autant plus significative pour du mobilier dont les matières premières qui le compose sont issues d’hydrocarbures ou de métaux (la mousse polyuréthane, le plastique et le métal sont, par exemple, des matériaux qui contribuent fortement aux poids carbone du produit final de par l’impact très important de leur phase de production) ou de bois dont la provenance de forêts gérées durablement n’est pas certifiée. En effet, le bois non certifié est très probablement issu de déforestation sauvage. Les méthodes de calcul d’impact carbone considèrent donc une forte contribution au changement climatique pour cette pratique, là où une gestion durable de la forêt, par le prélèvement de dioxyde de carbone associé à la phase de production du bois (c’est-à-dire à la pousse de l’arbre), est considérée avoir un impact neutre sur le changement climatique. Chaque année 7 milliard de grands arbres sont abattus pour un besoin économique immédiat sans être remplacés, ce qui représente 200 000 km² de forêt coupée  soit l’équivalent de la surface de la Guyane. 
@@ -41,13 +41,13 @@ L’autre manière de réduire l’impact GES associé à nos achats de meubles 
 
 ```Figure 3 : Les deux logos à chercher quand vous achetez des meubles en bois```
 
-### Passer à l’action
+## Passer à l’action
 Pour acheter de seconde main : 
 - [Emmaus](https://www.label-emmaus.co/fr/)
 - [troc.com](https://www.troc.com/fr/meubles-c10000)
 - [leboncoin](https://www.leboncoin.fr)
 
-### Sources
+## Sources
 (1) : L’empreinte carbone des Français reste stable, janvier 2020, Commissariat général au développement durable
 (2) : Empreinte carbone d’un français moyen en 2010,  Carbone 4 et Terra Eco
 (3) : Modélisation et évaluation du poids carbone de produits de consommation et biens d’équipements

@@ -1,15 +1,15 @@
 # Consommer durable 
 
-### Contexte de l’action
+## Contexte de l’action
 Des habits que nous portons, au mobilier d’intérieur sans oublier bien évidemment nos appareils électriques et électroniques, notre consommation de biens et équipements a un impact réel sur le climat. L’empreinte carbone de notre consommation représente d’ailleurs le quart de notre empreinte carbone totale individuelle. C’est pourquoi suivre les principes d’une consommation plus durable (du questionnement du besoin réel à l’achat de produits durables) est essentielle pour réduire son impact sur l’environnement.
 
-### Impact GES moyen de l’action
+## Impact GES moyen de l’action
 Consommer durable permet toujours d’évités et réduire nos impacts sur l’environnement et le climat, et ce même quand il s’agit de l’achat de biens neufs (en comparaison à l’achat de biens “moyens”, c’est-à-dire non labellisés et/ou éco-conçus et/ou produits localement). Pour comprendre les impacts et connaitre leurs poids sur notre empreinte carbone, n’hésitez pas à consulter les fiches dédiées aux différents principes de la consommation durable (rubrique Passer à l’action). 
 
-### Budget
+## Budget
 Consommer durable est souvent tagué d’un préjugé de coûter plus cher, mais permet en réalité très souvent de réaliser des économies. A l’exception de l’achat de biens neufs durables, les différents principes de la consommation durable, qu’il s’agisse de questionner son besoin réel, d’acheter de seconde main, de réparer ses biens ou d’utiliser ceux du voisin, permettent des économies conséquentes pouvant monter jusqu’à plusieurs centaines d’euros en fonction des biens considérés et des gestes suivis. 
 
-### Chiffres clés à retenir
+## Chiffres clés à retenir
 - Un téléviseur pèse 11 kg mais nécessite de mobiliser 2.5 tonnes de matières premières pour sa fabrication tandis qu’un réfrigérateur et un lave-linge pèsent respectivement 56 et 79 kg pour 1.75 tonnes et 2.1 tonnes de matières mobilisées. Notre garde-robe (+ chaussure) n’est pas en reste car elle pèse en moyenne 50 kg pour 2.5 tonnes de matières mobilisée. (3)
 - En comparaison à 2002, nous achetons en moyenne 60 % de plus de vêtements que nous gardons deux fois moins longtemps (4)
 - La vente de voiture a été multiplié par 6, passant de 5 millions en 1960 à plus de 30 millions aujourd’hui (5)
@@ -17,7 +17,7 @@ Consommer durable est souvent tagué d’un préjugé de coûter plus cher, mais
 - 93 % de notre garde-robe n’est plus portée depuis plus d’un an (4)
 - Selon une étude IFOP pour l’ADEME, 74% des consommateurs prennent en compte le respect de l’environnement dans leurs achats (7)
 
-### Explication
+## Explication
 L’impact de notre consommation qu’il s’agisse de vêtements, de meubles ou de produits électroniques est bien réel. L’empreinte carbone de notre consommation représente d’ailleurs le quart de notre empreinte carbone individuelle. Poussée par la mutation de nos rapports avec les objets (par l’intermédiaire de stratégies marketing omniprésentes et efficaces), notre manière de consommer est directement responsable de ces impacts. L’acte d’achat, et plus particulièrement celui du renouvellement d’un produit, est devenu quelque chose d'anodin. Les impacts environnementaux de ces actes sont totalement occultés (notamment ceux d’un renouvellement précoce) car souvent poussés hors de nos frontières. 
 Essayer de réduire l’impact carbone de sa consommation, c’est donc penser ces actes d’achats de manière responsable : on parle alors de consommation durable. Pour cela, il y a plusieurs principes clés à respecter :
 
@@ -59,7 +59,7 @@ La mode, la publicité et plus généralement les stratégies marketing nous pou
 
 Ce principe très en lien avec le principe précédent consiste à essayer de faire durer le plus longtemps les biens et produits que nous possédons. Qu’il s’agisse de la réparation d’une panne ou de l’extension de la durée de vie du produit (par rapport à sa durée de vie initiale théorique), c’est autant d'émissions de CO2 évitées et d’euros économisés. A titre d’exemple, réparer son lave-linge si celui tombe en panne (à demi-vie), c’est 105 kgCO2eq évités (11) (l’équivalent de 410 km parcourus en voiture). Si j’allonge la durée totale d'usage de mes équipements multimédia et électroménagers  d’un an (plutôt que les remplacer), c’est 184 kgCO2eq évités (12). Pour en savoir plus, n’hésitez pas à consulter les fiches dédiées à l’augmentation des durées de nos biens et équipements (rubrique Passer à l’action).
 
-### Passer à l’action
+## Passer à l’action
 Pour savoir quel label choisir : https://www.ademe.fr/labels-environnementaux
 
 Les ateliers de réparation, d’upcycling et de customisation vous aideront à réparer, transformer ou créer à partir d’objets de récupération. Pour trouver les Repair Cafés® proches de chez vous, consultez le site de l’association : www.repaircafe.org/f
@@ -89,7 +89,7 @@ La France expérimente l’affichage environnemental. Son but : informer le cons
 - Désencombrer sa consommation
 - Se détacher de l’influence de la pub et des soldes
 
-### Sources
+## Sources
 (1) : L’empreinte carbone des Français reste stable, janvier 2020, Commissariat général au développement durable
 (2) : Empreinte carbone d’un français moyen en 2010,  Carbone 4 et Terra Eco
 (3) : L’économie circulaire en 10 questions, décembre 2019, Ademe

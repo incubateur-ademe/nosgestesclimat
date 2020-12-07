@@ -1,9 +1,9 @@
 # Se détacher de l’influence de la pub et des soldes
 
-### Contexte de l’action
+## Contexte de l’action
 Par les désirs et besoins qu’elle crée en nous, la publicité (et plus largement le marketing) nous incite à la surconsommation. En effet, tous les biens de consommation font l’objet de stratégies d’obsolescence programmée (qu’elle soit technique et/ou culturelle) afin d’augmenter les taux de renouvellement et ainsi les volumes de ventes. Cette surconsommation, au regard des procédés, énergie et matière qu’elle mobilise, n’est aucunement soutenable. Essayer de changer de mode de consommation en prêtant moins d’importance aux désirs publicitaires est donc un geste significatif pour réduire son empreinte sur la planète.
 
-### Impact GES moyen de l’action 
+## Impact GES moyen de l’action 
 Je ne renouvelle pas trop tôt (par effet de mode) mes équipements  (3):
 - Smartphone : **16 kgCO2eq évités** en évitant le renouvellement à 2 ans de demi-vie. Cela équivaut à 60 km en voiture
 - Ordinateur portable : **65 kgCO2eq évités** en évitant le renouvellement à 3 ans de demi-vie. Cela équivaut à 240 km en voiture
@@ -12,7 +12,7 @@ Je ne renouvelle pas trop tôt (par effet de mode) mes équipements  (3):
 - Lave-linge : **120 kgCO2eq évités** en évitant le renouvellement à 5 ans de demi-vie. Cela équivaut à 470 km en voiture
 - Réfrigérateur combiné : **110 kgCO2eq évités** en évitant le renouvellement à 5 ans de demi-vie. Cela équivaut à 110 km en voiture
 
-### Ordre de grandeur GES 
+## Ordre de grandeur GES 
 
 ![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eee-2nd-main-fig1.jpg)
 
@@ -22,7 +22,7 @@ Je ne renouvelle pas trop tôt (par effet de mode) mes équipements  (3):
 
 ```Figure 2 : Impact GES des phases amont et aval pour plusieurs équipements électroménager (données élaborées depuis (4))```
 
-### Budget
+## Budget
 Allonger la durée de vie des produits, c’est aussi réaliser des économies. L’ADEME met en évidence (5) qu’il est toujours économiquement favorable pour le consommateur de ne pas remplacer un équipement pour des raisons d’obsolescence perçue  (c’est-à-dire une volonté de changer alors que l’équipement fonctionne toujours). Cela représente une économie de :
 - Smartphone : **96€/an** (soit 288 € sur sa durée de vie complète restante)
 - Ordinateur portable : **112€/an** (soit 336 € sur sa durée de vie complète restante)
@@ -31,12 +31,12 @@ Allonger la durée de vie des produits, c’est aussi réaliser des économies. 
 - Lave-linge : **29 €/an** (soit 145 € sur sa durée de vie complète restante)
 - Réfrigérateur combiné : **36 €/an** (soit 180 € sur sa durée de vie complète restante)
 
-### Chiffres clés à retenir 
+## Chiffres clés à retenir 
 - En 2014, 92 % des Français étaient persuadés que les produits électroménagers étaient conçus pour ne pas durer (6).
 - On évalue à 1,4 million de tonnes la quantité de déchets d’équipements électriques et électroniques produits en France chaque année (7).
 - 18 mars 2016 : depuis cette date, la garantie légale de conformité des produits est étendue à deux ans, contre six mois auparavant. Pendant cette période, le consommateur peut invoquer un défaut de conformité d’un produit, présumé existant au moment de l’achat.
 
-### Explication
+## Explication
 Notre société de consommation a vu le jour et s’est démocratisée dans l'après-guerre. Ayant contribué à l’amélioration de la qualité de vie et du confort des foyers français, nous réalisons maintenant que son existence est incompatible avec un mode de développement respectant les limites du système Terre. En effet, en créant artificiellement un besoin/une demande (par des publicités alléchantes, des stratégies marketing efficaces, etc.), nous avons la sensation que nos produits sont obsolètes tant d’un point de vue technique que du point de vue de l’image qu’ils dégagent. Nous cherchons donc à les remplacer souvent bien avant leur durée de vie atteinte. Ce renouvellement perpétuel de nos biens et équipements est la base de notre machine économique. Il permet d’augmenter la rentabilité financière de nos entreprises et de grappiller quelques points de croissance. Ce renouvellement est même souvent exacerbé au moment des soldes où les prix cassés servent à créer d’autant plus de désir afin d'augmenter les taux de renouvellement et ainsi remettre de l’huile dans le moteur de la consommation.
 
 Malheureusement, ce mode de fonctionnement n’est pas soutenable. Comme le met en évidence plusieurs rapports de l’ADEME, il est toujours environnementalement (3) (et économiquement même) favorable de ne pas renouveler prématurément nos biens et équipements (cf. Impact GES moyen de l’action).
@@ -49,7 +49,7 @@ Un autre indicateur moins connu mesurant l’impact de nos modes de vie est l’
 
 Enfin, un dernier indicateur mettant en avant la non soutenabilité de nos modes de vies est [le jour du dépassement](https://www.overshootday.org/). Cet indicateur met en avant la date à laquelle l’humanité à consommer, en une année, les ressources “mises à disposition” par le système Terre. Ce jour se rapproche d’année en année (c’est à dire qu’il est de plus en plus proche du 1er janvier) et se situe en 2019 (2020 n’étant pas représentatif d’une année normale en raison de la crise sanitaire mondiale) le 29 juillet. Pour cet indicateur aussi, le jour du dépassement est différent selon les modes de vie des différents pays. Ainsi, en 2018, en considérant les modes de vie américain, luxembourgeois, français, chinois, brésilien, égyptien et vietnamien, les jours du dépassement sont survenus respectivement les 19 février, 15 mars, 5 mai, 15 juin, 19 juillet, 6 novembre, 21 décembre.
 
-### Sources
+## Sources
 (1) : L’empreinte carbone des Français reste stable, janvier 2020, Commissariat général au développement durable
 (2) : Empreinte carbone d’un français moyen en 2010,  Carbone 4 et Terra Eco
 (3) : Modélisation et évaluation environnementale de produits de consommation et biens d’équipement, rapport, décembre 2019, ADEME

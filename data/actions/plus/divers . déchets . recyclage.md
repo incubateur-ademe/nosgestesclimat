@@ -1,23 +1,23 @@
 # Recycler correctement ses biens et équipements
 
-### Contexte
+## Contexte
 Les vêtements que nous portons, notre mobilier d’intérieur, nos appareils électriques et électroniques, … en d’autres termes, nos « biens de consommation » représentent un gisement de matière conséquent et encore mal exploité. Réussir à récupérer et réutiliser cette matière est essentiel pour réduire l’impact environnemental de tous les secteurs de consommation. Suivre les consignes de tri concernant l’ensemble de nos biens et équipements, c’est aussi contribuer à rendre les filières de recyclage pertinentes au sein de la transition écologique. Plus généralement, cela permet d'œuvrer à la préservation de nombreuses ressources tout en évitant de consommer de grande quantité d’énergie.
 
-### Impact GES moyen de l’action
+## Impact GES moyen de l’action
 Il est difficile de quantifier l’impact de cette action à l’échelle individuelle. Néanmoins, en France, sur une année et de manière globale (i.e. portant sur les déchets des ménages, des entreprises et des collectivités), le recyclage (qu’il s’agisse de réemploi, de valorisation matière ou de valorisation énergétique) a contribué à (1) :
 - éviter les émissions de **23 millions de tonnes de CO2**,
 - éviter la consommation de **64 TWh** d’énergie soit l’équivalent de la production annuelle de trois à quatre centrales nucléaires (le parc français en compte 19)
 
 Recycler, même à son échelle, c’est donc participer à cette économie de matière et d’énergie.
 
-### Ordre de grandeur GES
+## Ordre de grandeur GES
 
 ![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/trier-dechets-consommation-fig1.jpg)
  
 ```Figure 1 : Impact GES de la réincorporation d’une tonne de matériaux [source (9)]```
 
 
-### Chiffres clés à retenir
+## Chiffres clés à retenir
 - Le tonnage de nos déchets d’équipements électriques et électroniques (DEEE) collecté était en 2018 de 730 000 tonnes. Cela ne représente que 51 % des 1.5 millions de tonnes (3) mises sur le marché cette année-là . La mise sur le marché correspond à l’ensemble des produits vendus. L’objectif étant d’arriver progressivement à de très haut taux de collecte. En 2018 l’objectif fixé par les autorités était un taux de collecte de 59 %.
 - Nos équipements électriques et électroniques sont à :
 	- 72 % recyclés d’un point de vue matière
@@ -38,7 +38,7 @@ Recycler, même à son échelle, c’est donc participer à cette économie de m
 	- à 34 %  à la valorisation matière. Ils sont notamment utilisés pour faire des chiffons d’essuyage à usage industriel et ménager, des filatures (production de nouveaux textiles), des géotextiles à destination de l'automobile et du bâtiment (pour réaliser le rembourrage et l’isolation) ou encore des plastiques composites.
 	- à 8 % de la valorisation énergétique. Ils sont brûlés (avec d’autres matières) pour produire de la chaleur (8). 
 
-### Explication
+## Explication
 Nos biens et équipements sont un gisement de matière conséquent et mal exploité. En 2019, le volume de nos biens et équipements jetés, ramené à l’individu, représente pour un français moyen : 2.9 kg  de TLC (textiles, linges de maison et chaussures), 3 biens d’ameublement par an et 22 kg de DEEE (Déchets d’Equipements Electriques et Electroniques).
 
 Même si les taux de collecte progressent d’année en année avec la structuration des filières de collecte dédiées, le geste de recyclage pour nos biens et équipements n’est pas encore la norme. Une trop grande fraction finit encore dans nos poubelles courantes. Il est ainsi important de rappeler qu’il ne faut en aucun cas jeter nos biens et équipements dans nos poubelles courantes, qu’il s’agisse de la poubelle classique (poubelle grise) ou de la poubelle de tri (poubelle dédiée aux papiers, cartons, plastiques notamment) et ce pour plusieurs raisons :
@@ -50,7 +50,7 @@ Par ailleurs, apporter les biens et équipements dont nous ne voulons plus en PA
 - massifier le gisement de déchets et donc, in fine, la quantité de produits pouvant être réutilisés/réemployés directement ou de matière disponible pouvant être réincorporée réellement dans la fabrication d’un autre produit. C’est ainsi que l’entreprise Le Relais conçoit l’isolant Métisse®, isolant thermique et acoustique issu de textiles recyclés .
 - générer des économies de matière. Et c’est là, le principal avantage du tri et du recyclage. Cela permet d’éviter de perdre de la matière et donc de ne pas avoir à en recréer. Grâce au recyclage, on conserve donc, pour un nouvel usage, une partie de l’énergie et de la matière contenue dans les déchets. Dans le cas de nos équipements électroniques, c’est autant de processus d'extraction de matières premières, de minerais et de terres rares en moins. Pour une autre matière comme l’aluminium (bien que moins utilisée par les ménages), ce n’est pas moins de 95% d’énergie économisée par la confection d’une tonne d’aluminium à partir d’aluminium recyclé .
 
-### Passer à l’action
+## Passer à l’action
 Pour connaitre les Points d’Apports Volontaires (PAV) les plus près de chez soi :
 - Textiles, Linges de maison et Chaussures (TLC) : 
 ![refashion.fr](https://refashion.fr/citoyen/fr/je-d%C3%A9pose)
@@ -60,7 +60,7 @@ Pour connaitre les Points d’Apports Volontaires (PAV) les plus près de chez s
 	- ![www.ecosystem.eco](https://www.ecosystem.eco/fr/recherche-point-de-collecte)
 	- ![www.ecologic-france.com](https://www.ecologic-france.com/citoyens/ou-deposer-mes-dechets.html)
 
-### Sources
+## Sources
 (1) : L’empreinte carbone des Français reste stable, janvier 2020, Commissariat général au développement durable
 (2) : Empreinte carbone d’un français moyen en 2010,  Carbone 4 et Terra Eco
 (3) : Équipements électriques et électroniques, données 2018, rapport annuel, septembre 2009, ADEME
