@@ -3,6 +3,8 @@
 ### Contexte de l’action
 Nos biodéchets, c’est à dire les déchets putrescibles issus de notre alimentation (épluchures, restes de repas, etc.), représentent une grande partie du poids de notre poubelle grise contribuant ainsi à majorer l’empreinte carbone associée à la gestion de nos déchets. Ces déchets sont très souvent peu ou mal valorisés malgré le bénéfice environnemental qu’ils peuvent apporter : un compost, substance organique riche et bénéfique pour les sols. Composter nos biodéchets (de manière individuelle ou collective) permet donc de réduire la taille de nos poubelles et de favoriser la création de ce compost pouvant à terme être utilisé comme alternative aux engrais chimiques
 
+![](https://sendeyo.com/up/d/7a2de26405)
+
 ### Impact GES moyen de l’action
 Je composte mes biodéchets : ** -15 kgCO2eq/an**
 
