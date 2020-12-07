@@ -4,6 +4,8 @@
 2/3 de la consommation d’énergie d’un ménage est consacrée au chauffage (3). Cette consommation d’énergie, en plus d’avoir un coût financier non négligeable, participe à augmenter l’empreinte carbone des ménages. 
 Cette forte consommation énergétique s’explique souvent par des logements énergivores où l’isolation thermique est mauvaise voire inexistante. En effet, les 2/3 des logements en France ont été construits avant 1974 (2), période où il n’y avait aucune réglementation thermique en vigueur et où les économies d’énergie n’étaient pas une priorité. Rénover énergétiquement son logement permet donc de contribuer à réduire massivement la consommation d’énergie liée au chauffage et de fait, son empreinte sur le climat.
 
+![](https://sendeyo.com/up/d/3f6bb1a5b0)
+
 ### Impact GES moyen de l’action et ordre de grandeur
 
 ![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/renovation-energetique-fig1.jpg)
