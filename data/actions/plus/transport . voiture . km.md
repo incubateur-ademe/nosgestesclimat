@@ -3,6 +3,8 @@
 ### Contexte de l’action
 La dépendance à la voiture individuelle dans nos déplacements quotidiens est telle que nous allons jusqu’à l’utiliser pour des trajets très courts, c’est-à-dire des trajets de moins de 5 km. Ainsi, chaque jour, plusieurs dizaines de millions de trajets de moins de 5 km sont réalisés seul en voiture (hors trajets domicile-travail) représentant ainsi 43 % des trajets quotidiens . L’utilisation de la voiture pour ces « petits » trajets n’est malheureusement pas sans impact sur le climat ainsi que sur la qualité de l’air que nous respirons très souvent saturés en polluants atmosphériques. Privilégier le vélo (ou tout autre type de mobilités actives) pour les petits trajets du quotidien permet donc d’agir à la fois à son échelle en réduisant son empreinte carbone individuelle mais aussi d’agir plus largement en participant à un changement global de mentalité. 
 
+![](https://sendeyo.com/up/d/c63675fabb)
+
 ### Impact GES moyen de l’action
 Sur la base des données de l’Enquête Nationale Transport et Déplacements (1)  , en considérant les déplacements (hors domicile-travail) de moins de 5 km seul en voiture :
 - Utiliser le vélo plutôt que la voiture pour les trajets de moins 5 km :  **-5 MtCO2eq/an** à l’échelle nationale, soit un peu plus que les émissions de GES de la Communauté Urbaine de Bordeaux (4,76 MtCO2eq (2) )
