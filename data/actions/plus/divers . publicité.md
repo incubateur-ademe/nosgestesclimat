@@ -5,12 +5,12 @@ Par les désirs et besoins qu’elle crée en nous, la publicité (et plus large
 
 ### Impact GES moyen de l’action 
 Je ne renouvelle pas trop tôt (par effet de mode) mes équipements  (3):
-- Smartphone : 16 kgCO2eq évités en évitant le renouvellement à 2 ans de demi-vie. Cela équivaut à 60 km en voiture
-- Ordinateur portable : 65 kgCO2eq évités en évitant le renouvellement à 3 ans de demi-vie. Cela équivaut à 240 km en voiture
-- Télévision : 170 kgCO2eq évités en évitant le renouvellement à 4 ans de demi-vie. Cela équivaut à 670 km en voiture
-- Lave-vaisselle : 100 kgCO2eq évités en évitant le renouvellement à 5 ans de demi-vie. Cela équivaut à 390 km en voiture
-- Lave-linge : 120 kgCO2eq évités en évitant le renouvellement à 5 ans de demi-vie. Cela équivaut à 470 km en voiture
-- Réfrigérateur combiné : 110 kgCO2eq évités en évitant le renouvellement à 5 ans de demi-vie. Cela équivaut à 110 km en voiture
+- Smartphone : **16 kgCO2eq évités** en évitant le renouvellement à 2 ans de demi-vie. Cela équivaut à 60 km en voiture
+- Ordinateur portable : **65 kgCO2eq évités** en évitant le renouvellement à 3 ans de demi-vie. Cela équivaut à 240 km en voiture
+- Télévision : **170 kgCO2eq évités** en évitant le renouvellement à 4 ans de demi-vie. Cela équivaut à 670 km en voiture
+- Lave-vaisselle : **100 kgCO2eq évités** en évitant le renouvellement à 5 ans de demi-vie. Cela équivaut à 390 km en voiture
+- Lave-linge : **120 kgCO2eq évités** en évitant le renouvellement à 5 ans de demi-vie. Cela équivaut à 470 km en voiture
+- Réfrigérateur combiné : **110 kgCO2eq évités** en évitant le renouvellement à 5 ans de demi-vie. Cela équivaut à 110 km en voiture
 
 ### Ordre de grandeur GES 
 
@@ -24,12 +24,12 @@ Je ne renouvelle pas trop tôt (par effet de mode) mes équipements  (3):
 
 ### Budget
 Allonger la durée de vie des produits, c’est aussi réaliser des économies. L’ADEME met en évidence (5) qu’il est toujours économiquement favorable pour le consommateur de ne pas remplacer un équipement pour des raisons d’obsolescence perçue  (c’est-à-dire une volonté de changer alors que l’équipement fonctionne toujours). Cela représente une économie de :
-- Smartphone : 96€/an (soit 288 € sur sa durée de vie complète restante)
-- Ordinateur portable : 112€/an (soit 336 € sur sa durée de vie complète restante)
-- Télévision : 44 €/an (soit 176 € sur sa durée de vie complète restante)
-- Lave-vaisselle : 24 €/an (soit 176 € sur sa durée de vie complète restante)
-- Lave-linge : 29 €/an (soit 145 € sur sa durée de vie complète restante)
-- Réfrigérateur combiné : 36 €/an (soit 180 € sur sa durée de vie complète restante)
+- Smartphone : **96€/an** (soit 288 € sur sa durée de vie complète restante)
+- Ordinateur portable : **112€/an** (soit 336 € sur sa durée de vie complète restante)
+- Télévision : **44 €/an** (soit 176 € sur sa durée de vie complète restante)
+- Lave-vaisselle : **24 €/an** (soit 176 € sur sa durée de vie complète restante)
+- Lave-linge : **29 €/an** (soit 145 € sur sa durée de vie complète restante)
+- Réfrigérateur combiné : **36 €/an** (soit 180 € sur sa durée de vie complète restante)
 
 ### Chiffres clés à retenir 
 - En 2014, 92 % des Français étaient persuadés que les produits électroménagers étaient conçus pour ne pas durer (6).
