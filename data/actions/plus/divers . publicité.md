@@ -14,7 +14,11 @@ Je ne renouvelle pas trop tôt (par effet de mode) mes équipements  (3):
 
 ### Ordre de grandeur GES 
 
+![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eee-2nd-main-fig1.jpg)
+
 ```Figure 1 : Impact GES des phases amont et aval pour plusieurs équipements à forte composante électronique (données élaborées depuis (4))```
+
+![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eee-2nd-main-fig2.jpg)
 
 ```Figure 2 : Impact GES des phases amont et aval pour plusieurs produits électroménager (données élaborées depuis (4))```
 
