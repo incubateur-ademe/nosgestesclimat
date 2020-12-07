@@ -3,6 +3,8 @@
 ### Contexte de l’action
 Emballage, suremballage, usage unique : ces pratiques de conditionnement de notre alimentation sont relativement “récentes” et ont notamment vu le jour avec la généralisation après-guerre d’un produit dérivé du pétrole : le plastique. Les emballages alimentaires plastifiés sont maintenant devenus la base du conditionnement alimentaire. Cette pratique, en plus associée de manière quasi systématique à la pratique du « tout jetable », induit des pollutions significatives en terme de GES (tout emballage à usage unique doit être traité en tant que déchet mais également reproduit) et en terme de matière où la pollution plastique est visible et bien connue de tous.
 
+![](https://sendeyo.com/up/d/be3e2c0f1c)
+
 ### Impact GES moyen de l’action
 Réduire les emballages alimentaires en faisant ses courses en vrac : **-35 kgCO2eq/an**
 
