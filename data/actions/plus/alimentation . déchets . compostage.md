@@ -6,7 +6,7 @@ Nos biodéchets, c’est à dire les déchets putrescibles issus de notre alimen
 ![](https://sendeyo.com/up/d/7a2de26405)
 
 ### Impact GES moyen de l’action
-Je composte mes biodéchets : ** -15 kgCO2eq/an**
+Je composte mes biodéchets : **-15 kgCO2eq/an**
 
 ### Budget
 Si votre collectivité de résidence met en place une Tarification Incitative (TI) , composter ses biodéchets peut représenter une économie financière significative  au vu de la part que ces déchets représentent dans nos poubelles grise. Une tarification incitative permet ainsi pour un foyer de 2 personnes (et concernant leur production d’OMR annuelle) une économie moyenne allant de 30 à 60 €/an.
