@@ -5,6 +5,7 @@ Il semble contre-intuitif que nos meubles puissent participer à augmenter l’e
 
 ### Impact GES moyen de l’action
 J'achète une table et 4 chaises en bois d’occasion (au lieu de neufs): **- 35 kg CO2eq**
+
 J'équipe mon (petit) appartement avec du mobilier de 2nd main (au lieu de neufs) : **- 587 kg CO2eq**
 
 ### Ordre de grandeur GES
