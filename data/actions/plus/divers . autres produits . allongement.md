@@ -11,6 +11,8 @@ J’allonge la durée d’usage totale de mon armoire :
 
 ### Ordre de grandeur GES
 
+![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/meubles-2nd-main-fig1.jpg)
+
 ### Budget
 Allonger la durée de vie du mobilier, c’est aussi réaliser des économies. L’ADEME met en évidence (4) qu’il est toujours économiquement favorable pour le consommateur de réparer ou de ne pas remplacer un équipement pour des raisons d’obsolescence perçue (c’est-à-dire une volonté de changer par l’utilisateur alors que l’équipement fonctionne toujours). Ainsi, pour une armoire cela peut représenter une économie d’environ 80 €.
 
