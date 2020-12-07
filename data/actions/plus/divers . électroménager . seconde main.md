@@ -11,8 +11,7 @@ De l’électroménager à la dernière tablette numérique, les équipements é
 ### Ordre de grandeur GES
 ![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eee-2nd-main-fig1.jpg)
 
-```Figure 1 : Impact GES des phases a
-mont et aval pour plusieurs à forte composante électronique (données élaborées depuis (3))```
+```Figure 1 : Impact GES des phases amont et aval pour plusieurs à forte composante électronique (données élaborées depuis (3))```
 
 ![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eee-2nd-main-fig2.jpg)
 
