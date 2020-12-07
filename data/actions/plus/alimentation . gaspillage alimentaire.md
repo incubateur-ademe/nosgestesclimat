@@ -1,10 +1,4 @@
-# Nos choix alimentaires : le quart de nos émissions
- 
-### Contexte général
-L’alimentation représente pour beaucoup d’entre nous le poste le plus émetteur de notre empreinte carbone (environ 2.5 tCO2eq/an) [1]. Nos choix et mode d’alimentation impactent, en effet, fortement le climat et notre environnement. 
-L’analyse de l’empreinte carbone d’un français moyen montre notamment l’importance que joue la consommation de produits animaux en termes d’émissions de GES. Ainsi, la consommation de viande est responsable de presque la moitié de l’impact du poste alimentation (41 %). Vient ensuite la consommation de produit laitier (34 %). La consommation de produits animaux représente donc, dans sa globalité pour un français moyen, les ¾ des émissions du poste alimentation. Le reste de notre alimentation (c’est-à-dire tous les autres aliments composant notre alimentation - fruits, légumes, etc.) n’est pour autant pas sans impact. Il compose le quart restant (25 %) de l’empreinte carbone de notre alimentation. En effet, une multitude de transformations, de transports et de processus ont lieux pour amener un produit du champ à notre assiette. 
-
-## Action : Réduire le gaspillage alimentaire
+# Réduire le gaspillage alimentaire
 
 ### Contexte de l’action
 En moyenne, l’alimentation représente le ¼ de notre empreinte carbone individuelle et plus largement entre 20 et 50 % de l’empreinte environnementale des Français. De la consommation d’énergie directe et indirecte à la consommation d’eau en passant par la pollution de certains milieux naturels, la production, la transformation et le conditionnement de nos aliments génèrent des impacts sur notre environnement et sur les ressources naturelles. 
