@@ -18,11 +18,11 @@ J’allonge la durée d’usage totale de mes équipements (4) :
 
 ![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eee-2nd-main-fig1.jpg)
 
-```Figure 1 : Impact GES des phases amont et aval pour plusieurs à forte composante électronique (données élaborées depuis l’étude (5))```
+```Figure 1 : Impact GES des phases amont et aval pour plusieurs équipements à forte composante électronique (données élaborées depuis l’étude (5))```
 
 ![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eee-2nd-main-fig2.jpg)
 
-```Figure 2 : Impact GES des phases amont et aval pour plusieurs produits électroménager (données élaborées depuis l’étude (5))```
+```Figure 2 : Impact GES des phases amont et aval pour plusieurs équipements électroménager (données élaborées depuis l’étude (5))```
 
 ### Budget
 Allonger la durée de vie des produits permet aussi de réaliser des économies. L’ADEME met en évidence (6) qu’il est toujours économiquement favorable  pour le consommateur de :
