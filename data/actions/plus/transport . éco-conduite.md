@@ -1,6 +1,9 @@
 # Adopter une éco-conduite
+
 ### Contexte de l’action
 Les déplacements quotidiens des Français, qu’il s’agisse des trajets domicile-travail ou bien de trajets personnels se font très majoritairement en voiture. - C’est ainsi 77 % des trajets quotidiens qui sont effectués en voiture (1). Adapter une éco-conduite et des pratiques éco-responsables au volant permet de diminuer l’empreinte carbone de nos déplacements et de limiter les émissions de GES.
+
+![](https://sendeyo.com/up/d/fd351d7a04)
 
 ### Impact GES moyen de l’action :
 De manière générale, l’éco-conduite permet une réduction de sa consommation de carburant d’en moyenne 15 % (2). Ainsi à titre d’exemple :
@@ -8,8 +11,6 @@ De manière générale, l’éco-conduite permet une réduction de sa consommati
 - Paris-Marseille en adoptant une éco-conduite : **- 24 kgCO2eq**
 - 1000 km en adoptant une éco-conduite : **- 31 kgCO2eq**
 - 15 000 km parcourus chaque année en adoptant une éco-conduite : **- 461kgCO2eq**
-
-
 
 
 ### Ordre de grandeur GES
