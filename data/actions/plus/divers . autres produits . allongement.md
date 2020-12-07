@@ -5,9 +5,9 @@ Les meubles, plus que de simples objets pratiques composent et personnifient not
 
 ### Impact GES moyen de l’action
 J’allonge la durée d’usage totale de mon armoire :
-- en la conservant 1 an de plus (au lieu de la remplacer) après atteinte de sa “durée de vie” initiale :**≈ 35 kgCO2eq  évités**
-- en la conservant 2 ans de plus (au lieu de la remplacer) après atteinte de sa “durée de vie” initiale :**≈ 70 kgCO2eq  évités**
-- en la conservant 3 ans de plus (au lieu de la remplacer) après atteinte de sa “durée de vie” initiale :**≈ 105 kgCO2eq  évités**
+- en la conservant 1 an de plus (au lieu de la remplacer) après atteinte de sa “durée de vie” initiale : **≈ 35 kgCO2eq  évités**
+- en la conservant 2 ans de plus (au lieu de la remplacer) après atteinte de sa “durée de vie” initiale : **≈ 70 kgCO2eq  évités**
+- en la conservant 3 ans de plus (au lieu de la remplacer) après atteinte de sa “durée de vie” initiale : **≈ 105 kgCO2eq  évités**
 
 ### Ordre de grandeur GES
 
