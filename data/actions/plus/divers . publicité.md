@@ -20,7 +20,7 @@ Je ne renouvelle pas trop tôt (par effet de mode) mes équipements  (3):
 
 ![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eee-2nd-main-fig2.jpg)
 
-```Figure 2 : Impact GES des phases amont et aval pour plusieurs produits électroménager (données élaborées depuis (4))```
+```Figure 2 : Impact GES des phases amont et aval pour plusieurs équipements électroménager (données élaborées depuis (4))```
 
 ### Budget
 Allonger la durée de vie des produits, c’est aussi réaliser des économies. L’ADEME met en évidence (5) qu’il est toujours économiquement favorable pour le consommateur de ne pas remplacer un équipement pour des raisons d’obsolescence perçue  (c’est-à-dire une volonté de changer alors que l’équipement fonctionne toujours). Cela représente une économie de :
