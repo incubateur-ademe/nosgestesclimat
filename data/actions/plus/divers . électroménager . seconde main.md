@@ -11,15 +11,17 @@ De l’électroménager à la dernière tablette numérique, les équipements é
 ### Ordre de grandeur GES
 ![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eee-2nd-main-fig1.jpg)
 
-```Figure 1 : Impact GES des phases amont et aval pour plusieurs à forte composante électronique (données élaborées depuis (3))```
+```Figure 1 : Impact GES des phases amont et aval pour plusieurs équipements à forte composante électronique (données élaborées depuis (3))```
 
 ![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eee-2nd-main-fig2.jpg)
 
-```Figure 2 : Impact GES des phases amont et aval pour plusieurs produits électroménager (données élaborées depuis (3))```
+```Figure 2 : Impact GES des phases amont et aval pour plusieurs équipements électroménager (données élaborées depuis (3))```
 
 ![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eee-2nd-main-fig3.jpg)
 
-```Figure 3 : Impact GES sur une année associé au fonctionnement d’équipements classiques et d’équipements à faible consommation énergétique (à partir des consommations données dans (4)). Les équipements pris en compte sont : un réfrigérateur/congélateur, une machine à laver, un lave-vaisselle, un sèche-linge, un ordinateur, un aspirateur et un téléviseur```
+```Figure 3 : Impact GES sur une année associé au fonctionnement d’équipements classiques et d’équipements à faible consommation énergétique (à partir des consommations données dans (4))```
+
+*Les équipements pris en compte sont : un réfrigérateur/congélateur, une machine à laver, un lave-vaisselle, un sèche-linge, un ordinateur, un aspirateur et un téléviseur*
 
 ### Budget
 Que vous cherchiez de la marque ou non, le prix final payé en caisse est toujours bien moins élevé pour des équipements de seconde main que pour des équipements neufs. En revanche, il est fort probable que des produits éco-conçus ou efficaces soient plus chers à l’achat. Néanmoins, leur faible consommation d’énergie les rend plus rentables sur le long terme. Ainsi, sur la base des mêmes équipements que la Figure 3 et en considérant les consommations données dans (4) :
