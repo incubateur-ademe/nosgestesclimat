@@ -4,15 +4,21 @@
 De l’électroménager à la dernière tablette numérique, les équipements électriques et électroniques font maintenant partie intégrante de notre quotidien. Malheureusement, la production et le fonctionnement de ces biens ne sont pas sans impact sur le climat et sur l'environnement. De l’extraction de la matière première aux transports dans nos magasins, sans oublier leur fonctionnement quotidien, ce sont des quantités toujours plus importantes de matières et d’énergie à mobiliser. C’est pourquoi, acheter des équipements électriques et électroniques reconditionnés et/ou à faible consommation d’énergie et/ou éco-conçus permet de réduire fortement son impact sur le climat
 
 ### Impact GES moyen de l’action
-- Acheter une machine à laver reconditionnée au lieu d’une neuve : **≈ 275 kg CO2eq évités** (cf. Figure 2)
-- Acheter un smartphone reconditionné au lieu d’un neuf **≈ 40 kg CO2eq évités** (cf. Figure 1)
-- Fonctionnement d’appareils efficaces vs appareils peu efficaces : **- 36 kg CO2eq/an**
+- Acheter une machine à laver reconditionnée au lieu d’une neuve : **275 kg CO2eq évités** (cf. Figure 2)
+- Acheter un smartphone reconditionné au lieu d’un neuf **40 kg CO2eq évités** (cf. Figure 1)
+- Fonctionnement d’appareils efficaces vs appareils peu efficaces : **36 kg CO2eq/an évités**
 
 ### Ordre de grandeur GES
+![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eee-2nd-main-fig1.jpg)
 
-```Figure 1 : Impact GES des phases amont et aval pour plusieurs à forte composante électronique (données élaborées depuis (3))```
+```Figure 1 : Impact GES des phases a
+mont et aval pour plusieurs à forte composante électronique (données élaborées depuis (3))```
+
+![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eee-2nd-main-fig2.jpg)
 
 ```Figure 2 : Impact GES des phases amont et aval pour plusieurs produits électroménager (données élaborées depuis (3))```
+
+![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eee-2nd-main-fig3.jpg)
 
 ```Figure 3 : Impact GES sur une année associé au fonctionnement d’équipements classiques et d’équipements à faible consommation énergétique (à partir des consommations données dans (4)). Les équipements pris en compte sont : un réfrigérateur/congélateur, une machine à laver, un lave-vaisselle, un sèche-linge, un ordinateur, un aspirateur et un téléviseur```
 
@@ -37,6 +43,8 @@ Dans le cas des équipements électriques (comme l’électroménager) et élect
 C’est pourquoi, afin de réduire son impact sur le climat, il est pertinent d’acheter des produits reconditionnés plutôt que neufs. En effet, les produits reconditionnés permettent d’éviter toutes les pollutions et les émissions de GES liées aux phases amont des cycles de vie (plus particulièrement les phases d'extraction de la matière première, d'approvisionnement, de mise en forme et d’assemblage).
 
 Néanmoins, si l’on souhaite acheter neuf, il existe aussi plusieurs moyens de réduire l’impact GES de ses achats. Pour se faire il faut se tourner vers des produits efficaces (c'est-à-dire à faible consommation d’énergie, aussi appelés à haute performance énergétique) et/ou éco-conçus. Le caractère “efficace” est  primordial dans le cas d’appareil électroménager ou la consommation d’énergie sur la phase d’utilisation représente souvent une part significative de l’impact GES d’un produit. Pour aider le consommateur à s’y retrouver dans le choix de ses appareils, des “étiquettes énergie” équipent maintenant tout nouveau produit électroménager. Ces étiquettes par une graduation claire permettent d’identifier clairement les produits performants énergétiquement et à consommation réduite. 
+
+![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eee-2nd-main-fig4.png)
 
 ```Figure 4 : Exemple d'étiquette d'énergie pour un réfrigérateur/congélateur 2 portes```
 
