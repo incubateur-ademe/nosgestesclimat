@@ -8,7 +8,7 @@ L’impact GES de notre alimentation est directement corrélé à notre consomma
 
 ## Impact GES de l’action
 
-- Réduction de la conso de viande par 2 par semaine : **-690 kgCO2eq/an **
+- Réduction de la conso de viande par 2 par semaine : **-690 kgCO2eq/an**
 - Remplacer de la viande rouge par de la viande blanche à chaque repas : **-180 kg de CO2eq/an**
 
 ## Ordre de grandeur GES
