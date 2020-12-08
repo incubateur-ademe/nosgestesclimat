@@ -18,7 +18,7 @@ Je bois l’eau du robinet plutôt que de l’eau en bouteille : **- 215 kg CO2e
 
 **Attention** : les facteurs d’émission donnés ne concernent que l’aspect consommation. L’impact GES de la fin de vie des bouteilles n’est donc pas pris en compte. Suivant les modes de valorisation des bouteilles (recyclage, incinération, etc.) l’impact GES peut varier à la hausse comme à la baisse. Néanmoins l’ordre de grandeur restera le même (rapport de 1000).
 
-##Budget
+### Budget
 Le prix d’un litre d’eau du robinet est en moyenne de 0.3 centime d’euro contre environ 30 centimes d’euro pour un litre d’eau en bouteille. En considérant une consommation journalière de 1.5 l/jour par individu, consommer de l’eau du robinet plutôt que de l’eau en bouteille représente une économie de plus de 160 €/an (consommation d’eau du robinet = 1.6 €/an contre 164 €/an pour la consommation d’eau en bouteille plastique).
 
 ## Chiffres clés à retenir
