@@ -6,7 +6,7 @@ Ici résident les modèles de calcul et les données de https://ecolab.ademe.fr.
 
 ## ecolab-climat 🌍🥵
 
-Le modèle est déployé à chaque changement à l'adresse https://ecolab.ademe.fr/apps/climat
+Le modèle est déployé à chaque changement à l'adresse https://nosgestesclimat.fr
 
 ### Ecriture des modèles du simulateur
 
