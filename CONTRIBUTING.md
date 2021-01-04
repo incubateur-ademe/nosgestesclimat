@@ -38,7 +38,7 @@ Il y a de grandes chances que ce soit déjà le cas : direction [l'onglet *issue
 
 ### Si vous n'avez que ⌛ 2 minutes pour faire une remarque
 
-Si vous avez un compte Github, [créez simplement une issue](https://github.com/laem/ecolab-data/issues/new) qui parle de votre idée ou correction et qui contient le calcul ou les interrogations en français.
+Si vous avez un compte Github, [créez simplement une issue](https://github.com/betagouv/ecolab-data/issues/new) qui parle de votre idée ou correction et qui contient le calcul ou les interrogations en français.
 
 Sinon, écrivez-nous sur [notre formulaire de retour](https://ecolab.ademe.fr/apps/climat/contribuer).
 
