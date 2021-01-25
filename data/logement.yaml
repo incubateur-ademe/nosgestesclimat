@@ -11,12 +11,12 @@ logement . impact:
       - chauffage autres
 logement . habitants: 
   question: Combien de personnes vivent chez vous ?
-  par défaut: 2
+  par défaut: 2 personnes
   unité: personnes
 
 logement . surface: 
   question: Quelle est la surface de votre logement ?
-  par défaut: 80
+  par défaut: 80 m2
   note: |
     Valeur par défaut obtenue dans [ce rapport de l'INSEE](https://www.insee.fr/fr/statistiques/2586377).
 
@@ -26,7 +26,7 @@ logement . surface:
     3 pièces: 70
     maison: 120
     château 🏰: 1000
-  unité: m²
+  unité: m2
 
 
 logement . construction . facteur:
@@ -45,7 +45,7 @@ logement . électricité . consommation:
   icônes: ⚡
   question: Quelle est la consommation annuelle d'éléctricité de votre foyer ?
   unité: kWh
-  par défaut: 5000
+  par défaut: 5000 kWh
   aide: estimation via le coût
   description: |
     Astuce : vous trouverez la consommation annuelle d'électricité sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
@@ -88,7 +88,7 @@ logement . bois . consommation . granulés:
   question: Quelle est la consommation annuelle de bois en granulés de votre foyer ?
   unité: kWh
   aide: estimation via le coût
-  par défaut: 10000
+  par défaut: 10000 kWh
   description: |
     Astuce : en moyenne, 1kg de granulés produisent 4.6 kWh. Vous pouvez donc multiplier votre consommation annuelle (en T) par 4600 kWh.
 
@@ -105,7 +105,7 @@ logement . bois . consommation . bûche:
   question: Quelle la consommation annuelle de bois en bûches de votre foyer ?
   aide: estimation via le coût
   unité: kWh
-  par défaut: 10000
+  par défaut: 10000 kWh
 
 logement . bois . consommation . bûche . estimation via le coût:
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
@@ -118,11 +118,10 @@ logement . bois . consommation . bûche . estimation via le coût:
 logement . bois . facteur d'émission: 
   unité: kgCO2e/kWh
   formule: 
-    correspondance: 
-      variable: type
-      tableau: 
-        bûche:  0.0295
-        granulés: 0.0304
+    variations: 
+      - si: type = 'bûche'
+        alors: 0.0295
+      - sinon: 0.0304
 
 logement . bois . type:
   titre: type de bois
@@ -133,7 +132,7 @@ logement . bois . type:
       possibilités: 
         - bûche
         - granulés
-  par défaut: bûche
+  par défaut: "'bûche'"
 logement . bois . type . bûche: 
 logement . bois . type . granulés: 
 
@@ -161,7 +160,7 @@ logement . gaz . estimation via le coût:
 logement . gaz . consommation:
   icônes: 🔥
   question: Quelle est la consommation annuelle de gaz de votre foyer ?
-  par défaut: 15000
+  par défaut: 15000 kWh
   unité: kWh
   aide: estimation via le coût
   description: |
@@ -198,7 +197,7 @@ logement . fioul . consommation:
   description: |
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
     Si vous utilisez plusieurs logements (par exemple une residence secondaire) il faut se debrouiller à "ramener" ces consommations dans celles du logement principal.
-  par défaut: 0
+  par défaut: 0 kWh
   aide: estimation via le coût
 
 logement . fioul . intensité carbone:

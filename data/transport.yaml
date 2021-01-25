@@ -13,10 +13,41 @@ transport:
       - train
       - métro ou tram
       - bus
+        
+
+transport . voiture:
+  description: |
+    ![](https://images.unsplash.com/photo-1572312284222-ecf6d70f1907?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=80)
+    
+    La voiture est aujourd'hui en France essentiellement thermique (essence, diesel), bien que l'électrique progresse lentement.
+    
+    Pourtant, électrique ou thermique, elle reste un moyen de déplacement très peu efficient : 
+    **il s'agit en moyenne de déplacer un humain de 80kg dans une boîte en métal de 1200kg**.
+    
+    Un peu comme si chaque midi, nous faisions à manger pour 10 avant de jeter 90% de la nourriture, 
+    ou que nous décidions de chauffer tout le pâté de maison plutôt que l'intérieur de chacune des 10 maisons.
+    
+    Notons finalement qu'il est important de prendre en compte à la fois l'usage (les km parcourus) et la construction de ce véhicule de plus d'une tonne de matériaux divers.
+    
+  formule: # Ici nous pourrions utiliser un "non applicable si: km = 0" mais un bug fait que la question km deviendra booléenne Oui/Non. Voir https://github.com/betagouv/mon-entreprise/issues/1367
+    variations: 
+      - si: km = 0
+        alors: 0
+      - sinon: (construction amortie + impact usage) / voyageurs
+  unité: kgCO2e
 
 transport . voiture . voyageurs:
   question: Quel est le nombre moyen de voyageurs dans la voiture ?
-  par défaut: 1.2
+  description: |
+    Une voiture consomme à peu près autant qu'elle ait 1, 2 ou 5 voyageurs à bord. Voyager à plusieurs, c'est donc potentiellement diviser par 5 sa consommation et donc son empreinte individuelle ! 
+
+    🤔 Mais cette question n'est pas facile : il est probable que dans une année vous soyez parti en vacance à 3, ayez pris la voiture quotidiennement tout seul, etc.
+
+    Essayez d'estimer une moyenne approximative : si tous les jours vous prenez la voiture tout seul, mettez 1 ou 1,2.
+    Si vous ne la prenez qu'en famille ou entre amis, mettez 3 ou 4.
+
+    > Dans une prochaine évolution du simulateur, nous pourrons séparer les questions par type de trajets : vacances, domicile-travail, quotidiens avec un nombre de voyageur personnalisable.
+  par défaut: 1.2 voyageurs
   unité: voyageurs
   suggestions:  
     seul: 1
@@ -30,19 +61,18 @@ transport . voiture . km:
 
     Par exemple, si vous êtes en mission professionnelle dans un autre département ou un autre pays cela rentre dans la comptabilité de votre entreprise : ne le comptez pas ici.
 
-  par défaut: 11000
-  unité: km/an
+  par défaut: 11000 km/an
   suggestions: 
-    zéro: 0
-    traverser la France: 2000
-    10km par jour: 3600
-    20km par jour: 7000
+    zéro: 0 km/an
+    traverser la France: 2000 km/an
+    10km par jour: 3600 km/an
+    20km par jour: 7000 km/an
 
 
 transport . voiture . motorisation: 
   question: Quel type de voiture utilisez-vous ?
   description: Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.
-  par défaut: thermique
+  par défaut: "'thermique'"
   formule: 
     une possibilité: 
       choix obligatoire: oui
@@ -54,14 +84,15 @@ transport . voiture . motorisation . thermique:
 transport . voiture . motorisation . électrique:
 transport . voiture . motorisation . hybride:
   
-transport . voiture . thermique:
+transport . voiture . thermique: oui # sans le 'oui', une question vide est posée
+
 transport . voiture . thermique . consommation aux 100:
   question: Quelle est la consommation moyenne de la voiture ?
   description: |
     Comme pour la motorisation, si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.
 
-  par défaut: 6.5
-  unité: l/100km
+  par défaut: 6.5 l/centkm
+  unité: l/centkm
   note: Les suggestions de réponse sont à la louche, à préciser et sourcer.
   suggestions: 
     petite: 6
@@ -77,7 +108,8 @@ transport . voiture . thermique . empreinte au kilomètre:
   titre: empreinte au km thermique
   formule: consommation au kilomètre * empreinte au litre
 
-transport . voiture . électrique:
+transport . voiture . électrique: oui # sans le 'oui', une question vide est posée
+
 transport . voiture . électrique . empreinte au kilomètre:
   titre: empreinte au km électrique
   formule: 0.020
@@ -107,12 +139,12 @@ transport . voiture . thermique . empreinte au litre:
 
 transport . voiture . construction:
   formule: 
-    correspondance: 
-      variable: motorisation
-      tableau: 
-        thermique: 7000
-        hybride: 7000
-        électrique: 12000
+    variations: 
+      - si: motorisation = 'thermique'
+        alors: 7000
+      - si: motorisation = 'électrique'
+        alors: 12000
+      - sinon: 7000
   unité: kgCO2e
   description: |
     Une voiture est un gros, très gros objet, qui pèse souvent plus d'une tonne et demi. En conséquence, sa construction a une empreinte importante. 
@@ -126,6 +158,10 @@ transport . voiture . construction:
   note: Il nous faudra trouver les variations d'empreinte de la construction, c'est surement significatif, au moins pour l'électrique.
 
 transport . voiture . âge:
+  applicable si: 
+    toutes ces conditions: 
+      - km > 0
+      - propriétaire # Nous ne devrions pas avoir à poser ces conditions. Publicodes devrait déterminer lui-même qu'elles sont à poser après la question des km et la question propriétaire, mais la nouvelle version de publicodes a perdu ce côté magique.
   question: Quel est l'âge de votre voiture ?
   description: | 
     Pour calculer l'empreinte de la construction de la voiture, qu'il ne faut pas négliger, nous utilisons l'âge de la voiture.
@@ -136,7 +172,7 @@ transport . voiture . âge:
 
     Si vous possédez plusieurs voitures utilisées uniquement par vous même, ~~vendez au moins la deuxième~~ ce cas n'est pas encore prévu.
   unité: années
-  par défaut: 9
+  par défaut: 9 années
   suggestions: 
     6 mois: 0.5 
     1 an et demi: 1.5
@@ -149,7 +185,6 @@ transport . voiture . construction amortie:
         alors: construction * amortissement particulier
       - sinon: (construction / durée de vie) * facteur location
   unité: kgCO2e
-  note: On fait âge + 1 pour éviter de faire une division par 0 😁.
 
 transport . voiture . amortissement particulier:
   description: |
@@ -202,23 +237,6 @@ transport . voiture . propriétaire:
     Si votre entreprise vous met à disposition une voiture dont vous êtes le principal utilisateur, vous pouvez considérer que c'est votre voiture individuelle.
   par défaut: oui
 
-transport . voiture:
-  description: |
-    ![](https://images.unsplash.com/photo-1572312284222-ecf6d70f1907?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=80)
-    
-    La voiture est aujourd'hui en France essentiellement thermique (essence, diesel), bien que l'électrique progresse lentement.
-    
-    Pourtant, électrique ou thermique, elle reste un moyen de déplacement très peu efficient : 
-    **il s'agit en moyenne de déplacer un humain de 80kg dans une boîte en métal de 1200kg**.
-    
-    Un peu comme si chaque midi, nous faisions à manger pour 10 avant de jeter 90% de la nourriture, 
-    ou que nous décidions de chauffer tout le pâté de maison plutôt que l'intérieur de chacune des 10 maisons.
-    
-    Notons finalement qu'il est important de prendre en compte à la fois l'usage (les km parcourus) et la construction de ce véhicule de plus d'une tonne de matériaux divers.
-    
-  non applicable si: km = 0
-  formule: (construction amortie + impact usage) / voyageurs
-  unité: kgCO2e
 
 transport . avion:
   applicable si: usager
@@ -288,7 +306,7 @@ transport . avion . court courrier . heures de vol:
     Paris🔁Ajaccio: 3.2
 
   unité: h/an
-  par défaut: 1
+  par défaut: 1 h/an
 
 transport . avion . moyen courrier:
   formule:  heures de vol * vitesse moyenne * empreinte par km
@@ -321,7 +339,7 @@ transport . avion . moyen courrier . heures de vol:
     Paris🔁Liban: 8
 
   unité: h/an
-  par défaut: 1
+  par défaut: 1 h/an
 
 transport . avion . long courrier:
   formule: heures de vol * vitesse moyenne * empreinte par km
@@ -357,7 +375,7 @@ transport . avion . long courrier . heures de vol:
     Paris🔁Sydney: 40
 
   unité: h/an
-  par défaut: 1
+  par défaut: 1 h/an
 
 transport . train:
   description: |
@@ -376,8 +394,9 @@ transport . train . km:
     traversée d'une région: 300
     Paris↔Lyon: 800
     Brest↔Nice: 2400 
+    💳 grand voyageur plus ultra: 10000
   unité: km/an
-  par défaut: 1000
+  par défaut: 1000 km/an
 
 transport . métro ou tram:
   description: |
@@ -401,7 +420,7 @@ transport . métro ou tram . heures par semaine:
     1h / jour: 7
     2h / jour: 14
   unité: heures/semaine
-  par défaut: 3
+  par défaut: 3 heures/semaine
 
 transport . bus:
   description: |
@@ -428,6 +447,6 @@ transport . bus . heures par semaine:
     1h / jour: 7
     2h / jour: 14
   unité: heures/semaine
-  par défaut: 3
+  par défaut: 3 heures/semaine
 
 

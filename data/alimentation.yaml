@@ -114,11 +114,10 @@ alimentation . boisson . sucrées . litres:
   titre: Consommation de boissons sucrées
   question: Quelle est votre consommation par semaine de sodas, jus de fruit, sirops, etc. ?
   suggestions: 
-    nulle: 0
-    modérée: 1
-    importante: 5
-  unité: l/semaine
-  par défaut: 2
+    nulle: 0 l/semaine
+    modérée: 1 l/semaine
+    importante: 5 l/semaine
+  par défaut: 2 l/semaine
 
 alimentation . boisson . alcool: 
   unité: kgCO2e
@@ -144,7 +143,7 @@ alimentation . boisson . alcool . litres:
     modérée: .5
     importante: 2
   unité: l/semaine
-  par défaut: 1
+  par défaut: 1 l/semaine
 
 
 
@@ -310,7 +309,7 @@ alimentation . plats . viande 1 . empreinte:
   formule: 1.350
   unité: kgCO2e
 alimentation . plats . viande 1 . nombre:
-  question: Nombre de plats types
+  question: Nombre de plats viande 1 par semaine
   par défaut: 4
   période: semaine
 
@@ -347,14 +346,14 @@ alimentation . plats . viande 2 . empreinte:
   unité: kgCO2e
   note: C'est le "Repas classique 2 (avec bœuf)" [ici](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm).
 alimentation . plats . viande 2 . nombre:
-  question: Nombre de plats types
+  question: Nombre de plats viande 2 par semaine
   par défaut: 4
   période: semaine
 
 alimentation . nombre de plats viande: 
   formule: plats . viande 1 . nombre + plats . viande 2 . nombre
 
-alimentation . régime . planétaire: 
+alimentation . planétaire: 
   icônes: 🥗
   description: |
     Un régime décrit en 2019 pour concilier santé et environnement.
@@ -385,7 +384,7 @@ alimentation . petit déjeuner . type:
 
     Il manque votre petit déjeuner et vous pensez ne pas pas être le seul à l'apprécier ? [Écrivez-nous](/contribuer).
 
-  par défaut: français
+  par défaut: "'français'"
   formule:
     une possibilité: 
       choix obligatoire: oui
@@ -573,7 +572,7 @@ alimentation . déchets . niveau d'engagement:
 
     Pour un engagement "en partie", en cours de transition vers cet idéal difficile à atteindre, nous prenons les 2/3 de l'empreinte moyenne.
   note: Il faudrait détailler ce calcul.
-  par défaut: pas du tout
+  par défaut: "'pas du tout'"
   formule:
     une possibilité: 
       choix obligatoire: oui
@@ -588,10 +587,10 @@ alimentation . déchets . niveau d'engagement . affirmatif:
 
 alimentation . déchets . facteur: 
   formule: 
-    correspondance: 
-      variable: niveau d'engagement
-      tableau: 
-        pas du tout: 1
-        en partie: 0.6
-        affirmatif: 0.3
+    variations: 
+        - si: niveau d'engagement = 'pas du tout'
+          alors: 1
+        - si: niveau d'engagement = 'en partie'
+          alors: 0.6
+        - sinon: 0.3
 
