@@ -88,19 +88,44 @@ transport . voiture . motorisation . hybride:
   
 transport . voiture . thermique: oui # sans le 'oui', une question vide est posée
 
+transport . voiture . gabarit:
+  question: Quel est le gabarit de la voiture ?
+  par défaut: moyenne
+  formule: 
+    une possibilité:
+      choix obligatoire: oui
+      possibilités: 
+        - petite
+        - moyenne
+        - berline
+        - SUV
+
+transport . voiture . gabarit . petite:
+transport . voiture . gabarit . moyenne:
+transport . voiture . gabarit . berline:
+transport . voiture . gabarit . SUV:
+
 transport . voiture . thermique . consommation aux 100:
-  question: Quelle est la consommation moyenne de la voiture ?
+  question: Connaissez-vous la consommation moyenne de la voiture ?
   description: |
     Comme pour la motorisation, si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.
 
-  par défaut: 6.5 l/centkm
+  par défaut: consommation estimée
   unité: l/centkm
   note: Les suggestions de réponse sont à la louche, à préciser et sourcer.
-  suggestions: 
-    petite: 6
-    moyenne: 7
-    berline: 9
-    SUV: 11
+
+transport . voiture . consommation estimée:
+  unité: l/centkm
+  formule:
+    variations: 
+      - si: gabarit = 'petite' 
+        alors: 6
+      - si: gabarit = 'moyenne'
+        alors: 7
+      - si: gabarit = 'berline'
+        alors: 9
+      - si: gabarit = 'SUV'
+        alors: 11
 
 transport . voiture . thermique . consommation au kilomètre:
   formule: consommation aux 100 / 100
