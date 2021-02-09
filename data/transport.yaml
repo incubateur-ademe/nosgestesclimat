@@ -10,9 +10,10 @@ transport:
     somme: 
       - voiture
       - avion
+      - deux roues thermique
+      - bus
       - train
       - métro ou tram
-      - bus
       - vélo
         
 
@@ -494,3 +495,51 @@ transport . vélo . km:
 
 
 
+transport . deux roues thermique: 
+  applicable si: usager
+  formule: empreinte * km
+transport . deux roues thermique . usager: 
+  question: Utilisez-vous un scooter ou une moto ?
+  par défaut: oui
+
+transport . deux roues thermique . km: 
+  question: Combien de km faites-vous à l'année avec votre scooter ou moto ? 
+  par défaut: 1000 km
+
+transport . deux roues thermique . type: 
+  question: Quel type de deux roues thermique utilisez-vous ? 
+  par défaut: "'scooter'"
+  formule: 
+    une possibilité: 
+      choix obligatoire: oui
+      possibilités: 
+        - scooter
+        - moto
+
+transport . deux roues thermique . type . scooter:
+  titre: Scooter ou moto légère
+transport . deux roues thermique . type . moto:
+  
+
+transport . deux roues thermique . empreinte: 
+  formule: 
+    variations:
+      - si: type = 'scooter'
+        alors: 0.0616 kgCO2e/km
+      - si: type = 'moto'
+        alors: 0.168 kgCO2e/km
+
+
+  note: |
+    Deux roues thermiques < 250cm3 ; 61,6 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
+
+    Deux roues thermiques > 250cm3 ; 168 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
+
+
+    Nous ne prenons en compte que l'empreinte à l'usage, pas la construction, faute de données.
+
+    Notons cependant que si l'on estime la fabrication à une tonne de CO2e, un véhicule qui ferait 100 000 km émetterait ~ 10 tonnes de CO2e, soit 10x l'empreinte de construction.
+
+
+  références: 
+    documentation bilan-GES: https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?routier2.htm
