@@ -167,10 +167,10 @@ transport . voiture . construction:
   formule: 
     variations: 
       - si: motorisation = 'thermique'
-        alors: 7000
+        alors: barème thermique
       - si: motorisation = 'électrique'
-        alors: 12000
-      - sinon: 7000
+        alors: barème électrique
+      - sinon: barème hybride
   unité: kgCO2e
   description: |
     Une voiture est un gros, très gros objet, qui pèse souvent plus d'une tonne et demi. En conséquence, sa construction a une empreinte importante. 
@@ -181,7 +181,70 @@ transport . voiture . construction:
 
     Mieux, mais loin d'être faible ! En 2020, il ne s'agit plus seulement de comparer des solutions techniques entre elles, il s'agit d'évaluer ses achats par rapport aux objectifs climat.
     
-  note: Il nous faudra trouver les variations d'empreinte de la construction, c'est surement significatif, au moins pour l'électrique.
+  note: |
+    
+    Nous utilisons l'étude [FNH-Carbone4](https://github.com/betagouv/ecolab-data/files/5945898/vehicule_electrique_rapport.pdf).
+
+    Pour l'instant, nous n'avons que deux gabarits, la citadine et la berline.
+
+    p. 12.
+
+    ![](https://user-images.githubusercontent.com/1177762/107264406-3afdd980-6a43-11eb-87ad-a09681240949.png)
+
+    Nous prenons la "production et fin de vie" et lui retranchons les "crédits de recyclage", et les données de 2016 plutôt que le scénario prospectif 2030.
+
+    p. 57 et 58.
+
+    ![](https://user-images.githubusercontent.com/1177762/107265071-1eae6c80-6a44-11eb-9b51-c2aee3bfcf3c.png)
+    ![](https://user-images.githubusercontent.com/1177762/107265098-2706a780-6a44-11eb-8681-7901f00e057b.png)
+
+transport . voiture . construction . barème thermique:
+  formule: 
+    variations:
+      - si:
+          une de ces conditions: 
+            - gabarit = 'petite'
+            - gabarit = 'moyenne'
+        alors: 6700 - 1100
+      - si:
+          une de ces conditions: 
+            - gabarit = 'berline'
+            - gabarit = 'SUV'
+        alors: 7600 - 1200
+  unité: kgCO2e
+
+transport . voiture . construction . barème électrique:
+  formule: 
+    variations:
+      - si:
+          une de ces conditions: 
+            - gabarit = 'petite'
+            - gabarit = 'moyenne'
+        alors: 10000 - 2200
+      - si:
+          une de ces conditions: 
+            - gabarit = 'berline'
+            - gabarit = 'SUV'
+        alors: 20200 - 6600
+  unité: kgCO2e
+
+transport . voiture . construction . barème hybride:
+  formule: 
+    variations:
+      - si:
+          une de ces conditions: 
+            - gabarit = 'petite'
+            - gabarit = 'moyenne'
+        alors: 9600 - 2000
+      - si:
+          une de ces conditions: 
+            - gabarit = 'berline'
+            - gabarit = 'SUV'
+        alors: 6900 - 2400
+  unité: kgCO2e
+  note: Ètonnamment, la berline a moins d'empreinte construction que la citadine... A voir si l'étude relève ce mystère.
+
+
 
 transport . voiture . âge:
   applicable si: 
