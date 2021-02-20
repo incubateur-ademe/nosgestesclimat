@@ -89,19 +89,44 @@ transport . voiture . motorisation . hybride:
   
 transport . voiture . thermique: oui # sans le 'oui', une question vide est posée
 
+transport . voiture . gabarit:
+  applicable si: km > 0
+  question: Quel est le gabarit de la voiture ?
+  par défaut: "'moyenne'"
+  formule: 
+    une possibilité:
+      choix obligatoire: oui
+      possibilités: 
+        - petite
+        - moyenne
+        - berline
+        - SUV
+
+transport . voiture . gabarit . petite:
+transport . voiture . gabarit . moyenne:
+transport . voiture . gabarit . berline:
+transport . voiture . gabarit . SUV:
+
 transport . voiture . thermique . consommation aux 100:
-  question: Quelle est la consommation moyenne de la voiture ?
+  question: Connaissez-vous la consommation moyenne de la voiture ?
   description: |
     Comme pour la motorisation, si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.
 
-  par défaut: 6.5 l/centkm
+  par défaut: consommation estimée
   unité: l/centkm
   note: Les suggestions de réponse sont à la louche, à préciser et sourcer.
-  suggestions: 
-    petite: 6
-    moyenne: 7
-    berline: 9
-    SUV: 11
+
+transport . voiture . consommation estimée:
+  formule:
+    variations: 
+      - si: gabarit = 'petite' 
+        alors: 6 l/centkm
+      - si: gabarit = 'moyenne'
+        alors: 7 l/centkm
+      - si: gabarit = 'berline'
+        alors: 9 l/centkm
+      - si: gabarit = 'SUV'
+        alors: 11 l/centkm
 
 transport . voiture . thermique . consommation au kilomètre:
   formule: consommation aux 100 / 100
@@ -110,14 +135,29 @@ transport . voiture . thermique . consommation au kilomètre:
 transport . voiture . thermique . empreinte au kilomètre:
   titre: empreinte au km thermique
   formule: consommation au kilomètre * empreinte au litre
+  note: Cette méthode de calcul, plutôt qu'un barème gabarit -> empreinte au km, permet à l'utilisateur qui connait la consommation moyenne réelle de sa voiture de la saisir pour plus de précision.
 
 transport . voiture . électrique: oui # sans le 'oui', une question vide est posée
 
 transport . voiture . électrique . empreinte au kilomètre:
   titre: empreinte au km électrique
-  formule: 0.020
   unité: kgCO2e/km
-  note: Pas de variations en fonction de la taille de la voiture, il nous faudra trouver ces donnnées
+  formule: 
+    variations: 
+      - si: gabarit = 'petite'
+        alors: 0.0159
+      - si: gabarit = 'moyenne'
+        alors: 0.0198
+      - sinon: 0.0273
+  note: |
+    Nous faisons la correspondance suivante entre notre gabarit et les données de la base bilan-GES: 
+      - petite -> "entrée de gamme - véhicule léger"
+      - moyenne -> "coeur de gamme - véhicule compact"
+      - berline et SUV -> "haut de gamme - berline"
+
+  références: 
+    bilan-GES: https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=voiture
+
 
 transport . voiture . impact usage:
   formule: km * empreinte au kilomètre
@@ -134,6 +174,22 @@ transport . voiture . empreinte au kilomètre:
       - si: motorisation = 'hybride'
         alors: thermique . empreinte au kilomètre * 0.85
       - sinon: électrique . empreinte au kilomètre
+  note: |
+    Pour la voiture hybride, nous n'avons pour l'instant pas utilisé les valeurs de la base bilan-GES, car elles sont compliquées à interprêter : 
+      - la catégorie "hybride rechargeable" a une empreinte étonnamment faible (du niveau de l'électrique), mais surtout 0 émissions à la combustion. Ce serait donc un véhicule essence qui n'utilise pas d'essence à l'usage ? [Un sujet récent] sur le forum de bilan-GES n'explique pas l'incohérence.
+      - la différence entre Hybride full Prius et Hybride full P2 n'est pas expliquée
+      - dans ces 2 catégories, il n'y pas l'entrée de gamme.
+
+    L'étude FNH-Carbone4 pourrait être utilisée pour l'empreinte au km des véhicules hybrides rechargeables. Voici l'hypothèse structurante retenue : 
+
+    > Répartition des modes de roulage (thermique / électrique) pour les hybrides : 50% / 50% en 2016
+
+    Mais on notera la controverse récente sur l'empreinte des véhicules hybrides rechargeable suite à [une étude](https://www.transportenvironment.org/press/les-hybrides-rechargeables-au-cœur-d’un-nouveau-scandale-d’émissions-des-tests-révèlent-des) de Transport & Environnement faisant état d'une empreinte réelle incomparable à l'empreinte annoncée par les constructeurs.
+
+    Nous avons donc pour l'instant retenu le calcul du calculateur MicMac qui est la base de Nos Gestes Climat, dont la source est malheureusement inaccessible : 
+
+    > Hybride : enlever 15 % aux consommations ci-dessus (source ADEME : http://www2.ademe.fr/servlet/KBaseShow?catid=13655)
+
 
 
 transport . voiture . thermique . empreinte au litre:
@@ -144,10 +200,10 @@ transport . voiture . construction:
   formule: 
     variations: 
       - si: motorisation = 'thermique'
-        alors: 7000
+        alors: barème thermique
       - si: motorisation = 'électrique'
-        alors: 12000
-      - sinon: 7000
+        alors: barème électrique
+      - sinon: barème hybride
   unité: kgCO2e
   description: |
     Une voiture est un gros, très gros objet, qui pèse souvent plus d'une tonne et demi. En conséquence, sa construction a une empreinte importante. 
@@ -158,7 +214,70 @@ transport . voiture . construction:
 
     Mieux, mais loin d'être faible ! En 2020, il ne s'agit plus seulement de comparer des solutions techniques entre elles, il s'agit d'évaluer ses achats par rapport aux objectifs climat.
     
-  note: Il nous faudra trouver les variations d'empreinte de la construction, c'est surement significatif, au moins pour l'électrique.
+  note: |
+    
+    Nous utilisons l'étude [FNH-Carbone4](https://github.com/betagouv/ecolab-data/files/5945898/vehicule_electrique_rapport.pdf).
+
+    Pour l'instant, nous n'avons que deux gabarits, la citadine et la berline.
+
+    p. 12.
+
+    ![](https://user-images.githubusercontent.com/1177762/107264406-3afdd980-6a43-11eb-87ad-a09681240949.png)
+
+    Nous prenons la "production et fin de vie" et lui retranchons les "crédits de recyclage", et les données de 2016 plutôt que le scénario prospectif 2030.
+
+    p. 57 et 58.
+
+    ![](https://user-images.githubusercontent.com/1177762/107265071-1eae6c80-6a44-11eb-9b51-c2aee3bfcf3c.png)
+    ![](https://user-images.githubusercontent.com/1177762/107265098-2706a780-6a44-11eb-8681-7901f00e057b.png)
+
+transport . voiture . construction . barème thermique:
+  formule: 
+    variations:
+      - si:
+          une de ces conditions: 
+            - gabarit = 'petite'
+            - gabarit = 'moyenne'
+        alors: 6700 - 1100
+      - si:
+          une de ces conditions: 
+            - gabarit = 'berline'
+            - gabarit = 'SUV'
+        alors: 7600 - 1300
+  unité: kgCO2e
+
+transport . voiture . construction . barème électrique:
+  formule: 
+    variations:
+      - si:
+          une de ces conditions: 
+            - gabarit = 'petite'
+            - gabarit = 'moyenne'
+        alors: 10200 - 2200
+      - si:
+          une de ces conditions: 
+            - gabarit = 'berline'
+            - gabarit = 'SUV'
+        alors: 20200 - 6600
+  unité: kgCO2e
+
+transport . voiture . construction . barème hybride:
+  formule: 
+    variations:
+      - si:
+          une de ces conditions: 
+            - gabarit = 'petite'
+            - gabarit = 'moyenne'
+        alors: 9600 - 2000
+      - si:
+          une de ces conditions: 
+            - gabarit = 'berline'
+            - gabarit = 'SUV'
+        alors: 6900 - 2400
+  unité: kgCO2e
+  note: Ètonnamment, la berline a moins d'empreinte construction que la citadine... A voir si l'étude relève ce mystère.
+
+
 
 transport . voiture . âge:
   applicable si: 
