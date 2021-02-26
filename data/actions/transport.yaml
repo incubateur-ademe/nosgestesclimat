@@ -1,6 +1,14 @@
+transport . avion . heures de vol:
+  formule: moyen courrier . heures de vol + long courrier . heures de vol
 transport . arrêter l'avion: 
   icônes: 🛬🧳
   formule: transport . avion
+  effort:
+    variations: 
+      - si: avion . heures de vol < 6
+        alors: modéré
+      - sinon: conséquent
+        
   description: |
     L'avion a une empreinte importante sur le climat. 
 
@@ -34,6 +42,7 @@ transport . arrêter l'avion court:
   icônes: 🛬🚆
   formule: transport . avion . court courrier
   # Mettre histogramme GES qui compare les trajets train vs avion. Voir le fichier Excel de calcul sur le drive partagé
+  effort : modéré
   description: |
     L’avion a bouleversé nos modes de vies et nos façons de voyager. Nous pouvons maintenant aller plus loin, plus vite, plus fréquemment. L’accélération de nos
     modes de vie que permet l’avion n’est malheureusement pas sans contrepartie sur notre empreinte carbone et sur le climat en général. En effet, il existe
@@ -51,6 +60,7 @@ transport . éco-conduite:
   titre: Adopter une éco-conduite
   icônes: 🚗☮
   formule: transport . voiture . impact usage * 15%
+  effort : faible
   description: |
     L’éco-conduite est une action simple et efficace qui se tient à la portée de tous.  Elle permet notamment d'économiser en moyenne 15 % de carburant, 
     de réduire les coûts d’entretien du véhicule, de réduire le risque d’accident de 10 à 15 %  en moyenne et de réaliser des économies substantielles pouvant 
@@ -59,14 +69,21 @@ transport . éco-conduite:
     
   références: 
     Guide de formation à l'éco-conduite ADEME-LaPoste: https://www.ademe.fr/sites/default/files/assets/documents/66885_guide_ecoconduite.pdf#page=8
-    
+
+transport . transport en commun . heures par semaine:
+  formule: bus . heures par semaine + métro ou tram . heures par semaine
+
 transport . boulot:
 transport . boulot . covoiturage:
   titre: Aller au travail en covoiturage
   applicable si: voiture . propriétaire
-  non applicable si: voiture . km = 0
+  non applicable si:
+    - une de ces conditions:
+      - voiture . km = 0
+      - transport . transport en commun . heures par semaine > 3 #3h ou plus signifie probablement que l'utilisateur utilise les TC pour aller au boulot
   icônes: 🚗👥
   formule: distance . année * voiture . empreinte au kilomètre * réduction covoiturage
+  effort : modéré
   description: |
     Si le covoiturage longue distance est bien connu en France, celui des courtes distances est presque inexistant : aujourd’hui seuls 3 % des déplacements domicile-travail sont réalisés en covoiturage.
 
@@ -124,10 +141,26 @@ transport . boulot . distance:
 
 transport . empreinte au km covoiturage: 0.2 kgCO2e/km
 
+transport . transport en commun . heures par semaine:
+  formule: bus . heures par semaine + métro ou tram . heures par semaine
 
 transport . boulot . commun:
   titre: Aller au travail autrement qu'en voiture
   icônes: 🚌🚃
+  non applicable si: transport en commun . heures par semaine > 3
+  effort:
+    variations: 
+      - si: 
+        - une de ces conditions: 
+          - 1 < jours travaillés en voiture < 4
+          - 10 < boulot . distance < 20
+        alors: modéré
+      - si:
+        - une de ces conditions:
+          - jours travaillés en voiture >= 4
+          - boulot . distance >= 20
+        alors: conséquent
+      - sinon: faible
   description: |
     Quand c'est possible, prendre les transports en commun ou des véhicules légers (marche à pied, vélo, trottinette personnelle, ...) pour aller au travail réduit notre empreinte climat, mais améliore aussi notre qualité de vie.
 
@@ -209,6 +242,7 @@ transport . tramway . empreinte:
 transport . boulot . télétravail: 
   titre: Faire du télétravail
   icônes: 🏠💻
+  effort : conséquent
   description: |  
     Le télétravail permet d'éviter des déplacements journaliers pour se rendre au boulot.
 
@@ -216,7 +250,10 @@ transport . boulot . télétravail:
 
     Dans ce calcul, nous ne prenons en compte que les jours télétravaillés qui évitent un déplacement en voiture individuelle.
   applicable si: compatible
-  non applicable si: voiture . km = 0
+  non applicable si: 
+    - une de ces conditions:
+      - voiture . km = 0
+      - transport en commun . heures par semaine > 3 #3h ou plus signifie probablement que l'utilisateur utilise les TC pour aller au boulot donc le TT n'est pas très pertinent
   formule: empreinte jour voiture * jours télétravaillés * 47
 
 transport . boulot . empreinte jour voiture: 
