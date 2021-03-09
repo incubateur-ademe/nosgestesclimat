@@ -1,16 +1,10 @@
-# ecolab-data
+# nosgestesclimat 🌍🥵
 
-Ici résident les modèles de calcul et les données de https://ecolab.ademe.fr.
-
-:bulb: Pour l'instant, vous n'y trouverez que les modèles de simulation climat personnelle annuelle. Ils sont en cours de développement, pas encore validés. Suivront les données de ecolab-transport, et éventuellement les données de la base agribalyse nouvelle génération.
-
-## ecolab-climat 🌍🥵
-
-Le modèle est déployé à chaque changement à l'adresse https://nosgestesclimat.fr
+Ici résident les modèles de calcul et les données de https://nosgestesclimat.fr.
 
 ### Ecriture des modèles du simulateur
 
-Le modèle climat est écrit dans un français le plus lisible possible : 
+Le modèle d'empreinte climat personnelle est écrit dans un français le plus lisible possible : 
 
 ```yaml
 # Premier extrait 
@@ -37,14 +31,16 @@ transport . avion . coefficient de forçage radiatif:
 
 ```
 
-:pen: Suivez [le guide pour contribuer](https://github.com/betagouv/ecolab-data/blob/master/CONTRIBUTING.md).
+:pen: Suivez [le guide pour contribuer](https://github.com/datagir/nosgestesclimat/blob/master/CONTRIBUTING.md).
 
-Tous les modèles sont dans [le dossier `data`](https://github.com/betagouv/ecolab-data/tree/master/data).
+Tous les modèles sont dans [le dossier `data`](https://github.com/datagir/nosgestesclimat/tree/master/data).
 
 
 
 ### code de l'interface
 
-Le code du simulateur ici [`betagouv/ecolab-climat`](https://github.com/betagouv/ecolab-climat).
+Le code du simulateur ici [`datagir/nosgestesclimat-site`](https://github.com/datagir/nosgestesclimat-site).
 
 Il repose sur le nouveau langage de programmation `publicodes` documenté sur https://publi.codes.
+
+Il est développé dans le cadre de https://beta.gouv.fr
