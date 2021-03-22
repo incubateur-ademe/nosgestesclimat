@@ -97,9 +97,11 @@ logement . électricité . intensité carbone:
     La v2.6 de MicMac donne une valeur de 12.4gCO2e/kWh pour les fournisseurs d'électricité "verte", mais cette valeur semble correspondre à un calcul théorique sur l'année, et non pas à un calcul réel, minute par minute.
   
 logement . chauffage autres: 
-  formule: gaz + fioul + bois
+  formule: gaz + fioul + bois . empreinte
 
-logement . bois: 
+logement . bois: oui
+
+logement . bois . empreinte: 
   applicable si: chauffage au bois
   formule: consommation * facteur d'émission
 
@@ -171,12 +173,20 @@ logement . bois . consommation . bûche . estimation via le coût:
     - https://www.ademe.fr/etude-chauffage-domestique-bois 
 
 logement . bois . facteur d'émission: 
-  unité: kgCO2e/kWh
   formule: 
     variations: 
       - si: type = 'bûche'
-        alors: 0.0295
-      - sinon: 0.0304
+        alors: bûche
+      - sinon: granulés
+
+logement . bois . facteur d'émission . bûche: 
+  titre: empreinte bois bûche
+  formule: 0.0295 
+  unité: kgCO2e/kWh
+logement . bois . facteur d'émission . granulés: 
+  titre: empreinte bois granulés
+  formule: 0.0304
+  unité: kgCO2e/kWh
 
 logement . bois . type:
   titre: type de bois
