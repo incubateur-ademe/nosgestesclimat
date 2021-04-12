@@ -59,9 +59,22 @@ logement . appartement:
   références: 
     INSEE: https://www.insee.fr/fr/statistiques/3676693?sommaire=3696937
 
+logement . éco-construit:
+  question: Votre logement est-il fait en bois, paille, pierre ou terre (éco-construit) ?
+  par défaut: non
+  notes: |
+    L'entrée dans la base carbone ne donne pas plus d'informations sur cette catégorie de méthode de construction.
+
+    Le facteur d'émission titre "Maison éco-construite", faute d'informations nous considérons qu'il est le même pour un appartement éco-construit.
+  références: 
+    Base carbone: https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=Maison+éco-construite+«+bois
+  
+
 logement . construction . par surface:
   formule: 
     variations: 
+      - si: éco-construit
+        alors: 144 kgCO2e/m2
       - si: appartement
         alors: 525 kgCO2e/m2
       - sinon: 425 kgCO2e/m2
@@ -69,6 +82,9 @@ logement . construction . par surface:
     Source bilan-ges "Immeubles de logements collectifs (IC) - 525 kgCO2e/m² SHON"
 
     Pistes d'amélioration : https://github.com/betagouv/ecolab-data/issues/897
+  rérénces: 
+    éco-construit: https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=Maison+éco-construite+«+bois
+    appartement et maison: https://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Batiments
 
 logement . construction . durée d'amortissement:
   formule: 50 ans
