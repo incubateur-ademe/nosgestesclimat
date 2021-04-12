@@ -40,12 +40,11 @@ logement . surface:
     château 🏰: 1000
   unité: m2
 
-
-logement . construction . facteur:
-  formule:  empreinte par surface / durée d'amortissement
+logement . construction . annuelle et par surface:
+  formule:  par surface / durée d'amortissement
   unité: kgCO2e/m2
 
-logement . construction . empreinte par surface:
+logement . construction . par surface:
   formule: 525 kgCO2e/m2
   note: |
     Source bilan-ges "Immeubles de logements collectifs (IC) - 525 kgCO2e/m² SHON"
@@ -60,9 +59,30 @@ logement . construction . durée d'amortissement:
     base carbone: https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?batiments.htm
 
 
+
+logement . âge: 
+  question: Quel est l'âge de votre logement ? 
+  par défaut: 30 ans
+  note: Valeur par défaut complètment arbitraire.
+  suggestions: 
+    neuf: 0 ans
+    récent: 10 ans
+    années 70: 45 ans
+    après-guerre: 70 ans
+    un siècle: 100 ans
   
 logement . construction:
-  formule: surface * facteur
+  formule: 
+    variations: 
+      - si: âge < 50 ans
+        alors: surface * annuelle et par surface
+      - sinon: 0
+  note: |
+    Un logement va en moyenne durer au moins 50 ans. C'est une valeur conservative. 
+
+    Nous considérons ici que l'empreinte de la construction d'un logement est attributée chaque année au 50ième aux habitants des 50 premières années. 
+
+    Par la suite, l'empreinte de construction du logement est mise à zéro.
   unité: kgCO2e
 
 logement . électricité:
