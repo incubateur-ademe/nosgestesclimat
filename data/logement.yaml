@@ -40,25 +40,97 @@ logement . surface:
     château 🏰: 1000
   unité: m2
 
-
-logement . construction . facteur:
-  formule:  empreinte par surface / durée d'amortissement
+logement . construction . annuelle et par surface:
+  formule:  par surface / durée d'amortissement
   unité: kgCO2e/m2
 
-logement . construction . empreinte par surface:
-  formule: 525 kgCO2e/m2
-  note: |
-    Source bilan-ges "Immeubles de logements collectifs (IC) - 525 kgCO2e/m² SHON"
+logement . appartement: 
+  question: Votre logement est-il un appartement ?
+  par défaut: non
+  description: |
+    Par opposition à une maison individuelle.
 
-    Pistes d'amélioration : https://github.com/betagouv/ecolab-data/issues/897
+    L'augmentation de l'habitat en appartements peut nous faire oublier que la maison reste le logement majoritaire des foyers français en 2018.
+
+    Cette information influence notamment l'empreinte de construction, mais aussi les possibilités de travaux d'isolation par exemple.
+  note: |
+    > En 2018, l’habitat individuel représente 56 % des logements : il est majoritaire parmi les résidences principales comme parmi les résidences secondaires et logements occasionnels. Après avoir progressé entre 1999 et 2008, sa part recule légèrement car le nombre de logements collectifs augmente plus vite que celui des logements individuels du fait des évolutions récentes de la construction neuve.
+    Notons qu'il s'agit d'une proportion de logement, or on peut s'attendre (à vérifier) à ce que les maisons contiennent davantage de gens en moyenne que les appartements, ce qui renforce le choix de la valeur par défaut.
+  références: 
+    INSEE: https://www.insee.fr/fr/statistiques/3676693?sommaire=3696937
+
+logement . éco-construit:
+  question: Votre logement est-il fait en bois, paille, pierre ou terre (éco-construit) ?
+  par défaut: non
+  notes: |
+    L'entrée dans la base carbone ne donne pas plus d'informations sur cette catégorie de méthode de construction.
+
+    Le facteur d'émission titre "Maison éco-construite", faute d'informations nous considérons qu'il est le même pour un appartement éco-construit. Cependant, l'étude Carbone 4 l'affirme (réduction de 55% du béton au bois pour la maison, et de 60% pour l'appartement).
+  références: 
+    Base carbone: https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=Maison+éco-construite+«+bois
+    Carbone 4: http://www.carbone4.com/wp-content/uploads/2015/05/Note-de-communication-filière-bois-vf.pdf
+  
+
+logement . construction . par surface:
+  formule: 
+    variations: 
+      - si: éco-construit
+        alors: 144 kgCO2e/m2
+      - si: appartement
+        alors: 525 kgCO2e/m2
+      - sinon: 425 kgCO2e/m2
+  note: |
+    Notons que pour le logement éco-construit, le CO2 biogénique stocké n'est pas comptabilisé, seul le CO2 fossile émis l'est.
+
+    Pour le logement éco-construit, nous retenons le facteur d'émission de la base carbone, mais il semble confirmé en ordre de grandeur dans l'étude Carbone 4.
+
+    > Gains observés sur le CO2 fossile du poste gros-œuvre (fondations et structure), en comparaison au béton. Le stockage de carbone dans le produit  bois  n’est  pas  pris  en  compte.  Gains  liés  à  la  substitution  matériau  :  MI  bois  CLT  :  118  kgCO2e/m2  SHON,  soit  473  kgCO2e/m3  de produit bois. MI bois ossature : 83 kgCO2e/m2 SHON, soit 2495 kgCO2e/m3 de produit bois. LC bois CLT : 231 kgCO2e/m2 SHON, soit 699 kgCO2e/m3 de produit bois. LC bois ossature : 139 kgCO2e/m2 SHON, soit 3172 kgCO2e/m3 de produit bois.
+  rérénces: 
+    éco-construit: https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=Maison+éco-construite+«+bois
+    appartement et maison: https://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Batiments
+    Carbone 4: http://www.carbone4.com/wp-content/uploads/2015/05/Note-de-communication-filière-bois-vf.pdf
 
 logement . construction . durée d'amortissement:
-  formule: 30 ans
-  note: Ce choix d'amortissement linéaire sur 30 ans est temporaire.
+  formule: 50 ans
+  note: | 
+    Ces valeurs tiennent compte de l’entretien et de l’éventuel remplacement des produits et équipements durant la vie du bâtiment fixée à 50 ans.
+  références: 
+    base carbone: https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?batiments.htm
 
+
+
+logement . âge: 
+  question: Quel est l'âge de votre logement ? 
+  par défaut: 45 ans
+  description: |
+    En France, 24% du parc de logements date d'avant 1949 et 24% entre 1949 et 1974.
+
+    Pour Paris, [cette carte](https://www.comeetie.fr/galerie/BatiParis) interactive est fascinante si la question de l'âge de ses logements vous intéresse.
+  références: 
+    INSEE: 24% du parc de logements date d'avant 1949 et 24% entre 1949 et 1974 par exemple (https://www.insee.fr/fr/statistiques/fichier/2586377/LOGFRA17.pdf).
+  suggestions: 
+    neuf: 0 ans
+    récent: 10 ans
+    années 70: 45 ans
+    après-guerre: 70 ans
+    un siècle: 100 ans
   
 logement . construction:
-  formule: surface * facteur
+  formule: 
+    variations: 
+      - si: âge < 50 ans
+        alors: surface * annuelle et par surface
+      - sinon: 0
+  note: |
+    Un logement va en moyenne durer au moins 50 ans. C'est une valeur conservative. 
+
+    Nous considérons ici que l'empreinte de la construction d'un logement est attributée chaque année au 50ième aux habitants des 50 premières années. 
+
+    Par la suite, l'empreinte de construction du logement est mise à zéro.
+
+    Amélioration possible : nous manquons de données, mais il devrait être possible d'attribuer une empreinte annuelle d'entretien du logement (ravalement, isolation, travaux intérieurs, etc.).
+
+
   unité: kgCO2e
 
 logement . électricité:
