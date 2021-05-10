@@ -11,10 +11,9 @@ Box internet, téléviseur, tablettes numériques, cafetière, gros électromén
 Et bien d’autres éco-gestes sur les publications grand public de l’Ademe (4) (5).
 
 
-Tableau 1 : Exemples d'éco-gestes pour économiser l'énergie dans logement
-Eco-gestes	Impacts
+```Tableau 1 : Exemples d'éco-gestes pour économiser l'énergie dans son logement```
 
-**Mettre image du tableau**
+![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/maitrise-conso-elec-logement-tab1.jpg)
 
 ## Ordre de grandeur GES 
 
