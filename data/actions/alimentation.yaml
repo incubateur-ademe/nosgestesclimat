@@ -73,9 +73,9 @@ alimentation . plats . végétalien . saison:
     
     2.56 = ratio d'impact entre hors saison et saison : Impact saison = Impact hors saison / 2.56
     
-    Nous considérons donc les plats initiaux comme hors saison
-   
-    Voici le menu type utilisé pour notre calcul.
+    Nous considérons donc les plats comme hors saison
+    
+    Voici le menu type ajusté du ratio "de saison"
     
     | Ingrédients  | Qte (g)  | Kcal  | Protéines (g)  | Lipides (g)  | gCO2e /kg  | gCO2e   |
     |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
@@ -104,10 +104,10 @@ alimentation . plats . végétarien . saison:
     (basé sur les fraises et les tomates : seules données disponibles). 
     
     2.56 = ratio d'impact entre hors saison et saison : Impact saison = Impact hors saison / 2.56
-    
-    Nous considérons donc les plats initiaux comme hors saison
    
-    Voici le menu type (et de saison) utilisé pour notre calcul.
+    Nous considérons donc les plats comme hors saison
+    
+    Voici le menu type ajusté du ratio "de saison"
     
     | Ingrédients  | Qte (g)  | Kcal  | Protéines (g)  | Lipides (g)  | gCO2e /kg  | gCO2e   |
     |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
@@ -138,7 +138,9 @@ alimentation . plats . viande 1 . saison:
     
     2.56 = ratio d'impact entre hors saison et saison : Impact saison = Impact hors saison / 2.56
     
-    Nous considérons donc les plats initiaux comme hors saison
+    Nous considérons donc les plats comme hors saison
+    
+    Voici le menu type ajusté du ratio "de saison"
     
     | Types de repas  | Qte (g)  | Kcal  | Protéines (g)  | Lipides (g)  | gCO2e /kg  | gCO2e   |
     |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
@@ -170,7 +172,9 @@ alimentation . plats . viande 2 . saison:
     
     2.56 = ratio d'impact entre hors saison et saison : Impact saison = Impact hors saison / 2.56
     
-    Nous considérons donc les plats initiaux comme hors saison
+    Nous considérons donc les plats comme hors saison
+    
+    Voici le menu type ajusté du ratio "de saison"
 
     | Types de repas  | Qte (g)  | Kcal  | Protéines (g)  | Lipides (g)  | gCO2e /kg  | gCO2e   |
     |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
@@ -234,74 +238,196 @@ alimentation . gaspillage alimentaire:
     - https://www.ademe.fr/operation-foyers-temoins-estimer-impacts-gaspillage-alimentaire-menages
 
 
-
-alimentation . saison :
-  titre : Je consomme des produits de saison 
-  icônes : 🍅☀️ 
-  description: | #message informatif de la fiche
-    De nos jours, il devient même de plus en plus difficile de connaître avec exactitude la saisonnalité des produits que l’on mange et parfois même 
-    leur provenance. Cette prolifération d’aliments hors saisonnalité et lointains contribue malheureusement à majorer fortement l’empreinte carbone de 
-    notre alimentation. Ainsi la production de légumes sous serres chauffées nécessite une consommation d’énergie 10 fois supérieure et émet 10 à 20 fois 
-    plus de gaz à effet de serre qu’une culture en plein champ. Choisir des fruits et légumes locaux et de saison participe donc à la fois à réduire 
-    les transports intermédiaires, à diminuer l’énergie nécessaire pour faire pousser fruits et légumes  et à soutenir l’économie locale.
-  #chiffres clefs  
-  #Une tomate (consommée hors saison) et provenant du Maroc c’est 4 fois plus d’eau utilisée qu’une tomate française de plein champ consommée en pleine saison
-      #Source : Alimentation et environnement, champs d’actions pour les professionnels, Octobre 2016, Ademe
-  #La production de légumes sous serres chauffées émet 10 à 20 fois plus de gaz à effet de serre qu’une culture en plein champ
-      #Source : Manger mieux, gaspiller moins. Pour alimentation saine et durable, Ademe, septembre 2019.
-
-  question: A quelle fréquence consommez-vous des produits de saison ?
-  par défaut: souvent
-  une possibilité: 
-      choix obligatoire: oui
-      possibilités: 
-        - tout le temps
-        - très fréquemment
-        - souvent
-        - épisodiquement
-        - jamais
-  formule:
-    variations:
-      - si: saison = 'tout le temps'
-         alors: #à déterminer ! sur le même type que réduction des déchets et gaspi alimentaire ?
-       - si: saison = 'très fréquemment'
-         alors: #à déterminer ! sur le même type que réduction des déchets et gaspi alimentaire ?
-       - si: #etc.
-
 ### Alimentation locale ###
 
-# A faire : Déterminer la formule pour évaluer l'action
-
-alimentation . locale:
-  titre : Je consomme des produits locaux en privilégiant le circuit court #Attention au dernier km
-  icônes : 🍅🍄🇫🇷 
-  description: | #message informatif de la fiche
+alimentation . manger local:
+  non applicable si: local = 'oui'
+  titre: Manger local
+  effort: modéré
+  icônes : 🍅🇫🇷 
+  formule: (déjeuner et dîner - déjeuner et dîner . local) * coefficient local
+  description: |
     De nos jours, il devient même de plus en plus difficile de connaître avec exactitude la saisonnalité des produits que l’on mange et parfois même 
     leur provenance. Cette prolifération d’aliments hors saisonnalité et lointains contribue malheureusement à majorer fortement l’empreinte carbone 
     et l'impact environnemental de notre alimentation. Ainsi Une tomate (consommée hors saison) et provenant du Maroc c’est 4 fois plus d’eau utilisée 
     qu’une tomate française de plein champ consommée en pleine saison et plusieurs milliers de km parcourus. Choisir des fruits et légumes locaux  permet donc de réduire 
     les transports intermédiaires tout en soutenant l’économie locale.
-  #chiffres clefs  
-  #Une tomate (consommée hors saison) et provenant du Maroc c’est 4 fois plus d’eau utilisée qu’une tomate française de plein champ consommée en pleine saison
-      #Source : Alimentation et environnement, champs d’actions pour les professionnels, Octobre 2016, Ademe
+  note: |
+    [Manger mieux](https://www.ademe.fr/sites/default/files/assets/documents/guide-pratique-manger-mieux-gaspiller-moins.pdf)
 
-  question: A quelle fréquence consommez-vous des produits locaux ?
-  par défaut: souvent
+alimentation . local:
+  question: Les aliments que vous consommez sont-ils d'origine française locale ?
+  par défaut: non
   une possibilité: 
       choix obligatoire: oui
       possibilités: 
-        - tout le temps
-        - très fréquemment
-        - souvent
-        - épisodiquement
+        - toujours
+        - parfois
         - jamais
+        
+alimentation . coefficient local:
   formule:
     variations:
-      - si: locale = 'tout le temps'
-         alors: #à déterminer ! sur le même type que réduction des déchets et gaspi alimentaire ?
-       - si: locale = 'très fréquemment'
-         alors: #à déterminer ! sur le même type que réduction des déchets et gaspi alimentaire ?
-       - si: #etc.
+      - si: local = 'non'
+         alors: 1
+       - sinon: 0.5 
+
+alimentation . déjeuner et dîner . local:
+  formule: par semaine . local * 52
+alimentation . déjeuner et dîner . par semaine . local:
+  formule: plats . local
+
+alimentation . plats . local:
+  formule: 
+    somme:
+      - viande 1 . local
+      - viande 2 . local
+      - végétalien . local
+      - végétarien . local
+
+
+alimentation . plats . végétalien . local:
+  formule: empreinte * nombre
+  icônes: 🌾🥜🥗
+  description: |
+    Procédure pour calculer une empreinte "locale" : 
+    1. Nous utilisons les données d'Agrybalise pour reconstituer le plat végétalien
+    2. On utilise les données Agrybalise pour extraitre la part transport
+    3. On soustrait la moitiée de cette part transport pour obtenir une évaluation "circuit court"
+    4. On calcul le ratio entre empreinte "normale" et "circuit court"
+    5. On reporte ce ratio à l'estimation faite par l'ADEME (car la reconstitution est toujours bien plus grande que la donnée ADEME) 
+   
+    Nous considérons les plats comme non local
+   
+    Voici le menu type ajusé du ratio "local".
+    
+    | Ingrédients  | Qte (g)  | Kcal  | Protéines (g)  | Lipides (g)  | gCO2e /kg  | gCO2e   |
+    |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+    |      Entrée : salade de légumes  |  |  |  |  |  |  |
+    | 200g légumes de saison  | 200  | 60  | 3  | 0  | 267  | 47.2 |
+    | noix françaises de saison | 10  | 71  | 1,3  | 6,7  | 1327  | 11.7  |
+    | huile (1/2 c.s.)  | 7  | 63  | 0  | 7  | 2153  | 13.3  |
+    |      Plat principal : tofu mariné, pommes de terre et oignons  |  |  |  |  |  |  |
+    | tofu  | 150  | 128  | 16  | 8  | 982  | 130.1  |
+    | pommes de terre  | 200  | 170  | 3  | 0,2  | 77  | 13.7  |
+    | huile (1/2 c.s.)  | 7  | 63  | 0  | 7  | 2153  | 15,1  |
+    |      Dessert : salade de fruits  |  |  |  |  |  |  |
+    | fruits de saison  | 200  | 100  | 2  | 0  | 267  | 47.2  |
+    | Pain  | 50  | 125  | 4  | 0,6  | 1520  | 67.1  |
+    | Total  |    | 776  | 29,3  | 29,5  |    | 345.4 |
+    
+alimentation . plats . végétalien . local . empreinte:
+  formule: 0.348
+  unité: kgCO2e
+
+alimentation . plats . végétarien . local:
+  formule: empreinte * nombre
+  icônes: 🥗🍳🧀
+  description: |
+    Procédure pour calculer une empreinte "locale" : 
+    1. Nous utilisons les données d'Agrybalise pour reconstituer le plat végétalien
+    2. On utilise les données Agrybalise pour extraitre la part transport
+    3. On soustrait la moitiée de cette part transport pour obtenir une évaluation "circuit court"
+    4. On calcul le ratio entre empreinte "normale" et "circuit court"
+    5. On reporte ce ratio à l'estimation faite par l'ADEME (car la reconstitution est toujours bien plus grande que la donnée ADEME) 
+    
+    Nous considérons les plats comme non local
+   
+    Voici le menu type ajusté du ratio "local".
+    
+    | Ingrédients  | Qte (g)  | Kcal  | Protéines (g)  | Lipides (g)  | gCO2e /kg  | gCO2e   |
+    |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+    |      Entrée : soupe de légumes  |  |  |  |  |  |  |
+    | 200g légumes de saison  | 200  | 60  | 3  | 0  | 267  | 47.7 |
+    | huile (1/2 c.s.)  | 7  | 63  | 0  | 7  | 2153  | 13.5  |
+    |      Plat principal : omelette aux pommes de terre et aux oignons  |  |  |  |  |  |  |
+    | 2 œufs  | 106  | 195  | 16  | 11  | 2610  | 247.1  |
+    | pommes de terre  | 200  | 170  | 3  | 0,2  | 77  | 13.8 |
+    | huile (1/2 c.s.)  | 7  | 63  | 0  | 7  | 2153  | 15.3  |
+    |      Dessert : salade de fruits  |  |  |  |  |  |  |
+    | fruits de saison  | 200  | 100  | 2  | 0  | 267  | 47.7 |
+    | Pain  | 50  | 125  | 4  | 0,6  | 1520  | 67.9  |
+    | Total  |    | 776  | 28  | 25,8  |    | 453 |
+    
+alimentation . plats . végétarien . local . empreinte:
+  formule: 0.455
+  unité: kgCO2e
+  note: C'est le "Repas végétarien 1" [ici](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm)
+
+# A faire : Déterminer la formule pour évaluer l'action
+
+alimentation . plats . viande 1 . local:
+  formule: empreinte * nombre
+  titre: Viande 1
+  icônes: 🍗🥓🧀
+  description: |
+    Procédure pour calculer une empreinte "locale" : 
+    1. Nous utilisons les données d'Agrybalise pour reconstituer le plat végétalien
+    2. On utilise les données Agrybalise pour extraitre la part transport
+    3. On soustrait la moitiée de cette part transport pour obtenir une évaluation "circuit court"
+    4. On calcul le ratio entre empreinte "normale" et "circuit court"
+    5. On reporte ce ratio à l'estimation faite par l'ADEME (car la reconstitution est toujours bien plus grande que la donnée ADEME) 
+    
+    Nous considérons les plats comme non local
+    
+    Voici le menu type ajusté du ratio "local".
+        
+    | Types de repas  | Qte (g)  | Kcal  | Protéines (g)  | Lipides (g)  | gCO2e /kg  | gCO2e   |
+    |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+    |      Entrée : légumes à la grecque  |  |  |  |  |  |  |
+    | légumes de saison  | 200  | 60  | 3  | 0  | 267  | 51.6 |
+    | huile d'olive (1/2 c.s.)  | 7  | 63  | 0  | 7  | 2600  | 17.6  |
+    |      Plat principal : poulet au riz  |  |  |  |  |  |  |
+    | poulet  | 150  | 225  | 30  | 10,5  | 5160  | 747.6  |
+    | riz  | 60  | 214  | 5  | 1  | 1410  | 81.7  |
+    | beurre  | 10  | 76  | 1  | 8,4  | 9490  | 91.7  |
+    |      Plateau de fromages  |  |  |  |  |  |  |
+    | fromage à pâte molle  | 25  | 68  | 5  | 5  | 4280  | 103.4  |
+    | fromage à pâte dure  | 25  | 100  | 7  | 7,5  | 5600  | 135.2  |
+    | Pain  | 50  | 125  | 4  | 0,6  | 1520  | 73.4  |
+    | Total  |    | 931  | 55  | 40  |    | 1302.1 |
+  note: C'est le "Repas classique 1 (avec poulet)" [ici](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm).
+  
+alimentation . plats . viande 1 . local . empreinte:
+  formule: 1.302
+  unité: kgCO2e  
+
+alimentation . plats . viande 2 . local:
+  formule: empreinte * nombre
+  titre: viande 2
+  icônes: 🥩🍖
+  description: |
+    Procédure pour calculer une empreinte "locale" : 
+    1. Nous utilisons les données d'Agrybalise pour reconstituer le plat végétalien
+    2. On utilise les données Agrybalise pour extraitre la part transport
+    3. On soustrait la moitiée de cette part transport pour obtenir une évaluation "circuit court"
+    4. On calcul le ratio entre empreinte "normale" et "circuit court"
+    5. On reporte ce ratio à l'estimation faite par l'ADEME (car la reconstitution est toujours bien plus grande que la donnée ADEME) 
+    
+    Nous considérons les plats comme non local
+    
+    Voici le menu type ajusté du ratio "local".
+
+    | Types de repas  | Qte (g)  | Kcal  | Protéines (g)  | Lipides (g)  | gCO2e /kg  | gCO2e   |
+    |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+    |      Entrée : tzatziki  |  |  |  |  |  |  |
+    | yaourt  | 125  | 75  | 5  | 4,4  | 2880  | 356  |
+    | concombre  | 75  |    | 1  |    | 1720  | 127.6  |
+    | huile d'olive (1/2 c.s.)  | 7  | 63  | 0  | 9  | 2600  | 18  |
+    |      Plat principal : bifteck - frites  |  |  |  |  |  |  |
+    | bifteck  | 150  | 222  | 37,5  | 6  | 35800  | 5310.9  |
+    | frites  | 200  | 228  | 4,6  | 7,3  | 1300  | 257.1  |
+    |      Dessert : tarte aux poires  |  |  |  |  |  |  |
+    | farine  | 40  | 136  | 4,8  | 0,8  | 1170  | 46,3  |
+    | poires  | 100  | 60  | 0,4  | 0  | 709,5  | 70.2  |
+    | huile (1 c.s.)  | 15  | 135  | 0  | 15  | 2153  | 31.9  |
+    | Total  |    | 919  | 53,3  | 42,5  |    | 6218.2 |
+
+alimentation . plats . viande 2 . local . empreinte:
+  formule: 6.218
+  unité: kgCO2e
+  note: C'est le "Repas classique 2 (avec bœuf)" [ici](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm).
+
 
 
 
