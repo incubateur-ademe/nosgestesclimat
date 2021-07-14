@@ -12,157 +12,20 @@ alimentation:
     Contrairement à ce que l'on entend souvent, la distance parcourue par nos aliments et la quantité d'emballages plastique sont au second plan.
   formule: 
     somme:
-      - petit déjeuner annuel
-      - déjeuner et dîner
-      - boisson
-      - déchets
-        # à venir peut-être dans une prochaine version
-        # - laitages
+      - déjeuners
 
-alimentation . laitages: 
-  description: Cette question est importante au moins en France, où l'on consomme beaucoup de lait de vache et dont la gastronomie est renommée pour son fromage. 
-  note: |
-    On trouve dans MicMac les quantités suivantes.
-
-    > Portion fromage : 0,05kg Portion laitages : 0,125 kg.
-
-    Ensuite les quantités de 3 catégories sont demandées en kg/semaine : fromage et beurre, laitages, lait.
-
-
-
-
-alimentation . boisson: 
-  icônes: 🥤🍷
-  formule: froide + chaude
-  
-alimentation . boisson . chaude: 
-  formule:
-    multiplication:
-      assiette: tasse de thé + tasse de café
-      facteur: 365
-  note: Nous faisons une moyenne très grossière, en attendant de poser la question de la consommation individuelle.
-
-alimentation . boisson . tasse de thé:
-  icônes: 🍵
-  formule: 0.0123
-  unité: kgCO2e
-  références:
-    - http://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
-
-alimentation . boisson . tasse de café:
-  icônes: ☕
-  formule: 0.0503
-  unité: kgCO2e
-  références:
-    - http://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
-
-alimentation . boisson . froide: 
-  icônes: 🍺🥤🧴
-  formule: 
-    somme: 
-      - sucrées
-      - alcool
-      - eau en bouteille
-
-alimentation . boisson . eau en bouteille:
-  applicable si: affirmatif
-  formule: consommation annuelle * empreinte    
-
-  références: 
-    - http://www.bilans-ges.ademe.fr/
-
-alimentation . boisson . eau en bouteille . consommation annuelle:
-  formule: 365 * 1.5
-  unité: l
-  description: On considère que chacun boit 1,5 litres d'eau par jour.
-
-alimentation . boisson . eau en bouteille . empreinte:
-  formule: 0.393
-  unité: kgCO2e/l
-  note: |
-    Base carbone consultée le 17/11/20.
-    
-    > Eau - en bouteille PET, plate, 0,5L - en magasin, prêt à consommer 0.393 kgCO2e/litre de liquide. 
-    
-    Attention, il s'agit bien d'un facteur d'émission par l, même si l'hypothèse est une consommation de bouteilles de 0,5l. 
-    
-    Cette hypothèse semble très contestable, car ce format correspond plutôt à une consommation en dehors du foyer (cinéma, restauration, etc.).
-
-
-alimentation . boisson . eau en bouteille . affirmatif:
-  titre: Eau en bouteille
-  question: Buvez-vous votre eau en bouteille ?
-  par défaut: non
-  description: |
-    Si vous buvez principalement de l'eau du robinet et que votre consommation d'eau en bouteille se réduit à de rares occasions (par exemple un repas sur le pouce en boulangerie par semaine, avec leur fameux menu "sandwich + dessert + boisson en bouteille plastique"), répondez non.
-
-    Si vous achetez régulièrement des packs d'eau en bouteille au supermarché ou si vous achetez une petite bouteille chaque jour à la cantine du boulot, répondez oui.
-  note: | 
-    Les français boivent en moyenne entre 100 et 150 litres d'eau en bouteille par an [source](https://www.planetoscope.com/consommation-eau/854-litres-d-eau-en-bouteille-vendus-en-france.html), soit environ un tiers de nos besoins de 1-1,5l par jour [source](https://www.mangerbouger.fr/Le-Mag/Bien-etre/L-eau-indispensable-a-notre-bonne-sante).
-
-    Nous avons considéré que la valeur par défaut était donc "non".
-
-alimentation . boisson . sucrées: 
-  description: |
-    Notons que des alternatives au soda, très simples à préparer maison, sont possibles : c'est le cas du [kéfir](https://fr.wikipedia.org/wiki/K%C3%A9fir) ou [Kombucha](https://fr.wikipedia.org/wiki/Kombucha).
-
-    Nous n'avons pas évalué les gains d'empreinte offerts par ces alternatives, mais la préparation locale pour cet aliment très lourd, qui évite transports et emballages est sans doutes significative.
-  unité: kgCO2e
-  formule: litres * nombre de semaines * facteur
-
-alimentation . boisson . sucrées . facteur: 
-  formule: 1.1
-  note: Cette valeur est bien sûr très approximative.
-
-alimentation . boisson . sucrées . litres: 
-  titre: Consommation de boissons sucrées
-  question: Quelle est votre consommation par semaine de sodas, jus de fruit, sirops, etc. ?
-  suggestions: 
-    nulle: 0 l/semaine
-    modérée: 1 l/semaine
-    importante: 5 l/semaine
-  par défaut: 2 l/semaine
-
-alimentation . boisson . alcool: 
-  unité: kgCO2e
-  description: |
-    Étonnamment, notre consommation d'alcool prend un rôle important dans notre empreinte. 
-
-    La bonne nouvelle, c'est que nous pouvons l'améliorer de façon très simple : plus que l'alimentation, une boisson est lourde, voyage beaucoup, et son emballage a une empreinte significative. 
-
-    > Prenons l'exemple d'une 🍺 bière de 25cl : brassée au bout du monde, elle a voyagé des milliers de kilomètres et son contenu (la boisson) est emballé dans un contenant qui fait presque le même poids (200g de verre). 
-
-    > En privilégiant une bière brassée localement, servie à la pression (le fût étant réutilisé des années), on peut réduire drastiquement l'empreinte sans changer la consommation.
-  formule: litres * nombre de semaines * facteur
-
-alimentation . boisson . alcool . facteur: 
-  formule: 2
-  note: Le vin n'a pas la même empreinte que la bière au litre, c'est une grosse simplification.
-
-alimentation . boisson . alcool . litres: 
-  titre: Consommation d'alcool
-  question: Quelle est votre consommation par semaine d'alcool (vin, bière, etc.) ?
-  suggestions: 
-    nulle: 0
-    modérée: .5
-    importante: 2
-  unité: l/semaine
-  par défaut: 1 l/semaine
-
-
-
-alimentation . déjeuner et dîner:
+alimentation . déjeuners :
   icônes: 🍽️
-  formule: par semaine * 52
-alimentation . déjeuner et dîner . par semaine:
+  formule: par semaine * profil . nbre semaines
+alimentation . déjeuners . par semaine:
   formule: plats
 
 alimentation . plats:
-  titre: Empreinte de 14 repas
+  titre: Empreinte de 5 repas
   description: |
-      A choisir : 14 plats types pour représenter une semaine complète de repas midi et soir (donc, petit déjeuner non inclus). 
+      A choisir : 5 plats types pour représenter une semaine complète de repas du midi dans le cadre professionnel. 
 
-      Ceci est la somme de l'empreinte de ces 14 plats.
+      Ceci est la somme de l'empreinte de ces 5 plats.
   formule: 
     somme:
       - viande 1
@@ -236,7 +99,7 @@ alimentation . plats . végétalien . empreinte:
     Pour les noix, nous ajoutons 1 cerneau (10g sans la coquille), et nous utilisons l'empreinte climat de la base [FoodGES](https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23) de l'ADEME, `1,3kgCO2e/kg ingéré`, et les valeurs nutritives de [la page Wikipedia](https://fr.wikipedia.org/wiki/Noix#Valeur_nutritive). 
 alimentation . plats . végétalien . nombre:
   question: Nombre de plats végétaliens par semaine
-  par défaut: 2
+  par défaut: 1
   période: semaine
 
 alimentation . plats . végétarien:
@@ -268,7 +131,7 @@ alimentation . plats . végétarien . empreinte:
 
 alimentation . plats . végétarien . nombre:
   question: Nombre de plats végétariens par semaine
-  par défaut: 4
+  par défaut: 1
   période: semaine
 
 
@@ -280,7 +143,7 @@ alimentation . plats . végétarien . nombre:
   #  formule: empreinte * nombre
   #alimentation . plats . viande 2 . empreinte:
   #  formule: 666
-  #	note: Pas implémenté encore, non activité.
+  #note: Pas implémenté encore, non activité.
   #alimentation . plats . viande 2 . nombre:
   #  question: Nombre de plats types
   #  par défaut: 0
@@ -315,7 +178,7 @@ alimentation . plats . viande 1 . empreinte:
   unité: kgCO2e
 alimentation . plats . viande 1 . nombre:
   question: Nombre de plats viande 1 par semaine
-  par défaut: 4
+  par défaut: 2
   période: semaine
 
 alimentation . plats . viande 2:
@@ -352,7 +215,7 @@ alimentation . plats . viande 2 . empreinte:
   note: C'est le "Repas classique 2 (avec bœuf)" [ici](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm).
 alimentation . plats . viande 2 . nombre:
   question: Nombre de plats viande 2 par semaine
-  par défaut: 4
+  par défaut: 1
   période: semaine
 
 alimentation . nombre de plats viande: 
@@ -368,240 +231,3 @@ alimentation . planétaire:
     Contrairement au vague régime "flexitarien", le régime planétaire est [décrit très précisément](https://www.culture-nutrition.com/2019/01/28/modele-alimentaire-regime-planetaire/).
 
     ![](https://eatforum.org/content/uploads/2019/02/EAT-Lancet_PHD_Plate_RGB-02.png)
-
-alimentation . petit déjeuner annuel: 
-  titre: Petit déjeuner
-  icônes: 🥐☕
-  formule: petit déjeuner * 365
-
-alimentation . petit déjeuner: 
-  formule:
-    variations: 
-      - si: type = 'français'
-        alors: français
-      - si: type = 'lait céréales'
-        alors: lait céréales
-      - sinon: 0
-
-alimentation . petit déjeuner . type: 
-  question: Quel petit déjeuner vous correspond le plus ?
-  description: |
-    Il existe une variété infinie de petit déjeuners. Nous en avons sélectionné quelques uns pour que vous obteniez une réponse facilement.
-
-    Il manque votre petit déjeuner et vous pensez ne pas pas être le seul à l'apprécier ? [Écrivez-nous](/contribuer).
-
-  par défaut: "'français'"
-  formule:
-    une possibilité: 
-      choix obligatoire: oui
-      possibilités: 
-        - français
-          #        - britannique
-        - lait céréales
-          # - lait végétal céréales
-        - aucun
-alimentation . petit déjeuner . lait céréales: 
-  note: | 
-    Vérifier ces proportions issues de FoodGES : correspondent-elles à un petit déjeuner moyen ?
-  formule: 
-    somme: 
-      - lait
-      - céréales
-
-alimentation . lait: 
-  formule: empreinte * poids
-alimentation . lait . empreinte: 
-  formule: 
-    variations: 
-      - si: type = 'lait végétal'
-        alors: 0.950
-      - sinon: 1.390
-  unité: kgCO2e/kg
-  note: |
-    Pour le lait, en l'asbsence de données dans FoodGES pour le lait de soja, nous utilisons cette étude [Comparison between cow milk and soy milk combining nutritional values and GHG data](https://www.researchgate.net/publication/317600130_Comparison_between_cow_milk_and_soy_milk_combining_nutritional_values_and_GHG_data). 
-
-    Notons que l'empreinte du lait de vache estimée dans FoodGES est inférieure à celle de cette étude, mais dans le cadre de cette question nous préférons comparer deux empreintes obtenues par la même méthode.
-
-    La base agribalyse v3, qui sera disponible en octobre 2020, pourrait consolider ces données.
-
-alimentation . lait . type:
-  question: Quel type de lait consommez-vous ? 
-  par défaut: "'lait de vache'"
-  formule:
-    une possibilité: 
-      choix obligatoire: oui
-      possibilités: 
-        - lait de vache
-        - lait végétal
-
-alimentation . lait . type . lait de vache:
-alimentation . lait . type . lait végétal:
-
-alimentation . lait . poids: 
-  formule: 0.202
-  unité: kg
-  note: FoodGES donne cette quantité de lait, la source ci-dessous donne un peu plus, 25cl.
-  références: 
-    - https://www.enviedebienmanger.fr/fiche-recette/recette-bol-de-lait-aux-muesli-et-fruits-rouges
-
-alimentation . céréales: 
-  formule: empreinte * poids
-  références: 
-    - https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
-
-alimentation . céréales . empreinte: 
-  formule: 0.34
-  unité: kgCO2e/kg
-
-alimentation . céréales . poids: 
-  formule: 0.135
-  unité: kg
-  note: Pourquoi dans FoodGES la masse d'ingrédient "consommables" est-elle très supérieure à la masse "sortie de magasin" dans l'onglet details_Plats ?
-
-alimentation . petit déjeuner . français: 
-  note: |
-    Vérifier ces proportions issues de FoodGES : correspondent-elles à un petit déjeuner moyen ?
-  formule:
-    somme:
-      - pain
-      - viennoiserie
-      - orange
-      - beurre doux
-        # Pas de facteur d'émission pour la confiture dans FoodGES
-        # - confiture
-
-alimentation . viennoiserie:
-  formule: 0.114
-  icônes: 🥐
-  description: Viennoiserie de type pain au chocolat. 
-  note: Il n'est pas détaillé dans FoodGES si le chocolat est pris en compte, et donc si cette viennoiserie est représentative du croissant.
-
-alimentation . pain:
-  icônes: 🥖
-  formule: empreinte * poids
-alimentation . pain . empreinte:
-  formule: 1.52
-  unité: kgCO2e/kg
-  références: 
-    - https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
-alimentation . pain . poids:
-  formule: 0.040
-  unité: kg
-alimentation . beurre doux:
-  icônes: 🧈
-  formule: empreinte * poids
-alimentation . beurre doux . empreinte:
-  formule: 9.5
-  unité: kgCO2e/kg
-  références: 
-    - https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
-alimentation . beurre doux . poids:
-  formule: 0.010
-  unité: kg
-
-alimentation . orange:
-  formule: 0.1
-  unité: kgCO2e
-  description: Orange fraîche. Production Espagne, Afrique du Sud et États Unis - pourcentage de production inclus.
-  références: 
-    - https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
-
-
-
-
-
-alimentation . petit déjeuner . type . aucun:
-  titre: Pas de petit-dej'
-  description: |
-    Vous ne mangez rien au petit déjeuner (mais vous pouvez boire un café ou un thé).
-
-    À noter : nous intégrons automatiquement un café et un thé par jour dans le calcul. Vous pourrez bientôt nous en dire plus sur votre consommation personnelle.
-alimentation . petit déjeuner . type . lait céréales:
-  icônes: 🥣🎑
-  description: |
-    Un bol de lait céréales. Le lait peut être animal ou végétal. 
-alimentation . petit déjeuner . type . français:
-  icônes: 🥐🥖
-  titre: Viennoiserie baguette
-  description: |
-    Il ne semble pas exister de petit déjeuner standard français (pas de page Wikipedia).  
-
-    Il semble proche du petit-déjeuner appelé ["continental"](https://fr.wikipedia.org/wiki/Déjeuner#Repas_de_type_continental).
-
-    Ceci est une proposition parmi d'autres possibilités, qui peut bien sûr ne pas correspondre au votre.
-
-  note: |
-    Faut-il inclure du beurre, confiture ? Un pain au chocolat ? 
-
-    On résoudra cette question en proposant plus de choix, sans noyer l'utilisateur.
-
-alimentation . petit déjeuner . type . britannique:
-  titre: Britannique salé
-  icônes: 🍳🥓
-  description: |
-    Le traditionnel déjeuner anglais ou irlandais : toasts, oeufs, bacon, baked beans, saucisses, tomates, champignons, pommes de terre. 
-  références: 
-    - https://fr.wikipedia.org/wiki/Petit_déjeuner_anglais
-
-alimentation . déchets: 
-  icônes: 🚮🧃
-  description: |
-    Nous avons rangé cette catégorie dans `alimentation` car les déchets ménagers sont composés à 85% de déchets alimentaires, selon la référence ci-dessous.
-  note: Impossible de trouver une source de 1er niveau pour ce chiffre des 85%.
-  références: 
-    - http://multimedia.ademe.fr/animations/alimentation
-
-  formule: facteur * base
-
-alimentation . déchets . base: 
-  formule: 193 * facteur carbone CO2
-  unité: kgCO2e
-  note: | 
-    Attention : notre source est un article écrit en 2003, qui semble basé sur la composition de la poubelle d'un français mesurée en 1998. 
-
-    On y apprend aussi que ces déchets ont augmenté de 33% en 10 ans de 1980 à 1990. 
-
-    En attendant mieux, on peut donc considérer que cette empreinte est sous-estimée. 
-
-    Cependant, n'oublions pas l'existence du poste "service publics", qui pourrait bien inclure une part de déchets. Peut-être seulement leur fin de vie, à creuser.
-  références: 
-    - https://jancovici.com/changement-climatique/les-ges-et-nous/combien-de-gaz-a-effet-de-serre-dans-notre-poubelle/
-
-facteur carbone CO2: 
-  formule: 44 / 12
-
-alimentation . déchets . niveau d'engagement: 
-  titre: Engagement zéro déchet
-  question: Êtes-vous engagé dans une démarche zéro déchet ?
-  description: |
-    L'engagement zéro déchet consiste à réduire au maximum les achats d'aliments emballés (les yaourts sont donc exclus par exemple) et donc privilégier le vrac, 
-    le compostage (en jardin ou en vermicompost) des déchets organiques, etc.
- 
-    Nous considérons qu'en cas d'engagement "zéro déchet", la quantité de gaz à effet de serre émis par personne est divisée par 3. 
-
-    En effet, il est très difficile de se débarrasser d'une base minimale de déchets qui nous est imposée et souvent invisible.
-
-    Pour un engagement "en partie", en cours de transition vers cet idéal difficile à atteindre, nous prenons les 2/3 de l'empreinte moyenne.
-  note: Il faudrait détailler ce calcul.
-  par défaut: "'pas du tout'"
-  formule:
-    une possibilité: 
-      choix obligatoire: oui
-      possibilités: 
-        - pas du tout
-        - en partie
-        - affirmatif
-alimentation . déchets . niveau d'engagement . pas du tout: 
-alimentation . déchets . niveau d'engagement . en partie: 
-alimentation . déchets . niveau d'engagement . affirmatif:
-  titre: oui
-
-alimentation . déchets . facteur: 
-  formule: 
-    variations: 
-        - si: niveau d'engagement = 'pas du tout'
-          alors: 1
-        - si: niveau d'engagement = 'en partie'
-          alors: 0.6
-        - sinon: 0.3
-
