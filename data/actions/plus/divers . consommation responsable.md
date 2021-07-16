@@ -3,6 +3,8 @@
 ## Contexte de l’action
 Des habits que nous portons, au mobilier d’intérieur sans oublier bien évidemment nos appareils électriques et électroniques, notre consommation de biens et équipements a un impact réel sur le climat. L’empreinte carbone de notre consommation représente d’ailleurs le quart de notre empreinte carbone totale individuelle. C’est pourquoi suivre les principes d’une consommation plus durable (du questionnement du besoin réel à l’achat de produits durables) est essentielle pour réduire son impact sur l’environnement.
 
+![](https://github.com/datagir/nosgestesclimat/blob/actions_images_elaborees2/public/images/Chiffres-clefs_Desencombrer_v1.png)
+
 ## Impact GES moyen de l’action
 Consommer durable permet toujours d’évités et réduire nos impacts sur l’environnement et le climat, et ce même quand il s’agit de l’achat de biens neufs (en comparaison à l’achat de biens “moyens”, c’est-à-dire non labellisés et/ou éco-conçus et/ou produits localement). Pour comprendre les impacts et connaitre leurs poids sur notre empreinte carbone, n’hésitez pas à consulter les fiches dédiées aux différents principes de la consommation durable (rubrique Passer à l’action). 
 
