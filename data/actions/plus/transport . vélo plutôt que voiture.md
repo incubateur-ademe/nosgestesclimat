@@ -4,7 +4,7 @@
 
 La dépendance à la voiture individuelle dans nos déplacements quotidiens est telle que nous allons jusqu’à l’utiliser pour des trajets très courts, c’est-à-dire des trajets de moins de 5 km. Ainsi, chaque jour, plusieurs dizaines de millions de trajets de moins de 5 km sont réalisés seul en voiture (hors trajets domicile-travail) représentant ainsi 43 % des trajets quotidiens . L’utilisation de la voiture pour ces « petits » trajets n’est malheureusement pas sans impact sur le climat ainsi que sur la qualité de l’air que nous respirons très souvent saturés en polluants atmosphériques. Privilégier le vélo (ou tout autre type de mobilités actives) pour les petits trajets du quotidien permet donc d’agir à la fois à son échelle en réduisant son empreinte carbone individuelle mais aussi d’agir plus largement en participant à un changement global de mentalité.
 
-![](https://sendeyo.com/up/d/c63675fabb)
+![](https://github.com/datagir/nosgestesclimat/blob/actions_images_elaborees2/public/images/Chiffres-cles_privilegier_velo_a_voiture_5km_v2.png)
 
 ## Impact GES moyen de l’action
 
