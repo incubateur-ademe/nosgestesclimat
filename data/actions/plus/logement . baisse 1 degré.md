@@ -3,7 +3,7 @@
 ## Contexte de l’action
 ¾ des de la consommation d’énergie d’un ménage est consacrée au chauffage et à l’eau chaude sanitaire (3). Cette consommation d’énergie, en plus d’avoir un coût financier non négligeable, participe à augmenter l’empreinte carbone des ménages. Elle peut toutefois facilement être limitée en diminuant la température des pièces occupées sans perdre de confort thermique ou bien ressentir une sensation de froid (à condition d’avoir des logements bien isolés). Ainsi, régler la température entre 19° et 21°C dans les pièces occupées la journée (et 17°C la nuit ou dans les pièces peu occupées) permet de contribuer à réduire son impact sur le climat.
 
-![](https://sendeyo.com/up/d/bb72233aef)
+![](https://github.com/datagir/nosgestesclimat/blob/actions_images_elaborees2/public/images/Chiffres-cles_limiter_temperature_logement.png)
 
 ## Impact GES moyen de l’action et ordre de grandeur
 
