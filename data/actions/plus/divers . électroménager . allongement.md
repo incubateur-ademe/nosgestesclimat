@@ -3,6 +3,8 @@
 ## Contexte de l’action
 De l’électroménager à la dernière tablette numérique, les équipements électriques et électroniques font maintenant partie intégrante de notre quotidien. Leur essor s’est malheureusement accompagné d’une stratégie d’obsolescence programmée (technique comme culturelle) afin d’augmenter les taux de renouvellement et ainsi les volumes de ventes. Certains de ces biens sont même devenus des biens de consommation classique. Ces renouvellements prématurés conduisent malheureusement à des tensions toujours plus grandes sur les ressources et augmentent les besoins en énergie. C’est préserver et allonger la durée de vie de nos équipements électriques et électroniques est un geste fort pour réduire notre empreinte sur le climat et sur l’environnement. 
 
+![](https://github.com/datagir/nosgestesclimat/blob/actions_images_elaborees2/public/images/Chiffres-clefs_Allonger-duree-vie-produits-elec_v2.png)
+
 ## Impact GES moyen de l’action
 Je répare mes appareils électroménager quand ceux-ci tombe en panne (à leur demi-vie) :
 - **384 kgCO2eq évités** soit 1490 km en voiture (en considérant une TV, un lave-vaisselle, un lave-linge, un réfrigérateur et un aspirateur).
