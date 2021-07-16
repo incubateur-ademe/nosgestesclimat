@@ -4,7 +4,7 @@
 ## Contexte de l’action
 L’acte de jeter est quelque chose d’a priori anodin. Malheureusement, ce geste n’est pas sans impact sur les ressources et sur le climat. Il participe, en effet, à faire disparaître de la matière première et contribue à émettre des GES, nos déchets dans nos poubelles nécessitant d’être traités. Réduire le volume de nos poubelles, c’est donc oeuvrer en premier lieu à préserver les ressources mais aussi à éviter les émissions de GES associées de manière directe à la gestion des déchets, et de manière indirecte à la confection des produits neufs de substitution.
 
-![](https://sendeyo.com/up/d/81bb0756be)
+![](https://github.com/datagir/nosgestesclimat/blob/master/public/images/Chiffres-cles_reduire_taille%20poubelle_v2.png)
 
 ## Impact GES moyen de l’action
 Diviser par deux le volume de mes poubelles :
