@@ -6,39 +6,31 @@ numérique:
   couleur: '#B53471'
   icônes: 📺
   formule: 
-    somme: 
-      - téléphone
-      - TV
+    somme:
+      - internet
+      - visioconférence
       - ordinateur portable
       - ordinateur fixe
-      - internet
+      - écran supplémentaire
+      - téléphone
       - tablette
-      - vidéoprojecteur
-      - appareil photo
-      - home cinéma
 
 numérique . internet: 
-  formule: empreinte horaire * durée journalière * 365
+  formule: empreinte horaire * durée journalière * (profil . nbre semaines * 5)
   unité: kgCO2e
+
 numérique . internet . consommation horaire:
-  formule: (0.12 + 0.24) / 2
+  formule: 0.4
   unité: kWh/h
   note: |
-    Ce chiffre a été retenu dans le calculateur MicMac version 2.6. La source est un article de CarbonBrief utilisant des données AIE, et critiquant les calculs du Shift Project.
-
-    > Taken together, my analysis suggests that streaming a Netflix video in 2019 typically consumed 0.12-0.24kWh of electricity per hour.
-
-    Voici d'autres sources qui donnent des résultats sensiblement différents : 
-      - 400 g CO2e pour le [Shift Project](https://theshiftproject.org/article/shift-project-vraiment-surestime-empreinte-carbone-video-analyse/) (après correction)
-      - 100 g CO2e pour [Netflix (DIMPACT)](https://www.wired.com/story/netflix-binge-watching-carbon-footprint/)
-      - 36 g CO2e pour l'[IEA](https://www.iea.org/commentaries/the-carbon-footprint-of-streaming-video-fact-checking-the-headlines) (même ramené à 4g pour la France si je comprends bien, en raison de l'intensité carbone du mix électrique)
-      - 28 g CO2e pour [Greenspector](https://greenspector.com/fr/impact-video-canal/) (pour l'utilisation de services Canal +)
+    400 g CO2e pour le [Shift Project](https://theshiftproject.org/article/shift-project-vraiment-surestime-empreinte-carbone-video-analyse/) (après correction)    
 
     A faire : comment les calculs en source pondèrent-ils les usages (streaming, navigation Web, etc.) ? 
 
     Est-ce une estimation de consommation de données par heure d'usage ? 
   références: 
-    - https://www.carbonbrief.org/factcheck-what-is-the-carbon-footprint-of-streaming-video-on-netflix
+    - https://theshiftproject.org/article/shift-project-vraiment-surestime-empreinte-carbone-video-analyse/
+
 numérique . internet . empreinte horaire:
   formule: consommation horaire * intensité électricité
   unité: kgCO2e/heure
@@ -50,46 +42,68 @@ numérique . internet . empreinte horaire . intensité électricité:
   unité: kgCO2e/kWh
   références: 
     base bilan-GES: https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=électricité
+  note: à rajouter dans l'excel WC
 
 numérique . internet . durée journalière: 
-  question: Combien d'heures passez-vous par jour sur internet hors bureau (envoi de mail, surf Web, streaming vidéo, etc.) ?
-  description: Comptez seulement une estimation à la louche de vos heures hors bureau, car ce que vous faites au boulot entre dans la comptabilité de votre entreprise ou organisation.
+  question: Dans le cadre professionnel, combien d'heures passez-vous par jour sur internet hors visio-conférence (envoi de mail, surf Web, streaming vidéo, etc.) ?
+  description: Comptez une estimation de vos heures seulement au bureau.
   unité: heures
-  par défaut: 2 heures
+  par défaut: 4 heures
   suggestions: 
     zéro: 0
     modérément: 2
     je ne décroche pas: 8
-    
-numérique . appareil photo . présent:
-  note: On range l'appareil photo dans la catégorie numérique vu la rareté des appareils argentiques aujourd'hui.
-  question: Utilisez-vous un appareil photo ?
-  par défaut: non
-numérique . appareil photo . durée:
-  question: Quel âge a votre appareil photo ? 
-  unité: ans
-  par défaut: 4 ans
-numérique . appareil photo:
-  applicable si: présent
-  icônes: 📷
-  formule: 30 / (durée + 1)
-  unité: kgCO2e
-  note: Nous estimons que l'appareil va durer un an de plus que l'âge renseigné au moment de l'estimation.
 
-numérique . home cinéma . présent:
-  question: Utilisez-vous un home cinéma ?
-  par défaut: non
-numérique . home cinéma . durée:
-  question: Quel âge a votre home cinéma ? 
-  unité: ans
-  par défaut: 4 ans
-numérique . home cinéma:
-  icônes: 🔊🎬
-  applicable si: présent
-  formule: 133 / (durée + 1)
+numérique . visioconférence:
+  description: |
+    A completer
+    Une visio-conférence sur mobile est en moyenne 3 fois plus impactante pour l’environnement quand on ajoute la vidéo à l’audio.
+  formule: empreinte horaire * durée journalière * (profil . nbre semaines * 5)
   unité: kgCO2e
-  note: Nous estimons que l'appareil va durer un an de plus que l'âge renseigné au moment de l'estimation.
 
+numérique . visioconférence . empreinte horaire:
+  formule: empreinte par minute * 60
+  unité: kgCO2e/heure
+
+numérique . visioconférence . empreinte par minute:
+  formule: 0.00023
+  unité: kgCO2e/minutes
+  références: https://greenspector.com/fr/quelle-application-mobile-de-visioconference-pour-reduire-votre-impact-edition-2021/
+  note: |
+    On se base sur une étude de Greenspector. Ce chiffre correspond à la moyenne des différents outils de visio étudiés: 
+    - Google Meet 
+    - Microsoft Teams 
+    - Skype
+    - Cisco Webex Meetings
+    - Zoom
+    - Discord
+
+numérique . visioconférence . durée journalière:
+  question: Combien d'heures passez-vous en moyenne en visioconférence par jour ?
+  unité: heure
+  par défaut: 2
+  suggestions:
+    peu: 2
+    beaucoup: 5
+
+numérique . mails:
+  description: |
+    A completer 
+  formule: empreinte par mail * nbre journalier * (profil . nbre semaines * 5)
+  unité: kgCO2e
+
+numérique . mails . empreinte par mail:
+  formule: 0.004
+  unité: kgCO2e/mail
+
+numérique . mails . nbre journalier:
+  question: Dans le cadre professionnel, combien de mails envoyez-vous et recevez-vous en moyenne par jour ?
+  unité: mails
+  par défaut: 20
+  suggestions:
+    zéros: 0
+    10 mails par jour: 10
+    30 mails par jour: 30
 
 numérique . ordinateur portable . présent:
   question: Utilisez-vous un ordinateur portable ?
@@ -101,9 +115,7 @@ numérique . ordinateur portable . durée:
 numérique . ordinateur portable:
   icônes: 💻
   note: |
-  
-    Nous estimons que l'appareil va durer un an de plus que l'âge renseigné au moment de l'estimation.
-
+   Nous estimons que l'appareil va durer un an de plus que l'âge renseigné au moment de l'estimation.
   applicable si: présent
   formule: 156 / (durée + 1)
   unité: kgCO2e
@@ -135,36 +147,30 @@ numérique . ordinateur fixe . empreinte:
   formule: 296 + écran
 
 numérique . ordinateur fixe . écran: 
-  formule: 248
-  note: Valeur pour un écran de 21 pouces.
+  formule: 222
+  note: Valeur pour un écran de xx pouces.
   références: 
-    Ecran - 23,8 pouces: https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=écran
+    Ecran - xx pouces: https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=écran
 
+numérique . écran supplémentaire . présent:
+  question: Avez-vous un écran supplémentaire ?
+  par défaut: non
 
+numérique . écran supplémentaire . durée:
+  question: Quel âge a votre appareil photo ? 
+  unité: ans
+  par défaut: 4 ans
 
+numérique . écran supplémentaire:
+  applicable si: présent
+  icônes: 🖥
+  formule: 30 / (durée + 1)
+  unité: kgCO2e
+  note: Nous estimons que l'appareil va durer un an de plus que l'âge renseigné au moment de l'estimation.
 
 numérique . téléphone . présent:
   question: Utilisez-vous un téléphone ?
   par défaut: oui
-
-numérique . téléphone . type:
-  applicable si: présent
-  icônes: 🤙📱
-  question: Quel téléphone avez-vous ?
-  formule:
-    une possibilité:
-      choix obligatoire: oui
-      possibilités:
-        - téléphone basique
-        - smartphone classique
-        - smartphone haut de gamme
-  description: |
-
-    Un smartphone haut de gamme, c'est par exemple un iPhone récent avec un grand écran (> iPhone X), ou un Samsung Galaxy S ou Note récent.
-
-    Si vous n'avez pas de téléphone mobile, il y a de grandes chances pour que vous ayez un fixe. Répondez à la question en fonction de la sophistication de votre téléphone fixe, notamment la taille de l'écran. Si vous n'avez ni fixe ni mobile, désolé...
-
-  par défaut: "'smartphone classique'"
 
 numérique . téléphone:
   applicable si: présent
@@ -197,38 +203,11 @@ numérique . téléphone . impact:
     - https://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/produits_informatiques__electr
     - https://www.apple.com/environment/pdf/products/iphone/iPhone_11_PER_sept2019.pdf
   description: |
-
-    Nous segmentons les possibilités de cette question en trois catégories.
-
-    ## Téléphone basique
-
-    Aussi appelé "feature phone", qui sont aujourd'hui au croisement entre le fameux Nokia 3310 et le smartphone, dont l'écran reste petit et les composants bas de gamme
-
-    > Son empreinte est donnée par la base bilan-GES.
-
-
-    ## Smartphone classique
     
-    Milieu de gamme, qui représente l'écrasante majorité des ventes. Tous les smartphones vendus en 2021 ou presque ont un écran supérieur à 5.5 pouces. 
+    Facteur d'émission sélectionné ici pour un smartphone milieu de gamme, qui représente l'écrasante majorité des ventes. Tous les smartphones vendus en 2021 ou presque ont un écran supérieur à 5.5 pouces. 
     
     > Son empreinte est donnée par la base bilan-GES.
-    
-    ## Smartphone haut de gamme 
-
-    La base bilan-GES n'inclut pas de catégories "téléphone haut de gamme" ou "écran > 6 pouces". De plus, l'empreinte d'un iPhone 11 estimée par Apple elle-même est de 72kg de CO2e, dont 79% donc ~57kg juste pour la production. A moins que le périmètre des études ne soit pas le même, mais un périmètre plus important pris par l'entreprise que par l'authorité environnementale est pour le moins étonnant, nous retenons la valeur du fabricant. 
-  formule:
-    variations: 
-      - si: type = 'téléphone basique'
-        alors: 16.5
-      - si: type = 'smartphone classique'
-        alors: 39.1
-      - si: type = 'smartphone haut de gamme'
-        alors: 57
-
-numérique . téléphone . type . téléphone basique:
-numérique . téléphone . type . smartphone classique:
-numérique . téléphone . type . smartphone haut de gamme:
-
+  formule: 32.8
 
 numérique . tablette . présent:
   question: Utilisez-vous une tablette ?
@@ -240,33 +219,22 @@ numérique . tablette . durée:
 numérique . tablette:
   icônes: ⬛
   applicable si: présent
-  formule: 63 / (durée + 1)
+  formule: 63.2 / (durée + 1)
   unité: kgCO2e
   note: Nous estimons que l'appareil va durer un an de plus que l'âge renseigné au moment de l'estimation.
 
-numérique . TV . présent:
-  question: Utilisez-vous une TV ?
-  par défaut: oui
-numérique . TV . durée:
-  question: Quel âge a votre TV ? 
+numérique . appareil photo . présent:
+  note: On range l'appareil photo dans la catégorie numérique vu la rareté des appareils argentiques aujourd'hui.
+  question: Utilisez-vous un appareil photo ?
+  par défaut: non
+numérique . appareil photo . durée:
+  question: Quel âge a votre appareil photo ? 
   unité: ans
   par défaut: 4 ans
-numérique . TV:
-  icônes: 📺
+numérique . appareil photo:
   applicable si: présent
-  formule: 371 / (durée + 1)
-  unité: kgCO2e
-  note: |
-    Valeur pour 40-49 pouces de la base [bilan-GES](https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=télévision).
-    
-    Nous estimons que l'appareil va durer un an de plus que l'âge renseigné au moment de l'estimation.
-    
-    La taille étant très variable, il serait mieux d'en faire des variations. 
-
-    Notons aussi : 
-      - la résolution (empreinte d'une 8k ?)
-      - la technologie d'affichage (LED, plasma, etc.)
-
+  icônes: 📷
+  formule: 30.6 / (durée + 1)
 
 numérique . vidéoprojecteur . présent:
   question: Utilisez-vous un vidéoprojecteur ?
@@ -278,8 +246,5 @@ numérique . vidéoprojecteur . durée:
 numérique . vidéoprojecteur:
   icônes: 📽️
   applicable si: présent
-  formule: 94 / (durée + 1)
+  formule: 145 / (durée + 1)
   unité: kgCO2e
-
-
-
