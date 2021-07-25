@@ -1,0 +1,963 @@
+déplacements:
+  description: |
+    A compléter
+  couleur: '#0c2461'
+  icônes: 🚦
+  formule:
+    somme:
+      - véhicule de fonction
+      - déplacements domicile-travail
+      - déplacements professionnels
+
+déplacements . véhicule de fonction:
+  applicable si: affirmatif   
+  formule: 
+    variations: 
+      - si: type = 'voiture'
+        alors: véhicule de fonction . voiture
+      - sinon: véhicule de fonction . deux-roues
+
+déplacements . véhicule de fonction . affirmatif:
+  question: Possédez-vous un véhicule de fonction ?
+  par défaut: non
+
+déplacements . véhicule de fonction . type:
+  question: Quel est le type de véhicule dont vous disposez ?
+  description: |
+    A compléter
+  formule:
+    une possibilité: 
+      choix obligatoire: oui
+      possibilités:
+        - voiture
+        - deux-roues
+  par défaut: "'voiture'"
+
+déplacements . véhicule de fonction . type . voiture:
+déplacements . véhicule de fonction . type . deux-roues:
+
+déplacements . véhicule de fonction . voiture:
+  icônes: 🚘
+  formule: construction amortie + impact usage
+  unité: kgCO2e
+
+déplacements . véhicule de fonction . voiture . motorisation: 
+  question: Quel type de voiture utilisez-vous ?
+  description: |
+    Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.
+  
+  par défaut: "'thermique'"
+  formule: 
+    une possibilité: 
+      choix obligatoire: oui
+      possibilités:
+        - thermique
+        - hybride
+        - électrique
+
+déplacements . véhicule de fonction . voiture . motorisation . thermique:
+  titre: Thermique (diesel/essence)
+déplacements . véhicule de fonction . voiture . motorisation . électrique:
+déplacements . véhicule de fonction . voiture . motorisation . hybride:
+
+déplacements . véhicule de fonction . voiture . thermique: oui # sans le 'oui', une question vide est posée
+
+déplacements . véhicule de fonction . voiture . thermique . gabarit:
+  applicable si: km > 0
+  question: Quel est le gabarit de la voiture ?
+  description: |
+    Plus une voiture est lourde et haute donc avec une forte prise au vent, plus elle consomme donc plus elle pollue ! 
+    Comme pour la motorisation, si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.
+  par défaut: "'moyenne'"
+  formule: 
+    une possibilité:
+      choix obligatoire: oui
+      possibilités: 
+        - petite
+        - moyenne
+        - berline
+        - SUV
+
+déplacements . véhicule de fonction . voiture . thermique . gabarit . petite:
+déplacements . véhicule de fonction . voiture . thermique . gabarit . moyenne:
+déplacements . véhicule de fonction . voiture . thermique . gabarit . berline:
+déplacements . véhicule de fonction . voiture . thermique . gabarit . SUV:
+
+déplacements . véhicule de fonction . voiture . thermique . empreinte au kilomètre:
+  formule:
+    variations: 
+      - si: gabarit = 'petite' 
+        alors: 0.13 kgCO2e/km
+      - si: gabarit = 'moyenne'
+        alors: 0.15 kgCO2e/km
+      - si: gabarit = 'berline'
+        alors: 0.19 kgCO2e/km
+      - si: gabarit = 'SUV'
+        alors: 0.23 kgCO2e/km
+  note: FE 26, 27, 28, 29
+
+déplacements . véhicule de fonction . voiture . impact usage:
+  formule: km * empreinte au kilomètre
+  unité: kgCO2e
+
+déplacements . véhicule de fonction . voiture . km:
+  question: Quelle distance parcourez-vous à l’année avec cette voiture dans le cadre de vos déplacements professionnels ?
+  par défaut: 100
+  unité: km
+
+déplacements . véhicule de fonction . voiture . empreinte au kilomètre: 
+  formule: 
+    variations: 
+      - si: motorisation = 'thermique'
+        alors: thermique . empreinte au kilomètre
+      - si: motorisation = 'électrique'
+        alors: 0.103
+      - sinon: 0.183
+  note: FE 76 pour l'électrique, 77 pour l'hybride
+  
+déplacements . véhicule de fonction . voiture . construction amortie:
+  formule: construction * amortissement particulier
+  unité: kgCO2e
+
+déplacements . véhicule de fonction . voiture . construction:
+  formule: 
+    variations: 
+      - si: motorisation = 'thermique'
+        alors: 3740
+      - si: motorisation = 'électrique'
+        alors: 6570
+      - sinon: 5610
+  note: FE 30, 31, 32
+  unité: kgCO2e
+  description: |
+    ![](https://i.imgur.com/uIlZcEjl.jpg)
+    Une voiture est un gros, très gros objet, qui pèse souvent plus d'une tonne et demi. En conséquence, sa construction a une empreinte importante. 
+    En particulier, la construction d'une voiture électrique de gamme équivalente à une thermique émet plus de gaz à effet de serre. C'est notamment du à la batterie et son poids important.
+    Malgré cela, en France, sur la durée de vie de la voiture et donc les km parcourus, le choix de la voiture électrique est nettement mieux pour le climat. 
+    Mieux, mais loin d'être faible ! En 2020, il ne s'agit plus seulement de comparer des solutions techniques entre elles, il s'agit d'évaluer ses achats par rapport aux objectifs climat.
+
+déplacements . véhicule de fonction . voiture . amortissement particulier:
+  description: |
+    Quand on achète une voiture, on émet déjà une quantité donnée de GES. Disons par exemple, 10 tonnes, pour une durée de vie de la voiture de 10 ans. Ces gaz sont émis l'année de l'achat, ou plus ou moins (certains composants auront déjà été produits). 
+    Il serait donc logique du point de vue de l'empreinte sur le climat, d'attribuer les émissions de la construction à la 1ère année : l'effet de serre réchauffant commence dès l'achat !
+    Sauf que beaucoup de voitures sont achetées par des entreprises avant d'être vendues d'occasion aux particuliers, ou entre particuliers. Il semble donc légitime de distribuer l'attribution dans le temps, donc au fur et à mesure des propriétaires. De la même façon, il faut aussi penser aux utilisateurs qui découvrivraient cet outil seulement l'année suivant l'achat d'une voiture : il est légitime de leur réserver une partie des émissions émises.
+    Deuxièmement, en attribuant toute l'empreinte à l'achat, on enverrait un signal fort qui désavantagerait le choix d'une voiture électrique par rapport à une thermique, alors qu'en France les émissions de cette dernière rattrapent la première dès les premières années d'usage.
+    D'où le choix d'amortir l'achat sur les 10 premières années (la durée de vie moyenne d'une voiture), avec un taux dégressif, en s'assurant bien que la somme de la part de chaque année donne 100%.
+    
+    En bref, nous faisons un compromis entre un modèle cohérent du point de vue du climat et un modèle plus pratique dans le contexte d'un simulateur pédagogique pas forcément utilisé chaque année.
+    
+    Pour voir la réflexion ayant mené à cette méthode, voir [cette discussion](https://github.com/betagouv/ecolab-data/issues/225#issuecomment-689472950).
+  note: |
+    Quand on aura mis à jour le code avec la dernière version de publi.codes, on pourra utiliser le [mécanisme `grille`](https://publi.codes/mécanismes#grille) qui fait exactement ça.
+  formule: 
+    variations: 
+      - si: âge < 1
+        alors: 40%
+      - si: âge < 2
+        alors: 20%
+      - si: âge < 3
+        alors: 10%
+      - si: âge < 10
+        alors: 5%
+      - sinon: 0%
+
+déplacements . véhicule de fonction . voiture . âge:
+  question: Quel est l'âge de votre voiture de fonction ?
+  description: | 
+    Pour calculer l'empreinte de la construction de la voiture, qu'il ne faut pas négliger, nous utilisons l'âge de la voiture.
+    
+    Répondez bien avec *l'âge de la voiture*, pas le nombre d'année qu'elle a passé en votre possession : il y a en effet de grandes chances que vous l'ayez achetée d'occasion.
+    Si vous êtes deux à utiliser deux voitures, vous pouvez simplement vous en attribuer une, ou entrer une moyenne de leurs caractéristiques.
+    Si vous possédez plusieurs voitures utilisées uniquement par vous même, ~~vendez au moins la deuxième~~ ce cas n'est pas encore prévu.
+  unité: années
+  par défaut: 3
+  suggestions: 
+    6 mois: 0.5 
+    1 an et demi: 1.5
+    5 ans: 5
+    10 ans: 10
+
+déplacements . véhicule de fonction . deux-roues:
+  icônes: 🛵
+  formule: km * empreinte au kilomètre
+  unité: kgCO2e
+
+déplacements . véhicule de fonction . deux-roues . type:
+  formule: 
+    une possibilité: 
+      choix obligatoire: oui
+      possibilités:
+        - scooter
+        - moins de 250cm3
+        - plus de 250cm3
+  par défaut: "'plus de 250cm3'"
+
+déplacements . véhicule de fonction . deux-roues . type . scooter:
+déplacements . véhicule de fonction . deux-roues . type . moins de 250cm3:
+déplacements . véhicule de fonction . deux-roues . type . plus de 250cm3:
+
+déplacements . véhicule de fonction . deux-roues . km:
+  question: Quelle distance parcourez-vous à l’année avec ce deux-roues dans le cadre de vos déplacements professionnels ?
+  par défaut: 100
+  unité: km
+  
+déplacements . véhicule de fonction . deux-roues . empreinte au kilomètre:
+  formule:
+    variations: 
+      - si: deux-roues . type = 'scooter'
+        alors: 0.065
+      - si: deux-roues . type = 'moins de 250cm3'
+        alors: 0.062
+      - sinon: 0.17
+  note: FE 8, 9, 10
+  unité: kgCO2e/km
+
+# déplacements . véhicule de fonction . voiture thermique . km:
+#   question: En moyenne, quelle distance parcourez-vous chaque semaine avec cette voiture dans le cadre de vos déplacements professionnels (hors déplacement domicile-travail) ?
+#   suggestions: 
+#     50km par semaine: 50
+#     400km par semaine: 400
+#     800km par semaine: 800
+#   unité: km/semaine
+#   par défaut: 400
+
+# déplacements . véhicule de fonction . voiture électrique . détient:
+#   question: Avez-vous une voiture électrique ?
+#   par défaut: non
+
+# déplacements . véhicule de fonction . voiture électrique :
+#   icônes: 🚘
+#   applicable si: détient
+#   formule: km * profil . nbre semaines * 0.103
+#   note: FE 75
+#   unité: kgCO2e
+
+# déplacements . véhicule de fonction . voiture électrique . km:
+#   question: En moyenne, quelle distance parcourez-vous chaque semaine avec cette voiture dans le cadre de vos déplacements professionnels (hors déplacement domicile-travail) ?
+#   suggestions: 
+#     50km par semaine: 50
+#     400km par semaine: 400
+#     800km par semaine: 800
+#   unité: km/semaine
+#   par défaut: 400
+  
+# déplacements . véhicule de fonction . voiture hybride . détient:
+#   question: Avez-vous une voiture hybride ?
+#   par défaut: non
+
+# déplacements . véhicule de fonction . voiture hybride :
+#   icônes: 🚘
+#   applicable si: détient
+#   formule: km * profil . nbre semaines * 0.183
+#   note: FE 76
+#   unité: kgCO2e
+
+# déplacements . véhicule de fonction . voiture hybride . km:
+#   question: En moyenne, quelle distance parcourez-vous chaque semaine avec cette voiture dans le cadre de vos déplacements professionnels (hors déplacement domicile-travail) ?
+#   suggestions: 
+#     50km par semaine: 50
+#     400km par semaine: 400
+#     800km par semaine: 800
+#   unité: km/semaine
+#   par défaut: 400
+
+# déplacements . véhicule de fonction . scooter . détient:
+#   question: Avez-vous une scooter ?
+#   par défaut: non
+
+# déplacements . véhicule de fonction . scooter:
+#   icônes: 🛵
+#   applicable si: détient
+#   formule: km * profil . nbre semaines * 0.0644
+#   note: FE 8
+#   unité: kgCO2e
+
+# déplacements . véhicule de fonction . scooter . km:
+#   question: En moyenne, quelle distance parcourez-vous chaque semaine avec cette voiture dans le cadre de vos déplacements professionnels (hors déplacement domicile-travail) ?
+#   suggestions: 
+#     50km par semaine: 50
+#     400km par semaine: 400
+#     800km par semaine: 800
+#   unité: km/semaine
+#   par défaut: 400
+
+# déplacements . véhicule de fonction . moto moins de 250 cm3 . détient:
+#   question: Avez-vous une moto de moins de 250 cm3 ?
+#   par défaut: non
+
+# déplacements . véhicule de fonction . moto moins de 250 cm3:
+#   icônes: 🏍
+#   applicable si: détient
+#   formule: km * profil . nbre semaines * 0.0616
+#   note: FE 9
+#   unité: kgCO2e
+
+# déplacements . véhicule de fonction . moto moins de 250 cm3 . km:
+#   question: En moyenne, quelle distance parcourez-vous chaque semaine avec cette voiture dans le cadre de vos déplacements professionnels (hors déplacement domicile-travail) ?
+#   suggestions: 
+#     50km par semaine: 50
+#     400km par semaine: 400
+#     800km par semaine: 800
+#   unité: km/semaine
+#   par défaut: 400
+
+# déplacements . véhicule de fonction . moto plus de 250 cm3 . détient:
+#   question: Avez-vous une moto de plus de 250 cm3 ?
+#   par défaut: non
+
+# déplacements . véhicule de fonction . moto plus de 250 cm3:
+#   icônes: 🏍
+#   applicable si: détient
+#   formule: km * profil . nbre semaines * 0.168
+#   note: FE 10
+#   unité: kgCO2e
+
+# déplacements . véhicule de fonction . moto plus de 250 cm3 . km:
+#   question: En moyenne, quelle distance parcourez-vous chaque semaine avec cette voiture dans le cadre de vos déplacements professionnels (hors déplacement domicile-travail) ?
+#   suggestions: 
+#     50km par semaine: 50
+#     400km par semaine: 400
+#     800km par semaine: 800
+#   unité: km/semaine
+#   par défaut: 400
+
+#------------------------------------------- DOMICILE-TRAVAIL -------------------------------------------
+
+déplacements . déplacements domicile-travail:
+  description: |
+    ![](https://www.mobilitytechgreen.com/wp-content/uploads/2017/08/bicyclecommute.jpg)
+    
+    Les déplacements pendulaires représentent une part importante du bilan carbone de votre entreprise.
+  formule:  # Ici nous pourrions utiliser un "non applicable si: jours par semaine = 0" mais un bug fait que la question km deviendra booléenne Oui/Non. Voir https://github.com/betagouv/mon-entreprise/issues/1367
+    variations:
+    - si: jours par semaine = 0
+      alors: 0
+    - sinon: moyens de transport * facteur aller-retour
+
+déplacements . déplacements domicile-travail . jours par semaine:
+  question: En moyenne, combien de jours par semaine vous rendez-vous sur votre lieu de travail ?
+  par défaut: 5
+  unité: jours
+  suggestions:
+    zéro: 0
+    1 fois/semaine: 1
+    2 fois/semaine: 2
+    3 fois/semaine: 3
+    4 fois/semaine: 4
+    tous les jours: 5
+
+déplacements . déplacements domicile-travail . aller-retour:
+  description: Augmentation de la part de transport Domicile-Travail de 20%, 60% ou 100% respectivement pour de temps en temps (1 fois sur 5), souvent (3 fois sur 5) et tous les jours. 
+  question: Vous arrive-t-il de rentrer manger chez vous le midi ?
+  par défaut: "'jamais'"
+  formule: 
+    une possibilité: 
+      choix obligatoire: oui
+      possibilités:
+        - jamais
+        - de temps en temps
+        - souvent
+        - tous les jours
+
+déplacements . déplacements domicile-travail . aller-retour . jamais:
+déplacements . déplacements domicile-travail . aller-retour . de temps en temps:
+déplacements . déplacements domicile-travail . aller-retour . souvent:
+déplacements . déplacements domicile-travail . aller-retour . tous les jours:
+
+déplacements . déplacements domicile-travail . facteur aller-retour: 
+  formule: 
+    variations: 
+      - si: aller-retour = 'jamais'
+        alors: 1
+      - si: aller-retour = 'de temps en temps'
+        alors: 1.2
+      - si: aller-retour = 'souvent'
+        alors: 1.6
+      - si: aller-retour = 'tous les jours'
+        alors: 2
+
+déplacements . déplacements domicile-travail . moyens de transport:
+  titre: Proportions moyens de transport
+  description: |
+    A répartir parmi 6 moyens de transport que vous êtes est susceptible de prendre pour vous rendre sur votre lieu de travail (combinaisons possibles).
+  formule: 
+    somme:
+      - neutre
+      - véhicule de fonction
+      - véhicule personnel ou location
+      - tram 
+      - bus
+      - train
+
+#------------------------------------------- moyens de transport Neutre -------------------------------------------
+
+déplacements . déplacements domicile-travail . moyens de transport . neutre:
+  titre: Marche ou vélo (non électrique)
+  description: |
+    Je marche ou je pédale à hauteur de :
+
+    ![](https://upload.wikimedia.org/wikipedia/commons/9/95/Man_biking_on_Recife_city.jpg)
+
+    La marche et le vélo (non électrique) font partie des mobilités douces, qui n’émettent pas de GES de manière directe.
+    Les émissions liées à la fabrication (environ 100 kgCO2eq) n’ont pas été prises en compte, car trop faibles face aux autres émissions liées au transport.
+  icônes: 🚲
+  formule: 0 * pourcent / 100
+
+déplacements . déplacements domicile-travail . moyens de transport . neutre . pourcent:
+  question: Part de la marche ou vélo dans la répartition des moyens de transport sur la semaine
+  par défaut: 0
+  période: semaine
+
+#------------------------------------------- moyen de transport Véhicule de fonction -------------------------------------------
+
+déplacements . déplacements domicile-travail . moyens de transport . véhicule de fonction:
+  titre: Véhicule de fonction
+  applicable si: déplacements . véhicule de fonction . affirmatif
+  description: |
+    J'utilise mon véhicule de fonction à hauteur de :
+  icônes: 🚗
+  formule: 0 * pourcent / 100
+
+déplacements . déplacements domicile-travail . moyens de transport . véhicule de fonction . pourcent:
+  question: Part du véhicule de fonction dans la répartition des moyens de transport sur la semaine
+  par défaut: 0
+  période: semaine
+
+
+#------------------------------------------- moyen de transport véhicule personnel ou location -------------------------------------------
+
+déplacements . déplacements domicile-travail . moyens de transport . véhicule personnel ou location:
+  titre: Véhicule personnel ou location
+  description: |
+    J'utilise mon véhicule personnel ou de location à hauteur de :
+
+    ![](https://images.unsplash.com/photo-1572312284222-ecf6d70f1907?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=80)
+
+    La voiture est aujourd’hui en France essentiellement thermique (essence ou diesel) bien que l’électrique progresse lentement. 
+    En France, on émet en moyenne 193 gCO2eq/km parcouru en voiture. Ce chiffre comprend les émissions dues à la combustion du carburant mais également celles dues à la fabrication. Il faut également noter qu’une voiture française transporte en moyenne 1,6 passager.
+    
+  icônes: 🚗
+  formule: 
+    variations: 
+    - si: pourcent = 0
+      alors: 0
+    - sinon: (pourcent / 100) * impact usage
+
+déplacements . déplacements domicile-travail . moyens de transport . véhicule personnel ou location . pourcent:
+  question: Part de la voiture dans la répartition des moyens de transport sur la semaine
+  par défaut: 50
+  unité: %
+  période: semaine
+
+déplacements . déplacements domicile-travail . moyens de transport . véhicule personnel ou location . impact usage:
+  formule: km * empreinte au kilomètre
+  unité: kgCO2e
+
+déplacements . déplacements domicile-travail . moyens de transport . véhicule personnel ou location . km trajet:
+  question: Quelle est la distance moyenne de votre trajet en voiture (aller simple)?
+  applicable si: pourcent > 0
+  description: |
+    Ne comptez que les kilomètres d'*un* trajet pour rejoindre votre lieu de travail habituel ou un point relais depuis votre domicile.
+    Par exemple, si vous êtes en mission professionnelle dans un autre département ou un autre pays : ne le comptez pas ici.
+    
+    Nous parlons donc ici de la distance *aller* que vous effectuez en voiture.
+    
+    70% des travailleurs en France travaillent à moins de 15km de chez eux.
+
+    57% travaillent à moins de 10km et 78% à moins de 20km. 
+
+    Source : études INSEE 2004 et 2013, chiffres stables.
+  note: Mettre un lien vers l'étude et mettre à jour avec les statistiques de l'enquête déplacement 2020 si disponible.
+  par défaut: 15
+  unité: km/trajet
+  suggestions:
+    10km: 10
+    20km: 20
+    30km: 30
+
+déplacements . déplacements domicile-travail . moyens de transport . véhicule personnel ou location . km:
+  description: |
+    Distance moyenne parcourue par l'usager à l'année.
+  unité: km
+  formule: km trajet * 2 * (profil . nbre semaines * déplacements . déplacements domicile-travail . jours par semaine)
+
+déplacements . déplacements domicile-travail . moyens de transport . véhicule personnel ou location . empreinte au kilomètre:
+  formule:
+    variations:
+      - si: type = 'voiture'
+        alors: voiture . empreinte au kilomètre
+      - sinon: deux-roues . empreinte au kilomètre
+
+déplacements . déplacements domicile-travail . moyens de transport . véhicule personnel ou location . type:
+  question: Quel est le type de véhicule que vous utilisez ?
+  description: |
+    A compléter
+  formule:
+    une possibilité: 
+      choix obligatoire: oui
+      possibilités:
+        - voiture
+        - deux-roues
+  par défaut: "'voiture'"
+
+déplacements . déplacements domicile-travail . moyens de transport . véhicule personnel ou location . type . voiture:
+déplacements . déplacements domicile-travail . moyens de transport . véhicule personnel ou location . type . deux-roues:
+
+déplacements . déplacements domicile-travail . moyens de transport . véhicule personnel ou location . voiture: oui
+déplacements . déplacements domicile-travail . moyens de transport . véhicule personnel ou location . deux-roues: oui
+
+déplacements . déplacements domicile-travail . moyens de transport . véhicule personnel ou location . voiture . motorisation: 
+  question: Quel type de voiture utilisez-vous ?
+  description: |
+    Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.
+  
+  par défaut: "'thermique'"
+  formule: 
+    une possibilité: 
+      choix obligatoire: oui
+      possibilités:
+        - thermique
+        - hybride
+        - électrique
+
+déplacements . déplacements domicile-travail . moyens de transport . véhicule personnel ou location . voiture . motorisation . thermique:
+  titre: Thermique (diesel/essence)
+déplacements . déplacements domicile-travail . moyens de transport . véhicule personnel ou location . voiture . motorisation . électrique:
+déplacements . déplacements domicile-travail . moyens de transport . véhicule personnel ou location . voiture . motorisation . hybride:
+
+déplacements . déplacements domicile-travail . moyens de transport . véhicule personnel ou location . voiture . empreinte au kilomètre: 
+  formule: 
+    variations: 
+      - si: motorisation = 'thermique'
+        alors: 0.193
+      - si: motorisation = 'électrique'
+        alors: 0.103
+      - sinon: 0.183
+  note: FE 75 pour le thermique, 76 pour l'électrique, 77 pour l'hybride
+
+déplacements . déplacements domicile-travail . moyens de transport . véhicule personnel ou location . deux-roues . type:
+  formule: 
+    une possibilité: 
+      choix obligatoire: oui
+      possibilités:
+        - scooter
+        - moins de 250cm3
+        - plus de 250cm3
+  par défaut: "'plus de 250cm3'"
+
+déplacements . déplacements domicile-travail . moyens de transport . véhicule personnel ou location . deux-roues . type . scooter:
+déplacements . déplacements domicile-travail . moyens de transport . véhicule personnel ou location . deux-roues . type . moins de 250cm3:
+déplacements . déplacements domicile-travail . moyens de transport . véhicule personnel ou location . deux-roues . type . plus de 250cm3:
+
+déplacements . déplacements domicile-travail . moyens de transport . véhicule personnel ou location . deux-roues . km:
+  question: Quelle distance parcourez-vous à l’année avec ce deux-roues dans le cadre de vos déplacements professionnels ?
+  par défaut: 100
+  unité: km
+  
+déplacements . déplacements domicile-travail . moyens de transport . véhicule personnel ou location . deux-roues . empreinte au kilomètre:
+  formule:
+    variations: 
+      - si: deux-roues . type = 'scooter'
+        alors: 0.065
+      - si: deux-roues . type = 'moins de 250cm3'
+        alors: 0.062
+      - sinon: 0.17
+  note: FE 8, 9, 10
+  unité: kgCO2e/km
+  
+#------------------------------------------- moyen de transport Tram -------------------------------------------
+
+déplacements . déplacements domicile-travail . moyens de transport . tram:
+  titre : tram
+  description: |
+    J'utilise le tram à hauteur de :
+
+    ![](https://upload.wikimedia.org/wikipedia/commons/d/de/Tram-de-Nantes.jpg) 🚄
+  icônes: 🚋
+  formule: 
+    variations: 
+    - si: pourcent = 0
+      alors: 0
+    - sinon: pourcent / 100 * heures par jour * impact par heure * profil . nbre semaines * déplacements . déplacements domicile-travail . jours par semaine
+
+déplacements . déplacements domicile-travail . moyens de transport . tram . pourcent:
+  question: Part du tram dans la répartition des moyens de transport sur la semaine
+  par défaut: 50
+  unité: %
+  période: semaine
+
+déplacements . déplacements domicile-travail . moyens de transport . tram . impact par heure:
+  formule: 22 * 0.00298
+  unité: kgCO2e/heures
+  note: Nous avons confondu tram et métro, alors que le modèle MicMac v2.6 ne parle que de métro. 
+  description: |
+    Sur la base de 2,98 gCO2e/(passager.km) et de 22 km/h de vitesse moyenne. Vitesse calculée selon le temps nécessaire au tramway pour parcourir les lignes ; Base Carbone consultée le 04/12/20 - Métro, tramway, trolleybus - 2018 - Agglomération > à 250 000 habitants
+  références: 
+   - https://fr.wikipedia.org/wiki/Tramway_de_Nantes
+   - http://www.bilans-ges.ademe.fr/
+
+déplacements . déplacements domicile-travail . moyens de transport . tram . minutes par trajet:
+  applicable si: pourcent > 0 
+  question: Combien de temps, en moyenne, dure votre trajet en tramway (aller simple)?
+  suggestions: 
+    10 minutes / trajet: 10
+    20 minutes / trajet: 20
+    30 minutes / jour: 30
+  unité: minutes/trajet
+  par défaut: 15
+
+déplacements . déplacements domicile-travail . moyens de transport . tram . heures par jour:
+  formule: 2 * minutes par trajet / 60
+  unité: heures/jour
+
+#------------------------------------------- moyen de transport Bus -------------------------------------------
+
+déplacements . déplacements domicile-travail . moyens de transport . bus:
+  titre: bus
+  description: |
+    J'utilise le bus à hauteur de :
+
+    ![](https://upload.wikimedia.org/wikipedia/commons/d/d8/Busway%2C_TAN_%28NANTES%2CFR44%29.jpg)
+  icônes: 🚌
+  formule: 
+    variations: 
+    - si: pourcent = 0
+      alors: 0
+    - sinon: pourcent / 100 * heures par jour * impact par heure * profil . nbre semaines * déplacements . déplacements domicile-travail . jours par semaine
+
+
+déplacements . déplacements domicile-travail . moyens de transport . bus . pourcent:
+  question: Part du bus dans la répartition des moyens de transport sur la semaine
+  par défaut: 0
+  unité: %
+  période: semaine
+
+déplacements . déplacements domicile-travail . moyens de transport . bus . impact par heure:
+  formule: 0.129 * 15
+  unité: kgCO2e/heure
+  description: |
+    Sur la base de 129 gCO2e/(passager.km) et de 12 km/h de vitesse moyenne - Base Carbone consultée le 04/12/20 - Autobus moyen - Agglomération de plus de 250 000 habitants ;
+    - http://www.bilans-ges.ademe.fr/
+  références: 
+    - https://www.lemonde.fr/blog/transports/2016/06/15/dans-les-villes-moyennes-des-bus-rapides-mais-vides-et-couteux/
+    - http://www.bilans-ges.ademe.fr/
+
+déplacements . déplacements domicile-travail . moyens de transport . bus . minutes par trajet:
+  question: Combien de temps, en moyenne, dure votre trajet en bus (aller simple)?
+  suggestions: 
+    10 minutes / trajet: 10
+    20 minutes / trajet: 20
+    30 minutes / jour: 30
+  unité: minutes/trajet
+  par défaut: 15
+
+déplacements . déplacements domicile-travail . moyens de transport . bus . heures par jour:
+  formule: 2 * minutes par trajet / 60
+  unité: heures/jour
+
+#------------------------------------------- moyen de transport Train -------------------------------------------
+
+déplacements . déplacements domicile-travail . moyens de transport . train:
+  titre: train
+  description: |
+    J'utilise le train à hauteur de :
+
+    ![](https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Alliance_Auch_ligne_6_Allées_Baylac.JPG/640px-Alliance_Auch_ligne_6_Allées_Baylac.JPG)
+  icônes: 🚂
+  formule: 
+    variations: 
+    - si: pourcent = 0
+      alors: 0
+    - sinon: pourcent / 100 * heures par jour * impact par heure * profil . nbre semaines * déplacements . déplacements domicile-travail . jours par semaine
+
+
+déplacements . déplacements domicile-travail . moyens de transport . train . pourcent:
+  question: Part du train dans la répartition des moyens de transport sur la semaine
+  par défaut: 0
+  unité: %
+  période: semaine
+
+déplacements . déplacements domicile-travail . moyens de transport . train . impact par heure:
+  formule: 0.0248 * 135
+  unité: kgCO2e/heure
+  description: |
+    Sur la base de 24.8 gCO2e/(passager.km) et de 135 km/h de vitesse moyenne - Base Carbone consultée le 04/12/20 - TER - 2019 - Traction moyenne ; vitesse calculée sur la base du trajet TER Nantes-Angers
+  références: 
+    - http://www.bilans-ges.ademe.fr/
+
+déplacements . déplacements domicile-travail . moyens de transport . train . minutes par trajet:
+  question: Combien de temps, en moyenne, dure votre trajet en train (aller simple)?
+  suggestions: 
+    20 minutes / trajet: 20
+    30 minutes / jour: 30
+    1 heure / trajet: 60
+  unité: minutes/trajet
+  par défaut: 15
+
+déplacements . déplacements domicile-travail . moyens de transport . train . heures par jour:
+  formule: 2 * minutes par trajet / 60
+  unité: heures/jour
+
+#------------------------------------------- DEPLACEMENTS PRO -------------------------------------------
+
+déplacements . déplacements professionnels :
+  description: |
+    ![](https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Correspondances_Pey_Berland_août_2016.jpg/640px-Correspondances_Pey_Berland_août_2016.jpg)
+    
+    Sans surprise, le transport et avant tout le transport basé sur le pétrole constitue une part très importante de notre empreinte.
+
+  applicable si: affirmatif
+  couleur: '#0984e3'
+  icônes: ✈️
+  formule: 
+    somme: 
+      - moyen
+      - hotel
+
+déplacements . déplacements professionnels . affirmatif:
+  question: Êtes-vous amener à effectuer des déplacements professionels ?
+  par défaut: oui
+
+déplacements . déplacements professionnels . moyen:
+  titre: Voyages professionnels
+  icônes: ✈️
+  description: |
+    A compléter
+  formule:
+    somme:
+      - marche ou vélo
+      - transports en commun
+      - avion
+      - train
+      - véhicule de fonction
+      - véhicule personnel ou location
+      - taxi
+
+déplacements . déplacements professionnels . moyen . marche ou vélo . présent:
+  question: Utilisez-vous un moyen de transport neutre ?
+  par défaut: non
+
+déplacements . déplacements professionnels . moyen . marche ou vélo:
+  icônes: 🚲
+  formule: 0
+
+déplacements . déplacements professionnels . moyen . transports en commun . présent:
+  question: Prenez-vous les transports en commun ?
+  par défaut: non
+
+déplacements . déplacements professionnels . moyen . transports en commun :
+  icônes: 🚃
+  note: |
+   Non
+  applicable si: présent
+  formule:
+    somme: 
+      - tram ou métro
+      - bus
+
+déplacements . déplacements professionnels . moyen . transports en commun . tram ou métro:
+  titre : Trajet en tram ou métro
+  description: |
+    Je me déplace en tram ou métro à hauteur de :
+
+    ![](https://upload.wikimedia.org/wikipedia/commons/d/de/Tram-de-Nantes.jpg)
+  icônes: 🚊
+  applicable si: présent
+  formule:
+    variations: 
+    - si: heures = 0
+      alors: 0
+    - sinon: heures * 0.0385 * profil . nbre semaines
+  note: FE 65
+
+déplacements . déplacements professionnels . moyen . transports en commun . tram ou métro . heures:
+  question: Combien d'heures passez-vous en métro ?
+  par défaut: 10
+  unité: heures
+  période: semaine
+  
+déplacements . déplacements professionnels . moyen . transports en commun . bus:
+  titre : Trajet en bus
+  description: |
+    Je me déplace en bus à hauteur de :
+
+    ![](https://upload.wikimedia.org/wikipedia/commons/d/de/Tram-de-Nantes.jpg)
+  icônes: 🚌
+  applicable si: présent
+  formule:
+    variations: 
+    - si: heures = 0
+      alors: 0
+    - sinon: heures * 1.38 * profil . nbre semaines
+  note: FE 66
+
+déplacements . déplacements professionnels . moyen . transports en commun . bus . heures:
+  question: Combien d'heures passez-vous en bus ?
+  par défaut: 10
+  unité: heures
+  période: semaine
+
+déplacements . déplacements professionnels . moyen . avion . présent:
+  question: Prenez-vous l'avion ?
+  par défaut: oui
+
+déplacements . déplacements professionnels . moyen . avion :
+  icônes: ✈️
+  note: |
+   Non
+  applicable si: présent
+  formule:
+    somme: 
+      - court courrier
+      - moyen courrier
+      - long courrier
+
+déplacements . déplacements professionnels . moyen . avion . court courrier:
+  titre : Trajet en France métropolitaine
+  description: |
+    Je voyage en avion en France à hauteur de :
+
+    ![](https://upload.wikimedia.org/wikipedia/commons/d/de/Tram-de-Nantes.jpg)
+  icônes: 🇫🇷
+  applicable si: présent
+  formule:
+    variations: 
+    - si: heures = 0
+      alors: 0
+    - sinon: heures * 119.2
+  note: FE 4
+
+déplacements . déplacements professionnels . moyen . avion . court courrier . heures:
+  question: Combien d'heures passez-vous en avion court courrier ?
+  par défaut: 10
+  unité: heures
+  période: année
+  
+déplacements . déplacements professionnels . moyen . avion . moyen courrier:
+  titre : Trajet en Europe et dans le bassin méditerranéen
+  description: |
+    Je voyage en avion en Europe à hauteur de :
+
+    ![](https://upload.wikimedia.org/wikipedia/commons/d/de/Tram-de-Nantes.jpg)
+  icônes: 🇪🇺
+  applicable si: présent
+  formule:
+    variations: 
+    - si: heures = 0
+      alors: 0
+    - sinon: heures * 101
+  note: FE 5
+
+déplacements . déplacements professionnels . moyen . avion . moyen courrier . heures:
+  question: Combien d'heures passez-vous en avion moyen courrier ?
+  par défaut: 0
+  unité: heures
+  période: année
+
+déplacements . déplacements professionnels . moyen . avion . long courrier:
+  titre : Trajet au-delà (long courrier)
+  description: |
+    Je voyage en avion en long courrier à hauteur de :
+
+    ![](https://upload.wikimedia.org/wikipedia/commons/d/de/Tram-de-Nantes.jpg)
+  icônes: 🌏
+  applicable si: présent
+  formule:
+    variations: 
+    - si: heures = 0
+      alors: 0
+    - sinon: heures * 103.7
+  note: FE 6
+
+déplacements . déplacements professionnels . moyen . avion . long courrier . heures:
+  question: Combien d'heures passez-vous en avion long courrier ?
+  par défaut: 0
+  unité: heures
+  période: année
+
+déplacements . déplacements professionnels . moyen . train . présent:
+  question: Prenez-vous le train ?
+  par défaut: non
+
+déplacements . déplacements professionnels . moyen . train:
+  icônes: 🚄
+  applicable si: présent
+  formule: heures * 0.346
+  unité: kgCO2e
+  note: FE 67, on considère seulement le TGV pour l'instant
+
+déplacements . déplacements professionnels . moyen . train . heures:
+  question: En moyenne, combien d'heures par an passez-vous dans le train dans le cadre de vos déplacements professionnels ?
+  suggestions: 
+    à faire: 0
+  unité: heures/an
+  par défaut: 10
+
+déplacements . déplacements professionnels . moyen . véhicule de fonction . présent:
+  question: Prenez-vous votre véhicule de fonction ?
+  par défaut: non
+
+déplacements . déplacements professionnels . moyen . véhicule de fonction:
+  titre: Véhicule de fonction
+  icônes: 🚘
+  applicable si: présent
+  description: |
+    A compléter
+  formule : 0
+
+déplacements . déplacements professionnels . moyen . véhicule personnel ou location . présent:
+  question: Prenez-vous votre voiture personnelle  ?
+  par défaut: non
+
+déplacements . déplacements professionnels . moyen . véhicule personnel ou location :
+  icônes: 🚘
+  note: |
+   Non
+  applicable si: présent
+  formule: km * déplacements . déplacements domicile-travail . moyens de transport . véhicule personnel ou location . empreinte au kilomètre
+  unité: kgCO2e
+
+déplacements . déplacements professionnels . moyen . véhicule personnel ou location . km:
+  question: En moyenne, quelle distance parcourez-vous chaque semaine avec cette voiture dans le cadre de vos déplacements professionnels (hors déplacement domicile-travail) ?
+  suggestions: 
+    50km par semaine: 50
+    400km par semaine: 400
+    800km par semaine: 800
+  unité: km/semaine
+  par défaut: 400
+
+déplacements . déplacements professionnels . moyen . taxi . présent:
+  question: Prenez-vous un taxi ?
+  par défaut: non
+
+déplacements . déplacements professionnels . moyen . taxi:
+  icônes: 🚖
+  applicable si: présent
+  formule: heures * 7.6 * profil . nbre semaines
+  note: FE 69
+  unité: kgCO2e
+
+déplacements . déplacements professionnels . moyen . taxi . heures:
+  question: En moyenne, combien d'heures par semaine passez-vous dans le taxi pour vvos déplacements professionnels ?
+  suggestions: 
+    1h par semaine: 1
+    3h par semaine: 3
+    10h par semaine: 10
+  unité: h/semaine
+  par défaut: 2
+
+déplacements . déplacements professionnels . hotel:
+  icônes: 🏨
+  applicable si: déplacements . déplacements professionnels . affirmatif
+  formule: nbre nuits * 12 * 0.320 * 130
+  note: FE 37, on considère que nuit + repas + petitdej = 130€
+  unité: kgCO2e
+
+déplacements . déplacements professionnels . hotel . nbre nuits:
+  question: En moyenne, combien de nuits passez-vous à l'hotel chaque mois ?
+  suggestions: 
+    zéros: 0
+    1 par mois: 1
+    10 par mois: 10
+  unité: nuits/mois
+  par défaut: 5
