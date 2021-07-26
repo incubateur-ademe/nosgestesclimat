@@ -3,6 +3,8 @@
 ## Contexte de l’action
 L’essor de la fast-fashion et sa diffusion progressive à travers le monde comme standard d’habillement est responsable de nombreux impacts à la fois sur l’environnement et sur le climat. Il s’agit souvent, pour nombre d’entre nous, du poste le plus émetteur de gaz à effet de serre dans la catégorie des biens que nous consommons (2). De la pousse du coton, à la synthèse de fibres synthétiques en passant par la filature, la confection et la distribution, un nombre faramineux de procédés ont lieu pour aboutir au tee-shirt préféré de notre garde-robe. Acheter ses vêtements de seconde main permet donc ne pas avoir recours à tous ces procédés de fabrication et de conditionnement réduisant ainsi fortement notre impact sur le climat et sur l’environnement en général.
 
+![](https://github.com/datagir/nosgestesclimat/blob/actions_images_elaborees2/public/images/Chiffres-cles_Mode-2nde-main_v2.png)
+
 ## Impact GES moyen de l’action
 
 - S’habiller avec des vêtements de 2nd main : - 471 kg CO2eq 
