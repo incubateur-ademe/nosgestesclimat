@@ -94,7 +94,7 @@ déplacements . véhicule de fonction . voiture . thermique . empreinte au kilom
         alors: 0.19 kgCO2e/km
       - si: gabarit = 'SUV'
         alors: 0.23 kgCO2e/km
-  note: FE 26, 27, 28, 29
+  note: FE 25, 26, 27, 28
 
 déplacements . véhicule de fonction . voiture . impact usage:
   formule: km * empreinte au kilomètre
@@ -335,7 +335,7 @@ déplacements . déplacements domicile-travail:
     - sinon: moyens de transport * facteur aller-retour
 
 déplacements . déplacements domicile-travail . jours par semaine:
-  question: En moyenne, combien de jours par semaine vous rendez-vous sur votre lieu de travail ?
+  question: En moyenne, combien de fois par semaine vous-rendez-vous sur votre lieu de travail ? 
   par défaut: 5
   unité: jours
   suggestions:
@@ -348,7 +348,7 @@ déplacements . déplacements domicile-travail . jours par semaine:
 
 déplacements . déplacements domicile-travail . aller-retour:
   description: Augmentation de la part de transport Domicile-Travail de 20%, 60% ou 100% respectivement pour de temps en temps (1 fois sur 5), souvent (3 fois sur 5) et tous les jours. 
-  question: Vous arrive-t-il de rentrer manger chez vous le midi ?
+  question: Vous arrive-t-il de faire un aller-retour entre votre domicile et lieu de travail dans la journée ? (pour la pause déjeuner par exemple)
   par défaut: "'jamais'"
   formule: 
     une possibilité: 
@@ -423,6 +423,32 @@ déplacements . déplacements domicile-travail . moyens de transport . véhicule
   par défaut: 0
   période: semaine
 
+déplacements . déplacements domicile-travail . moyens de transport . véhicule de fonction . km trajet:
+  question: Lorsque vous utilisez ce véhicule, combien de km parcourez-vous par trajet avec ce véhicule pour vous rendre de votre domicile à votre lieu de travail ? (aller seulement) 
+  applicable si: pourcent > 0
+  description: |
+    A compléter
+    
+  par défaut: 15
+  unité: km/trajet
+  suggestions:
+    10km: 10
+    20km: 20
+    30km: 30
+
+déplacements . déplacements domicile-travail . moyens de transport . véhicule de fonction . km:
+  description: |
+    Distance moyenne parcourue par l'usager à l'année.
+  unité: km
+  formule: km trajet * 2 * (profil . nbre semaines * déplacements . déplacements domicile-travail . jours par semaine)
+
+déplacements . déplacements domicile-travail . moyens de transport . véhicule de fonction . empreinte au kilomètre:
+  formule:
+    variations:
+      - si: déplacements . véhicule de fonction . type = 'voiture'
+        alors: déplacements . véhicule de fonction . voiture . empreinte au kilomètre
+      - sinon: déplacements . véhicule de fonction . deux-roues . empreinte au kilomètre
+
 
 #------------------------------------------- moyen de transport véhicule personnel ou location -------------------------------------------
 
@@ -454,7 +480,7 @@ déplacements . déplacements domicile-travail . moyens de transport . véhicule
   unité: kgCO2e
 
 déplacements . déplacements domicile-travail . moyens de transport . véhicule personnel ou location . km trajet:
-  question: Quelle est la distance moyenne de votre trajet en voiture (aller simple)?
+  question: Lorsque vous utilisez ce véhicule, combien de km parcourez-vous par trajet avec ce véhicule pour vous rendre de votre domicile à votre lieu de travail ? (aller seulement) 
   applicable si: pourcent > 0
   description: |
     Ne comptez que les kilomètres d'*un* trajet pour rejoindre votre lieu de travail habituel ou un point relais depuis votre domicile.
@@ -568,7 +594,7 @@ déplacements . déplacements domicile-travail . moyens de transport . véhicule
 #------------------------------------------- moyen de transport Tram -------------------------------------------
 
 déplacements . déplacements domicile-travail . moyens de transport . tram:
-  titre : tram
+  titre : tram ou métro
   description: |
     J'utilise le tram à hauteur de :
 
@@ -587,18 +613,15 @@ déplacements . déplacements domicile-travail . moyens de transport . tram . po
   période: semaine
 
 déplacements . déplacements domicile-travail . moyens de transport . tram . impact par heure:
-  formule: 22 * 0.00298
+  formule: 0.0385
   unité: kgCO2e/heures
-  note: Nous avons confondu tram et métro, alors que le modèle MicMac v2.6 ne parle que de métro. 
+  note: FE 64 
   description: |
-    Sur la base de 2,98 gCO2e/(passager.km) et de 22 km/h de vitesse moyenne. Vitesse calculée selon le temps nécessaire au tramway pour parcourir les lignes ; Base Carbone consultée le 04/12/20 - Métro, tramway, trolleybus - 2018 - Agglomération > à 250 000 habitants
-  références: 
-   - https://fr.wikipedia.org/wiki/Tramway_de_Nantes
-   - http://www.bilans-ges.ademe.fr/
+    A compléter
 
 déplacements . déplacements domicile-travail . moyens de transport . tram . minutes par trajet:
   applicable si: pourcent > 0 
-  question: Combien de temps, en moyenne, dure votre trajet en tramway (aller simple)?
+  question: Combien de temps, en moyenne, dure votre trajet en métro ou tramway (aller simple)?
   suggestions: 
     10 minutes / trajet: 10
     20 minutes / trajet: 20
@@ -633,14 +656,11 @@ déplacements . déplacements domicile-travail . moyens de transport . bus . pou
   période: semaine
 
 déplacements . déplacements domicile-travail . moyens de transport . bus . impact par heure:
-  formule: 0.129 * 15
+  formule: 1.37
   unité: kgCO2e/heure
+  note: 
   description: |
-    Sur la base de 129 gCO2e/(passager.km) et de 12 km/h de vitesse moyenne - Base Carbone consultée le 04/12/20 - Autobus moyen - Agglomération de plus de 250 000 habitants ;
-    - http://www.bilans-ges.ademe.fr/
-  références: 
-    - https://www.lemonde.fr/blog/transports/2016/06/15/dans-les-villes-moyennes-des-bus-rapides-mais-vides-et-couteux/
-    - http://www.bilans-ges.ademe.fr/
+    A compléter
 
 déplacements . déplacements domicile-travail . moyens de transport . bus . minutes par trajet:
   question: Combien de temps, en moyenne, dure votre trajet en bus (aller simple)?
@@ -678,12 +698,11 @@ déplacements . déplacements domicile-travail . moyens de transport . train . p
   période: semaine
 
 déplacements . déplacements domicile-travail . moyens de transport . train . impact par heure:
-  formule: 0.0248 * 135
+  formule: 0.346
   unité: kgCO2e/heure
+  note: On considère seulement le TGV pour l'instant, FE 67
   description: |
-    Sur la base de 24.8 gCO2e/(passager.km) et de 135 km/h de vitesse moyenne - Base Carbone consultée le 04/12/20 - TER - 2019 - Traction moyenne ; vitesse calculée sur la base du trajet TER Nantes-Angers
-  références: 
-    - http://www.bilans-ges.ademe.fr/
+    A compléter
 
 déplacements . déplacements domicile-travail . moyens de transport . train . minutes par trajet:
   question: Combien de temps, en moyenne, dure votre trajet en train (aller simple)?
@@ -938,7 +957,7 @@ déplacements . déplacements professionnels . moyen . taxi:
   unité: kgCO2e
 
 déplacements . déplacements professionnels . moyen . taxi . heures:
-  question: En moyenne, combien d'heures par semaine passez-vous dans le taxi pour vvos déplacements professionnels ?
+  question: En moyenne, combien d'heures par semaine passez-vous dans le taxi pour vos déplacements professionnels ?
   suggestions: 
     1h par semaine: 1
     3h par semaine: 3
