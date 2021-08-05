@@ -10,11 +10,8 @@ numérique:
     somme:
       - internet
       - visioconférence
-      - ordinateur portable
-      - ordinateur fixe
-      - écran supplémentaire
-      - téléphone
-      - tablette
+      - mails
+      - équipements
 
 numérique . internet: 
   formule: empreinte horaire * durée journalière * (profil . nbre semaines * 5)
@@ -43,7 +40,7 @@ numérique . internet . empreinte horaire . intensité électricité:
   unité: kgCO2e/kWh
   références: 
     base bilan-GES: https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=électricité
-  note: à rajouter dans l'excel WC
+  note: FE 78
 
 numérique . internet . durée journalière: 
   question: Dans le cadre professionnel, combien d'heures passez-vous par jour sur internet hors visio-conférence (envoi de mail, surf Web, streaming vidéo, etc.) ?
@@ -115,146 +112,159 @@ numérique . mails . nbre journalier:
     10 mails par jour: 10
     30 mails par jour: 30
 
-numérique . ordinateur portable . présent:
-  question: Utilisez-vous un ordinateur portable ?
-  par défaut: oui
-numérique . ordinateur portable . durée:
-  question: Quel âge a votre ordinateur portable ? 
-  unité: ans
-  par défaut: 5 ans
-numérique . ordinateur portable:
+numérique . équipements:
+  description: |
+    A completer
+  unité: kgCO2e
+  formule:
+    somme:
+      - ordinateur portable
+      - ordinateur fixe
+      - écran supplémentaire
+      - téléphone
+      - tablette
+      - appareil photo
+      - vidéoprojecteur
+
+numérique . équipements . ordinateur portable:
   icônes: 💻
+  description: |
+    Je voyage en avion en France à hauteur de :
+
+    ![](https://upload.wikimedia.org/wikipedia/commons/d/de/Tram-de-Nantes.jpg)
   note: |
    Nous estimons que l'appareil va durer un an de plus que l'âge renseigné au moment de l'estimation.
   applicable si: présent
-  formule: 156 / (durée + 1)
+  formule: 156 / (age + 1)
   unité: kgCO2e
-
-numérique . ordinateur fixe . présent:
-  question: Utilisez-vous un ordinateur fixe ?
+numérique . équipements . ordinateur portable . présent:
+  question: Utilisez-vous un ordinateur portable ?
   par défaut: oui
-numérique . ordinateur fixe . durée:
-  question: Quel âge a votre ordinateur fixe ? 
+numérique . équipements . ordinateur portable . age:
+  question: Quel âge a votre ordinateur portable ?
+  applicable si: ordinateur portable . présent
   unité: ans
-  par défaut: 5 ans
-numérique . ordinateur fixe:
+  par défaut: 5
+
+numérique . équipements . ordinateur fixe:
   icônes: 🖥
   description: |
-    Un ordinateur fixe (avec une tour détachée de l'écran) ou un écran fixe. 
-    
-    Si vous possédez un écran fixe sans tour, avec un mini-ordinateur séparé ou intégré dans l'écran, répondez oui : l'écran fixe représente une empreinte non négligeable.
+    Je voyage en avion en France à hauteur de :
+
+    ![](https://upload.wikimedia.org/wikipedia/commons/d/de/Tram-de-Nantes.jpg)
   note: |
     Nous estimons que l'appareil va durer un an de plus que l'âge renseigné au moment de l'estimation.
 
     Le modèle MicMac parle d'ordinateur fixe haute performance ou d'ordinateur portable. 
     C'est perturbant pour l'utilisateur, car l'option ordinateur fixe pas haute performance n'est pas proposée. 
     Nous avons donc confondu fixe et fixe haute performance.
-
   applicable si: présent
-  formule: empreinte / (durée + 1)
+  formule: empreinte / (age + 1)
   unité: kgCO2e
-numérique . ordinateur fixe . empreinte:
+numérique . équipements . ordinateur fixe . présent:
+  question: Utilisez-vous un ordinateur fixe ?
+  par défaut: oui
+numérique . équipements . ordinateur fixe . age:
+  question: Quel âge a votre ordinateur fixe ?
+  applicable si: ordinateur fixe . présent
+  unité: ans
+  par défaut: 5
+numérique . équipements . ordinateur fixe . empreinte:
   formule: 296 + écran
-
-numérique . ordinateur fixe . écran: 
+numérique . équipements . ordinateur fixe . écran: 
   formule: 222
   note: Valeur pour un écran de xx pouces.
   références: 
     Ecran - xx pouces: https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=écran
 
-numérique . écran supplémentaire . présent:
+numérique . équipements . écran supplémentaire:
+  applicable si: présent
+  description: |
+    Je voyage en avion en France à hauteur de :
+
+    ![](https://upload.wikimedia.org/wikipedia/commons/d/de/Tram-de-Nantes.jpg)
+  icônes: 🖥
+  formule: 30 / (age + 1)
+  unité: kgCO2e
+  note: Nous estimons que l'appareil va durer un an de plus que l'âge renseigné au moment de l'estimation.
+numérique . équipements . écran supplémentaire . présent:
   question: Avez-vous un écran supplémentaire ?
   par défaut: non
-
-numérique . écran supplémentaire . durée:
-  question: Quel âge a votre appareil photo ? 
+numérique . équipements . écran supplémentaire . age:
+  question: Quel âge a votre appareil photo ?
+  applicable si: écran supplémentaire . présent
   unité: ans
-  par défaut: 5 ans
+  par défaut: 4
 
-numérique . écran supplémentaire:
-  applicable si: présent
-  icônes: 🖥
-  formule: 30 / (durée + 1)
-  unité: kgCO2e
-  note: Nous estimons que l'appareil va durer un an de plus que l'âge renseigné au moment de l'estimation.
-
-numérique . téléphone . présent:
-  question: Utilisez-vous un téléphone ?
-  par défaut: oui
-
-numérique . téléphone:
+numérique . équipements . téléphone:
   applicable si: présent
   icônes: 📱
-  formule: impact / (durée + 1)
-  description: >
-    Les téléphones, et particulièrement les smartphones récents, sont le symbole
-    par excellence de la *high-tech*, qui est réputée consommer beaucoup de
-    ressources.
-
-    La question est d'autant plus importante qu'ils sont souvent renouvelés régulièrement, par exemple à chaque sortie annuelle du nouvel iPhone.
-
-    En réalité, notamment en comparaison du nombre d'heures que nous passons sur ces petits objets, leur empreinte climat pourrait être compatible avec un style de vie durable. Illustration : 
-
-    Un téléphone haut de gamme (iPhone X) c'est < 100kgCO2e. En supposant qu'on achète ce smartphone dernier cri tous les 2 ans, on a < 50kgCO2e/an.
-    Cela représente un demi-pourcent de l'empreinte moyenne d'un français (11 tonnes). Et 2.5% d'une empreinte durable de 2 tonnes / an.
-  note: Nous estimons que l'appareil va durer un an de plus que l'âge renseigné au moment de l'estimation.
-
-numérique . téléphone . durée:
-  question: Quel âge a votre téléphone ? 
-  unité: ans
-  par défaut: 2 ans
-
-numérique . téléphone . impact:
-  icônes: 📱✨
-  exposé: oui
-  unité: kgCO₂e
-  références: 
-    - https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=Smartphone
-    - https://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/produits_informatiques__electr
-    - https://www.apple.com/environment/pdf/products/iphone/iPhone_11_PER_sept2019.pdf
+  formule: 32.8 / (age + 1)
   description: |
-    
-    Facteur d'émission sélectionné ici pour un smartphone milieu de gamme, qui représente l'écrasante majorité des ventes. Tous les smartphones vendus en 2021 ou presque ont un écran supérieur à 5.5 pouces. 
-    
-    > Son empreinte est donnée par la base bilan-GES.
-  formule: 32.8
+    Je voyage en avion en France à hauteur de :
 
-numérique . tablette . présent:
+    ![](https://upload.wikimedia.org/wikipedia/commons/d/de/Tram-de-Nantes.jpg)
+  note: Nous estimons que l'appareil va durer un an de plus que l'âge renseigné au moment de l'estimation.
+numérique . équipements . téléphone . présent:
+  question: Utilisez-vous un téléphone ?
+  par défaut: oui
+numérique . équipements . téléphone . age:
+  question: Quel âge a votre téléphone ?
+  applicable si: téléphone . présent
+  unité: ans
+  par défaut: 2
+
+numérique . équipements . tablette:
+  icônes: ⬛
+  description: |
+    Je voyage en avion en France à hauteur de :
+
+    ![](https://upload.wikimedia.org/wikipedia/commons/d/de/Tram-de-Nantes.jpg)
+  applicable si: présent
+  formule: 63.2 / (age + 1)
+  unité: kgCO2e
+  note: Nous estimons que l'appareil va durer un an de plus que l'âge renseigné au moment de l'estimation.
+numérique . équipements . tablette . présent:
   question: Utilisez-vous une tablette ?
   par défaut: non
-numérique . tablette . durée:
-  question: Quel âge a votre tablette ? 
+numérique . équipements . tablette . age:
+  question: Quel âge a votre tablette ?
+  applicable si: tablette . présent
   unité: ans
-  par défaut: 5 ans
-numérique . tablette:
-  icônes: ⬛
-  applicable si: présent
-  formule: 63.2 / (durée + 1)
-  unité: kgCO2e
-  note: Nous estimons que l'appareil va durer un an de plus que l'âge renseigné au moment de l'estimation.
+  par défaut: 5
 
-numérique . appareil photo . présent:
-  note: On range l'appareil photo dans la catégorie numérique vu la rareté des appareils argentiques aujourd'hui.
+numérique . équipements . appareil photo:
+  applicable si: présent
+  description: |
+    Je voyage en avion en France à hauteur de :
+
+    ![](https://upload.wikimedia.org/wikipedia/commons/d/de/Tram-de-Nantes.jpg)
+  icônes: 📷
+  formule: 30.6 / (age + 1)
+numérique . équipements . appareil photo . présent:
+  note: On range l'appareil photo dans la catégorie numérique . équipements vu la rareté des appareils argentiques aujourd'hui.
   question: Utilisez-vous un appareil photo ?
   par défaut: non
-numérique . appareil photo . durée:
-  question: Quel âge a votre appareil photo ? 
+numérique . équipements . appareil photo . age:
+  question: Quel âge a votre appareil photo ?
+  applicable si: appareil photo . présent
   unité: ans
-  par défaut: 4 ans
-numérique . appareil photo:
-  applicable si: présent
-  icônes: 📷
-  formule: 30.6 / (durée + 1)
+  par défaut: 4
 
-numérique . vidéoprojecteur . présent:
-  question: Utilisez-vous un vidéoprojecteur ?
-  par défaut: non
-numérique . vidéoprojecteur . durée:
-  question: Quel âge a votre vidéoprojecteur ? 
-  unité: ans
-  par défaut: 4 ans
-numérique . vidéoprojecteur:
+numérique . équipements . vidéoprojecteur:
+  description: |
+    Je voyage en avion en France à hauteur de :
+
+    ![](https://upload.wikimedia.org/wikipedia/commons/d/de/Tram-de-Nantes.jpg)
   icônes: 📽️
   applicable si: présent
-  formule: 145 / (durée + 1)
+  formule: 145 / (age + 1)
   unité: kgCO2e
+numérique . équipements . vidéoprojecteur . présent:
+  question: Utilisez-vous un vidéoprojecteur ?
+  par défaut: non
+numérique . équipements . vidéoprojecteur . age:
+  question: Quel âge a votre vidéoprojecteur ?
+  applicable si: vidéoprojecteur . présent
+  unité: ans
+  par défaut: 5
