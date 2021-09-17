@@ -4,7 +4,7 @@
 Nos vacances et nos weekends s’articulent très souvent autour de la voiture et de l’aviation et il n’est pas rare, pour un grand nombre de français de traverser la France (en voiture) et/ou le monde (en avion). Malheureusement, ces modes de déplacements caractéristiques du toujours plus vite toujours plus loin contribuent très fortement à augmenter les émissions GES. Adapter nos week-ends et nos vacances en nous tournant vers des offres de mobilités bas carbone et/ou en repensant notre manière de voyager est donc essentiel si l’on souhaite réduire notre empreinte carbone individuelle et permettre d’atteindre la neutralité carbone à 
 l’échelle de la société.
 
-![](https://github.com/datagir/nosgestesclimat/blob/actions_images_elaborees2/public/images/Chiffres-clefs_alternatives_bas_carbones_vacances_week-end_v2.png)
+![](https://ecolab-data.netlify.app/images/Chiffres-clefs_alternatives_bas_carbones_vacances_week-end_v2.png)
 
 ## Impact GES de l’action :
 - Privilégier le train plutôt que l’avion pour un week-end à Marseille (depuis Paris, soit environ 800 km) : - 410 kgCO2eq
