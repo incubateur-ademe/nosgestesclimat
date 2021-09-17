@@ -3,7 +3,7 @@
 ## Contexte de l’action
 Les meubles, plus que de simples objets pratiques composent et personnifient notre foyer. Néanmoins, ils font partie des nombreux objets que nous consommons et que nous n’hésitons pas à remplacer. Malheureusement, leur fabrication n’est pas sans impacts sur l'environnement. Des procédés nécessaires à l’assemblage, à leur acheminement jusqu’au lieu de vente, sans oublier l’impact de la ressource si cette dernière n’est pas gérée durablement (pour le bois notamment), l’impact sur le climat de notre mobilier est bien réel. Oeuvrer au prolongement de leurs durées de vie ou bien leur redonner une deuxième jeunesse c’est donc réduire son empreinte sur le climat.
 
-![](https://github.com/datagir/nosgestesclimat/blob/actions_images_elaborees2/public/images/Chiffres-cles_Duree-vie-meubles_v2.png)
+![](https://ecolab-data.netlify.app/images/Chiffres-cles_Duree-vie-meubles_v2.png)
 
 ## Impact GES moyen de l’action
 J’allonge la durée d’usage totale de mon armoire :
