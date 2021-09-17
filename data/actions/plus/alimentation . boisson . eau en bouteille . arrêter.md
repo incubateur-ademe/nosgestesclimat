@@ -4,7 +4,7 @@
 
 Apport quotidien vital à notre survie, la façon dont nous consommons l’eau joue un rôle important dans le poids de notre empreinte carbone individuelle. En effet, consommer de l’eau en bouteille est bien plus impactant que l’eau du robinet du fait de la phase de production des bouteilles à laquelle s’ajoute également l’impact de la fin de vie des bouteilles, avec les problèmes bien connus de gestion des déchets plastiques. Qui plus est, on reproche souvent à l’eau du robinet une qualité moindre alors qu’aucune étude n’a jamais abondée en ce sens et que l’eau est le produit alimentaire le plus contrôlé. C’est pourquoi consommer l’eau du robinet plutôt que l’eau en bouteille est un geste fort pour le climat tout autant que pour l’environnement.
 
-![](https://github.com/datagir/nosgestesclimat/blob/master/public/images/Chiffres-cles_eau.png)
+![](https://ecolab-data.netlify.app/images/Chiffres-cles_eau.png)
 
 ## Impact GES de l’action
 
