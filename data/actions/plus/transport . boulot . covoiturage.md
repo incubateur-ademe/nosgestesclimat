@@ -4,7 +4,7 @@
 ## Contexte de l’action
 La dépendance à la voiture individuelle dans nos déplacements quotidiens est telle qu’elle s’est imposée comme une évidence dans nos déplacements domicile-travail. Sans remettre en cause la nécessité réelle de ce besoin pour nombre de français, ces déplacements quotidiens en voiture ne sont pas sans impact sur le climat et contribuent à majorer fortement nos empreintes carbone individuelles. Sans remettre en cause la réalisation du déplacement, privilégier le covoiturage pour les trajets domicile-travail permet de réduire significativement son empreinte carbone individuelle tout en participant à plus large échelle à la réduction de l’empreinte carbone de notre mobilité.  
 
-![](https://ecolab-data.netlify.app/public/images/Chiffres-clefs_covoitDT.png)
+![](https://ecolab-data.netlify.app/images/Chiffres-clefs_covoitDT.png)
 
 ## Impact GES moyen de l’action
 
