@@ -3,7 +3,7 @@
 ## Contexte de l’action
 Nos poubelles renferment un gisement de matière et d’énergie encore mal exploité. Participer au tri de ses déchets de manière active, c’est donc contribuer à l’exploiter en aidant les filières de recyclage à être pertinentes au sein de la transition écologique. Plus particulièrement, cela permet d’œuvrer à la préservation de nombreuses ressources tout en évitant de consommer de grande quantité d’énergie.
 
-![](https://github.com/datagir/nosgestesclimat/blob/master/public/images/Chiffres-cles_trier-ses-dechets_v2.png)
+![](https://ecolab-data.netlify.app/images/Chiffres-cles_trier-ses-dechets_v2.png)
 
 ## Impact GES moyen de l’action
 Il est difficile de quantifier l’impact de cette action à l’échelle individuelle. Néanmoins, en France, sur une année et de manière globale (i.e. portant sur les déchets des ménages, des entreprises et des collectivités), le recyclage a contribué à (1) :
