@@ -3,8 +3,7 @@
 ## Contexte de l’action
 Les déplacements quotidiens des Français, qu’il s’agisse des trajets domicile-travail ou bien de trajets personnels se font très majoritairement en voiture. - C’est ainsi 77 % des trajets quotidiens qui sont effectués en voiture (1). Adapter une éco-conduite et des pratiques éco-responsables au volant permet de diminuer l’empreinte carbone de nos déplacements et de limiter les émissions de GES.
 
-![](https://github.com/datagir/nosgestesclimat/blob/actions_images_elaborees2/public/images/Chiffres-clefs_ecoconduite_carburant_v2.png)
-![](https://github.com/datagir/nosgestesclimat/blob/actions_images_elaborees2/public/images/Chiffres-clefs_ecoconduite_accident_v2.png)
+![](https://ecolab-data.netlify.app/images/Chiffres-clefs_ecoconduite_carburant_v2.png)
 
 ## Impact GES moyen de l’action :
 De manière générale, l’éco-conduite permet une réduction de sa consommation de carburant d’en moyenne 15 % (2). Ainsi à titre d’exemple :
