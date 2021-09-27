@@ -258,9 +258,10 @@ transport . voiture 5km:
   titre: Se passer de voiture pour moins de 5 km 
   icônes: 🚗🚲
   formule: distance totale * voiture . empreinte . au kilomètre
+  non applicable si:
+    voiture . km < seuil d'activation
   description: |
-    En France, 4 trajets en voiture sur 10 font moins de 3 km et ce n’est pas moins de 177 millions de trajets de moins de 5km qui sont réalisés seuls 
-    en voiture chaque semaine (hors trajets domicile-travail). 
+    En France, 4 trajets en voiture sur 10 font moins de 3 km et ce n’est pas moins de 177 millions de trajets de moins de 5km qui sont réalisés seuls en voiture chaque semaine (hors trajets domicile-travail). 
 
     L’ensemble de ces trajets « courts » mis bout à bout présentent, à l’échelle de la France, près de 10% de la distance totale parcourue en voiture chaque année. 
 
@@ -270,12 +271,23 @@ transport . voiture 5km:
   # 4 trajets en voiture sur 10 font moins de 3 km +  10% de la distance totale parcourue = Transflash, N°398, Juin 2015, Cerema
   # 177 millions de trajets de moins de 5km = consolidation depuis Enquête Nationale Transport et Déplacements (ENTD), MTES, 2008.
 
+transport . voiture 5km . seuil d'activation: 
+  description: |
+    Distance minimale pour déclencher cette action. 
+
+    > Si quelqu'un nous dit qu'il ne fait que 200km de voiture dans l'année, il y a peu de chances 
+    > qu'il s'agisse de trajets de 5km.
+
+  formule: nombre de semaines * distance moyenne . aller-retour
+  unité: km
+
 transport . voiture 5km . distance totale:
   formule:  fréquence * distance moyenne . aller-retour * nombre de semaines
 
   
 transport . voiture 5km . distance moyenne . aller-retour:
   formule: distance moyenne * 2
+
 transport . voiture 5km . distance moyenne:
   formule: 2.5
   unité: km/trajets
@@ -289,7 +301,8 @@ transport . voiture 5km . fréquence :
   par défaut: 14
   unité: trajets
   suggestions: 
-    2 fois par jour: 14
-    1 fois par jour: 7
-    du lundi au vendredi: 5
+    jamais: 0
     uniquement le weekend : 2
+    du lundi au vendredi: 5
+    1 fois par jour: 7
+    2 fois par jour: 14
