@@ -79,8 +79,10 @@ transport . boulot:
 transport . boulot . covoiturage:
   titre: Aller au travail en covoiturage
   effort: modéré
-  applicable si: voiture . propriétaire
-  non applicable si: voiture . km = 0
+  applicable si: 
+    toutes ces conditions: 
+      - voiture . propriétaire
+      - voiture . km > seuil d'activation
   icônes: 🚗👥
   formule: distance . année * voiture . empreinte . au kilomètre * réduction covoiturage
   description: |
@@ -118,6 +120,7 @@ transport . jours travaillés en voiture:
   par défaut: 4 jours
   unité: jours
   suggestions: 
+    0: 0
     1: 1
     2: 2
     3: 3
@@ -145,6 +148,7 @@ transport . boulot . commun:
   action: 
     dépasse: 
       - transport . boulot . covoiturage
+      - transport . boulot . télétravail
   titre: Aller au travail autrement qu'en voiture
   effort: conséquent
   icônes: 🚌🚃
@@ -241,7 +245,7 @@ transport . tramway . empreinte:
   description: |
     Base Carbone consultée le 02/10/20 Tramway - 2019 - Île-de-France
 
-transport . boulot . télétravail: 
+transport . boulot . télétravail:
   titre: Faire du télétravail
   effort: conséquent
   icônes: 🏠💻
@@ -255,7 +259,12 @@ transport . boulot . télétravail:
     toutes ces conditions: 
       - compatible
       - voiture . km > seuil d'activation
-  formule: empreinte jour voiture * jours télétravaillés * 47
+      - jours travaillés en voiture > 0
+  formule: empreinte jour voiture * jours gagnés * 47
+
+transport . boulot . jours gagnés: 
+  valeur: jours télétravaillés
+  plafond: jours travaillés en voiture
 
 transport . boulot . empreinte jour voiture: 
   formule: (distance * 2) * voiture . empreinte . au kilomètre
@@ -326,7 +335,7 @@ transport . voiture 5km . fréquence :
   unité: trajets
   suggestions: 
     jamais: 0
-    uniquement le weekend : 2
-    du lundi au vendredi: 5
-    1 fois par jour: 7
-    2 fois par jour: 14
+    seulement le weekend : 2
+    dans la semaine: 5
+    chaque jour: 7
+    deux trajets par jour: 14
