@@ -62,21 +62,21 @@ Pour en savoir plus sur chacun de ces gestes et sur leurs impacts sur le climat,
 
 ## Passer à l’action
 
-Zéro Waste France : https://www.zerowastefrance.org/passer-a-laction/adopter-zero-dechet/
-La maison du zéro déchets, Paris 18e : https://lamaisonduzerodechet.org/blog/
-Compostage des biodéchets : www.biodechets.org.
+Zéro Waste France : [https://www.zerowastefrance.org/passer-a-laction/adopter-zero-dechet/](https://www.zerowastefrance.org/passer-a-laction/adopter-zero-dechet/)
+
+La maison du zéro déchets, Paris 18e : [https://lamaisonduzerodechet.org/blog/](https://lamaisonduzerodechet.org/blog/)
+
+Compostage des biodéchets : [www.biodechets.org](www.biodechets.org)
+
 
 ## Sources
 
-[^1]: La Tarification Incitative, Fiche Technique, 2015, ADEME
-[^2]: Réduction des déchets et du gaspillage : opinions et pratiques des français en 2019, ADEME
-[^3]: Déchets chiffres clés, 2019, ADEME
-[^4]: MODECOM 2017 - Campagne nationale de caractérisation des déchets ménagers et assimilés, mars 2019, ADEME
-[^5]: Haut Conseil pour le Climat.
-
-La position du Haut Conseil pour le Climat. Juin 2019
-
-[^6]: https://www.greenpeace.fr/pollution-oceans-limpact-plastiques/
-[^7]: Des GES dans ma poubelle ?, 2010, Réseau Action Climat
+[^1]: [La Tarification Incitative, Fiche Technique, 2015, ADEME](https://librairie.ademe.fr/cadic/1208/fiche-tarification-incitative.pdf)
+[^2]: [Réduction des déchets et du gaspillage : opinions et pratiques des français en 2019, ADEME](https://www.ademe.fr/sites/default/files/assets/documents/reduction_des_dechets_et_gaspillage_opinions_et_pratiques_des_francais_2019_010967.pdf)
+[^3]: [Déchets chiffres clés, 2020, ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/28-dechets-chiffres-cles-edition-2020-9791029712135.html)
+[^4]: [MODECOM 2017 - Campagne nationale de caractérisation des déchets ménagers et assimilés, mars 2019, ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html)
+[^5]: [Haut Conseil pour le Climat. La position du Haut Conseil pour le Climat. Juin 2019](https://www.hautconseilclimat.fr/publications/rapport-2019/)
+[^6]: [Greenpeace. Pollution des océans : l'impact des plastiques](https://www.greenpeace.fr/pollution-oceans-limpact-plastiques/)
+[^7]: [Des GES dans ma poubelle ?, 2010, Réseau Action Climat](https://reseauactionclimat.org/publications/gaz-effet-serre-poubelle/)
 [^8]: Evolution des ratios de déchets par habitant desservi, Sinoe
-[^9]: https://jancovici.com/changement-climatique/les-ges-et-nous/combien-de-gaz-a-effet-de-serre-dans-notre-poubelle/
+[^9]: [Combien de gaz à effet de serre dans notre poubelle ? Jancovici](https://jancovici.com/changement-climatique/les-ges-et-nous/combien-de-gaz-a-effet-de-serre-dans-notre-poubelle/)
