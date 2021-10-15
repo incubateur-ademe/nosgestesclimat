@@ -1,7 +1,7 @@
 # Consommer durable 
 
 ## Contexte de l’action
-Des habits que nous portons, au mobilier d’intérieur sans oublier bien évidemment nos appareils électriques et électroniques, notre consommation de biens et équipements a un impact réel sur le climat. L’empreinte carbone de notre consommation représente d’ailleurs le quart de notre empreinte carbone totale individuelle. C’est pourquoi suivre les principes d’une consommation plus durable (du questionnement du besoin réel à l’achat de produits durables) est essentielle pour réduire son impact sur l’environnement.
+Des habits que nous portons, au mobilier d’intérieur sans oublier bien évidemment nos appareils électriques et électroniques, notre consommation de biens et équipements a un impact réel sur le climat. L’empreinte carbone de notre consommation représente d’ailleurs le quart de notre empreinte carbone totale individuelle [^1] [^2]. C’est pourquoi suivre les principes d’une consommation plus durable (du questionnement du besoin réel à l’achat de produits durables) est essentielle pour réduire son impact sur l’environnement.
 
 ![](https://ecolab-data.netlify.app/images/Chiffres-clefs_Desencombrer_v1.png)
 
@@ -12,12 +12,12 @@ Consommer durable permet toujours d’évités et réduire nos impacts sur l’e
 Consommer durable est souvent tagué d’un préjugé de coûter plus cher, mais permet en réalité très souvent de réaliser des économies. A l’exception de l’achat de biens neufs durables, les différents principes de la consommation durable, qu’il s’agisse de questionner son besoin réel, d’acheter de seconde main, de réparer ses biens ou d’utiliser ceux du voisin, permettent des économies conséquentes pouvant monter jusqu’à plusieurs centaines d’euros en fonction des biens considérés et des gestes suivis. 
 
 ## Chiffres clés à retenir
-- Un téléviseur pèse 11 kg mais nécessite de mobiliser 2.5 tonnes de matières premières pour sa fabrication tandis qu’un réfrigérateur et un lave-linge pèsent respectivement 56 et 79 kg pour 1.75 tonnes et 2.1 tonnes de matières mobilisées. Notre garde-robe (+ chaussure) n’est pas en reste car elle pèse en moyenne 50 kg pour 2.5 tonnes de matières mobilisée. (3)
-- En comparaison à 2002, nous achetons en moyenne 60 % de plus de vêtements que nous gardons deux fois moins longtemps (4)
-- La vente de voiture a été multiplié par 6, passant de 5 millions en 1960 à plus de 30 millions aujourd’hui (5)
-- 70 % des vêtements de nos armoires ne sont jamais portés. Beaucoup de vêtements ne sont d’ailleurs portés que 7 à 10 fois (6)
-- 93 % de notre garde-robe n’est plus portée depuis plus d’un an (4)
-- Selon une étude IFOP pour l’ADEME, 74% des consommateurs prennent en compte le respect de l’environnement dans leurs achats (7)
+- Un téléviseur pèse 11 kg mais nécessite de mobiliser 2.5 tonnes de matières premières pour sa fabrication tandis qu’un réfrigérateur et un lave-linge pèsent respectivement 56 et 79 kg pour 1.75 tonnes et 2.1 tonnes de matières mobilisées. Notre garde-robe (+ chaussure) n’est pas en reste car elle pèse en moyenne 50 kg pour 2.5 tonnes de matières mobilisée. [^3]
+- En comparaison à 2002, nous achetons en moyenne 60 % de plus de vêtements que nous gardons deux fois moins longtemps [^4]
+- La vente de voiture a été multiplié par 6, passant de 5 millions en 1960 à plus de 30 millions aujourd’hui [^5]
+- 70 % des vêtements de nos armoires ne sont jamais portés. Beaucoup de vêtements ne sont d’ailleurs portés que 7 à 10 fois [^6]
+- 93 % de notre garde-robe n’est plus portée depuis plus d’un an [^4]
+- Selon une étude IFOP pour l’ADEME, 74% des consommateurs prennent en compte le respect de l’environnement dans leurs achats [^7]
 
 ## Explication
 L’impact de notre consommation qu’il s’agisse de vêtements, de meubles ou de produits électroniques est bien réel. L’empreinte carbone de notre consommation représente d’ailleurs le quart de notre empreinte carbone individuelle. Poussée par la mutation de nos rapports avec les objets (par l’intermédiaire de stratégies marketing omniprésentes et efficaces), notre manière de consommer est directement responsable de ces impacts. L’acte d’achat, et plus particulièrement celui du renouvellement d’un produit, est devenu quelque chose d'anodin. Les impacts environnementaux de ces actes sont totalement occultés (notamment ceux d’un renouvellement précoce) car souvent poussés hors de nos frontières. 
@@ -29,7 +29,7 @@ Il s’agit ici de venir questionner la réalité du besoin, notamment quand on 
 
 - **Principe n°2 : Éviter le suréquipement**
 
-Ce principe directement en lien avec le 1er a pour but d’éviter de se retrouver avec plusieurs produits/équipements répondant à un même besoin. Ainsi, n’est-il pas possible de couvrir mes besoins avec les produits que j’ai déjà ? À titre d’exemple, 70 % des vêtements des armoires françaises ne sont jamais portés (6).
+Ce principe directement en lien avec le 1er a pour but d’éviter de se retrouver avec plusieurs produits/équipements répondant à un même besoin. Ainsi, n’est-il pas possible de couvrir mes besoins avec les produits que j’ai déjà ? À titre d’exemple, 70 % des vêtements des armoires françaises ne sont jamais portés [^6].
 
 - **Principe n°3 : Éviter le surdimensionnement**
 
@@ -55,11 +55,11 @@ En résumé, la consommation durable même si, dans le cas d’un achat, peut s'
 
 - **Principe n°7 : Éviter de renouveler trop souvent car c’est plus cher et cela a plus d’impacts**
 
-La mode, la publicité et plus généralement les stratégies marketing nous poussent à renouveler fréquemment nos biens équipements, ceci afin d’écouler les stocks et ainsi maximiser les marges de profits. Malheureusement, ces renouvellements prématurés à cause de l'obsolescence perçue (qu’elle soit technique et/ou culturelle) ont des impacts forts sur le climat et l'environnement. En effet, un renouvellement prématuré, c’est d’autant de matière et d’énergie à mobiliser précocement. C’est aussi un impact conséquent sur notre porte-monnaie. A titre d’exemple, ne pas renouveler prématurément sa télévision (à demi-vie par exemple), pour cause d’obsolescence perçue, c’est 170 kgCO2eq évités (9) (l’équivalent de 670 km parcourus en voiture) et 176 € économisés (10) sur le reste de la durée de vie complète de la télévision. Pour en savoir plus, n’hésitez pas à consulter les fiches dédiées à l’influence de la publicité et aux renouvellements prématurés (rubrique Passer à l’action).
+La mode, la publicité et plus généralement les stratégies marketing nous poussent à renouveler fréquemment nos biens équipements, ceci afin d’écouler les stocks et ainsi maximiser les marges de profits. Malheureusement, ces renouvellements prématurés à cause de l'obsolescence perçue (qu’elle soit technique et/ou culturelle) ont des impacts forts sur le climat et l'environnement. En effet, un renouvellement prématuré, c’est d’autant de matière et d’énergie à mobiliser précocement. C’est aussi un impact conséquent sur notre porte-monnaie. A titre d’exemple, ne pas renouveler prématurément sa télévision (à demi-vie par exemple), pour cause d’obsolescence perçue, c’est 170 kgCO2eq évités [^8] [^9] (l’équivalent de 670 km parcourus en voiture) et 176 € économisés [^10] sur le reste de la durée de vie complète de la télévision. Pour en savoir plus, n’hésitez pas à consulter les fiches dédiées à l’influence de la publicité et aux renouvellements prématurés (rubrique Passer à l’action).
 
 - **Principe n°8 : Augmenter la durée de vie des produits**
 
-Ce principe très en lien avec le principe précédent consiste à essayer de faire durer le plus longtemps les biens et produits que nous possédons. Qu’il s’agisse de la réparation d’une panne ou de l’extension de la durée de vie du produit (par rapport à sa durée de vie initiale théorique), c’est autant d'émissions de CO2 évitées et d’euros économisés. A titre d’exemple, réparer son lave-linge si celui tombe en panne (à demi-vie), c’est 105 kgCO2eq évités (11) (l’équivalent de 410 km parcourus en voiture). Si j’allonge la durée totale d'usage de mes équipements multimédia et électroménagers  d’un an (plutôt que les remplacer), c’est 184 kgCO2eq évités (12). Pour en savoir plus, n’hésitez pas à consulter les fiches dédiées à l’augmentation des durées de nos biens et équipements (rubrique Passer à l’action).
+Ce principe très en lien avec le principe précédent consiste à essayer de faire durer le plus longtemps les biens et produits que nous possédons. Qu’il s’agisse de la réparation d’une panne ou de l’extension de la durée de vie du produit (par rapport à sa durée de vie initiale théorique), c’est autant d'émissions de CO2 évitées et d’euros économisés. A titre d’exemple, réparer son lave-linge si celui tombe en panne (à demi-vie), c’est 105 kgCO2eq évités [^11] (l’équivalent de 410 km parcourus en voiture). Si j’allonge la durée totale d'usage de mes équipements multimédia et électroménagers  d’un an (plutôt que les remplacer), c’est 184 kgCO2eq évités [^12]. Pour en savoir plus, n’hésitez pas à consulter les fiches dédiées à l’augmentation des durées de nos biens et équipements (rubrique Passer à l’action).
 
 ## Passer à l’action
 Pour savoir quel label choisir : https://www.ademe.fr/labels-environnementaux
@@ -92,23 +92,18 @@ La France expérimente l’affichage environnemental. Son but : informer le cons
 - Se détacher de l’influence de la pub et des soldes
 
 ## Sources
-(1) : L’empreinte carbone des Français reste stable, janvier 2020, Commissariat général au développement durable
-(2) : Empreinte carbone d’un français moyen en 2010,  Carbone 4 et Terra Eco
-(3) : L’économie circulaire en 10 questions, décembre 2019, Ademe
-
-(4) : Comment reprendre la main sur nos consommations ? Infographie, Ademe
-
-(5) : https://www.ademe.fr/expertises/consommer-autrement/quoi-parle-t/consommation-menages-france 
-(6) : https://www.novethic.fr/actualite/social/consommation/isr-rse/infographie-les-10-chiffres-chocs-du-gaspillage-vestimentaire-a-avoir-en-tete-avant-de-faire-les-soldes-146769.html 
-
-(7) : IFOP 2015, La sensibilité des Français à la prévention des déchets
-(8) : Modélisation et évaluation du poids carbone de produits de consommation et biens d’équipement, rapport, septembre 2018, ADEME
-(9) : Modélisation et évaluation environnementale de produits de consommation et biens d’équipement, rapport, décembre 2019, ADEME
-
-(10) : Evaluation économique de l’allongement de la durée d’usage de produits de consommation et biens d’équipement, rapport, décembre 2019, ADEME
-
-(11) : Bien d’équipements, les bénéfices environnementaux d’allonger leur durée de vie, infographie, 2019, ADEME
-(12) : Evaluation environnementale et économique de l’allongement de la durée d’usage de biens d’équipement électriques et électroniques à l’échelle d’un foyer, rapport, avril 2020, ADEME
+[^1]: [L’empreinte carbone des Français reste stable, janvier 2020, Commissariat général au développement durable](https://www.statistiques.developpement-durable.gouv.fr/sites/default/files/2020-01/datalab-essentiel-204-l-empreinte-carbone-des-francais-reste-%20stable-janvier2020.pdf)
+[^2]: [Empreinte carbone d’un français moyen en 2010, Terra Eco, Carbone 4](https://www.terraeco.net/1990-2010-Notre-r-evolution,19337.html)
+[^3]: [L’économie circulaire en 10 questions, décembre 2019, Ademe](https://librairie.ademe.fr/dechets-economie-circulaire/919-l-economie-circulaire-en-10-questions-9791029712968.html)
+[^4]: [Comment reprendre la main sur nos consommations ? Infographie, Ademe](https://librairie.ademe.fr/cadic/929/infographie-consommation-garder-objets.pdf?modal=false)
+[^5]: [La consommation des ménages en France](https://www.ademe.fr/expertises/consommer-autrement/quoi-parle-t/consommation-menages-france)
+[^6]: [Infographie: les chiffres du gaspillage vestimentaire à avoir en tête avant de faire les soldes](https://www.novethic.fr/actualite/social/consommation/isr-rse/infographie-les-10-chiffres-chocs-du-gaspillage-vestimentaire-a-avoir-en-tete-avant-de-faire-les-soldes-146769.html)
+[^7]: [IFOP 2015, La sensibilité des Français à la prévention des déchets](https://www.ifop.com/publication/la-sensibilite-des-francais-a-la-prevention-des-dechets/)
+[^8]: [Modélisation et évaluation du poids carbone de produits de consommation et biens d’équipement, rapport, septembre 2018, ADEME](https://librairie.ademe.fr/consommer-autrement/1190-modelisation-et-evaluation-du-poids-carbone-de-produits-de-consommation-et-biens-d-equipement.html#:~:text=effet%20de%20serre.-,La%20pr%C3%A9sente%20%C3%A9tude%20propose%20une%20%C3%A9valuation%20du%20%C2%ABpoids%20carbone%C2%BB%20de,renouvellement%20trop%20fr%C3%A9quent%20des%20%C3%A9quipements)
+[^9]: [Modélisation et évaluation environnementale de produits de consommation et biens d’équipement, rapport, décembre 2019, ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/127-modelisation-et-evaluation-environnementale-de-produits-de-consommation-et-biens-d-equipement.html)
+[^10]: [Evaluation économique de l’allongement de la durée d’usage de produits de consommation et biens d’équipement, rapport, décembre 2019, ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/126-evaluation-economique-de-l-allongement-de-la-duree-d-usage-de-produits-de-consommation-et-biens-d-equipement.html#:~:text=biens%20d'%C3%A9quipement-,Evaluation%20%C3%A9conomique%20de%20l'allongement%20de%20la%20dur%C3%A9e%20d'usage,consommation%20et%20biens%20d'%C3%A9quipement&text=Le%20but%20principal%20est%20de,ou%20une%20obsolescence%20culturelle%2Fper%C3%A7ue)
+[^11]: [Bien d’équipements, les bénéfices environnementaux d’allonger leur durée de vie, infographie, 2019, ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/325-biens-d-equipement-benefices-environnementaux-d-allonger-leur-duree-de-vie.html)
+[^12]: [Evaluation environnementale et économique de l’allongement de la durée d’usage de biens d’équipement électriques et électroniques à l’échelle d’un foyer, rapport, avril 2020, ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/125-evaluation-environnementale-et-economique-de-l-allongement-de-la-duree-d-usage-de-biens-d-equipements-electriques-et-electroniques-a-l-echelle-d-un-foyer.html)
 
 
 

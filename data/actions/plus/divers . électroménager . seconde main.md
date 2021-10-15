@@ -11,29 +11,29 @@ De l’électroménager à la dernière tablette numérique, les équipements é
 ## Ordre de grandeur GES
 ![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eee-2nd-main-fig1.jpg)
 
-```Figure 1 : Impact GES des phases amont et aval pour plusieurs équipements à forte composante électronique (données élaborées depuis (3))```
+```Figure 1 : Impact GES des phases amont et aval pour plusieurs équipements à forte composante électronique,données élaborées depuis```[^2]
 
 ![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eee-2nd-main-fig2.jpg)
 
-```Figure 2 : Impact GES des phases amont et aval pour plusieurs équipements électroménager (données élaborées depuis (3))```
+```Figure 2 : Impact GES des phases amont et aval pour plusieurs équipements électroménager, données élaborées depuis```[^2]
 
 ![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eee-2nd-main-fig3.jpg)
 
-```Figure 3 : Impact GES sur une année associé au fonctionnement d’équipements classiques et d’équipements à faible consommation énergétique (à partir des consommations données dans (4))```
+```Figure 3 : Impact GES sur une année associé au fonctionnement d’équipements classiques et d’équipements à faible consommation énergétique, à partir des consommations données dans```[^3]
 
 *Les équipements pris en compte sont : un réfrigérateur/congélateur, une machine à laver, un lave-vaisselle, un sèche-linge, un ordinateur, un aspirateur et un téléviseur*
 
 ## Budget
-Que vous cherchiez de la marque ou non, le prix final payé en caisse est toujours bien moins élevé pour des équipements de seconde main que pour des équipements neufs. En revanche, il est fort probable que des produits éco-conçus ou efficaces soient plus chers à l’achat. Néanmoins, leur faible consommation d’énergie les rend plus rentables sur le long terme. Ainsi, sur la base des mêmes équipements que la Figure 3 et en considérant les consommations données dans (4) :
+Que vous cherchiez de la marque ou non, le prix final payé en caisse est toujours bien moins élevé pour des équipements de seconde main que pour des équipements neufs. En revanche, il est fort probable que des produits éco-conçus ou efficaces soient plus chers à l’achat. Néanmoins, leur faible consommation d’énergie les rend plus rentables sur le long terme. Ainsi, sur la base des mêmes équipements que la Figure 3 et en considérant les consommations données dans [^3]:
 - Consommation des équipements-  classiques : 1515 kWh/an soit *235 €/an*
 - Consommation des équipements à haute performance énergétique : 725 kWh soit *110 €/an*
 
 ## Chiffres clés à retenir
-- Si tous les ménages français qui s’équipent en nouveaux appareils choisissaient les plus économes, on économiserait 4,9 TWh / an, soit autant que la consommation d’électricité domestique de 2 millions de personnes (1)
-- Les économies d’énergie réalisables avec les appareils les mieux classés sont loin d’être anecdotiques. La classe A+++, signale les appareils qui consomment de 20 à 50 % d’énergie de moins que ceux classés A+ (1).
-- 52 % des consommateurs affirment souhaiter consommer mieux, et la moitié des consommateurs se déclarent prêts à payer 20 % plus cher un produit mieux noté dans le cadre de l’affichage environnemental (5)
-- Pour les produits à forte composante électronique , la phase de production des matières premières représente souvent plus des ¾ de l’impact GES. Ainsi, l’impact, sur l’ensemble du cycle de vie, d’une télévision estimée à 343 kgCO2eq (6) provient à 80 % de l’extraction des matières premières (299  kgCO2eq).
-- Pour les produits électroménagers, la phase de production des matières premières et la phase d’utilisation représentent à elles deux très souvent plus de 70 % de l’impact GES. Ainsi, l’impact, sur l’ensemble du cycle de vie, d’un réfrigérateur estimé à 343 kgCO2eq (6) est réparti à :
+- Si tous les ménages français qui s’équipent en nouveaux appareils choisissaient les plus économes, on économiserait 4,9 TWh / an, soit autant que la consommation d’électricité domestique de 2 millions de personnes [^1]
+- Les économies d’énergie réalisables avec les appareils les mieux classés sont loin d’être anecdotiques. La classe A+++, signale les appareils qui consomment de 20 à 50 % d’énergie de moins que ceux classés A+ [^1].
+- 52 % des consommateurs affirment souhaiter consommer mieux, et la moitié des consommateurs se déclarent prêts à payer 20 % plus cher un produit mieux noté dans le cadre de l’affichage environnemental [^4]
+- Pour les produits à forte composante électronique , la phase de production des matières premières représente souvent plus des ¾ de l’impact GES. Ainsi, l’impact, sur l’ensemble du cycle de vie, d’une télévision estimée à 343 kgCO2eq [^5] provient à 80 % de l’extraction des matières premières (299  kgCO2eq).
+- Pour les produits électroménagers, la phase de production des matières premières et la phase d’utilisation représentent à elles deux très souvent plus de 70 % de l’impact GES. Ainsi, l’impact, sur l’ensemble du cycle de vie, d’un réfrigérateur estimé à 343 kgCO2eq [^5] est réparti à :
 	- 154  kgCO2eq (45 %) pour la phase  production de matières premières
 	- 84  kgCO2eq (25 %) pour la phase d’utilisation
 	- 19 kg approvisionnement, 36 kg mise en forme, 28 kg assemblage, 63 kg distribution, -41 kg (recyclage)
@@ -55,11 +55,9 @@ Enfin, dans le cas où il nous est nécessaire d’acheter un produit neuf, il e
 Ecogator : analyse financière des étiquettes énergies des appareils
 
 ## Sources
-(1) : L’empreinte carbone des Français reste stable, janvier 2020, Commissariat général au développement durable
-(2) : Empreinte carbone d’un français moyen en 2010,  Carbone 4 et Terra Eco
-(3) : Modélisation et évaluation du poids carbone de produits de consommation et biens d’équipements, rapport, septembre 2018, ADEME
-(4) : Réduire sa facture d’électricité, Juin 2019, Ademe
-(5) : Ademe Magazine, n°124, Avril 2019,
-(6) : http://multimedia.ademe.fr/infographies/infographie-poids-carbone/
-
+[^1]: [L’empreinte carbone des Français reste stable, janvier 2020, Commissariat général au développement durable](https://www.statistiques.developpement-durable.gouv.fr/sites/default/files/2020-01/datalab-essentiel-204-l-empreinte-carbone-des-francais-reste-%20stable-janvier2020.pdf)
+[^2]: [Modélisation et évaluation du poids carbone de produits de consommation et biens d’équipement, rapport, septembre 2018, ADEME](https://librairie.ademe.fr/consommer-autrement/1190-modelisation-et-evaluation-du-poids-carbone-de-produits-de-consommation-et-biens-d-equipement.html#:~:text=effet%20de%20serre.-,La%20pr%C3%A9sente%20%C3%A9tude%20propose%20une%20%C3%A9valuation%20du%20%C2%ABpoids%20carbone%C2%BB%20de,renouvellement%20trop%20fr%C3%A9quent%20des%20%C3%A9quipements)
+[^3]: [Réduire sa facture d’électricité, Juin 2019, Ademe](https://librairie.ademe.fr/changement-climatique-et-energie/1966-reduire-sa-facture-d-electricite-9791029708275.html)
+[^4]: [Ademe Magazine, n°124, Avril 2019](https://librairie.ademe.fr/produire-autrement/953-ademe-vous-le-mag-n-124.html)
+[^5]: [Ces objets qui pèsent lourd dans notre quotidien](https://multimedia.ademe.fr/infographies/infographie-poids-carbone/)
 
