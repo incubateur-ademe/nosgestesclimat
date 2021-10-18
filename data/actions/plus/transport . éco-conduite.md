@@ -1,12 +1,12 @@
 # Adopter une éco-conduite
 
 ## Contexte de l’action
-Les déplacements quotidiens des Français, qu’il s’agisse des trajets domicile-travail ou bien de trajets personnels se font très majoritairement en voiture. - C’est ainsi 77 % des trajets quotidiens qui sont effectués en voiture (1). Adapter une éco-conduite et des pratiques éco-responsables au volant permet de diminuer l’empreinte carbone de nos déplacements et de limiter les émissions de GES.
+Les déplacements quotidiens des Français, qu’il s’agisse des trajets domicile-travail ou bien de trajets personnels se font très majoritairement en voiture. - C’est ainsi 77 % des trajets quotidiens qui sont effectués en voiture [^1]. Adapter une éco-conduite et des pratiques éco-responsables au volant permet de diminuer l’empreinte carbone de nos déplacements et de limiter les émissions de GES.
 
 ![](https://ecolab-data.netlify.app/images/Chiffres-clefs_ecoconduite_carburant_v2.png)
 
 ## Impact GES moyen de l’action :
-De manière générale, l’éco-conduite permet une réduction de sa consommation de carburant d’en moyenne 15 % (2). Ainsi à titre d’exemple :
+De manière générale, l’éco-conduite permet une réduction de sa consommation de carburant d’en moyenne 15 % [^2]. Ainsi à titre d’exemple :
 
 - Paris-Marseille en adoptant une éco-conduite : **- 24 kgCO2eq**
 - 1000 km en adoptant une éco-conduite : **- 31 kgCO2eq**
@@ -24,10 +24,10 @@ De manière générale, l’éco-conduite permet une réduction de sa consommati
 Au-delà de l’impact sur le climat, c’est aussi sur votre budget que cette action va influer. En économisant un à deux litres de carburant pour 100 kilomètres, on peut réaliser des économies substantielles. Sur une base de 15 000 kilomètres par an, l’économie peut atteindre environ 300 € pour un véhicule diesel et 400 € pour un véhicule à essence (pour un prix du gasoil à 1,,20 € le litre et un prix du super sans plomb à 1,32 € le litre - données novembre  2020) [2]
 
 ## Chiffres clés à retenir :
-- **77 %** des trajets quotidiens des français sont effectués en voiture (1)
+- **77 %** des trajets quotidiens des français sont effectués en voiture [^1]
 - **15 %** : c’est la réduction moyenne de la consommation de carburant associée à la pratique de l’éco-conduite
-- Au-delà de l’impact GES, l’éco-conduite permet également de réduire le risque d’accident de **10 à 15 %** en moyenne (2)
-- Autre astuce pour le climat : ne pas abuser de la climatisation. Elle augmente la consommation de carburant de votre véhicule de **1 à 7%** suivant les climats, les véhicules et les usages (1)
+- Au-delà de l’impact GES, l’éco-conduite permet également de réduire le risque d’accident de **10 à 15 %** en moyenne [^2]
+- Autre astuce pour le climat : ne pas abuser de la climatisation. Elle augmente la consommation de carburant de votre véhicule de **1 à 7%** suivant les climats, les véhicules et les usages [^1]
 
 ## Explication
 Plus de ¾ (77 %) des trajets quotidiens des Français s’effectuent en voiture. L’éco-conduite est une solution qui permet de réduire les émissions de GES de nos déplacements en voiture. En effet, elle permet de réaliser jusqu’à 15 % d’économie de carburant. Cela représente donc une diminution des émissions de GES tout autant qu’une économie financière non négligeable. Ainsi, pour un trajet de 1000 km, cela représente une diminution des émissions de GES de 31 kg de CO2eq. Pour une personne réalisant un trajet domicile-travail en voiture de manière quotidienne, la baisse des émissions de GES engendrée par une éco-conduite est encore plus significative. Ainsi, dans le cadre d’un trajet de 20 km (40 km aller-retour), cela représenterait une diminution des émissions de GES de 276 kg CO2eq et une diminution de la facture en carburant de plusieurs centaines d’euros. 
@@ -41,5 +41,5 @@ L’application de l’éco-conduite est d’autant plus pertinente en ville et 
 Outre ces éléments, il est important de rappeler ici la nécessité plus générale de décarboner notre mobilité quotidienne et que donc l’éco-conduite ne peut-être une finalité en soi. En effet, il s’agit d’une solution utile et pertinente pour des personnes parcourant beaucoup de kilomètres mais elle ne remet pas en cause la place prépondérante de la voiture dans notre quotidien.
 
 ## Sources :
-(1) : La mobilité en 10 questions, septembre 2019, Ademe 
-(2) : Guide de Formation à l’éco-conduite, Ademe
+[^1]: [La mobilité en 10 questions, septembre 2020, ADEME](https://agirpourlatransition.ademe.fr/particuliers/sites/default/files/2020-09/guide-mobilite-10-questions.pdf)
+[^2]: [Guide de Formation à l’éco-conduite, Ademe](https://www.campus.uliege.be/upload/docs/application/pdf/2017-07/66885_guide_ecoconduite.pdf)
