@@ -51,6 +51,8 @@ Par ailleurs, apporter les biens et équipements dont nous ne voulons plus en PA
 - générer des économies de matière. Et c’est là, le principal avantage du tri et du recyclage. Cela permet d’éviter de perdre de la matière et donc de ne pas avoir à en recréer. Grâce au recyclage, on conserve donc, pour un nouvel usage, une partie de l’énergie et de la matière contenue dans les déchets. Dans le cas de nos équipements électroniques, c’est autant de processus d'extraction de matières premières, de minerais et de terres rares en moins. Pour une autre matière comme l’aluminium (bien que moins utilisée par les ménages), ce n’est pas moins de 95% d’énergie économisée par la confection d’une tonne d’aluminium à partir d’aluminium recyclé .
 
 ## Passer à l’action
+Vous souhaitez vérifier que vous respectez bien les consignes de tri pour vos emballages, pots de peinture ou médicaments et si vous vous demandez où apporter vos appareils électriques, votre ordinateur ou vos vêtements, le simulateur Que Faire de Mes Déchets est là pour vous aider : <https://quefairedemesdechets.fr/>
+
 Pour connaitre les Points d’Apports Volontaires (PAV) les plus près de chez soi :
 - Textiles, Linges de maison et Chaussures (TLC) : 
 ![refashion.fr](https://refashion.fr/citoyen/fr/je-d%C3%A9pose)
