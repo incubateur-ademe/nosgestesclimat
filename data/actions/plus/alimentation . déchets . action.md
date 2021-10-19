@@ -62,11 +62,11 @@ Pour en savoir plus sur chacun de ces gestes et sur leurs impacts sur le climat,
 
 ## Passer à l’action
 
-Zéro Waste France : [https://www.zerowastefrance.org/passer-a-laction/adopter-zero-dechet/](https://www.zerowastefrance.org/passer-a-laction/adopter-zero-dechet/)
+Zéro Waste France : <https://www.zerowastefrance.org/passer-a-laction/adopter-zero-dechet/>
 
-La maison du zéro déchets, Paris 18e : [https://lamaisonduzerodechet.org/blog/](https://lamaisonduzerodechet.org/blog/)
+La maison du zéro déchets, Paris 18e : <https://lamaisonduzerodechet.org/blog/>
 
-Compostage des biodéchets : [www.biodechets.org](www.biodechets.org)
+Compostage des biodéchets : <http://biodechets.org/>
 
 
 ## Sources

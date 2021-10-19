@@ -41,18 +41,18 @@ S’habiller de seconde main permet donc d’éviter toutes les pollutions et le
 
 ## Passer à l’action
 Pour acheter de seconde main :
-- https://www.label-emmaus.co/fr/
-- https://crushonapp.com/
-- https://www.vinted.fr 
-- https://fr.vestiairecollective.com
-- https://www.leboncoin.fr
+- <https://www.label-emmaus.co/fr/>
+- <https://crushonapp.com/>
+- <https://www.vinted.fr>
+- <https://fr.vestiairecollective.com>
+- <https://www.leboncoin.fr>
 
 Pour acheter en connaissance de cause, pensez à : 
 - L’affichage environnemental. Au vu de l’impact de notre consommation sur notre empreinte carbone (et environnementale), il a été mis en place l’affichage environnemental. Ce dispositif permettra d’informer le consommateur sur les impacts environnementaux des produits qu’ils achètent. Pour l’instant volontaire, la démarche se concentre sur quelques secteurs seulement : l’habillement, l’ameublement, les produits électroniques, l’alimentation, l’hôtellerie. Pour en savoir plus :
 
-https://agirpourlatransition.ademe.fr/particuliers/conso/droit-conso/etiquettes-affichage-labels-environnementaux-comment-sy-retrouver 
+<https://agirpourlatransition.ademe.fr/particuliers/conso/droit-conso/etiquettes-affichage-labels-environnementaux-comment-sy-retrouver>
 
-- Les labels pour garantir des produits plus responsables. Plus d’infos sur la fiche dédiée à la consommation durable et ici : https://www.ademe.fr/labels-environnementaux
+- Les labels pour garantir des produits plus responsables. Plus d’infos sur la fiche dédiée à la consommation durable[^8] et ici : <https://www.ademe.fr/labels-environnementaux>
 
 ## Sources
 [^1]: [L’empreinte carbone des Français reste stable, janvier 2020, Commissariat général au développement durable](https://www.statistiques.developpement-durable.gouv.fr/sites/default/files/2020-01/datalab-essentiel-204-l-empreinte-carbone-des-francais-reste-%20stable-janvier2020.pdf)

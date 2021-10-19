@@ -44,9 +44,9 @@ L’autre manière de réduire l’impact GES associé à nos achats de meubles 
 
 ## Passer à l’action
 Pour acheter de seconde main : 
-- [Emmaus](https://www.label-emmaus.co/fr/)
-- [troc.com](https://www.troc.com/fr/meubles-c10000)
-- [leboncoin](https://www.leboncoin.fr)
+- <https://www.troc.com/fr/meubles-c10000>
+- <https://www.label-emmaus.co/fr/>
+- <https://www.leboncoin.fr>
 
 ## Sources
 [^1]: [L’empreinte carbone des Français reste stable, janvier 2020, Commissariat général au développement durable](https://www.statistiques.developpement-durable.gouv.fr/sites/default/files/2020-01/datalab-essentiel-204-l-empreinte-carbone-des-francais-reste-%20stable-janvier2020.pdf)

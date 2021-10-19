@@ -35,17 +35,17 @@ Le deuxième bénéfice associé à l’allongement de la durée de vie de nos b
 Enfin, la réparation de nos meubles (quand cela est possible) permet aussi de limiter son impact sur le climat. Cela permet, en effet, de retarder la fin de vie du produit. Cette phase de fin de vie contribue elle aussi à l’impact GES global de nos biens d’ameublement du fait de la réémission du carbone dans l’air (carbone considéré capté lors de la phase de production du bois, c’est-à-dire la pousse des arbres). Néanmoins, cet impact peut, selon les produits, être "atténué"  lorsque nos biens d’ameublement sont orientés vers les filières de valorisation énergétique (à ce sujet consulter la fiche sur la fin de vie de nos biens de consommation).
 
 ## Passer à l’action
-Les ateliers de réparation, d’upcycling et de customisation vous aideront à réparer, transformer ou créer à partir d’objets de récupération. Pour trouver les Repair Cafés® proches de chez vous, consultez le site de l’association : ![www.repaircafe.org](www.repaircafe.org/fr)
+Les ateliers de réparation, d’upcycling et de customisation vous aideront à réparer, transformer ou créer à partir d’objets de récupération. Pour trouver les Repair Cafés® proches de chez vous, consultez le site de l’association : <www.repaircafe.org>
 
 Les ressourceries et recycleries sont des lieux dédiés au réemploi et souvent animés par des ateliers et événements consacrés au prolongement des durées de vie de nos objets.
 
-Pour consulter les notices et manuels d’utilisation des différents produits, échanger sur un forum d’entraide et dialoguer directement avec les fabricants : [www.apreslachat.com](www.apreslachat.com)
+Pour consulter les notices et manuels d’utilisation des différents produits, échanger sur un forum d’entraide et dialoguer directement avec les fabricants : <www.apreslachat.com>
 
-Pour trouver des réparateurs : [www.annuairereparation.fr](www.annuairereparation.fr)
+Pour trouver des réparateurs : <www.annuairereparation.fr>
 
-Pour partager des conseils et des astuces sur la réparation des biens : [www.commentreparer.com](www.annuairereparation.fr)
+Pour partager des conseils et des astuces sur la réparation des biens : <www.commentreparer.com>
 
-Les Amis de la Terre proposent des adresses près de chez vous pour donner une seconde vie à vos objets : ![www.produitspourlavie.org](www.produitspourlavie.org/guideReparationReemploi/Guide_Reemploi_Cartes.php)
+Les Amis de la Terre proposent des adresses près de chez vous pour donner une seconde vie à vos objets : <www.produitspourlavie.org>
 
 
 ## Sources

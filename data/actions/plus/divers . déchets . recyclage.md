@@ -55,12 +55,12 @@ Vous souhaitez vérifier que vous respectez bien les consignes de tri pour vos e
 
 Pour connaitre les Points d’Apports Volontaires (PAV) les plus près de chez soi :
 - Textiles, Linges de maison et Chaussures (TLC) : 
-![refashion.fr](https://refashion.fr/citoyen/fr/je-d%C3%A9pose)
+[refashion.fr](https://refashion.fr/citoyen/fr/je-d%C3%A9pose)
 - Mobiliers et biens d’ameublement : 
-![www.eco-mobilier.fr](https://www.eco-mobilier.fr/vos-points-de-collecte-dedies-b2c/)
+[www.eco-mobilier.fr](https://www.eco-mobilier.fr/vos-points-de-collecte-dedies-b2c/)
 - Déchets d’Equipement Electriques et Electroniques :
-	- ![www.ecosystem.eco](https://www.ecosystem.eco/fr/recherche-point-de-collecte)
-	- ![www.ecologic-france.com](https://www.ecologic-france.com/citoyens/ou-deposer-mes-dechets.html)
+	- [www.ecosystem.eco](https://www.ecosystem.eco/fr/recherche-point-de-collecte)
+	- [www.ecologic-france.com](https://www.ecologic-france.com/citoyens/ou-deposer-mes-dechets.html)
 
 ## Sources
 [^1]: [L’empreinte carbone des Français reste stable, janvier 2020, Commissariat général au développement durable](https://www.statistiques.developpement-durable.gouv.fr/sites/default/files/2020-01/datalab-essentiel-204-l-empreinte-carbone-des-francais-reste-%20stable-janvier2020.pdf)

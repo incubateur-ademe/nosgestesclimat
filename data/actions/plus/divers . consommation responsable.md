@@ -48,7 +48,7 @@ Acheter neuf n’est pas une obligation. Faire du neuf avec du vieux est souvent
 
 Une fois la décision d’acheter neuf entérinée, acheter des biens “durables” est essentiel pour réduire son impact sur l’environnement. Mais comment faire ? En choisissant des produits porteurs de labels environnementaux ! Ces labels (portant sur quasiment toutes les catégories de produits, du textile, au bricolage ou encore sur le mobilier et le multimédia) garantissent le respect de critères environnementaux et/ou sociaux. Ainsi, ils s'emploient à vérifier que les produits qu’ils certifient œuvrent à réduire leur impact environnemental tout au long de leur cycle de vie. Plus d’informations sur les labels ici :
 
-https://www.ademe.fr/labels-environnementaux
+<https://www.ademe.fr/labels-environnementaux>
 
 Pour acheter durable, il est aussi intéressant de se renseigner sur le caractère éco-conçu des produits. Cette démarche vise elle aussi à réduire, tout au long du cycle de vie, l’impact environnemental d’un produit. Il est d’ailleurs très fréquent que des produits éco-conçu soient labellisés. Enfin, acheter durable, c’est aussi se préoccuper des conséquences sociales de son acte d’achat. Se tourner vers des biens produits localement (quand cela est possible) permet d’éviter le transport sur plusieurs milliers de km et c’est un geste fort pour le maintien des emplois locaux. 
 En résumé, la consommation durable même si, dans le cas d’un achat, peut s'avérer plus onéreuse, qu’il s’agisse d’avoir acheté labellisé, éco-conçus, ou local, suit le précepte d’acheter moins pour acheter mieux.
@@ -62,23 +62,23 @@ La mode, la publicité et plus généralement les stratégies marketing nous pou
 Ce principe très en lien avec le principe précédent consiste à essayer de faire durer le plus longtemps les biens et produits que nous possédons. Qu’il s’agisse de la réparation d’une panne ou de l’extension de la durée de vie du produit (par rapport à sa durée de vie initiale théorique), c’est autant d'émissions de CO2 évitées et d’euros économisés. A titre d’exemple, réparer son lave-linge si celui tombe en panne (à demi-vie), c’est 105 kgCO2eq évités [^11] (l’équivalent de 410 km parcourus en voiture). Si j’allonge la durée totale d'usage de mes équipements multimédia et électroménagers  d’un an (plutôt que les remplacer), c’est 184 kgCO2eq évités [^12]. Pour en savoir plus, n’hésitez pas à consulter les fiches dédiées à l’augmentation des durées de nos biens et équipements (rubrique Passer à l’action).
 
 ## Passer à l’action
-Pour savoir quel label choisir : https://www.ademe.fr/labels-environnementaux
+Pour savoir quel label choisir : <https://www.ademe.fr/labels-environnementaux>
 
 Les ateliers de réparation, d’upcycling et de customisation vous aideront à réparer, transformer ou créer à partir d’objets de récupération. Pour trouver les Repair Cafés® proches de chez vous, consultez le site de l’association : www.repaircafe.org/f
 
 Pour trouver des réparateurs : www.annuairereparation.fr
 
 Pour louer et se rendre des services entre particulier :
-- https://www.allovoisins.com/
-- https://www.kiwiiz.fr/location-particuliers/
+- <https://www.allovoisins.com/>
+- <https://www.kiwiiz.fr/location-particuliers/>
 
 Pour acheter de seconde main :
-- https://www.backmarket.fr/ 
-- https://www.vinted.fr/ 
-- https://www.leboncoin.fr/ 
-- https://www.label-emmaus.co/fr/
-- https://ressourceries.info/?PagePrincipale 
-- https://vide-greniers.org/ 
+- <https://www.backmarket.fr/>
+- <https://www.vinted.fr/>
+- <https://www.leboncoin.fr/> 
+- <https://www.label-emmaus.co/fr/>
+- <https://ressourceries.info/?PagePrincipale>
+- <https://vide-greniers.org/>
 
 La France expérimente l’affichage environnemental. Son but : informer le consommateur sur les impacts environnementaux globaux des produits qu’il achète. Ce dispositif est pour l’instant volontaire et se concentre sur quelques secteurs seulement : l’habillement, l’ameublement, les produits électroniques, l’alimentation et l’hôtellerie. Pour en savoir plus : https://particuliers.ademe.fr/conso/conso-responsable/etiquettes-affichage-labels-environnementaux-comment-sy-retrouver
 

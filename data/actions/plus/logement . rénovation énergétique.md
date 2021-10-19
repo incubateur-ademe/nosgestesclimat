@@ -28,8 +28,8 @@ Un ménage consacre en moyenne 8,5 % de son budget annuel à ses factures d’é
 
 N’hésitez pas à consulter le site web du réseau [FAIRE](https://www.faire.gouv.fr/) qui est une base d’informations exhaustives sur les techniques et les aides accessibles aux ménages. Vous trouverez également des informations pertinentes sur les aides accessibles aux adresses suivantes :
 
-https://agirpourlatransition.ademe.fr/particuliers/finances/aides-a-renovation   
-https://www.faire.gouv.fr/aides-de-financement/aides-nationales
+<https://agirpourlatransition.ademe.fr/particuliers/finances/aides-a-renovation>
+<https://www.faire.gouv.fr/aides-de-financement/aides-nationales>
 
 Enfin, le guide ADEME Grand Public « Aides financières » [^9] (ainsi que les autres listés dans la section Passage à l’action) sont aussi des ressources utiles et pour comprendre les enjeux techniques et financiers de la rénovation de son système de chauffage.
 
