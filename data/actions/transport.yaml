@@ -1,5 +1,8 @@
 transport . arrêter l'avion: 
   icônes: 🛬🧳
+  action: 
+    dépasse:
+      - transport . arrêter l'avion court
   effort: conséquent
   formule: transport . avion
   description: |
@@ -57,7 +60,7 @@ transport . éco-conduite:
   titre: Adopter une éco-conduite
   effort: faible
   icônes: 🚗☮
-  formule: transport . voiture . impact usage * 15%
+  formule: transport . voiture . empreinte . usage * 15%
   description: |
     L’éco-conduite est une action simple et efficace qui se tient à la portée de tous.  
     
@@ -72,13 +75,16 @@ transport . éco-conduite:
     Guide de formation à l'éco-conduite ADEME-LaPoste: https://www.ademe.fr/sites/default/files/assets/documents/66885_guide_ecoconduite.pdf#page=8
     
 transport . boulot:
+  icônes: 🏢
 transport . boulot . covoiturage:
   titre: Aller au travail en covoiturage
   effort: modéré
-  applicable si: voiture . propriétaire
-  non applicable si: voiture . km = 0
+  applicable si: 
+    toutes ces conditions: 
+      - voiture . propriétaire
+      - voiture . km > seuil d'activation
   icônes: 🚗👥
-  formule: distance . année * voiture . empreinte au kilomètre * réduction covoiturage
+  formule: distance . année * voiture . empreinte . au kilomètre * réduction covoiturage
   description: |
     Si le covoiturage longue distance est bien connu en France, celui des courtes distances est presque inexistant : aujourd’hui seuls 3 % des déplacements domicile-travail sont réalisés en covoiturage.
 
@@ -114,6 +120,7 @@ transport . jours travaillés en voiture:
   par défaut: 4 jours
   unité: jours
   suggestions: 
+    0: 0
     1: 1
     2: 2
     3: 3
@@ -138,6 +145,10 @@ transport . empreinte au km covoiturage: 0.2 kgCO2e/km
 
 
 transport . boulot . commun:
+  action: 
+    dépasse: 
+      - transport . boulot . covoiturage
+      - transport . boulot . télétravail
   titre: Aller au travail autrement qu'en voiture
   effort: conséquent
   icônes: 🚌🚃
@@ -150,10 +161,25 @@ transport . boulot . commun:
 
     > A titre d'exemple les bouchons représentent en Île-de-France par an et par personne [163 heures perdues](https://www.tomtom.com/en_gb/traffic-index/paris-traffic) soit environ 6 jours. 
 
-  non applicable si: voiture . km = 0
+  applicable si: voiture . km > seuil d'activation
   formule: boulot . distance . année * gain empreinte au km
+
+transport . boulot . seuil d'activation: 
+  description: |
+    Distance minimale pour déclencher cette action. 
+
+    > Si quelqu'un nous dit qu'il ne fait que 200km de voiture dans l'année, il y a peu de chances 
+    > qu'il aille en voiture au boulot.
+
+    Nous définitions la distance du seuil à 1km aller, pour 5 jours par semaine.
+
+  formule: nombre de semaines * 5 * 2
+  unité: km
+
+
 transport . boulot . commun . gain empreinte au km:
-  formule: voiture . empreinte au kilomètre - empreinte
+  formule: voiture . empreinte . au kilomètre - empreinte
+
 transport . boulot . commun . empreinte:
   titre: Empreinte transport en commun choisi
   formule:
@@ -219,7 +245,7 @@ transport . tramway . empreinte:
   description: |
     Base Carbone consultée le 02/10/20 Tramway - 2019 - Île-de-France
 
-transport . boulot . télétravail: 
+transport . boulot . télétravail:
   titre: Faire du télétravail
   effort: conséquent
   icônes: 🏠💻
@@ -229,12 +255,19 @@ transport . boulot . télétravail:
     Il n'est évidemment pas possible pour de nombreux salariés, mais la crise sanitaire de 2020 a montré que beaucoup de métiers sont effectivement télétravaillables.
 
     Dans ce calcul, nous ne prenons en compte que les jours télétravaillés qui évitent un déplacement en voiture individuelle.
-  applicable si: compatible
-  non applicable si: voiture . km = 0
-  formule: empreinte jour voiture * jours télétravaillés * 47
+  applicable si: 
+    toutes ces conditions: 
+      - compatible
+      - voiture . km > seuil d'activation
+      - jours travaillés en voiture > 0
+  formule: empreinte jour voiture * jours gagnés * 47
+
+transport . boulot . jours gagnés: 
+  valeur: jours télétravaillés
+  plafond: jours travaillés en voiture
 
 transport . boulot . empreinte jour voiture: 
-  formule: (distance * 2) * voiture . empreinte au kilomètre
+  formule: (distance * 2) * voiture . empreinte . au kilomètre
   unité: kgCO2e/jours
 
 transport . boulot . jours télétravaillés:
@@ -257,10 +290,11 @@ transport . boulot . télétravail . compatible:
 transport . voiture 5km: 
   titre: Se passer de voiture pour moins de 5 km 
   icônes: 🚗🚲
-  formule: distance totale * voiture . empreinte au kilomètre
+  formule: distance totale * voiture . empreinte . au kilomètre
+  non applicable si:
+    voiture . km < seuil d'activation
   description: |
-    En France, 4 trajets en voiture sur 10 font moins de 3 km et ce n’est pas moins de 177 millions de trajets de moins de 5km qui sont réalisés seuls 
-    en voiture chaque semaine (hors trajets domicile-travail). 
+    En France, 4 trajets en voiture sur 10 font moins de 3 km et ce n’est pas moins de 177 millions de trajets de moins de 5km qui sont réalisés seuls en voiture chaque semaine (hors trajets domicile-travail). 
 
     L’ensemble de ces trajets « courts » mis bout à bout présentent, à l’échelle de la France, près de 10% de la distance totale parcourue en voiture chaque année. 
 
@@ -270,12 +304,23 @@ transport . voiture 5km:
   # 4 trajets en voiture sur 10 font moins de 3 km +  10% de la distance totale parcourue = Transflash, N°398, Juin 2015, Cerema
   # 177 millions de trajets de moins de 5km = consolidation depuis Enquête Nationale Transport et Déplacements (ENTD), MTES, 2008.
 
+transport . voiture 5km . seuil d'activation: 
+  description: |
+    Distance minimale pour déclencher cette action. 
+
+    > Si quelqu'un nous dit qu'il ne fait que 200km de voiture dans l'année, il y a peu de chances 
+    > qu'il s'agisse de trajets de 5km.
+
+  formule: nombre de semaines * distance moyenne . aller-retour
+  unité: km
+
 transport . voiture 5km . distance totale:
   formule:  fréquence * distance moyenne . aller-retour * nombre de semaines
 
   
 transport . voiture 5km . distance moyenne . aller-retour:
   formule: distance moyenne * 2
+
 transport . voiture 5km . distance moyenne:
   formule: 2.5
   unité: km/trajets
@@ -289,7 +334,8 @@ transport . voiture 5km . fréquence :
   par défaut: 14
   unité: trajets
   suggestions: 
-    2 fois par jour: 14
-    1 fois par jour: 7
-    du lundi au vendredi: 5
-    uniquement le weekend : 2
+    jamais: 0
+    seulement le weekend : 2
+    dans la semaine: 5
+    chaque jour: 7
+    deux trajets par jour: 14
