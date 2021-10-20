@@ -6,7 +6,7 @@ Nos poubelles renferment un gisement de matière et d’énergie encore mal expl
 ![](https://ecolab-data.netlify.app/images/Chiffres-cles_trier-ses-dechets_v2.png)
 
 ## Impact GES moyen de l’action
-Il est difficile de quantifier l’impact de cette action à l’échelle individuelle. Néanmoins, en France, sur une année et de manière globale (i.e. portant sur les déchets des ménages, des entreprises et des collectivités), le recyclage a contribué à (1) :
+Il est difficile de quantifier l’impact de cette action à l’échelle individuelle. Néanmoins, en France, sur une année et de manière globale (i.e. portant sur les déchets des ménages, des entreprises et des collectivités), le recyclage a contribué à [^1] :
 - éviter les émissions de **23 millions de tonnes de CO2**,
 - éviter la consommation de **64 TWh d’énergie** soit l’équivalent de la production annuelle de trois à quatre centrales nucléaires (le parc français en compte 19)
 
@@ -16,14 +16,14 @@ Recycler, même à son échelle, c’est donc participer à cette économie de m
  
  ![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/trier-dechets-consommation-fig1.jpg)
  
-```Figure 1 : Impact GES de la réincorporation d’une tonne de matériaux (source (2))```
+```Figure 1 : Impact GES de la réincorporation d’une tonne de matériaux```[^2]
 
 ## Chiffres clés à retenir
 - Avec un taux de recyclage moyen d’environ 20 % (26 % en Europe), la France se situe parmi les pays européens réalisant les moins bonnes performances pour le recyclage des déchets en plastique quand bien même la Feuille de Route Economie Circulaire (FREC) prévoit d’atteindre 100 % de plastiques recyclés à l’horizon 2025. 
 - Le taux d’incorporation réel de plastique recyclé dans la confection de nouveaux objets plastiques est seulement de 6 % (2 - Annexe 8)
-- Réussir à réincorporer 1 tonne de plastique, c’est un gain de 3 tonnes de CO2eq (2) soit presque l’équivalent de 15 500 km parcourus en voiture
-- Le secteur des déchets compte pour 3% des émissions de GES nationales (14 Mt CO2eq) (3)
-- Sans collecte séparée, pas de recyclage. Une amélioration du tri pourrait permettre la collecte de tous les matériaux recyclables. Ainsi, en 2017 (1) :
+- Réussir à réincorporer 1 tonne de plastique, c’est un gain de 3 tonnes de CO2eq [^2] soit presque l’équivalent de 15 500 km parcourus en voiture
+- Le secteur des déchets compte pour 3% des émissions de GES nationales (14 Mt CO2eq) [^3]
+- Sans collecte séparée, pas de recyclage. Une amélioration du tri pourrait permettre la collecte de tous les matériaux recyclables. Ainsi, en 2017 [^1] :
 	- 48 % des déchets sont collectés en mélange dans la poubelle grise, soit 254 kg/hab
 	- 21 % sont collectés triés par les ménages, soit 109 kg/hab
 	- 31 % sont apportés en déchetterie, soit 162 kg/hab
@@ -37,10 +37,10 @@ Recycler, même à son échelle, c’est donc participer à cette économie de m
 	- 14 % vers de la valorisation organique, 
 	- le reste est éliminé en stockage ou incinéré.
 
-- Au final, seulement 40 % des déchets des ménages sont orientés vers le recyclage  (30 % si l’on considère les Déchets Ménagers et Assimilés (1)). Pour atteindre un recyclage maximal de nos déchets, il est fondamental d’améliorer les collectes séparées.
+- Au final, seulement 40 % des déchets des ménages sont orientés vers le recyclage  (30 % si l’on considère les Déchets Ménagers et Assimilés [^1]). Pour atteindre un recyclage maximal de nos déchets, il est fondamental d’améliorer les collectes séparées.
 
 ## Explication
-La production d’ordures ménagères a doublé en 40 ans (4) même si ces dernières tendent à se réduire depuis ces 10 dernières années (327 kg/hab/an en 2005 contre 254 kg/hab/an en 2017 (5)). Il n’en reste pas moins que nos poubelles renferment de grandes quantités de matière première et d’énergie pouvant être réutilisées, mais pour cela, il faut s’assurer que nos déchets partent “au bon endroit” (i.e. soient orientés vers la bonne filière de traitement). 
+La production d’ordures ménagères a doublé en 40 ans [^4] même si ces dernières tendent à se réduire depuis ces 10 dernières années (327 kg/hab/an en 2005 contre 254 kg/hab/an en 2017 [^5]). Il n’en reste pas moins que nos poubelles renferment de grandes quantités de matière première et d’énergie pouvant être réutilisées, mais pour cela, il faut s’assurer que nos déchets partent “au bon endroit” (i.e. soient orientés vers la bonne filière de traitement). 
 
 C’est pour cela qu’a été instauré la collecte séparée, première étape du cycle de recyclage de nos déchets. Cette collecte séparée est essentielle et sans elle, il n’y a pas de recyclage. Oeuvrer donc à trier activement ces déchets permet de contribuer à l’efficacité des filières de recyclage des déchets qui permettent en retour de nombreux bénéfices :
 - Quand le tri est bien réalisé, les flux de matières sont suffisamment homogènes pour éviter d’avoir à les trier a posteriori  (on parle de « sur-tri »). Trier à la source permet donc d’améliorer la qualité des matériaux à recycler, et de réduire les interventions ultérieures de sur-tri, ce qui économise de l’énergie et diminue, par conséquent, les émissions de GES associées au process.
@@ -55,10 +55,10 @@ N’hésitez pas à consulter d’autres fiches actions en lien avec le recyclag
 - Recycler correctement ses biens de consommation
 
 ## Sources
-(1) : Déchets chiffres clés, 2019, ADEME
-(2) : Les filières de recyclage de déchets en France métropolitaine, Rapport à Madame la Ministre de la Transition écologique et solidaire, janvier 2020.
-(3) Haut Conseil pour le Climat. La position du Haut Conseil pour le Climat. Juin 2019
-(4) : Des GES dans ma poubelle ?, 2010, Réseau Action Climat
-(5) : Evolution des ratios de déchets par habitant desservi, Sinoe 
+[^1]: [Déchets chiffres clés, 2020, ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/28-dechets-chiffres-cles-edition-2020-9791029712135.html)
+[^2]: [Les filières de recyclage de déchets en France métropolitaine (annexe 8), Rapport à Madame la Ministre de la Transition écologique et solidaire, janvier 2020](https://www.economie.gouv.fr/files/files/directions_services/cge/filieres-dechets-recyclage.pdf)
+[^3]: [Haut Conseil pour le Climat. La position du Haut Conseil pour le Climat. Juin 2019](https://www.hautconseilclimat.fr/publications/rapport-2019/)
+[^4]: [Des GES dans ma poubelle ?, 2010, Réseau Action Climat](https://reseauactionclimat.org/publications/gaz-effet-serre-poubelle/)
+[^5]: Evolution des ratios de déchets par habitant desservi, Sinoe 
 
 

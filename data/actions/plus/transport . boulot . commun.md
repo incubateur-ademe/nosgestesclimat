@@ -26,25 +26,23 @@ Depuis le 5 mai 2020, la subvention de vos titres d’abonnements peut s’accom
 
 ## Chiffres clés à retenir
 
-- 70% des déplacements domicile-travail sont réalisés avec des véhicules individuels, la plupart en autosolisme (1)
-- Environ 15 millions de déplacements sont effectués par jour (du lundi au vendredi) en transports collectifs pour une distance moyenne de 11 km :  ⅓ de ces 15 millions de déplacements sont réalisés pour une distance comprise entre 2 et 5 km et ⅓ pour une distance comprise entre 5 et 10 km (2)
-- Nous sommes toujours plus nombreux sur la route : +1.5 % d’augmentation par an de la circulation routière en moyenne (3).
-- Les bouchons représentent, à l’échelle de l’Ile de France, un temps perdu chaque année, par personne, de 163 heures soit 6 jours et 19 minutes (4).
+- 70% des déplacements domicile-travail sont réalisés avec des véhicules individuels, la plupart en autosolisme [^1]
+- Environ 15 millions de déplacements sont effectués par jour (du lundi au vendredi) en transports collectifs pour une distance moyenne de 11 km :  ⅓ de ces 15 millions de déplacements sont réalisés pour une distance comprise entre 2 et 5 km et ⅓ pour une distance comprise entre 5 et 10 km [^2]
+- Nous sommes toujours plus nombreux sur la route : +1.5 % d’augmentation par an de la circulation routière en moyenne [^3].
+- Les bouchons représentent, à l’échelle de l’Ile de France, un temps perdu chaque année, par personne, de 163 heures soit 6 jours et 19 minutes [^4].
 
 ## Explication
-La voiture occupe une place prépondérante, voire quasi exclusive, pour les déplacements domicile-travail d’un très grand nombre de français. Malgré les progrès technologiques, c’est le seul secteur dont les émissions augmentent de manière constante (+ 11 % depuis 1990) (3). Les transports représentent un tiers des émissions de gaz à effet de serre en France : 95 % d'entre elles sont dus au transport routier, dont 54 % aux seules voitures, les poids lourds et les véhicules utilitaires représentant respectivement 22 % et 21 % des émissions du secteur transport (3).
+La voiture occupe une place prépondérante, voire quasi exclusive, pour les déplacements domicile-travail d’un très grand nombre de français. Malgré les progrès technologiques, c’est le seul secteur dont les émissions augmentent de manière constante (+ 11 % depuis 1990) [^3]. Les transports représentent un tiers des émissions de gaz à effet de serre en France : 95 % d'entre elles sont dus au transport routier, dont 54 % aux seules voitures, les poids lourds et les véhicules utilitaires représentant respectivement 22 % et 21 % des émissions du secteur transport [^3].
 
 Sans remettre en cause la nécessité réelle de ce besoin pour nombre de français, ces trajets quotidiens se font souvent seul en voiture. On parle d’autosolisme. Cette pratique contribue fortement à augmenter notre empreinte carbone individuelle et plus généralement, notre impact sur le climat. 
 
 A l’inverse, les transports en commun, lorsque les offres existent, sont des alternatives bien moins polluantes que la voiture (cf. Figure 1) étant donné qu’ils permettent de transporter un plus grand nombre de passagers en même temps. Néanmoins, les transports en commun n’ont pas la flexibilité de la voiture au sens où ces derniers ne peuvent pas, en général, nous emmener du pas de notre porte à celle de notre travail, en résulte des temps de transport souvent allongés. Par ailleurs, l’offre de transport en commun n’existe pas encore partout. C’est pourquoi, de multiples aménagements sont en cours de réalisation dans de nombreuses villes afin de coller au mieux aux besoins des individus : installation de parkings sécurisés pour vélos aux abords de la gare, mise à disposition de trottinettes et de vélos en libre service pour réaliser rapidement les derniers mètres entre l’arrêt du transport en commun et le lieu de destination, etc. S'il n'est pas possible de se rendre au travail en transports en commun, le covoiturage peut être une solution alternative pour réduire son empreinte carbone individuelle. A ce sujet, n’hésitez pas à consulter la fiche dédiée au covoiturage pour les trajets domicile-travail.
 
 ## Passer à l’action
-Vous souhaitez évaluer l’impact GES de vos déplacements, le simulateur Mon Impact Transport est là pour vous aider au calcul : https://monimpacttransport.fr 
+Vous souhaitez évaluer l’impact GES de vos déplacements, le simulateur Mon Impact Transport est là pour vous aider au calcul : <https://monimpacttransport.fr>
 
 ## Sources
-(1) : https://www.ecologie-solidaire.gouv.fr/covoiturage-en-france-avantages-et-reglementationen-vigueur
-(2) : Enquête Nationale Transport et Déplacements (ENTD), Ministère de la Transition écologique et Solidaire, 2008.
-(3) : La mobilité en 10 questions, septembre 2020, ADEME
-(4) : Trafic Index, Paris trafic, TomTom : https://www.tomtom.com/en_gb/traffic-index/paris-traffic/
-(5) : Efficacités énergétique et environnementale des modes de transports, synthèse publique, janvier 2008, étude réalisé par DELOITTE pour l’ADEME
-
+[^1]: [Le covoiturage en France, ses avantages et la réglementation en vigueur](https://www.ecologie-solidaire.gouv.fr/covoiturage-en-france-avantages-et-reglementationen-vigueur)
+[^2]: [Enquête Nationale Transport et Déplacements (ENTD), Ministère de la Transition écologique et Solidaire, 2008.](https://www.statistiques.developpement-durable.gouv.fr/enquete-nationale-transports-et-deplacements-entd-2008)
+[^3]: [La mobilité en 10 questions, septembre 2020, ADEME](https://agirpourlatransition.ademe.fr/particuliers/sites/default/files/2020-09/guide-mobilite-10-questions.pdf)
+[^4]: [Zero Empty Seats, Blablacar, 2019](https://blog.blablacar.fr/blablalife/lp/zeroemptyseats)
