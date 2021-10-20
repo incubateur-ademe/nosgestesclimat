@@ -39,7 +39,7 @@ alimentation . boisson . chaude:
   formule:
     multiplication:
       assiette: tasse de thé + tasse de café
-      facteur: 365
+      facteur: 365 * logement . habitant  #On reprend la variable logement en attendant d'avoir une variable globale. A affiner en foncion des parents 
   note: Nous faisons une moyenne très grossière, en attendant de poser la question de la consommation individuelle.
 
 alimentation . boisson . tasse de thé:
@@ -65,8 +65,8 @@ alimentation . boisson . froide:
       - eau en bouteille
 
 alimentation . boisson . eau en bouteille:
-  applicable si: affirmatif
-  formule: consommation annuelle * empreinte    
+  applicable si: nombre > 0
+  formule: consommation annuelle * empreinte * nombre    
 
   références: 
     - http://www.bilans-ges.ademe.fr/
@@ -89,10 +89,15 @@ alimentation . boisson . eau en bouteille . empreinte:
     Cette hypothèse semble très contestable, car ce format correspond plutôt à une consommation en dehors du foyer (cinéma, restauration, etc.).
 
 
-alimentation . boisson . eau en bouteille . affirmatif:
+alimentation . boisson . eau en bouteille . nombre:
   titre: Eau en bouteille
-  question: Buvez-vous votre eau en bouteille ?
-  par défaut: non
+  question: Combien de personnes boivent de l’eau en bouteille ?
+  par défaut: 0 personnes
+  unité: personnes
+  suggestions:  
+    une : 1
+    deux: 2
+    trois: 3
   description: |
     Si vous buvez principalement de l'eau du robinet et que votre consommation d'eau en bouteille se réduit à de rares occasions (par exemple un repas sur le pouce en boulangerie par semaine, avec leur fameux menu "sandwich + dessert + boisson en bouteille plastique"), répondez non.
 
@@ -160,7 +165,7 @@ alimentation . déjeuner et dîner . par semaine:
 alimentation . plats:
   titre: Empreinte de 14 repas
   description: |
-      A choisir : 14 plats types pour représenter une semaine complète de repas midi et soir (donc, petit déjeuner non inclus). 
+      A choisir : 14 plats types pour représenter votre semaine complète de repas midi et soir (donc, petit déjeuner non inclus). 
 
       Ceci est la somme de l'empreinte de ces 14 plats.
   formule: 
@@ -374,65 +379,53 @@ alimentation . petit déjeuner annuel:
   icônes: 🥐☕
   formule: petit déjeuner * 365
 
-alimentation . petit déjeuner: 
+alimentation . petit déjeuner:
+  titre: Empreinte des petits-déjeuners du foyer
   formule:
-    variations: 
-      - si: type = 'français'
-        alors: français
-      - si: type = 'lait céréales'
-        alors: lait céréales
-      - sinon: 0
+    somme: 
+      - français * français . nombre
+      - lait céréales
+      - aucun * aucun . nombre
 
-alimentation . petit déjeuner . type: 
-  question: Quel petit déjeuner vous correspond le plus ?
-  description: |
-    Il existe une variété infinie de petit déjeuners. Nous en avons sélectionné quelques uns pour que vous obteniez une réponse facilement.
+alimentation . petit déjeuner . lait céréales . nombre:
+  question: Nombre de petit-déjeuner lait céréales pour un jour type
+  par défaut: 1
+  période: semaine
 
-    Il manque votre petit déjeuner et vous pensez ne pas pas être le seul à l'apprécier ? [Écrivez-nous](/contribuer).
-
-  par défaut: "'français'"
-  formule:
-    une possibilité: 
-      choix obligatoire: oui
-      possibilités: 
-        - français
-          #        - britannique
-        - lait céréales
-          # - lait végétal céréales
-        - aucun
 alimentation . petit déjeuner . lait céréales: 
   note: | 
     Vérifier ces proportions issues de FoodGES : correspondent-elles à un petit déjeuner moyen ?
   formule: 
     somme: 
-      - lait
-      - céréales
-
-alimentation . lait: 
-  formule: empreinte * poids
-alimentation . lait . empreinte: 
-  formule: 
-    variations: 
-      - si: type = 'lait végétal'
-        alors: 0.950
-      - sinon: 1.390
-  unité: kgCO2e/kg
-  note: |
-    Pour le lait, en l'asbsence de données dans FoodGES pour le lait de soja, nous utilisons cette étude [Comparison between cow milk and soy milk combining nutritional values and GHG data](https://www.researchgate.net/publication/317600130_Comparison_between_cow_milk_and_soy_milk_combining_nutritional_values_and_GHG_data). 
-
-    Notons que l'empreinte du lait de vache estimée dans FoodGES est inférieure à celle de cette étude, mais dans le cadre de cette question nous préférons comparer deux empreintes obtenues par la même méthode.
-
-    La base agribalyse v3, qui sera disponible en octobre 2020, pourrait consolider ces données.
+      - lait de vache
+      - lait végétal
+      - céréales * lait de vache . nombre
+      - céréales * lait végétal . nombre
 
 alimentation . lait . type:
-  question: Quel type de lait consommez-vous ? 
-  par défaut: "'lait de vache'"
-  formule:
-    une possibilité: 
-      choix obligatoire: oui
-      possibilités: 
-        - lait de vache
-        - lait végétal
+  question: Pour les consommateurs de lait, quel type de lait consommez-vous ? 
+
+alimentation . lait de vache . nombre:
+  question: Nombre de consommateur de lait de vache
+  par défaut: 1
+
+alimentation . lait de vache: 
+  formule: empreinte * lait . poids * nombre
+  
+alimentation . lait de vache . empreinte:
+  formule: 0.950
+  unité: kgCO2e/kg
+  
+alimentation . lait végétal . nombre:
+  question: Nombre de consommateur de lait végétal
+  par défaut: 1
+  
+alimentation . lait végétal: 
+  formule: empreinte * lait . poids * nombre
+  
+alimentation . lait végétal . empreinte:
+  formule: 1.390
+  unité: kgCO2e/kg
 
 alimentation . lait . type . lait de vache:
 alimentation . lait . type . lait végétal:
@@ -457,6 +450,11 @@ alimentation . céréales . poids:
   formule: 0.135
   unité: kg
   note: Pourquoi dans FoodGES la masse d'ingrédient "consommables" est-elle très supérieure à la masse "sortie de magasin" dans l'onglet details_Plats ?
+
+alimentation . petit déjeuner . français . nombre:
+  question: Nombre de petit-déjeuner lait céréales pour un jour type
+  par défaut: 1
+  période: semaine
 
 alimentation . petit déjeuner . français: 
   note: |
@@ -506,8 +504,14 @@ alimentation . orange:
   références: 
     - https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
 
+alimentation . petit déjeuner . aucun:
+  formule: 0
+  unité: kgCO2e/kg
 
-
+alimentation . petit déjeuner . aucun . nombre:
+  question: Nombre de personne ne prenant pour un jour type
+  par défaut: 0
+  période: semaine
 
 
 alimentation . petit déjeuner . type . aucun:
