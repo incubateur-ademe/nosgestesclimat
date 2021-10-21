@@ -20,7 +20,8 @@ logement . baisse température . nombre degrés:
     Elle peut toutefois facilement être limitée en diminuant la température des pièces occupées sans perdre de confort thermique ou bien ressentir une sensation de froid (à condition d’avoir des logements bien isolés). 
     Ainsi, régler la température entre 19° et 21°C dans les pièces occupées la journée (et 17°C la nuit ou dans les pièces peu occupées) permet de contribuer à réduire son impact sur le climat.
     En effet, baisser la température de chauffage d’1°C représente une économie d’énergie de 7%.
-  par défaut: 1   
+  par défaut: 1
+  unité: degrés   
   suggestions:
     je ne souhaite pas diminuer mon chauffage: 0
     1 degré: 1
@@ -43,33 +44,52 @@ logement . baisse température . gains 1 degré:
     Où est la source pour ces 7% ? Peut-on décliner ce chiffre pour chaque type d'énergie (bois, gaz, etc.) ? Quelle est la sensibilité de ce chiffre au type de logement, son isolation, etc. ?
 
 logement . empreinte chauffage:
-  formule:
-    somme: 
-      - électricité * part chauffage . électricité
-      - gaz * part chauffage . gaz
-      - bois . empreinte * part chauffage . bois
-      - fioul * part chauffage . fioul
-  note: |
-    Ici, nous proposons ce calcul simplifié. Il est assez théorique, car on peut chauffer son logement au bois, tout en ayant une consommation d'électricité sans chauffage. C'est une 1ère estimation.
-
-logement . part chauffage:
-  formule: oui
+  formule: 
+    variations: 
+      - si: chauffage électrique = 'oui uniquement électrique'
+        alors: électricité * part chauffage électricité
+      - si: chauffage électrique = 'en partie'
+        alors:
+          somme:
+            - électricité * part chauffage électricité
+            - gaz * part chauffage gaz
+            - bois . empreinte * part chauffage bois
+            - fioul * part chauffage fioul
+      - si: chauffage électrique = 'mon logement est chauffé autrement'
+        alors:
+          somme:
+            - gaz * part chauffage gaz
+            - bois . empreinte * part chauffage bois
+            - fioul * part chauffage fioul
   description: |
     Pour chaque kWh de chaque type d'énergie, quelle est la part utilisée pour le chauffage de l'air d'un foyer ? 
 
     Nous utilions ici [les données du CEREN](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel) pour calculer ces ratios, onglet `Conso 1982-2018`.
+  note: |
+    Ici, nous proposons ce calcul simplifié. Il est assez théorique, car on peut chauffer son logement au bois, tout en ayant une consommation d'électricité sans chauffage. C'est une 1ère estimation.
 
-logement . part chauffage . électricité:
-  titre: Part de l'électricité dans le chauffage
+logement . chauffage électrique:
+  question: Votre mode de chauffage est-il électrique ?
+  par défaut: "'en partie'"
+  formule:
+    une possibilité: 
+      choix obligatoire: oui
+      possibilités: 
+        - oui uniquement électrique
+        - en partie
+        - mon logement est chauffé autrement
+
+logement . chauffage électrique . oui uniquement électrique:
+logement . chauffage électrique . en partie:
+logement . chauffage électrique . mon logement est chauffé autrement:
+
+logement . part chauffage électricité:
   formule: 33.8 / 143
-logement . part chauffage . gaz:
-  titre: Part du gaz dans le chauffage
+logement . part chauffage gaz:
   formule: 119.6 / 144.8
-logement . part chauffage . bois:
-  titre: Part du bois dans le chauffage
+logement . part chauffage bois:
   formule: 82.4 / 82.8
-logement . part chauffage . fioul:
-  titre: Part du fioul dans le chauffage
+logement . part chauffage fioul:
   formule: 37.8 / 43.3
 
 
