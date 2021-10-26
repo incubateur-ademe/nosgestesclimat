@@ -32,7 +32,8 @@ logement . baisse température . nombre degrés:
     3 degrés: 3
 
 logement . baisse température . température:
-  question: A quelle température chauffez-vous votre logement ?
+  question: À quelle température chauffez-vous votre logement ?
+  description: Cette question nous permet simplement de ne pas vous proposer de baisser la température quand elle est déjà relativement faible. 
   icônes: 🌡
   par défaut: 20
   unité: degrés
@@ -49,7 +50,7 @@ logement . baisse température . gains 1 degré:
 logement . empreinte chauffage:
   formule: 
     variations: 
-      - si: chauffage électrique = 'oui uniquement électrique'
+      - si: chauffage électrique = 'uniquement'
         alors: électricité * part chauffage électricité
       - si: chauffage électrique = 'en partie'
         alors:
@@ -58,7 +59,7 @@ logement . empreinte chauffage:
             - gaz * part chauffage gaz
             - bois . empreinte * part chauffage bois
             - fioul * part chauffage fioul
-      - si: chauffage électrique = 'mon logement est chauffé autrement'
+      - si: chauffage électrique = 'autrement'
         alors:
           somme:
             - gaz * part chauffage gaz
@@ -74,17 +75,24 @@ logement . empreinte chauffage:
 logement . chauffage électrique:
   question: Votre mode de chauffage est-il électrique ?
   par défaut: "'en partie'"
+  description: |
+    Certains logements sont chauffés entièrement à l'électricité, d'autres sont entièrement chauffés avec du gaz, et plus rarement du bois ou du fioul. 
+
+    > Dans d'autres situations encore, un logement peut être chauffé principalement à l'électricité, mais avec un appoint bois, par exemple. C'est l'option `En partie`.
   formule:
     une possibilité: 
       choix obligatoire: oui
       possibilités: 
-        - oui uniquement électrique
+        - uniquement
         - en partie
-        - mon logement est chauffé autrement
+        - autrement
 
-logement . chauffage électrique . oui uniquement électrique:
+logement . chauffage électrique . uniquement:
+  titre: oui uniquement électrique
 logement . chauffage électrique . en partie:
-logement . chauffage électrique . mon logement est chauffé autrement:
+  titre: En partie électrique 
+logement . chauffage électrique . autrement:
+  titre: Il est chauffé autrement
 
 logement . part chauffage électricité:
   formule: 33.8 / 143
