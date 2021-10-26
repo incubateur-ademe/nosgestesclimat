@@ -158,6 +158,18 @@ alimentation . déjeuner et dîner:
 alimentation . déjeuner et dîner . par semaine:
   formule: plats
 
+alimentation . déjeuner et dîner:
+  formule: par semaine * 52
+alimentation . déjeuner et dîner . par semaine:
+  formule: 
+    variations:
+      - si: local = 'toujours'
+        alors: plats local
+      - si: local = 'parfois'
+        alors: plats - ((plats - plats local) * coefficient local)
+      - sinon: plats
+      
+
 alimentation . plats:
   titre: Empreinte de 14 repas
   description: |
@@ -190,9 +202,19 @@ alimentation . plats:
       
       Nous y ajoutons le régime végétalien, variation du végétarien.
 
-
 références: 
   - https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
+
+alimentation . plats local:
+  formule: 
+    somme:
+      - alimentation . plats . viande 1 / 1,01
+      - alimentation . plats . viande 2 / 1,04
+      - alimentation . plats . végétarien / 1,12
+      - alimentation . plats . végétalien / 1,17
+  note: |
+    Ces coefficients sont obtenus en reconstituant les repas types de la Base Carbone avec des produits équivalents issus d'Agribalyse et en considérant 
+    une part de transport divisé par 2. Pluc concrètement le ratio = plat reconstitué / plat reconstitué avec une part transport divisée par 2 
 
 alimentation . plats . végétalien:
   formule: empreinte * nombre
@@ -456,6 +478,28 @@ alimentation . planétaire:
 
     ![](https://eatforum.org/content/uploads/2019/02/EAT-Lancet_PHD_Plate_RGB-02.png)
 
+
+alimentation . local:
+  question: Vos aliments sont-ils d'origine locale ?
+  note: |
+    Nous entendons par "locale" le fait que les aliments soient issus de la région ou vous vivez ou de régions proches. Si vous manger "français" considérez votre alimentation
+    comme "locale"
+  par défaut: Non, je ne fais pas attention à leur provenance
+  une possibilité: 
+      choix obligatoire: oui
+      possibilités:
+        - Non, je ne fais pas attention à leur provenance
+        - parfois
+        - toujours  
+    
+alimentation . coefficient local:
+  formule:
+    variations:
+      - si: saison = 'Non, je ne fais pas attention à leur provenance'
+         alors: 1
+      - sinon: 0.5
+    
+
 alimentation . petit déjeuner annuel: 
   titre: Petit déjeuner
   icônes: 🥐☕
@@ -629,6 +673,7 @@ alimentation . petit déjeuner . type . britannique:
     Le traditionnel déjeuner anglais ou irlandais : toasts, oeufs, bacon, baked beans, saucisses, tomates, champignons, pommes de terre. 
   références: 
     - https://fr.wikipedia.org/wiki/Petit_déjeuner_anglais
+    
 
 alimentation . de saison:
   icone: 🍅🌞
