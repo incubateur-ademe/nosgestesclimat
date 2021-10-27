@@ -139,52 +139,39 @@ alimentation . déchets . action:
   inactive: oui
   
 alimentation . manger de saison:
-  non applicable si: saison = 'jamais'
+  applicable si: de saison . consommation = non
   titre: Manger en respectant les saisons
   icônes: 🍅🌞
   effort: modéré
-  formule: (déjeuner et dîner - déjeuner et dîner saison) * coefficient saison
+  formule: part saisonable / ratio
   description: |
-    Blabla
+    Contrairement à ce qu'on pourrait imaginer, l'impact de cette action est relativement faible car la part de produits saisonables représente seulement 7% de l'alimentation moyenne d'un français.
+    En effet, dans une première approche, nous avons choisi d'estimer la part de produits saisonnables dans le [repas moyen français](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm)
+    calculé à partir de l'enquête INCA 3 (2017).
+    Ces produits correspondent aux fruits et légumes, susceptibles d'être achetés "directement" de saison, mais également d'autres produits transformés, tels que
+    les jus de fruits, soupes, compotes, pouvant être achetés en connaissance de la date de production du produit.
+    Cette approche est une première estimation qui pourra être affinée par la suite. A titre d'exemple, on peut supposer que l'impact de cette action sera plus importante pour les régimes 
+    végétalisés, ce qui n'est pas pris en compte ici.
 
-alimentation . saison:
-  question: Consommez vous des aliments en dehors de leur saison de production ?
-  par défaut: parfois
-  formule:
-    une possibilité: 
-      choix obligatoire: oui
-      possibilités:
-        - oui je ne fais pas attention à la saison
-        - parfois
-        - jamais  
-
-alimentation . saison . oui je ne fais pas attention à la saison:
-alimentation . saison . parfois:
-alimentation . saison . jamais:
-
-alimentation . coefficient saison:
-  formule:
-    variations:
-      - si: saison = 'oui je ne fais pas attention à la saison'
-        alors: 1
-      - sinon: 0.5
-
-alimentation . plats saison:
-  formule: 
-    somme:
-      - alimentation . plats . viande 1
-      - alimentation . plats . viande 2
-      - alimentation . plats . végétarien / 2.42
-      - alimentation . plats . végétalien / 2.42
-  note: |
+alimentation . manger de saison . ratio:
+  formule: 2.42
+  description: |
     Ce coefficient de 2,42 est issu d'Agribalyse en réalisant la moyenne des ratios d'un même produit considéré "de saison" et "hors saison".
     Ce coefficient est sujet à une forte incertitude étant donné que la donnée de saison/hors saison ne concerne que 2 produits dans Agribalyse (la tomate et la fraise).
 
-alimentation . déjeuner et dîner saison:
-  formule: par semaine * 52
-alimentation . déjeuner et dîner saison . par semaine:
-  formule: plats saison
+alimentation . manger de saison . part saisonable:
+  formule: pourcentage saisonable * (petit déjeuner annuel + déjeuner et dîner)
+  description: |
+    Le pourcentage de produits saisonables est appliqué à l'ensemble des repas d'un individu.
 
+alimentation . manger de saison . pourcentage saisonable:
+  formule: 0.073
+  description: |
+    Dans une première approche, nous avons choisi d'estimer la part de produits saisonnables dans le [repas moyen français](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm)
+    calculé à partir de l'enquête INCA 3 (2017).
+    Ces produits correspondent aux fruits et légumes, susceptibles d'être achetés "directement" de saison, mais également d'autres produits transformés, tels que
+    les jus de fruits, soupes, compotes, pouvant être achetés en connaissance de la date de production du produit.
+    Nous avons choisi d'exclure les pommes de terre du calcul étant donné que la récolte est possible toute l'année.
 
 alimentation . boisson . eau en bouteille . arrêter:
   applicable si: affirmatif
