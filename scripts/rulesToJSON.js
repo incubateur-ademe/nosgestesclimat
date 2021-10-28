@@ -11,7 +11,7 @@ glob('data/**/*.yaml', (err, files) => {
 		const rules = yaml.parse(data)
 		return { ...memo, ...rules }
 	}, {})
-	glob('data/actions/plus/*.md', (err2, mdFiles) => {
+	glob('data/actions-plus/*.md', (err2, mdFiles) => {
 		const rulesPlus = mdFiles.reduce((memo, filename) => {
 			const data = fs.readFileSync('./' + filename, 'utf8')
 			const dottedName = filename.replace(/(data\/actions\/plus\/|\.md)/g, '')
