@@ -139,19 +139,28 @@ alimentation . déchets . action:
   inactive: oui
   
 alimentation . manger de saison:
-  applicable si: de saison . consommation = non
+  #applicable si: de saison . consommation = non
+  inapplicable si: consommation = 'oui toujours'
   titre: Manger en respectant les saisons
   icônes: 🍅🌞
   effort: modéré
-  formule: part saisonable / ratio
+  #formule: part saisonable / ratio
+  formule:
+    variations:
+      - si: consommation = 'jamais'
+        alors: part saisonable / ratio
+      - si: consommation = 'parfois'
+        alors: (part saisonable / ratio) *0.5
   description: |
-    Contrairement à ce qu'on pourrait imaginer, l'impact de cette action est relativement faible car la part de produits saisonables représente seulement 7% de l'alimentation moyenne d'un français.
-    En effet, dans une première approche, nous avons choisi d'estimer la part de produits saisonnables dans le [repas moyen français](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm)
+    Contrairement à ce qu'on pourrait imaginer, l'impact de cette action est relativement faible car la part de produits saisonables est très faible dans l'alimentation moyenne d'un français
+    Mais il existe de nombreux autres bénéfices à l'alimentation saisonnière comme le moindre impact sur la ressource eau ou encore la diversité des cultures.
+    Il faut garder en tête qu'il s'agit d'une première approche qui sera affinée par la suite. A titre d'exemple, on peut supposer que l'impact de cette action sera
+    plus importante pour les régimes végétalisés, ce qui n'est pas pris en compte ici.
+  note: |
+    Nous considérons une part de 7% de produits saisonnables dans l'alimentation moyenne d'un français en nous basant sur le[repas moyen français](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm)
     calculé à partir de l'enquête INCA 3 (2017).
-    Ces produits correspondent aux fruits et légumes, susceptibles d'être achetés "directement" de saison, mais également d'autres produits transformés, tels que
-    les jus de fruits, soupes, compotes, pouvant être achetés en connaissance de la date de production du produit.
-    Cette approche est une première estimation qui pourra être affinée par la suite. A titre d'exemple, on peut supposer que l'impact de cette action sera plus importante pour les régimes 
-    végétalisés, ce qui n'est pas pris en compte ici.
+    Nous avons considéré comme produits saisonnables les fruits et légumes susceptibles d'être achetés "directement" de saison, mais également d'autres produits transformés, tels que
+    les jus de fruits, soupes, compotes, pouvant être achetés en connaissance de la date de production du produit
 
 alimentation . manger de saison . ratio:
   formule: 2.42
