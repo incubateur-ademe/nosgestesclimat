@@ -171,6 +171,8 @@ alimentation . plats:
       - viande 2
       - végétalien
       - végétarien
+      - poisson 1
+      - poisson 2
       # Dans une v4, nous allons introduire ce régime flexitarien bien documenté
       # - planétaire 
         # A venir dans une v3
@@ -315,7 +317,7 @@ alimentation . plats . viande 1 . empreinte:
   unité: kgCO2e
 alimentation . plats . viande 1 . nombre:
   question: Nombre de plats viande 1 par semaine
-  par défaut: 4
+  par défaut: 3
   période: semaine
 
 alimentation . plats . viande 2:
@@ -357,6 +359,90 @@ alimentation . plats . viande 2 . nombre:
 
 alimentation . nombre de plats viande: 
   formule: plats . viande 1 . nombre + plats . viande 2 . nombre
+
+alimentation . plats . poisson 1:
+  formule: empreinte * nombre
+  icônes: 🍣🥧
+  description: |
+    Repas contenant thon, saumon, sardine ou maquereau.
+
+    Voici le menu type utilisé pour notre calcul.
+
+    | Ingrédients  | Qte (g)  | Kcal  | Protéines (g)  | Lipides (g)  | gCO2e /kg  | gCO2e   |
+    |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+    |      Entrée : salade de légumes  |  |  |  |  |  |  |
+    | 200g légumes de saison  | 200  | 60  | 3  | 0  | 267  | 53.4  |
+    | huile d'olive (1/2 c.s.)  | 7  | 63  | 0  | 7  | 2600  | 18,2  |
+    |      Plat principal : Portion de tarte au saumon  |  |  |  |  |  |  |
+    | saumon  | 100  | 194  | 20,5  | 12,4  | 4032  | 403  |
+    | pate feuilletée  | 60  | 243  | 4  | 18  | 6200  | 372  |
+    | lait demi-écrémé pasteurisé | 5  | 2,25  | 0,17  | 0,08  | 1490  | 7,45  |
+    | crème légère épiaisse  | 5  | 8,5  | 0,125  | 0,75  | 3680  | 18,4  |
+    | oeufs  | 37,5  | 55  | 4,6  | 3,9  | 2410  | 90  |
+    |      Dessert : tarte aux poires  |  |  |  |  |  |  |
+    | farine  | 40  | 136  | 4,8  | 0,8  | 1170  | 46,8  |
+    | poires  | 100  | 60  | 0,4  | 0  | 709,5  | 71  |
+    | huile (1 c.s.)  | 15  | 135  | 0  | 15  | 2153  | 32,3  |
+    | Total  |    | 956  | 37  | 57,9  |    | 1113,1 |
+
+alimentation . plats . poisson 1 . empreinte:
+  formule: 1.113
+  unité: kgCO2e
+  note: |
+    Pour l'instant, en l'absence de repas type poisson dans la [base carbone](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm), 
+    nous proposons un menu poisson à partir des "repas classiques" de la base carbone. 
+
+    Le plat principal est une tarte au saumon. Le facteur d'émission associé à l'ingrédient principal (ici le saumon)
+    correspond à une moyenne de facteurs d'émissions associés au thon, saumon, sardine ou maquereau d'Agribalyse.
+
+    🧮 Le calcul détaillé est [disponible ici](https://github.com/datagir/nosgestesclimat/blob/master/data/alimentation/menus-poisson.ods) sous forme de tableur.
+
+
+alimentation . plats . poisson 1 . nombre:
+  question: Nombre de plats poisson 1 par semaine
+  par défaut: 1
+  période: semaine
+  
+
+alimentation . plats . poisson 2:
+  formule: empreinte * nombre
+  icônes: 🐟🍚
+  description: |
+    Repas avec un filet de poisson blanc.
+
+    Voici le menu type utilisé pour notre calcul.
+
+    | Ingrédients  | Qte (g)  | Kcal  | Protéines (g)  | Lipides (g)  | gCO2e /kg  | gCO2e   |
+    |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+    |      Entrée : salade de légumes  |  |  |  |  |  |  |
+    | 200g légumes de saison  | 200  | 60  | 3  | 0  | 267  | 53.4  |
+    | huile (1/2 c.s.)  | 7  | 63  | 0  | 7  | 2600  | 18,2  |
+    |      Plat principal : tofu mariné, pommes de terre et oignons  |  |  |  |  |  |  |
+    | poisson blanc  | 150  | 117  | 27  | 1  | 9596  | 1439,3  |
+    | riz  | 60  | 215  | 5  | 1  | 1410  | 85  |
+    | sauce beurre blanc  | 30  | 56  | 0,2  | 6  | 7940  | 238  |
+    |      Dessert : tarte aux poires  |  |  |  |  |  |  |
+    | farine  | 40  | 136  | 4,8  | 0,8  | 1170  | 46,8  |
+    | poires  | 100  | 60  | 0,4  | 0  | 709,5  | 71  |
+    | huile (1 c.s.)  | 15  | 135  | 0  | 15  | 2153  | 32,3  |
+    | Total  |    | 841  | 41  | 31  |    | 1983,8 |
+
+alimentation . plats . poisson 2 . empreinte:
+  formule: 1.984
+  unité: kgCO2e
+  note: |
+    Pour l'instant, en l'absence de repas type poisson dans la [base carbone](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm), 
+    nous proposons un menu poisson à partir des "repas classiques" de la base carbone. 
+
+    Le plat principal est un filet de poisson blanc, sauce beurre blanc. Le facteur d'émission associé à l'ingrédient principal (ici le saumon)
+    correspond à une moyenne de facteurs d'émissions associésà divers poissons blancs (bar, cabillaud, lotte, merlu...) d'Agribalyse.
+
+    🧮 Le calcul détaillé est [disponible ici](https://github.com/datagir/nosgestesclimat/blob/master/data/alimentation/menus-poisson.ods) sous forme de tableur.
+alimentation . plats . poisson 2 . nombre:
+  question: Nombre de plats poisson 2 par semaine
+  par défaut: 0
+  période: semaine
+
 
 alimentation . planétaire: 
   icônes: 🥗
