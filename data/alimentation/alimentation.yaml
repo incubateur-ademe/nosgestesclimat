@@ -15,6 +15,7 @@ alimentation:
       - petit déjeuner annuel
       - déjeuner et dîner
       - de saison . empreinte
+      - local . empreinte
       - boisson
       - déchets
         # à venir peut-être dans une prochaine version
@@ -458,6 +459,8 @@ alimentation . planétaire:
 
 alimentation . local:
   icone: 🍅🇫🇷
+
+alimentation . local . empreinte:
   non applicable si: consommation = 'jamais'
   formule: facteur local * part locale annuelle
 
@@ -490,10 +493,10 @@ alimentation . local . niveau:
   description: |
     On applique un coefficient de 0,5 dans le cas ou l'utilisateur indique qu'il ne consomme pas exclusivement de saison.
 
-alimentation . part locale annuelle:
+alimentation . local . part locale annuelle:
   formule: part locale * 52
 
-alimentation . part locale:
+alimentation . local . part locale:
   formule: 
     somme:
       - alimentation . plats . végétalien * (1 - 1 / 1.17)
@@ -502,8 +505,7 @@ alimentation . part locale:
       - alimentation . plats . viande 2 * (1 - 1 / 1.04)
       - alimentation . plats . poisson 1 * (1 - 1 / 1.1) #calcul en cours
       - alimentation . plats . poisson 2 * (1 - 1 / 1.1) #calcul en cours
-      - alimentation . petit déjeuner . lait céréales * (1 - 1 / 1.12)
-      - alimentation . petit déjeuner . français * (1 - 1 / 1.12) #on considère les petits déjeuners comme des repas végétariens
+      - alimentation . petit déjeuner . par semaine * (1 - 1 / 1.12) #on considère les petits déjeuners comme des repas végétariens
   note: |
     Ces coefficients sont obtenus en reconstituant les repas types de la Base Carbone avec des produits équivalents issus d'Agribalyse et en considérant 
     une part de transport divisé par 2. Pluc concrètement le ratio = plat reconstitué / plat reconstitué avec une part transport divisée par 2 
@@ -512,6 +514,9 @@ alimentation . petit déjeuner annuel:
   titre: Petit déjeuner
   icônes: 🥐☕
   formule: petit déjeuner * 365
+
+alimentation . petit déjeuner . par semaine:
+  formule: alimentation . petit déjeuner * 7
 
 alimentation . petit déjeuner: 
   formule:
