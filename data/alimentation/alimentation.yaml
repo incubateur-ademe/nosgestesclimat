@@ -158,18 +158,6 @@ alimentation . déjeuner et dîner:
 alimentation . déjeuner et dîner . par semaine:
   formule: plats
 
-alimentation . déjeuner et dîner:
-  formule: par semaine * 52
-alimentation . déjeuner et dîner . par semaine:
-  formule: 
-    variations:
-      - si: local = 'toujours'
-        alors: plats local
-      - si: local = 'parfois'
-        alors: plats - ((plats - plats local) * coefficient local)
-      - sinon: plats
-      
-
 alimentation . plats:
   titre: Empreinte de 14 repas
   description: |
@@ -204,17 +192,6 @@ alimentation . plats:
 
 références: 
   - https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
-
-alimentation . plats local:
-  formule: 
-    somme:
-      - alimentation . plats . viande 1 / 1,01
-      - alimentation . plats . viande 2 / 1,04
-      - alimentation . plats . végétarien / 1,12
-      - alimentation . plats . végétalien / 1,17
-  note: |
-    Ces coefficients sont obtenus en reconstituant les repas types de la Base Carbone avec des produits équivalents issus d'Agribalyse et en considérant 
-    une part de transport divisé par 2. Pluc concrètement le ratio = plat reconstitué / plat reconstitué avec une part transport divisée par 2 
 
 alimentation . plats . végétalien:
   formule: empreinte * nombre
@@ -480,25 +457,56 @@ alimentation . planétaire:
 
 
 alimentation . local:
-  question: Vos aliments sont-ils d'origine locale ?
+  icone: 🍅🇫🇷
+  non applicable si: consommation = 'jamais'
+  formule: facteur local * part locale annuelle
+
+alimentation . local . facteur local:
+  formule: (-1) * niveau
+
+alimentation . local . consommation:
+  question: Consommez-vous des produits locaux ?
   note: |
-    Nous entendons par "locale" le fait que les aliments soient issus de la région ou vous vivez ou de régions proches. Si vous manger "français" considérez votre alimentation
-    comme "locale"
-  par défaut: Non, je ne fais pas attention à leur provenance
+    Nous entendons par "local" le fait que les aliments sont issus de la région ou vous vivez ou de régions proches. Si vous manger "français" considérez votre alimentation
+    comme "local"
+  par défaut: "'jamais'"
   une possibilité: 
       choix obligatoire: oui
       possibilités:
-        - Non, je ne fais pas attention à leur provenance
+        - jamais
         - parfois
-        - toujours  
+        - oui toujours
+
+alimentation . local . consommation . jamais:
+alimentation . local . consommation . parfois:
+alimentation . local . consommation . oui toujours:
     
-alimentation . coefficient local:
+alimentation . local . niveau:
   formule:
     variations:
-      - si: saison = 'Non, je ne fais pas attention à leur provenance'
-         alors: 1
+      - si: consommation = 'oui toujours'
+        alors: 1
       - sinon: 0.5
-    
+  description: |
+    On applique un coefficient de 0,5 dans le cas ou l'utilisateur indique qu'il ne consomme pas exclusivement de saison.
+
+alimentation . part locale annuelle:
+  formule: part locale * 52
+
+alimentation . part locale:
+  formule: 
+    somme:
+      - alimentation . plats . végétalien * (1 - 1 / 1.17)
+      - alimentation . plats . végétarien * (1 - 1 / 1.12)
+      - alimentation . plats . viande 1 * (1 - 1 / 1.01)
+      - alimentation . plats . viande 2 * (1 - 1 / 1.04)
+      - alimentation . plats . poisson 1 * (1 - 1 / 1.1) #calcul en cours
+      - alimentation . plats . poisson 2 * (1 - 1 / 1.1) #calcul en cours
+      - alimentation . petit déjeuner . lait céréales * (1 - 1 / 1.12)
+      - alimentation . petit déjeuner . français * (1 - 1 / 1.12) #on considère les petits déjeuners comme des repas végétariens
+  note: |
+    Ces coefficients sont obtenus en reconstituant les repas types de la Base Carbone avec des produits équivalents issus d'Agribalyse et en considérant 
+    une part de transport divisé par 2. Pluc concrètement le ratio = plat reconstitué / plat reconstitué avec une part transport divisée par 2 
 
 alimentation . petit déjeuner annuel: 
   titre: Petit déjeuner
