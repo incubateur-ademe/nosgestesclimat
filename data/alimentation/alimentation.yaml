@@ -9,11 +9,12 @@ alimentation:
       - la production d'un kilo de viande émet du CO2, mais aussi d'autres gaz (comme le méthane) qui réchauffent le climat bien plus rapidement
       - il faut nourrir les animaux avec des productions céréalières que l'on aurait pu manger nous-même, souvent issues de la déforestation.
 
-    Contrairement à ce que l'on entend souvent, la distance parcourue par nos aliments et la quantité d'emballages plastique sont au second plan.
+    Contrairement à ce que l'on entend souvent, la distance parcourue par nos aliments, le caractère de saison des fruits et légumes, et la quantité d'emballages plastique sont au second plan.
   formule: 
     somme:
       - petit déjeuner annuel
       - déjeuner et dîner
+      - de saison . empreinte
       - boisson
       - déchets
         # à venir peut-être dans une prochaine version
@@ -628,6 +629,84 @@ alimentation . petit déjeuner . type . britannique:
     Le traditionnel déjeuner anglais ou irlandais : toasts, oeufs, bacon, baked beans, saucisses, tomates, champignons, pommes de terre. 
   références: 
     - https://fr.wikipedia.org/wiki/Petit_déjeuner_anglais
+
+alimentation . de saison:
+  icone: 🍅🌞
+  
+alimentation . de saison . empreinte:
+  titre: Différence d'empreinte régime de saison
+  non applicable si: consommation = 'jamais'
+  formule: facteur de saison * part saisonable
+
+alimentation . de saison . facteur de saison:
+  formule: (-1) * niveau / ratio
+
+alimentation . de saison . consommation:
+  question: Consommez-vous des produits de saison ?
+  description: |
+    Cette question nous permet de corriger l'empreinte de votre régime alimentaire en fonction de votre habitude sur le caractère de saison de vos achats.
+
+    Cet impact est relativement faible car la part de produits saisonables représente seulement 7% de l'alimentation moyenne d'un français.
+
+    Mais c'est toujours ça de gagné, et les avantages d'une consommation de saison ne s'arrêtent pas à l'empreinte climat.
+  note: Voir détail de l'approche de calcul [ici](http://nosgestesclimat/documentation/alimentation/de-saison/pourcentage-saisonable)
+  par défaut: "'jamais'"
+  formule:
+    une possibilité: 
+      choix obligatoire: oui
+      possibilités:
+        - jamais
+        - parfois
+        - oui toujours  
+
+alimentation . de saison . consommation . jamais:
+alimentation . de saison . consommation . parfois:
+alimentation . de saison . consommation . oui toujours:
+
+alimentation . de saison . niveau:
+  formule:
+    variations:
+      - si: consommation = 'oui toujours'
+        alors: 1
+      - sinon: 0.5
+  description: |
+    On applique un coefficient de 0,5 dans le cas ou l'utilisateur indique qu'il ne consomme pas exclusivement de saison.
+
+alimentation . de saison . ratio:
+  formule: 2.42
+  description: |
+    Ce coefficient de 2,42 est issu d'Agribalyse en réalisant la moyenne des ratios d'un même produit considéré "de saison" et "hors saison".
+
+    Ce coefficient est sujet à une forte incertitude étant donné que la donnée de saison/hors saison ne concerne que 2 produits dans Agribalyse (la tomate et la fraise).
+  note: |
+    Cette méthode de calcul est imparfaite : idéalement, nous pourrions faire la différence saison / de saison sur chaque plat du régime personnalisé de l'utilisateur. Mais Agribalyse ne donne pas encore le coupe saison/pas de saison pour chaque aliment. 
+
+    Elle a cependant le mérite de donner un premier ordre de grandeur.
+
+    🧮 Le tableur du calcul détaillé est [disponible ici](<https://github.com/datagir/nosgestesclimat/blob/master/data/alimentation/alimentation . de saison . ratio.ods>).
+
+alimentation . de saison . part saisonable:
+  formule: pourcentage saisonable * (petit déjeuner annuel + déjeuner et dîner)
+  description: |
+    Le pourcentage de produits saisonables est appliqué à l'ensemble des repas d'un individu.
+
+alimentation . de saison . pourcentage saisonable:
+  titre: Pourcentage saisonable de l'empreinte moyenne
+  formule: 7.3%
+  description: |
+    Dans une première approche, nous avons choisi d'estimer la part de l'empreinte des produits saisonnables dans l'empreinte du [repas moyen français](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm)
+    calculé à partir de l'enquête INCA 3 (2017).
+
+    Ces produits correspondent aux fruits et légumes susceptibles d'être achetés "directement" de saison, mais également d'autres produits transformés, tels que
+    les jus de fruits, soupes, compotes, pouvant être achetés en connaissance de la date de production du produit.
+
+    Nous avons choisi d'exclure les pommes de terre du calcul étant donné que la récolte est possible presque toute l'année grâce aux nombreux genres de pomme de terre.
+  note: |
+    Cette méthode de calcul est imparfaite : idéalement, nous pourrions faire la différence saison / de saison sur chaque plat du régime personnalisé de l'utilisateur. Nous pourrons cependant dans une prochaine version du calcul différencier le pourcentage pour chaque élément du régime.   
+
+    Elle a cependant le mérite de donner un premier ordre de grandeur.
+
+    🧮 Le tableur du calcul détaillé est [disponible ici](<https://github.com/datagir/nosgestesclimat/blob/master/data/alimentation/alimentation . de saison . pourcentage saisonable.ods>).
 
 alimentation . déchets: 
   icônes: 🚮🧃
