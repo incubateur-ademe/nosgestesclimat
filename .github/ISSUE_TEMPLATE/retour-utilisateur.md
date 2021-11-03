@@ -12,4 +12,8 @@ assignees: ''
 *Décrivez ici le problème que vous avez eu, l'amélioration que vous souhaitez proposer, ou toute autre question ici.*
 
 ## Proposer une amélioration 
+
 *Si vous avez une idée précise de votre amélioration, vous pouvez directement suivre [ce guide de contribution](https://github.com/datagir/nosgestesclimat/blob/master/CONTRIBUTING.md)*
+
+N'hésitez pas à inclure des chiffres, des sources, des articles de presse, une ébauche de calcul par vos soins etc.
+
