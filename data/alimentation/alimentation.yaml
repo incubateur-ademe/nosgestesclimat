@@ -457,59 +457,6 @@ alimentation . planétaire:
     ![](https://eatforum.org/content/uploads/2019/02/EAT-Lancet_PHD_Plate_RGB-02.png)
 
 
-alimentation . local:
-  icone: 🍅🇫🇷
-
-alimentation . local . empreinte:
-  non applicable si: consommation = 'jamais'
-  formule: facteur local * part locale annuelle
-
-alimentation . local . facteur local:
-  formule: (-1) * niveau
-
-alimentation . local . consommation:
-  question: Consommez-vous des produits locaux ?
-  note: |
-    Nous entendons par "local" le fait que les aliments sont issus de la région ou vous vivez ou de régions proches. Si vous manger "français" considérez votre alimentation
-    comme "local"
-  par défaut: "'jamais'"
-  une possibilité: 
-      choix obligatoire: oui
-      possibilités:
-        - jamais
-        - parfois
-        - oui toujours
-
-alimentation . local . consommation . jamais:
-alimentation . local . consommation . parfois:
-alimentation . local . consommation . oui toujours:
-    
-alimentation . local . niveau:
-  formule:
-    variations:
-      - si: consommation = 'oui toujours'
-        alors: 1
-      - sinon: 0.5
-  description: |
-    On applique un coefficient de 0,5 dans le cas ou l'utilisateur indique qu'il ne consomme pas exclusivement de saison.
-
-alimentation . local . part locale annuelle:
-  formule: part locale * 52
-
-alimentation . local . part locale:
-  formule: 
-    somme:
-      - alimentation . plats . végétalien * (1 - 0.90)
-      - alimentation . plats . végétarien * (1 - 0.92)
-      - alimentation . plats . viande 1 * (1 - 0.97)
-      - alimentation . plats . viande 2 * (1 - 0.98)
-      - alimentation . plats . poisson 1 * (1 - 0.95)
-      - alimentation . plats . poisson 2 * (1 - 0.95)
-      - alimentation . petit déjeuner . par semaine * (1 - 0.92) #on considère les petits déjeuners comme des repas végétariens
-  note: |
-    Ces coefficients sont obtenus en reconstituant les repas types de la Base Carbone avec des produits équivalents issus d'Agribalyse et en considérant 
-    une part de transport divisé par 2. Pluc concrètement le ratio = plat reconstitué / plat reconstitué avec une part transport divisée par 2 
-
 alimentation . petit déjeuner annuel: 
   titre: Petit déjeuner
   icônes: 🥐☕
@@ -687,6 +634,70 @@ alimentation . petit déjeuner . type . britannique:
   références: 
     - https://fr.wikipedia.org/wiki/Petit_déjeuner_anglais
     
+alimentation . local:
+  icone: 🍅🇫🇷
+
+alimentation . local . empreinte:
+  non applicable si: consommation = 'jamais'
+  formule: facteur local * part locale annuelle
+
+alimentation . local . facteur local:
+  formule: (-1) * niveau
+
+alimentation . local . consommation:
+  question: Consommez-vous des produits locaux ?
+  description: |
+    Cette question nous permet de corriger l'empreinte de votre régime alimentaire en fonction de votre habitude sur le caractère local de vos achats.
+    Nous entendons par "local" le fait que les aliments sont issus de la région ou vous vivez ou de régions proches. Si vous mangez "français", considérez votre alimentation
+    comme "local".
+
+    Cet impact est relativement faible car la part de l'impact du transport dans l'empreinte carbone des produits que nous consommons est faible 
+    devant les émissions liées à la production, la transformation ou l'emballage de nos aliments.
+
+    Mais c'est toujours ça de gagné, et les avantages d'une consommation locale ne s'arrêtent pas à l'empreinte climat.
+  note: Voir détail de l'approche de calcul [ici](http://nosgestesclimat/documentation/alimentation/local/part-locale)
+  par défaut: "'jamais'"
+  une possibilité: 
+      choix obligatoire: oui
+      possibilités:
+        - jamais
+        - parfois
+        - oui toujours
+
+alimentation . local . consommation . jamais:
+alimentation . local . consommation . parfois:
+alimentation . local . consommation . oui toujours:
+    
+alimentation . local . niveau:
+  formule:
+    variations:
+      - si: consommation = 'oui toujours'
+        alors: 1
+      - sinon: 0.5
+  description: |
+    On applique un coefficient de 0,5 dans le cas ou l'utilisateur indique qu'il ne consomme pas exclusivement de saison.
+
+alimentation . local . part locale annuelle:
+  formule: part locale * 52
+
+alimentation . local . part locale:
+  formule: 
+    somme:
+      - alimentation . plats . végétalien * (1 - 0.90)
+      - alimentation . plats . végétarien * (1 - 0.92)
+      - alimentation . plats . viande 1 * (1 - 0.97)
+      - alimentation . plats . viande 2 * (1 - 0.98)
+      - alimentation . plats . poisson 1 * (1 - 0.95)
+      - alimentation . plats . poisson 2 * (1 - 0.95)
+      - alimentation . petit déjeuner . par semaine * (1 - 0.92) #on considère les petits déjeuners comme des repas végétariens
+  description: |
+    Dans une première approche, nous avons choisi de travailler sur les menus proposés dans le simulateur en considérant les facteurs d'émission d'Agribalyse, actualisés en divisant la part de transport par 2. 
+  
+  note: |
+    Ces coefficients sont obtenus en reconstituant les repas types de la Base Carbone avec des produits équivalents issus d'Agribalyse 
+    et en considérant une part de transport divisée par 2. Pluc concrètement le ratio = plat reconstitué avec une part transport divisée par 2 / plat reconstitué. 
+          
+    🧮 Le tableur du calcul détaillé est [disponible ici](<https://github.com/datagir/nosgestesclimat/issues/1266>).
 
 alimentation . de saison:
   icone: 🍅🌞
