@@ -322,12 +322,12 @@ logement . mutualisation:
     Vivre à plusieurs permet de réduire l'empreinte carbone de son poste logement. 
 
     Même si cette dernière sera un peu plus élevée avec un ou plusieurs colocataires,
-    de très nombreux impacts seront en réalité mutualisés (éclairage, chauffage, cuisson, etc.). 
+    de très nombreux impacts seront en réalité mutualisés (éclairage, chauffage, cuisson, etc.), donc diminués par rapport à une individualisation des logements. 
 
-    Cela permet au final de réduire son empreinte carbone individuelle. 
 logement . places libres:
   question: Combien de chambres libres avez-vous dans votre logement ? 
   par défaut: 0
+  unité: ''
   suggestions: 
     1: 1
     2: 2
@@ -335,7 +335,21 @@ logement . places libres:
 
 logement . impact majoré:
   unité: kgCO2e
-  formule: logement . impact + (logement . électricité * électricité * places libres)
+  formule: logement . impact + majoration
 
-logement . impact majoré . électricité:
-  formule: 15%
+
+logement . impact majoré . majoration:
+  formule: postes majorés * facteur
+  description: On considère que faire passer une chambre d'inoccupée à ocuppée augmente en proportion de la surface totale le chauffage et l'électricité. Pour un logement de 80m² et une chambre de 12m², le facteur est de +15%.
+  note: C'est un calcul assez grossier qui pourrait facilement être affiné. 
+
+logement . impact majoré . postes majorés:
+  formule: électricité + chauffage autres
+  description: |
+
+logement . impact majoré . facteur:
+  formule: (surface chambre / surface) * places libres
+
+logement . surface chambre: 
+  formule: 12m2
+  description: On fixe la taille standard d'une chambre à 12m².
