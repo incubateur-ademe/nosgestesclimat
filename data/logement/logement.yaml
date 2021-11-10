@@ -10,12 +10,12 @@ logement:
   formule: impact / habitants
 
 logement . impact:
-  formule: 
-    somme: 
+  formule:
+    somme:
       - construction
       - électricité
-      - chauffage autres
-logement . habitants: 
+      - chauffage
+logement . habitants:
   question: Combien de personnes vivent chez vous ?
   description: |
     Il s'agit de savoir combien de personnes partagent votre logement et toutes les consommations qu'il entraîne (construction, chauffage, etc).
@@ -27,21 +27,21 @@ logement . habitants:
     > Si vous êtes séparé avec un enfant qui alterne entre votre logement et un autre, vous pouvez saisir `1,5`.
 
   par défaut: 2 personnes
-  suggestions: 
+  suggestions:
     seul: 1
     en couple: 2
   unité: personnes
 
-logement . surface: 
+logement . surface:
   question: Quelle est la surface de votre logement ?
   par défaut: 80 m2
   note: |
     Valeur par défaut obtenue dans [ce rapport de l'INSEE](https://www.insee.fr/fr/statistiques/2586377).
 
     > Les logements ont une surface moyenne d’un peu plus de 80 m2.
-    
+
     > Si vous vivez dans un logement original, par exemple un camping car / un camion / une péniche, renseignez simplement les m² de ce logement.
-  suggestions: 
+  suggestions:
     studio: 25
     3 pièces: 70
     maison: 120
@@ -49,10 +49,10 @@ logement . surface:
   unité: m2
 
 logement . construction . annuelle et par surface:
-  formule:  par surface / durée d'amortissement
+  formule: par surface / durée d'amortissement
   unité: kgCO2e/m2
 
-logement . appartement: 
+logement . appartement:
   question: Votre logement est-il un appartement ?
   par défaut: non
   description: |
@@ -61,12 +61,12 @@ logement . appartement:
     L'augmentation de l'habitat en appartements peut nous faire oublier que la maison reste le logement majoritaire des foyers français en 2018.
 
     Cette information influence notamment l'empreinte de construction, mais aussi les possibilités de travaux d'isolation par exemple.
-    
-    > Si vous vivez dans un habitat original, par exemple un camping car / un camion / une péniche, pas de problème : choisissez "appartement" et saisissez les m² de ce qui constitue quand même votre logement. 
+
+    > Si vous vivez dans un habitat original, par exemple un camping car / un camion / une péniche, pas de problème : choisissez "appartement" et saisissez les m² de ce qui constitue quand même votre logement.
   note: |
     > En 2018, l’habitat individuel représente 56 % des logements : il est majoritaire parmi les résidences principales comme parmi les résidences secondaires et logements occasionnels. Après avoir progressé entre 1999 et 2008, sa part recule légèrement car le nombre de logements collectifs augmente plus vite que celui des logements individuels du fait des évolutions récentes de la construction neuve.
     Notons qu'il s'agit d'une proportion de logement, or on peut s'attendre (à vérifier) à ce que les maisons contiennent davantage de gens en moyenne que les appartements, ce qui renforce le choix de la valeur par défaut.
-  références: 
+  références:
     INSEE: https://www.insee.fr/fr/statistiques/3676693?sommaire=3696937
 
 logement . éco-construit:
@@ -76,14 +76,13 @@ logement . éco-construit:
     L'entrée dans la base carbone ne donne pas plus d'informations sur cette catégorie de méthode de construction.
 
     Le facteur d'émission titre "Maison éco-construite", faute d'informations nous considérons qu'il est le même pour un appartement éco-construit. Cependant, l'étude Carbone 4 l'affirme (réduction de 55% du béton au bois pour la maison, et de 60% pour l'appartement).
-  références: 
+  références:
     Base carbone: https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=Maison+éco-construite+«+bois
     Carbone 4: http://www.carbone4.com/wp-content/uploads/2015/05/Note-de-communication-filière-bois-vf.pdf
-  
 
 logement . construction . par surface:
-  formule: 
-    variations: 
+  formule:
+    variations:
       - si: éco-construit
         alors: 144 kgCO2e/m2
       - si: appartement
@@ -95,40 +94,38 @@ logement . construction . par surface:
     Pour le logement éco-construit, nous retenons le facteur d'émission de la base carbone, mais il semble confirmé en ordre de grandeur dans l'étude Carbone 4.
 
     > Gains observés sur le CO2 fossile du poste gros-œuvre (fondations et structure), en comparaison au béton. Le stockage de carbone dans le produit  bois  n’est  pas  pris  en  compte.  Gains  liés  à  la  substitution  matériau  :  MI  bois  CLT  :  118  kgCO2e/m2  SHON,  soit  473  kgCO2e/m3  de produit bois. MI bois ossature : 83 kgCO2e/m2 SHON, soit 2495 kgCO2e/m3 de produit bois. LC bois CLT : 231 kgCO2e/m2 SHON, soit 699 kgCO2e/m3 de produit bois. LC bois ossature : 139 kgCO2e/m2 SHON, soit 3172 kgCO2e/m3 de produit bois.
-  rérénces: 
+  rérénces:
     éco-construit: https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=Maison+éco-construite+«+bois
     appartement et maison: https://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Batiments
     Carbone 4: http://www.carbone4.com/wp-content/uploads/2015/05/Note-de-communication-filière-bois-vf.pdf
 
 logement . construction . durée d'amortissement:
   formule: 50 ans
-  note: | 
+  note: |
     Ces valeurs tiennent compte de l’entretien et de l’éventuel remplacement des produits et équipements durant la vie du bâtiment fixée à 50 ans.
-  références: 
+  références:
     base carbone: https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?batiments.htm
 
-
-
-logement . âge: 
-  question: Quel est l'âge de votre logement ? 
+logement . âge:
+  question: Quel est l'âge de votre logement ?
   par défaut: 45 ans
   description: |
     En France, 24% du parc de logements date d'avant 1949 et 24% entre 1949 et 1974.
 
     Pour Paris, [cette carte](https://www.comeetie.fr/galerie/BatiParis) interactive est fascinante si la question de l'âge de ses logements vous intéresse.
-  références: 
+  références:
     INSEE: 24% du parc de logements date d'avant 1949 et 24% entre 1949 et 1974 par exemple (https://www.insee.fr/fr/statistiques/fichier/2586377/LOGFRA17.pdf).
-  suggestions: 
+  suggestions:
     neuf: 0 ans
     récent: 10 ans
     années 70: 45 ans
     après-guerre: 70 ans
     un siècle: 100 ans
-  
+
 logement . construction:
   icônes: 🏗️
-  formule: 
-    variations: 
+  formule:
+    variations:
       - si: âge < 50 ans
         alors: surface * annuelle et par surface
       - sinon: 0
@@ -141,13 +138,11 @@ logement . construction:
 
     Amélioration possible : nous manquons de données, mais il devrait être possible d'attribuer une empreinte annuelle d'entretien du logement (ravalement, isolation, travaux intérieurs, etc.).
 
-
   unité: kgCO2e
 
 logement . électricité:
   icônes: ⚡
   formule: consommation * intensité carbone
-
 
 logement . électricité . consommation:
   icônes: ⚡
@@ -179,32 +174,49 @@ logement . électricité . intensité carbone:
     L'intensité du chauffage résidentiel est ainsi définie à 80gCO2e/kWh par la RE2020, [source](https://www.batiactu.com/edito/facteur-energie-primaire-contenu-carbone-electricite-58485.php).
   note: |
     La v2.6 de MicMac donne une valeur de 12.4gCO2e/kWh pour les fournisseurs d'électricité "verte", mais cette valeur semble correspondre à un calcul théorique sur l'année, et non pas à un calcul réel, minute par minute.
-  
-logement . chauffage autres: 
-  titre: Chauffage autre qu'électricité
-  icônes: 🌡️🔥
-  formule: gaz + fioul + bois . empreinte
 
-logement . bois: 
+logement . chauffage:
+  titre: Mode de chauffage
+  icônes: 🌡️🔥
+  description: |
+    Certains logements sont chauffés entièrement à l'électricité, d'autres sont entièrement chauffés avec du gaz, et plus rarement du bois ou du fioul. 
+
+    Dans d'autres situations encore, un logement peut être chauffé principalement à l'électricité, mais avec un appoint bois, par exemple.
+  formule:
+    somme:
+      - gaz
+      - fioul
+      - bois . empreinte
+      # à venir : réseau de chaleur
+      # chauffage électrique déjà compté dans la conso électrique
+
+logement . chauffage . électricité:
+  icônes: ⚡️
+
+logement . chauffage . électricité . présent:
+  question: Votre logement est-il chauffé à l'électricité ?
+  par défaut: oui
+
+logement . chauffage . bois:
   icônes: 🪵
 
-logement . bois . empreinte: 
+logement . chauffage . bois . empreinte:
   titre: Empreinte du bois
-  applicable si: chauffage au bois
+  applicable si: présent
   formule: consommation * facteur d'émission
 
-logement . bois . chauffage au bois: 
+logement . chauffage . bois . présent:
   question: Votre logement est-il chauffé au bois ?
   par défaut: non
 
-logement . bois . consommation: 
-  formule: 
-    variations: 
+logement . chauffage . bois . consommation:
+  formule:
+    variations:
       - si: type = 'bûche'
         alors: bûche
       - sinon: granulés
 
-logement . bois . consommation . granulés: 
+logement . chauffage . bois . consommation . granulés:
   question: Quelle est la consommation annuelle de bois en granulés de votre foyer ?
   unité: kWh
   aide: estimation via le coût
@@ -212,7 +224,7 @@ logement . bois . consommation . granulés:
   description: |
     Astuce : en moyenne, 1kg de granulés produisent 4.6 kWh. Vous pouvez donc multiplier votre consommation annuelle (en T) par 4600 kWh.
 
-logement . bois . consommation . granulés . estimation via le coût:
+logement . chauffage . bois . consommation . granulés . estimation via le coût:
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
   unité: €/kWh
   formule: 0.072
@@ -220,20 +232,18 @@ logement . bois . consommation . granulés . estimation via le coût:
     Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois. 
     Voir l'onglet "Calcul consommation Energie" du [tableur MicMac](https://avenirclimatique.org/wp-content/uploads/2020/04/2020-04-12_MicMac_V2.6.xlsx)
 
-
-logement . bois . consommation . bûche: 
+logement . chauffage . bois . consommation . bûche:
   formule: saisie * intensité énergétique
-logement . bois . consommation . bûche . intensité énergétique: 
+logement . chauffage . bois . consommation . bûche . intensité énergétique:
   formule: 1610
   unité: kWh/stère
   note: |
     Nous faisons l'hypothèse d'une consommation de bûches de 20% d'humidité.
     Source : dans le fichier ZIP (!) ci-dessous, fichier 1_chauffage_domestique_bois_appro_rapport.pdf page 10.
-  références: 
+  références:
     - https://www.ademe.fr/etude-chauffage-domestique-bois
 
-
-logement . bois . consommation . bûche . saisie: 
+logement . chauffage . bois . consommation . bûche . saisie:
   question: Quelle la consommation annuelle de bois en bûches de votre foyer ?
   aide: estimation via le coût
   description: |
@@ -242,13 +252,13 @@ logement . bois . consommation . bûche . saisie:
     ![](https://upload.wikimedia.org/wikipedia/commons/7/7c/Raummeter_hg.jpg)
   unité: stères
   par défaut: 6 stères
-  note: | 
+  note: |
     Source pour la consommation moyenne : dans le lien ci-dessous, fichier PDF présentation, page 10.
-  références: 
-    - https://www.ademe.fr/etude-chauffage-domestique-bois 
+  références:
+    - https://www.ademe.fr/etude-chauffage-domestique-bois
     - https://fr.wikipedia.org/wiki/Stère
 
-logement . bois . consommation . bûche . estimation via le coût:
+logement . chauffage . bois . consommation . bûche . estimation via le coût:
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
   unité: €/stère
   formule: 71
@@ -257,52 +267,52 @@ logement . bois . consommation . bûche . estimation via le coût:
   note: |
     Source : ci-dessous, fichier 3_presentation.pdf, page 34
 
-  références: 
-    - https://www.ademe.fr/etude-chauffage-domestique-bois 
+  références:
+    - https://www.ademe.fr/etude-chauffage-domestique-bois
 
-logement . bois . facteur d'émission: 
-  formule: 
-    variations: 
+logement . chauffage . bois . facteur d'émission:
+  formule:
+    variations:
       - si: type = 'bûche'
         alors: bûche
       - sinon: granulés
 
-logement . bois . facteur d'émission . bûche: 
+logement . chauffage . bois . facteur d'émission . bûche:
   titre: empreinte bois bûche
-  formule: 0.0295 
+  formule: 0.0295
   unité: kgCO2e/kWh
-logement . bois . facteur d'émission . granulés: 
+logement . chauffage . bois . facteur d'émission . granulés:
   titre: empreinte bois granulés
   formule: 0.0304
   unité: kgCO2e/kWh
 
-logement . bois . type:
+logement . chauffage . bois . type:
   titre: type de bois
   question: Quel type de bois utilisez-vous ?
-  formule: 
-    une possibilité: 
+  formule:
+    une possibilité:
       choix obligatoire: oui
-      possibilités: 
+      possibilités:
         - bûche
         - granulés
   par défaut: "'bûche'"
-logement . bois . type . bûche: 
-logement . bois . type . granulés: 
+logement . chauffage . bois . type . bûche:
+logement . chauffage . bois . type . granulés:
 
-logement . gaz:
+logement . chauffage . gaz:
   icônes: 🔥
-  applicable si: chauffage au gaz
+  applicable si: présent
   formule: consommation * intensité carbone
 
-logement . gaz . chauffage au gaz: 
-  question: Votre logement est-il chauffé au gaz ? 
+logement . chauffage . gaz . présent:
+  question: Votre logement est-il chauffé au gaz ?
   par défaut: oui
   note: |
     Bien que le chauffage majoritaire en France soit électrique [source](https://fr.statista.com/statistiques/856283/types-chauffage-logement-principal-france), nous mettons ici la valeur par défaut à oui pour se rapprocher de la moyenne d'empreinte du logement. 
 
-    On touche aux limites actuelles de ce système de situation par défaut. 
+    On touche aux limites actuelles de ce système de situation par défaut.
 
-logement . gaz . estimation via le coût: 
+logement . chauffage . gaz . estimation via le coût:
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
   unité: €/kWh
   formule: 0.074
@@ -310,8 +320,7 @@ logement . gaz . estimation via le coût:
     Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois. 
     Voir l'onglet "Calcul consommation Energie" du [tableur MicMac](https://avenirclimatique.org/wp-content/uploads/2020/04/2020-04-12_MicMac_V2.6.xlsx)
 
-
-logement . gaz . consommation:
+logement . chauffage . gaz . consommation:
   icônes: 🔥
   question: Quelle est la consommation annuelle de gaz de votre foyer ?
   par défaut: 15000 kWh
@@ -321,20 +330,21 @@ logement . gaz . consommation:
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
     Si vous utilisez plusieurs logements (par exemple une residence secondaire) il faut se débrouiller pour "ramener" ces consommations dans celles du logement principal.
 
-logement . gaz . intensité carbone:
-  formule:  0.227
+logement . chauffage . gaz . intensité carbone:
+  formule: 0.227
   unité: kgCO2e/kWh
 
-logement . fioul:
-  applicable si: chauffage au fioul
+logement . chauffage . fioul:
+  icônes: 🛢
+  applicable si: présent
   titre: Fioul domestique
   formule: consommation * intensité carbone litre
 
-logement . fioul . chauffage au fioul: 
-  question: Votre logement est-il chauffé au fioul ? 
+logement . chauffage . fioul . présent:
+  question: Votre logement est-il chauffé au fioul ?
   par défaut: non
 
-logement . fioul . estimation via le prix: 
+logement . chauffage . fioul . estimation via le prix:
   question: Pas de facture ? Entrez vos dépenses approximatives en fioul par mois
   unité: €/litre
   formule: 0.8887
@@ -342,11 +352,10 @@ logement . fioul . estimation via le prix:
     Cette formule nous permet de passer des €/mois aux litres/an.
 
     Source : Fioul domestique 2000 à 4999 litres, semestre 2 2021.
-  références: 
-    écologie.gouv.fr: https://www.ecologie.gouv.fr/prix-des-produits-petroliers 
+  références:
+    écologie.gouv.fr: https://www.ecologie.gouv.fr/prix-des-produits-petroliers
 
-logement . fioul . consommation:
-  icônes: 🛢
+logement . chauffage . fioul . consommation:
   question: Quelle est la consommation annuelle de fioul domestique de votre foyer ?
   unité: litre
   description: |
@@ -355,18 +364,15 @@ logement . fioul . consommation:
 
     > Il est estimé que la consommation d'une maison récente de 100m² chauffée au fioul consomme entre 1200 et 2400 litres par an. Pour une maison ancienne dans une région froide, elle peut atteindre 6000 litres par an. [Source lenergietoutcompris.fr](https://www.lenergietoutcompris.fr/faq/fioul/quelle-est-la-consommation-moyenne-de-fioul-au-m2).
 
-  par défaut: 0 litre
+  par défaut: 1800 litres
   aide: estimation via le prix
 
-logement . fioul . intensité carbone:
-  formule:  0.324
+logement . chauffage . fioul . intensité carbone:
+  formule: 0.324
   unité: kgCO2e/kWh
 
-logement . fioul . intensité carbone litre:
-  formule:  3.25
+logement . chauffage . fioul . intensité carbone litre:
+  formule: 3.25
   unité: kgCO2e/litre
-  références: 
+  références:
     - https://www.bilans-ges.ademe.fr - Fioul domestique France continental
-    
-    
-    

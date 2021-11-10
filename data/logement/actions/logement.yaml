@@ -6,7 +6,7 @@ logement . baisse température:
     Le logement et en particulier son chauffage (au fioul ou au gaz) a un impact sur le climat important.
 
     Baisser la température d'un ou deux degrés peut être un moyen de réduire son empreinte.
-    
+
     Source : ADEME - [40 trucs et astuces pour économiser l'eau et l'énergie](https://www.ademe.fr/40-trucs-astuces-economiser-leau-lenergie)
   applicable si: température > 19
   formule: (nombre degrés * gains 1 degré * empreinte chauffage) / habitants
@@ -22,10 +22,10 @@ logement . baisse température . nombre degrés:
     Elle peut toutefois facilement être limitée en diminuant la température des pièces occupées sans perdre de confort thermique ou bien ressentir une sensation de froid (à condition d’avoir des logements bien isolés).
 
     Par exemple, régler la température entre 19° et 21°C dans les pièces occupées la journée (et 17°C la nuit ou dans les pièces peu occupées).
-    
+
     En effet, baisser la température de chauffage d’1°C représente une économie d’énergie de 7%.
   par défaut: 1
-  unité: degrés   
+  unité: degrés
   suggestions:
     1 degré: 1
     2 degrés: 2
@@ -33,7 +33,7 @@ logement . baisse température . nombre degrés:
 
 logement . température:
   question: À quelle température chauffez-vous votre logement ?
-  description: Cette question nous permet simplement de ne pas vous proposer de baisser la température quand elle est déjà relativement faible. 
+  description: Cette question nous permet simplement de ne pas vous proposer de baisser la température quand elle est déjà relativement faible.
   icônes: 🌡
   par défaut: 20
   unité: degrés
@@ -48,51 +48,15 @@ logement . baisse température . gains 1 degré:
     Où est la source pour ces 7% ? Peut-on décliner ce chiffre pour chaque type d'énergie (bois, gaz, etc.) ? Quelle est la sensibilité de ce chiffre au type de logement, son isolation, etc. ?
 
 logement . empreinte chauffage:
-  formule: 
-    variations: 
-      - si: chauffage électrique = 'uniquement'
-        alors: électricité * part chauffage électricité
-      - si: chauffage électrique = 'en partie'
-        alors:
-          somme:
-            - électricité * part chauffage électricité
-            - gaz * part chauffage gaz
-            - bois . empreinte * part chauffage bois
-            - fioul * part chauffage fioul
-      - si: chauffage électrique = 'autrement'
-        alors:
-          somme:
-            - gaz * part chauffage gaz
-            - bois . empreinte * part chauffage bois
-            - fioul * part chauffage fioul
-  description: |
-    Pour chaque kWh de chaque type d'énergie, quelle est la part utilisée pour le chauffage de l'air d'un foyer ? 
-
-    Nous utilions ici [les données du CEREN](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel) pour calculer ces ratios, onglet `Conso 1982-2018`.
-  note: |
-    Ici, nous proposons ce calcul simplifié. Il est assez théorique, car on peut chauffer son logement au bois, tout en ayant une consommation d'électricité sans chauffage. C'est une 1ère estimation.
-
-logement . chauffage électrique:
-  question: Votre mode de chauffage est-il électrique ?
-  par défaut: "'en partie'"
-  description: |
-    Certains logements sont chauffés entièrement à l'électricité, d'autres sont entièrement chauffés avec du gaz, et plus rarement du bois ou du fioul. 
-
-    > Dans d'autres situations encore, un logement peut être chauffé principalement à l'électricité, mais avec un appoint bois, par exemple. C'est l'option `En partie`.
   formule:
-    une possibilité: 
-      choix obligatoire: oui
-      possibilités: 
-        - uniquement
-        - en partie
-        - autrement
+    somme:
+      - chauffage . électricité . présent * électricité * part chauffage électricité
+      - chauffage . gaz . présent * chauffage . gaz * part chauffage gaz
+      - chauffage . bois . présent * chauffage . bois . empreinte * part chauffage bois
+      - chauffage . fioul . présent * chauffage . fioul * part chauffage fioul
+  description: |
+    Pour chaque kWh de chaque type d'énergie, quelle est la part utilisée pour le chauffage de l'air d'un foyer ?
 
-logement . chauffage électrique . uniquement:
-  titre: oui uniquement électrique
-logement . chauffage électrique . en partie:
-  titre: En partie électrique 
-logement . chauffage électrique . autrement:
-  titre: Il est chauffé autrement
 
 logement . part chauffage électricité:
   formule: 33.8 / 143
@@ -104,7 +68,7 @@ logement . part chauffage fioul:
   formule: 37.8 / 43.3
 
 
-logement . éteindre appareils: 
+logement . éteindre appareils:
   formule: empreinte du foyer / habitants
   effort: faible
   unité: kgCO2e
@@ -122,47 +86,50 @@ logement . éteindre appareils:
 logement . éteindre appareils . empreinte du foyer:
   formule: énergie de veille * intensité électricité
 
-logement . énergie de veille: 
-  formule: puissance * temps d'absence 
+logement . énergie de veille:
+  formule: puissance * temps d'absence
   unité: kWh
 
-logement . énergie de veille . puissance: 
+logement . énergie de veille . puissance:
   formule: 0.050
   description: |
-    > La puissance totale de ces veilles pour un ménage dépasse souvent 50 
+    > La puissance totale de ces veilles pour un ménage dépasse souvent 50
   note: |
     Il est bien possible que l'on sous-estime le nombre de Watt en veille. Notamment, il apparait que les box internet et TV à elle-seules en consomme plus que 50. 
 
-    > La « box » est un équipement de plus en plus courant, qui reste souvent allumé 24 h sur 24 et qui génère une consommation pou-vant dépasser 200 kWh / an, soit autant que le lave-linge. Sa consommation totale sur un an se situe entre 150 et 300 kWh* : c'est autant qu'un grand réfrigérateur 
+    > La « box » est un équipement de plus en plus courant, qui reste souvent allumé 24 h sur 24 et qui génère une consommation pou-vant dépasser 200 kWh / an, soit autant que le lave-linge. Sa consommation totale sur un an se situe entre 150 et 300 kWh* : c'est autant qu'un grand réfrigérateur
 
   unité: kW
-logement . énergie de veille . temps d'absence: 
-  formule: 365 * journalier 
+logement . énergie de veille . temps d'absence:
+  formule: 365 * journalier
   unité: h
-logement . énergie de veille . temps d'absence . journalier: 
+logement . énergie de veille . temps d'absence . journalier:
   formule: 12
   unité: h
   description: On suppose qu'en moyenne, on n'est pas présent chez soi la moitié du temps, ou on dort. La nuit (8h) et en moyenne 4h en journée, pour prendre en compte les weekends qui compensent les journées de travail de 8h, et le fait que tout le monde dans le foyer n'est pas absent au même moment.
 
-logement . mutualiser: 
+logement . mutualiser:
   titre: Mutualiser son logement
   icônes: 🏠👥
   inactive: oui
 
-logement . remplacer fioul par bois: 
+logement . remplacer fioul par bois:
   titre: Remplacer ma chaudière au fioul par une chaudière bois
-  applicable si: 
-    toutes ces conditions: 
+  applicable si:
+    toutes ces conditions:
       - propriétaire
-      - fioul . chauffage au fioul
+      - chauffage . fioul . présent
   effort: conséquent
   icônes: 🛢️🪵
-  formule: (fioul - alternative) / habitants
+  formule: (chauffage . fioul - alternative) / habitants
   description: |
     Les chaudières au fuel sont les plus polluantes. Les remplacer par des alternatives moins carbonnées comme ici le bois en granulés est un geste fort pour réduire votre empreinte carbone.
   inactive: non
   note: |
     Nous considérons pour l'instant que le remplacement des kWh de fioul par la même quantité de kWh de bois est une bonne approximation de premier ordre. Nous pourrons par la suite l'adapter en fonction du rendement des installations résidentielles.
+
+logement . remplacer fioul par bois . alternative:
+  formule: chauffage . fioul . consommation * chauffage . bois . facteur d'émission . granulés
 
 logement . éclairage: oui
 logement . éclairage . LED:
@@ -179,7 +146,7 @@ logement . éclairage . consommation de l'éclairage:
   titre: Éclairage dans la facture d'électricité
   formule: électricité * 5.6%
   description: La part dans l'électricité consommée consacrée à l'éclairage.
-  références: 
+  références:
     Réduire sa facture d’électricité, Juin 2019, ADEME: https://www.ademe.fr/sites/default/files/assets/documents/guide-pratique-reduire-facture-electricite.pdf#page=2
 
 logement . éclairage . avec LED:
@@ -189,23 +156,20 @@ logement . éclairage . avec LED:
     6.43, c'est le rapport entre la conso annuelle de 10 ampoules 60W (450kWh) vs 10 LED équivalent 60 W (70kWh).
   références:
     Réduire sa facture d’électricité, Juin 2019, ADEME: https://www.ademe.fr/sites/default/files/assets/documents/guide-pratique-reduire-facture-electricite.pdf#page=7
-    
-logement . remplacer fioul par bois . alternative: 
-  formule: fioul . consommation * bois . facteur d'émission . granulés
 
-logement . remplacer gaz par PAC: 
+logement . remplacer gaz par PAC:
   titre: Passer de chaudière gaz à pompe à chaleur
-  action: 
+  action:
     dépasse:
       - logement . rénovation énergétique
       - logement . rénovation énergétique BBC
-  applicable si: 
-    toutes ces conditions: 
+  applicable si:
+    toutes ces conditions:
       - propriétaire
-      - gaz . chauffage au gaz
+      - chauffage . gaz . présent
   effort: conséquent
   icônes: 🔥🔄
-  formule: (gaz - pompe à chaleur) / habitants
+  formule: (chauffage . gaz - pompe à chaleur) / habitants
   description: |
     Les chaudières au gaz sont parmi les plus émissives de CO₂. Les remplacer par des alternatives moins carbonnées comme des pompes à chaleur est un geste fort pour réduire votre empreinte carbone.
 
@@ -213,34 +177,34 @@ logement . remplacer gaz par PAC:
 
     💡 Leur principe est ingénieux : c'est un frigo inversé ! Votre frigo, grâce à un peu d'électricité, refroidit son intérieur et rejette la chaleur dans la pièce. La PAC refroidit l'air extérieur pour chauffer votre logement.
 
-    > Bonus : s'il fait trop chaud chez vous l'été, certaines PAC peuvent inverser leur fonctionnement et faire office de climatisation l'été. 
+    > Bonus : s'il fait trop chaud chez vous l'été, certaines PAC peuvent inverser leur fonctionnement et faire office de climatisation l'été.
 
   note: |
     Nous considérons pour l'instant que le remplacement des kWh de gaz par la même quantité de kWh électrique est une bonne approximation de premier ordre. Nous pourrons par la suite l'adapter en fonction du rendement des installations résidentielles.
 
     Cette action chiffre le remplacement de la chaudière gaz, si vous chauffez aussi votre eau au gaz il faudra choisir une PAC qui peut aussi chauffer l'eau.
-  références: 
+  références:
     Guide ADEME PAC: https://www.ademe.fr/sites/default/files/assets/documents/guide-pratique-installer-une-pompe-a-chaleur.pdf
 
 logement . pompe à chaleur:
-  formule: (gaz . consommation / coefficient COP) * électricité . intensité carbone
+  formule: (chauffage . gaz . consommation / coefficient COP) * électricité . intensité carbone
 
 logement . pompe à chaleur . coefficient COP:
   titre: Coefficient de performance réel
   formule: 2
   description: Pour 1kWh d'électricité consommée, combien de kWh de chaleur fournis ?
   note: Nous choississons un coefficient conservateur (l'ADEME conseille un COP > 3).
-  références: 
+  références:
     Guide EDF: https://particulier.edf.fr/fr/accueil/guide-energie/electricite/pompe-a-chaleur.html
     Pompe à chaleur ou radiateurs électriques ?: https://conseils-thermiques.org/contenu/pompe-a-chaleur-ou-radiateur-electrique.php
 
-logement . chaudière remplacement: 
+logement . chaudière remplacement:
   titre: Passer à une chaudière bois ou à une pompe à chaleur
   icônes: 🔥🔄
   inactive: oui
 
 logement . séchage air libre:
-  titre: Privilégier l'étendoir au sèche-linge 
+  titre: Privilégier l'étendoir au sèche-linge
   applicable si: divers . électroménager . sèche-linge . présent
   #quand on aura une sélection de l'électroménager à l'instar des équipements électroniques, la question aura déjà été répondue
   effort: faible
@@ -250,7 +214,7 @@ logement . séchage air libre:
   formule: (400 kWh * électricité . intensité carbone) / habitants
   note: |
     400 kWh est une valeur choisie sur la base des kWh annuels donnés par différents constructeurs, les valeurs allant de 300 à 500+ kWh annum, 400 kWh a été retenu.
- 
+
 logement . climatisation:
 
 logement . climatisation . réduction:
@@ -275,10 +239,10 @@ logement . rénovation énergétique:
 
 logement . gain rénovation:
   formule: 39%
-  note:  |
-    Gain énergétique moyen après rénovation sur un programme de l'ANAH de 13 000 logements ciblant les "passoires thermiques". 
+  note: |
+    Gain énergétique moyen après rénovation sur un programme de l'ANAH de 13 000 logements ciblant les "passoires thermiques".
 
-  références: 
+  références:
     Programme "habiter mieux" de l'ANAH: https://www.anah.fr/actualites/detail/actualite/lanah-publie-un-premier-bilan-du-programme-habiter-mieux/?tx_news_pi1[controller]=News&tx_news_pi1[action]=detail&cHash=26d00161febd159fcbca45d2032a56b3
 
 logement . propriétaire:
@@ -289,10 +253,9 @@ logement . propriétaire:
     Pourtant, la loi pourrait dès 2023 être un soutien de poids : les passoires thermiques [seront interdites à la location](https://www.gouvernement.fr/interdiction-a-la-location-des-logements-avec-une-forte-consommation-d-energie-des-2023), forçant les propriétaires à lancer des travaux substentiels.
 
   par défaut: oui
- 
 
 logement . rénovation énergétique BBC:
-  action: 
+  action:
     dépasse:
       - logement . rénovation énergétique
   titre: Rénover mon logement en BBC
