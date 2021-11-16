@@ -1,0 +1,101 @@
+logement . chauffage . bois:
+  icônes: 🪵
+
+logement . chauffage . bois . empreinte:
+  titre: Empreinte du bois
+  applicable si: présent
+  formule: consommation * facteur d'émission
+
+logement . chauffage . bois . présent:
+  question: Votre logement est-il chauffé au bois ?
+  par défaut: non
+
+logement . chauffage . bois . consommation:
+  formule:
+    variations:
+      - si: type = 'bûche'
+        alors: bûche
+      - sinon: granulés
+
+logement . chauffage . bois . consommation . granulés:
+  question: Quelle est la consommation annuelle de bois en granulés de votre foyer ?
+  unité: kWh
+  aide: estimation via le coût
+  par défaut: 10000 kWh
+  description: |
+    Astuce : en moyenne, 1kg de granulés produisent 4.6 kWh. Vous pouvez donc multiplier votre consommation annuelle (en T) par 4600 kWh.
+
+logement . chauffage . bois . consommation . granulés . estimation via le coût:
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  unité: €/kWh
+  formule: 0.072
+  description: |
+    Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois. 
+    Voir l'onglet "Calcul consommation Energie" du [tableur MicMac](https://avenirclimatique.org/wp-content/uploads/2020/04/2020-04-12_MicMac_V2.6.xlsx)
+
+logement . chauffage . bois . consommation . bûche:
+  formule: saisie * intensité énergétique
+logement . chauffage . bois . consommation . bûche . intensité énergétique:
+  formule: 1610
+  unité: kWh/stère
+  note: |
+    Nous faisons l'hypothèse d'une consommation de bûches de 20% d'humidité.
+    Source : dans le fichier ZIP (!) ci-dessous, fichier 1_chauffage_domestique_bois_appro_rapport.pdf page 10.
+  références:
+    - https://www.ademe.fr/etude-chauffage-domestique-bois
+
+logement . chauffage . bois . consommation . bûche . saisie:
+  question: Quelle la consommation annuelle de bois en bûches de votre foyer ?
+  aide: estimation via le coût
+  description: |
+    La consommation de bois de chauffage se compte traditionnellement en stères, ce qui correspond approximativement à un mètre cube de bûches.
+
+    ![](https://upload.wikimedia.org/wikipedia/commons/7/7c/Raummeter_hg.jpg)
+  unité: stères
+  par défaut: 6 stères
+  note: |
+    Source pour la consommation moyenne : dans le lien ci-dessous, fichier PDF présentation, page 10.
+  références:
+    - https://www.ademe.fr/etude-chauffage-domestique-bois
+    - https://fr.wikipedia.org/wiki/Stère
+
+logement . chauffage . bois . consommation . bûche . estimation via le coût:
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  unité: €/stère
+  formule: 71
+  description: |
+    Cette formule nous permet de passer des €/mois au nb_stère/an
+  note: |
+    Source : ci-dessous, fichier 3_presentation.pdf, page 34
+
+  références:
+    - https://www.ademe.fr/etude-chauffage-domestique-bois
+
+logement . chauffage . bois . facteur d'émission:
+  formule:
+    variations:
+      - si: type = 'bûche'
+        alors: bûche
+      - sinon: granulés
+
+logement . chauffage . bois . facteur d'émission . bûche:
+  titre: empreinte bois bûche
+  formule: 0.0295
+  unité: kgCO2e/kWh
+logement . chauffage . bois . facteur d'émission . granulés:
+  titre: empreinte bois granulés
+  formule: 0.0304
+  unité: kgCO2e/kWh
+
+logement . chauffage . bois . type:
+  titre: type de bois
+  question: Quel type de bois utilisez-vous ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - bûche
+        - granulés
+  par défaut: "'bûche'"
+logement . chauffage . bois . type . bûche:
+logement . chauffage . bois . type . granulés:
