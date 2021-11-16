@@ -4,18 +4,17 @@ logement . chauffage . bois:
 logement . chauffage . bois . empreinte:
   titre: Empreinte du bois
   applicable si: présent
-  formule: consommation * facteur d'émission
+  formule:
+    variations:
+      - si: type = 'bûche'
+        alors: consommation . bûche * facteur d'émission . bûche
+      - sinon: consommation . granulés * facteur d'émission . granulés
 
 logement . chauffage . bois . présent:
   question: Votre logement est-il chauffé au bois ?
   par défaut: non
 
 logement . chauffage . bois . consommation:
-  formule:
-    variations:
-      - si: type = 'bûche'
-        alors: bûche
-      - sinon: granulés
 
 logement . chauffage . bois . consommation . granulés:
   question: Quelle est la consommation annuelle de bois en granulés de votre foyer ?
@@ -72,11 +71,6 @@ logement . chauffage . bois . consommation . bûche . estimation via le coût:
     - https://www.ademe.fr/etude-chauffage-domestique-bois
 
 logement . chauffage . bois . facteur d'émission:
-  formule:
-    variations:
-      - si: type = 'bûche'
-        alors: bûche
-      - sinon: granulés
 
 logement . chauffage . bois . facteur d'émission . bûche:
   titre: empreinte bois bûche
@@ -90,6 +84,8 @@ logement . chauffage . bois . facteur d'émission . granulés:
 logement . chauffage . bois . type:
   titre: type de bois
   question: Quel type de bois utilisez-vous ?
+  description: |
+    > Les poêles à bûches représentent 70% des poêles vendus.
   formule:
     une possibilité:
       choix obligatoire: oui
@@ -97,5 +93,7 @@ logement . chauffage . bois . type:
         - bûche
         - granulés
   par défaut: "'bûche'"
+  références:
+    planetoscope: https://www.planetoscope.com/Source-d-energie/1521-.html
 logement . chauffage . bois . type . bûche:
 logement . chauffage . bois . type . granulés:
