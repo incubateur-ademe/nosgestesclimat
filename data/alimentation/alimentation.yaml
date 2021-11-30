@@ -17,6 +17,7 @@ alimentation:
       - local . empreinte
       - boisson
       - déchets
+      - gaspillage alimentaire
         # à venir peut-être dans une prochaine version
         # - laitages
 
@@ -832,3 +833,41 @@ alimentation . déchets . facteur:
       - si: niveau d'engagement = 'en partie'
         alors: 0.6
       - sinon: 0.3
+
+alimentation . gaspillage alimentaire:
+  icônes: 🍲🚯
+  unité: kgCO2e
+  formule:
+    variations:
+      - si: fréquence = 'souvent'
+        alors: 60
+      - si: fréquence = 'parfois'
+        alors: 45
+      - si: fréquence = 'jamais'
+        alors: 29
+  note: |
+    Dans le document en référence, page 7 pour l'empreinte du gaspillage et page 36 pour la réduction moyenne.
+
+    Notons que l'étude n'est pas forcément évidente à suivre, car le détail du calcul des l'empreinte climat n'y est pas. Le calcul est fait sur une population non représentative, puis corrigée avec des statistiques MODECOM, qui font passer l'empreinte de 34kgCO2e à 60kgCO2e. 
+    Notons aussi que le détail n'est pas donné quand à l'empreinte des 60kgCO2e : inclut-elle l'empreinte des déchets "inévitables" ? Cette empreinte n'est-elle pas un double comptage avec une empreinte déjà intégrée dans les variables repas ? Nous mettons de côté ces interrogations pour prévilégier le fait de communiquer déjà cet ordre de grandeur.
+
+    Pour aller plus loin dans cette discussion, notamment les questions de périmètre et de comparaison avec l'étude internationale de la FAO, voir nos commentaires [ici](https://github.com/datagir/nosgestesclimat/pull/1096#issuecomment-945158967).
+  références:
+    - https://www.ademe.fr/sites/default/files/assets/documents/estimer-impacts-du-gaspillage-alimentaire-des-menages.pdf
+
+alimentation . gaspillage alimentaire . fréquence:
+  question: À quelle fréquence jetez-vous des aliments (qu'ils aient été cuisinés ou non) ?
+  par défaut: "'souvent'"
+  description: |
+    Si vous ne faites peu d'efforts pour ne pas jeter vos aliments, répondez "souvent" : en moyenne, le gaspillage alimentaire reste la norme.
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - souvent
+        - parfois
+        - jamais
+
+alimentation . gaspillage alimentaire . fréquence . souvent:
+alimentation . gaspillage alimentaire . fréquence . parfois:
+alimentation . gaspillage alimentaire . fréquence . jamais:
