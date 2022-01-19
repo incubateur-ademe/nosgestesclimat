@@ -381,6 +381,81 @@ transport . voiture . notif proprio:
   description: |
     Vous n'êtes pas propriétaire d'une voiture, mais vous faites quand même des km : nous devons donc vous demander les caractéristiques des voitures que vous empruntez en tant que passager ou conducteur (voiture de location, voiture d'amis).
 
+transport . caravane:
+  icônes: 🚎
+  applicable si: propriétaire
+  formule: surconsommation * km
+  
+transport . camping car . empreinte:
+  non applicable si: km = 0
+  formule: (construction amortie + usage) / voyageurs
+  unité: kgCO2e
+  
+transport . camping car . empreinte . construction amortie:
+  formule: construction / durée de vie
+  unité: kgCO2e
+  
+transport . camping car . empreinte . construction:
+  formule: 30000
+  unité: kgCO2e
+  note: | 
+    Faire un barême en fonction de la taille ou du poids du camping-car
+
+transport . camping car . durée de vie:
+  formule: 20
+
+transport . camping car . km:
+  titre: km en camping car
+  question: Quelle distance parcourez-vous à l'année en camping-car ?
+  par défaut: 5000 km/an
+
+transport . camping car . consommation aux 100:
+  question: Connaissez-vous la consommation moyenne de votre camping-car ?
+  par défaut: 20
+  unité: l/centkm
+  
+transport . camping car . consommation au kilomètre:
+  formule: consommation aux 100 / 100
+  unité: l/km
+
+transport . camping car . empreinte au litre:
+  formule: 4
+  unité: kgCO2e/l
+
+transport . camping car . empreinte au kilomètre:
+  titre: empreinte au km camping-car
+  formule: consommation au kilomètre * empreinte au litre
+  
+transport . camping car . empreinte . usage:
+  formule: km en camping car * empreinte au km camping-car
+  unité: kgCO2e
+
+#transport . camping car . empreinte au kilomètre . personne:
+#  formule: empreinte au kilomètre / voyageurs
+  
+#transport . camping car . empreinte . par personne:
+#  formule: usage / voyageurs
+
+transport . camping car . voyageurs:
+  question: Quel est le nombre moyen de voyageurs dans le camping-car ?
+  description: |
+    Comme pour une voiture, plus on voyage nombreux plus on divise son impact ! 🤔 Mais cette question n'est pas toujours facile car il  est probable que le nombre de 
+    voyageurs varient d'un voyage à l'autre. Essayez tout de même d'estimer une moyenne approximative. 
+  par défaut: 2 voyageurs
+  unité: voyageurs
+  suggestions:
+    deux: 2
+    trois: 3
+    quatre: 4
+
+transport . caravane . propriétaire:
+  question: Possédez-vous une caravane ?
+  par défaut: non
+  
+transport . camping car . propriétaire:
+  question: Possédez-vous une caravane ?
+  par défaut: non
+  
 transport . avion:
   icônes: ✈️
   applicable si: usager
