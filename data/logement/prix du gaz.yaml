@@ -1,0 +1,42 @@
+gaz:
+  références: https://tarifgaz.com/tarifs
+
+gaz . marginal HT:
+  formule: 0.0649
+  unité: €/kWh
+  description: |
+    Prix marginal du kWh hors taxe pour un forfait B1 (cuisine, chauffage air et eau : 6000kWh à 30 000kWh/an).·
+
+    Nous choissons la zone 2 car elle semble la plus représentative (la zone 1 a plus de villes, l'essentiel des métropoles, mais reste une extrêmité et Paris est en 2). [Comprendre les zon  es](https://selectra.info/energie/guides/demarches/zone-tarifaire-gaz).
+
+    Le barème de février 2022 est disponible sur [le site du CRE](https://www.cre.fr/Actualites/publication-des-baremes-applicables-pour-les-tarifs-reglementes-de-vente-de-gaz-naturel-fevri  er-2022).
+
+gaz . marginal avec TVA: marginal HT * 1.2
+
+gaz . TICGN:
+  formule: 0.00841
+  unité: €/kWh
+
+gaz . TICGN avec TVA: TICGN * 1.2
+
+gaz . marginal taxé: TICGN avec TVA + marginal avec TVA
+
+gaz . abonnement: 202.68 €
+gaz . abonnement avec TVA: abonnement * 1.055
+
+gaz . abonnement ATRD fixe: 139.92€
+gaz . CTA: abonnement ATRD fixe * 0.208
+gaz . CTA avec TVA: CTA * 1.055
+
+gaz . consommation par défaut:
+  description: Pour calculer une estimation du prix réel payé par les ménages et en déduire les kWh, on part sur une consommation arbitraire.
+  formule: 15000
+  unité: kWh
+
+gaz . part variable: consommation par défaut * marginal taxé
+
+gaz . prix total: part variable + abonnement avec TVA + CTA avec TVA
+
+gaz . prix:
+  formule: prix total / consommation par défaut
+  description: C'est le facteur qui nous permet de passer du prix payé par le ménage à la consommation en kWh
