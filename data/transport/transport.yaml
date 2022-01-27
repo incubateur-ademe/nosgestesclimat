@@ -41,8 +41,8 @@ transport . voiture . empreinte:
   non applicable si: km = 0
   formule:
     variations:
-      - si: voiture . aide km = 'oui'
-        alors: (construction amortie + usage)
+      - si: voiture . aide km
+        alors: construction amortie / ratio voyageurs + usage
       - sinon: (construction amortie + usage) / voyageurs
   unité: kgCO2e
 
@@ -68,7 +68,28 @@ transport . voiture . voyageurs:
     cinq: 5
 
 transport . voiture . aide km:
+  question: L'utilisateur a-t-il été assisté pour remplir son nombre de kilomètres en voiture, ce nombre étant alors déjà proratisé par le nombre de voyageur pour chaque trajet ?
   par défaut: non
+
+transport . voiture . ratio voyageurs:
+  question: Si l'utilisateur a été assisté pour remplir son nombre de kilomètres, quel est le rapport entre la somme brute des kilomètres, et la somme des kilomètres divisés par le nombre de voyageur du trajet ?
+  note: |
+
+    J'avoue ne pas trop savoir comment définir cette variable qui a pour but de proratiser la construction du véhicule. 
+
+    On a deux solutions : utiliser le nombre de voyageurs moyens, ou utiliser le ratio entre les km bruts et les km proratisés. 
+
+    km perso= A/a + B/b + C/c    
+
+    km brut = A + B + C
+
+    conducteurs moyens = (A*a+B*b+C*c) / (A+B+C)
+
+    ou ratio = km brut / km perso.
+
+    Sans conviction, j'ai choisi ce dernier ratio.
+
+  par défaut: 1
 
 transport . voiture . km:
   titre: Km en voiture
