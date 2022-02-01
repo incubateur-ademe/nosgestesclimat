@@ -1,0 +1,359 @@
+transport . voiture:
+  formule: oui
+  icônes: 🚗
+  description: |
+    ![](https://images.unsplash.com/photo-1572312284222-ecf6d70f1907?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=80)
+
+    La voiture est aujourd'hui en France essentiellement thermique (essence, diesel), bien que l'électrique progresse lentement.
+
+    Pourtant, électrique ou thermique, elle reste un moyen de déplacement très peu efficient : 
+    **il s'agit en moyenne de déplacer un humain de 80kg dans une boîte en métal de 1200kg**.
+
+    Un peu comme si chaque midi, nous faisions à manger pour 10 avant de jeter 90% de la nourriture, 
+    ou que nous décidions de chauffer tout le pâté de maison plutôt que l'intérieur de chacune des 10 maisons.
+
+    Notons finalement qu'il est important de prendre en compte à la fois l'usage (les km parcourus) et la construction de ce véhicule de plus d'une tonne de matériaux divers.
+
+transport . voiture . empreinte:
+  non applicable si: km = 0
+  formule: (construction amortie + usage) / voyageurs
+  unité: kgCO2e
+
+transport . voiture . voyageurs:
+  question: Quel est le nombre moyen de voyageurs dans la voiture ?
+  description: |
+    Une voiture consomme à peu près autant qu'elle ait 1, 2 ou 5 voyageurs à bord. Voyager à plusieurs, c'est donc potentiellement diviser par 5 l'empreinte individuelle ! 
+
+    🤔 Mais cette question n'est pas facile : il est probable que dans une année vous soyez parti en vacances à 3, ayez pris la voiture quotidiennement tout seul, etc.
+
+    Essayez d'estimer une moyenne approximative : si tous les jours vous prenez la voiture tout seul, mettez 1 ou 1,2.
+    Si vous ne la prenez qu'en famille ou entre amis, mettez 3 ou 4.
+
+    > Dans une prochaine évolution du simulateur, nous pourrons séparer les questions par type de trajets : vacances, domicile-travail, quotidiens avec un nombre de voyageur personnalisable.
+
+    Bien sûr, si vous vous faites conduire ou si vous prenez le taxi, le chauffeur ne compte pas, car il est au service de votre déplacement.
+
+  par défaut: 1.2 voyageurs
+  unité: voyageurs
+  suggestions:
+    seul: 1
+    deux: 2
+    cinq: 5
+
+transport . voiture . km:
+  titre: Km en voiture
+  question: Quelle distance parcourez-vous à l'année en voiture ?
+  description: |
+    Ne comptez que les kilomètres de déplacement personnel (courses, loisirs, famille etc.) et de déplacement domicile travail pour rejoindre votre lieu de travail habituel.
+
+    Par exemple, si vous êtes en mission professionnelle dans un autre département ou un autre pays cela rentre dans la comptabilité de votre entreprise : ne le comptez pas ici.
+
+  par défaut: 11000 km/an
+  suggestions:
+    zéro: 0 km/an
+    vacances: 2000 km/an
+    10km / jour: 3600 km/an
+    20km / jour: 7000 km/an
+    1000km / mois: 12000 km/an
+
+transport . voiture . motorisation:
+  question: Quel type de voiture utilisez-vous ?
+  description: |
+    Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.
+
+    > Note : vous êtes étonnés de voir cette question alors que vous avez répondu "non" à "Avez vous votre voiture individuelle" ? C'est normal : dès que vous faites des kilomètres en voiture, nous devons connaitre ses caractéristiques, même si elle n'est pas à vous, pour calculer votre empreinte.
+  par défaut: "'thermique'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - thermique
+        - hybride
+        - électrique
+transport . voiture . motorisation . thermique:
+  titre: Thermique (diesel/essence)
+transport . voiture . motorisation . électrique:
+transport . voiture . motorisation . hybride:
+
+transport . voiture . thermique: oui # sans le 'oui', une question vide est posée
+
+transport . voiture . gabarit:
+  applicable si: km > 0
+  question: Quel est le gabarit de la voiture ?
+  description: |
+    Plus une voiture est lourde et haute donc avec une forte prise au vent, plus elle consomme donc plus elle pollue ! 
+
+    Comme pour la motorisation, si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.
+
+  par défaut: "'moyenne'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - petite
+        - moyenne
+        - berline
+        - SUV
+
+transport . voiture . gabarit . petite:
+transport . voiture . gabarit . moyenne:
+transport . voiture . gabarit . berline:
+transport . voiture . gabarit . SUV:
+
+transport . voiture . thermique . consommation aux 100:
+  question: Connaissez-vous la consommation moyenne de la voiture ?
+  description: |
+    Comme pour la motorisation, si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.
+
+  par défaut: consommation estimée
+  unité: l/centkm
+  note: Les suggestions de réponse sont à la louche, à préciser et sourcer.
+
+transport . voiture . consommation estimée:
+  formule:
+    variations:
+      - si: gabarit = 'petite'
+        alors: 6 l/centkm
+      - si: gabarit = 'moyenne'
+        alors: 7 l/centkm
+      - si: gabarit = 'berline'
+        alors: 9 l/centkm
+      - si: gabarit = 'SUV'
+        alors: 11 l/centkm
+
+transport . voiture . thermique . consommation au kilomètre:
+  formule: consommation aux 100 / 100
+  unité: l/km
+
+transport . voiture . thermique . empreinte au kilomètre:
+  titre: empreinte au km thermique
+  formule: consommation au kilomètre * empreinte au litre
+  note: Cette méthode de calcul, plutôt qu'un barème gabarit -> empreinte au km, permet à l'utilisateur qui connait la consommation moyenne réelle de sa voiture de la saisir pour plus de précision.
+
+transport . voiture . électrique: oui # sans le 'oui', une question vide est posée
+
+transport . voiture . électrique . empreinte au kilomètre:
+  titre: empreinte au km électrique
+  unité: kgCO2e/km
+  formule:
+    variations:
+      - si: gabarit = 'petite'
+        alors: 0.0159
+      - si: gabarit = 'moyenne'
+        alors: 0.0198
+      - sinon: 0.0273
+  note: |
+    Nous faisons la correspondance suivante entre notre gabarit et les données de la base bilan-GES: 
+      - petite -> "entrée de gamme - véhicule léger"
+      - moyenne -> "coeur de gamme - véhicule compact"
+      - berline et SUV -> "haut de gamme - berline"
+
+  références:
+    bilan-GES: https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=voiture
+
+transport . voiture . empreinte . usage:
+  formule: km * au kilomètre
+  unité: kgCO2e
+
+transport . voiture . empreinte . par km personne:
+  formule: au kilomètre / voyageurs
+
+transport . voiture . empreinte . au kilomètre:
+  formule:
+    variations:
+      - si: motorisation = 'thermique'
+        alors: thermique . empreinte au kilomètre
+      - si: motorisation = 'hybride'
+        alors: thermique . empreinte au kilomètre * 0.85
+      - sinon: électrique . empreinte au kilomètre
+  note: |
+    Pour la voiture hybride, nous n'avons pour l'instant pas utilisé les valeurs de la base bilan-GES, car elles sont compliquées à interprêter : 
+      - la catégorie "hybride rechargeable" a une empreinte étonnamment faible (du niveau de l'électrique), mais surtout 0 émissions à la combustion. Ce serait donc un véhicule essence qui n'utilise pas d'essence à l'usage ? [Un sujet récent] sur le forum de bilan-GES n'explique pas l'incohérence.
+      - la différence entre Hybride full Prius et Hybride full P2 n'est pas expliquée
+      - dans ces 2 catégories, il n'y pas l'entrée de gamme.
+
+    L'étude FNH-Carbone4 pourrait être utilisée pour l'empreinte au km des véhicules hybrides rechargeables. Voici l'hypothèse structurante retenue : 
+
+    > Répartition des modes de roulage (thermique / électrique) pour les hybrides : 50% / 50% en 2016
+
+    Mais on notera la controverse récente sur l'empreinte des véhicules hybrides rechargeable suite à [une étude](https://www.transportenvironment.org/press/les-hybrides-rechargeables-au-cœur-d’un-nouveau-scandale-d’émissions-des-tests-révèlent-des) de Transport & Environnement faisant état d'une empreinte réelle incomparable à l'empreinte annoncée par les constructeurs.
+
+    Nous avons donc pour l'instant retenu le calcul du calculateur MicMac qui est la base de Nos Gestes Climat, dont la source est malheureusement inaccessible : 
+
+    > Hybride : enlever 15 % aux consommations ci-dessus (source ADEME : http://www2.ademe.fr/servlet/KBaseShow?catid=13655)
+
+transport . voiture . thermique . empreinte au litre:
+  formule: 2.9
+  unité: kgCO2e/l
+
+transport . voiture . empreinte . construction:
+  formule:
+    variations:
+      - si: motorisation = 'thermique'
+        alors: barème thermique
+      - si: motorisation = 'électrique'
+        alors: barème électrique
+      - sinon: barème hybride
+  unité: kgCO2e
+  description: |
+    ![](https://i.imgur.com/uIlZcEjl.jpg)
+
+    Une voiture est un gros, très gros objet, qui pèse souvent plus d'une tonne et demi. En conséquence, sa construction a une empreinte importante. 
+
+    En particulier, la construction d'une voiture électrique de gamme équivalente à une thermique émet plus de gaz à effet de serre. C'est notamment du à la batterie et son poids important.
+
+    Malgré cela, en France, sur la durée de vie de la voiture et donc les km parcourus, le choix de la voiture électrique est nettement mieux pour le climat. 
+
+    Mieux, mais loin d'être faible ! En 2020, il ne s'agit plus seulement de comparer des solutions techniques entre elles, il s'agit d'évaluer ses achats par rapport aux objectifs climat.
+
+  note: |
+
+    Nous utilisons l'étude [FNH-Carbone4](https://github.com/betagouv/ecolab-data/files/5945898/vehicule_electrique_rapport.pdf).
+
+    Pour l'instant, nous n'avons que deux gabarits, la citadine et la berline.
+
+    p. 12.
+
+    ![](https://user-images.githubusercontent.com/1177762/107264406-3afdd980-6a43-11eb-87ad-a09681240949.png)
+
+    Nous prenons la "production et fin de vie" et lui retranchons les "crédits de recyclage", et les données de 2016 plutôt que le scénario prospectif 2030.
+
+    p. 57 et 58.
+
+    ![](https://user-images.githubusercontent.com/1177762/107265071-1eae6c80-6a44-11eb-9b51-c2aee3bfcf3c.png)
+    ![](https://user-images.githubusercontent.com/1177762/107265098-2706a780-6a44-11eb-8681-7901f00e057b.png)
+
+transport . voiture . empreinte . construction . barème thermique:
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - gabarit = 'petite'
+            - gabarit = 'moyenne'
+        alors: 6700 - 1100
+      - si:
+          une de ces conditions:
+            - gabarit = 'berline'
+            - gabarit = 'SUV'
+        alors: 7600 - 1300
+  unité: kgCO2e
+
+transport . voiture . empreinte . construction . barème électrique:
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - gabarit = 'petite'
+            - gabarit = 'moyenne'
+        alors: 10200 - 2200
+      - si:
+          une de ces conditions:
+            - gabarit = 'berline'
+            - gabarit = 'SUV'
+        alors: 20200 - 6600
+  unité: kgCO2e
+
+transport . voiture . empreinte . construction . barème hybride:
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - gabarit = 'petite'
+            - gabarit = 'moyenne'
+        alors: 9600 - 2000
+      - si:
+          une de ces conditions:
+            - gabarit = 'berline'
+            - gabarit = 'SUV'
+        alors: 6900 - 2400
+  unité: kgCO2e
+  note: Ètonnamment, la berline a moins d'empreinte construction que la citadine... A voir si l'étude relève ce mystère.
+
+transport . voiture . âge:
+  applicable si:
+    toutes ces conditions:
+      - km > 0
+      - propriétaire # Nous ne devrions pas avoir à poser ces conditions. Publicodes devrait déterminer lui-même qu'elles sont à poser après la question des km et la question propriétaire, mais la nouvelle version de publicodes a perdu ce côté magique.
+  question: Quel est l'âge de votre voiture ?
+  description: |
+    Pour calculer l'empreinte de la construction de la voiture, qu'il ne faut pas négliger, nous utilisons l'âge de la voiture.
+
+    Répondez bien avec *l'âge de la voiture*, pas le nombre d'année qu'elle a passé en votre possession : il y a en effet de grandes chances que vous l'ayez achetée d'occasion.
+
+    Si vous êtes deux à utiliser deux voitures, vous pouvez simplement vous en attribuer une, ou entrer une moyenne de leurs caractéristiques.
+
+    Si vous possédez plusieurs voitures utilisées uniquement par vous même, ~~vendez au moins la deuxième~~ ce cas n'est pas encore prévu.
+  unité: années
+  par défaut: 9 années
+  suggestions:
+    6 mois: 0.5
+    1 an et demi: 1.5
+    5 ans: 5
+    10 ans: 10
+transport . voiture . empreinte . construction amortie:
+  formule:
+    variations:
+      - si: propriétaire
+        alors: construction * amortissement particulier
+      - sinon: (construction / durée de vie) * facteur location
+  unité: kgCO2e
+
+transport . voiture . amortissement particulier:
+  description: |
+    Quand on achète une voiture, on fait émettre une quantité donnée de GES. Disons par exemple, 10 tonnes, pour une durée de vie de la voiture de 10 ans. Ces gaz sont émis l'année de l'achat, ou plus ou moins (certains composants auront déjà été produits). 
+
+    Il serait donc logique du point de vue de l'empreinte sur le climat, d'attribuer les émissions de la construction à la 1ère année : l'effet de serre réchauffant commence dès l'achat !
+
+    Sauf que beaucoup de voitures sont achetées par des entreprises avant d'être vendues d'occasion aux particuliers, ou entre particuliers. Il semble donc légitime de distribuer l'attribution dans le temps, donc au fur et à mesure des propriétaires. De la même façon, il faut aussi penser aux utilisateurs qui découvrivraient cet outil seulement l'année suivant l'achat d'une voiture : il est légitime de leur réserver une partie des émissions émises.
+
+    Deuxièmement, en attribuant toute l'empreinte à l'achat, on enverrait un signal fort qui désavantagerait le choix d'une voiture électrique par rapport à une thermique, alors qu'en France les émissions de cette dernière rattrapent la première dès les premières années d'usage.
+
+    D'où le choix d'amortir l'achat sur les 10 premières années (la durée de vie moyenne d'une voiture), avec un taux dégressif, en s'assurant bien que la somme de la part de chaque année donne 100%.
+
+    En bref, nous faisons un compromis entre un modèle cohérent du point de vue du climat et un modèle plus pratique dans le contexte d'un simulateur pédagogique pas forcément utilisé chaque année.
+
+    Pour voir la réflexion ayant mené à cette méthode, voir [cette discussion](https://github.com/betagouv/ecolab-data/issues/225#issuecomment-689472950).
+  note: |
+    Quand on aura mis à jour le code avec la dernière version de publi.codes, on pourra utiliser le [mécanisme `grille`](https://publi.codes/mécanismes#grille) qui fait exactement ça.
+  formule:
+    variations:
+      - si: âge < 1
+        alors: 40%
+      - si: âge < 2
+        alors: 20%
+      - si: âge < 3
+        alors: 10%
+      - si: âge < 10
+        alors: 5%
+      - sinon: 0%
+
+transport . voiture . durée de vie:
+  formule: 19
+  description: |
+    Nous considérons qu'une voiture de particulier, comme une voiture de location, est utilisée en moyenne 19 ans avant d'être mise à la casse [source](https://www.largus.fr/actualite-automobile/le-top-15-des-voitures-envoyees-a-la-casse-10348407.html).
+
+    En effet, bon nombre de voitures sont par exemple achetées neuves par des entreprises de location, et seront ensuite aquises par un particulier d'occasion.
+
+transport . voiture . facteur location:
+  formule: km / 16300
+  note: |
+    On attribue à l'utilisateur l'impact de la construction au pro rata de son utilisation par rapport au km parcourus par la voiture sur une année.
+  références:
+    - https://www.ademe.fr/sites/default/files/assets/documents/enquete-autopartage-2019-rapport.pdf
+
+transport . voiture . propriétaire:
+  question: Avez-vous votre propre voiture individuelle ?
+  description: |
+    Par opposition à l'utilisation exclusive de voitures de location partagées par d'autres personnes le reste du temps, ou l'utilisation de la voiture d'un ami, de la famille.
+
+    Si votre entreprise vous met à disposition une voiture dont vous êtes le principal utilisateur, vous pouvez considérer que c'est votre voiture individuelle.
+  par défaut: oui
+
+transport . voiture . notif proprio:
+  type: notification
+  formule:
+    toutes ces conditions:
+      - propriétaire = non
+      - km > 0
+  description: |
+    Vous n'êtes pas propriétaire d'une voiture, mais vous faites quand même des km : nous devons donc vous demander les caractéristiques des voitures que vous empruntez en tant que passager ou conducteur (voiture de location, voiture d'amis).
