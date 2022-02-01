@@ -81,10 +81,27 @@ prix . avocat:
 
 > 💡 Pour faciliter la relecture par les autres contributeurs et l'équipe, la discussion et les itérations, mieux vaut faire une PR (*Pull request*, proposition de changements) par sujet. Par exemple, faite une PR pour votre proposition "ajouter la moto au simulateur". Faites-en une autre pour votre proposition "amélioration des données d'empreinte de construction des véhicules électriques".
 
-### Vous voulez devenir un pro des modèles carbone
 
-Nous travaillons à un environnement Web de développement, vous pouvez en avoir un avant goût sur le [studio publicodes](https://publi.codes/studio). 
+### Vous voulez contribuer comme un pro
 
-En attendant, pour travailler sur ces modèles YAML et voir vos changements mettre à jour l'interface de simulation (sans F5, c'est magique), il faut adopter la méthode de travail d'un développeur Web.
+#### Sans rien installer sur votre machine [⌛ < 30 minutes de mise en place]
+
+Bonne nouvelle, Github vient de sortir ses Codespaces ! En 5 minutes, vous aurez un environnement de travail dans votre navigateur qui vous permet de modifier les modèles carbone et de voir en un rafraichissement de page comment ils impactent l'interface de NGC. C'est parti ! 
+
+- Sur la page d'accueil du modèle [ici](https://github.com/datagir/nosgestesclimat), cliquez sur le bouton vert "Code", l'onglet Codespaces, puis New codespace (à ne faire qu'une fois, ensuite vous le réutiliserez). 
+- Un nouvel onglet s'ouvre, vous avez accès à tout un environnement de développement, appelé Visual Studio Code, qui est un standard aujourd'hui parmi les développeurs Web. Vous pouvez naviguer dans les fichiers, les modifier, puis envoyer vos changements sur git via l'onglet (vertical) "Source control". 
+- Vous verez dans ces onglets la liste des fichiers modifiés, appellée "Changes". Pour faire votre 1er commit, vous devez ajouter des fichiers en cliquant sur "+" à droite du fichier. Vous avez alors des "stages changes". Écrivez un message de commit, puis validez ! 
+- C'est bien beau de pouvoir faire des changements, mais comment être sur qu'ils *compilent*, c'est à dire que leur forme est correcte, et que leur fond l'est aussi, ce qui vous demande de voir l'impact qu'ont vos changements sur l'interface NGC ? 
+- En bas, vous avez le "terminal", la ligne de commande. Dans cette ligne de commande, lancez cette suite d'instructions. 
+- `cd ..` pour vous déplacer un répertoire au-dessus du modèle nosgestesclimat
+- `git clone https://github.com/datagir/nosgestesclimat-site` pour rappatrier sur votre codespace le code du site
+- `nvm install 15` pour utiliser une version récente de nodejs, donc de javascript (le site en a besoin :/)
+- `yarn && yarn start` : la commande `yarn` installe les dépendances du site, puis `yarn start` lance la compilation et le serveur; ⏳️ attendez un peu que ça se passe
+- vous verrez normalement un dialogue en bas à droite disant "Your application running on port 8080 is available.", cliquez sur le bouton vert "Open in browser"
+- si tout s'est bien passé, vous avez le site qui tourne *avec votre version du modèle climat*, que vous pouvez modifier à votre guise. Après un changement du modèle dans votre environnement de développement (ajoutez 1000 à la somme de `bilan.yaml`) par exemple, faites Ctrl-S (sauvegarder) puis allez voir l'onglet du site ouvert juste avant et faites F5 : le calcul aura changé de 1000 😀
+
+#### En adoptant les outils et pratiques des développeurs
+
+Rien ne remplace l'outillage complet : pour travailler sur ces modèles YAML et voir vos changements mettre à jour l'interface de simulation (sans F5, c'est magique), il faut adopter la méthode de travail d'un développeur Web.
 
 Il va falloir se documenter pour comprendre ce qu'est [*git*](https://openclassrooms.com/fr/courses/1233741-gerez-vos-codes-source-avec-git), cloner ce dépôt vers un dossier nommé "nosgestesclimat", puis cloner [nosgestesclimat-site](https://github.com/datagir/nosgestesclimat-site) à la même racine, entrer dans ecolab-climat et faire `yarn && yarn start`. Vous pourrez alors modifier les fichiers .yaml et voir en temps réel les résultats des calculs changer, et les simulations poser de nouvelles questions :sparkles: .
