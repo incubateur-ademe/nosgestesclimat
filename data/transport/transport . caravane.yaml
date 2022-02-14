@@ -13,35 +13,43 @@ transport . vacances . caravane . empreinte:
   applicable si: propriétaire
   formule: (construction amortie + (surconsommation * distance)) / voyageurs
   note: |
-    On applique une surconsommation (20 % fixé arbitrairement) sur un pourcentage des km effectués (5% fixé arbitrairement)
-    On considère le même nombre de voyageurs
-
+    On considère une surconsommation pour les km parcourus avec la caravance.
+    
 transport . vacances . caravane . surconsommation:
   formule: voiture . empreinte . au kilomètre * ratio surconsommation
 
 transport . vacances . caravane . ratio surconsommation:
   formule: 25%
   note: |
-    Cette hypothèse semble une bonne première approximation au regard de ce qui se lit sur internet (à peine 1l/100 de plus vs +50 %)
+    1.2 à 1.5 l/100 km [ici](https://www.lemondedupleinair.com/comment-limiter-sa-consommation-de-carburant-en-tractant-une-caravane/) ce qui peut être estimé à une surconsommation de 10 à 20%
+    40 à 50 % [ici](https://forum.lescaravaniers2.com/viewtopic.php?t=9973)
+    En première approximation, nous considérons donc une hypothèse de 25% de surconsommation
 
 transport . vacances . caravane . distance:
   question: Quelle distance parcourez-vous à l'année en caravane ?
   par défaut: 5000 km/an
 
 transport . vacances . caravane . empreinte . construction:
-  formule: 1850
+  formule: voiture . gabarit . berline . empreinte * (caravane . poids / voiture . gabarit . berline . poids)
   unité: kgCO2e
   note: |
-    On extrapole l'impact de la fabrication d'un camping car à partir d'un ratio sur le poids et en considérant les données de construction "Citadine"
-    On considère un poids 1.138t pour la citadine (source étude FNH-Carbone4) et on considère un poids de 750 kg pour une caravane.
-    Cette valeur est divisé par deux pour tenir compte du fait que la fabrication d'une caravane est plus simple (pas de moteur, de transmission, etc.)
+    On extrapole l'impact de la fabrication d'une caravane car à partir d'un ratio sur le poids et en considérant les données de construction "Berline" (6300 kgCO2e et 1500 t)
+    Source Figure 6 et tableau 1 [FNH-Carbone4](https://europeanclimate.org/wp-content/uploads/2019/11/quelle-contribution-du-vehicule-electrique-a-la-transition-ecologique-en-france.pdf)
+    On considère un poids de 750 kg pour une caravane.
 
+transport . vacances . caravane . poids:
+  formule: 750
+  unité: kg
+    
 transport . vacances . caravane . empreinte . construction amortie:
   formule: construction / durée de vie
   unité: kgCO2e
 
 transport . vacances . caravane . durée de vie:
-  formule: 20
+  formule: 25
+note: |
+  Comme pour le camping car on considère une durée de vie de [25 ans](https://objectifpleinair.com/combien-de-temps-dure-un-camping-car/).
+  Cette hypothèse nécessite d'être mieux sourcée.
 
 transport . vacances . caravane . voyageurs:
   question: Quel est le nombre moyen de voyageurs lorsque vous voyagez avec votre caravane ?
