@@ -1,6 +1,5 @@
 transport . vacances . caravane:
   formule: oui
-  icônes: 🚐
   description: |
     A compléter
 
@@ -11,16 +10,28 @@ transport . vacances . caravane . propriétaire:
 transport . vacances . caravane . empreinte:
   titre: Caravane
   icônes: 🚎
-  applicable si: propriétaire
-  formule: (construction amortie + (surconsommation * distance)) / voyageurs
+  applicable si:
+    toutes ces conditions:
+      - transport . voiture . km > 0
+      - propriétaire
+  formule: usage réel + construction amortie réelle
   note: |
     On considère une surconsommation pour les km parcourus avec la caravance.
+
+transport . vacances . caravane . empreinte . usage réel:
+  titre: Usage Camping Car
+  formule: (surconsommation * distance) / voyageurs
+  unité: kgCO2e
+
+transport . vacances . caravane . empreinte . construction amortie réelle:
+  formule: construction amortie / voyageurs
+  unité: kgCO2e
 
 transport . vacances . caravane . surconsommation:
   formule: voiture . empreinte . au kilomètre * ratio surconsommation
 
 transport . vacances . caravane . ratio surconsommation:
-  formule: 25%
+  formule: 0.25
   note: |
     1.2 à 1.5 l/100 km [ici](https://www.lemondedupleinair.com/comment-limiter-sa-consommation-de-carburant-en-tractant-une-caravane/) ce qui peut être estimé à une surconsommation de 10 à 20%
     40 à 50 % [ici](https://forum.lescaravaniers2.com/viewtopic.php?t=9973)
