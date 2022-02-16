@@ -1,0 +1,64 @@
+gaz:
+  description: |
+    Nous calculons ici le prix du gaz à partir de la consommation d'un foyer. 
+
+    Il s'agit donc d'inclure les différents prélèvements obligatoires, ainsi que l'abonnement vraiment significatif dans le cas du gaz. 
+
+    Attention, le marché du gaz est largement libéralisé, ainsi le tarif reglementé, qui est la base de notre calcul, n'est plus exclusif. On ne peut plus y souscire, mais les clients existens le seront jusqu'en 2023. 
+
+    Il existe en 2022 deux types de tarifs : celui qui est indexé sur le tarif reglementé, qui en est très proche, et les tarifs complètement libres, souvent fixés pour une durée déterminée.
+
+    Nous partons donc du principe que le tarif reglementé reste représentatif du prix d'un foyer moyen. 
+
+    Source pour [la liste des taxes](https://www.energie-info.fr/fiche_pratique/cspe-ticgn-cta-tva-toutes-les-taxes-sur-ma-facture/).
+  références: https://tarifgaz.com/tarifs
+
+gaz . marginal HT:
+  formule: 0.0649
+  unité: €/kWh
+  description: |
+    Prix marginal du kWh hors taxe pour un forfait B1 (cuisine, chauffage air et eau : 6000kWh à 30 000kWh/an).·
+
+    Nous choissons la zone 2 car elle semble la plus représentative (la zone 1 a plus de villes, l'essentiel des métropoles, mais reste une extrêmité et Paris est en 2). [Comprendre les zon  es](https://selectra.info/energie/guides/demarches/zone-tarifaire-gaz).
+
+    Le barème de février 2022 est disponible sur [le site du CRE](https://www.cre.fr/Actualites/publication-des-baremes-applicables-pour-les-tarifs-reglementes-de-vente-de-gaz-naturel-fevri  er-2022).
+
+gaz . marginal avec TVA: marginal HT * 1.2
+
+gaz . TICGN:
+  formule: 0.00841
+  unité: €/kWh
+
+gaz . TICGN avec TVA: TICGN * 1.2
+
+gaz . marginal taxé: TICGN avec TVA + marginal avec TVA
+
+gaz . abonnement: 202.68 €
+gaz . abonnement avec TVA: abonnement * 1.055
+
+gaz . abonnement ATRD fixe:
+  formule: 139.92€
+  description: |
+    Partie fixe du tarif d’acheminement appliqué par les gestionnaires des réseaux de distribution gaz naturel pour calcul de la CTA, [source](https://opera-energie.com/atrd-tarif-distribution-gaz-naturel).
+
+gaz . CTA: abonnement ATRD fixe * 0.208
+gaz . CTA avec TVA: CTA * 1.055
+
+gaz . consommation par défaut:
+  description: Pour calculer une estimation du prix réel payé par les ménages et en déduire les kWh, on part sur une consommation arbitraire.
+  formule: 15000
+  unité: kWh
+
+gaz . part variable: consommation par défaut * marginal taxé
+
+gaz . prix total: part variable + abonnement avec TVA + CTA avec TVA
+
+gaz . prix:
+  formule: prix total / consommation par défaut
+  description: C'est le facteur qui nous permet de passer du prix payé par le ménage à la consommation en kWh.
+  note: |
+    On remarquera que la formule de calcul est de type p = c * a + b, où p=prix, c=coût, a=coût marginal TTC, b = coût fixe. 
+
+    Ainsi, nous pourrions avoir une estimation bien plus fiable de la conso à partir du prix en inversant cette équation. 
+
+    Mais malheureusement notre formulaire d'estimation ne fonctionne aujourd'hui qu'avec un facteur de multiplication.
