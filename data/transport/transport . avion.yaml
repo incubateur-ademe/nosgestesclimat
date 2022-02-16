@@ -1,0 +1,152 @@
+transport . avion:
+  icônes: ✈️
+  applicable si: usager
+  description: |
+    ![](https://images.unsplash.com/photo-1525624286412-4099c83c1bc8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80)
+
+    L'empreinte de l'avion est conséquente. Il n'est pas forcément plus polluant *au kilomètre* qu'une voiture qui ne déplace qu'une personne, 
+    mais la distance et surtout la distance parcourue en une heure (qu'on appelle couramment la vitesse), permet de changer de continent pour un week-end.
+
+    Gardons aussi en tête que le Français moyen ne prend pas ou peu l'avion. L'essentiel de l'empreinte de l'aviation est donc concentrée sur 10% ou moins des Français.
+
+  note: |
+    Nous avons fait le choix de demander le total d'heures de vol, plutôt que de demander à l'utilisateur de renseigner chacun de ses vols 
+    via l'aéroport de départ, d'arrivée et la classe économique. C'est une évolution possible par la suite, 
+    voir [ce simulateur](https://futur.eco/simulateur/transport/avion/impact) où une partie du travail est déjà faite.
+
+    A noter aussi que les escales entrainent des décollages supplémentaires, qui consomment plus de carburant qu'une vitesse de croisière.
+    C'est aussi un paramètre à prendre en compte par la suite.
+
+    Pour un modèle plus détaillé de l'empreinte de l'avion, nous avons trouvé deux sources.
+
+    L'algorithme complet de l'appli North, disponible [ici](https://github.com/tmrowco/northapp-contrib/blob/master/co2eq/flights/index.js).  
+
+    Le pseudo-algorithme de myclimate.org, ci-dessous.
+
+    ![](https://imgur.com/hIVvuIw.jpg).
+  formule:
+    somme:
+      - court courrier
+      - moyen courrier
+      - long courrier
+
+transport . avion . usager:
+  question: Prenez-vous l'avion ?
+  description: |
+    Si vous ne prenez pas l'avion tous les ans mais que vous comptez continuer à le prendre, répondez "oui" et estimez grossièrement le nombre d'heures de vol ramené à l'année. 
+
+    Ce n'est pas très rigoureux, mais l'avion a une telle empreinte sur le climat qu'il est important de prendre cela en compte.
+
+    > Par exemple, si vous avez pris un long-courrier de 20h en 2018 et que vous comptez le reprendre en 2022, nous pouvons partir du principe que vous le prenez tous les 4 ans environ : renseignez simplement `5 heures` à la question "long-courier".
+  par défaut: oui
+
+transport . avion . court courrier:
+  formule: heures de vol * vitesse moyenne * empreinte par km
+transport . avion . court courrier . vitesse moyenne:
+  formule: 600 / 1.3
+  unité: km/h
+  note: |
+    Nous utilisons la vitesse moyenne de vol pour un Paris Toulouse.
+transport . avion . court courrier . empreinte par km:
+  formule: 0.230
+  note: |
+    Nous utilisons le facteur d'émission de la tranche de distance < 1000 km (aller) de [ecolab-transport](https://github.com/betagouv/ecolab-transport/blob/master/ges-transport.yaml#L13).
+  unité: kgCO2e/km
+
+transport . avion . court courrier . heures de vol:
+  question: Combien d'heures par an voyagez-vous en avion en France métropolitaine ?
+  description: |
+    Comptez les heures que vous avez passé dans un avion pour des vols d'une distance inférieure à 1000km (à peu près). Si vous faites des escales, additionnez simplement les durées de chaque vol.
+
+
+    Les suggestions sont basées sur la durée minimum arrondie de vol constatée dans les moteurs de recherche, doublée pour considérer un aller-retour.
+
+    💡 Ne comptez que les km de déplacement personnel et de déplacement domicile travail pour rejoindre votre lieu de travail habituel.
+    Par exemple, si vous êtes en mission professionnelle dans un autre pays, cela rentre dans la comptabilité de votre entreprise.
+
+  suggestions:
+    🚫✈️: 0
+    Paris🔁Lyon: 2
+    Paris🔁Toulouse: 2.6
+    Paris🔁Nice: 2.8
+    Paris🔁Ajaccio: 3.2
+
+  unité: h/an
+  par défaut: 1 h/an
+
+transport . avion . moyen courrier:
+  formule: heures de vol * vitesse moyenne * empreinte par km
+transport . avion . moyen courrier . vitesse moyenne:
+  formule: 1350 / 2.5
+  unité: km/h
+  note: |
+    Nous utilisons la vitesse moyenne de vol pour un Paris Alger.
+transport . avion . moyen courrier . empreinte par km:
+  formule: (0.186 + 0.178) / 2
+  note: |
+    Nous utilisons la moyenne des facteurs d'émissions des tranches de distance 1000-2000km et 2000-3500km (aller) de [ecolab-transport](https://github.com/betagouv/ecolab-transport/blob/master/ges-transport.yaml#L13).
+  unité: kgCO2e/km
+
+transport . avion . moyen courrier . heures de vol:
+  question: Combien d'heures par an voyagez-vous en avion vers l'Europe ou le bassin méditerranéen ?
+  description: |
+    Comptez les heures que vous avez passé dans un avion pour des vols d'une distance entre 1000km et 3500km (à peu près). Si vous faites des escales, additionnez simplement les durées de chaque vol.
+
+    Les suggestions sont basées sur la durée minimum arrondie de vol constatée dans les moteurs de recherche, doublée pour considérer un aller-retour.
+
+    💡 Ne comptez que les km de déplacement personnel et de déplacement domicile travail pour rejoindre votre lieu de travail habituel.
+    Par exemple, si vous êtes en mission professionnelle dans un autre pays, cela rentre dans la comptabilité de votre entreprise.
+
+  suggestions:
+    🚫✈️: 0
+    Paris🔁Copenhague: 4
+    Paris🔁Alger: 5
+    Paris🔁Athènes: 6
+    Paris🔁Liban: 8
+
+  unité: h/an
+  par défaut: 1 h/an
+
+transport . avion . long courrier:
+  formule: heures de vol * vitesse moyenne * empreinte par km
+transport . avion . long courrier . vitesse moyenne:
+  formule: 5800 / 8.5
+  unité: km/h
+  note: |
+    Nous utilisons la vitesse moyenne de vol du modèle MicMac v2.6, déterminée selon [ces données](http://www.abm.fr/voyager-en-avion-le-guide-du-passager/en-complement/distances-et-durees-de-vol.html).
+transport . avion . long courrier . empreinte par km:
+  formule: 0.151
+  note: |
+    Nous utilisons le facteur d'émissions de la tranche > 3500km (aller) de [ecolab-transport](https://github.com/betagouv/ecolab-transport/blob/master/ges-transport.yaml#L13).
+  unité: kgCO2e/km
+
+transport . avion . long courrier . heures de vol:
+  question: Combien d'heures par an voyagez-vous au-delà en vol long courrier ?
+  description: |
+    Comptez les heures que vous avez passé dans un avion pour des vols d'une distance supérieure à 3500km, c'est-à-dire au-delà de l'Europe et du pourtour méditerranéen. 
+
+    Si vous faites des escales, additionnez simplement les durées de chaque vol.
+
+    Les suggestions sont basées sur la durée minimum arrondie de vol constatée dans les moteurs de recherche, doublée pour considérer un aller-retour.
+
+    💡 Ne comptez que les km de déplacement personnel et de déplacement domicile travail pour rejoindre votre lieu de travail habituel.
+    Par exemple, si vous êtes en mission professionnelle dans un autre pays, cela rentre dans la comptabilité de votre entreprise.
+
+  suggestions:
+    🚫✈️: 0
+    Paris🔁Kinshasa: 16
+    Paris🔁New York: 17
+    Paris🔁Tokyo: 24
+    Paris🔁Lima: 36
+    Paris🔁Sydney: 40
+
+  unité: h/an
+  par défaut: 1 h/an
+
+transport . train:
+  icônes: 🚋
+  description: |
+
+    ![](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/TER_Vesoul.jpg/640px-TER_Vesoul.jpg)
+
+  formule: km * impact par km
