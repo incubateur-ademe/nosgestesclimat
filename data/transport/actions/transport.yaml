@@ -331,7 +331,6 @@ transport . voiture 5km . fréquence:
     chaque jour: 7
     deux trajets par jour: 14
 
-## Il est théoriquement possible que le recalcul soit négatif 
 transport . voiture électrique:
   titre: Passer à la voiture électrique
   icônes: 🔌🚗
@@ -343,9 +342,28 @@ transport . voiture électrique:
   note: |
     Envisager de ne proposer cette action que si elle > 0 voire > à plusieurs centaines de kgCO2eq
 
-transport . voiture électrique . recalcul:
+transport . voiture électrique . recalcul: ## Il est théoriquement possible que le recalcul soit négatif
   formule:
     recalcul:
       règle: transport . voiture . empreinte
       avec:
         transport . voiture . motorisation: "'électrique'"
+
+transport . voiture électrique neuve:
+  titre: Acheter une voiture électrique neuve
+  icônes: 🔌🚗
+  non applicable si: transport . voiture . motorisation = 'électrique'
+  formule: transport . voiture . empreinte - transport . voiture électrique neuve . recalcul
+  description: |
+    La voiture électrique n'est pas la solution miracle mais pour certains usages elle peut s'avérer utile pour réduire l'empreinte carbone de nos déplacements.
+    Si vous voulez mieux comprendre les enjeux de la voiture électrique consultez nos explications détaillées [Renvoyer vers la fiche élaborées (qui n'est peut être pas mises).]
+  note: |
+    Envisager de ne proposer cette action que si elle > 0 voire > à plusieurs centaines de kgCO2eq
+
+transport . voiture électrique neuve . recalcul:
+  formule:
+    recalcul:
+      règle: transport . voiture . empreinte
+      avec:
+        transport . voiture . motorisation: "'électrique'"
+        transport . voiture . âge: 1 années
