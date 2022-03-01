@@ -244,46 +244,44 @@ transport . voiture . thermique . empreinte au litre:
   description: |
     Les empreintes sont disponibles de façon assez détaillée sur [la base carbone](https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=diesel), ici par exemple pour le "diesel". Idem pour "essence". 
     Pour les retrouver facilement, filtrez par unité "kgCO2e/litre" et par géographie "France continentale".
+    A noter que pour le gazole, le FE choisi est la moyenne entre le gazole B7 et le gazole B10.
   formule:
     variations:
-      - si: carburant = 'gazole B7'
-        alors: 3.1
-      - si: carburant = 'gazole B10'
-        alors: 3.04
-      - si: carburant = 'essence E5 et E10'
+      - si: carburant = 'gazole B7 ou B10'
+        alors: 3.07
+      - si: carburant = 'essence E5 ou E10'
         alors: 2.7
-      - si: carburant = 'essence E85'
-        alors: 1.11
+      # - si: carburant = 'essence E85'
+      #   alors: 1.11
   unité: kgCO2e/l
 
 transport . voiture . thermique . carburant:
   question: Quel type de carburant votre voiture consomme-t-elle ?
   description: |
 
-
     Pour comprendre les différents types de carburants, [cet article pédagogique](https://www.francetvinfo.fr/economie/automobile/essence/les-carburants-changent-de-nom-a-la-pompe-voici-comment-vous-y-retrouver_2967013.html) est très utile. 
 
     [Cet article](https://www.ecologie.gouv.fr/carburants-et-combustibles-autorises-en-france) du ministère de l'écologie explique plus en détail les carburants légaux en France. 
 
-    > Attention, si le type de carburant fait varier de façon significative l'empreinte climat au litre, la consommation en litre par 100km elle aussi varie. Veillez à saisir une consommation au litre basée sur votre moyenne réelle. À titre d'exemple, le superéthanol E85 est moins énergétique, donc fait grimper les litres consommés [de 15 à 25%](https://www.ledauphine.com/magazine-lifestyle/2020/02/02/ce-que-vous-devez-savoir-sur-le-superethanol-e85-avant-de-vous-lancer).
+    Au vu des problématiques liées au changement d'affectation des sols et autres impacts environnementaux liés à la culture du maïs par exemple, les **biocarburants** ne sont pas pris en compte (le facteur d'émission de la base carbone étant particulièrement incertain). Voir discussions [ici](https://github.com/datagir/nosgestesclimat/pull/1324)
 
-  par défaut: "'essence E5 et E10'"
+    > Attention, si le type de carburant fait varier de façon significative l'empreinte climat au litre, la consommation en litre par 100km elle aussi varie. Veillez à saisir une consommation au litre basée sur votre moyenne réelle.
+
+  par défaut: "'essence E5 ou E10'"
   formule:
     une possibilité:
       choix obligatoire: oui
       possibilités:
-        - gazole B7
-        - gazole B10
-        - essence E5 et E10
-        - essence E85
+        - gazole B7 ou B10
+        - essence E5 ou E10
+        # - essence E85 -> On choisi pour le moment de ne pas inclure les biocarburants.
   note: |
     La domination du couple gazole-essence est écrasante, [source](https://www.leprogres.fr/magazine-automobile/2021/03/27/quels-sont-les-carburants-les-plus-utilises-dans-votre-commune).
 
     Par contre, parmi les véhicules neufs, l'essence domine aujourd'hui.
 
-transport . voiture . thermique . carburant . gazole B7:
-transport . voiture . thermique . carburant . gazole B10:
-transport . voiture . thermique . carburant . essence E5 et E10:
+transport . voiture . thermique . carburant . gazole B7 ou B10:
+transport . voiture . thermique . carburant . essence E5 ou E10:
 transport . voiture . thermique . carburant . essence E85:
 
 transport . voiture . empreinte . construction:
