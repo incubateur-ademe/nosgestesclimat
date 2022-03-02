@@ -2,6 +2,9 @@ alimentation . réduire viande:
 
 alimentation . réduire viande . par deux:
   applicable si: nombre de plats viande > 0
+  action:
+    dépasse:
+      - alimentation . viande faible empreinte
   titre: Manger de la viande uniquement le midi
   formule: par semaine * 52
   icônes: 🍖📉
@@ -28,8 +31,8 @@ alimentation . réduire viande . par deux . par semaine . nouveau régime:
       - plats . poisson 2
       - compensation végétarienne
 
-? alimentation . réduire viande . par deux . par semaine . nouveau régime . compensation végétarienne
-: formule: plats . végétarien . empreinte * (nombre de plats viande / 2)
+alimentation . réduire viande . par deux . par semaine . nouveau régime . compensation végétarienne:
+  formule: plats . végétarien . empreinte * (nombre de plats viande / 2)
   description: On compense la division par 2 des plats de viande par des plats végétariens.
 
 alimentation . réduire viande . par quatre:
@@ -37,6 +40,7 @@ alimentation . réduire viande . par quatre:
   action:
     dépasse:
       - alimentation . réduire viande . par deux
+      - alimentation . viande faible empreinte
   titre: Manger de la viande uniquement le week-end
   formule: par semaine * 52
   icônes: 🍖📉
@@ -59,8 +63,8 @@ alimentation . réduire viande . par quatre . par semaine . nouveau régime:
       - plats . poisson 2
       - compensation végétarienne
 
-? alimentation . réduire viande . par quatre . par semaine . nouveau régime . compensation végétarienne
-: formule: plats . végétarien . empreinte * (nombre de plats viande * (3 / 4))
+alimentation . réduire viande . par quatre . par semaine . nouveau régime . compensation végétarienne:
+  formule: plats . végétarien . empreinte * (nombre de plats viande * (3 / 4))
   description: On compense la division par 4 des plats de viande par des plats végétariens.
 
 alimentation . devenir végétarien:
@@ -112,6 +116,10 @@ alimentation . une semaine végétalien:
 
 alimentation . viande faible empreinte:
   applicable si: plats . viande 2 . nombre > 0
+  action:
+    dépasse:
+      - alimentation . réduire viande . par quatre
+      - alimentation . réduire viande . par deux
   titre: Privilégier la volaille ou le porc
   formule: par semaine * 52
   icônes: 🥩🍗
@@ -134,8 +142,8 @@ alimentation . viande faible empreinte . par semaine . nouveau régime:
       - plats . végétarien
       - compensation viande 1
 
-? alimentation . viande faible empreinte . par semaine . nouveau régime . compensation viande 1
-: formule: plats . viande 1 . empreinte * (plats . viande 2 . nombre)
+alimentation . viande faible empreinte . par semaine . nouveau régime . compensation viande 1:
+  formule: plats . viande 1 . empreinte * (plats . viande 2 . nombre)
   description: On compense la suppression des plat viande 2 en plat viande 1.
 
 alimentation . manger local:
