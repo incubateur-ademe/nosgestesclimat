@@ -31,7 +31,7 @@ Infographie 80 % des surfaces agricoles dédiées à l'alimentation animale
 Pour chiffrer concraitement l’impact de ces actions, utilisez les profils types à disposition : Mehdi et Jessica
 
 -------------
-Et devenir végétalien, c’est encore mieux non ?
+> Et devenir végétalien, c’est encore mieux non ?
 Oui en effet devenir végétalien, c’est réduire de manière encore plus significative l’empreinte carbone de son alimentation. Cela va plus loin encore qu'être végétarien : il s'agit de ne plus consommer de produits issus d’animaux (œufs, laits, fromages, etc.). Même si les produits issus des animaux ont très souvent des empreintes carbone inférieures à une viande elle-même(à quelques exceptions près), ils ont à l’inverse une empreinte carbone bien plus forte que les produits végétaux (fruits, légumes, légumineuses, etc.)
 Cependant devenir végétalien nécessite de maitriser quelques notions de base en nutrition afin de garantir que son régime alimentaire ne comporte aucune carence.
 -------------
