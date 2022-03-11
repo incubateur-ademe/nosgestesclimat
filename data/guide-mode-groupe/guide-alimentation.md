@@ -19,6 +19,7 @@ La consommation de viande et plus particulièrement l’élevage joue donc un r�
  `a) Pour commencer on peut donc modifier sa consommation de viande pour privilégier celles à plus faible impact carbone comme le porc ou la volaille`
 
 > _Le saviez-vous ?_
+
 Il faut 11 calories d'origine végétale pour produire 1 calorie de bœuf, ou de mouton et 4 calories d'origine végétale pour produire 1 calorie de porc ou de volaille.
 (supprimer ?)A titre d’exemple, en sorti d’élevage, un kg de bœuf aura participé à émettre 17 kg de CO2eq alors qu’un kilo de poulet seulement 1,87 kgCO2eq. Un kg de bœuf émet donc 9 fois plus qu’un kg de poulet.
 
@@ -31,7 +32,7 @@ Infographie 80 % des surfaces agricoles dédiées à l'alimentation animale
 Pour chiffrer concraitement l’impact de ces actions, utilisez les profils types à disposition : Mehdi et Jessica
 
 -------------
-> Et devenir végétalien, c’est encore mieux non ?
+> **Et devenir végétalien, c’est encore mieux non ?**
 Oui en effet devenir végétalien, c’est réduire de manière encore plus significative l’empreinte carbone de son alimentation. Cela va plus loin encore qu'être végétarien : il s'agit de ne plus consommer de produits issus d’animaux (œufs, laits, fromages, etc.). Même si les produits issus des animaux ont très souvent des empreintes carbone inférieures à une viande elle-même(à quelques exceptions près), ils ont à l’inverse une empreinte carbone bien plus forte que les produits végétaux (fruits, légumes, légumineuses, etc.)
 Cependant devenir végétalien nécessite de maitriser quelques notions de base en nutrition afin de garantir que son régime alimentaire ne comporte aucune carence.
 -------------
@@ -40,6 +41,7 @@ Cependant devenir végétalien nécessite de maitriser quelques notions de base 
 Et oui trouver des tomates en plein hiver n'est pas sans impact supplémentaire.
 
 > _Le saviez-vous ?_
+
 Une tomate (consommée hors saison) et provenant du Maroc, c’est 4 fois plus d’eau utilisée qu’une tomate française de plein champ consommée en pleine saison 
 
 ![](https://ecolab-data.netlify.app/images/Chiffres-cles_consommer_produits_saison_circuits_courts_v2.png)
@@ -57,6 +59,7 @@ Les emballages (plastique notamment) sont extrêmement durs à recycler et à r�
  `c) Réduire son gaspillage alimentaire`
 
 > _Le saviez-vous ?_
+
 En France, environ 32 kg de déchets alimentaires sont jetés par personne et par an dont [7 kg d’aliments](https://www.casuffitlegachis.fr/) encore emballés
 Le gaspillage alimentaire représente environ 10 % de notre poubelle grise
 
@@ -68,7 +71,7 @@ Les déchets putrescibles représentent presque le tiers des déchets de nos pou
 ![](https://ecolab-data.netlify.app/images/Chiffres-cles_biodechets_v2.png)
 
 ----------------------------
-Le terme valorisation organique désigne les modes de gestion et de valorisation des déchets biodégradables (déchets alimentaires et déchets verts notamment pour les ménages). Cela regroupe la méthanisation et le compostage.
+> Le terme valorisation organique désigne les modes de gestion et de valorisation des déchets biodégradables (déchets alimentaires et déchets verts notamment pour les ménages). Cela regroupe la méthanisation et le compostage.
 [La méthanisation](https://www.fnade.org/fr/produire-matieres-energie/valorisation-organique) est un processus de décomposition de la matière organique contenue dans les déchets biodégradables en milieu **anaérobie** (c’est-à-dire en absence d’oxygène)
 [Le compostage](https://www.fnade.org/fr/produire-matieres-energie/valorisation-organique) est un procédé de traitement **aérobie** (en présence d’oxygène) des déchets fermentescibles par les micro-organismes, dans des conditions contrôlées. Il produit du gaz carbonique, de la chaleur et un résidu organique stable (faible potentiel de biodégradabilité), riche en composés humiques : **le compost**.
 ----------------------------
@@ -79,7 +82,7 @@ Même si le secteur des déchets représente seulement 3 % des émissions de gaz
 ![](https://ecolab-data.netlify.app/images/Chiffres-cles_reduire_taille poubelle_v2.png)
 
 ----------------------------
-**Trier ces déchets, ça sert vraiment à quelque chose ?**
+> **Trier ces déchets, ça sert vraiment à quelque chose ?**
 Oh oui ! Mais pas pour des questions « climat »
 Même si un tri de qualité permet de limiter les besoins en « sur-tri » (i.e. tri fait à nouveau à posteriori de la collecte) et donc réduire la consommation énergétique des filières de traitement, **l’avantage du tri se situe sur les économies de matière qu’il permet**. Plus particulièrement, cela permet d’éviter de perdre de la matière et donc de ne pas avoir à en recréer. Grâce au recyclage, on conserve donc pour un nouvel usage, une partie de l’énergie et de la matière contenue dans le déchet. A titre d’exemple, ce n’est pas moins de 95% d’énergie économisée par la confection d’une tonne d’aluminium à partir d’aluminium recyclé .
 Même si certains taux de réutilisation de la matière recyclée sont très faibles (pour le plastique notamment, où le taux de réincorporation est seulement de 6% contre 49% pour la ferraille, 56 % pour le calcin (verre) et 67 % pour les papiers et cartons), le tri de ses déchets est un geste important pour la préservation des ressources et dans une mesure plus relative, pour le climat. 
@@ -94,6 +97,7 @@ Infographie produit transformé
 ### 5.	Boire l’eau du robinet
 
 > _Le saviez-vous ?_
+
 L’eau en bouteille coûte en moyenne 100 à 300 fois plus cher que l’eau du robinet . Ainsi, lorsqu’on achète une bouteille d’eau en plastique :
 - l’eau (le liquide) représente 20% du coût total
 - la fabrication de l’emballage en représente 80 %
@@ -102,7 +106,7 @@ L’eau en bouteille coûte en moyenne 100 à 300 fois plus cher que l’eau du 
 
 
 ----------------------------
-**Et consommer bio, ça ne réduit pas mon empreinte carbone ?**
+> **Et consommer bio, ça ne réduit pas mon empreinte carbone ?**
 Hum… C’est compliqué ... Difficile de dégager un consensus scientifique.
 De manière générale et d’un point de vue purement Gaz à Effet de Serre (GES), on a tendance à considérer l’agriculture biologique comme plus « contributrice » au changement climatique. En effet, à production et produits égaux, une culture bio va nécessiter des parcelles agricoles plus grandes, réduisant la taille des forêts et des zones naturelles, zones essentielles à la séquestration du carbone. Néanmoins, cette réflexion est faite à production égale et à l’échelle française (c’est-à-dire en gardant les mêmes cultures). Or une transformation de nos modèles agricoles pour les adapter au futur monde bas carbone et aux conséquences du changement climatique suppose de repenser la finalité de l’agriculture (la France est à l’heure actuelle le 5e exportateur de denrées alimentaires avec 59 millions de tonnes de produits agricoles (dont 33 rien que de céréales). Cette finalité repensée (comme une autosuffisance plus grande) permettra de changer les pratiques, de diversifier les cultures et les rotations au bénéfice de l’activité biologique des sols et de réduire également de nombreux impacts environnementaux et sociaux (perte de biodiversité, pollution des sols, des eaux souterraines, santé des agriculteurs, etc.) via notamment une diminution des intrants (produits phytosanitaires, engrais azotés de synthèse, etc.).
 Néanmoins, pour réussir à transformer notre agriculture, le consommateur doit aussi faire sa part. En effet, cette transformation doit s’accompagner d’une transformation de notre régime alimentaire, afin que ce dernier soit moins carné et complété de plus de céréales et légumineuses
