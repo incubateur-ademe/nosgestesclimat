@@ -16,7 +16,7 @@ La consommation de viande et plus particulièrement l’élevage joue donc un r�
 
 ### 1. Modifier sa consommation de viande puis la réduire significativement pour tendre vers un régime végétarien
 
-  a) Pour commencer on peut donc modifier sa consommation de viande pour privilégier celles à plus faible impact carbone comme le porc ou la volaille
+ ```a) Pour commencer on peut donc modifier sa consommation de viande pour privilégier celles à plus faible impact carbone comme le porc ou la volaille```
 
 _Le saviez-vous ?_
 Il faut 11 calories d'origine végétale pour produire 1 calorie de bœuf, ou de mouton et 4 calories d'origine végétale pour produire 1 calorie de porc ou de volaille.
