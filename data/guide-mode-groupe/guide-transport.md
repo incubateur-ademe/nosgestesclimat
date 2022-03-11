@@ -9,7 +9,7 @@ Image HCC secteur transport
 ## Ma voiture, mon amour ?
 Fruit des aménagements passés et actuels, notre mobilité quotidienne est historiquement centrée autour de la voiture individuelle. Tout est en effet pensé et adapté à la voiture… 
 Décarboner notre mobilité et la façon dont nous nous déplaçons suppose donc de revoir cette dépendance à la voiture et c’est loin d’être gagné ! Chaque année, nous sommes toujours plus nombreux sur la route : **+1.5 % d’augmentation par an de la circulation routière en moyenne.** 
-De plus, quand on parle de transport, il ne faut pas occulter l’impact du secteur aérien et sa forte contribution à l’empreinte carbone de beaucoup d’entre nous.
+Mais quand on parle de transport, il ne faut pas occulter l’impact du secteur aérien et sa forte contribution à l’empreinte carbone de beaucoup d’entre nous.
 
 ## **Que faire à son échelle ?** 
 
@@ -59,7 +59,6 @@ Pour connaitre l’impact concret de ces actions, utilisez les profils types à 
 
 -------------
 > **Et changer ma voiture pour une électrique, est-ce une bonne chose ?**
-> 
 Hum…. Oui et non : c’est compliqué !
 Une Analyse de cycle de vie  menée pour le compte de l’ADEME (Agence de l’Environnement et de la Maitrise de l’Energie) met en évidence que la consommation d’énergie primaire  est identique pour un véhicule électrique ou thermique (dans le cadre d’une utilisation en France et de 150 000 km parcourus sur 10 ans). Néanmoins, grâce à notre mix énergétique peu carboné, une voiture électrique s’avère 2 à 3 fois moins émettrice de GES (65 %) qu’un véhicule thermique équivalent. Cependant, ce résultat doit être contextualisé en prenant en compte d’autres impacts environnementaux et, comme le montrent certaines études similaires réalisées dans d’autres pays, l’intensité carbone du mix énergétique du pays (i.e. dans un pays ou le mix énergétique est (très) carboné, les véhicules électriques peuvent être plus impactants). Enfin, une utilisation moins intensive (comme dans le cas d’un 2nd véhicule familial) peut s’avérer défavorable pour les véhicules électriques, même avec notre mix peu carboné, étant donné que l’impact lié à la fabrication de la batterie ne saurait être réellement amorti (la fabrication d’un véhicule électrique ayant bien plus d’impact que celle d’un véhicule thermique).
 Ainsi, même si les résultats de l’étude mettent en avant les réductions d’émissions que peuvent apporter les véhicules électriques, ces derniers doivent être nuancés et contextualisés en fonction des utilisations de chacun. Ils ne doivent pas nous amener à la conclusion simpliste qu’il suffirait de passer à un parc de véhicules tout électrique pour décarboner nos transports. **En effet, les atouts environnementaux du véhicule électrique sont intrinsèquement liés à la mise en œuvre de la transition énergétique et écologique à l’échelle nationale (questionnement des besoins de mobilités, remise en cause de la voiture individuelle, développement alternative bas carbone, etc.).**
