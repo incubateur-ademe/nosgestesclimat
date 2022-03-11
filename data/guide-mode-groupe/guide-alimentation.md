@@ -42,7 +42,7 @@ Et oui trouver des tomates en plein hiver n'est pas sans impact supplémentaire.
 > _Le saviez-vous ?_
 Une tomate (consommée hors saison) et provenant du Maroc, c’est 4 fois plus d’eau utilisée qu’une tomate française de plein champ consommée en pleine saison 
 
-Infographie tomate et serre
+![](https://ecolab-data.netlify.app/images/Chiffres-cles_consommer_produits_saison_circuits_courts_v2.png)
 
 ### 3. Limiter sa production de déchets et réduire le volume de ces poubelles
 
@@ -52,7 +52,7 @@ Action a priori anodine mais en moyenne chaque année c'est tout de même 14 kg 
   `b) Acheter en vrac et réutiliser vos emballages`
 Les emballages (plastique notamment) sont extrêmement durs à recycler et à réutiliser. De plus, il est aussi courant qu’une part significative de ces déchets plastiques soient exportés et vendus à d’autres pays. Ainsi en 2016, pas moins de 50 % des déchets plastiques triés européens ont été exportés vers la Chine. Cet exportation (vers des pays aux normes environnementales moins contraignantes) et une des raisons qui font que chaque année, entre [8 et 12 millions de tonnes de plastique](https://www.greenpeace.fr/pollution-oceans-limpact-plastiques/) finissent dans les océans. On estime ainsi qu’un “[7e continent de plastique](https://assets.theoceancleanup.com/app/uploads/2019/04/Lebreton2018_SciRep.pdf)” flottant au large de l’Océan Pacifique contiendrait environ 80 000 tonnes de déchets plastique et s’étendrait sur une surface d’environ 1.6 millions de km2 (soit plus de 3 fois la surface de la France métropolitaine
 
-Infographie : 85% des emballages jetés par les ménages sont des emballages alimentaires
+![](https://ecolab-data.netlify.app/images/Chiffres-cles_vrac_v2.png)
 
  `c) Réduire son gaspillage alimentaire`
 
@@ -65,7 +65,7 @@ Infographie gaspi alimentaire (si elle existe)
  `d)	Composter ses biodéchets`
 Les déchets putrescibles représentent presque le tiers des déchets de nos poubelles. Si on y ajoute les papiers souillés, c’est presque 40 % des ordures des ménages français qui pourraient faire l’objet d’une valorisation organique.
 
-Infographie 83 kg biodéchets
+![](https://ecolab-data.netlify.app/images/Chiffres-cles_biodechets_v2.png)
 
 ----------------------------
 Le terme valorisation organique désigne les modes de gestion et de valorisation des déchets biodégradables (déchets alimentaires et déchets verts notamment pour les ménages). Cela regroupe la méthanisation et le compostage.
@@ -76,13 +76,14 @@ Le terme valorisation organique désigne les modes de gestion et de valorisation
   `e)	Tendre vers un mode de vie zéro déchets`
 Même si le secteur des déchets représente seulement 3 % des émissions de gaz à effet de serre en France, réduire le volume de sa poubelle est bénéfique à bien d’autres égards (réduction pollution plastique, besoin en matière 1ère diminué, etc.).**Un leitmotiv : le meilleur déchet est celui qu’on ne produit pas !**
 
-Infographie décomposage poubelle
+![](https://ecolab-data.netlify.app/images/Chiffres-cles_reduire_taille poubelle_v2.png)
 
 ----------------------------
 **Trier ces déchets, ça sert vraiment à quelque chose ?**
 Oh oui ! Mais pas pour des questions « climat »
 Même si un tri de qualité permet de limiter les besoins en « sur-tri » (i.e. tri fait à nouveau à posteriori de la collecte) et donc réduire la consommation énergétique des filières de traitement, **l’avantage du tri se situe sur les économies de matière qu’il permet**. Plus particulièrement, cela permet d’éviter de perdre de la matière et donc de ne pas avoir à en recréer. Grâce au recyclage, on conserve donc pour un nouvel usage, une partie de l’énergie et de la matière contenue dans le déchet. A titre d’exemple, ce n’est pas moins de 95% d’énergie économisée par la confection d’une tonne d’aluminium à partir d’aluminium recyclé .
 Même si certains taux de réutilisation de la matière recyclée sont très faibles (pour le plastique notamment, où le taux de réincorporation est seulement de 6% contre 49% pour la ferraille, 56 % pour le calcin (verre) et 67 % pour les papiers et cartons), le tri de ses déchets est un geste important pour la préservation des ressources et dans une mesure plus relative, pour le climat. 
+![](https://ecolab-data.netlify.app/images/Chiffres-cles_trier-ses-dechets_v2.png)
 ----------------------------
 
 ### 4. Réduire sa consommation de produits transformés/surgelés
@@ -96,6 +97,9 @@ Infographie produit transformé
 L’eau en bouteille coûte en moyenne 100 à 300 fois plus cher que l’eau du robinet . Ainsi, lorsqu’on achète une bouteille d’eau en plastique :
 - l’eau (le liquide) représente 20% du coût total
 - la fabrication de l’emballage en représente 80 %
+
+![](https://ecolab-data.netlify.app/images/Chiffres-cles_eau.png)
+
 
 ----------------------------
 **Et consommer bio, ça ne réduit pas mon empreinte carbone ?**
