@@ -13,7 +13,9 @@ Nous allons donc passer en revue ce qu’il est possible de faire. De simples é
 
 ## **Que faire à son échelle ?** 
 
-### 1. Commençons tout d’abord par un geste simple : **adapter la température de son logement**
+Commençons tout d’abord par un geste simple
+
+### 1. Adapter la température de son logement
 
 En effet, il est assez fréquent de chauffer à plus haute température que ce que l’on estime. Vérifier par vous-même et ramener la température à 19°C voir 20°C.
 
@@ -21,7 +23,7 @@ En effet, il est assez fréquent de chauffer à plus haute température que ce q
 > 
 ![](https://ecolab-data.netlify.app/images/Chiffres-cles_limiter_temperature_logement.png)
 
-### 2. Sachez qu’il existe aussi de nombreux écogestes pour réduire sa consommation d’énergie
+### 2. Connaitre les nombreux écogestes pour réduire sa consommation d’énergie
 
 Remplacer ses ampoules par des LED, sécher à l’air libre de ses vêtements ou encore éteindre ses appareils en veille, multiples sont les moyens d’économiser de l’énergie et de l’argent. N’hésitez pas à consulter la bibliothèque numérique en bas de page pour en savoir plus et notamment le guide « 40 trucs et astuces pour économiser l’eau et l’énergie ».
 
@@ -31,7 +33,9 @@ Infographie Ecogestes
 
 Mises en avant de personas ? 
 
-### 3. Enfin, pour limiter sa consommation d’énergie (en période estivale) on peut **se tourner vers l’isolation active en cas de forte chaleur**. 
+### 3. Se tourner vers l’isolation active en cas de forte chaleur...
+
+... en période estivale afin de limite sa consommation d'énergie
 
 Volets fermés, ouvertures matinales, brasseur d’air et humidification sont les pistes à suivre pour à la fois se protéger de la chaleur et apporter de la fraicheur à son logement. L’isolation active est aussi un moyen d’éviter la prolifération de climatiseurs dans les foyers et la très forte surconsommation que cela engendrerait.
 
@@ -83,10 +87,12 @@ Terminons avec des actions souvent laissées de côté car elles peuvent bouscul
 > 
 Infographie étalement urbain
 
-### 6.	Ainsi, si on a de la place chez soi pourquoi ne pas prendre un colocataire (ou plusieurs) ?
+### 6.	Si on a de la place chez soi pourquoi ne pas prendre un colocataire (ou plusieurs) ?
 En effet depuis 1968, la taille des ménages diminue passant de 3.1 personnes à 2.2 personnes en moyenne. Et donc dans le même temps, depuis trente ans, le parc immobilier français s’accroît de 1,1 % par an en moyenne. Partager son logement permet en quelque sorte de limiter l’étalement urbain (en considérant une réduction de la demande en logement) et de réduire l’empreinte carbone de son logement en le « répartissant » entre plusieurs habitants
 
-### 7.	En gardant la même logique, dans le but de limiter l’étalement urbain et la demande en logement neuf, **pourquoi ne pas se tourner vers des logements anciens/existants et/ou à rénover lors d’un futur achat ?**
+### 7.	Pourquoi ne pas se tourner vers des logements anciens/existants et/ou à rénover lors d’un futur achat ?
+
+Si l'on suit la même logique afin de limiter l'étalement urbain et la demande en logement neuf.
 
 Vous voulez allez plus loin :
 -	[Baisser la température de chauffage d’un degré](https://nosgestesclimat.fr/actions/plus/logement/r%C3%A9novation-%C3%A9nerg%C3%A9tique)
