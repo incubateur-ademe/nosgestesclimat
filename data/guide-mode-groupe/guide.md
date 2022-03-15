@@ -30,8 +30,7 @@ Bien sûr, ce mode sondage ne remplace pas un bilan carbone mais peut permettre,
 ## Je lance des discussions
 
 > J'arrive sur l'écran de fin, et puis quoi ?
-
-<iframe src="https://giphy.com/embed/9RuXRqY2d1gKk" width="480" height="391" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/charlie-good-luck-boa-sorte-9RuXRqY2d1gKk"></a></p>
+> ![GIF by Giphy](https://media.giphy.com/media/9RuXRqY2d1gKk/giphy.gif)
 
 **Vous pouvez profiter de l'écran de visualisation du mode groupe pour lancer des échanges au regard des résultats des participants.**
 
