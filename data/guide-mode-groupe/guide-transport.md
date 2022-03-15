@@ -69,11 +69,8 @@ Pour connaitre l’impact concret de ces actions, utilisez les profils types à 
 >
 > **Ainsi, même si les résultats de l’étude mettent en avant les réductions d’émissions que peuvent apporter les véhicules électriques, ces derniers doivent être nuancés et contextualisés en fonction des utilisations de chacun. Ils ne doivent pas nous amener à la conclusion simpliste qu’il suffirait de passer à un parc de véhicules tout électrique pour décarboner nos transports. En effet, les atouts environnementaux du véhicule électrique sont intrinsèquement liés à la mise en œuvre de la transition énergétique et écologique à l’échelle nationale (questionnement des besoins de mobilités, remise en cause de la voiture individuelle, développement alternative bas carbone, etc.).**
 
-Vous voulez allez plus loin :
+## Pour approfondir:
 
-- [Aller au travail en covoiturage](https://nosgestesclimat.fr/actions/plus/transport/boulot/covoiturage)
-- [Aller au travail en transports en commun](https://nosgestesclimat.fr/actions/plus/transport/boulot/commun)
-- [Privilégier le vélo plutôt que la voiture pour les trajets courts](https://nosgestesclimat.fr/actions/plus/transport/v%C3%A9lo-plut%C3%B4t-que-voiture)
-- [Utiliser une alternative bas carbone pour partir en vacances/week-end](https://nosgestesclimat.fr/actions/plus/transport/arr%C3%AAter-l'avion)
+Guides et informations grand public
 
-Un guide utile : [La mobilité en 10 questions](https://librairie.ademe.fr/mobilite-et-transport/3859-la-mobilite-en-10-questions-9791029716126.html)
+- Un guide utile : [La mobilité en 10 questions](https://librairie.ademe.fr/mobilite-et-transport/3859-la-mobilite-en-10-questions-9791029716126.html)

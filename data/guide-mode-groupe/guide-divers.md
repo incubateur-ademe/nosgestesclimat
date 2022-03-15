@@ -99,26 +99,7 @@ Plus généralement, le simulateur Datagir "Que Faire de mes Déchets" peut vous
 > Ne parlons pas que de Gaz à Effet de Serre : la raréfaction des matière premières
 > Faire un topo synthétique sur ce sujet ? Utiliser le Country Overshoot Days pour mettre en avant que les ressources s’épuise et qu’au-delà de l’aspect GES il est pertinent de faire durer/réparer ses équipements et biens pour limiter l’utilisation de matière
 
-Pour approfondir:
-
-Consultez les explications détaillées de chaque action (lien à faire ..?):
-
-- Acheter mes vêtements de seconde main
-- Désencombrer sa consommation
-- Se détacher de l’influence de la pub et des soldes
-- Recycler correctement mes biens
-- Consommer durable
-- Faire durer mes biens d’ameublement
-- Acheter mes meubles d’occasion
-- Faire durer mes biens électroniques/ électroménager
-- Acheter d'occasion mes produits électroniques/électroménager
-  Guides et informations grand public
-- Qu’est-ce que l’obsolescence programmée
-- Le poids carbone de nos objets
-- Le revers de mon look
-- Guide pratique économie circulaire en 10 questions
-- Bénéfices environnementaux de l’allongement de la durée d’usage
-- Comment faire durer ses objets
+## Pour approfondir:
 
 Guides et informations grand public
 

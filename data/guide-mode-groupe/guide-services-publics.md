@@ -7,3 +7,9 @@ On a tous en tête cet objectif de 2 tonnes par an et par personne en 2050... ma
 La total est obtenu en majorité à partir de ratios monétaires **[peut être expliquer ce que c'est ?]** et est ramené au nombre d'habitants, tous les français ont donc tous la même empreinte carbone pour cette catégorie !
 
 A noter que l'enseigement est inclus dans cette empreinte à hauteur de 25% (source ? chiffre à garder ?). Agir collectivement à l'échelle d'un établissement n'est donc pas anodin.
+
+## Pour approfondir:
+
+Guides et informations grand public
+
+**A ajouter ?**
