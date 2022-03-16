@@ -52,9 +52,11 @@ Et oui trouver des tomates en plein hiver n'est pas sans impact supplémentaire.
 **3. 🚯 Limiter sa production de déchets et réduire le volume de ces poubelles**
 
 - Coller une mention « Stop Pub » sur sa boite aux lettres
+
 Action a priori anodine mais en moyenne chaque année c'est tout de même 14 kg de prospectus publicitaires par habitant qui sont déposés dans nos boites aux lettres … pour rien
 
 - Acheter en vrac et réutiliser vos emballages
+
 Les emballages (plastique notamment) sont extrêmement durs à recycler et à réutiliser. De plus, il est aussi courant qu’une part significative de ces déchets plastiques soient exportés et vendus à d’autres pays. Ainsi en 2016, pas moins de 50 % des déchets plastiques triés européens ont été exportés vers la Chine. Cet exportation (vers des pays aux normes environnementales moins contraignantes) et une des raisons qui font que chaque année, entre [8 et 12 millions de tonnes de plastique](https://www.greenpeace.fr/pollution-oceans-limpact-plastiques/) finissent dans les océans. On estime ainsi qu’un “[7e continent de plastique](https://assets.theoceancleanup.com/app/uploads/2019/04/Lebreton2018_SciRep.pdf)” flottant au large de l’Océan Pacifique contiendrait environ 80 000 tonnes de déchets plastique et s’étendrait sur une surface d’environ 1.6 millions de km2 (soit plus de 3 fois la surface de la France métropolitaine
 
 `Le saviez-vous ?`
@@ -101,7 +103,7 @@ Les produits transformés sont, d’un point de vue nutritif, très souvent en d
 `Le saviez-vous ?`
 ![](https://ecolab-data.netlify.app/images/Chiffres-cles_Se-passer-produits-transformes.png)
 
-**5. 💧 Boire l’eau du robinet
+**5. 💧 Boire l’eau du robinet**
 
 `Le saviez-vous ?`
 L’eau en bouteille coûte en moyenne 100 à 300 fois plus cher que l’eau du robinet . Ainsi, lorsqu’on achète une bouteille d’eau en plastique :
