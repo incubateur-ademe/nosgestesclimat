@@ -6,9 +6,12 @@ En France le secteur de l’agriculture est le deuxième secteur le plus contrib
 
 ![](https://ecolab-data.netlify.app/images/HCC_emissions_secteur_alimentation.PNG)
 
-Ces émissions se décomposent en environ 45 % de méthane (CH4) dû aux élevages (fermentations entériques c’est-à-dire la digestion des ruminants et stockage des effluents), à 40 % de protoxyde d’azote (N20) liées à la fertilisation des cultures et aux engrais azotés et enfin 15 % de CO2 qui provient de la consommation d’énergie (fioul, gaz, carburant, électricité) nécessaire au fonctionnement d'une exploitation (engins agricoles, serres chauffées, bâtiment, etc.).
+Si l'on devait catégoriser ces émissions par type de gaz à effet de serre, on obtiendrait la décomposition suivante : 
+- environ 45 % de méthane (CH4) dû aux élevages (fermentations entériques c’est-à-dire la digestion des ruminants et stockage des effluents),
+- 40 % de protoxyde d’azote (N20) liées à la fertilisation des cultures et aux engrais azotés
+- 15 % de CO2 qui provient de la consommation d’énergie (fioul, gaz, carburant, électricité) nécessaire au fonctionnement d'une exploitation (engins agricoles, serres chauffées, bâtiment, etc.).
 
-Image 2 : image décomposition par GES
+![](https://ecolab-data.netlify.app/images/Agriculture_et_GES.png)
 
 La consommation de viande et plus particulièrement l’élevage joue donc un rôle majeur dans les émissions de gaz à effet de serre de l’agriculture.
 
@@ -17,12 +20,18 @@ La consommation de viande et plus particulièrement l’élevage joue donc un r�
 **1. 🥩📉 Modifier sa consommation de viande puis la réduire significativement pour tendre vers un régime végétarien**
 
 - Pour commencer, privilégier des viandes à plus faible impact carbone comme le porc ou la volaille
+
+`Un petit échantillon des émissions de plats carnés`
 ![](https://ecolab-data.netlify.app/images/Plats_viandes_GES.PNG )
 
 - On peut ensuite réduire sa consommation de viande
+
+`Le saviez-vous ?`
 ![](https://ecolab-data.netlify.app/images/Chiffres-cles_reduire_sa_consommation_viande_v2.png)
 
 - Enfin, on peut devenir végétarien
+
+`Le saviez-vous ?`
 ![](https://ecolab-data.netlify.app/images/Chiffres-cles_reduire_produits_laitiers_v2.png)
 
 Pour chiffrer concraitement l’impact de ces actions, utilisez les profils types à disposition : Mehdi et Jessica
