@@ -3,7 +3,8 @@ on:
   pull_request:
     types: [opened, synchronize]
   push:
-    branches: [master, demo, next]
+    branches:
+      - '*'
 
   # We display the release notes in the "news" section of mon-entreprise.urssaf.fr so
   # we want to re-deploy the site when a new release is published or edited on
@@ -26,7 +27,7 @@ jobs:
       - id: deploy-env
         run: echo "::set-output name=name::${{ github.event.number || '${GITHUB_REF#refs/*/}' }}"
       - id: base-urls
-        run: echo "::set-output name=fr::${{ steps.deploy-env.outputs.name == 'master' && 'https://mon-entreprise.urssaf.fr' || format('https://{0}--mon-entreprise.netlify.app', steps.deploy-env.outputs.name) }}";
+        run: echo "::set-output name=fr::${{ steps.deploy-env.outputs.name == 'master' && 'https://nosgestesclimat.fr' || format('https://{0}--mon-entreprise.netlify.app', steps.deploy-env.outputs.name) }}";
 
   build:
     needs: deploy-context
@@ -39,45 +40,7 @@ jobs:
         with:
           node-version: '16'
           cache: 'yarn'
-      - run: yarn install --immutable
-        env:
-          # Secrets of all kinds for fetching stats & releases
-          GITHUB_API_SECRET: ${{ secrets.GITHUB_TOKEN }}
-          ZAMMAD_API_SECRET_KEY: ${{ secrets.ZAMMAD_API_SECRET_KEY }}
-          ATINTERNET_API_SECRET_KEY: ${{ secrets.ATINTERNET_API_SECRET_KEY }}
-          ATINTERNET_API_ACCESS_KEY: ${{ secrets.ATINTERNET_API_ACCESS_KEY }}
-      - name: Build app
-        run: yarn workspace site build
-        env:
-          VITE_AT_INTERNET_SITE_ID: ${{ needs.deploy-context.outputs.env-name == 'master' && 617190 || 617189 }}
-          VITE_ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
-          VITE_ALGOLIA_SEARCH_KEY: ${{secrets.ALGOLIA_SEARCH_KEY}}
-          VITE_ALGOLIA_INDEX_PREFIX: monentreprise-${{needs.deploy-context.outputs.env-name}}-
-          VITE_GITHUB_REF: ${{ github.ref }}
-          VITE_GITHUB_HEAD_REF: ${{ github.head_ref }}
-          VITE_GITHUB_SHA: ${{ github.sha }}
-      - name: Build app SSR
-        run: |
-          yarn workspace site build:ssr
-          yarn workspace site build:prerender
-      - name: Replace site placeholders in netlify.toml redirection file
-        run: |
-          sed -i "s|:SITE_FR|$VITE_FR_BASE_URL|g" site/netlify.toml;
-          sed -i "s|:SITE_EN|$VITE_EN_BASE_URL|g" site/netlify.toml;
-      - name: Update Algolia index
-        run: yarn workspace site algolia:update
-        env:
-          ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
-          ALGOLIA_ADMIN_KEY: ${{ secrets.ALGOLIA_ADMIN_KEY }}
-          ALGOLIA_SEARCH_KEY: ${{secrets.ALGOLIA_SEARCH_KEY}}
-          ALGOLIA_INDEX_PREFIX: monentreprise-${{needs.deploy-context.outputs.env-name}}-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: static-site
-          path: |
-            site/dist/**
-            site/netlify.toml
-          if-no-files-found: error
+      - run: yarn compile
 
   deploy-preview:
     needs: [build, deploy-context]
