@@ -11,7 +11,7 @@ Si l'on devait catégoriser ces émissions par type de gaz à effet de serre, on
 - 40 % de protoxyde d’azote (N20) liées à la fertilisation des cultures et aux engrais azotés
 - 15 % de CO2 qui provient de la consommation d’énergie (fioul, gaz, carburant, électricité) nécessaire au fonctionnement d'une exploitation (engins agricoles, serres chauffées, bâtiment, etc.).
 
-![](https://ecolab-data.netlify.app/images/Agriculture_et_GES.png)
+![](https://ecolab-data.netlify.app/images/Agriculture_GES.PNG)
 
 La consommation de viande et plus particulièrement l’élevage joue donc un rôle majeur dans les émissions de gaz à effet de serre de l’agriculture.
 
