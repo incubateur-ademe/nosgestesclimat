@@ -1,6 +1,6 @@
 # Comment réduire l’empreinte carbone de mes consommations diverses ?
 
-`Faire un intro sur le fait que nos vies se remplissent de gadget élec, qu’on achète à tout va, qu’on jette aussi énormément, etc. ????`
+<!-- `Faire un intro sur le fait que nos vies se remplissent de gadget élec, qu’on achète à tout va, qu’on jette aussi énormément, etc. ????` -->
 
 ## L'empreinte carbone d'un produit
 
@@ -14,7 +14,7 @@ La réponse est oui ! C’est ce qu’on appelle l’approche empreinte. Il faut
 
 Et ces deux approches ne donnent pas les mêmes chiffres : l’empreinte carbone est environ 50 % plus élevée que les émissions territoriales : environ 10t de CO2eq/hab/an contre 6,5t CO2eq/hab/an en 2019. Cela signifie que les Français importent plus de biens et services carbonés qu’ils n’en exportent.
 
-![](url du croquis)
+<!-- ![](url du croquis) -->
 
 `Un bon croquis vaut mieux qu'un long discours !`
 
@@ -31,14 +31,14 @@ Et ces deux approches ne donnent pas les mêmes chiffres : l’empreinte carbone
 `Le saviez-vous ?`
 ![](https://ecolab-data.netlify.app/images/Chiffres-clefs_Allonger-duree-vie-produits-elec_v2.png)
 
-- Si jamais il tombe en panne, cherchez à le faire réparer plutôt que le remplacer. Mais on vous l’accorde ce n’est pas toujours facile. Cela peut s’avérer parfois plus cher et il est même possible que le constructeur vous en propose un neuf directement. Quelques ordres de grandeur à avoir en tête :
+<!-- - Si jamais il tombe en panne, cherchez à le faire réparer plutôt que le remplacer. Mais on vous l’accorde ce n’est pas toujours facile. Cela peut s’avérer parfois plus cher et il est même possible que le constructeur vous en propose un neuf directement. Quelques ordres de grandeur à avoir en tête :
 
-![](Ajouter une infographie ?)
+![](Ajouter une infographie ?) -->
 
 - Eviter le renouvellement précoce de vos biens. Cela n’est pas chose aisée non plus car l’obsolescence technique ou culturelle (mode) est bien une réalité. De produits ne pouvant suivre les prérequis techniques des nouveautés au matraquage marketing, la tentation de renouveler (précocement) ses appareils est grande. Mais résister à ce phénomène permet de préserver le climat et même de faire économies significatives.
 
-`Le saviez-vous ?`
-![](image non trouvée "eviter renouvellement précoce permet de ...)
+<!-- `Le saviez-vous ?`
+![](image non trouvée "eviter renouvellement précoce permet de ...) -->
 
 **2. Avant l'achat, questionnez le besoin.**
 
@@ -48,9 +48,9 @@ Votre achat est-il vraiment nécessaire ? Pourquoi ne pas vous tourner vers l’
 
 - Pourquoi ne pas vous tournez tout d’abord vers de la seconde main ou des produits reconditionnés. Ces derniers ont bien moindre sur le climat comparé au neuf!
 
-`Le saviez-vous ?`
+<!-- `Le saviez-vous ?`
 
-![](image non trouvée "fabricatrion produit électronique")
+![](image non trouvée "fabricatrion produit électronique") -->
 
 > Attention : quand on parle de seconde main ou de produits reconditionnés on ne parle pas du dernier smartphone acheté, sur un site de revente, à peine 6 mois après sa sortie mais bien de donner une seconde vie à des biens ou des équipements
 
@@ -60,9 +60,9 @@ Ainsi, pour nos vêtements et habits, les friperies et les boutiques vintages so
 
 C’est simple : plus c’est gros plus l’empreinte carbone est grande. Là encore, c’est parfois difficile aux regards des offres promotionnelles qui nous incitent à acheter toujours plus grand.
 
-`Le saviez-vous ?`
+<!-- `Le saviez-vous ?`
 
-![](image non trouvée "impact taille écran")
+![](image non trouvée "impact taille écran") -->
 
 - Eviter le suréquipement
 

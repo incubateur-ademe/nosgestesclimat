@@ -4,12 +4,14 @@ On a tous en tête cet objectif de 2 tonnes par an et par personne en 2050... ma
 
 ![](https://codimd.s3.shivering-isles.com/demo/uploads/55c84c826662ee144f2d26f6c.png)
 
-La total est obtenu en majorité à partir de ratios monétaires **[peut être expliquer ce que c'est ?]** et est ramené au nombre d'habitants, tous les français ont donc tous la même empreinte carbone pour cette catégorie !
+**Suite à venir !**
 
-A noter que l'enseigement est inclus dans cette empreinte à hauteur de 25% (source ? chiffre à garder ?). Agir collectivement à l'échelle d'un établissement n'est donc pas anodin.
+<!-- La total est obtenu en majorité à partir de ratios monétaires **[peut être expliquer ce que c'est ?]** et est ramené au nombre d'habitants, tous les français ont donc tous la même empreinte carbone pour cette catégorie ! -->
 
-## Pour approfondir:
+<!-- A noter que l'enseigement est inclus dans cette empreinte à hauteur de 25% (source ? chiffre à garder ?). Agir collectivement à l'échelle d'un établissement n'est donc pas anodin. -->
+
+<!-- ## Pour approfondir:
 
 Guides et informations grand public
 
-**A ajouter ?**
+**A ajouter ?** -->

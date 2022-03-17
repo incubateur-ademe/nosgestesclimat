@@ -28,11 +28,11 @@ En effet, il est assez fréquent de chauffer à plus haute température que ce q
 
 Remplacer ses ampoules par des LED, sécher à l’air libre de ses vêtements ou encore éteindre ses appareils en veille, multiples sont les moyens d’économiser de l’énergie et de l’argent. N’hésitez pas à consulter la bibliothèque numérique en bas de page pour en savoir plus et notamment le guide « 40 trucs et astuces pour économiser l’eau et l’énergie ».
 
-> _Le saviez-vous ?_
+<!-- > _Le saviez-vous ?_
 >
-> Infographie Ecogestes
+> Infographie Ecogestes -->
 
-Mises en avant de personas ?
+<!-- Mises en avant de personas ? -->
 
 ### 3. Se tourner vers l’isolation active en cas de forte chaleur...
 
@@ -40,9 +40,9 @@ Mises en avant de personas ?
 
 Volets fermés, ouvertures matinales, brasseur d’air et humidification sont les pistes à suivre pour à la fois se protéger de la chaleur et apporter de la fraicheur à son logement. L’isolation active est aussi un moyen d’éviter la prolifération de climatiseurs dans les foyers et la très forte surconsommation que cela engendrerait.
 
-> _Le saviez-vous ?_
+<!-- > _Le saviez-vous ?_
 >
-> Infographie Climatisation
+> Infographie Climatisation -->
 
 Continuons maintenant avec les actions demandant un investissement financier mais qui permettent une réduction importante de son empreinte carbone
 
@@ -50,16 +50,16 @@ Continuons maintenant avec les actions demandant un investissement financier mai
 
 Cette action s’adresse avant tout aux propriétaires de chaudières au gaz ou fioul car ces dernières sont de très mauvais élève en termes d’émissions de gaz à effet de serre (et d’autant plus dans des logements mal isolés). Cependant, il n’y a pas de solution unique et différents types de solutions peuvent répondre à vos besoins. Pour rentrer dans les détails techniques reportez vous à la bibliothèque numérique en bas de page et plus spécifiquement aux guides « se chauffer mieux et moins cher » et « une maison plus écologique »
 
-> _Le saviez-vous ?_
+<!-- > _Le saviez-vous ?_
 >
 > Graphe FE système chauffage
-> Infographie système chauffage
+> Infographie système chauffage -->
 
 ### 5. Rénover énergétiquement votre logement
 
 Saviez-vous, qu'en France il y a plus de 7 millions de passoires énergétiques (logement très mal isolés situés dans les classes énergétique F ou G). Et dans ces passoires énergétiques les pertes de chaleur peuvent venir de partout.
 
-Image déperdition chaleur
+<!-- Image déperdition chaleur -->
 
 Il est donc essentiel pour réduire son empreinte carbone de vivre dans les logements bien isolés pour limiter notamment sa consommation d’énergie. Afin de réduire au maximum son empreinte carbone l’idéal est d’envisager des travaux de rénovation énergétique visant une labellisation HPE (Haute Performance Energétique) comme avec le label BBC (Bâtiment Basse Consommation). Pour en savoir plus sur la rénovation énergétique tournez-vous vers les sources de la bibliothèque numérique en bas de page et plus spécifiquement vers le guide ADEME « Isoler sa maison ». Sachez tout de même qu’une rénovation énergétique consistera toujours à réduire au maximum les fuites thermiques (qui transmettent rapidement le froid extérieur à l’intérieur du logement) et les entrées d’air parasites afin que celui-ci reste « facilement » (i.e. sans recours excessif au chauffage) à une température modérée.
 
@@ -71,7 +71,7 @@ Il est donc essentiel pour réduire son empreinte carbone de vivre dans les loge
 
 > **Mais ça coute extrêmement cher tout ça !**
 
-## C’est vrai ! Mais sachez à l’inverse que cela permet des économies sur le long terme. Sachez aussi qu’il existe de nombreuses aides pour les rénovations énergétiques, travaux d’isolation et changement de système de chauffage. Pour tout savoir, consultez [France Renov](https://france-renov.gouv.fr/fr/trouver-un-conseiller) ou [Agir pour la Transition](https://agirpourlatransition.ademe.fr/particuliers/finances/aides-a-renovation) ainsi que le guide ADEME « Aides financières » (cf. Bibliothèque Numérique)
+C’est vrai ! Mais sachez à l’inverse que cela permet des économies sur le long terme. Sachez aussi qu’il existe de nombreuses aides pour les rénovations énergétiques, travaux d’isolation et changement de système de chauffage. Pour tout savoir, consultez [France Renov](https://france-renov.gouv.fr/fr/trouver-un-conseiller) ou [Agir pour la Transition](https://agirpourlatransition.ademe.fr/particuliers/finances/aides-a-renovation) ainsi que le guide ADEME « Aides financières » (cf. Bibliothèque Numérique)
 
 Mise en avant de personas pour essayer d’estimer plus précisément l’impact de ces deux actions ?
 
@@ -86,9 +86,9 @@ Mise en avant de personas pour essayer d’estimer plus précisément l’impact
 
 Terminons avec des actions souvent laissées de côté car elles peuvent bousculer nos quotidiens et nos habitudes
 
-> _Le saviez-vous ?_
+<!-- > _Le saviez-vous ?_
 >
-> Infographie étalement urbain
+> Infographie étalement urbain -->
 
 ### 6. Si on a de la place chez soi pourquoi ne pas prendre un colocataire (ou plusieurs) ?
 

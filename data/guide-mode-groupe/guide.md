@@ -42,9 +42,7 @@ Si vous ne souhaitez pas vous focaliser sur les résultats d'une personne en par
 
   [Je visite la page Alimentation](./guide-alimentation)
 
-- **🚦 Transport:** intro à écrire
-
-  [Je visite la page Transport](./guide-transport)
+- **🚦 Transport:** [Je visite la page Transport](./guide-transport)
 
 - **🏘 Logement:** Le logement est un poste particulièrement important et souvent celui qui génère le plus de frustration... En effet, le champ d'action sur cette catégorie est faible. Néanmoins, plusieurs sujets peuvent être évoqué pour expliquer les difficultés : propriétaire ? surface du logement ? choix du chauffage ? mix énergétique ?
 
@@ -53,10 +51,6 @@ Si vous ne souhaitez pas vous focaliser sur les résultats d'une personne en par
 - **🏛️ Services publics:** On a tous en tête cet objectif de 2 tonnes par an et par personne en 2050... mais en voyant le résultat du test, on est souvent déroutés par l'empreinte des services publics, qui représente 1,1 tonnes !
   [Je visite la page Services Publics](./guide-services-publics)
 
-- **📦 Divers:** - Les consommations
+- **📦 Divers:** [Je visite la page Divers](./guide-divers)
 
-  [Je visite la page Divers](./guide-divers)
-
-- **📺 Numérique:** intro à écrire
-
-  [Je visite la page Numérique](./guide-numérique)
+- **📺 Numérique:** [Je visite la page Numérique](./guide-numérique)

@@ -1,7 +1,3 @@
 # Fiche Numérique
 
-A faire
-
-## Pour approfondir:
-
-**A ajouter ?**
+**A venir !**
