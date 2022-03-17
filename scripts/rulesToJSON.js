@@ -18,14 +18,30 @@ glob('data/**/*.yaml', (err, files) => {
 
 			return { ...memo, [dottedName]: { ...memo[dottedName], plus: data } }
 		}, rules)
+		glob('data/guide-mode-groupe/*.md', (err2, mdFiles) => {
+			const rulesPlusWithGuide = mdFiles.reduce((memo, filename) => {
+				const data = fs.readFileSync('./' + filename, 'utf8')
+				const guideName = filename.replace(
+					/(data\/guide-mode-groupe\/|\.md)/g,
+					''
+				)
+				return {
+					...memo,
+					['guide-mode-groupe']: {
+						...memo['guide-mode-groupe'],
+						[guideName]: data,
+					},
+				}
+			}, rulesPlus)
 
-		fs.writeFile(
-			'./public/co2.json',
-			JSON.stringify(rulesPlus),
-			function (err) {
-				if (err) return console.error(err)
-				console.log('Les règles en JSON ont été écrites avec succès, bravo !')
-			}
-		)
+			fs.writeFile(
+				'./public/co2.json',
+				JSON.stringify(rulesPlusWithGuide),
+				function (err) {
+					if (err) return console.error(err)
+					console.log('Les règles en JSON ont été écrites avec succès, bravo !')
+				}
+			)
+		})
 	})
 })
