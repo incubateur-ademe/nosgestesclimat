@@ -13,9 +13,9 @@ Une fois la simulation terminée l'ensemble des participants verront les résult
 > **Les avantages du mode conférence :**
 >
 > - Pas de serveur dédié à la salle conférence
-> - Une technologie qui peut supporter une charge de milliers de participants
+> - Une technologie qui peut supporter une charge de centaines de participants
 > - Le partage des données se fait instantanément sur l'écran de visualisation
-> - Pas de données sauvegardées: il n'y a pas de questions à se poser au niveau de la RGPD
+> - Pas de données sauvegardées: c'est plus respectueux d'un point de vue RGPD
 
 A l'instar du mode conférence, le mode sondage permet de faire le test en groupe mais cette fois-ci, en permettant la sauvegarde des données de manière pérenne. L'objectif est de proposer à une organisation et ses membres de collecter les données issues de Nos Gestes Climat sur une période donnée. Il est possible d'utiliser le mode sondage de la même manière que le mode conférence (en réalisant les tests en simultané) mais la technologie du mode conférence est plus pertinente.
 
@@ -23,9 +23,9 @@ Bien sûr, ce mode sondage ne remplace pas un bilan carbone mais peut permettre,
 
 > **Les avantages du mode sondage :**
 >
-> - Permet à chacun d'analyser les données obtenues à l'issue du sondage (fichier csv)
-> - Technologie robuste, qui fonctionne, peu importe le réseau de l'organisation
+> - Technologie plus classique qui fonctionne peu importe le réseau de l'organisation
 > - Une opportunité pour lancer la mise en place d'actions collectives au sein de son organisation
+> - Permet à chacun d'analyser les données obtenues à l'issue du sondage (fichier csv)
 
 ## Je lance des discussions
 
@@ -53,7 +53,7 @@ Si vous ne souhaitez pas vous focaliser sur les résultats d'une personne en par
 - **🏛️ Services publics:** On a tous en tête cet objectif de 2 tonnes par an et par personne en 2050... mais en voyant le résultat du test, on est souvent déroutés par l'empreinte des services publics, qui représente 1,1 tonnes !
   [Je visite la page Services Publics](./guide-services-publics)
 
-- **📦 Divers:** - intro à écrire / Seconde main / occasion
+- **📦 Divers:** - Les consommations
 
   [Je visite la page Divers](./guide-divers)
 
