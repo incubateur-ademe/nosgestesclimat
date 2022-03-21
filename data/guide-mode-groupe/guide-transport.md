@@ -44,7 +44,8 @@ Cela s'avère particulièrement pertinent pour les gens dont les trajets quotidi
 `Le saviez-vous ?`
 ![](https://ecolab-data.netlify.app/images/Chiffres-cles_Teletravail_v2.png)
 
-Pour connaitre l’impact concret de ces actions, utilisez les profils types à disposition :
+Pour connaitre l’impact concret de ces actions, utilisez les profils types à disposition
+<!-- Mises en avant de personas ? -->
 
 ✈️**2. La deuxième chose à faire est de ne plus prendre l'avion**
 
@@ -67,7 +68,8 @@ Pour réduire son empreinte carbone, on peut ainsi :
 - Arreter de prendre l'avion pour les vacances
 Cela impose très certainement de revoir, à plus large échelle, notre rapport au temps et au voyage mais peut être qu’à l’avenir les « voyages doux » (c’est-à-dire, moins intensif en énergie) deviendront la norme. L’idée d’un voyage à l’autre bout du monde ne disparaitra pas forcément mais s’envisagera très certainement au long cours et non plus en 2 semaines par exemple
 
-Pour connaitre l’impact concret de ces actions, utilisez les profils types à disposition :
+Pour connaitre l’impact concret de ces actions, utilisez les profils types à disposition
+<!-- Mises en avant de personas ? -->
 
 ---
 
