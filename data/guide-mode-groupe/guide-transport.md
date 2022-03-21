@@ -61,7 +61,7 @@ Pour réduire son empreinte carbone, on peut ainsi :
 
 - Prendre le train au lieu de l'avion
 
-> _Le saviez-vous ?_
+`Le saviez-vous ?`
 > Un aller-retour Paris-Marseille émet environ 250 kgCO2eq par passager en avion contre seulement 3 kgCO2eq en train
 
 - Arreter de prendre l'avion pour les vacances
@@ -83,7 +83,7 @@ Doit-on en conclure que pour décarbonner notre mobilité il suffit de remplacer
 >
 > Vous l’aurez donc compris, le sujet est complexe et même si le véhicule électrique est un vrai atout pour réussir à décarboner nos déplacements, ce n’est pas la panacée. La solution se trouve davantage dans un questionnement de nos besoins de mobilités et dans le développement des mobilités actives que dans une solution technique déployée à grande échelle.
 >
-> Pour creuser le sujet, consultez cette F.A.Q
+> Pour creuser le sujet, consultez cette [F.A.Q](https://www.carbone4.com/analyse-faq-voiture-electrique)
 
 ---
 
