@@ -36,6 +36,7 @@ Et ces deux approches ne donnent pas les mêmes chiffres : l’empreinte carbone
 Mais on vous l’accorde ce n’est pas toujours facile. Cela peut s’avérer parfois plus cher et il est même possible que le constructeur vous en propose un neuf directement. Quelques ordres de grandeur à avoir en tête :
 
 ![](https://ecolab-data.netlify.app/images/Economie_GES_reparation.PNG)
+
 `Les économies de CO2 réalisées en allongant la durée de vie des équipements`
 
 - Eviter le renouvellement précoce de vos biens. Cela n’est pas chose aisée non plus car l’obsolescence technique ou culturelle (mode) est bien une réalité. De produits ne pouvant suivre les prérequis techniques des nouveautés au matraquage marketing, la tentation de renouveler (précocement) ses appareils est grande. Mais résister à ce phénomène permet de préserver le climat et même de faire économies significatives.
