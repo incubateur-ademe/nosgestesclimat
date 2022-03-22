@@ -359,3 +359,38 @@ transport . super ethanol . taux surconsommation:
 
 transport . super ethanol . recalcul avec surconsommation:
   formule: recalcul * taux surconsommation
+
+transport . voiture électrique:
+  titre: Acheter une voiture électrique
+  icônes: 🔌🚗
+  non applicable si: transport . voiture . motorisation = 'électrique'
+  formule: transport . voiture . empreinte - transport . voiture électrique . recalcul
+  description: |
+    La voiture électrique n'est pas la solution miracle mais pour certains usages elle peut s'avérer (très) utile pour réduire l'empreinte carbone de nos déplacements. Attention
+    toutefois à ne pas arriver à la conclusion simpliste qu'il suffirait simplement de passer à un parc automobile électrique pour décarboner les déplacements des français. 
+    La priorité doit être, en zone urbaine, donnée à l'essor des mobilités actives (telle que le vélo) et aux transports en commun.
+    Néanmoins le chiffre que l'on vous présente correspond bien à la différence d'émissions de gaz à effet de serre qui aurait eu lieu si vous aviez parcouru vos km avec 
+    un véhicule électrique et non thermique.
+  note: |
+    Envisager de ne proposer cette action que si elle > 0 voire > à plusieurs centaines de kgCO2eq
+
+transport . voiture électrique . recalcul:
+  formule:
+    recalcul:
+      règle: transport . voiture . empreinte
+      avec:
+        transport . voiture . motorisation: "'électrique'"
+        transport . voiture . âge: transport . âge nouvelle voiture électrique
+
+transport . âge nouvelle voiture électrique:
+  formule:
+    variations:
+      - si: occasion
+        alors: 5
+      - sinon: 1
+  note: on considère que l'âge d'une voiture d'occasion est 5 ans.
+
+transport . âge nouvelle voiture électrique . occasion:
+  question: Envisagez-vous d'acheter une voiture électrqieu d'occasion ?
+  par défaut: oui
+# L'action disparait quand l'impact climat devient positif
