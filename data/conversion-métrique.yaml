@@ -1,0 +1,61 @@
+pétrole:
+  formule: pleins
+
+pétrole . pleins:
+  formule: pétrole brut / 50
+
+pétrole . baril:
+  formule: pétrole brut / 159
+
+pétrole . pétrole brut:
+  formule: conso tous carburants * facteur extraction * facteur raffinage
+
+pétrole . facteur extraction:
+  formule: 1.25
+  note: |
+    25% (Peak oil and the low-carbon energy transition A net-energy perspective)
+    Question: est ce que ce chiffre contient le raffinage ?
+
+pétrole . facteur raffinage:
+  formule: 1.07
+  note: Chiffre tiré d'un article sans source primaire (https://energieetenvironnement.com/2018/12/19/le-fonctionnement-des-raffineries-de-petrole/)
+
+pétrole . conso tous carburants:
+  formule:
+    somme:
+      - litres gazole
+      - litres essence
+      - litres kérosène
+      - litres fioul
+
+pétrole . litres gazole:
+  applicable si: transport . voiture . thermique . carburant = 'gazole B7 ou B10'
+  formule: transport . voiture . empreinte . usage / transport . voiture . thermique . empreinte au litre
+  unité: l
+
+pétrole . litres essence:
+  applicable si: transport . voiture . thermique . carburant = 'essence E5 ou E10'
+  formule: transport . voiture . empreinte . usage / transport . voiture . thermique . empreinte au litre
+  unité: l
+
+pétrole . litres kérosène:
+  applicable si: transport . avion . usager
+  formule: km * conso passager
+  unité: l
+
+pétrole . litres kérosène . km:
+  formule:
+    somme:
+      - transport . avion . court courrier . heures de vol * transport . avion . court courrier . vitesse moyenne
+      - transport . avion . moyen courrier . heures de vol * transport . avion . moyen courrier . vitesse moyenne
+      - transport . avion . long courrier . heures de vol * transport . avion . long courrier . vitesse moyenne
+
+pétrole . litres kérosène . conso passager:
+  formule: 0.035
+  unité: l/km
+  référence: à inclure
+
+pétrole . litres fioul:
+  applicable si: logement . chauffage . fioul . présent
+  formule: logement . chauffage . fioul . consommation
+  unité: l
