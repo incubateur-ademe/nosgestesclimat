@@ -2,8 +2,8 @@
 
 ## Le saviez-vous ?
 
-Le secteur du transport est le secteur le plus contributif au changement climatique en France avec 136 Mégatonnes de CO2eq (soit 31 %) sur les 440 Mégatonnes CO2eq émises au total sur le territoire.
-Et ce n’est pas que la faute aux poids lourds… C’est même le contraire car la voiture individuelle y joue une place prépondérante (63 %)
+Le secteur du transport est le secteur le plus contributif au changement climatique en France avec 136 Mégatonnes de CO2eq (soit 31 %) des 440 Mégatonnes CO2eq émises au total sur le territoire.
+Et ce n’est pas que la faute aux poids lourds… C’est même le contraire car la voiture individuelle y joue une place prépondérante (53 %)
 
 ![](https://ecolab-data.netlify.app/images/HCC_emissions_secteur_transport.PNG)
 
