@@ -19,7 +19,7 @@ Une fois la simulation terminée l'ensemble des participants verront les résult
 
 A l'instar du mode conférence, le mode sondage permet de faire le test en groupe mais cette fois-ci, en permettant la sauvegarde des données de manière pérenne. L'objectif est de proposer à une organisation et ses membres de collecter les données issues de Nos Gestes Climat sur une période donnée. Il est possible d'utiliser le mode sondage de la même manière que le mode conférence (en réalisant les tests en simultané) mais la technologie du mode conférence est plus pertinente.
 
-_Attention :_
+**_Attention :_**
 
 Nos Gestes Climat est un outil d'évaluation de l'empreinte carbone individuelle. Le mode sondage ne remplace pas un Bilan d'Emissions de GES. Les données recceuillies ne peuvent pas être exploitées en l'état pour la collecte de données d'activité. Cependant, il permet de récolter des données parfois difficiles à estimer (transport, alimentation) via une simulation ludique, afin de servir cet objectif de collecte d'informations. N'hésitez pas à vous rapprochez vous des équipes de Datagir pour en discuter davantage.
 
