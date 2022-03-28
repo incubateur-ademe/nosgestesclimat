@@ -33,6 +33,12 @@ transport . arrêter l'avion:
 
     Deuxièmement, on ne peut comparer la voiture et l'avion simplement parce qu'un trajet en avion est en général bien plus long. Quand il s'agit de choisir la destination des vacances par exemple, un trajet en voiture a donc toutes les chances d'être beaucoup moins polluant. Cela dit, notons aussi que nos kilométrages en voiture sont tels que le match est relancé quand on regarde l'empreinte à l'année.
 
+transport . arrêter l'avion . pétrole:
+  formule: litres kérosène
+  # formule: 25 * (avion . court courrier . heures de vol + avion . moyen courrier . heures de vol + avion . long courrier . heures de vol)
+  # 25 l/heure de vol issu du [RAC](https://reseauactionclimat.org/les-propositions-du-reseau-action-climat-pour-limiter-limpact-de-la-hausse-du-prix-des-carburants-routiers/)
+
+
 transport . arrêter l'avion court:
   titre: Privilégier le train au lieu de l'avion
   effort: modéré
@@ -56,6 +62,13 @@ transport . arrêter l'avion court:
   #Un aller-retour Paris-Marseille émet environ 250 kgCO2eq en avion contre seulement 3 kgCO2eq en train (source Base Carbone)
   #Choisir de se rendre, depuis Paris, à Barcelone (en train) plutôt qu’à Marrakech (en avion) permettra d’éviter d’émettre 781 kg de CO2eq (source Base Carbone)
 
+
+transport . arrêter l'avion court . pétrole:
+ formule: (avion . court courrier . heures de vol * avion . court courrier . vitesse moyenne) *  pétrole . litres kérosène . conso passager
+ # formule: 25 * avion . court courrier . heures de vol
+ # 25 l/heure de vol issu du [RAC](https://reseauactionclimat.org/les-propositions-du-reseau-action-climat-pour-limiter-limpact-de-la-hausse-du-prix-des-carburants-routiers/)
+
+
 transport . éco-conduite:
   titre: Adopter une éco-conduite
   effort: faible
@@ -73,6 +86,23 @@ transport . éco-conduite:
 
   références:
     Guide de formation à l'éco-conduite ADEME-LaPoste: https://www.ademe.fr/sites/default/files/assets/documents/66885_guide_ecoconduite.pdf#page=8
+
+transport . éco-conduite . petrole:
+  formule:
+    variations:
+      - si: voiture . thermique . carburant = 'essence E5 ou E10'
+        alors: pétrole . litres essence * 15%
+      - si: voiture . thermique . carburant = 'gazole B7 ou B10'
+        alors: pétrole . litres gazole * 15%
+  
+transport . éco-conduite . prix:  
+  formule:
+    variations:
+      - si: voiture . thermique . carburant = 'essence E5 ou E10'
+        alors: (pétrole . litres essence *  pétrole . prix litre essence) * 15%
+      - si: voiture . thermique . carburant = 'gazole B7 ou B10'
+        alors: (pétrole . litres gazole *  pétrole . prix litre gazole) * 15%
+
 
 transport . boulot:
   icônes: 🏢
