@@ -34,7 +34,7 @@ Nos Gestes Climat est un outil d'évaluation de l'empreinte carbone individuelle
 > J'arrive sur l'écran de fin, et puis quoi ?
 >
 > <p align="center">
->  <img src="https://media.giphy.com/media/9RuXRqY2d1gKk/giphy.gif" />
+>  <img alt="GIF I dont know from GIPHY" src="https://media.giphy.com/media/9RuXRqY2d1gKk/giphy.gif" />
 > </p>
 
 **Vous pouvez profiter de l'écran de visualisation du mode groupe pour lancer des échanges au regard des résultats des participants.**
