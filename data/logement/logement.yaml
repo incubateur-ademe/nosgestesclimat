@@ -176,111 +176,23 @@ logement . électricité . intensité carbone:
     Nous utilisons ici le contenu carbone du kWh en Guadeloupe. source : OREC - Bilan de l'énergie 2020
 
     
-  
+logement . climatisation:
+   icônes: 
+   question: Utilisez-vous un climatiseur électrique pour refroidir votre logement ?
+   par défaut: non
+   formule: empreinte * nombre
+   unité: kgCO2e/an
+   
+logement . climatisation . empreinte:
+   formule: 114
+   unité: kgCO2e/an
+   note: |
+      Nous utilisons la valeur d'émission de GES lié aux fuites d'HFC, présent dans les climatiseurs électriques. source : https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Refrigeration_et_climatisation & GESTIS Substance Database . Ces 2 gaz sont le R410a et le R407c.
 
-logement . chauffage:
-  icônes: 🌡️
-  description: |
-    Certains logements sont chauffés entièrement à l'électricité, d'autres sont entièrement chauffés avec du gaz, et plus rarement du bois ou du fioul. 
+logement . climatisation . nombre:
+   question: Combien de climatiseurs électriques possédez-vous ?
+   par défaut: 1
+   
+     
 
-    Dans d'autres situations encore, un logement peut être chauffé principalement à l'électricité, mais avec un appoint bois, par exemple.
-
-    Ici nous faisons la somme de l'empreinte des modes de chauffage autres que l'électricité, dont la facture est commune à tous ses usages.
-  formule:
-    somme:
-      - gaz
-      - fioul
-      - bois . empreinte
-      # à venir : réseau de chaleur
-      # chauffage électrique déjà compté dans la conso électrique
-
-logement . chauffage . électricité:
-  icônes: ⚡️
-
-logement . chauffage . électricité . présent:
-  question: Votre logement est-il chauffé à l'électricité ?
-  par défaut: oui
-
-logement . chauffage . gaz:
-  icônes: 🔥
-  applicable si: présent
-  formule: consommation * intensité carbone
-
-logement . chauffage . gaz . présent:
-  question: Votre logement est-il chauffé au gaz ?
-  par défaut: oui
-  note: |
-    Bien que le chauffage majoritaire en France soit électrique [source](https://fr.statista.com/statistiques/856283/types-chauffage-logement-principal-france), nous mettons ici la valeur par défaut à oui pour se rapprocher de la moyenne d'empreinte du logement. 
-
-    On touche aux limites actuelles de ce système de situation par défaut.
-
-logement . chauffage . gaz . estimation via le coût:
-  question: Pas de facture ? Entrez vos dépenses approximatives par mois
-  unité: €/kWh
-  formule: gaz . prix
-  description: |
-    Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois. 
-
-    Voir l'onglet "Calcul consommation Energie" du [tableur MicMac](https://avenirclimatique.org/wp-content/uploads/2020/04/2020-04-12_MicMac_V2.6.xlsx)
-    Mis à jour via un petit algorithme de calcul en janvier 2022, suite aux hausses historiques du prix en 2021.
-    La valeur pour 2022 est approximativement de 0.104 €/kWh.
-
-logement . chauffage . gaz . consommation:
-  icônes: 🔥
-  question: Quelle est la consommation annuelle de gaz de votre foyer ?
-  par défaut: gaz . consommation par défaut
-  unité: kWh
-  aide: estimation via le coût
-  description: |
-    Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
-    Si vous utilisez plusieurs logements (par exemple une residence secondaire) il faut se débrouiller pour "ramener" ces consommations dans celles du logement principal.
-
-logement . chauffage . gaz . intensité carbone:
-  formule: 0.227
-  unité: kgCO2e/kWh
-
-logement . chauffage . fioul:
-  icônes: 🛢
-  applicable si: présent
-  titre: Fioul domestique
-  formule: consommation * intensité carbone litre
-
-logement . chauffage . fioul . présent:
-  question: Votre logement est-il chauffé au fioul ?
-  par défaut: non
-
-logement . chauffage . fioul . estimation via le prix:
-  question: Pas de facture ? Entrez vos dépenses approximatives en fioul par mois
-  unité: €/litre
-  formule: 0.8887
-  description: |
-    Cette formule nous permet de passer des €/mois aux litres/an.
-
-    Source : Fioul domestique 2000 à 4999 litres, semestre 2 2021.
-  références:
-    écologie.gouv.fr: https://www.ecologie.gouv.fr/prix-des-produits-petroliers
-
-logement . chauffage . fioul . consommation:
-  question: Quelle est la consommation annuelle de fioul domestique de votre foyer ?
-  unité: litre
-  description: |
-    Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
-    Si vous utilisez plusieurs logements (par exemple une residence secondaire) il faut se débrouiller pour "ramener" ces consommations dans celles du logement principal.
-
-    > Il est estimé que la consommation d'une maison récente de 100m² chauffée au fioul consomme entre 1200 et 2400 litres par an. Pour une maison ancienne dans une région froide, elle peut atteindre 6000 litres par an. [Source lenergietoutcompris.fr](https://www.lenergietoutcompris.fr/faq/fioul/quelle-est-la-consommation-moyenne-de-fioul-au-m2).
-
-  par défaut: 1800 litres
-  aide: estimation via le prix
-
-logement . chauffage . fioul . intensité carbone:
-  formule: 0.324
-  unité: kgCO2e/kWh
-
-logement . chauffage . fioul . intensité carbone litre:
-  formule: 3.25
-  unité: kgCO2e/litre
-  références:
-    - https://www.bilans-ges.ademe.fr - Fioul domestique France continental
-
-  
   
