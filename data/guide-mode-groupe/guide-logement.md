@@ -74,6 +74,8 @@ En effet depuis 1968, la taille des ménages diminue passant de 3.1 personnes à
 
 Si l'on suit la même logique afin de limiter l'étalement urbain et la demande en logement neuf, l'achat d'un logement déjà existant permet de participer à la limitation de l'artificialisation des sols.
 
+---
+
 ## Pour approfondir:
 
 Guides et informations grand public
