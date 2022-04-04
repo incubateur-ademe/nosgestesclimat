@@ -98,7 +98,7 @@ transport . boulot . covoiturage:
       - voiture . propriétaire
       - voiture . km > seuil d'activation
   icônes: 🚗👥
-  formule: distance . année * voiture . empreinte . au kilomètre * réduction covoiturage
+  formule: distance * voiture . empreinte . au kilomètre * réduction covoiturage
   description: |
     Si le covoiturage longue distance est bien connu en France, celui des courtes distances est presque inexistant : aujourd’hui seuls 3 % des déplacements domicile-travail sont réalisés en covoiturage.
 
@@ -119,17 +119,19 @@ transport . réduction covoiturage:
     - https://theconversation.com/a-quelles-conditions-le-covoiturage-sera-t-il-un-mode-de-transport-durable-124122
     - https://www.sciencedirect.com/science/article/pii/S1361920918303201
 
-transport . boulot . distance . année:
+transport . boulot . distance:
   formule: semaines * hebdomadaire
 
 transport . boulot . semaines:
   formule: 47
+  unité: semaines
   description: 47 semaines, plutôt que 52 pour prendre en compte les 5 semaines de congés.
 
 transport . boulot . distance . hebdomadaire:
-  formule: distance * 2 * jours travaillés en voiture
+  formule: km aller * 2 * jours travaillés en voiture
+  unité: km/semaine
 
-transport . jours travaillés en voiture:
+transport . boulot . jours travaillés en voiture:
   question: Combien de jours par semaine prenez-vous votre voiture pour aller au travail ?
   par défaut: 4 jours
   unité: jours
@@ -141,7 +143,7 @@ transport . jours travaillés en voiture:
     4: 4
     5: 5
 
-transport . boulot . distance:
+transport . boulot . distance . km aller:
   question: A quelle distance de chez vous se situe votre travail ?
   unité: km
   description: |
@@ -177,7 +179,7 @@ transport . boulot . commun:
     >💡 Le saviez-vous ? L'État et beaucoup de régions ou villes subventionnent les vélos mécaniques, électriques, cargo, pliants, etc. [Calculez votre aide 🚲️ en 3 clics](https://mesaidesvelo.fr).
 
   applicable si: voiture . km > seuil d'activation
-  formule: boulot . distance . année * gain empreinte au km
+  formule: boulot . distance * gain empreinte au km
 
 transport . boulot . seuil d'activation:
   description: |
@@ -200,60 +202,45 @@ transport . boulot . commun . empreinte:
     variations:
       - si: type = 'bus'
         alors: bus . empreinte
-      - si: type = 'tramway'
-        alors: tramway . empreinte
       - si: type = 'TER'
         alors: TER . empreinte
-      - si: type = 'métro'
-        alors: métro . empreinte
+      - si: type = 'métro ou tramway'
+        alors: métro ou tramway . empreinte
       - si: type = 'vélo'
         alors: vélo . empreinte
 
 transport . boulot . commun . type:
   question: Si vous deviez ne plus prendre votre voiture pour vous rendre au travail quel autre moyen de transport pourriez-vous utiliser ?
-  par défaut: "'bus'"
+  par défaut: "'métro ou tramway'"
   formule:
     une possibilité:
       choix obligatoire: oui
       possibilités:
         - bus
-        - tramway
-        - métro
+        - métro ou tramway
         - TER
         - vélo
 
 transport . boulot . commun . type . bus:
-transport . boulot . commun . type . métro:
-transport . boulot . commun . type . tramway:
+transport . boulot . commun . type . métro ou tramway:
 transport . boulot . commun . type . TER:
 transport . boulot . commun . type . vélo:
 
 transport . bus . empreinte:
-  formule: 0.129
+  formule: transport . bus . impact par km
   unité: kgCO2e/km
-  description: |
-    Base Carbone consultée le 02/10/20 Autobus moyen - Agglomération de plus de 250 000 habitants
 
 transport . TER:
 transport . TER . empreinte:
-  formule: 0.0248
+  formule: transport . train . TER
   unité: kgCO2e/km
   description: |
-    Base Carbone consultée le 02/10/20 TER - 2019 - Traction moyenne
+    On considère qu'un déplacement domicile travail effectué en voiture peut-être remplacé par un train régional et non par un TGV.
 
-transport . métro:
-transport . métro . empreinte:
-  formule: 0.0025
+transport . métro ou tramway:
+transport . métro ou tramway . empreinte:
+  formule: transport . métro ou tram . impact par km
   unité: kgCO2e/km
-  description: |
-    Base Carbone consultée le 02/10/20 Métro - 2019 - Île-de-France
-
-transport . tramway:
-transport . tramway . empreinte:
-  formule: 0.0022
-  unité: kgCO2e/km
-  description: |
-    Base Carbone consultée le 02/10/20 Tramway - 2019 - Île-de-France
 
 transport . boulot . télétravail:
   titre: Faire du télétravail
