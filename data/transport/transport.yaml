@@ -67,6 +67,7 @@ transport . train:
 transport . train . impact par km:
   formule: 0.0056
   unité: kgCO2e/km
+
 transport . train . km:
   question: Combien de kilomètres parcourez-vous en train par an ?
   description: Les suggestions sont basées sur la distance à vol d'oiseau doublée pour considérer un aller-retour.
@@ -85,14 +86,23 @@ transport . métro ou tram:
   formule: heures par semaine * impact par heure * nombre de semaines
 
 transport . métro ou tram . impact par heure:
-  formule: 0.17
+  formule: impact par km * vitesse
   unité: kgCO2e/heures
   note: Nous avons confondu tram et métro, alors que le modèle MicMac v2.6 ne parle que de métro.
   description: |
-    Sur la base de 6,63 gCO2e/(passager.km) et de 25 km/h de vitesse moyenne. Base Carbone consultée le 22/06/19- Métro/tram/Trolley, réseaux urbains Classe 1 - amont et combustion ; transports.blog.lemonde.fr, consulté le 05/09/2014
+    Sur la base de 6,63 gCO2e/(passager.km) et de 25 km/h de vitesse moyenne.
+
+transport . métro ou tram . impact par km:
+  formule: 0.00663
+  unité: kgCO2e/heures
+  note: Base Carbone consultée le 22/06/19- Métro/tram/Trolley, réseaux urbains Classe 1 - amont et combustion
+
+transport . métro ou tram . vitesse:
+  formule: 25
+  unité: km/heure
+  note: Hypothèse de 25 km/h de vitesse moyenne, transports.blog.lemonde.fr, consulté le 05/09/2014
   références:
     - http://transports.blog.lemonde.fr/2013/03/11/les-petits-secrets-de-la-ratp-reveles-au-public/
-      - http://www.bilans-ges.ademe.fr/
 
 transport . métro ou tram . heures par semaine:
   question: Combien d'heures passez-vous par semaine en métro ou en tram ?
@@ -114,13 +124,22 @@ nombre de semaines:
   unité: semaine
 
 transport . bus . impact par heure:
-  formule: 1.99
-  unité: kgCO2e/heure
+  formule: impact par km * vitesse
+  unité: kgCO2e/heures
   description: |
-    Sur la base de 166 gCO2e/(passager.km) et de 12 km/h de vitesse moyenne - Base Carbone consultée le 22/06/19 - Bus, moyen, réseaux urbains Classe 2 (zone urbaine et interurbaine) - amont et combustion ; Mairie de Paris pour la vitesse des bus, consulté le 05/09/2014
+    Sur la base de 166 gCO2e/(passager.km) et de 12 km/h de vitesse moyenne
+
+transport . bus . impact par km:
+  formule: 0.166
+  unité: kgCO2e/heures
+  note: Base Carbone consultée le 22/06/19 - Bus, moyen, réseaux urbains Classe 2 (zone urbaine et interurbaine) - amont et combustion
+
+transport . bus . vitesse:
+  formule: 12
+  unité: km/heure
+  note: Hypothèse de 12 km/h de vitesse moyenne, Mairie de Paris, consulté le 05/09/2014
   références:
     - http://www.paris.fr/pratique/deplacements-voirie/transports-en-commun/promouvoir-les-transports-collectifs/rub_385_stand_10755_port_1208
-    - http://www.bilans-ges.ademe.fr/
 
 transport . bus . heures par semaine:
   question: Combien d'heures passez-vous dans un bus par semaine ?
