@@ -286,7 +286,7 @@ transport . boulot . télétravail . compatible:
 transport . voiture 5km:
   titre: Se passer de voiture pour moins de 5 km
   icônes: 🚗🚲
-  formule: distance totale * voiture . empreinte . au kilomètre
+  formule: transport . voiture . empreinte - transport . voiture 5km . recalcul
   non applicable si: voiture . km < seuil d'activation
   description: |
     En France, 4 trajets en voiture sur 10 font moins de 3 km et ce n’est pas moins de 177 millions de trajets de moins de 5km qui sont réalisés seuls en voiture chaque semaine (hors trajets domicile-travail). 
@@ -310,6 +310,17 @@ transport . voiture 5km . seuil d'activation:
 
   formule: nombre de semaines * distance moyenne . aller-retour
   unité: km
+
+transport . voiture 5km . recalcul:
+  formule:
+    recalcul:
+      règle: transport . voiture . empreinte
+      avec:
+        transport . voiture . empreinte . usage: transport . voiture 5km . usage réduit
+
+transport . voiture 5km . usage réduit:
+  formule: (transport . voiture . km - distance totale) * transport . voiture . empreinte . au kilomètre
+  unité: kgCO2e
 
 transport . voiture 5km . distance totale:
   formule: fréquence * distance moyenne . aller-retour * nombre de semaines
