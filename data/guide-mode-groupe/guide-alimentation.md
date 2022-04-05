@@ -2,17 +2,17 @@
 
 ## Tout d'abord un peu de contexte - De quoi parlons nous ?
 
-En France le secteur de l’agriculture est le deuxième secteur le plus contributif aux émissions de gaz à effet de serre. Ce secteur émet chaque année 85 Mt de CO2eq ce qui se représente 19 % des émissions françaises. --> SOURCE ?
+En France le secteur de l’agriculture est le deuxième secteur le plus contributif aux émissions de gaz à effet de serre. Ce secteur émet chaque année 85 Mt de CO2eq ce qui se représente 19 % des émissions françaises[^1].
 
 ![Infographie sur la part de l'agriculture des émissions en France](https://ecolab-data.netlify.app/images/HCC_emissions_secteur_alimentation.PNG)
 
-Si l'on devait catégoriser ces émissions par type de gaz à effet de serre, on obtiendrait la décomposition suivante : --> SOURCE ?
+Si l'on devait catégoriser ces émissions par type de gaz à effet de serre, on obtiendrait la décomposition suivante[^2] :
 
 - environ 45 % de méthane (CH4) dû aux élevages (fermentations entériques c’est-à-dire la digestion des ruminants et stockage des effluents),
 - 40 % de protoxyde d’azote (N20) liées à la fertilimmmmsation des cultures et aux engrais azotés
 - 15 % de CO2 qui provient de la consommation d’énergie (fioul, gaz, carburant, électricité) nécessaire au fonctionnement d'une exploitation (engins agricoles, serres chauffées, bâtiment, etc.).
 
-![Infographie décomposition GES agriculture](https://ecolab-data.netlify.app/images/Agriculture_GES.PNG)
+![Infographie décomposition GES agriculture](https://ecolab-data.netlify.app/images/Agriculture_GES_2020.PNG)
 
 La consommation de viande et plus particulièrement l’élevage joue donc un rôle majeur dans les émissions de gaz à effet de serre de l’agriculture.
 
@@ -44,14 +44,14 @@ Et oui trouver des tomates en plein hiver n'est pas sans conséquence supplémen
 
 > **Et consommer bio, ça ne réduit pas mon empreinte carbone ?**
 > C’est compliqué ... Difficile de dégager un consensus scientifique.
-> De manière générale et d’un point de vue purement Gaz à Effet de Serre (GES), on a tendance à considérer l’agriculture biologique comme plus « contributrice » au changement climatique. En effet, à production et produits égaux, une culture bio va nécessiter des parcelles agricoles plus grandes, réduisant la taille des forêts et des zones naturelles, zones essentielles à la séquestration du carbone. Néanmoins, cette réflexion est faite à production égale et à l’échelle française (c’est-à-dire en gardant les mêmes cultures). Or une transformation de nos modèles agricoles pour les adapter au futur monde bas carbone et aux conséquences du changement climatique suppose de repenser la finalité de l’agriculture (la France est à l’heure actuelle le 5e exportateur de denrées alimentaires avec 69 millions de tonnes de produits agricoles (dont 32 rien que de céréales). Cette finalité repensée (comme une autosuffisance plus grande) permettra de changer les pratiques, de diversifier les cultures et les rotations au bénéfice de l’activité biologique des sols et de réduire également de nombreux impacts environnementaux et sociaux (perte de biodiversité, pollution des sols, des eaux souterraines, santé des agriculteurs, etc.) via notamment une diminution des intrants (produits phytosanitaires, engrais azotés de synthèse, etc.).
+> De manière générale et d’un point de vue purement Gaz à Effet de Serre (GES), on a tendance à considérer l’agriculture biologique comme plus « contributrice » au changement climatique. En effet, à production et produits égaux, une culture bio va nécessiter des parcelles agricoles plus grandes, réduisant la taille des forêts et des zones naturelles, zones essentielles à la séquestration du carbone. Néanmoins, cette réflexion est faite à production égale et à l’échelle française (c’est-à-dire en gardant les mêmes cultures). Or une transformation de nos modèles agricoles pour les adapter au futur monde bas carbone et aux conséquences du changement climatique suppose de repenser la finalité de l’agriculture (la France est à l’heure actuelle le 5e exportateur de denrées alimentaires avec 69 millions de tonnes de produits agricoles (dont 32 rien que de céréales)[^3]. Cette finalité repensée (comme une autosuffisance plus grande) permettra de changer les pratiques, de diversifier les cultures et les rotations au bénéfice de l’activité biologique des sols et de réduire également de nombreux impacts environnementaux et sociaux (perte de biodiversité, pollution des sols, des eaux souterraines, santé des agriculteurs, etc.) via notamment une diminution des intrants (produits phytosanitaires, engrais azotés de synthèse, etc.).
 > **Néanmoins, pour réussir à transformer notre agriculture, le consommateur doit aussi faire sa part. En effet, cette transformation doit s’accompagner d’une transformation de notre régime alimentaire, afin que ce dernier soit moins carné et complété de plus de céréales et légumineuses.**
 
 **🚯 3. Limiter sa production de déchets et réduire le volume de ces poubelles**
 
 - **Coller une mention « Stop Pub » sur sa boite aux lettres**
 
-Action a priori anodine mais en moyenne chaque année c'est tout de même 14 kg de prospectus publicitaires par habitant qui sont déposés dans nos boites aux lettres …. --> SOURCE ?
+Action a priori anodine mais en moyenne chaque année c'est tout de même 14 kg de prospectus publicitaires par habitant qui sont déposés dans nos boites aux lettres[^4]...
 
 - **Acheter en vrac et réutiliser vos emballages**
 
@@ -61,8 +61,8 @@ Les emballages (plastique notamment) sont extrêmement durs à recycler et à r�
 
 - **Réduire son gaspillage alimentaire**
 
-En France, environ 32 kg de déchets alimentaires sont jetés par personne et par an dont [7 kg d’aliments](https://www.casuffitlegachis.fr/) --> PAGE INTROUVABLE ? encore emballés
-Le gaspillage alimentaire représente environ 10 % de notre poubelle grise. --> SOURCE ?
+En France, environ 32 kg de déchets alimentaires sont jetés par personne et par an dont 7 kg d’aliments encore emballés
+Le gaspillage alimentaire représente environ 10 % de notre poubelle grise[^5].
 
 - **Composter ses biodéchets**
   Les déchets putrescibles représentent presque le tiers des déchets de nos poubelles. Si on y ajoute les papiers souillés, c’est presque 40 % des ordures des ménages français qui pourraient faire l’objet d’une valorisation organique.
@@ -75,14 +75,14 @@ Le gaspillage alimentaire représente environ 10 % de notre poubelle grise. --> 
 
 - **Tendre vers un mode de vie zéro déchets**
 
-Même si le secteur des déchets représente seulement 3 % des émissions de gaz à effet de serre en France, réduire le volume de sa poubelle est bénéfique à bien d’autres égards (réduction pollution plastique, besoin en matière première diminué, etc.). **Un leitmotiv : le meilleur déchet est celui qu’on ne produit pas !**
+Même si le secteur des déchets représente seulement 4 % des émissions de gaz à effet de serre en France[^1], réduire le volume de sa poubelle est bénéfique à bien d’autres égards (réduction pollution plastique, besoin en matière première diminué, etc.). **Un leitmotiv : le meilleur déchet est celui qu’on ne produit pas !**
 
 ![Infographie taille poubelle](https://ecolab-data.netlify.app/images/Chiffres-cles_reduire_taille%20poubelle_v2.png)
 
 > **Trier ces déchets, ça sert vraiment à quelque chose ?**
 > Oh oui ! Mais pas seulement pour des questions d'impact carbone
 > Même si un tri de qualité permet de limiter les besoins en « sur-tri » (i.e. tri fait à nouveau à posteriori de la collecte) et donc réduire la consommation énergétique des filières de traitement, **l’avantage du tri se situe sur les économies de matière qu’il permet**. Plus particulièrement, cela permet d’éviter de perdre de la matière et donc de ne pas avoir à en recréer. Grâce au recyclage, on conserve donc pour un nouvel usage, une partie de l’énergie et de la matière contenue dans le déchet. A titre d’exemple, ce n’est pas moins de 95% d’énergie économisée par la confection d’une tonne d’aluminium à partir d’aluminium recyclé .
-> Même si certains taux de réutilisation de la matière recyclée sont très faibles (pour le plastique notamment, où le taux de réincorporation est seulement de 6% contre 49% pour la ferraille, 56 % pour le calcin (verre) et 67 % pour les papiers et cartons), le tri de ses déchets est un geste important pour la préservation des ressources et dans une mesure plus relative, pour le climat.
+> Même si certains taux de réutilisation de la matière recyclée sont très faibles (pour le plastique notamment, où le taux de réincorporation est seulement de 6% contre 49% pour la ferraille, 56 % pour le calcin (verre) et 67 % pour les papiers et cartons[^6]), le tri de ses déchets est un geste important pour la préservation des ressources et dans une mesure plus relative, pour le climat.
 > ![Infographie tri déchet](https://ecolab-data.netlify.app/images/Chiffres-cles_trier-ses-dechets_v2.png)
 
 **🌭 4. Réduire sa consommation de produits transformés/surgelés**
@@ -93,7 +93,7 @@ Les produits transformés sont, d’un point de vue nutritif, très souvent en d
 
 **💧 5. Boire l’eau du robinet**
 
-L’eau en bouteille coûte en moyenne 100 à 300 fois plus cher que l’eau du robinet . Ainsi, lorsqu’on achète une bouteille d’eau en plastique :
+L’eau en bouteille coûte en moyenne 100 à 300 fois plus cher que l’eau du robinet[^7]. Ainsi, lorsqu’on achète une bouteille d’eau en plastique :
 
 - l’eau (le liquide) représente 20% du coût total
 - la fabrication de l’emballage en représente 80 %
@@ -107,3 +107,13 @@ L’eau en bouteille coûte en moyenne 100 à 300 fois plus cher que l’eau du 
 Guides et informations grand public
 
 - Un guide utile : [Mangez mieux, gaspillez moins](https://librairie.ademe.fr/consommer-autrement/1947-manger-mieux-gaspiller-moins-9791029708480.html)
+
+## Sources
+
+[^1]: [Haut Conseil pour le Climat](https://www.hautconseilclimat.fr/wp-content/uploads/2021/09/HCC_Rapport_GP_2021_web-1.pdf)
+[^2]: [Ministère de l'agriculture et de l'alimentation issu de l'inventaire SECTEN du CITEPA, ed. 2020](https://agriculture.gouv.fr/infographie-le-secteur-agricole-et-forestier-la-fois-emetteur-et-capteur-de-gaz-effet-de-serre)
+[^3]: [Consolidé depuis les données de Food and Agriculture Organization](https://www.fao.org/faostat/en/#data/TM)
+[^4]: [Gisement d'évitement considéré dans cette étude](https://librairie.ademe.fr/dechets-economie-circulaire/2520-etude-d-evaluation-des-gisements-d-evitement-des-potentiels-de-reduction-de-dechets-et-des-impacts-environnementaux-evites.html)
+[^5]: [MODECOM 2017 - Campagne nationale de caractérisation des déchets ménagers et assimilés, mars 2019, ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html)
+[^6]: [Les filières de recyclage de déchets en France métropolitaine, Rapport à Madame la Ministre de la Transition écologique et solidaire, janvier 2020](https://www.vie-publique.fr/sites/default/files/rapport/pdf/274322.pdf)
+[^7]: [Le Centre d'Information sur l'Eau](https://www.cieau.com/le-metier-de-leau/usages-consommation-conseils/pourquoi-les-francais-boivent-de-plus-en-plus-de-leau-du-robinet/)
