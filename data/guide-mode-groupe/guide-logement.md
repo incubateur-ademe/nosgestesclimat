@@ -2,11 +2,11 @@
 
 ## Le saviez-vous ?
 
-En France, le secteur du bâtiment contribue à 17% des émissions territoriales françaises (79 Mt CO2eq sur 435 Mt CO2eq). --> SOURCE ?
+En France, le secteur du bâtiment contribue à 17% des émissions territoriales françaises (79 Mt CO2eq sur 435 Mt CO2eq)[^1].
 
 ![Infographie sur la part des bâtiments des émissions en France](https://ecolab-data.netlify.app/images/HCC_emissions_secteur_logement.PNG)
 
-Il faut savoir également que les factures d’énergie représentent en moyenne 8,5 % du budget annuel des ménages (réparties à peu près équitablement entre les déplacements (48 %) et le logement (52 %)). Cela représente en moyenne 2 900 € par ménage et par an. --> SOURCE ?
+Il faut savoir également que les factures d’énergie représentent en moyenne 8,5 % du budget annuel des ménages (réparties à peu près équitablement entre les déplacements (48 %) et le logement (52 %)). Cela représente en moyenne 2 900 € par ménage et par an[^2].
 
 ## "Sur le logement je n’ai pas vraiment de leviers d’actions…"
 
@@ -42,7 +42,7 @@ Cette action s’adresse avant tout aux propriétaires de chaudières fonctionna
 
 **🔨5. Rénover énergétiquement votre logement**
 
-Saviez-vous, qu'en France il y a plus de 7 millions de passoires énergétiques (logement très mal isolés situés dans les classes énergétique F ou G). Et dans ces passoires énergétiques les pertes de chaleur peuvent venir de partout. --> SOURCE ?
+Saviez-vous, qu'en France il y a plus de 7 millions de passoires énergétiques (logement très mal isolés situés dans les classes énergétique F ou G). Et dans ces passoires énergétiques les pertes de chaleur peuvent venir de partout[^3].
 
 ![Schéma pertes de chaleur](https://ecolab-data.netlify.app/images/Pertes_chaleur.PNG)
 
@@ -61,14 +61,15 @@ Il est donc essentiel pour réduire son empreinte carbone de vivre dans les loge
 > En premier lieu, il faut savoir qu’à moins de posséder sa propre source d’électricité (panneaux photovoltaïque), l’électricité dite « verte » fournie par les producteurs d’énergie renouvelable ne peut vous être acheminée sans l’existence du réseau électrique français, réseau unique et partagé par tous. Nos Gestes Climat utilise donc seulement le facteur d’émission (facteur permettant de convertir vos kWh consommés en kg de CO2 émis) de ce réseau, qui sera d’autant plus bas que des sources durables y seront connectées. Pour vous donner une image, il n'y a pas de robinet "énergie verte" à la porte de chaque logement. Vous recevez la même électricité que votre voisin, peu importe vos contrats respectifs.
 > A l’heure actuelle, ce facteur d’émission est particulièrement faible grâce à la part importante de nucléaire et de barrages hydrauliques dans le mix énergétique français. Cependant, comme l’explique [RTE](https://assets.rte-france.com/prod/public/2021-12/Futurs-Energetiques-2050-principaux-resultats.pdf) (gestionnaire du réseau de transport français d’électricité) financer et développer les capacités dites « renouvelables » est essentiel. Leur message est clair : un développement massif des énergies renouvelables est essentiel pour atteindre la neutralité carbone à l’échelle française. Souscrire à un contrat d’électricité « verte » est donc un bon moyen pour être en phase avec ses valeurs, participer à la création d’emplois non délocalisables et participer à l’atteinte d’une France neutre en carbone.
 >
-> **Attention : beaucoup de fournisseurs d’électricité verte ne sont pas très sérieux**. A mettre ? --> SOURCE ??
+> **Attention : beaucoup de fournisseurs d’électricité verte ne sont pas très sérieux**.
 >
-> Privilégiez donc les acteurs cités dans [l’avis technique de l’ADEME](https://librairie.ademe.fr/energies-renouvelables-reseaux-et-stockage/1035-offres-d-electricite-verte.html) : Enercoop, Ilek, Energie d’Ici et EkWateur (uniquement l’offre « petits producteurs indépendants »).
-> --> Et vert volt ?
+> Privilégiez donc les acteurs cités dans [l’avis technique de l’ADEME](https://librairie.ademe.fr/energies-renouvelables-reseaux-et-stockage/1035-offres-d-electricite-verte.html) : Enercoop, Ilek, Energie d’Ici et EkWateur (uniquement l’offre « petits producteurs indépendants ») ainsi que ceux disposant du
+label [VertVolt](https://agirpourlatransition.ademe.fr/particuliers/vertvolt)
+
 
 **✚1️⃣ 6. Si on a de la place chez soi, prendre un colocataire (ou plusieurs ?)**
 
-En effet depuis 1968, la taille des ménages diminue passant de 3.1 personnes à 2.2 personnes en moyenne. Et donc dans le même temps, depuis trente ans, le parc immobilier français s’accroît de 1,1 % par an en moyenne. Partager son logement permet en quelque sorte de limiter l’étalement urbain (en considérant une réduction de la demande en logement) et de réduire l’empreinte carbone de son logement en le « répartissant » entre plusieurs habitants
+En effet depuis 1968, la taille des ménages diminue passant de 3.1 personnes à 2.2 personnes en moyenne[^4]. Et donc dans le même temps, depuis trente ans, le parc immobilier français s’accroît de 1,1 % par an en moyenne[^5]. Partager son logement permet en quelque sorte de limiter l’étalement urbain (en considérant une réduction de la demande en logement) et de réduire l’empreinte carbone de son logement en le « répartissant » entre plusieurs habitants
 
 **🏰 7. Se tourner vers des logements anciens/existants et/ou à rénover lors d’un futur achat**
 
@@ -87,3 +88,12 @@ Guides et informations grand public
 - Choisir son éclairage, Septembre 2018, ADEME
 - [Réduire sa facture d’électricité,](https://librairie.ademe.fr/changement-climatique-et-energie/1966-reduire-sa-facture-d-electricite-9791029708275.html)
 - [Aide Financières](https://librairie.ademe.fr/urbanisme-et-batiment/4108-aides-financieres-2021-9791029717048.html)
+
+
+## Sources
+
+[^1]: [Haut Conseil pour le Climat](https://www.hautconseilclimat.fr/wp-content/uploads/2021/09/HCC_Rapport_GP_2021_web-1.pdf)
+[^2]: [40 trucs et astuces pour économiser l'eau et l'énergie](https://librairie.ademe.fr/cadic/1001/guide-pratique-economiser-eau-energie.pdf?modal=false)
+[^3]: [Collectif Renovons](https://www.precarite-energie.org/wp-content/uploads/2019/07/2017-02-21---sce-nario-re-novons-.pdf)
+[^4]: [Statistiques INSEE](https://www.insee.fr/fr/statistiques/2381486)
+[^5]: [Statistiques INSEE](https://www.insee.fr/fr/statistiques/3620894)
