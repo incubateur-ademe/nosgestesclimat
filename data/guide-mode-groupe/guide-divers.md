@@ -9,7 +9,7 @@ Avant toute chose, expliquons une notion clé : la notion d’empreinte. Il faut
 - L’approche territoriale qui évalue les émissions qui sont émises sur le territoire français.
 - L’approche empreinte qui mesure les émissions liées à la consommation des biens et services des Français, en comptabilisant les importations et les exportations, et donc les émissions d'un produit sur la totalité de son cycle de vie !
 
-Et ces deux approches ne donnent pas les mêmes chiffres : l’empreinte carbone est environ 50 % plus élevée que les émissions territoriales : environ 10t de CO2eq/hab/an contre 6,5t CO2eq/hab/an en 2019. --> SOURCE ? Cela signifie que les Français importent plus de biens et services carbonés qu’ils n’en exportent.
+Et ces deux approches ne donnent pas les mêmes chiffres : l’empreinte carbone est environ 50 % plus élevée que les émissions territoriales : environ 10t de CO2eq/hab/an contre 6,5t CO2eq/hab/an en 2019[^1]. Cela signifie que les Français importent plus de biens et services carbonés qu’ils n’en exportent.
 
 ![Infographie empreinte carbone ](https://ecolab-data.netlify.app/images/HCC_empreinte_carbone_fr.PNG)
 
@@ -72,7 +72,7 @@ On entend par bien durables des produits labellisés ([labels environnementaux o
 
 **♻️ 4. Lorsque que votre produit arrive en fin de vie, orientez-le vers les filières de traitement adéquates**
 
-Il est difficile de quantifier l’impact de cette action à l’échelle individuelle. Néanmoins, en France, sur une année et de manière globale (c’est-à-dire en prenant en compte les déchets des ménages, des entreprises, des collectivités et de la construction), le recyclage (qu’il s’agisse de réemploi, de valorisation matière -autre terme pour désigner le recyclage- ou de valorisation énergétique) a contribué à éviter les émissions de 23 millions de tonnes de CO2 (l’empreinte carbone Française en 2020 est estimée à 663 Millions de tonnes de CO2e). --> SOURCE ?
+Il est difficile de quantifier l’impact de cette action à l’échelle individuelle. Néanmoins, en France, sur une année et de manière globale (c’est-à-dire en prenant en compte les déchets des ménages, des entreprises, des collectivités et de la construction), le recyclage (qu’il s’agisse de réemploi, de valorisation matière -autre terme pour désigner le recyclage- ou de valorisation énergétique) a contribué à éviter les émissions de 23 millions de tonnes de CO2 (l’empreinte carbone Française en 2020 est estimée à 663 Millions de tonnes de CO2e)[^2].
 
 Recycler, même à son échelle, c’est donc participer à cette économie de matière et d’énergie.
 
@@ -88,7 +88,7 @@ Plus généralement, le simulateur Datagir "Que Faire de mes Déchets" peut vous
 
 > **Ne parlons pas que des Gaz à Effet de Serre !**
 >
-> Chercher à respecter les principes de la consommation durable et limiter l'achat de produits neufs est bon pour le climat mais aussi pour l'environnement en général. Comme nous l'avons vu la phase de fabrication représente très souvent la très grande majorité des impacts. En effet, quelque soit le produit fabriqué la quantité de matière mobilisée est toujours gigantesque. A titre d'exemple un téléviseur de 11 kg ou une garde robe de 50 kg c'est [2,5 tonnes de matières mobilisées](https://multimedia.ademe.fr/infographies/infographie-poids-carbone/). 7 milliards de grands arbres sont abattus et non remplacés chaque année pour fabriquer de nouveaux meubles, ce qui représente 200 000 km2 de forêt coupée soit la surface de la Guyanne. Cette gabegie en matière est tout aussi problématique que les émissions de GES en elle même car cette première commence à manquer. De nombreux métaux présentent de fort de criticité, c’est-à-dire que l’approvisionnement est un enjeu particulièrement problématique et il en va de même avec la ressource bois.
+> Chercher à respecter les principes de la consommation durable et limiter l'achat de produits neufs est bon pour le climat mais aussi pour l'environnement en général. Comme nous l'avons vu la phase de fabrication représente très souvent la très grande majorité des impacts. En effet, quelque soit le produit fabriqué la quantité de matière mobilisée est toujours gigantesque. A titre d'exemple un téléviseur de 11 kg ou une garde robe de 50 kg c'est [2,5 tonnes de matières mobilisées](https://multimedia.ademe.fr/infographies/infographie-poids-carbone/). 7 milliards de grands arbres sont abattus et non remplacés chaque année pour fabriquer de nouveaux meubles, ce qui représente 200 000 km2 de forêt coupée soit la surface de la Guyanne[^3]. Cette gabegie en matière est tout aussi problématique que les émissions de GES en elle même car cette première commence à manquer. De nombreux métaux présentent de fort taux de criticité, c’est-à-dire que l’approvisionnement est un enjeu particulièrement problématique et il en va de même avec la ressource bois.
 
 ---
 
@@ -102,3 +102,9 @@ Guides et informations grand public
 - [Guide pratique économie circulaire en 10 questions](https://librairie.ademe.fr/cadic/922/guide-pratique-economie-circulaire-10-questions.pdf?modal=false)
 - [Bénéfices environnementaux de l’allongement de la durée d’usage](https://librairie.ademe.fr/cadic/327/infographie-benefices-environnementaux-allongement-duree-dusage-2019.pdf?modal=false)
 - [Comment faire durer ses objets](https://librairie.ademe.fr/dechets-economie-circulaire/1204-comment-faire-durer-ses-objets-.html)
+
+## Sources
+
+[^1]: [Haut Conseil pour le Climat](https://www.hautconseilclimat.fr/wp-content/uploads/2021/09/HCC_Rapport_GP_2021_web-1.pdf)
+[^2]: [Déchets chiffres-clés – L’essentiel 2019, ADEME](https://presse.ademe.fr/2020/04/la-nouvelle-edition-dechets-chiffres-cles-lessentiel-2019-est-disponible.html)
+[^3]: [Le poids carbone de nos objets](https://multimedia.ademe.fr/infographies/infographie-poids-carbone/)
