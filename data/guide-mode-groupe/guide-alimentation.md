@@ -51,7 +51,7 @@ Et oui trouver des tomates en plein hiver n'est pas sans conséquence supplémen
 
 - **Coller une mention « Stop Pub » sur sa boite aux lettres**
 
-Action a priori anodine mais en moyenne chaque année c'est tout de même 14 kg de prospectus publicitaires par habitant qui sont déposés dans nos boites aux lettres[^4]...
+Action a priori anodine mais en moyenne chaque année c'est tout de même 14 kg de prospectus publicitaires par habitant qui sont déposés dans nos boites aux lettres[^4].
 
 - **Acheter en vrac et réutiliser vos emballages**
 
@@ -98,7 +98,7 @@ L’eau en bouteille coûte en moyenne 100 à 300 fois plus cher que l’eau du 
 - l’eau (le liquide) représente 20% du coût total
 - la fabrication de l’emballage en représente 80 %
 
-![Chiffres](https://ecolab-data.netlify.app/images/Chiffres-cles_eau.png)
+![Chiffres eau](https://ecolab-data.netlify.app/images/Chiffres-cles_eau.png)
 
 ---
 

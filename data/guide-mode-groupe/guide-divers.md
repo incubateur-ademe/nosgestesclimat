@@ -15,8 +15,6 @@ Et ces deux approches ne donnent pas les mêmes chiffres : l’empreinte carbone
 
 `Un bon croquis vaut mieux qu'un long discours !`
 
-**Enfin, à garder en tête, l’empreinte carbone de la France est supérieure à son niveau de 1995 mais bonne nouvelle, elle est à la baisse depuis dix ans.** -> Est ce vraiment une bonne chose de l'écrire ? + SOURCE ?
-
 ## Que faire à son échelle ?
 
 **Suivre les principes de consommation durable.** Même si ce terme peut faire débat (voir prêter à sourire) il s’agit ici de respecter une série de principes pour réduire l’impact de sa consommation. Certains de ces principes peuvent bouleverser nos habitudes mais sachez qu’ils contribuent à une réduction significative de son empreinte.
@@ -78,11 +76,11 @@ Recycler, même à son échelle, c’est donc participer à cette économie de m
 
 Pour connaitre les Points d’Apports Volontaires (PAV) les plus près de chez soi :
 
-• Textiles, Linges de maison et Chaussures (TLC) : [https://refashion.fr/citoyen/fr/je-d%C3%A9pose](https://refashion.fr/citoyen/fr/je-d%C3%A9pose)
+• [Textiles, Linges de maison et Chaussures (TLC)](https://refashion.fr/citoyen/fr/je-d%C3%A9pose)
 
-• Mobiliers et biens d’ameublement : [https://www.eco-mobilier.fr/vos-points-de-collecte-dedies-b2c/](https://www.eco-mobilier.fr/vos-points-de-collecte-dedies-b2c/)
+• [Mobiliers et biens d’ameublement](https://www.eco-mobilier.fr/vos-points-de-collecte-dedies-b2c/)
 
-• Déchets d’Equipement Electriques et Electroniques : [https://www.ecosystem.eco/fr/recherche-point-de-collecte](https://www.ecosystem.eco/fr/recherche-point-de-collecte)
+• [Déchets d’Equipement Electriques et Electroniques](https://www.ecosystem.eco/fr/recherche-point-de-collecte)
 
 Plus généralement, le simulateur Datagir "Que Faire de mes Déchets" peut vous être utile ! [https://quefairedemesdechets.fr/](https://quefairedemesdechets.fr/)
 

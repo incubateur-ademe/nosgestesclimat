@@ -36,7 +36,7 @@ Volets fermés, ouvertures matinales, brasseur d’air et humidification sont le
 
 **🔥 4. Opter pour un système de chauffage moins émissif**
 
-Cette action s’adresse avant tout aux propriétaires de chaudières fonctionnant au gaz ou au fioul car ces dernières sont de très mauvais élève en termes d’émissions de gaz à effet de serre (et d’autant plus dans des logements mal isolés). Cependant, il n’y a pas de solution unique et différents types de solutions peuvent répondre à vos besoins. Pour rentrer dans les détails techniques reportez vous à la bibliothèque numérique en bas de page et plus spécifiquement aux guides « se chauffer mieux et moins cher » et « une maison plus écologique »
+Cette action s’adresse avant tout aux propriétaires de chaudières fonctionnant au gaz ou au fioul car ces dernières sont de très mauvais élève en termes d’émissions de gaz à effet de serre (et d’autant plus dans des logements mal isolés). Cependant, il n’y a pas de solution unique et différents types de solutions peuvent répondre à vos besoins. Pour rentrer dans les détails techniques reportez vous à la bibliothèque numérique en bas de page et plus spécifiquement aux guides « se chauffer mieux et moins cher » et « une maison plus écologique ».
 
 ![Infographie remplacement chaudière](https://ecolab-data.netlify.app/images/Chiffres-cles_Changement-chaudiere.png)
 
@@ -64,12 +64,11 @@ Il est donc essentiel pour réduire son empreinte carbone de vivre dans les loge
 > **Attention : beaucoup de fournisseurs d’électricité verte ne sont pas très sérieux**.
 >
 > Privilégiez donc les acteurs cités dans [l’avis technique de l’ADEME](https://librairie.ademe.fr/energies-renouvelables-reseaux-et-stockage/1035-offres-d-electricite-verte.html) : Enercoop, Ilek, Energie d’Ici et EkWateur (uniquement l’offre « petits producteurs indépendants ») ainsi que ceux disposant du
-label [VertVolt](https://agirpourlatransition.ademe.fr/particuliers/vertvolt)
-
+> label [VertVolt](https://agirpourlatransition.ademe.fr/particuliers/vertvolt)
 
 **✚1️⃣ 6. Si on a de la place chez soi, prendre un colocataire (ou plusieurs ?)**
 
-En effet depuis 1968, la taille des ménages diminue passant de 3.1 personnes à 2.2 personnes en moyenne[^4]. Et donc dans le même temps, depuis trente ans, le parc immobilier français s’accroît de 1,1 % par an en moyenne[^5]. Partager son logement permet en quelque sorte de limiter l’étalement urbain (en considérant une réduction de la demande en logement) et de réduire l’empreinte carbone de son logement en le « répartissant » entre plusieurs habitants
+En effet depuis 1968, la taille des ménages diminue passant de 3.1 personnes à 2.2 personnes en moyenne[^4]. Et donc dans le même temps, depuis trente ans, le parc immobilier français s’accroît de 1,1 % par an en moyenne[^5]. Partager son logement permet en quelque sorte de limiter l’étalement urbain (en considérant une réduction de la demande en logement) et de réduire l’empreinte carbone de son logement en le « répartissant » entre plusieurs habitants.
 
 **🏰 7. Se tourner vers des logements anciens/existants et/ou à rénover lors d’un futur achat**
 
@@ -88,7 +87,6 @@ Guides et informations grand public
 - Choisir son éclairage, Septembre 2018, ADEME
 - [Réduire sa facture d’électricité,](https://librairie.ademe.fr/changement-climatique-et-energie/1966-reduire-sa-facture-d-electricite-9791029708275.html)
 - [Aide Financières](https://librairie.ademe.fr/urbanisme-et-batiment/4108-aides-financieres-2021-9791029717048.html)
-
 
 ## Sources
 
