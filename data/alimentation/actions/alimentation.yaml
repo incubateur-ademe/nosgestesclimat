@@ -151,14 +151,7 @@ alimentation . manger local:
   titre: Manger essentiellement des produits locaux
   icônes: 🍅🇫🇷
   effort: faible
-  formule:
-    variations:
-      - si: local . consommation = 'jamais'
-        alors: local . part locale annuelle
-      - si: local . consommation = 'parfois'
-        alors: local . part locale annuelle * 0.666
-      - si: local . consommation = 'souvent'
-        alors: local . part locale annuelle * 0.333
+  formule: alimentation . local . empreinte - recalcul
   description: |
     L’alimentation locale permet en effet de réduire les distances de transports des produits que nous consommons. Cependant, même si cela peut sembler contre intuitif l'alimentation
     locale peut, en fonction des cas considérés, être défavorable en terme d'émissions de gaz à effet de serre : l'impact de la provenance de nos produits ne peut être 
@@ -169,6 +162,13 @@ alimentation . manger local:
 
     Il faut garder en tête qu'il s'agit d'une première approche qui sera affinée par la suite. A titre d'exemple, on peut supposer que l'impact de cette action sera
     plus importante pour les régimes végétalisés, ce qui n'est pas pris en compte ici.
+
+alimentation . manger local . recalcul:
+  formule:
+    recalcul:
+      règle: alimentation . local . empreinte
+      avec:
+        alimentation . local . consommation: "'oui toujours'"
 
 alimentation . gaspillage alimentaire:
   inactive: oui
@@ -188,14 +188,7 @@ alimentation . manger de saison:
   titre: Manger en respectant les saisons
   icônes: 🍅🌞
   effort: faible
-  formule:
-    variations:
-      - si: de saison . consommation = 'jamais'
-        alors: de saison . part saisonable / de saison . ratio
-      - si: de saison . consommation = 'parfois'
-        alors: (de saison . part saisonable / de saison . ratio) * 0.666
-      - si: de saison . consommation = 'souvent'
-        alors: (de saison . part saisonable / de saison . ratio) * 0.333
+  formule: alimentation . de saison . empreinte - recalcul
   description: |
     Contrairement à ce qu'on pourrait imaginer, l'impact de cette action est relativement faible car la part de produits saisonables est très faible dans l'alimentation moyenne d'un français.
 
@@ -205,6 +198,13 @@ alimentation . manger de saison:
     plus importante pour les régimes végétalisés, ce qui n'est pas pris en compte ici.
   note: |
     Pour en savoir plus sur la méthode de calcul, parcourez sa formule, les variables seront expliquées.
+
+alimentation . manger de saison . recalcul:
+  formule:
+    recalcul:
+      règle: alimentation . de saison . empreinte
+      avec:
+        alimentation . de saison . consommation: "'oui toujours'"
 
 alimentation . boisson . eau en bouteille . arrêter:
   applicable si: affirmatif
