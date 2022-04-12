@@ -103,19 +103,19 @@ transport . métro ou tram:
 
 transport . métro ou tram . impact par heure:
   formule: impact par km * vitesse
-  unité: kgCO2e/heures
+  unité: kgCO2e/h
   note: Nous avons confondu tram et métro, alors que le modèle MicMac v2.6 ne parle que de métro.
   description: |
     Sur la base de 6,63 gCO2e/(passager.km) et de 25 km/h de vitesse moyenne.
 
 transport . métro ou tram . impact par km:
   formule: 0.00329
-  unité: kgCO2e/heures
+  unité: kgCO2e/h
   note: Métro, tramway, trolleybus - 2018 - Agglomération > à 250 000 habitants ; 3.29 gCO2e/km/personne ; Base Carbone consultée le 04/04/2022
 
 transport . métro ou tram . vitesse:
   formule: 25
-  unité: km/heure
+  unité: km/h
   note: Hypothèse de 25 km/h de vitesse moyenne, transports.blog.lemonde.fr, consulté le 05/09/2014
   références:
     - http://transports.blog.lemonde.fr/2013/03/11/les-petits-secrets-de-la-ratp-reveles-au-public/
@@ -126,8 +126,8 @@ transport . métro ou tram . heures par semaine:
     zéro: 0
     1h / jour: 7
     2h / jour: 14
-  unité: heures/semaine
-  par défaut: 3 heures/semaine
+  unité: h/semaine
+  par défaut: 3 h/semaine
 
 transport . bus:
   icônes: 🚌
@@ -141,13 +141,13 @@ nombre de semaines:
 
 transport . bus . impact par heure:
   formule: impact par km * vitesse
-  unité: kgCO2e/heures
+  unité: kgCO2e/heure
   description: |
     Sur la base de 166 gCO2e/(passager.km) et de 12 km/h de vitesse moyenne
 
 transport . bus . impact par km:
   formule: 0.113
-  unité: kgCO2e/heures
+  unité: kgCO2e/km
   note: |
     Autobus - Gazole ; 113 gCO2e/km/personne ; Base Carbone consultée le 04/04/2022
     La flotte étant majoriatirement Diesel en France (https://www.statistiques.developpement-durable.gouv.fr/69-000-autocars-en-circulation-au-1er-janvier-2020), on fait le choix de prendre ce FE (plus fiable que la référence "Autobus moyen" selon la base carbone)
@@ -166,8 +166,8 @@ transport . bus . heures par semaine:
     zéro: 0
     1h / jour: 7
     2h / jour: 14
-  unité: heures/semaine
-  par défaut: 3 heures/semaine
+  unité: h/semaine
+  par défaut: 3 h/semaine
 
 transport . vélo:
   icônes: 🚲
@@ -265,3 +265,14 @@ transport . deux roues thermique . empreinte:
 
   références:
     documentation bilan-GES: https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?routier2.htm
+
+transport . deux roues thermique . conso:
+  formule:
+    variations:
+      - si: type = 'scooter'
+        alors: 2.3 / 100 l/km
+      - si: type = 'moto inf 250'
+        alors: 2.2 / 100 l/km
+      - si: type = 'moto sup 250'
+        alors: 6 / 100 l/km
+  note: Données issues de HBEFA selon la documentation de la base carbone (https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?routier2.htm)
