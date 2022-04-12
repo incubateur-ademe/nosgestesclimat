@@ -184,18 +184,46 @@ logement . électricité . intensité carbone:
 logement . chauffage:
   icônes: 🌡️
   description: |
-    Certains logements sont chauffés entièrement à l'électricité, d'autres sont entièrement chauffés avec du gaz, et plus rarement du bois ou du fioul. 
+    Certains logements sont chauffés entièrement à l'électricité, d'autres sont entièrement chauffés au gaz, et plus rarement au bois ou au fioul. 
 
-    Dans d'autres situations encore, un logement peut être chauffé principalement à l'électricité, mais avec un appoint bois, par exemple.
+    Dans d'autres situations encore, un logement peut être chauffé principalement via des chauffages électriques ou une pompe à chaleur, mais avec un appoint bois, par exemple.
 
     Ici nous faisons la somme de l'empreinte des modes de chauffage autres que l'électricité, dont la facture est commune à tous ses usages.
+
   formule:
     somme:
       - gaz
       - fioul
       - bois . empreinte
-      # à venir : réseau de chaleur
-      # chauffage électrique déjà compté dans la conso électrique
+      - réseau de chaleur
+      # chauffage électrique et PAC déjà compté dans la conso électrique
+
+logement . chauffage . réseau de chaleur:
+  icônes: 🏭
+  applicable si: présent
+  formule: 0
+
+logement . chauffage . réseau de chaleur . présent:
+  question: Votre logement est-il chauffé via un réseau de chaleur ?
+  par défaut: non
+  inactif: oui
+
+logement . chauffage . PAC:
+  titre: Pompe à chaleur
+  icônes: 🌡️
+
+logement . chauffage . PAC . présent:
+  question: Votre logement est-il chauffé via une pompe à chaleur ?
+  par défaut: non
+
+logement . chauffage . notif électrique:
+  type: notification
+  formule:
+    une de ces conditions:
+      - PAC . présent = oui
+      - électricité . présent = oui
+  description: |
+    Vous avez renseigné une pompe à chaleur ou un chauffage électrique : leur consommation est prise en compte via votre facture globale d'électricité.
 
 logement . chauffage . électricité:
   icônes: ⚡️
@@ -284,6 +312,3 @@ logement . chauffage . fioul . intensité carbone litre:
   unité: kgCO2e/litre
   références:
     - https://www.bilans-ges.ademe.fr - Fioul domestique France continental
-
-  
-  
