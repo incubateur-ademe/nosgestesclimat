@@ -65,8 +65,25 @@ transport . train:
   formule: km * impact par km
 
 transport . train . impact par km:
-  formule: 0.0056
+  formule: (TER + TGV) / 2
   unité: kgCO2e/km
+  note: |
+    Nous faisons le choix de ne pas différencier TGV et TER pour le moment (pour éviter de poser deux questions)
+    On pourrait ajouter un curseur pour évaluer la pondération de la moyenne et être plus précis. Aujourd'hui on est à 50/50.
+    On prend donc le facteur d'émission moyen entre TER et TGV.
+
+transport . train . TER:
+  formule: 0.0296
+  unité: kgCO2e/km
+  note: |
+    TER - 2019 - Traction moyenne ; 29.6 gCO2e/km/personne ; Base Carbone consultée le 04/04/2022 (Données SNCF)
+
+transport . train . TGV:
+  formule: 0.00236
+  unité: kgCO2e/km
+  note: |
+    TGV - 2019 ; 2.36 gCO2e/km/personne ; Base Carbone consultée le 04/04/2022 (Données SNCF)
+
 transport . train . km:
   question: Combien de kilomètres parcourez-vous en train par an ?
   description: Les suggestions sont basées sur la distance à vol d'oiseau doublée pour considérer un aller-retour.
@@ -85,14 +102,23 @@ transport . métro ou tram:
   formule: heures par semaine * impact par heure * nombre de semaines
 
 transport . métro ou tram . impact par heure:
-  formule: 0.17
-  unité: kgCO2e/heures
+  formule: impact par km * vitesse
+  unité: kgCO2e/h
   note: Nous avons confondu tram et métro, alors que le modèle MicMac v2.6 ne parle que de métro.
   description: |
-    Sur la base de 6,63 gCO2e/(passager.km) et de 25 km/h de vitesse moyenne. Base Carbone consultée le 22/06/19- Métro/tram/Trolley, réseaux urbains Classe 1 - amont et combustion ; transports.blog.lemonde.fr, consulté le 05/09/2014
+    Sur la base de 6,63 gCO2e/(passager.km) et de 25 km/h de vitesse moyenne.
+
+transport . métro ou tram . impact par km:
+  formule: 0.00329
+  unité: kgCO2e/h
+  note: Métro, tramway, trolleybus - 2018 - Agglomération > à 250 000 habitants ; 3.29 gCO2e/km/personne ; Base Carbone consultée le 04/04/2022
+
+transport . métro ou tram . vitesse:
+  formule: 25
+  unité: km/h
+  note: Hypothèse de 25 km/h de vitesse moyenne, transports.blog.lemonde.fr, consulté le 05/09/2014
   références:
     - http://transports.blog.lemonde.fr/2013/03/11/les-petits-secrets-de-la-ratp-reveles-au-public/
-      - http://www.bilans-ges.ademe.fr/
 
 transport . métro ou tram . heures par semaine:
   question: Combien d'heures passez-vous par semaine en métro ou en tram ?
@@ -100,8 +126,8 @@ transport . métro ou tram . heures par semaine:
     zéro: 0
     1h / jour: 7
     2h / jour: 14
-  unité: heures/semaine
-  par défaut: 3 heures/semaine
+  unité: h/semaine
+  par défaut: 3 h/semaine
 
 transport . bus:
   icônes: 🚌
@@ -114,13 +140,25 @@ nombre de semaines:
   unité: semaine
 
 transport . bus . impact par heure:
-  formule: 1.99
-  unité: kgCO2e/heure
+  formule: impact par km * vitesse
+  unité: kgCO2e/h
   description: |
-    Sur la base de 166 gCO2e/(passager.km) et de 12 km/h de vitesse moyenne - Base Carbone consultée le 22/06/19 - Bus, moyen, réseaux urbains Classe 2 (zone urbaine et interurbaine) - amont et combustion ; Mairie de Paris pour la vitesse des bus, consulté le 05/09/2014
+    Sur la base de 166 gCO2e/(passager.km) et de 12 km/h de vitesse moyenne
+
+transport . bus . impact par km:
+  formule: 0.113
+  unité: kgCO2e/km
+  note: |
+    Autobus - Gazole ; 113 gCO2e/km/personne ; Base Carbone consultée le 04/04/2022
+    La flotte étant majoriatirement Diesel en France (https://www.statistiques.developpement-durable.gouv.fr/69-000-autocars-en-circulation-au-1er-janvier-2020), on fait le choix de prendre ce FE (plus fiable que la référence "Autobus moyen" selon la base carbone)
+    La prise compte des autres motorisations de cette catégorie de la base carbone fera diminuer ce FE (en pondérant selon les caractéristiques de la flotte française). (Ex: Autobus - Electrique = 21.7 gCO2e/km/personne)
+
+transport . bus . vitesse:
+  formule: 12
+  unité: km/h
+  note: Hypothèse de 12 km/h de vitesse moyenne, Mairie de Paris, consulté le 05/09/2014
   références:
     - http://www.paris.fr/pratique/deplacements-voirie/transports-en-commun/promouvoir-les-transports-collectifs/rub_385_stand_10755_port_1208
-    - http://www.bilans-ges.ademe.fr/
 
 transport . bus . heures par semaine:
   question: Combien d'heures passez-vous dans un bus par semaine ?
@@ -128,8 +166,8 @@ transport . bus . heures par semaine:
     zéro: 0
     1h / jour: 7
     2h / jour: 14
-  unité: heures/semaine
-  par défaut: 3 heures/semaine
+  unité: h/semaine
+  par défaut: 3 h/semaine
 
 transport . vélo:
   icônes: 🚲
@@ -209,23 +247,32 @@ transport . deux roues thermique . empreinte:
   formule:
     variations:
       - si: type = 'scooter'
-        alors: 0.0644 kgCO2e/km
+        alors: 0.0763 kgCO2e/km
       - si: type = 'moto inf 250'
-        alors: 0.0616 kgCO2e/km
+        alors: 0.0763 kgCO2e/km
       - si: type = 'moto sup 250'
-        alors: 0.168 kgCO2e/km
+        alors: 0.191 kgCO2e/km
 
   note: |
-    Scooter ; 64.4 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
+    Cyclomoteur - Mixte - 2018 ; 76,3 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
 
-    Deux roues thermiques < 250cm3 ; 61,6 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
+    Moto =< 250 cm3 - Mixte - 2018 ; 76,3 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
 
-    Deux roues thermiques > 250cm3 ; 168 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
+    Moto > 250 cm3 - Mixte - 2018 ; 191 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
 
 
-    Nous ne prenons en compte que l'empreinte à l'usage, pas la construction, faute de données.
-
-    Notons cependant que si l'on estime la fabrication à une tonne de CO2e, un véhicule qui ferait 100 000 km émetterait ~ 10 tonnes de CO2e, soit 10x l'empreinte de construction.
+    Les chiffres ci-dessus incluent la fabrication du véhicule, contrairement aux données précédentes (2021).
 
   références:
     documentation bilan-GES: https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?routier2.htm
+
+transport . deux roues thermique . conso:
+  formule:
+    variations:
+      - si: type = 'scooter'
+        alors: 2.3 / 100 l/km
+      - si: type = 'moto inf 250'
+        alors: 2.2 / 100 l/km
+      - si: type = 'moto sup 250'
+        alors: 6 / 100 l/km
+  note: Données issues de HBEFA selon la documentation de la base carbone (https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?routier2.htm)
