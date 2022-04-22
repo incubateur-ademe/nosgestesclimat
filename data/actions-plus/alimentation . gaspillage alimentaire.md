@@ -4,7 +4,7 @@
 En moyenne, l’alimentation représente le ¼ de notre empreinte carbone individuelle et plus largement entre 20 et 50 % de l’empreinte environnementale des Français [^1]. De la consommation d’énergie directe et indirecte à la consommation d’eau en passant par la pollution de certains milieux naturels, la production, la transformation et le conditionnement de nos aliments génèrent des impacts sur notre environnement et sur les ressources naturelles. 
 Lutter contre le gaspillage alimentaire, c’est donc diminué les tensions sur ces ressources.
 
-## Impact GES de l’action
+## Impact GES moyen de l’action
 Réduire le gaspillage alimentaire : **-31 kgCO2eq/an/personne**
 
 ## Ordre de grandeur GES 
