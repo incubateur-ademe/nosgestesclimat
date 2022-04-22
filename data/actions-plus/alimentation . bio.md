@@ -83,9 +83,9 @@ et au végétarisme.
 
 ## Passer à l'action
 
-[Agrybalise](https://www.agribalyse.fr/) pour comprendre et connaitre les impacts environnementaux des produits alimentaires
-[Agence Bio](https://www.agencebio.org/) : Agence Française pour le Développement et la Promotion de l'Agriculture Biologique
-[Cartobio](https://cartobio.org/#/) pour savoir où se situe les parcelles en bio près de chez soi
+- [Agrybalise](https://www.agribalyse.fr/) pour comprendre et connaitre les impacts environnementaux des produits alimentaires
+- [Agence Bio](https://www.agencebio.org/) : Agence Française pour le Développement et la Promotion de l'Agriculture Biologique
+- [Cartobio](https://cartobio.org/#/) pour savoir où se situe les parcelles en bio près de chez soi
 
 ## Sources
 
