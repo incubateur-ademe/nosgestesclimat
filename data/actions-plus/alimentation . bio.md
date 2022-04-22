@@ -94,4 +94,4 @@ et au végétarisme.
 [^3]: [Agreste](https://agreste.agriculture.gouv.fr/agreste-web/download/publication/publie/GraFra2020Chap9.3/Graf2035%20-%20Agriculture%20biologique.pdf)
 [^4]: [Agence Bio, chiffres clés](https://www.agencebio.org/vos-outils/les-chiffres-cles/) 
 [^5]: Les chiffres 2019 du secteur bio, dossier de presse, 9 juillet 2020, Agence BIO
-[^6]: Scénario Afterres 2050, version 2016, Solagro
+[^6]: [Scénario Afterres 2050, version 2016, Solagro](https://afterres2050.solagro.org/wp-content/uploads/2015/11/solagro_afterres2050_version2016.pdf)
