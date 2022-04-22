@@ -3,10 +3,10 @@
 ## Contexte de l’action
 
 Portée par des préoccupations fortes quant aux risques pour notre santé et pour l’environnement, la consommation de produits biologiques explose depuis
-maintenant quelques années. Cependant, la capacité de l’agriculture biologique à répondre à l’enjeu climatique fait débat. Même si elle tend à mobiliser une plus
-grande surface au sol (pour un rendement équivalent), consommer des produits biologiques fait néanmoins sens lorsqu’on l’associe à une modification de notre 
-régime alimentaire (pour que ce dernier soit moins carné). De plus, au-delà du critère carbone, l’agriculture biologique permet de réduire de nombreux autres 
-impacts environnementaux.
+maintenant quelques années. Cependant, la capacité de l’agriculture biologique à répondre à l’enjeu climatique fait débat. Même si elle tend à mobiliser une plus grande surface au sol (pour un rendement équivalent), consommer des produits biologiques fait néanmoins sens lorsqu’on l’associe à une modification de notre régime alimentaire (pour que ce dernier soit moins carné).
+De plus, au-delà du critère carbone, l’agriculture biologique permet également de réduire de nombreux autres impacts environnementaux.
+
+![](https://ecolab-data.netlify.app/images/Chiffres-cles_Consommer-bio.png)
 
 ## Impact GES de l’action
 
@@ -15,6 +15,7 @@ Néanmoins, afin de mettre en avant des ordres de grandeur, le graphique suivant
 produits alimentaires.
 
 ![](https://ecolab-data.netlify.app/images/Impact_GES_bio_conventionel.PNG)
+`Figure 1 : Impact CO2 d'un kg de produit à la sortie de la ferme - source [Agrybalise](https://www.agribalyse.fr/) `
 
 ## Budget
 
