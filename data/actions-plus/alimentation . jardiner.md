@@ -1,4 +1,4 @@
-# Réduire sa consommation de viande (et plus particulièrement de viande rouge)
+# Créer son propre potager et/ou jardin
 
 ## Contexte de l’action
 
