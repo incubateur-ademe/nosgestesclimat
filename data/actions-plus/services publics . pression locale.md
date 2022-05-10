@@ -15,20 +15,19 @@ Il est difficile d’estimer l’impact GES de cette action étant donné qu’i
 l'impact possible), il faudrait que l’action de l’élu soit comparée à ce qu’il se serait passé sans votre intervention. Cela suppose donc de comparer deux 
 scénarios avec chacun de fortes hypothèses, ce qui est complexe. 
 
-Néanmoins, la quantification d’actions phares que les élus pourraient porter a été réalisée par des experts, pour de nombreuses actions [1]. Interpeller ses
+Néanmoins, la quantification d’actions phares que les élus pourraient porter a été réalisée par des experts, pour de nombreuses actions [^1]. Interpeller ses
 élus est donc essentiel car les actions résultantes peuvent permettre d’éviter de nombreuses émissions :
-- Mise en place d’un bus à haut niveau de service roulant au biogaz issu de la méthanisation de biodéchets : 1600 t CO2eq évités par an, par rapport à un 
+- Mise en place d’un bus à haut niveau de service roulant au biogaz issu de la méthanisation de biodéchets : **1600 t CO2eq évités par an**, par rapport à un 
 bus classique (soit l’équivalent en émissions de GES de 6 000 000 km roulés en voiture)
-- Déploiement d'un schéma de déplacement communautaire : 860 t CO2eq évités par an (pour la Communauté de communes du Val d'Ille-Aubigné, soit environ 
+- Déploiement d'un schéma de déplacement communautaire : **860 t CO2eq évités par an** (pour la Communauté de communes du Val d'Ille-Aubigné, soit environ 
 40 000 habitants)
-- Mise en place d’une alimentation responsable dans une cantine : 2882 t CO2eq évités sur 9 ans soit 320 t CO2eq évités par an
-- Valorisation du fauchage tardif par méthanisation : 21 t CO2eq évités par an
+- Mise en place d’une alimentation responsable dans une cantine : **2882 t CO2eq évités sur 9 ans** soit 320 t CO2eq évités par an
+- Valorisation du fauchage tardif par méthanisation : **21 t CO2eq évités par an**
 
 ## Chiffres clés à retenir
 
-- En mars 2022, un sondage XXX confirmait la place de l'environnement parmi les préocupations majeures des français [^2]. 
-Cette préoccupation est bien réelle et ce, quels que soient les tranches d’âges et les milieux sociaux. Elle arrive, en effet, comme deuxième préoccupation
-majeure pour les plus de 60 ans et pour les ouvriers et salariés [^3]
+- En mars 2022, un sondage IPSOS confirmait une nouvelle fois la place de l'environnement parmi les préocupations majeures des français [^2]. 
+- Cette préoccupation est bien réelle et ce, quels que soient les tranches d’âges et les milieux sociaux. Elle arrive, en effet, comme deuxième préoccupation majeure pour les plus de 60 ans et pour les ouvriers et salariés [^3]
 - Même avec la crise sanitaire, l’environnement est resté une considération importante pour les français. Ils étaient 58% à estimer en 2020 que la reprise 
 économique ne devait pas se faire à tout prix en sacrifiant l’environnement [^4]
 - 2 527 communes couvertes par le Pacte pour la Transition lors des élections municipales de 2020 [^5]
@@ -38,19 +37,12 @@ y est !
 
 ## Explication
 
-Lorsque l'on parle d'engagement individuel et de transition écologique, il est possible d'entendre tous types de discours : "c'est aux citoyens de changer ! S'ils changent 
-le système changera" ; "Nos empreintes carbone individuelles ne sont rien au regard des émissions d'un Etat ou d'une grande entreprise" ; "L'injonction à la
-réduction de nos empreintes carbone a été pensé pour occulter la responsabilité des grands groupes dans le changement climatique". Bref difficile de s'y 
-retrouver et savoir qui a raison. Un peu tout le monde ?
-Ce que dit Nos Gestes Climat, c'est que la transition individuelle est absolument nécessaire mais pas suffisante pour mener à bien la transition et les changements
-dont nous avons besoin. C'est pourquoi en parallèle de l'action individuelle doit être associé des changements à plus grande échelle c’est-à-dire à celle
-des entreprises, des collectivités, de l'État et plus généralement de notre société. C’est ce qu’on appelle la bataille culturelle. De nombreuses
-associations (Réseau Action Climat, ANV COP 21, Alternatiba, GreenPeace, Extention Rebellion, Youth for Climate, et de nombreuses autres…) mènent ce travail
-de plaidoyer pour la transition et cherchent à alerter la population  et les élus sur les risques du changement climatique tout autant que sur les doubles 
-discours de certains acteurs. 
-Même si cette bataille de l’opinion a permis de faire prendre conscience aux français des risques que représente le changement climatique - les différents 
-sondages confirment que cette préoccupation des français vis-à-vis du changement climatique est forte et ce même en temps de crise sanitaire [^4] – beaucoup 
-de chemin reste encore à parcourir.
+Lorsque l'on parle d'engagement individuel et de transition écologique, il est possible d'entendre tous types de discours : "c'est aux citoyens de changer ! S'ils changent le système changera" ; "Nos empreintes carbone individuelles ne sont rien au regard des émissions d'un Etat ou d'une grande entreprise" ; "L'injonction à la réduction de nos empreintes carbone a été pensé pour occulter la responsabilité des grands groupes dans le changement climatique". Bref difficile de s'y retrouver et savoir qui a raison. Un peu tout le monde ?
+
+Ce que dit Nos Gestes Climat, c'est que **la transition individuelle est absolument nécessaire mais non suffisante** pour mener à bien la transition et les changements dont nous avons besoin. 
+
+C'est pourquoi en parallèle de l'action individuelle doit être associé des changements à plus grande échelle c’est-à-dire à celle des entreprises, des collectivités, de l'État et plus généralement de notre société. C’est ce qu’on appelle la bataille culturelle. De nombreuses associations (Réseau Action Climat, ANV COP 21, Alternatiba, GreenPeace, Extention Rebellion, Youth for Climate, et de nombreuses autres…) mènent ce travail de plaidoyer pour la transition et cherchent à alerter la population  et les élus sur les risques du changement climatique tout autant que sur les doubles discours de certains acteurs. Même si cette bataille de l’opinion a permis de faire prendre conscience aux français des risques que représente le changement climatique - les différents sondages confirment que cette préoccupation des français vis-à-vis du changement climatique est forte et ce même en temps de crise sanitaire [^4] – beaucoup de chemin reste encore à parcourir.
+
 A titre d’exemple, la réglementation BEGES qui impose depuis 2010, à certaines collectivités de plus de 50 000 habitants, aux établissements publics de plus de 250 
 employés et aux entreprises de plus de 500 employés - soit environ 5000 organisations obligées - de réaliser un bilan des émissions de GES  n’était 
 respectée, en 2018, qu’à, respectivement 16 %, 26 %, 36 % par les obligés. Il en va de même avec la rédaction des Plan Climat Air Energie Territorial 
@@ -61,6 +53,7 @@ publication d’une loi obligeant de nombreux territoires à leur rédaction. Au
 N’hésitez pas à vérifier si votre territoire s’y trouve. De plus, ces PCAET peuvent être réalisés de manière volontaire par toutes les collectivités. 
 Interpellez vos élus à ce sujet ! Et si votre collectivité est en phase de rédaction, n'hésitez pas à vous y intéresser et à donner votre avis. De 
 nombreuses consultations publiques ont souvent lieu. 
+
 A l’échelle de votre commune, n’hésitez pas aussi à demander à votre maire de s'engager. Des initiatives telle que la [Convention des Maire](https://www.conventiondesmaires.eu/fr/) sont là pour
 les accompagner dans la transition. Enfin, n’hésitez pas, une fois les élus en place, à leur rappeler leurs engagements. Tous les moyens sont bons : débats, 
 projections de documentaires, événements participatifs. Pour cela, appuyez vous sur
@@ -83,10 +76,10 @@ les associations et les [initiatives locales](https://alternatiba.eu/une-nouvell
 
 ## Sources
 
-[^1] : https://www.bilans-ges.ademe.fr/fr/ressource/fiche-action-list/index/siGras/1 
-[^2] : https://www.lesechos.fr/monde/europe/le-climat-en-tete-des-preoccupations-devant-le-pouvoir-dachat-1152797 
-[^3] : https://www.lemonde.fr/politique/article/2019/09/16/l-ecologie-une-preoccupation-desormais-majeure-pour-les-francais_5510924_823448.html 
-[^4] : https://www.ipsos.com/fr-fr/58-des-francais-estiment-que-la-reprise-economique-ne-doit-pas-se-faire-tout-prix-en-sacrifiant  
-[^5] : https://www.pacte-transition.org/#welcome 
-[^6] : https://www.territoires-climat.ademe.fr/actualite/cartes-davancement-nationale-et-regionales-des-pcaet-mars-2022
+[^1]: [Fiche Action Quanti GES](https://www.bilans-ges.ademe.fr/fr/ressource/fiche-action-list/index/siGras/1)
+[^2]: [Le climat en tête des préoccupations devant le pouvoir d'achat](https://www.ipsos.com/fr-fr/presidentielle-2022/enquete-electorale-vague-7)
+[^3]: [L'écologie une préoccupation désormais majeure pour les français](https://www.lemonde.fr/politique/article/2019/09/16/l-ecologie-une-preoccupation-desormais-majeure-pour-les-francais_5510924_823448.html)
+[^4]: [Une reprise économique à tout prix ?](https://www.ipsos.com/fr-fr/58-des-francais-estiment-que-la-reprise-economique-ne-doit-pas-se-faire-tout-prix-en-sacrifiant)  
+[^5]: [Pacte pour la Transition](https://www.pacte-transition.org/#welcome)
+[^6]: https://www.territoires-climat.ademe.fr/actualite/cartes-davancement-nationale-et-regionales-des-pcaet-mars-2022
 
