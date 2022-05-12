@@ -8,6 +8,8 @@ manière souvent pertinente de réduire notre empreinte carbone étant donné qu
 dont le métier le permet). Ce geste est d'autant plus significatif pour les personnes dont la mobilité quotidienne est articulée autour de la voiture 
 individuelle. Mais attention aux effets rebonds négatifs !
 
+![](https://ecolab-data.netlify.app/images/Chiffres-cles_Teletravail_v2.png)
+
 ## Impact GES moyen de l'action
 
 L’ADEME considère dans une étude [^1] que, de manière générale, un jour de télétravail par semaine permet de réduire de 271 kg CO2eq/an son empreinte
