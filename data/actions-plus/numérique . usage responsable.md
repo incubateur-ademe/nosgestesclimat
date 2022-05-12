@@ -8,6 +8,8 @@ en font aujourd’hui un enjeu majeur en termes d’émissions de gaz à effet d
 internet et lorsque l’on utilise des supports numériques est essentiel pour réduire son empreinte carbone individuelle ainsi que les impacts 
 environnementaux à l’échelle globale.
 
+![](https://ecolab-data.netlify.app/images/Chiffres-cles_Consommation-numerique-responsable.png)
+
 ## Impact GES moyen de l’action
 
 Il est difficile de définir l’impact GES moyen de cette action générique étant donné qu’elle englobe une grande diversité d’actions et de pratiques. De plus,
@@ -38,9 +40,9 @@ Néanmoins, afin de fournir des ordres de grandeur, la figure suivante présente
 ## Explication
 
 Les usages numériques font partie intégrante de notre quotidien. Qu’il s’agisse de surfer sur le web, d’envoyer un mail, de préparer ses prochaines vacances ou de regarder des séries, il est quasi impossible de se passer d’internet. Qui plus est, cette facilité et ce côté dématérialisé est tellement naturel que nombre d’entre nous n’ont pas conscience de ce qui se cache derrière tout ça. Et, malheureusement, l’impact du numérique et des objets connectés est tout sauf virtuel. 
-Premièrement, faire fonctionner internet et les équipements qui y sont reliés nécessite de l’électricité. Cette électricité, à travers le monde, provient très souvent d’énergies fossiles qui contribuent à émettre de très fortes quantité de GES. C’est ainsi qu’internet émet environ 4 % des gaz à effet de serre du monde, soit plus que le transport aérien civil [2] ou encore que la vidéo Gangnam Style, visionnée 2,7 milliards de fois sur la planète, aurait induit une demande d’électricité équivalente à la consommation annuelle d'une petite centrale nucléaire [6]. Deuxièmement, le fonctionnement d’internet, quels que soient les usages (mail, téléchargement, vidéo, requête web...) repose sur la transmission de données. Or ces données, qu’il s’agisse de l’envoi d’un simple mail ou d’une requête internet, ne peuvent « voyager » sans l’existence d’un « réseau » nécessitant des infrastructures complexes. Câble de fibre, routers, serveurs, unités de stockage : les équipements sollicités sont bien réels. On estime d’ailleurs que la distance moyenne parcourue par une donnée numérique est de 15 000 km.
+Premièrement, faire fonctionner internet et les équipements qui y sont reliés nécessite de l’électricité. Cette électricité, à travers le monde, provient très souvent d’énergies fossiles qui contribuent à émettre de très fortes quantité de GES. C’est ainsi qu’internet émet environ 4 % des gaz à effet de serre du monde (en date de 2020), soit plus que le transport aérien civil [^2] ou encore que la vidéo Gangnam Style, visionnée 2,7 milliards de fois sur la planète, aurait induit une demande d’électricité équivalente à la consommation annuelle d'une petite centrale nucléaire [^6]. Deuxièmement, le fonctionnement d’internet, quels que soient les usages (mail, téléchargement, vidéo, requête web...) repose sur la transmission de données. Or ces données, qu’il s’agisse de l’envoi d’un simple mail ou d’une requête internet, ne peuvent « voyager » sans l’existence d’un « réseau » nécessitant des infrastructures complexes. Câble de fibre, routers, serveurs, unités de stockage : les équipements sollicités sont bien réels.
  
-C’est pourquoi, adopter des pratiques responsables dans son usage du numérique (recherche internet, stockage de données, etc.) est essentiel pour réduire son empreinte carbone individuelle et limiter son impact sur l’environnement de manière générale. Ainsi, pour réduire votre impact numérique vous pouvez  : 
+C’est pourquoi, adopter des usages numériques responsables est essentiel pour réduire son empreinte carbone individuelle et limiter son impact sur l’environnement de manière générale. Ainsi, pour réduire votre impact numérique vous pouvez  : 
 -	Cibler les destinataires essentiels d’un mail : multiplier par 10 le nombre des destinataires d’un mail multiplie par 4 son impact,
 -	Utilisez des sites de dépôt temporaire pour transmettre de lourdes pièces jointes : le nettoyage au bout d’un certain temps libère de la place et évite ainsi de créer de plus en plus de ressources de stockage connectées,
 -	Pour des fichiers extrêmement lourds, privilégier le transfert par clé USB
@@ -56,22 +58,22 @@ utilisation de manière superflue a un impact environnemental fort et il est don
 quand on sait que seulement 57 % de la population mondiale navigue sur internet [^6]. 
 
 La croissance exponentielle des usages numériques (tant en nombre d’utilisateurs que dans les différentes manières de l’utiliser) est un enjeu majeur des 
-années à venir. Actuellement de l’ordre de 4 % des émissions de gaz à effet de serre du monde, le numérique pourrait, d’ici 2025, en représentait 8% soit 
+années à venir. Actuellement de l’ordre de 4 % (en date de 2020) des émissions de gaz à effet de serre du monde, le numérique pourrait, d’ici 2025, en représentait 8% soit 
 autant que les émissions de GES de l’Inde (à date de 2015) qui compte 1.3 milliard d’habitant [^2]. De manière générale, la taille de l’univers numérique va tripler à 
 quintupler (selon l’indicateur observé : masse, nombre d’équipements, d’utilisateurs, etc.) et ses impacts environnementaux vont doubler à tripler (selon 
 l’indicateur environnemental observé) [^3].
 
-L'autre enjeu majeur de numérique est l’impact environnemental liée à la fabrication des supports (ordinateur, smartphone, 
+**L'autre enjeu majeur de numérique est l’impact environnemental liée à la fabrication des supports** (ordinateur, smartphone, 
 tablette, télévision, etc.). En effet, leur fabrication est extrêmement gourmande en énergie et en eau. Ainsi pour un smartphone, sur l’ensemble du cycle de
 vie, c’est près de 3/4 des émissions de GES (source Base Carbone) et 80 % de la consommation en eau qui proviennent de la phase de 
 fabrication [^6].
 
-**Mettre ici l'infographie "produits électroniques reconditonnés"**
+![](https://ecolab-data.netlify.app/images/Chiffres-cles_Achat-elec-reconditionne.png)
 
 Il est donc indispensable d’éviter les rénouvellements précoces de ces appareils (pour cause d’obsolescence perçue et/ou 
 technique ) et d’essayer de faire en sorte de maximiser leur durée de vie. Ainsi, si tous les foyers français allongeaient d’un an (sur une période de 10 
 ans) la durée d’usage totale de leurs équipements multimédia (au lieu de les remplacer), cela contribuerait à éviter l’émission de plus de 4 millions de 
-tonnes de CO2eq [^7]. Il est également essentiel de limiter, la consommation d’énergie en débranchant/éteignant certains appareils la nuit. 
+tonnes de CO2eq [^7].
 
 De plus, questionner le besoin réel en équipements connectés est également nécessaire si l’on souhaite réduire l’impact de sa consommation numérique. En 
 effet, le besoin réel d’une montre connectée, d’un tracker d’activité physique ou encore d’un frigo pilotable à distance est questionnable quand on connait 
