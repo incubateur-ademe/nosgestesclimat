@@ -10,18 +10,15 @@ environnementaux à l’échelle globale.
 
 ![](https://ecolab-data.netlify.app/images/Chiffres-cles_Consommation-numerique-responsable.png)
 
-## Impact GES moyen de l’action
+## Impact GES moyen
 
-Il est difficile de définir l’impact GES moyen de cette action générique étant donné qu’elle englobe une grande diversité d’actions et de pratiques. De plus,
-le poids en terme de réduction de gaz à effet de serre peut varier très fortement en fonction des pratiques de chacun (nombre d’envoi de mail, présence sur 
-les réseaux sociaux, heures passées en streaming vidéo, etc.), mais aussi du réseau utilisé (mobile ou fixe) et des terminaux utilisés (smartphone, 
-ordinateurs, tablette). 
+Il est difficile de définir l’impact GES moyen d'une action type étant donné que l'impact dépendra des pratiques de chacun et sera fonction de la grande diversité de gestes pouvant être mis en place.
 
-Néanmoins, afin de fournir des ordres de grandeur, la figure suivante présente les impact GES moyen de certaines actions.
+Néanmoins, afin de fournir un ordre de grandeur, la figure suivante présente l'impact GES moyen de la consommation de données en fonction du réseau utilisé (mobile ou fixe).
 
- **TROUVER QUELLES DONNEES METTRE CAR LES DONNES DE LA BASE CARBONE SONT VIEILLES**
- 
-`Figure 1 : Impact GES de différentes actions sur le web  (source Base-Carbone®)`
+![](https://ecolab-data.netlify.app/images/Impact_GES_réseaux_data.PNG)
+
+`Figure 1 : Impact GES de la consommation de données en fonction du réseau  (source ARCEP)`
 
 
 ## Chiffres clés à retenir
