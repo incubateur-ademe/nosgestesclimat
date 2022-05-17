@@ -8,9 +8,9 @@ De plus, au-delà du critère carbone, l’agriculture biologique permet égalem
 
 ![](https://ecolab-data.netlify.app/images/Chiffres-cles_Consommer-bio.png)
 
-## Impact GES de l’action
+## Impact GES moyen
 
-Il est difficile d’estimer l’impact de cette action étant donné qu’elle dépend des types de produits consommés et des méthodes de production. 
+Il est difficile d’estimer l’impact d'une action type étant donné que l'impact dépendra des types de produits consommés et des méthodes de production. 
 Néanmoins, afin de mettre en avant des ordres de grandeur, le graphique suivant présente, les impacts en terme de gaz à effet de serre pour différents 
 produits alimentaires.
 
