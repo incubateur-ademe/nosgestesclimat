@@ -231,8 +231,8 @@ transport . voiture . thermique . empreinte au litre:
         alors: (3.1 + 3.04) / 2
       - si: carburant = 'essence E5 ou E10'
         alors: 2.7
-      # - si: carburant = 'essence E85'
-      #   alors: 1.11
+      - si: carburant = 'essence E85'
+        alors: 2.7 #idem essence (cf note carburant)
   unité: kgCO2e/l
 
 transport . voiture . thermique . carburant:
@@ -251,19 +251,28 @@ transport . voiture . thermique . carburant:
       possibilités:
         - gazole B7 ou B10
         - essence E5 ou E10
-        # - essence E85 -> On choisi pour le moment de ne pas inclure les biocarburants.
+        - essence E85
   note: |
     La domination du couple gazole-essence est écrasante, [source](https://www.leprogres.fr/magazine-automobile/2021/03/27/quels-sont-les-carburants-les-plus-utilises-dans-votre-commune).
 
     Par contre, parmi les véhicules neufs, l'essence domine aujourd'hui.
 
-    Au vu des problématiques liées au changement d'affectation des sols et autres impacts environnementaux liés à la culture du maïs par exemple, les **biocarburants** ne sont pas pris en compte (le facteur d'émission de la base carbone étant particulièrement incertain). Voir nos discussions [ici](https://github.com/datagir/nosgestesclimat/pull/1324).
+    Si vous sélectionné l'essence E85, le facteur d'émission de l'essence est attribué. En effet, au vu des problématiques liées au changement d'affectation des sols et autres impacts environnementaux liés à la culture du maïs par exemple, les **biocarburants** ne sont pas pris en compte (le facteur d'émission de la base carbone étant particulièrement incertain). Voir nos discussions [ici](https://github.com/datagir/nosgestesclimat/pull/1324).
 
 transport . voiture . thermique . carburant . gazole B7 ou B10:
   titre: Gazole (B7 ou B10)
 transport . voiture . thermique . carburant . essence E5 ou E10:
   titre: Essence (E5 ou E10)
 transport . voiture . thermique . carburant . essence E85:
+  titre: Essence E85 (biocarburants)
+
+transport . voiture . notif carburant:
+  type: notification
+  formule: thermique . carburant = 'essence E85'
+  description: |
+    Votre véhicule roule au biocarburant : au vu des problématiques actuelles liées à l'affectation des sols pour la production de biocarburants, 
+    le facteur d'émission de l'essence E85 disponible est particulièrement incertain. 
+    Pour ne pas introduire d'erreur significative, nous avons fait le choix d'attribuer le facteur d'émission de l'essence E5 ou E10 aux biocarburants.
 
 transport . voiture . empreinte . construction:
   formule:
