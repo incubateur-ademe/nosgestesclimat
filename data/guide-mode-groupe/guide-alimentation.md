@@ -9,7 +9,7 @@ En France le secteur de l’agriculture est le deuxième secteur le plus contrib
 Si l'on devait catégoriser ces émissions par type de gaz à effet de serre, on obtiendrait la décomposition suivante[^2] :
 
 - environ 45 % de méthane (CH4) dû aux élevages (fermentations entériques c’est-à-dire la digestion des ruminants et stockage des effluents),
-- 40 % de protoxyde d’azote (N20) liées à la fertilimmmmsation des cultures et aux engrais azotés
+- 40 % de protoxyde d’azote (N20) liées à la fertilisation des cultures et aux engrais azotés
 - 15 % de CO2 qui provient de la consommation d’énergie (fioul, gaz, carburant, électricité) nécessaire au fonctionnement d'une exploitation (engins agricoles, serres chauffées, bâtiment, etc.).
 
 ![Infographie décomposition GES agriculture](https://ecolab-data.netlify.app/images/Agriculture_GES_2020.PNG)
