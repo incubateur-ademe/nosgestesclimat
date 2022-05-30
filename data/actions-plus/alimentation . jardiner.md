@@ -63,7 +63,7 @@ ont des vertus médicinales (sauge, bleuet, etc.) et elles peuvent même être c
 
 Par ailleurs, afin de lutter contre les maladies et certains ravageurs, tournez-vous vers des méthodes et pratiques naturelles comme des décoctions de 
 plantes, des associations de plantes, des cultures alternées, des prédateurs naturels (hirondelles, crapauds, etc.). Pensez également à gérer de manière 
-raisonnée votre consommation d’eau (en arrosant aux pieds des plantes, binage régulier, etc.) car cette dernière est un bien précieux.
+raisonnée votre consommation d’eau (en arrosant aux pieds des plantes, binage régulier, etc.) car cette dernière est un bien précieux. Enfin en zone plus rurale n'hésitez pas à délaisser les délimitations en plastique ou en béton. Au delà des quantités de matières que cela nécessite (et des émissions associées) les haies et délimitations végétales sont des refuges de biodiversité.
 
 Enfin, cette pratique du jardinage et des cultures potagères, portée par la volonté de renouer un lien avec le vivant, s’étend maintenant aux zones urbaines
 où les jardins partagés se multiplient. Malheureusement freinée par l’étalement urbain et l’artificialisation des sols comme conséquence, il existe tout de
