@@ -88,9 +88,9 @@ climatique. Un rapport de 2016 des Amis de la Terre [^4] classe ainsi différent
 `Figure 2 : risque de voir votre finance contribuer au développement des énergies fossiles `
 
 De plus, plusieurs rapports mettent en avant l’impact passé mais aussi actuel des grandes banques françaises dans le financement de ces projets climaticides.
-Un rapport des Amis de la Terre et d’Oxfam [^1] estime que les 4 plus grandes banques françaises ont participé à émettre, en 2018, 2035 Mt CO2eq 
-(respectivement 782 Mt CO2eq par la BNP Paribas, 585 Mt CO2eq par le crédit Agricole, 505 Mt CO2eq par la Société Général et 163 Mt CO2eq par la BPCE) soit 
-4.5 fois les émissions de la France cette même année. Néanmoins, ces chiffres sont contestés par la plupart des banques, car ils estiment que la méthode 
+Un rapport des Amis de la Terre et d’Oxfam [^1] estime que les 4 plus grandes banques françaises ont participé à émettre, en 2020, 2560 Mt CO2eq 
+(respectivement 749 Mt CO2eq par la BNP Paribas, 707 Mt CO2eq par la Société Général, 620 Mt CO2eq par le crédit Agricole et 484 Mt CO2eq par la BPCE) soit 
+presque 4 fois l'empreinte carbone de la France cette même année. Néanmoins, ces chiffres ont été contestés par la plupart des banques (lors d'un précédent rapport), car ils estiment que la méthode 
 utilisée n’est pas conforme aux standards de la comptabilité carbone et qu’elle induirait de nombreux double comptage [^5].
 
 Enfin, il faut savoir que ces investissements et crédits accordés sont préjudiciables pour le climat mais ils le sont tout autant pour les banques 
@@ -112,7 +112,7 @@ Je change de banque
 
 ## Sources
  
-[^1]: [La colossale empreinte carbone des banques : une affaire d’État, novembre 2019, Les Amis de la Terre et Oxfam](https://www.oxfamfrance.org/wp-content/uploads/2019/11/Rapport-La-colossale-empreinte-carbone-des-banques-fran%C3%A7aises.pdf)
+[^1]: [Comment mettre les banques au service du climat ? Oxfam](https://www.oxfamfrance.org/wp-content/uploads/2022/02/Ebook-Oxfam-France-Comment-mettre-les-banques-au-service-du-climat.pdf)
 [^2]: [Banking on Climate Chaos]( https://www.bankingonclimatechaos.org/wp-content/uploads/2021/10/Banking-on-Climate-Chaos-2021.pdf)
 [^3]: [Carbon Tracker Initiative](https://carbontracker.org/)
 [^4]: [Climat : comment choisir ma banque ? 2015, Les Amis de la Terre]
