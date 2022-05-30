@@ -1,17 +1,16 @@
-# Faire pression localement pour que les élus s'engagent
+# Agir et faire changer autour de soi
 
 ## Contexte de l’action
 
 A notre échelle, il est facile de se laisser convaincre que nos actions n’ont que peu d’impact. Néanmoins, la transition écologique a besoin de 
 transformation opérant à petite comme à grande échelle. En revanche, soyons clairs, nos changements de comportement individuels ne seront pas suffisants 
 pour limiter le réchauffement à +2°. Ce n’est donc pas aux citoyens de porter l’ensemble du poids de la transition. Cette dernière doit également avoir lieu à plus grande 
-échelle, notamment au niveau de la collectivité, de la société dans son ensemble. C’est pourquoi interpeller ses élus et les pousser à agir est essentiel 
-pour faire se réaliser la transition écologique et réduire les émissions de gaz à effet de serre (GES) de nos modes de vie.
+échelle, notamment au niveau de la collectivité, des entreprises et de la société dans son ensemble. C’est pourquoi agir à son échelle et/ou interpeller directement ses proches, ses collègues ou ses élus pour les pousser à agir est essentiel, ceci afin que la réalisation de la transition écologique et de la réduction des émissions de gaz à effet de serre (GES) de nos modes de vie qu'elle implique devienne l'affaire de tous.
 
-## Impact GES moyen de l’action
+## Impact GES de l’action
 
 Il est difficile d’estimer l’impact GES de cette action étant donné qu’il s’agit 1. d’un levier d’action indirect et 2. que le fait d’interpeller et d’inciter
-à l’action ses élus ne se concrétise pas forcément immédiatement. Quand bien même votre mobilisation l’aurait poussé à l’action (et la quantification de 
+à l’action ses élus (mais aussi ses proches) ne se concrétise pas forcément immédiatement. Quand bien même votre mobilisation l'aurait poussé à l’action (et la quantification de 
 l'impact possible), il faudrait que l’action de l’élu soit comparée à ce qu’il se serait passé sans votre intervention. Cela suppose donc de comparer deux 
 scénarios avec chacun de fortes hypothèses, ce qui est complexe. 
 
@@ -30,16 +29,16 @@ bus classique (soit l’équivalent en émissions de GES de 6 000 000 km roulés
 - Cette préoccupation est bien réelle et ce, quels que soient les tranches d’âges et les milieux sociaux. Elle arrive, en effet, comme deuxième préoccupation majeure pour les plus de 60 ans et pour les ouvriers et salariés [^3]
 - Même avec la crise sanitaire, l’environnement est resté une considération importante pour les français. Ils étaient 58% à estimer en 2020 que la reprise 
 économique ne devait pas se faire à tout prix en sacrifiant l’environnement [^4]
-- 2 527 communes couvertes par le Pacte pour la Transition lors des élections municipales de 2020 [^5]
+- 2 527 communes ont été couvertes par le Pacte pour la Transition lors des élections municipales de 2020 [^5]
 - Une centaine de collectivités n’ont toujours pas lancé leur démarche de Plan Climat Air Energie Territoire. Vérifiez la [vôtre](https://www.territoires-climat.ademe.fr/ressource/642-232)
 y est !
 
 
 ## Explication
 
-Lorsque l'on parle d'engagement individuel et de transition écologique, il est possible d'entendre tous types de discours : "c'est aux citoyens de changer ! S'ils changent le système changera" ; "Nos empreintes carbone individuelles ne sont rien au regard des émissions d'un Etat ou d'une grande entreprise" ; "L'injonction à la réduction de nos empreintes carbone a été pensé pour occulter la responsabilité des grands groupes dans le changement climatique". Bref difficile de s'y retrouver et savoir qui a raison. Un peu tout le monde ?
+Lorsque l'on parle d'engagement individuel et de transition écologique, il est possible d'entendre tous types de discours : "_C'est aux citoyens de changer ! S'ils changent le système changera_" ; "_Nos empreintes carbone individuelles ne sont rien au regard des émissions d'un Etat ou d'une grande entreprise_" ; "_L'injonction à la réduction de nos empreintes carbone a été pensé pour occulter la responsabilité des grands groupes dans le changement climatique_". Bref difficile de s'y retrouver et savoir qui a raison. Un peu tout le monde ?
 
-Ce que dit Nos Gestes Climat, c'est que **la transition individuelle est absolument nécessaire mais non suffisante** pour mener à bien la transition et les changements dont nous avons besoin. 
+Ce que dit Nos Gestes Climat, c'est que **la transition individuelle est absolument nécessaire mais non suffisante** pour mener à bien la transition et les changements à plus grande échelle dont nous avons besoin. 
 
 C'est pourquoi en parallèle de l'action individuelle doit être associé des changements à plus grande échelle c’est-à-dire à celle des entreprises, des collectivités, de l'État et plus généralement de notre société. C’est ce qu’on appelle la bataille culturelle. De nombreuses associations (Réseau Action Climat, ANV COP 21, Alternatiba, GreenPeace, Extention Rebellion, Youth for Climate, et de nombreuses autres…) mènent ce travail de plaidoyer pour la transition et cherchent à alerter la population  et les élus sur les risques du changement climatique tout autant que sur les doubles discours de certains acteurs. Même si cette bataille de l’opinion a permis de faire prendre conscience aux français des risques que représente le changement climatique - les différents sondages confirment que cette préoccupation des français vis-à-vis du changement climatique est forte et ce même en temps de crise sanitaire [^4] – beaucoup de chemin reste encore à parcourir.
 
@@ -59,13 +58,15 @@ les accompagner dans la transition. Enfin, n’hésitez pas, une fois les élus 
 projections de documentaires, événements participatifs. Pour cela, appuyez vous sur
 les associations et les [initiatives locales](https://alternatiba.eu/une-nouvelle-plateforme-pour-promouvoir-la-transition/). 
 
+Enfin, ne négligez pas l'importance de faire changer autour de soi que ce soit par de la sensibilisation ou par des actes. A titre d'exemple, d'un simple choix de se passer de la voiture pour se rendre au travail (au profit du vélo) découle de nombreuses implications. C'est à la fois un double signal économique (achat d'un vélo et diminution de sa consommation d'essence) mais aussi une discussion qui s'initie au travail ou avec ses proches participant
+ainsi à les convaincre de faire de même. Dans notre exemple, à partir d'une certaine masse critique d'usagers c'était un signal fort envoyer aux responsables pour mettre en place des Plans de Mobilité en entreprises ou encore pour penser un schéma cyclabe à l'échelle d'une collectivité. 
 
 ## Passer à l'action
 
 -	Je m'instruis et je forme aux enjeux globaux de la transition :
   -	Je comprends les enjeux systémiques du changement climatique avec la [Fresque du climat](https://fresqueduclimat.org/)
   -	J’envisage un monde 1.5°C avec la [Fresque de la renaissance écologique](https://www.renaissanceecologique.fr/)
-  -	Je comprends les enjeux du changement climatique et de la transition avec les MOOC énergie climat de l’Association Bilan Carbone et Avenir Climatique 
+  -	Je comprends les enjeux du changement climatique et de la transition avec les [MOOC Energie Climat](https://www.youtube.com/user/AvenirClimatique/playlists?view=50&sort=dd&shelf_id=5) de l’[Association Bilan Carbone](https://www.associationbilancarbone.fr/) et [Avenir Climatique](https://avenirclimatique.org/)
   -	J’essaie de planifier la transition vers un monde 2 °C avec l’atelier « [2 tonnes](https://www.2tonnes.org/) »
   -	Je m’intéresse à d’autres enjeux environnementaux avec la Fresque Océane
 -	Je rejoins des [alternatives concrètes](https://alternatiba.eu/une-nouvelle-plateforme-pour-promouvoir-la-transition/)
