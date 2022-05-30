@@ -4,7 +4,7 @@
 
 L’impact GES de notre alimentation est directement corrélé à notre consommation de produits carnés.[^1] Cependant, toutes les viandes n’ont pas le même impact climat. Certaines contribuent à émettre plus de GES que d’autres. Ainsi, la viande rouge est la viande ayant le plus fort impact carbone.
 
-![](https://ecolab-data.netlify.app/images/Chiffres-cles_reduire_sa_consommation_viande_v2.png)
+![Infographie : la production d'un kilogramme de viande émet 5 à 10 fois plus de GES que celle d'un kilogramme de céréale](https://ecolab-data.netlify.app/images/Chiffres-cles_reduire_sa_consommation_viande_v2.png)
 
 ## Impact GES de l’action
 
@@ -13,10 +13,10 @@ L’impact GES de notre alimentation est directement corrélé à notre consomma
 
 ## Ordre de grandeur GES
 
-![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/reduction-viande-fig1-1.jpg)
+![Graphique : impact GES d'un kg de viande en sortie de ferme et ingéré](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/reduction-viande-fig1-1.jpg)
 `Figure 1 : Impact GES d'un kg de viande en sortie de ferme et ingéré (source Agrybalise)`
 
-![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/reduction-viande-fig2.jpg)
+![Graphique : impact GES pour différents types de repas](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/reduction-viande-fig2.jpg)
 `Figure 2 : Impact GES pour différents types de repas`
 
 ## Budget

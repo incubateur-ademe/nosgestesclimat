@@ -4,7 +4,7 @@
 
 Apport quotidien vital à notre survie, la façon dont nous consommons l’eau joue un rôle important dans le poids de notre empreinte carbone individuelle. En effet, consommer de l’eau en bouteille est bien plus impactant que l’eau du robinet du fait de la phase de production des bouteilles à laquelle s’ajoute également l’impact de la fin de vie des bouteilles, avec les problèmes bien connus de gestion des déchets plastiques. Qui plus est, on reproche souvent à l’eau du robinet une qualité moindre alors qu’aucune étude n’a jamais abondé en ce sens et que l’eau est le produit alimentaire le plus contrôlé. C’est pourquoi consommer l’eau du robinet plutôt que l’eau en bouteille est un geste fort pour le climat tout autant que pour l’environnement.
 
-![](https://ecolab-data.netlify.app/images/Chiffres-cles_eau.png)
+![Infographie : l'impact d'une bouteille d'eau en plaqtique est 450 fois supérieur à celui de l'eau du robinet](https://ecolab-data.netlify.app/images/Chiffres-cles_eau.png)
 
 ## Impact GES de l’action
 
@@ -12,7 +12,7 @@ Je bois l’eau du robinet plutôt que de l’eau en bouteille : **- 215 kg CO2e
 
 ## Ordre de grandeur GES
 
-![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eau-bouteille-fig1.jpg)
+![Graphique : impact GES de la consommation d’un litre d’eau](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eau-bouteille-fig1.jpg)
 
 `Figure 1 : Impact GES de la consommation d’un litre d’eau - Source Base Carbone®`
 

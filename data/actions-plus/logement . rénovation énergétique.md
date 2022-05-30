@@ -1,24 +1,26 @@
 # Rénover énergétiquement son logement
 
 ## Contexte de l’action
-2/3 de la consommation d’énergie d’un ménage est consacrée au chauffage [^1]. Cette consommation d’énergie, en plus d’avoir un coût financier non négligeable, participe à augmenter l’empreinte carbone des ménages. 
+
+2/3 de la consommation d’énergie d’un ménage est consacrée au chauffage [^1]. Cette consommation d’énergie, en plus d’avoir un coût financier non négligeable, participe à augmenter l’empreinte carbone des ménages.
 Cette forte consommation énergétique s’explique souvent par des logements énergivores où l’isolation thermique est mauvaise voire inexistante. En effet, les 2/3 des logements en France ont été construits avant 1974 [^2], période où il n’y avait aucune réglementation thermique en vigueur et où les économies d’énergie n’étaient pas une priorité. Rénover énergétiquement son logement permet donc de contribuer à réduire massivement la consommation d’énergie liée au chauffage et de fait, son empreinte sur le climat.
 
-![](https://ecolab-data.netlify.app/images/Chiffres-cles_renovation_energetique_bati_v2.png)
+![Infographie : rénover son logement permet de réduire sa commation d'énergie de 70%](https://ecolab-data.netlify.app/images/Chiffres-cles_renovation_energetique_bati_v2.png)
 
 ## Impact GES moyen de l’action et ordre de grandeur
 
-![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/renovation-energetique-fig1.jpg)
+![Graphique : impact GES (réduction des émissions GES) sur une année pour différents types de rénovation et pour différents systèmes de chauffage](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/renovation-energetique-fig1.jpg)
 
-```Figure 1 : Impact GES  (réduction des émissions GES) sur une année pour différents types de rénovation et pour différents systèmes de chauffage pour une consommation initiale de 10 000 kWh/an ```
+`Figure 1 : Impact GES (réduction des émissions GES) sur une année pour différents types de rénovation et pour différents systèmes de chauffage pour une consommation initiale de 10 000 kWh/an `
 
 ## Budget
 
-![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/renovation-energetique-fig2.jpg)
+![Graphique : economies (en €) sur une année pour différents types de rénovation énergétique et pour différents systèmes de chauffage](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/renovation-energetique-fig2.jpg)
 
-```Figure 2 : Economies (en €) sur une année pour différents types de rénovation énergétique et pour différents systèmes de chauffage pour une consommation initiale de 10 000 kWh/an ```
+`Figure 2 : Economies (en €) sur une année pour différents types de rénovation énergétique et pour différents systèmes de chauffage pour une consommation initiale de 10 000 kWh/an `
 
 Un ménage consacre en moyenne 8,5 % de son budget annuel à ses factures d’énergie. La moitié de ces factures est consacrée au poste logement [^3]. Se chauffer peut donc coûter cher, qui plus est dans des logements mal isolés voire des passoires énergétiques. Cependant, même s’ils permettent des économies d’énergies et donc des gains financiers, les travaux de rénovation énergétique représentent un investissement encore important. C’est pourquoi, il existe de nombreuses aides pour ces travaux afin d’en réduire le montant :
+
 - le crédit d’impôt pour la transition énergétique (CITE),
 - la TVA à taux réduit,
 - l’éco-prêt à taux zéro,
@@ -34,19 +36,21 @@ N’hésitez pas à consulter le site web du réseau [FAIRE](https://www.faire.g
 Enfin, le guide ADEME Grand Public « Aides financières » [^9] (ainsi que les autres listés dans la section Passage à l’action) sont aussi des ressources utiles et pour comprendre les enjeux techniques et financiers de la rénovation de son système de chauffage.
 
 ## Chiffres clés à retenir
+
 - Dans un souci de simplification on considère que 66 % de la consommation énergétique d’un foyer est dédiée au chauffage et 11 % à l’eau chaude sanitaire [^1]. Néanmoins cette moyenne cache de grande disparité entre les modes de chauffage. Ainsi, la part dédiée au chauffage représente :
-	- 24 % de la consommation d’énergie d’un foyer se chauffant à l’électrique
-	- 82 % % de la consommation d’énergie d’un foyer se chauffant au gaz
-	- 87 % de la consommation d’énergie d’un foyer se chauffant au fioul
-	- 100 % de la consommation d’énergie d’un foyer se chauffant au bois
+  - 24 % de la consommation d’énergie d’un foyer se chauffant à l’électrique
+  - 82 % % de la consommation d’énergie d’un foyer se chauffant au gaz
+  - 87 % de la consommation d’énergie d’un foyer se chauffant au fioul
+  - 100 % de la consommation d’énergie d’un foyer se chauffant au bois
 - Une rénovation BBC compatible peut permettre de réduire jusqu’à 70 % la consommation d’énergie de son logement [^8] ;
 - En France, le nombre de passoires énergétiques (logements aux étiquettes énergétiques de classe F ou G) dépasse les 7 millions de logements, soit près de 30% des résidences principales [^8] ;
 - La Loi pour la Transition Energétique et la Croissance Verte (LTECV) fixe l’objectif ambitieux de 500 000 rénovations énergétique par an avec l’objectif d’un parc bâtiment au niveau BBC (Bâtiment Basse Consommation) en 2050.
 
 ## Explication
-Le parc immobilier français est très énergivore et peu efficace d’un point de vue énergétique. En 2012, plus de la moitié des résidences principales possédaient ainsi des étiquettes D ou E (entre 151 et 330 kWhep/m2.an) [^6] et on estime même à 30% (où approximativement 7.4 millions de logements [^7]) le nombre de passoires énergétiques en France (c’est-à-dire des logements de catégorie F ou G). En effet, les 2/3 des logements en France ont été construits avant 1974 [^2] période où les réglementations thermiques étaient inexistantes et où les économies d’énergie n’étaient pas une priorité. Ainsi, pour un logement ancien, les pertes de chaleur sont multiples comme le montre la figure suivante : 
 
-```Figure 3 : Pertes de chaleur moyennes pour une maison construite avant 1974 et non isolée [^2]```
+Le parc immobilier français est très énergivore et peu efficace d’un point de vue énergétique. En 2012, plus de la moitié des résidences principales possédaient ainsi des étiquettes D ou E (entre 151 et 330 kWhep/m2.an) [^6] et on estime même à 30% (où approximativement 7.4 millions de logements [^7]) le nombre de passoires énergétiques en France (c’est-à-dire des logements de catégorie F ou G). En effet, les 2/3 des logements en France ont été construits avant 1974 [^2] période où les réglementations thermiques étaient inexistantes et où les économies d’énergie n’étaient pas une priorité. Ainsi, pour un logement ancien, les pertes de chaleur sont multiples comme le montre la figure suivante :
+
+`Figure 3 : Pertes de chaleur moyennes pour une maison construite avant 1974 et non isolée [^2]`
 
 Vivre dans un logement mal isolé voir une passoire énergétique dégrade la situation financière et sociale des ménages, tout en participant à majorer leur empreinte carbone. Certains ménages les plus modestes se retrouvent même confrontés à une forme de précarité énergétique (le fait de devoir renoncer à se chauffer pour des raisons budgétaires). On estime leur nombre à 5.8 millions de foyers [^7].
 
@@ -59,13 +63,15 @@ Ainsi, le réseaux ANAH (Agence National pour l’Amélioration de l’Habitat) 
 La rénovation énergétique de son logement est un enjeu fondamental pour la transition écologique à l’échelle nationale mais elle revêt un caractère essentiel pour les logements équipés de systèmes de chauffage fonctionnant au fioul et au gaz étant donné que les réductions d’émissions de GES et les économies financières possibles sont extrêmement conséquentes.
 
 ## Passer à l’action
+
 Pour en savoir plus sur les techniques de rénovation comprendre laquelle est la mieux adaptée à votre logement, n’hésitez pas à consulter les guides ADEME Grand Public :
+
 - Isoler sa maison
 - Se chauffer mieux et moins cher
 - Aides financières
 
-
 ## Sources
+
 [^1]: [Consommation des ménages – Climat, air et énergie, 2018, ADEME](https://centre.ademe.fr/sites/default/files/climat-air-energie-chiffres-cles.pdf)
 [^2]: [Isoler sa maison, Septembre 2018, Ademe](https://librairie.ademe.fr/cadic/2047/guide-pratique-isoler-sa-maison.pdf?modal=false)
 [^3]: [40 trucs et astuces pour économiser l’eau et l’énergie Aout 2019, Ademe](https://librairie.ademe.fr/cadic/1001/guide-pratique-economiser-eau-energie.pdf?modal=false)
@@ -74,4 +80,3 @@ Pour en savoir plus sur les techniques de rénovation comprendre laquelle est la
 [^7]: [Coûts et bénéfices d’un plan de rénovation des passoires énergétiques à horizon 2020, Février 2017, Collectif Rénovons](https://www.precarite-energie.org/wp-content/uploads/2019/07/2017-02-21---sce-nario-re-novons-.pdf)
 [^8]: [Les maisons rénovées a basse consommation, Avril 2021, L’Observatoire BBC](https://www.effinergie.org/web/images/attach/base_doc/2912/20210429etude-renovation.pdf)
 [^9]: [Aides financières, Octobre 2020, ADEME](https://librairie.ademe.fr/cadic/351/guide-pratique-aides-financieres-renovation-habitat-2020.pdf?modal=false)
-
