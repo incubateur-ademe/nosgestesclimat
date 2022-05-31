@@ -4,7 +4,7 @@
 
 En France, le secteur du bâtiment contribue à 17% des émissions territoriales françaises (79 Mt CO2eq sur 435 Mt CO2eq)[^1].
 
-![Infographie sur la part des bâtiments des émissions en France](https://ecolab-data.netlify.app/images/HCC_emissions_secteur_logement.PNG)
+![Infographie : les bâtiments représentent 17% des émissions en France](https://ecolab-data.netlify.app/images/HCC_emissions_secteur_logement.PNG)
 
 Il faut savoir également que les factures d’énergie représentent en moyenne 8,5 % du budget annuel des ménages (réparties à peu près équitablement entre les déplacements (48 %) et le logement (52 %)). Cela représente en moyenne 2 900 € par ménage et par an[^2].
 
@@ -20,35 +20,35 @@ Nous allons donc passer en revue ce qu’il est possible de faire. De simples é
 
 En effet, il est assez fréquent de chauffer à plus haute température que ce que l’on estime. Vérifier par vous-même et ramener la température à 20°C voir 19°C.
 
-![Infographie "baisse du chauffage](https://ecolab-data.netlify.app/images/Chiffres-cles_limiter_temperature_logement.png)
+![Infographie : baisser le chauffage d'un degré dans son logement permet d'économiser 7% d'énergie](https://ecolab-data.netlify.app/images/Chiffres-cles_limiter_temperature_logement.png)
 
 **🧐 2. Connaitre les nombreux écogestes pour réduire sa consommation d’énergie**
 
 Remplacer ses ampoules par des LED, sécher à l’air libre de ses vêtements ou encore éteindre ses appareils en veille, multiples sont les moyens d’économiser de l’énergie et de l’argent. N’hésitez pas à consulter la bibliothèque numérique en bas de page pour en savoir plus (notamment le guide « 40 trucs et astuces pour économiser l’eau et l’énergie »).
 
-![Infographie écogestes logement](https://ecolab-data.netlify.app/images/Chiffres-cles_Consommation-elec-logement.png)
+![Infographie : les écogestes dans son logement](https://ecolab-data.netlify.app/images/Chiffres-cles_Consommation-elec-logement.png)
 
 **🥵 3. Se tourner vers l’isolation active en cas de forte chaleur...**
 
 Volets fermés, ouvertures matinales, brasseur d’air et humidification sont les pistes à suivre pour à la fois se protéger de la chaleur et apporter de la fraicheur à son logement. L’isolation active est aussi un moyen d’éviter la prolifération de climatiseurs dans les foyers et la très forte surconsommation que cela engendrerait.
 
-![Infographie nombre de climatiseurs](https://ecolab-data.netlify.app/images/Chiffres-cles_Climatisation-passive.png)
+![Infographie : d'ici 2050 le nombre de climatiseurs pourrait passer de 1.6 à 5.6 milliards](https://ecolab-data.netlify.app/images/Chiffres-cles_Climatisation-passive.png)
 
 **🔥 4. Opter pour un système de chauffage moins émissif**
 
 Cette action s’adresse avant tout aux propriétaires de chaudières fonctionnant au gaz ou au fioul car ces dernières sont de très mauvais élève en termes d’émissions de gaz à effet de serre (et d’autant plus dans des logements mal isolés). Cependant, il n’y a pas de solution unique et différents types de solutions peuvent répondre à vos besoins. Pour rentrer dans les détails techniques reportez vous à la bibliothèque numérique en bas de page et plus spécifiquement aux guides « se chauffer mieux et moins cher » et « une maison plus écologique ».
 
-![Infographie remplacement chaudière](https://ecolab-data.netlify.app/images/Chiffres-cles_Changement-chaudiere.png)
+![Infographie : remplacer une chaudière au fioul ou au gaz par une équipement performant](https://ecolab-data.netlify.app/images/Chiffres-cles_Changement-chaudiere.png)
 
 **🔨5. Rénover énergétiquement votre logement**
 
 Saviez-vous, qu'en France il y a plus de 7 millions de passoires énergétiques (logement très mal isolés situés dans les classes énergétique F ou G). Et dans ces passoires énergétiques les pertes de chaleur peuvent venir de partout[^3].
 
-![Schéma pertes de chaleur](https://ecolab-data.netlify.app/images/Pertes_chaleur.PNG)
+![Schéma : pertes de chaleur d'une maison non isolée](https://ecolab-data.netlify.app/images/Pertes_chaleur.PNG)
 
 Il est donc essentiel pour réduire son empreinte carbone de vivre dans les logements bien isolés pour limiter notamment sa consommation d’énergie. Afin de réduire au maximum son empreinte carbone l’idéal est d’envisager des travaux de rénovation énergétique visant une labellisation HPE (Haute Performance Energétique) comme avec le label BBC (Bâtiment Basse Consommation). Pour en savoir plus sur la rénovation énergétique tournez-vous vers les sources de la bibliothèque numérique en bas de page et plus spécifiquement vers le guide ADEME « Isoler sa maison ». Sachez tout de même qu’une rénovation énergétique consistera toujours à réduire au maximum les fuites thermiques (qui transmettent rapidement le froid extérieur à l’intérieur du logement) et les entrées d’air parasites afin que celui-ci reste « facilement » (i.e. sans recours excessif au chauffage) à une température modérée.
 
-![Infographie rénovation](https://ecolab-data.netlify.app/images/Chiffres-cles_renovation_energetique_bati_v2.png)
+![Infographie : rénover son logement en BBC permet de réduire sa commation d'énergie de 70%](https://ecolab-data.netlify.app/images/Chiffres-cles_renovation_energetique_bati_v2.png)
 
 > **Mais ça coute extrêmement cher tout ça !**
 >

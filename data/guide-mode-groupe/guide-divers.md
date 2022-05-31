@@ -11,7 +11,7 @@ Avant toute chose, expliquons une notion clé : la notion d’empreinte. Il faut
 
 Et ces deux approches ne donnent pas les mêmes chiffres : l’empreinte carbone est environ 50 % plus élevée que les émissions territoriales : environ 10t de CO2eq/hab/an contre 6,5t CO2eq/hab/an en 2019[^1]. Cela signifie que les Français importent plus de biens et services carbonés qu’ils n’en exportent.
 
-![Infographie empreinte carbone ](https://ecolab-data.netlify.app/images/HCC_empreinte_carbone_fr.PNG)
+![Infographie : croquis empreinte carbone d'un français](https://ecolab-data.netlify.app/images/HCC_empreinte_carbone_fr.PNG)
 
 `Un bon croquis vaut mieux qu'un long discours !`
 
@@ -23,25 +23,25 @@ Et ces deux approches ne donnent pas les mêmes chiffres : l’empreinte carbone
 
 - **En en prenant soin**
 
-![Infographies appareils électroniques](https://ecolab-data.netlify.app/images/Chiffres-clefs_Allonger-duree-vie-produits-elec_v2.png)
+![Infographie : 1 appareil sur 2 est rapporté au SAV](https://ecolab-data.netlify.app/images/Chiffres-clefs_Allonger-duree-vie-produits-elec_v2.png)
 
 - **Si jamais il tombe en panne, cherchez à le faire réparer plutôt que le remplacer**
 
 Mais on vous l’accorde ce n’est pas toujours facile. Cela peut s’avérer parfois plus cher et il est même possible que le constructeur vous en propose un neuf directement. Quelques ordres de grandeur à avoir en tête lorsque l'on fait répérer un équipement:
 
-![Infograophie économies CO2e avec réparation](https://ecolab-data.netlify.app/images/Economie_GES_reparation.PNG)
+![Infograophie : économies CO2 équivalent en réparant un objet en panne](https://ecolab-data.netlify.app/images/Economie_GES_reparation.PNG)
 
 - **Eviter le renouvellement précoce de vos biens.**
 
 Cela n’est pas chose aisée non plus car l’obsolescence technique ou culturelle (mode) est bien une réalité. De produits ne pouvant suivre les prérequis techniques des nouveautés au matraquage marketing, la tentation de renouveler (précocement) ses appareils est grande. Mais résister à ce phénomène permet de préserver le climat et même de faire économies significatives.
 
-![Infographie renouvellement précoce](https://ecolab-data.netlify.app/images/Chiffres-cles_Resister-pub.png)
+![Infographie : éviter le renouvellement précoce des nos biens](https://ecolab-data.netlify.app/images/Chiffres-cles_Resister-pub.png)
 
 **🧐 2. Avant l'achat, questionnez le besoin.**
 
 Votre achat est-il vraiment nécessaire ? Pourquoi ne pas vous tourner vers l’économie du partage ? Achetez un équipement n’est pas une solution automatique. On peut maintenant emprunter, partager, louer de nombreux équipements et biens lorsque l’on en a besoin de manière ponctuelle.
 
-![Infographie vêtements jamais portés](https://ecolab-data.netlify.app/images/Chiffres-clefs_Desencombrer_v1.png)
+![Infographie : 70% des vêtements de nos armoires ne sont jamais portés](https://ecolab-data.netlify.app/images/Chiffres-clefs_Desencombrer_v1.png)
 
 **💡 3. Si l'achat devient nécessaire.**
 
@@ -49,7 +49,7 @@ Votre achat est-il vraiment nécessaire ? Pourquoi ne pas vous tourner vers l’
 
 Ces derniers ont un impact bien moindre sur le climat comparé au neuf !
 
-![Infographie reconditionné](https://ecolab-data.netlify.app/images/Chiffres-cles_Achat-elec-reconditionne.png)
+![Infographie : la fabrication d'un produit électronique représente 80% de l'empreinte carbone sur son cycle de vie](https://ecolab-data.netlify.app/images/Chiffres-cles_Achat-elec-reconditionne.png)
 
 > Attention : quand on parle de seconde main ou de produits reconditionnés on ne parle pas du dernier smartphone acheté, sur un site de revente, à peine 6 mois après sa sortie mais bien de donner une seconde vie à des biens ou des équipements
 

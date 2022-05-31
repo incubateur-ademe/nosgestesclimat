@@ -4,7 +4,7 @@
 
 En France le secteur de l’agriculture est le deuxième secteur le plus contributif aux émissions de gaz à effet de serre. Ce secteur émet chaque année 85 Mt de CO2eq ce qui se représente 19 % des émissions françaises[^1].
 
-![Infographie sur la part de l'agriculture des émissions en France](https://ecolab-data.netlify.app/images/HCC_emissions_secteur_alimentation.PNG)
+![Infographie : l'agriculture représente 19% des émissions en France](https://ecolab-data.netlify.app/images/HCC_emissions_secteur_alimentation.PNG)
 
 Si l'on devait catégoriser ces émissions par type de gaz à effet de serre, on obtiendrait la décomposition suivante[^2] :
 
@@ -12,7 +12,7 @@ Si l'on devait catégoriser ces émissions par type de gaz à effet de serre, on
 - 40 % de protoxyde d’azote (N20) liées à la fertilisation des cultures et aux engrais azotés
 - 15 % de CO2 qui provient de la consommation d’énergie (fioul, gaz, carburant, électricité) nécessaire au fonctionnement d'une exploitation (engins agricoles, serres chauffées, bâtiment, etc.).
 
-![Infographie décomposition GES agriculture](https://ecolab-data.netlify.app/images/Agriculture_GES_2020.PNG)
+![Infographie : décomposition des GES liés à l'agriculture](https://ecolab-data.netlify.app/images/Agriculture_GES_2020.PNG)
 
 La consommation de viande et plus particulièrement l’élevage joue donc un rôle majeur dans les émissions de gaz à effet de serre de l’agriculture.
 
@@ -22,15 +22,15 @@ La consommation de viande et plus particulièrement l’élevage joue donc un r�
 
 - Pour commencer, privilégier des viandes à plus faible impact carbone comme le porc ou la volaille
 
-![Emissions GES par animal](https://ecolab-data.netlify.app/images/Plats_viandes_GES.PNG)
+![Graphique : emissions GES par animal](https://ecolab-data.netlify.app/images/Plats_viandes_GES.PNG)
 
 - On peut ensuite réduire sa consommation de viande
 
-![Infographie viande vs céréales](https://ecolab-data.netlify.app/images/Chiffres-cles_reduire_sa_consommation_viande_v2.png)
+![Infographie : la production d'un kilogramme de viande émet 5 à 10 fois plus de GES que celle d'un kilogramme de céréals](https://ecolab-data.netlify.app/images/Chiffres-cles_reduire_sa_consommation_viande_v2.png)
 
 - Enfin, on peut devenir végétarien
 
-![Infographie surface agricole](https://ecolab-data.netlify.app/images/Chiffres-cles_reduire_produits_laitiers_v2.png)
+![Infographie : en France 80% des surfaces agricoles sont dédiées à l'alimentation animale](https://ecolab-data.netlify.app/images/Chiffres-cles_reduire_produits_laitiers_v2.png)
 
 > **Et devenir végétalien, c’est encore mieux non ?**
 > Oui en effet devenir végétalien, c’est réduire de manière encore plus significative l’empreinte carbone de son alimentation. Cela va plus loin encore qu'être végétarien : il s'agit de ne plus consommer de produits issus d’animaux (œufs, laits, fromages, etc.). Même si les produits issus des animaux ont très souvent des empreintes carbone inférieures à la viande elle-même (à quelques exceptions près), ils ont à l’inverse une empreinte carbone bien plus forte que les produits végétaux (fruits, légumes, légumineuses, etc.)
@@ -40,7 +40,7 @@ La consommation de viande et plus particulièrement l’élevage joue donc un r�
 
 Et oui trouver des tomates en plein hiver n'est pas sans conséquence supplémentaire sur l'environnement.
 
-![Infographie f&l de saison](https://ecolab-data.netlify.app/images/Chiffres-cles_consommer_produits_saison_circuits_courts_v2.png)
+![Infographie : une tomate poussant sous serre chauffée hors saison consomme 10 fois plus d'énergie qu'une tomate de saison](https://ecolab-data.netlify.app/images/Chiffres-cles_consommer_produits_saison_circuits_courts_v2.png)
 
 > **Et consommer bio, ça ne réduit pas mon empreinte carbone ?**
 > C’est compliqué ... Difficile de dégager un consensus scientifique.
@@ -57,7 +57,7 @@ Action a priori anodine mais en moyenne chaque année c'est tout de même 14 kg 
 
 Les emballages (plastique notamment) sont extrêmement durs à recycler et à réutiliser. De plus, il est aussi courant qu’une part significative de ces déchets plastiques soient exportés et vendus à d’autres pays. Ainsi en 2016, pas moins de 50 % des déchets plastiques triés européens ont été exportés vers la Chine. Cet exportation (vers des pays aux normes environnementales moins contraignantes) et une des raisons qui font que chaque année, entre [8 et 12 millions de tonnes de plastique](https://www.greenpeace.fr/pollution-oceans-limpact-plastiques/) finissent dans les océans. On estime ainsi qu’un “[7e continent de plastique](https://assets.theoceancleanup.com/app/uploads/2019/04/Lebreton2018_SciRep.pdf)” flottant au large de l’Océan Pacifique contiendrait environ 80 000 tonnes de déchets plastique et s’étendrait sur une surface d’environ 1.6 millions de km2 (soit plus de 3 fois la surface de la France métropolitaine
 
-![Infographie vrac](https://ecolab-data.netlify.app/images/Chiffres-cles_vrac_v2.png)
+![Infographie : 85% des emballages jetés par les ménages sont des emballages alimentaires](https://ecolab-data.netlify.app/images/Chiffres-cles_vrac_v2.png)
 
 - **Réduire son gaspillage alimentaire**
 
@@ -67,7 +67,7 @@ Le gaspillage alimentaire représente environ 10 % de notre poubelle grise[^5].
 - **Composter ses biodéchets**
   Les déchets putrescibles représentent presque le tiers des déchets de nos poubelles. Si on y ajoute les papiers souillés, c’est presque 40 % des ordures des ménages français qui pourraient faire l’objet d’une valorisation organique.
 
-![Infograghie Compost](https://ecolab-data.netlify.app/images/Chiffres-cles_biodechets_v2.png)
+![Infographie : les déchets compostables représentent 83 kg par habitant et par an](https://ecolab-data.netlify.app/images/Chiffres-cles_biodechets_v2.png)
 
 > Le terme valorisation organique désigne les modes de gestion et de valorisation des déchets biodégradables (déchets alimentaires et déchets verts notamment pour les ménages). Cela regroupe la méthanisation et le compostage.
 > [La méthanisation](https://www.fnade.org/fr/produire-matieres-energie/valorisation-organique) est un processus de décomposition de la matière organique contenue dans les déchets biodégradables en milieu **anaérobie** (c’est-à-dire en absence d’oxygène)
@@ -77,19 +77,19 @@ Le gaspillage alimentaire représente environ 10 % de notre poubelle grise[^5].
 
 Même si le secteur des déchets représente seulement 4 % des émissions de gaz à effet de serre en France[^1], réduire le volume de sa poubelle est bénéfique à bien d’autres égards (réduction pollution plastique, besoin en matière première diminué, etc.). **Un leitmotiv : le meilleur déchet est celui qu’on ne produit pas !**
 
-![Infographie taille poubelle](https://ecolab-data.netlify.app/images/Chiffres-cles_reduire_taille%20poubelle_v2.png)
+![Infographie : une poubelle grise d'un français moyen pesait 254 kg en 2017](https://ecolab-data.netlify.app/images/Chiffres-cles_reduire_taille%20poubelle_v2.png)
 
 > **Trier ces déchets, ça sert vraiment à quelque chose ?**
 > Oh oui ! Mais pas seulement pour des questions d'impact carbone
 > Même si un tri de qualité permet de limiter les besoins en « sur-tri » (i.e. tri fait à nouveau à posteriori de la collecte) et donc réduire la consommation énergétique des filières de traitement, **l’avantage du tri se situe sur les économies de matière qu’il permet**. Plus particulièrement, cela permet d’éviter de perdre de la matière et donc de ne pas avoir à en recréer. Grâce au recyclage, on conserve donc pour un nouvel usage, une partie de l’énergie et de la matière contenue dans le déchet. A titre d’exemple, ce n’est pas moins de 95% d’énergie économisée par la confection d’une tonne d’aluminium à partir d’aluminium recyclé .
 > Même si certains taux de réutilisation de la matière recyclée sont très faibles (pour le plastique notamment, où le taux de réincorporation est seulement de 6% contre 49% pour la ferraille, 56 % pour le calcin (verre) et 67 % pour les papiers et cartons[^6]), le tri de ses déchets est un geste important pour la préservation des ressources et dans une mesure plus relative, pour le climat.
-> ![Infographie tri déchet](https://ecolab-data.netlify.app/images/Chiffres-cles_trier-ses-dechets_v2.png)
+> ![Infographie : seulement 40% des déchets ménagers sont recyclés](https://ecolab-data.netlify.app/images/Chiffres-cles_trier-ses-dechets_v2.png)
 
 **🌭 4. Réduire sa consommation de produits transformés/surgelés**
 
 Les produits transformés sont, d’un point de vue nutritif, très souvent en deçà de leurs équivalents frais. Ils sont plus riche en graisses, sucres et protéines animales et consomment davantage de ressources naturelles.
 
-![Infographie nutrition régime alimentaire](https://ecolab-data.netlify.app/images/Chiffres-cles_Se-passer-produits-transformes.png)
+![Infographie : entre les années 50 et 2000 notre régime alimentaire c'est +30.7% de sucre et + 50% de matières grasses](https://ecolab-data.netlify.app/images/Chiffres-cles_Se-passer-produits-transformes.png)
 
 **💧 5. Boire l’eau du robinet**
 
@@ -98,7 +98,7 @@ L’eau en bouteille coûte en moyenne 100 à 300 fois plus cher que l’eau du 
 - l’eau (le liquide) représente 20% du coût total
 - la fabrication de l’emballage en représente 80 %
 
-![Chiffres eau](https://ecolab-data.netlify.app/images/Chiffres-cles_eau.png)
+![Infographie : l'impact d'une bouteille d'eau en plaqtique est 450 fois supérieur à celui de l'eau du robinet](https://ecolab-data.netlify.app/images/Chiffres-cles_eau.png)
 
 ---
 
