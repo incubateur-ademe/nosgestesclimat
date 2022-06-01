@@ -8,7 +8,7 @@ les projets qui ne sont pas en accord avec l’objectif de l’Accord de Paris v
 banque et en changer (dans le cas où cette dernière ne participerait pas réellement à la lutte contre le changement climatique) est un bon moyen d’être 
 cohérent avec ses valeurs tout en s’assurant que son épargne participe à la réduction des émissions de gaz à effet de serre à l’échelle globale.
 
-![](https://ecolab-data.netlify.app/images/Chiffres-cles_Banque-responsable.png)
+![](https://ecolab-data.netlify.app/images/Chiffres-cles_Banque-responsable_v2.png)
 
 ## Impact GES moyen de l’action 
 
