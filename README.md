@@ -1,8 +1,8 @@
 # nosgestesclimat 🌍🥵
 
-Ici résident les modèles de calcul et les données de https://nosgestesclimat.fr.
+Ici réside le modèle de calcul de https://nosgestesclimat.fr.
 
-### Ecriture des modèles du simulateur
+### Écriture des modèles du simulateur
 
 Le modèle d'empreinte climat personnelle est écrit dans un français le plus lisible possible : 
 
@@ -35,12 +35,8 @@ transport . avion . coefficient de forçage radiatif:
 
 Tous les modèles sont dans [le dossier `data`](https://github.com/datagir/nosgestesclimat/tree/master/data).
 
+Ils reposent sur le nouveau langage de programmation `publicodes` documenté sur https://publi.codes et développé dans le cadre de https://beta.gouv.fr.
 
+### Code de l'interface
 
-### code de l'interface
-
-Le code du simulateur ici [`datagir/nosgestesclimat-site`](https://github.com/datagir/nosgestesclimat-site).
-
-Il repose sur le nouveau langage de programmation `publicodes` documenté sur https://publi.codes.
-
-Il est développé dans le cadre de https://beta.gouv.fr
+Le code du site est ici [`datagir/nosgestesclimat-site`](https://github.com/datagir/nosgestesclimat-site).
