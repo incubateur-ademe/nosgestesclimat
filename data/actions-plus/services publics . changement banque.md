@@ -8,7 +8,7 @@ les projets qui ne sont pas en accord avec l’objectif de l’Accord de Paris v
 banque et en changer (dans le cas où cette dernière ne participerait pas réellement à la lutte contre le changement climatique) est un bon moyen d’être 
 cohérent avec ses valeurs tout en s’assurant que son épargne participe à la réduction des émissions de gaz à effet de serre à l’échelle globale.
 
-![](https://ecolab-data.netlify.app/images/Chiffres-cles_Banque-responsable_v2.png)
+![296 milliards d'euros de financement pour les industries fossiles accordés par les banques françaises](https://ecolab-data.netlify.app/images/Chiffres-cles_Banque-responsable_v2.png)
 
 ## Impact GES moyen de l’action 
 
@@ -75,7 +75,7 @@ souhaitez, y transférer votre épargne afin de les soutenir et de vous assurer 
 climatique. Un rapport de 2016 des Amis de la Terre [^4] classe ainsi différentes banques françaises selon un risque de voir votre épargne financer les 
 énergies fossiles. 
 
-![](https://ecolab-data.netlify.app/images/Probabilité_contribution_CC_banques.PNG)
+![Risque de voir votre finance contribuer au développement des énergies fossiles](https://ecolab-data.netlify.app/images/Probabilité_contribution_CC_banques.PNG)
  
 `Figure 2 : risque de voir votre finance contribuer au développement des énergies fossiles `
 
