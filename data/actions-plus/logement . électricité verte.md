@@ -16,8 +16,8 @@ déjà leur production.
 
 Cependant, à titre d'informations, il est présenté ci-dessous l'impact carbone (par kWh produit) de différents moyens de production d'électricité
 
-![](https://ecolab-data.netlify.app/images/Impact_GES_production_élec.PNG)
-`Figure 1 : Impact CO2 associé à la production d’un kWh électrique en fonction de différents types d’installation - source Base Carbone`
+![Graphique : impact GES associé à la production d’un kWh électrique en fonction de différents types d’installation](https://ecolab-data.netlify.app/images/Impact_GES_production_élec.PNG)
+`Figure 1 : Impact GES associé à la production d’un kWh électrique en fonction de différents types d’installation - source Base Carbone`
 
 ## Budget
 
