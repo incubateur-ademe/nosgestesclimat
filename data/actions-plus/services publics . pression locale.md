@@ -9,7 +9,7 @@ pour limiter le réchauffement à +2°. Ce n’est donc pas aux citoyens de port
 
 ## Impact GES de l’action
 
-Il est difficile d’estimer l’impact GES de cette action étant donné qu’il s’agit 1. d’un levier d’action indirect et 2. que le fait d’interpeller et d’inciter
+Il est difficile d’estimer, à titre individuel, l’impact GES de cette action étant donné qu’il s’agit 1. d’un levier d’action indirect et 2. que le fait d’interpeller et d’inciter
 à l’action ses élus (mais aussi ses proches) ne se concrétise pas forcément immédiatement. Quand bien même votre mobilisation l'aurait poussé à l’action (et la quantification de 
 l'impact possible), il faudrait que l’action de l’élu soit comparée à ce qu’il se serait passé sans votre intervention. Cela suppose donc de comparer deux 
 scénarios avec chacun de fortes hypothèses, ce qui est complexe. 
