@@ -8,7 +8,7 @@ manière souvent pertinente de réduire notre empreinte carbone étant donné qu
 dont le métier le permet). Ce geste est d'autant plus significatif pour les personnes dont la mobilité quotidienne est articulée autour de la voiture 
 individuelle. Mais attention aux effets rebonds négatifs !
 
-![](https://ecolab-data.netlify.app/images/Chiffres-cles_Teletravail_v2.png)
+![En moyenne, un jour de télétravail par semaine c'est 271 kgCO2eq évités sur l'année](https://ecolab-data.netlify.app/images/Chiffres-cles_Teletravail_v2.png)
 
 ## Impact GES moyen de l'action
 
