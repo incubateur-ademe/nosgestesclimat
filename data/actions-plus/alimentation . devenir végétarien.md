@@ -7,7 +7,7 @@ très significatif pour le climat. Ce choix n’est d’ailleurs pas uniquement 
 la réduction de son empreinte carbone individuelle (même s’il s’agit de l’action ayant le plus d’impact sur le poids carbone de son alimentation). Cette 
 action fait souvent intervenir des considérations morales et éthiques importantes : place du vivant, différences hommes/animal, etc.
 
-![](https://ecolab-data.netlify.app/images/Chiffres-cles_Devenir-vegetarien.png )
+![Il faut entre 2 et 10 kg d'aliments végétaux pour produire 1 kg de viande](https://ecolab-data.netlify.app/images/Chiffres-cles_Devenir-vegetarien.png )
 
 ## Impact GES moyen de l’action
 
@@ -15,7 +15,7 @@ Je deviens végétarien : - 1375 kgCO2eq/an
 
 ## Ordre de grandeur GES
 
-[](https://ecolab-data.netlify.app/images/Impact_GES_repas.PNG)
+[Impact GES pour différents types de repas](https://ecolab-data.netlify.app/images/Impact_GES_repas.PNG)
 `Figure 1 : Impact GES pour différents types de repas - source [Agrybalise](https://www.agribalyse.fr/)`
 
 ## Chiffres clés à retenir
