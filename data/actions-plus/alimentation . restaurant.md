@@ -6,7 +6,7 @@ pourquoi, connaître les ordres de grandeur en termes d’émissions de GES est 
 l’empreinte carbone de ses sorties. Changer d’alimentation au restaurant, voire opter pour des options végétariennes, permet également de normaliser autour 
 de soi la réduction de la consommation de viande.
 
-![](https://ecolab-data.netlify.app/images/Chiffres-cles_Restaurant.png)
+![Infographie : une entrecôte c'est 40 fois plus d'impact carbone qu'un risotto aux légumes](https://ecolab-data.netlify.app/images/Chiffres-cles_Restaurant.png)
 
 ## Impact GES moyen de l’action
 
@@ -18,7 +18,7 @@ Au restaurant, si je choisis  :
 
 ## Ordre de grandeur GES
 
-![](https://ecolab-data.netlify.app/images/Impact_GES_repas.PNG)
+![Graphique : Impact GES pour différents types de repas](https://ecolab-data.netlify.app/images/Impact_GES_repas.PNG)
 `Figure 1 : : Impact GES pour différents types de repas - source [Agrybalise](https://www.agribalyse.fr/)`
 
 ## Chiffres clés à retenir
