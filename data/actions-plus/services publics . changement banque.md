@@ -15,18 +15,10 @@ cohérent avec ses valeurs tout en s’assurant que son épargne participe à la
 Il est difficile d’estimer l’impact GES d’un transfert de son épargne vers une banque responsable étant donné qu’il s’agit d’une action indirecte dont la 
 quantification en termes de gaz à effet de serre est soumise à de nombreuses hypothèses. Tout d'abord, il est complexe de connaître le poids GES des 
 investissements des établissements financiers, étant donné les innombrables projets financés et les multiples prises de participation dans d’autres 
-structures. Améliorer cette quantification supposerait donc une transparence globale de la part des banques. 
+structures. Améliorer cette quantification supposerait qui plus est une transparence globale de la part des banques. 
 De plus, il faut savoir que Nos Gestes Climat prend en quelque sorte déjà en compte l'impact sur le climat des projets financés par les banques en 
-s'interessant aux produit finis que nous consommons. Cependant, dégager une part de responsabilité quant à l'empreinte des fortunes personnelles s'avérerait complexe et très certainement intrusif en termes de données personnelles.
+s'interessant aux produit finis que nous consommons. Enfin, dégager une part de responsabilité quant à l'empreinte des fortunes personnelles s'avérerait très certainement intrusif en termes de données personnelles.
 
-Néanmoins, plusieurs rapports et analyses mettent en avant la forte contribution des banques aux réchauffement de la planète (cf. Explication) et proposent
-des ordres de grandeur intéressants pour mieux cerner les enjeux. 
-
-![](https://ecolab-data.netlify.app/images/Impact_GES_banques.PNG)
-
-`Figure 1 :  Impact GES par euro d’activité  pour différentes banques (source Oxfam – Les Amis de la Terre [^1]) `
-
-` **Attention** : ces données ne sont pas issues de la Base Carbone® et ne font donc pas l’objet d’une revue technique et d'un consensus. Elles sont d’ailleurs, pour certaines, contestées (cf. Explication). De plus, seules quelques banques françaises sont présentées, le travail d’évaluation du rapport se concentrant seulement sur les plus grandes banques françaises (et que pour les autres, les données ne sont pas disponibles publiquement). `
 
 ## Budget
 
@@ -87,10 +79,10 @@ climatique. Un rapport de 2016 des Amis de la Terre [^4] classe ainsi différent
  
 `Figure 2 : risque de voir votre finance contribuer au développement des énergies fossiles `
 
-De plus, plusieurs rapports mettent en avant l’impact passé mais aussi actuel des grandes banques françaises dans le financement de ces projets climaticides.
-Un rapport des Amis de la Terre et d’Oxfam [^1] estime que les 4 plus grandes banques françaises ont participé à émettre, en 2020, 2560 Mt CO2eq 
+De plus, un rapport des Amis de la Terre et d’Oxfam [^1] met en avant l’impact passé mais aussi actuel des grandes banques françaises dans le financement de ces projets climaticides.
+Ce rapport estime que les 4 plus grandes banques françaises ont participé à émettre, en 2020, et de par leurs activités à travers le monde, 2560 Mt CO2eq 
 (respectivement 749 Mt CO2eq par la BNP Paribas, 707 Mt CO2eq par la Société Général, 620 Mt CO2eq par le crédit Agricole et 484 Mt CO2eq par la BPCE) soit 
-presque 4 fois l'empreinte carbone de la France cette même année. Néanmoins, ces chiffres ont été contestés par la plupart des banques (lors d'un précédent rapport), car ils estiment que la méthode 
+presque 4 fois l'empreinte carbone de la France cette même année. Néanmoins, ces chiffres ont été contestés par la plupart des banques (lors d'un précédent rapport), car elles estiment que la méthode 
 utilisée n’est pas conforme aux standards de la comptabilité carbone et qu’elle induirait de nombreux double comptage [^5].
 
 Enfin, il faut savoir que ces investissements et crédits accordés sont préjudiciables pour le climat mais ils le sont tout autant pour les banques 
