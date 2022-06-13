@@ -231,8 +231,8 @@ transport . voiture . thermique . empreinte au litre:
         alors: (3.1 + 3.04) / 2
       - si: carburant = 'essence E5 ou E10'
         alors: 2.7
-      # - si: carburant = 'essence E85'
-      #   alors: 1.11
+      - si: carburant = 'essence E85'
+        alors: 1.11
   unité: kgCO2e/l
 
 transport . voiture . thermique . carburant:
@@ -251,19 +251,31 @@ transport . voiture . thermique . carburant:
       possibilités:
         - gazole B7 ou B10
         - essence E5 ou E10
-        # - essence E85 -> On choisi pour le moment de ne pas inclure les biocarburants.
+        - essence E85
   note: |
     La domination du couple gazole-essence est écrasante, [source](https://www.leprogres.fr/magazine-automobile/2021/03/27/quels-sont-les-carburants-les-plus-utilises-dans-votre-commune).
 
     Par contre, parmi les véhicules neufs, l'essence domine aujourd'hui.
 
-    Au vu des problématiques liées au changement d'affectation des sols et autres impacts environnementaux liés à la culture du maïs par exemple, les **biocarburants** ne sont pas pris en compte (le facteur d'émission de la base carbone étant particulièrement incertain). Voir nos discussions [ici](https://github.com/datagir/nosgestesclimat/pull/1324).
+    Le facteur d'émission associé au biocarburant E85 n'est pas représentatif des conséquences environnementales liées à l'utilisation des biocarburants. 
+    En effet, au vu des problématiques liées au changement d'affectation des sols et autres impacts environnementaux liés à la culture du maïs par exemple, les **biocarburants** ne sont pas pris en compte 
+    (le facteur d'émission de la base carbone étant particulièrement incertain). Voir nos discussions [ici](https://github.com/datagir/nosgestesclimat/pull/1324).
 
 transport . voiture . thermique . carburant . gazole B7 ou B10:
   titre: Gazole (B7 ou B10)
 transport . voiture . thermique . carburant . essence E5 ou E10:
   titre: Essence (E5 ou E10)
 transport . voiture . thermique . carburant . essence E85:
+  titre: Essence E85 (biocarburants)
+
+transport . voiture . notif carburant:
+  type: notification
+  formule: thermique . carburant = 'essence E85'
+  description: |
+    Votre véhicule roule au biocarburant : Au-delà de l'empreinte carbone des biocarburants, il faut bien avoir conscience qu'ils ont une empreinte au sol : ce sol pourrait être utilisé pour faire pousser des céréales pour nous nourrir ou servir de refuges de biodiversité.
+    C'est ce qu'on appelle le "changement d'affectation des sols" ici à des fins de production de biocarburants. Malheureusement, l'impact sur le climat de ce changement d'affectation est difficile à quantifier et particulièrement incertain.
+
+    Nous avons fait le choix d'ajouter cette option dans le test mais il faut savoir que ce résultat **n'est pas représentatif des conséquences environnementales probables liées à l'utilisation de biocarburants.**
 
 transport . voiture . empreinte . construction:
   formule:
