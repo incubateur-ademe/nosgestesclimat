@@ -6,7 +6,7 @@ De la volonté d’être autosuffisant au souhait d’embellir sa propriété ou
 créent leurs propres jardins et/ou potagers, qu’ils soient partagés ou non. Bien que cette action ne soit pas réellement significative pour réduire son 
 empreinte carbone, c’est un bon moyen de retrouver un lien avec le vivant et de mieux comprendre les cycles qui le régissent.
 
-![](https://ecolab-data.netlify.app/images/Chiffres-cles_Jardiner-responsable.png)
+![Infographie : 90 % des eaux de surface et des nappes souterraines sont contaminées par les pesticides, les jardiniers amateurs seraient responsables d'un quart de cette polution](https://ecolab-data.netlify.app/images/Chiffres-cles_Jardiner-responsable.png)
 
 ## Impact GES moyen de l’action
 
