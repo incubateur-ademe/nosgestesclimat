@@ -16,9 +16,9 @@ Il est difficile d’estimer l’impact GES d’un transfert de son épargne ver
 quantification en termes de gaz à effet de serre est soumise à de nombreuses hypothèses. Tout d'abord, il est complexe de connaître le poids GES des 
 investissements des établissements financiers, étant donné les innombrables projets financés et les multiples prises de participation dans d’autres 
 structures. Améliorer cette quantification supposerait qui plus est une transparence globale de la part des banques. 
-De plus, il faut savoir que Nos Gestes Climat prend en quelque sorte déjà en compte l'impact sur le climat des projets financés par les banques en 
-s'interessant aux produit finis que nous consommons. Enfin, dégager une part de responsabilité quant à l'empreinte des fortunes personnelles s'avérerait très certainement intrusif en termes de données personnelles.
 
+De plus, il faut savoir que Nos Gestes Climat prend en quelque sorte déjà en compte l'impact sur le climat des projets financés par les banques en 
+s'interessant aux produit finis que nous consommons. 
 
 ## Budget
 
