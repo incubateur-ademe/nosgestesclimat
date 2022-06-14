@@ -4,18 +4,19 @@
 
 A notre échelle, il est facile de se laisser convaincre que nos actions n’ont que peu d’impact. Néanmoins, la transition écologique a besoin de 
 transformation opérant à petite comme à grande échelle. En revanche, soyons clairs, nos changements de comportement individuels ne seront pas suffisants 
-pour limiter le réchauffement à +2°. Ce n’est donc pas aux citoyens de porter l’ensemble du poids de la transition. Cette dernière doit également avoir lieu à plus grande 
-échelle, notamment au niveau de la collectivité, des entreprises et de la société dans son ensemble. C’est pourquoi agir à son échelle et/ou interpeller directement ses proches, ses collègues ou ses élus pour les pousser à agir est essentiel, ceci afin que la réalisation de la transition écologique et de la réduction des émissions de gaz à effet de serre (GES) de nos modes de vie qu'elle implique devienne l'affaire de tous.
+pour limiter le réchauffement à +2° tant qu'ils ne se généralisent pas à l'ensemble de la société, ce qui passe notamment par des lois. 
+
+Ce n’est donc pas aux citoyens de porter seuls l’ensemble du poids de la transition, mais pourtant les engagements et changements de mode de vie sont incontournables dans l'institutionnalisation de cette transition dans notre démocratie. Il est tentant de ne voir que l'oppoition des perspectives individu *versus* État, mais c'est ignorer la complexité de notre société représentée par les échelons divers que sont la famille, la copropriété, la commune, la collectivité territoriale, les entreprises et associations, et la société dans son ensemble.
+
+C’est pourquoi agir à son échelle et/ou interpeller directement ses proches, ses collègues ou ses élus pour les pousser à agir est essentiel, ceci afin que la réalisation de la transition écologique et de la réduction des émissions de gaz à effet de serre (GES) deviennent l'affaire de tous.
 
 ## Impact GES de l’action
 
-Il est difficile d’estimer, à titre individuel, l’impact GES de cette action étant donné qu’il s’agit 1. d’un levier d’action indirect et 2. que le fait d’interpeller et d’inciter
-à l’action ses élus (mais aussi ses proches) ne se concrétise pas forcément immédiatement. Quand bien même votre mobilisation l'aurait poussé à l’action (et la quantification de 
-l'impact possible), il faudrait que l’action de l’élu soit comparée à ce qu’il se serait passé sans votre intervention. Cela suppose donc de comparer deux 
-scénarios avec chacun de fortes hypothèses, ce qui est complexe. 
+Il est difficile d’estimer, à titre individuel, l’impact GES de cette action étant donné qu’il s’agit 1. d’un levier d’action indirect et 2. que le fait d’interpeller et d’inciter à l’action ses élus (mais aussi ses proches) ne se concrétise pas forcément immédiatement. Souvent, les évolutions de mode de vie s'inscrivent sur plusieurs années, passant par des étapes de découverte avant d'être plus effectifs.
 
-Néanmoins, la quantification d’actions phares que les élus pourraient porter a été réalisée par des experts, pour de nombreuses actions [^1]. Interpeller ses
-élus est donc essentiel car les actions résultantes peuvent permettre d’éviter de nombreuses émissions :
+Quand bien même votre mobilisation l'aurait poussé à l’action (et la quantification de l'impact possible), il faudrait que l’action de l’élu soit comparée à ce qu’il se serait passé sans votre intervention. Cela suppose donc de comparer deux scénarios avec chacun de fortes hypothèses, ce qui est complexe. 
+
+Néanmoins, la quantification d’actions phares que les élus pourraient porter a été réalisée par des experts, pour de nombreuses actions [^1]. Interpeller ses élus est donc essentiel car les actions résultantes peuvent permettre d’éviter de nombreuses émissions :
 - Mise en place d’un bus à haut niveau de service roulant au biogaz issu de la méthanisation de biodéchets : **1600 t CO2eq évités par an**, par rapport à un 
 bus classique (soit l’équivalent en émissions de GES de 6 000 000 km roulés en voiture)
 - Déploiement d'un schéma de déplacement communautaire : **860 t CO2eq évités par an** (pour la Communauté de communes du Val d'Ille-Aubigné, soit environ 
@@ -36,30 +37,28 @@ y est !
 
 ## Explication
 
-Lorsque l'on parle d'engagement individuel et de transition écologique, il est possible d'entendre tous types de discours : "_C'est aux citoyens de changer ! S'ils changent le système changera_" ; "_Nos empreintes carbone individuelles ne sont rien au regard des émissions d'un Etat ou d'une grande entreprise_" ; "_L'injonction à la réduction de nos empreintes carbone a été pensé pour occulter la responsabilité des grands groupes dans le changement climatique_". Bref difficile de s'y retrouver et savoir qui a raison. Un peu tout le monde ?
+Lorsque l'on parle d'engagement individuel et de transition écologique, il est possible d'entendre tous types de discours : "_C'est aux citoyens de changer ! S'ils changent le système changera_" ; "_Nos empreintes carbone individuelles ne sont rien au regard des émissions d'un Etat ou d'une grande entreprise_" ; "_L'injonction à la réduction de nos empreintes carbone a été pensée pour occulter la responsabilité des grands groupes dans le changement climatique_". Bref difficile de s'y retrouver et savoir qui a raison. Un peu tout le monde ?
 
 Ce que dit Nos Gestes Climat, c'est que **la transition individuelle est absolument nécessaire mais non suffisante** pour mener à bien la transition et les changements à plus grande échelle dont nous avons besoin. 
 
-C'est pourquoi en parallèle de l'action individuelle doit être associé des changements à plus grande échelle c’est-à-dire à celle des entreprises, des collectivités, de l'État et plus généralement de notre société. C’est ce qu’on appelle la bataille culturelle. De nombreuses associations (Réseau Action Climat, ANV COP 21, Alternatiba, GreenPeace, Extention Rebellion, Youth for Climate, et de nombreuses autres…) mènent ce travail de plaidoyer pour la transition et cherchent à alerter la population  et les élus sur les risques du changement climatique tout autant que sur les doubles discours de certains acteurs. Même si cette bataille de l’opinion a permis de faire prendre conscience aux français des risques que représente le changement climatique - les différents sondages confirment que cette préoccupation des français vis-à-vis du changement climatique est forte et ce même en temps de crise sanitaire [^4] – beaucoup de chemin reste encore à parcourir.
+C'est pourquoi en parallèle de l'action individuelle doivent être associés des changements à plus grande échelle c’est-à-dire à celle des entreprises, des collectivités, de l'État et plus généralement de notre société. C’est ce qu’on appelle la bataille culturelle. De nombreuses associations (Réseau Action Climat, ANV COP 21, Alternatiba, GreenPeace, Extinction Rebellion, Youth for Climate, …) mènent ce travail de plaidoyer pour la transition et cherchent à alerter la population et les élus sur les risques du changement climatique tout autant que sur les doubles discours de certains acteurs. Même si cette bataille de l’opinion a permis de faire prendre conscience aux français des risques que représente le changement climatique - les différents sondages confirment que cette préoccupation des français vis-à-vis du changement climatique est forte et ce même en temps de crise sanitaire [^4] – beaucoup de chemin reste encore à parcourir.
 
-A titre d’exemple, la réglementation BEGES qui impose depuis 2010, à certaines collectivités de plus de 50 000 habitants, aux établissements publics de plus de 250 
-employés et aux entreprises de plus de 500 employés - soit environ 5000 organisations obligées - de réaliser un bilan des émissions de GES  n’était 
-respectée, en 2018, qu’à, respectivement 16 %, 26 %, 36 % par les obligés. Il en va de même avec la rédaction des Plan Climat Air Energie Territorial 
+A titre d’exemple, la réglementation BEGES qui impose depuis 2010 à certaines collectivités de plus de 50 000 habitants, aux établissements publics de plus de 250 employés et aux entreprises de plus de 500 employés - soit environ 5000 organisations obligées - de réaliser un bilan des émissions de GES n’était 
+respectée, en 2018, qu’à respectivement 16 %, 26 %, 36 % par les obligés. Il en va de même avec la rédaction des Plan Climat Air Energie Territorial 
 (PCAET), véritable plan de transformation de son territoire vers une économie bas carbone. Encore beaucoup sont en cours d’élaboration 5 ans après la 
 publication d’une loi obligeant de nombreux territoires à leur rédaction. Au-delà de traduire une certaine inertie, plus d’une centaine de territoires 
 (sur environ 700 obligés) ne sont toujours pas lancés dans la démarche [^6]. La liste des obligés en retard est disponible 
 [ici](https://www.ecologie.gouv.fr/sites/default/files/PCAET%20non%20lance%CC%81s_mars_2020.pdf). 
+
 N’hésitez pas à vérifier si votre territoire s’y trouve. De plus, ces PCAET peuvent être réalisés de manière volontaire par toutes les collectivités. 
 Interpellez vos élus à ce sujet ! Et si votre collectivité est en phase de rédaction, n'hésitez pas à vous y intéresser et à donner votre avis. De 
 nombreuses consultations publiques ont souvent lieu. 
 
-A l’échelle de votre commune, n’hésitez pas aussi à demander à votre maire de s'engager. Des initiatives telle que la [Convention des Maire](https://www.conventiondesmaires.eu/fr/) sont là pour
-les accompagner dans la transition. Enfin, n’hésitez pas, une fois les élus en place, à leur rappeler leurs engagements. Tous les moyens sont bons : débats, 
-projections de documentaires, événements participatifs. Pour cela, appuyez vous sur
+A l’échelle de votre commune, n’hésitez pas aussi à demander à votre maire de s'engager. Des initiatives telle que la [Convention des Maires](https://www.conventiondesmaires.eu/fr/) sont là pour les accompagner dans la transition. Enfin, n’hésitez pas, une fois les élus en place, à leur rappeler leurs engagements. Tous les moyens sont bons : débats, projections de documentaires, événements participatifs. Pour cela, appuyez vous sur
 les associations et les [initiatives locales](https://alternatiba.eu/une-nouvelle-plateforme-pour-promouvoir-la-transition/). 
 
-Enfin, ne négligez pas l'importance de faire changer autour de soi que ce soit par de la sensibilisation ou par des actes. A titre d'exemple, d'un simple choix de se passer de la voiture pour se rendre au travail (au profit du vélo) découle de nombreuses implications. C'est à la fois un double signal économique (achat d'un vélo et diminution de sa consommation d'essence) mais aussi une discussion qui s'initie au travail ou avec ses proches participant
-ainsi à les convaincre de faire de même. Dans notre exemple, à partir d'une certaine masse critique d'usagers c'était un signal fort envoyer aux responsables pour mettre en place des Plans de Mobilité en entreprises ou encore pour penser un schéma cyclabe à l'échelle d'une collectivité. 
+Enfin, ne négligez pas l'importance de faire changer autour de soi que ce soit par de la sensibilisation ou par des actes. A titre d'exemple, d'un simple choix de se passer de la voiture pour se rendre au travail (au profit du vélo) découlent de nombreuses implications. C'est à la fois un double signal économique (achat d'un vélo et diminution de sa consommation d'essence) mais aussi une discussion qui s'initie au travail ou avec ses proches participant
+ainsi à les convaincre de faire de même. Dans notre exemple, d'abord une simple présence dans la rue au milieu des voitures, à partir d'une certaine masse critique d'usagers c'est un signal fort envoyé aux responsables pour mettre en place des Plans de Mobilité en entreprises ou encore pour penser un schéma cyclabe à l'échelle de la collectivité. 
 
 ## Passer à l'action
 
