@@ -2,11 +2,11 @@
 
 ## D'où vient ce chiffre ?
 
-L'empreinte carbone liée aux services publics est fixe, commune à tous les français. Ce chiffre est calculé à partir des bilans annuels des 16 ministères qui font fonctionner la société fançaise (les établissements publics et les 2,4 millions d'agents publics).
+L'empreinte carbone liée aux services publics est fixe, commune à tous les français. Ce chiffre prend en compte le fonctionnement des 16 ministères présentés ci-dessous (établissements publics et les 2,4 millions d'agents publics).
 
 ![](https://codimd.s3.shivering-isles.com/demo/uploads/55c84c826662ee144f2d26f6c.png)
 
-Le principe de calcul est le suivant : les différents ministères soumettent dans leur bilan annuel, les émissions carbone associées à leurs activités (en général, les résultats sont issus des flux monétaires qui permettent de donner un ordre de grandeur). Le total est ennsuite ramené à l'individu pour donner le chiffre de 1,1 tonne par français.
+Le principe de calcul est le suivant : pour chaque type de services publics (catégorisé par une nomenclature spécifique) on regarde l’ensemble des achats (en keuro) en France ou à l’étranger. Chaque poste d'achat est relié à une branche de l'économie, qui elle-même est associée à un ratio monétaire traduisant son intensité carbone (en tCO2eq/keuro). En multipliant l'intensité carbone d'une branche par le flux monétaire d'un service public on obtient l'impact carbone. Le total de l'ensemble des services publics est ensuite ramené à l'individu (en divisant par la taille de la population française) pour donner le chiffre de 1,1 tonnes par français.
 
 Le chiffre d'1,1 tonnes est issu d'une étude du SDES (Service de Données et Etudes Statistiques). L'étude n'est plus disponible (migration du site du ministère de l'environnement), [une référence est néanmoins disponible sur le site](https://www.notre-environnement.gouv.fr/donnees-et-ressources/ressources/graphiques/article/decomposition-de-l-empreinte-carbone-des-francais-par-grands-postes-de). Par ailleurs, une mise à jour de l'étude de l'empreinte carbone des français est en cours et une décomposition plus précise de ce poste devrait être disponible prochainement ce qui pourra nourrir des réflexions plus poussées sur ce sujet.
 
@@ -19,8 +19,9 @@ De nombreuses associations (Réseau Action Climat, ANV COP 21, Alternatiba, Gree
 - **Interpellez ses élus afin qu'ils mènent des actions en faveur de la transition écologique.**
   - Les initiaives au niveau des communes peuvent permettre d'éviter de nombreuses émissions. Par exemple, mettre en place d’un bus à haut niveau de service roulant au biogaz issu de la méthanisation de biodéchets permet d'éviter 1600 tonnes de CO2eq par an, par rapport à un bus classique (soit l’équivalent en émissions de GES de 6 000 000 km roulés en voiture). Par ailleurs, n’hésitez pas aussi à demander à votre maire de s'engager. Des initiatives telle que la [Convention des Maire](https://www.conventiondesmaires.eu/fr/) sont là pour les accompagner dans la transition.
   - Au niveau de votre territoire, vérifiez un Plan Climat Air Energie Territorial (PCAET) a été réallisé. C'est obligatoire ! Vous pouvez jeter à oeil à cette [liste](https://www.ecologie.gouv.fr/sites/default/files/PCAET%20non%20lance%CC%81s_mars_2020.pdf). Si votre collectivité est en phase de rédaction, n'hésitez pas à vous y intéresser et à donner votre avis.
-- **Sollicitez son entreprise pour qu'elle soit transparente sur son bilan carbone.** La réglementation BEGES qui impose depuis 2010, à certaines collectivités de plus de 50 000 habitants, aux établissements publics de plus de 250 employés et **aux entreprises de plus de 500 employés** de réaliser un bilan des émissions de GES.
-- **Sensibilisez autour de vous**, que ce soit par des discussions ou par des actes. Par exemple, choisir de se passer de la voiture pour se rendre au travail (au profit du vélo) implique des changement plus globaux. Discuter avec vos proches ou vos collègues de cette intiative les convaincra d'en faire de même. C'est un signal fort envoyé aux responsables pour mettre en place des Plans de Mobilité en entreprises ou encore pour penser un schéma cyclabe à l'échelle d'une collectivité.
+- **Sollicitez son entreprise pour qu'elle soit transparente sur son bilan carbone.** La réglementation BEGES qui impose depuis 2010, à certaines collectivités de plus de 50 000 habitants, aux établissements publics de plus de 250 employés et **aux entreprises de plus de 500 employés** de réaliser un bilan des émissions de GES. Et cela n'est pas réservé qu'aux grosses structures et mêmes les entreprises de taille plus modeste comme les PME et les ETI peuvent (et ont intérêt) [réaliser leur Bilan Carbone](https://www.associationbilancarbone.fr/les-solutions/) !
+- **Engagez-vous dans des associations œuvrant à la transition écologique.** Qu'il s'agisse de climat, de biodiversité, de préservation de la ressource en eau, de solidarité climatique Nord/Sud tout le monde à besoin de renfort ! **Sensibilisez autour de vous**, que ce soit par des discussions ou par des actes. Par exemple, choisir de se passer de la voiture pour se rendre au travail (au profit du vélo) implique des changement plus globaux. Discuter avec vos proches ou vos collègues de cette intiative les convaincra d'en faire de même. C'est un signal fort envoyé aux responsables pour mettre en place des Plans de Mobilité en entreprises ou encore pour penser un schéma cyclabe à l'échelle d'une collectivité.
+- **Privilégiez les candidats aux programmes écologiques ambitieux** lors des prochaines échéances électorales.
 
 ## Passer à l'action de manière plus concrète
 
@@ -29,7 +30,9 @@ De nombreuses associations (Réseau Action Climat, ANV COP 21, Alternatiba, Gree
 - J’envisage un monde 1.5°C avec la [Fresque de la renaissance écologique](https://www.renaissanceecologique.fr/)
 - Je comprends les enjeux du changement climatique et de la transition avec les [MOOC Energie Climat](https://www.youtube.com/user/AvenirClimatique/playlists?view=50&sort=dd&shelf_id=5) de l’[Association Bilan Carbone](https://www.associationbilancarbone.fr/) et [Avenir Climatique](https://avenirclimatique.org/)
 - J’essaie de planifier la transition vers un monde 2 °C avec l’atelier « [2 tonnes](https://www.2tonnes.org/) »
-- Je m’intéresse à d’autres enjeux environnementaux avec la Fresque Océane
+- Je m’intéresse aux enjeux liés aux océans avec la [Fresque Océane](https://fresqueoceane.com/)
+- Je m’intéresse aux enjeux liés au numérique avec la [Fresque du numérique](https://www.fresquedunumerique.org/)
+- Je m’intéresse aux enjeux liés aux ressources naturelles et aux déchets avec la [Fresque de l'économie circulaire](https://www.lafresquedeleconomiecirculaire.com/)
 - Je rejoins des [alternatives concrètes](https://alternatiba.eu/une-nouvelle-plateforme-pour-promouvoir-la-transition/)
 - Je rejoins une [association impliquée près de chez moi](https://reseauactionclimat.org/association/associations-membres/)
 - Je définis un scénario de transition 1.5° pour la France avec [Mission Climat](http://mission-climat.io/)
