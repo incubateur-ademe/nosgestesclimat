@@ -5,7 +5,7 @@
 Le secteur du transport est le secteur le plus contributif au changement climatique en France avec 136 Mégatonnes de CO2eq (soit 31 %) des 440 Mégatonnes CO2eq émises au total sur le territoire[^1].
 Et ce n’est pas que la faute aux poids lourds… C’est même le contraire car la voiture individuelle y joue une place prépondérante (53 %)[^1].
 
-![Infographie sur la part du transport des émissions en France](https://ecolab-data.netlify.app/images/HCC_emissions_secteur_transport.PNG)
+![Infographie : le transport représente 31% des émissions en France](https://ecolab-data.netlify.app/images/HCC_emissions_secteur_transport.PNG)
 
 ## Ma voiture, mon amour ?
 
@@ -25,19 +25,19 @@ A titre d'exemple, les bouchons représentent, à l’échelle de l’Ile de Fra
 
 Pensez à la marche, au vélo, au covoiturage !
 
-![Infographie sur les déplacements domicile-travail vs covoiturage](https://ecolab-data.netlify.app/images/Chiffres-clefs_covoitDT.png)
+![Infographie : 70% des déplacements domicile-travail sont réalisés avec des véhicules individuels (en autosolisme)](https://ecolab-data.netlify.app/images/Chiffres-clefs_covoitDT.png)
 
 - **Se passer de sa voiture pour les trajets de -5 km**
 
 Ces trajets « courts » de moins de 5 km représentent près de 10% de la distance totale parcourue en voiture en France chaque année[^4].
 
-![Infographie "40% des trajets en voiture font moins de 4km"](https://ecolab-data.netlify.app/images/Chiffres-cles_privilegier_velo_a_voiture_5km_v2.png)
+![Infographie : en France 4 trajets en voiture sur 10 font moins de 3km](https://ecolab-data.netlify.app/images/Chiffres-cles_privilegier_velo_a_voiture_5km_v2.png)
 
 - **Si vous le pouvez, mettez en place plusieurs jours de télé-travail**
 
 Cela s'avère particulièrement pertinent pour les gens dont les trajets quotidiens domicile-travail se font en autosolisme.
 
-![Infographie émission évitées grâce au télétravail](https://ecolab-data.netlify.app/images/Chiffres-cles_Teletravail_v2.png)
+![Infographie : 1 jour de télétravail par semaine c'est 271 kg de CO2 équivalent](https://ecolab-data.netlify.app/images/Chiffres-cles_Teletravail_v2.png)
 
 ✈️**2. La deuxième chose à faire est de réduire considérablement l'avion**
 
@@ -47,7 +47,7 @@ Si l’on recalculait l’inventaire nationale en prenant en compte l’impact d
 
 À l'échelle individuelle, prendre l’avion est incompatible avec une faible empreinte carbone. Rappelons que l’objectif est d’atteindre une empreinte de 2 tonnes par personne en 2050 alors qu'un aller-retour Paris/New-York, émettra à lui seul 1.8 tonnes…
 
-![Infographie vol Paris-New York](https://ecolab-data.netlify.app/images/Chiffres-clefs_alternatives_bas_carbones_vacances_week-end_v2.png)
+![Infographie : un aller-retour Paris - New York émet 1,8 tonnes de CO2 équivalent](https://ecolab-data.netlify.app/images/Chiffres-clefs_alternatives_bas_carbones_vacances_week-end_v2.png)
 
 Pour réduire son empreinte carbone, on peut ainsi :
 
