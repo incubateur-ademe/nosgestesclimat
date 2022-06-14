@@ -6,7 +6,7 @@ Une solution simple est de partager [les simulateurs Datagir](https://datagir.ad
 
 ## Mode Conférence VS mode Sondage
 
-Le mode conférence permet de répondre aux questions des participants en direct ! Vous séchez sur une question ? Pas de panique, c'est le moment de lancer la discussion sur le point qui pose problème entre les participants. Les bulles infos peuvent également être utiles. Attention, certains réseaux d'organisation ne permettent pas à notre technologie de fonctionner (pair-à-pair). Dans ce cas recommandez, aux participants d'utliser la 4G.
+Le mode conférence permet de répondre aux questions des participants en direct ! Vous séchez sur une question ? Pas de panique, c'est le moment de lancer la discussion sur le point qui pose problème entre les participants. Les bulles infos peuvent également être utiles. Attention, certains réseaux d'organisation ne permettent pas à notre technologie de fonctionner (pair-à-pair). Dans ce cas recommandez, aux participants d'utiliser la 4G.
 
 Une fois la simulation terminée l'ensemble des participants verront les résultats (sur leurs ordinateurs ou téléphones) s'ils restent dans la salle de conférence. Vous pouvez aussi projeter les résultats en tant qu'animateur !
 
@@ -21,7 +21,7 @@ A l'instar du mode conférence, le mode sondage permet de faire le test en group
 
 **_Attention :_**
 
-Nos Gestes Climat est un outil d'évaluation de l'empreinte carbone individuelle. Le mode sondage ne remplace pas un Bilan d'Emissions de GES. Les données recceuillies ne peuvent pas être exploitées en l'état pour la collecte de données d'activité. Cependant, il permet de récolter des données parfois difficiles à estimer (transport, alimentation) via une simulation ludique, afin de servir cet objectif de collecte d'informations. N'hésitez pas à vous rapprochez vous des équipes de Datagir pour en discuter davantage.
+Nos Gestes Climat est un outil d'évaluation de l'empreinte carbone individuelle. Le mode sondage ne remplace pas un Bilan d'Emissions de GES. Les données recueillies ne peuvent pas être exploitées en l'état pour la collecte de données d'activité. Cependant, il permet de récolter des données parfois difficiles à estimer (transport, alimentation) via une simulation ludique, afin de servir cet objectif de collecte d'informations. N'hésitez pas à vous rapprochez vous des équipes de Datagir pour en discuter davantage.
 
 > **Les avantages du mode sondage :**
 >

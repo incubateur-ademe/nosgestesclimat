@@ -48,7 +48,7 @@ Saviez-vous, qu'en France il y a plus de 7 millions de passoires énergétiques 
 
 Il est donc essentiel pour réduire son empreinte carbone de vivre dans les logements bien isolés pour limiter notamment sa consommation d’énergie. Afin de réduire au maximum son empreinte carbone l’idéal est d’envisager des travaux de rénovation énergétique visant une labellisation HPE (Haute Performance Energétique) comme avec le label BBC (Bâtiment Basse Consommation). Pour en savoir plus sur la rénovation énergétique tournez-vous vers les sources de la bibliothèque numérique en bas de page et plus spécifiquement vers le guide ADEME « Isoler sa maison ». Sachez tout de même qu’une rénovation énergétique consistera toujours à réduire au maximum les fuites thermiques (qui transmettent rapidement le froid extérieur à l’intérieur du logement) et les entrées d’air parasites afin que celui-ci reste « facilement » (i.e. sans recours excessif au chauffage) à une température modérée.
 
-![Infographie : rénover son logement en BBC permet de réduire sa commation d'énergie de 70%](https://ecolab-data.netlify.app/images/Chiffres-cles_renovation_energetique_bati_v2.png)
+![Infographie : rénover son logement en BBC permet de réduire sa consommation d'énergie de 70%](https://ecolab-data.netlify.app/images/Chiffres-cles_renovation_energetique_bati_v2.png)
 
 > **Mais ça coute extrêmement cher tout ça !**
 >

@@ -22,11 +22,11 @@ La consommation de viande et plus particulièrement l’élevage joue donc un r�
 
 - Pour commencer, privilégier des viandes à plus faible impact carbone comme le porc ou la volaille
 
-![Graphique : emissions GES par animal](https://ecolab-data.netlify.app/images/Plats_viandes_GES.PNG)
+![Graphique : émissions GES par animal](https://ecolab-data.netlify.app/images/Plats_viandes_GES.PNG)
 
 - On peut ensuite réduire sa consommation de viande
 
-![Infographie : la production d'un kilogramme de viande émet 5 à 10 fois plus de GES que celle d'un kilogramme de céréals](https://ecolab-data.netlify.app/images/Chiffres-cles_reduire_sa_consommation_viande_v2.png)
+![Infographie : la production d'un kilogramme de viande émet 5 à 10 fois plus de GES que celle d'un kilogramme de céréales](https://ecolab-data.netlify.app/images/Chiffres-cles_reduire_sa_consommation_viande_v2.png)
 
 - Enfin, on peut devenir végétarien
 
@@ -98,7 +98,7 @@ L’eau en bouteille coûte en moyenne 100 à 300 fois plus cher que l’eau du 
 - l’eau (le liquide) représente 20% du coût total
 - la fabrication de l’emballage en représente 80 %
 
-![Infographie : l'impact d'une bouteille d'eau en plaqtique est 450 fois supérieur à celui de l'eau du robinet](https://ecolab-data.netlify.app/images/Chiffres-cles_eau.png)
+![Infographie : l'impact d'une bouteille d'eau en plastique est 450 fois supérieur à celui de l'eau du robinet](https://ecolab-data.netlify.app/images/Chiffres-cles_eau.png)
 
 ---
 
