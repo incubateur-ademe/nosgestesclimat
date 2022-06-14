@@ -38,11 +38,10 @@ la prise en charge : [le site de l'URSSAF](https://www.urssaf.fr)
   - à l’échelle individuelle, ils minorent souvent la réduction d’émission de 31 % (augmentation de la consommation d’énergie, des flux de données, etc.)
   - à l’échelle globale, ils peuvent majorer la réduction d’émission de 52 % (les entreprises peuvent réduire les surfaces proportionnellement au nombre de 
 télétravailleurs dans l'entreprise) [^3]
-- Lorsque l’on télétravaille, il est essentiel de faire attention à son impact numérique qui n’a rien de virtuel. Le numérique représente, à l’heure 
-actuelle [^4] :
-  - 4 % des émissions mondiales de gaz à effet de serre et 8 % d’ici 2025 au rythme actuel (dont 47 % dus à nos équipements et 53 % dus aux data centers et 
-infrastructures réseaux)
-  - un secteur en augmentation constante avec près de 2 fois plus d’objets connectés chez les européens aujourd’hui par rapport à 2016
+- Lorsque l’on télétravaille, il est essentiel de faire attention à son impact numérique en évitant le surréquipement et le renouvellement précoce car le secteur du numérique c'est :
+  - en France, 15,9 % des émissions de GES générées par les data centers, 5,5 % par les infrastructures réseau et **78,7 % par les terminaux des utilisateurs** (dont 65 % rien que pour leur fabrication et 13 % pour leur utilisation) [^6]
+  - 4 % des émissions mondiales de gaz à effet de serre et 8 % d’ici 2025 au rythme actuel [^1])
+  - un secteur en augmentation constante avec près de 2 fois plus d’objets connectés chez les européens aujourd’hui par rapport à 2016 [^4]
 - 72 % des français ayant fait du télétravail pendant le confinement (qu’ils soient primo télétravailleurs ou non) aimeraient que cette pratique soit 
 pérennisée [^5]
 
@@ -90,3 +89,4 @@ Pour négocier la mise en place du télétravail : [cadremploi.fr](https://www.c
 [^3]: [Le télétravail, vraiment bon pour l’environnement ?](https://presse.ademe.fr/wp-content/uploads/2020/09/ADEME_InfographieTT.pdf)
 [^4]: [Comment télétravailleur léger ?](https://librairie.ademe.fr/consommer-autrement/249-comment-teletravailler-leger-.html)
 [^5]: [Télétravail, (im)mobilité et modes de vies, synthèse, juillet 2020, ADEME](https://librairie.ademe.fr/consommer-autrement/314-teletravail-immobilite-et-modes-de-vie.html)
+[^6]: [Evaluation de l'impact environnemental du numérique en France et analyse prospective](https://www.arcep.fr/uploads/tx_gspublication/etude-numerique-environnement-ademe-arcep-volet02_janv2022.pdf)
