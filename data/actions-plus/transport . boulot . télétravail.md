@@ -14,7 +14,8 @@ individuelle. Mais attention aux effets rebonds négatifs !
 
 L’ADEME considère dans une étude [^1] que, de manière générale, un jour de télétravail par semaine permet de réduire de 271 kg CO2eq/an son empreinte
 carbone individuelle . Cette réduction est cependant à moduler par des effets rebond négatifs (-31 %) comme certains trajets essentiels maintenus, 
-l’augmentation de la consommation d’énergie et des flux de données ou encore par l’émergence de nouvelles mobilités et par des effets rebond positifs (+52 %)
+l’augmentation de la consommation d’énergie et des flux de données ou encore par l’émergence de nouvelles mobilités et par des effets rebond positifs (+52 %).
+
 comme l’apparition des « flex office » (l’entreprise réduisant la taille de ses locaux en proportion du nombre de télétravailleurs).
 
 Les réductions d’émissions de GES liées à la mise en place du télétravail peuvent donc varier très fortement d’un personae de travailleur à un autre.
@@ -29,7 +30,7 @@ Néanmoins, il est certain que pour les personnes dont la mobilité quotidienne 
 peut représenter des économies substantielles, les économies de carburant compensant largement la surconsommation électrique.
 
 Enfin, sachez que les frais engagés par le salarié peuvent être couverts (en partie ou en totalité) par l’employeur. Pour en savoir plus sur le détail de 
-la prise en charge : [le site de l'URSSAF](https://www.urssaf.fr)
+la prise en charge : [le site de l'URSSAF](https://www.urssaf.fr).
 
 ## Chiffres clés à retenir
 
@@ -81,7 +82,7 @@ stress supplémentaire et qu’il était difficile de trouver un équilibre entr
 
 ## Passer à l’action
 
-Pour négocier la mise en place du télétravail : [cadremploi.fr](https://www.cadremploi.fr/editorial/actualites/actu-emploi/teletravail-leurs-astuces-pour-negocier-des-jours-en-plus)
+Pour négocier la mise en place du télétravail : [cadremploi.fr](https://www.cadremploi.fr/editorial/actualites/actu-emploi/teletravail-leurs-astuces-pour-negocier-des-jours-en-plus).
 
 ## Sources
 
