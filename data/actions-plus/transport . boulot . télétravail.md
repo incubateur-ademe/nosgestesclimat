@@ -40,7 +40,7 @@ la prise en charge : [le site de l'URSSAF](https://www.urssaf.fr)
 télétravailleurs dans l'entreprise) [^3]
 - Lorsque l’on télétravaille, il est essentiel de faire attention à son impact numérique en évitant le surréquipement et le renouvellement précoce car le secteur du numérique c'est :
   - en France, 15,9 % des émissions de GES générées par les data centers, 5,5 % par les infrastructures réseau et **78,7 % par les terminaux des utilisateurs** (dont 65 % rien que pour leur fabrication et 13 % pour leur utilisation) [^6]
-  - 4 % des émissions mondiales de gaz à effet de serre et 8 % d’ici 2025 au rythme actuel [^1])
+  - 4 % des émissions mondiales de gaz à effet de serre et 8 % d’ici 2025 au rythme actuel [^1]
   - un secteur en augmentation constante avec près de 2 fois plus d’objets connectés chez les européens aujourd’hui par rapport à 2016 [^4]
 - 72 % des français ayant fait du télétravail pendant le confinement (qu’ils soient primo télétravailleurs ou non) aimeraient que cette pratique soit 
 pérennisée [^5]
