@@ -4,14 +4,13 @@
 
 Depuis l’apparition d’internet il y a plus de 20 ans, le numérique fait maintenant partie intégrante de vie d’un grand nombre de personne. Les usages et 
 les équipements associés n’ont cessé de croitre et les prévisions de croissance du secteur sont toujours exponentielles, faisant du numérique un secteur de
-plus en plus important en termes d’émissions de gaz à effet de serre (GES). C’est pourquoi adopter des pratiques numériques responsables mais surtout limiter son nombre d'équipements et leur renouvellement est essentiel pour réduire son empreinte carbone individuelle ainsi que les impacts environnementaux à l’échelle globale.
-
+plus en plus important en termes d’émissions de gaz à effet de serre (GES). C’est pourquoi adopter des pratiques numériques responsables mais surtout limiter son nombre d'équipements ainsi que leur renouvellement est essentiel pour réduire son empreinte carbone individuelle ainsi que les impacts environnementaux à l’échelle globale.
 
 ![La fabrication d'un produit électronique représente 80 % de l'empreinte carbone sur son cyle de vie](https://ecolab-data.netlify.app/images/Chiffres-cles_Achat-elec-reconditionne.png)
 
 ## Impact GES moyen
 
-Il est difficile de définir l’impact GES moyen d'une action type étant donné que, premièrement, l'impact dépendra des pratiques de chacun (quels usages avec quels équipements) et que deuxièmement, comme nous allons le voir, l'enjeux fondamental pour limiter son impact sur le climat est de préserver au maximum ses équipements
+Il est difficile de définir l’impact GES moyen d'une action type étant donné que, premièrement, l'impact dépendra des pratiques de chacun (quels usages avec quels équipements) et que deuxièmement, comme nous allons le voir, l'enjeux fondamental pour limiter son impact sur le climat est de préserver au maximum ses équipements.
 
 Néanmoins, afin de fournir un ordre de grandeur, la figure suivante présente l'impact GES moyen de la consommation de données en fonction du réseau utilisé (mobile ou fixe).
 
@@ -22,7 +21,7 @@ Néanmoins, afin de fournir un ordre de grandeur, la figure suivante présente l
 
 ## Chiffres clés à retenir
 
-- Les émissions de GES du numérique en France sont générées à 15,9 % par les data centers, 5,5 % par les infrastructures réseau et à 78,7 % par les terminaux des utilisateurs (ordinateurs, smartphones, tablettes, objets connectés, etc.) [^1]
+- Les émissions de GES du numérique en France sont générées à 15,9 % par les data centers, 5,5 % par les infrastructures réseau et à 78,7 % par les terminaux des utilisateurs (dont 65 % rien que pour leur fabrication et 13 % pour leur utilisation) [^1]
 - Le nombre d’équipements numériques détenus par les européens a presque doublé en 5 ans passant de 5.3 en 2016 à 8.9 en 2021 [^8]
 - Si le numérique était un pays, il aurait environ 2 à 3 fois l’empreinte environnementale de la France [^3]
 - Aujourd’hui, le numérique représente environ 4 % des émissions de GES (à date de 2020) à l’échelle mondiale (environ 2 GtCO2eq). Ce chiffre pourrait doubler passant à 8% d'ici 2025 [^2]
@@ -33,18 +32,18 @@ Néanmoins, afin de fournir un ordre de grandeur, la figure suivante présente l
 **Le premier enjeu est celui de l’impact environnemental liée à la fabrication des équipements et support** (ordinateur, smartphone, 
 tablette, télévision, etc.). En effet, leur fabrication est extrêmement gourmande en énergie et en eau. Ainsi pour un smartphone, sur l’ensemble du cycle de
 vie, c’est près de 3/4 des émissions de GES (source Base Carbone) et 80 % de la consommation en eau qui proviennent de la phase de 
-fabrication [^6].
+fabrication [^6]. La phase d'utilisation est donc largement minoritaire en t
 
 Il est donc indispensable d’éviter les rénouvellements précoces de ces appareils (pour cause d’obsolescence perçue et/ou 
 technique ) et d’essayer de faire en sorte de maximiser leur durée de vie. Ainsi, si tous les foyers français allongeaient d’un an (sur une période de 10 
 ans) la durée d’usage totale de leurs équipements multimédia (au lieu de les remplacer), cela contribuerait à éviter l’émission de plus de 4 millions de 
 tonnes de CO2eq [^7]. Pour approfondir, n'hésitez pas à consulter nos fiches sur [l'enjeu d'allongement de la durée de vie](https://nosgestesclimat.fr/actions/plus/divers/%C3%A9lectrom%C3%A9nager/allongement) ainsi que sur les [achats d'occasion](https://nosgestesclimat.fr/actions/plus/divers/%C3%A9lectrom%C3%A9nager/seconde-main)
 
-De plus, questionner le besoin réel en équipements connectés est également nécessaire si l’on souhaite réduire l’impact de sa consommation numérique. En 
+De plus, questionner le besoin réel en équipements connectés est également nécessaire si l’on souhaite réduire son impact numérique. En 
 effet, le besoin réel d’une montre connectée, d’un tracker d’activité physique ou encore d’un frigo pilotable à distance est questionnable quand on connait 
 l’impact environnemental de leur fabrication ainsi que celui associé aux traitements des quantités de données transmises. 
 
-**L'autre enjeu du numérique porte sur les usages et plus spécifiquement sur la consommation d'énergie induite par l'ensemble des infrastructures réseau**. Data center, routers, serveurs, unités de stockage : la consommation d'électricité est bien réelle. Or, cette électricité, à travers le monde, provient très souvent d’énergies fossiles qui contribuent à émettre de fortes quantité de GES. C’est ainsi qu’on estime que le numérique représenterait environ 4 % des émissions de gaz à effet de serre mondiales (en date de 2020), soit plus que le transport aérien civil [^2] et il faut savoir que les prévision de croissance du secteur sont exponentielles (tant dans les usages qu'en nombre d’utilisateurs alors que seulement 57 % de la population mondiale navigue sur internet [^6]). Cet ordre de grandeur de 4 % pourrait, d’ici 2025, en attendre 8% [^2]. De manière générale, on s'attend à ce que la taille de l’univers numérique triple voire quintuple (selon l’indicateur observé : masse, nombre d’équipements, d’utilisateurs, etc.) et que les impacts environnementaux triplent en conséquence (selon l’indicateur environnemental observé) [^3].
+**L'autre enjeu du numérique porte sur les usages et plus spécifiquement sur la consommation d'énergie** induite par l'ensemble des infrastructures réseau même si comme nous l'avons dit la phase d'utilisation reste très minoritaire aux regards des impacts de la phase de fabrication. Data center, routers, serveurs, unités de stockage : la consommation d'électricité est tout de même bien réelle. Or, cette électricité, à travers le monde, provient très souvent d’énergies fossiles qui contribuent à émettre de fortes quantité de GES. C’est ainsi qu’on estime que le numérique représenterait environ 4 % des émissions de gaz à effet de serre mondiales (en date de 2020), soit plus que le transport aérien civil [^2] et il faut savoir que les prévision de croissance du secteur sont exponentielles (tant dans les usages qu'en nombre d’utilisateurs alors que seulement 57 % de la population mondiale navigue sur internet [^6]). Cet ordre de grandeur de 4 % pourrait, d’ici 2025, en attendre 8% [^2]. De manière générale, on s'attend à ce que la taille de l’univers numérique triple voire quintuple (selon l’indicateur observé : masse, nombre d’équipements, d’utilisateurs, etc.) et que les impacts environnementaux triplent en conséquence (selon l’indicateur environnemental observé) [^3].
 
 
 **A garder en tête !**
