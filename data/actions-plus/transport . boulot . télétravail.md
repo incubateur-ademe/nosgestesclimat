@@ -56,18 +56,19 @@ Cependant, la mise en place du télétravail doit être faite de manière réfl�
 défavorables. Tout d’abord, il est fréquent que la diminution des émissions de GES induite par l’usage réduit de la voiture ne soit pas aussi marquée. En 
 effet, de nombreux trajets devant être réalisés chaque jour (aller chercher les enfants à l’école, aller à la poste, faire les courses) venaient s’insérer 
 dans les trajets domicile-travail quotidiens. En télétravail, ces trajets sont toujours réalisés et le sont très souvent via la voiture individuelle. Un 
-autre effet rebond, bien connu du télétravail, provient de notre consommation d’énergie et de « données numériques ».  En effet, même si de nombreux usages 
+autre effet rebond, bien connu du télétravail, provient de l'achat de nouveaux équipements informatique, de notre (sur)consommation d’énergie et dans une moindre mesure de « données numériques ». En effet, même si de nombreux usages 
 restent identiques, le télétravail augmente considérablement le besoin en visio-conférence ainsi que l’utilisation de ressources de stockage en ligne (cloud,
-etc.). Cela entraîne une consommation accrue de données, dont l’impact est tout sauf virtuel. Ainsi, afin de limiter l’impact GES du travail à distance, il
-existe plusieurs comportements à adopter (à ce sujet n’hésitez pas à consulter la fiche dédiée à l’usage numérique responsable). Sans les lister tous, nous
-présenterons ici seulement les plus impactant :
+etc.). Ainsi, afin de limiter l’impact GES du travail à distance, il
+existe plusieurs comportements à adopter (à ce sujet n’hésitez pas à consulter la fiche dédiée à [l’usage numérique responsable](https://nosgestesclimat.fr/actions/plus/num%C3%A9rique/usage-responsable)). En premier lieu il est absolument nécessaire de préserver les nouveaux équipements achetés ou de se tourner pourquoi pas vers des équipements reconditionnés car la phase de fabrication des équipements représente la grande majorité de l'impact. Sur les usages, sans  lister tous les écogestes possibles vous pouvez  :
 -	essayez d’utiliser les clouds avec modération. Pour cela, vous pouvez désactiver les transferts automatiques de données, trier et stocker uniquement le 
 nécessaire, stocker de préference sur disque dur externe ou ordinateur. 
 -	vous pouvez également, lors de visioconférence, limiter au maximum l’usage de la visio et préférer un simple usage audio. Cela permet de réduire 
 significativement la consommation de bande passante. 
--	il est essentiel de travailler en wifi (ou directement en filaire pour l'ordinateur, c’est-à-dire avec un câble Ethernet) plutôt que via les données
-« mobiles ». L’impact GES d’un kilo-octet de données est bien plus important quand ces dernières sont transférées via les données cellulaires que par une 
-connexion wifi ou filaire.
+-	travailler en wifi (ou directement en filaire pour l'ordinateur, c’est-à-dire avec un câble Ethernet) plutôt que via les données
+« mobiles ». L’impact GES d’un giga-octet de données est bien plus important quand ces dernières sont transférées via un réseau mobile plutôt que via un réseau fixe.
+
+![25 gCO2eq/Go pour un réseau mobile contre 9 gCO2eq/Go pour un réseau fixe](https://ecolab-data.netlify.app/images/Impact_GES_réseaux_data.PNG)
+
 
 Enfin, il est fondamental de planifier correctement la mise en place du télétravail dans le cas où cette pratique serait amenée à se pérenniser. Même si 
 l’expérience des télétravailleurs français (durant la crise sanitaire de 2020, qu’ils soient primo télétravailleurs ou non) se révèle largement positive
