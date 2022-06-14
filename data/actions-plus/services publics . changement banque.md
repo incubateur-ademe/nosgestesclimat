@@ -18,13 +18,14 @@ investissements des établissements financiers, étant donné les innombrables p
 structures. Améliorer cette quantification supposerait qui plus est une transparence globale de la part des banques. 
 
 De plus, il faut savoir que Nos Gestes Climat prend en quelque sorte déjà en compte l'impact sur le climat des projets financés par les banques en 
-s'interessant aux produit finis que nous consommons. 
+s'interessant aux produit finis que nous consommons. Nous adoptons dans le simulateur une comptabilité dite de consommation. Inclure l'investissement personnel monétaire reviendrait à adopter une comptabilité d'investissement, difficilement compatibles entre elles, mais toutes les deux intéressantes.
 
 ## Budget
 
-Il est totalement gratuit de fermer un compte courant ou un livret réglementé. Les banques   françaises   proposent même un service d'aide à la mobilité 
+Il est totalement gratuit de fermer un compte courant ou un livret réglementé. Les banques françaises proposent même un service d'aide à la mobilité 
 bancaire à tous leurs nouveaux clients. Les Amis de la Terre ont rassemblé dans leur guide sur la [finance responsable](https://www.financeresponsable.org/uploads/GuideBanquesClimat_maj2015.pdf)
-les démarches à suivre :
+
+Les démarches à suivre sont :
 1. Commencez par ouvrir un compte dans la banque que vous avez choisie.
 2. Transférer sur votre nouveau compte tous les mouvements automatiques : prélèvements et ordres de virements permanents.
 3. Restituez vos chéquier et carte bleue à la banque que vous quittez.
