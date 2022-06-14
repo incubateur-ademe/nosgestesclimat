@@ -68,7 +68,7 @@ conduirait à un réchauffement supérieur à 2°C. C’est ce qu’on appelle l
 soit, au rythme de 50 Gt CO2eq émises par an, environ 18 ans d’émissions à "émissions constantes". Respecter ce budget carbone, c’est-à-dire limiter la hausse
 de la température du globe en dessous de la barre des 2°C, suppose de laisser plus des 3/4 de nos réserves en énergies fossiles dans le sol. Cependant, 
 malgré les appels répétés de la communauté scientifique internationale, les financements et les crédits accordés aux industries extractrices de pétrole, 
-charbon, gaz, sables bitumineux, etc. ne cessent d’augmenter (de 709 M$ en 2016 à 751 M$ en 2020 avec un pic à 824 M$ en 2019 [^2]).
+charbon, gaz, sables bitumineux, etc. ne cessent d’augmenter (de 709 milliards de $ en 2016 à 751 milliards $ en 2020 avec un pic à 824 milliards $ en 2019 [^2]).
 
 Vous n’êtes bien entendu pas responsables des investissements que réalise votre banque. Néanmoins, sachez qu’il existe des banques qui cherchent réellement 
 à limiter leur impact sur le climat en évitant de financer ces projets ou en décarbonant le portefeuille d’investissements. Vous pouvez donc, si vous le 
