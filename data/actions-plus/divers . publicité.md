@@ -58,7 +58,7 @@ Enfin, un dernier indicateur mettant en avant la non soutenabilité de nos modes
 
 ## Sources
 
-[1]: [L’empreinte carbone des Français reste stable, janvier 2020, Commissariat général au développement durable](https://www.statistiques.developpement-durable.gouv.fr/sites/default/files/2020-01/datalab-essentiel-204-l-empreinte-carbone-des-francais-reste-%20stable-janvier2020.pdf)
+[^1]: [L’empreinte carbone des Français reste stable, janvier 2020, Commissariat général au développement durable](https://www.statistiques.developpement-durable.gouv.fr/sites/default/files/2020-01/datalab-essentiel-204-l-empreinte-carbone-des-francais-reste-%20stable-janvier2020.pdf)
 [^2]: [Empreinte carbone d’un français moyen en 2010, Terra Eco, Carbone 4](https://www.terraeco.net/1990-2010-Notre-r-evolution,19337.html)
 [^3]: Modélisation et évaluation environnementale de produits de consommation et biens d’équipement, rapport, décembre 2019, ADEME
 [^4]: [Modélisation et évaluation du poids carbone de produits de consommation et biens d’équipement, rapport, septembre 2018, ADEME](https://librairie.ademe.fr/consommer-autrement/1190-modelisation-et-evaluation-du-poids-carbone-de-produits-de-consommation-et-biens-d-equipement.html#:~:text=effet%20de%20serre.-,La%20pr%C3%A9sente%20%C3%A9tude%20propose%20une%20%C3%A9valuation%20du%20%C2%ABpoids%20carbone%C2%BB%20de,renouvellement%20trop%20fr%C3%A9quent%20des%20%C3%A9quipements)
