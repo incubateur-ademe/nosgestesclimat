@@ -23,7 +23,7 @@ s'interessant aux produit finis que nous consommons. Nous adoptons dans le simul
 ## Budget
 
 Il est totalement gratuit de fermer un compte courant ou un livret réglementé. Les banques françaises proposent même un service d'aide à la mobilité 
-bancaire à tous leurs nouveaux clients, [expliqué ici](https://www.economie.gouv.fr/cedef/mobilite-bancaire) par le Ministère de l'Économie. Les Amis de la Terre ont rassemblé dans leur guide sur la [finance responsable](https://www.financeresponsable.org/uploads/GuideBanquesClimat_maj2015.pdf)
+bancaire à tous leurs nouveaux clients, [expliqué ici](https://www.economie.gouv.fr/cedef/mobilite-bancaire) par le Ministère de l'Économie. 
 
 Les démarches à suivre sont :
 1. Commencez par ouvrir un compte dans la banque que vous avez choisie.
@@ -108,5 +108,5 @@ Je change de banque
 [^1]: [Comment mettre les banques au service du climat ? Oxfam](https://www.oxfamfrance.org/wp-content/uploads/2022/02/Ebook-Oxfam-France-Comment-mettre-les-banques-au-service-du-climat.pdf)
 [^2]: [Banking on Climate Chaos]( https://www.bankingonclimatechaos.org/wp-content/uploads/2021/10/Banking-on-Climate-Chaos-2021.pdf)
 [^3]: [Carbon Tracker Initiative](https://carbontracker.org/)
-[^4]: [Climat : comment choisir ma banque ? 2015, Les Amis de la Terre]
+[^4]: [Climat : comment choisir ma banque ? 2015, Les Amis de la Terre](https://www.financeresponsable.org/uploads/GuideBanquesClimat_maj2015.pdf)
 [^5]: [Commentaire des banques](https://www.oxfamfrance.org/wp-content/uploads/2019/11/Commentaires-des-banques.pdf)
