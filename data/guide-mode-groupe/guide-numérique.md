@@ -2,7 +2,7 @@
 
 ## Pourquoi l'empreinte du numérique est un sujet de société important ?
 
-Ces dernières années, le numérique est évoqué comme "LE" nouveau poste d'émissions carbone. Et pour cause ! En France, le numérique émet autant que de CO2 équivalent que l'avion, soit 2,5% des émissions françaises[^1]. Au niveau mondial, il représente entre 3 et 4% des émissions[^2] [^3] aujourd'hui et les projections de croissance exponentielle de ce secteur en font aujourd’hui un enjeu majeur en termes d’émissions de gaz à effet de serre (+60 % d’ici à 2040 si rien n'est fait).
+Ces dernières années, le numérique est évoqué comme **LE** nouveau poste d'émissions carbone. Et pour cause ! En France, le numérique émet autant que de CO2 équivalent que l'avion, soit 2,5% des émissions françaises[^1]. Au niveau mondial, il représente entre 3 et 4% des émissions[^2] [^3] aujourd'hui et les projections de croissance exponentielle de ce secteur en font aujourd’hui un enjeu majeur en termes d’émissions de gaz à effet de serre (+60 % d’ici à 2040 si rien n'est fait).
 
 > En 2012, la chanson Gangnam Style de Psy dépassait le milliard de vues sur Youtube et la couverture médiatique a été impressionnate. C'était un évènement, un tournant pour la plateforme de streaming. Aujourd'hui la chanson Despacito approche les 8 milliards du vues et plus personne n'est étonné. Ce parallèle permet d'illuster la fait que le numérique occupe une place considérable dans nos vies, de part nos usages et la multiplicité de nos objets connectés, sans en être pleinement conscient.
 
@@ -47,6 +47,15 @@ Néanmoins, il est utiles d'avoir certaines bonnes pratiques en tête :
 - Sur vos plateformes vidéos, téléchargez une série plutôt que la regarder en streaming
 - Diminuez la qualité des vidéos que vous regardez afin de diminuer la quantité de données transmise.
 - Ne conservez, sur un espace de stockage à distance (cloud), seulement ce qui vous est réellement utile. Pour le reste (fichiers moins utiles, ou très lourds comme des vidéos) privilégiez le stockage local. Derrière le coloud, se cache un espace de stockage ou se trouve des centaines d’ordinateurs, serveurs, circuits de refroidissements, etc.
+
+**3. Apporter vos équipements en fin de vie dans des Points d'Apports Volontaires (PAV)**
+
+Les PAV ont vocation à recevoir vos déchets dans des conteneurs spécifiques. Les utiliser permet de légitimer et faire monter en puissance les filières de recyclage etretraitement. En effet, plus ces filières reçoivent d'équipements plus les volumes de matières premières issues du recyclage augmente et plus leur compétitivité s'améliore.
+Pour trouver votre point de collecte, utilisez notre simulateur [Que Faire de Mes Déchets](https://quefairedemesdechets.fr/) !
+
+[![Image : Que faire de mes déchets ?](https://ecolab-data.netlify.app/images/screen-que-faire-de-mes-déchets.png)](https://quefairedemesdechets.fr/)
+
+De plus, recycler ses déchets d'équipements électriques et électroniques (DEEE) permet d'éviter d'encombrer davantage les décharges en Afrique notamment, où sont envoyés les déchets sous prétexte qu'ils seront réutilisés ou réparés. Agbogbloshie au Ghana est la plus grande décharge de DEEE à ciel ouvert. [Un article de France TV Info](https://www.francetvinfo.fr/monde/afrique/societe-africaine/la-decharge-de-dechets-electroniques-dagbogbloshie-veritable-defi-economique-et-environnemental-pour-le-ghana_3863287.html) met en lumière cette réalité.
 
 ## Pour approfondir:
 
