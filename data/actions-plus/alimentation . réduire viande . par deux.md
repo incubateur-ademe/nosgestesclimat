@@ -50,7 +50,7 @@ Enfin, en plus des émissions GES, les élevages et la forte mobilisation des so
 [^1]: Empreinte carbone d’un français moyen en 2010, Terra Eco, Carbone 4 
 [^2]: [Les nouvelles générations transforment la consommation de viande, CREDOC - Septembre 2018](https://www.credoc.fr/publications/les-nouvelles-generations-transforment-la-consommation-de-viande)
 [^3]: [Haut Conseil pour le Climat. La position du Haut Conseil pour le Climat. Juin 2019](https://www.hautconseilclimat.fr/publications/rapport-2019/)
-[^4]: [Vers une alimentation bas carbone, saine et abordable. Rapport WWF, 2017](https://www.wwf.fr/sites/default/files/doc-2020-11/MAJ201905_Rapport_Vers-une-alimentation-bas-carbone_Volet1_WWF.pdf) 
+[^4]: [Vers une alimentation bas carbone, saine et abordable. Rapport WWF, 2017]([https://www.wwf.fr/sites/default/files/doc-2020-11/MAJ201905_Rapport_Vers-une-alimentation-bas-carbone_Volet1_WWF.pdf](https://www.wwf.fr/vous-informer/actualites/pour-le-meme-prix-manger-mieux-tout-en-reduisant-notre-impact-sur-la-planete-cest-possible) 
 [^5]: [Une voie étroite pour la sécurité alimentaire d'ici à 2050. Philippe Collomb / Le défi alimentaire à l’horizon 2050. Rapport d’information, 11 mai 2020, Sénat.](https://www.fao.org/3/x3002f/x3002f00.htm)
 [^6]: [Scénario Afterres 2050, version 2016, Solagro](https://afterres2050.solagro.org/wp-content/uploads/2015/11/solagro_afterres2050_version2016.pdf)
 [^7]: [Retour d’expérience Clim’Agri – Pays Basque](https://www.ademe.fr/sites/default/files/assets/documents/8070_pays_basque_climagri_ademe_v3_bd.pdf)
