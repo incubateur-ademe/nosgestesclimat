@@ -14,9 +14,7 @@ individuelle. Mais attention aux effets rebonds négatifs !
 
 L’ADEME considère dans une étude [^1] que, de manière générale, un jour de télétravail par semaine permet de réduire de 271 kg CO2eq/an son empreinte
 carbone individuelle . Cette réduction est cependant à moduler par des effets rebond négatifs (-31 %) comme certains trajets essentiels maintenus, 
-l’augmentation de la consommation d’énergie et des flux de données ou encore par l’émergence de nouvelles mobilités et par des effets rebond positifs (+52 %).
-
-comme l’apparition des « flex office » (l’entreprise réduisant la taille de ses locaux en proportion du nombre de télétravailleurs).
+l’augmentation de la consommation d’énergie et des flux de données ou encore par l’émergence de nouvelles mobilités et par des effets rebond positifs (+52 %) comme l’apparition des « flex office » (l’entreprise réduisant la taille de ses locaux en proportion du nombre de télétravailleurs).
 
 Les réductions d’émissions de GES liées à la mise en place du télétravail peuvent donc varier très fortement d’un personae de travailleur à un autre.
 
