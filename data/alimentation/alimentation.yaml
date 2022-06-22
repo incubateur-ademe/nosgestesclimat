@@ -422,7 +422,7 @@ alimentation . plats . poisson 2:
     |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
     |      Entrée : salade de légumes  |  |  |  |  |  |  |
     | 200g légumes de saison  | 200  | 60  | 3  | 0  | 267  | 53.4  |
-    | huile (1/2 c.s.)  | 7  | 63  | 0  | 7  | 2600  | 18,2  |
+    | huile d'olive (1/2 c.s.)  | 7  | 63  | 0  | 7  | 2600  | 18,2  |
     |      Plat principal : tofu mariné, pommes de terre et oignons  |  |  |  |  |  |  |
     | poisson blanc  | 150  | 117  | 27  | 1  | 9596  | 1439,3  |
     | riz  | 60  | 215  | 5  | 1  | 1410  | 85  |
@@ -475,10 +475,14 @@ alimentation . petit déjeuner . par semaine:
 alimentation . petit déjeuner:
   formule:
     variations:
-      - si: type = 'français'
-        alors: français
+      - si: type = 'continental'
+        alors: continental
       - si: type = 'lait céréales'
         alors: lait céréales
+      - si: type = 'britannique'
+        alors: britannique
+      - si: type = 'végétalien'
+        alors: végétalien
       - sinon: 0
 
 alimentation . petit déjeuner . type:
@@ -486,156 +490,113 @@ alimentation . petit déjeuner . type:
   description: |
     Il existe une variété infinie de petit déjeuners. Nous en avons sélectionné quelques uns pour que vous obteniez une réponse facilement.
 
-    Nous allons bientôt ajouter des propositions plus représentatives de la diversité des petits déjeuners consommés en France.
+    Même si vous ne retrouvez pas exactement votre petit déjeuner, choisissez celui qui s'en rapproche !
 
-  par défaut: "'français'"
+    > À noter que votre consommation de café / thé / chocolat chaud sera comptabilisée ultérieurement.
+
+  par défaut: "'continental'"
   formule:
     une possibilité:
       choix obligatoire: oui
       possibilités:
-        - français
-          #        - britannique
+        - continental
         - lait céréales
-          # - lait végétal céréales
+        - britannique
+        - végétalien
         - aucun
-alimentation . petit déjeuner . lait céréales:
-  note: |
-    Vérifier ces proportions issues de FoodGES : correspondent-elles à un petit déjeuner moyen ?
-  formule:
-    somme:
-      - lait
-      - céréales
 
-alimentation . lait:
-  formule: empreinte * poids
-alimentation . lait . empreinte:
-  formule:
-    variations:
-      - si: type = 'lait végétal'
-        alors: 0.950
-      - sinon: 1.390
-  unité: kgCO2e/kg
-  note: |
-    Pour le lait, en l'asbsence de données dans FoodGES pour le lait de soja, nous utilisons cette étude [Comparison between cow milk and soy milk combining nutritional values and GHG data](https://www.researchgate.net/publication/317600130_Comparison_between_cow_milk_and_soy_milk_combining_nutritional_values_and_GHG_data). 
-
-    Notons que l'empreinte du lait de vache estimée dans FoodGES est inférieure à celle de cette étude, mais dans le cadre de cette question nous préférons comparer deux empreintes obtenues par la même méthode.
-
-    La base agribalyse v3, qui sera disponible en octobre 2020, pourrait consolider ces données.
-
-alimentation . lait . type:
-  question: Quel type de lait consommez-vous ?
-  par défaut: "'lait de vache'"
-  formule:
-    une possibilité:
-      choix obligatoire: oui
-      possibilités:
-        - lait de vache
-        - lait végétal
-
-alimentation . lait . type . lait de vache:
-alimentation . lait . type . lait végétal:
-
-alimentation . lait . poids:
-  formule: 0.202
-  unité: kg
-  note: FoodGES donne cette quantité de lait, la source ci-dessous donne un peu plus, 25cl.
-  références:
-    - https://www.enviedebienmanger.fr/fiche-recette/recette-bol-de-lait-aux-muesli-et-fruits-rouges
-
-alimentation . céréales:
-  formule: empreinte * poids
-  références:
-    - https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
-
-alimentation . céréales . empreinte:
-  formule: 0.34
-  unité: kgCO2e/kg
-
-alimentation . céréales . poids:
-  formule: 0.135
-  unité: kg
-  note: Pourquoi dans FoodGES la masse d'ingrédient "consommables" est-elle très supérieure à la masse "sortie de magasin" dans l'onglet details_Plats ?
-
-alimentation . petit déjeuner . français:
-  note: |
-    Vérifier ces proportions issues de FoodGES : correspondent-elles à un petit déjeuner moyen ?
-  formule:
-    somme:
-      - pain
-      - viennoiserie
-      - orange
-      - beurre doux
-        # Pas de facteur d'émission pour la confiture dans FoodGES
-        # - confiture
-
-alimentation . viennoiserie:
-  formule: 0.114
-  icônes: 🥐
-  description: Viennoiserie de type pain au chocolat.
-  note: Il n'est pas détaillé dans FoodGES si le chocolat est pris en compte, et donc si cette viennoiserie est représentative du croissant.
-
-alimentation . pain:
-  icônes: 🥖
-  formule: empreinte * poids
-alimentation . pain . empreinte:
-  formule: 1.52
-  unité: kgCO2e/kg
-  références:
-    - https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
-alimentation . pain . poids:
-  formule: 0.040
-  unité: kg
-alimentation . beurre doux:
-  icônes: 🧈
-  formule: empreinte * poids
-alimentation . beurre doux . empreinte:
-  formule: 9.5
-  unité: kgCO2e/kg
-  références:
-    - https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
-alimentation . beurre doux . poids:
-  formule: 0.010
-  unité: kg
-
-alimentation . orange:
-  formule: 0.1
+alimentation . petit déjeuner . continental:
+  formule: 0.229
   unité: kgCO2e
-  description: Orange fraîche. Production Espagne, Afrique du Sud et États Unis - pourcentage de production inclus.
-  références:
-    - https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
+  description: |
+    Petit déjeuner avec pain, viénoiserie, beurre, confiture et un fruit.
+
+    Voici le menu type utilisé pour notre calcul.
+
+    | Ingrédients  | Qte (g)  | Kcal  | Protéines (g)  | Lipides (g)  | gCO2e /kg  | gCO2e   |
+    |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+    | Pain | 40  | 0  | 0  | 0  | 670  | 26,8  |
+    | Vienoiserie | 50  | 0  | 0  | 0  | 1460  | 73 |
+    | Beurre | 10  | 0  | 0  | 0  | 1549  | 15,5 |
+    | Confiture | 10  | 0  | 0  | 0  | 1620  | 16,2 |
+    | Orange | 100  | 0  | 0  | 0  | 970  | 97 |
+    | Total  |    | 0  | 0  | 0  |    | 228,5 |
+
+alimentation . petit déjeuner . lait céréales:
+  formule: 0.495
+  unité: kgCO2e
+  description: |
+    Petit déjeuner avec un produit laitier (lait de vache) et une portion de céréales.
+
+    Voici le menu type utilisé pour notre calcul.
+
+    | Ingrédients  | Qte (g)  | Kcal  | Protéines (g)  | Lipides (g)  | gCO2e /kg  | gCO2e   |
+    |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+    | Céréales (mélange au chocolat) | 60  | 0  | 0  | 0  | 3290  | 197,4  |
+    | Produit laitier | 200  | 0  | 0  | 0  | 1470  | 298 |
+    | Total  |    | 0  | 0  | 0  |    | 495,4 |
+
+alimentation . petit déjeuner . britannique:
+  formule: 1.233
+  unité: kgCO2e
+  description: |
+    Petit déjeuner avec 2 tranches de charcuterie, 2 oeufs au plat et 3 toasts.
+
+    Voici le menu type utilisé pour notre calcul.
+
+    | Ingrédients  | Qte (g)  | Kcal  | Protéines (g)  | Lipides (g)  | gCO2e /kg  | gCO2e   |
+    |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+    | Charcuterie  | 100  | 0  | 0  | 0  | 8140  | 814  |
+    | 2 oeufs | 100  | 0  | 0  | 0  | 2730  | 273  |
+    | Huile (1/2 c.s.)  | 7  | 63  | 0  | 7  | 2153  | 15 |
+    | Toasts (3 tranches)  | 60  | 0  | 0  | 0  | 2180  | 130 |
+    | Total  |    | 841  | 41  | 31  |    | 1232,9 |
+
+alimentation . petit déjeuner . végétalien:
+  formule: 0.313
+  unité: kgCO2e
+  description: |
+    Petit déjeuner avec une portion de muesli, un fruit et une portion de lait de soja.
+
+    Voici le menu type utilisé pour notre calcul.
+
+    | Ingrédients  | Qte (g)  | Kcal  | Protéines (g)  | Lipides (g)  | gCO2e /kg  | gCO2e   |
+    |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+    | Boisson végétale soja  | 200  | 0  | 0  | 0  | 420  | 84  |
+    | Céréales (type muesli)  | 50  | 0  | 0  | 0  | 3460  | 173  |
+    | Pomme | 100  | 0  | 0  | 0  | 280  | 56  |
+    | Total  |    | 0  | 0  | 0  |    | 313 |
+
+alimentation . petit déjeuner . type . continental:
+  icônes: 🥐🥖
+  titre: Viennoiserie & baguette
+  description: |
+    Nous avons fait choix de considérer un petit déjeuner standard français proche du petit-déjeuner appelé ["continental"](https://fr.wikipedia.org/wiki/Déjeuner#Repas_de_type_continental).
+    Il comprend pain, beurre, confiture, vienoiserie et un fruit.
+
+alimentation . petit déjeuner . type . lait céréales:
+  icônes: 🥣🎑
+  titre: Lait & céréales
+  description: |
+    Un bol de lait ou un yaourt avec des céréales. On considère ici que le lait est d'origine animale.
+
+alimentation . petit déjeuner . type . britannique:
+  titre: Salé (type britannique)
+  icônes: 🍳🥓
+  description: |
+    Un petit petit dej' salé : toasts, oeufs, charcuterie. Nous avons alléger le traditionnel [déjeuner anglais ou irlandais](https://fr.wikipedia.org/wiki/Petit_déjeuner_anglais) qui comprend également baked beans, saucisses, tomates, champignons, pommes de terre.
+
+alimentation . petit déjeuner . type . végétalien:
+  titre: Végétalien
+  icônes: 🌾🍎
+  description: |
+    Un petit petit dej' garanti "sans origine animale" avec des céréales, du lait végétal, un fruit.
 
 alimentation . petit déjeuner . type . aucun:
   titre: Pas de petit-dej'
+  icônes: ❌
   description: |
-    Vous ne mangez rien au petit déjeuner (mais vous pouvez boire un café ou un thé).
-
-    À noter : nous intégrons automatiquement un café et un thé par jour dans le calcul. Vous pourrez bientôt nous en dire plus sur votre consommation personnelle.
-alimentation . petit déjeuner . type . lait céréales:
-  icônes: 🥣🎑
-  description: |
-    Un bol de lait céréales. Le lait peut être animal ou végétal.
-alimentation . petit déjeuner . type . français:
-  icônes: 🥐🥖
-  titre: Viennoiserie baguette
-  description: |
-    Il ne semble pas exister de petit déjeuner standard français (pas de page Wikipedia).  
-
-    Il semble proche du petit-déjeuner appelé ["continental"](https://fr.wikipedia.org/wiki/Déjeuner#Repas_de_type_continental).
-
-    Ceci est une proposition parmi d'autres possibilités, qui peut bien sûr ne pas correspondre au votre.
-
-  note: |
-    Faut-il inclure du beurre, confiture ? Un pain au chocolat ? 
-
-    On résoudra cette question en proposant plus de choix, sans noyer l'utilisateur.
-
-alimentation . petit déjeuner . type . britannique:
-  titre: Britannique salé
-  icônes: 🍳🥓
-  description: |
-    Le traditionnel déjeuner anglais ou irlandais : toasts, oeufs, bacon, baked beans, saucisses, tomates, champignons, pommes de terre.
-  références:
-    - https://fr.wikipedia.org/wiki/Petit_déjeuner_anglais
+    Vous ne mangez rien au petit déjeuner (mais vous pouvez boire un café, un thé ou un chocolat chaud pris en compte dans une autre question).
 
 alimentation . local:
   icone: 🍅🇫🇷
