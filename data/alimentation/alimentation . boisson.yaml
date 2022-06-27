@@ -1,0 +1,241 @@
+alimentation . boisson:
+  icônes: 🥤
+  formule:
+    somme:
+      - chaude
+      - froide
+
+alimentation . boisson . chaude:
+  icônes: ☕️🫖
+  formule: par semaine * nombre de semaines
+  unité: kgCO2e
+
+alimentation . boisson . chaude . par semaine:
+  titre: Empreinte boissons chaudes par semaine
+  description: |
+    A choisir : une estimation de sa consommation moyenne de boissons chaudes sur une semaine-type (petit déjeuner inclus). 
+
+    Ceci est la somme de l'empreinte de sa consommation de boissons chaudes sur une semaine.
+  unité: kgCO2e/semaine
+  formule:
+    somme:
+      - café
+      - thé
+      - chocolat chaud
+
+alimentation . boisson . chaude . café:
+  icônes: ☕
+  formule: tasse de café * nombre
+  unité: kgCO2e
+
+alimentation . boisson . chaude . thé:
+  icônes: 🫖
+  formule: tasse de thé * nombre
+  unité: kgCO2e
+
+alimentation . boisson . chaude . chocolat chaud:
+  icônes: 🥛🍫
+  formule: tasse de chocolat chaud * nombre
+  unité: kgCO2e
+
+alimentation . boisson . chaude . café . nombre:
+  question: Nombre de cafés par semaine
+  par défaut: 7
+  unité: tasse
+  période: semaine
+
+alimentation . boisson . chaude . thé . nombre:
+  question: Nombre de thés par semaine
+  par défaut: 0
+  unité: tasse
+  période: semaine
+
+alimentation . boisson . chaude . chocolat chaud . nombre:
+  question: Nombre de chocolats chauds par semaine
+  par défaut: 0
+  unité: tasse
+  période: semaine
+
+alimentation . boisson . tasse de café:
+  titre: Empreinte d'une tasse de café
+  formule: empreinte café moulu * quantité café par tasse
+  unité: kgCO2e/tasse
+
+alimentation . boisson . tasse de café . empreinte café moulu:
+  formule: 9.4
+  unité: kgCO2e/kg
+  références:
+    - https://agribalyse.ademe.fr/app/aliments/18003#Caf%C3%A9,_moulu
+
+alimentation . boisson . tasse de café . quantité café par tasse:
+  formule: 0.012
+  unité: kg/tasse
+  note: on fait l'hypothèse qu'une tasse de café contient en moyenne 12 grammes de café moulu.
+
+alimentation . boisson . tasse de thé:
+  titre: Empreinte d'une tasse de thé
+  formule: empreinte thé infusé * quantité thé par tasse
+  unité: kgCO2e/tasse
+
+alimentation . boisson . tasse de thé . empreinte thé infusé:
+  formule: 0.05
+  unité: kgCO2e/kg
+  références:
+    - https://agribalyse.ademe.fr/app/aliments/18020#Th%C3%A9_infus%C3%A9,_non_sucr%C3%A9
+
+alimentation . boisson . tasse de thé . quantité thé par tasse:
+  formule: 0.250
+  unité: kg/tasse
+  note: on fait l'hypothèse qu'une tasse de thé fait en moyenne 250 grammes.
+
+alimentation . boisson . tasse de chocolat chaud:
+  titre: Empreinte d'une tasse de chocolat chaud
+  formule:
+    somme:
+      - empreinte cacao en poudre * quantité cacao par tasse
+      - empreinte lait de vache * quantité lait par tasse
+  unité: kgCO2e/tasse
+
+alimentation . boisson . tasse de chocolat chaud . empreinte cacao en poudre:
+  formule: 26.45
+  unité: kgCO2e/kg
+  références:
+    - https://agribalyse.ademe.fr/app/aliments/18100#Cacao,_non_sucr%C3%A9,_poudre_soluble
+
+alimentation . boisson . tasse de chocolat chaud . quantité cacao par tasse:
+  formule: 0.020
+  unité: kg/tasse
+  note: on fait l'hypothèse qu'une tasse de chocolat chaud contient en moyenne 20 grammes de cacao en poudre.
+
+alimentation . boisson . tasse de chocolat chaud . empreinte lait de vache:
+  formule: 1.49
+  unité: kgCO2e/kg
+  références:
+    - https://agribalyse.ademe.fr/app/aliments/19042#Lait_demi-%C3%A9cr%C3%A9m%C3%A9,_pasteuris%C3%A9
+
+alimentation . boisson . tasse de chocolat chaud . quantité lait par tasse:
+  formule: 0.200
+  unité: kg/tasse
+  note: on fait l'hypothèse qu'une tasse de chocolat chaud contient en moyenne 200 grammes de lait.
+
+alimentation . boisson . froide:
+  icônes: 🍺🥤🧴
+  formule:
+    somme:
+      - sucrées
+      - alcool
+      - eau en bouteille
+
+alimentation . boisson . eau en bouteille:
+  applicable si: affirmatif
+  formule: consommation annuelle * empreinte
+
+  références:
+    - http://www.bilans-ges.ademe.fr/
+
+alimentation . boisson . eau en bouteille . consommation annuelle:
+  formule: 365 * 1.5
+  unité: l
+  description: On considère que chacun boit 1,5 litres d'eau par jour.
+
+alimentation . boisson . eau en bouteille . empreinte:
+  formule: 0.393
+  unité: kgCO2e/l
+  note: |
+    Base carbone consultée le 17/11/20.
+
+    > Eau - en bouteille PET, plate, 0,5L - en magasin, prêt à consommer 0.393 kgCO2e/litre de liquide. 
+
+    Attention, il s'agit bien d'un facteur d'émission par l, même si l'hypothèse est une consommation de bouteilles de 0,5l. 
+
+    Cette hypothèse semble très contestable, car ce format correspond plutôt à une consommation en dehors du foyer (cinéma, restauration, etc.).
+
+alimentation . boisson . eau en bouteille . affirmatif:
+  titre: Eau en bouteille
+  question: Buvez-vous votre eau en bouteille ?
+  par défaut: non
+  description: |
+    Si vous buvez principalement de l'eau du robinet et que votre consommation d'eau en bouteille se réduit à de rares occasions (par exemple un repas sur le pouce en boulangerie par semaine, avec leur fameux menu "sandwich + dessert + boisson en bouteille plastique"), répondez non.
+
+    Si vous achetez régulièrement des packs d'eau en bouteille au supermarché ou si vous achetez une petite bouteille chaque jour à la cantine du boulot, répondez oui.
+
+    > Sachez que la consommation d'eau du robinet a une empreinte climat si faible que nous ne vos poserons pas la question de votre consommation alimentaire d'eau.
+  note: |
+    Les français boivent en moyenne entre 100 et 150 litres d'eau en bouteille par an [source](https://www.planetoscope.com/consommation-eau/854-litres-d-eau-en-bouteille-vendus-en-france.html), soit environ un tiers de nos besoins de 1-1,5l par jour [source](https://www.mangerbouger.fr/Le-Mag/Bien-etre/L-eau-indispensable-a-notre-bonne-sante).
+
+    Nous avons considéré que la valeur par défaut était donc "non".
+
+alimentation . boisson . sucrées:
+  description: |
+    Notons que des alternatives au soda, très simples à préparer maison, sont possibles : c'est le cas du [kéfir](https://fr.wikipedia.org/wiki/K%C3%A9fir) ou [Kombucha](https://fr.wikipedia.org/wiki/Kombucha). Nous n'avons pas encore évalué les gains d'empreinte offerts par ces alternatives.
+  unité: kgCO2e
+  formule: litres * nombre de semaines * facteur
+
+alimentation . boisson . sucrées . facteur:
+  formule: (facteur sodas + facteur jus de fruits + facteur sirops) / 3
+  note: Cette valeur est bien sûr très approximative.
+
+alimentation . boisson . sucrées . facteur sodas:
+  formule: 0.57
+  unité: kgCO2e/l
+  note: FE issu d'agribalyse (Cola, sucré), 0.57 kgCO2e/kg. On considère que la masse volumique est de 1kg/l.
+
+alimentation . boisson . sucrées . facteur jus de fruits:
+  formule: 0.8
+  unité: kgCO2e/l
+  note: FE issu d'agribalyse (Jus multifruit, pur jus, standard), 0.8 kgCO2e/kg. On considère que la masse volumique est de 1kg/l.
+
+alimentation . boisson . sucrées . facteur sirops:
+  formule: 1.06
+  unité: kgCO2e/l
+  note: FE issu d'agribalyse, 1.06 kgCO2e/kg. On considère que la masse volumique est de 1kg/l.
+
+alimentation . boisson . sucrées . litres:
+  titre: Consommation de boissons sucrées
+  question: Quelle est votre consommation par semaine de sodas, jus de fruit, sirops, etc. ?
+  suggestions:
+    nulle: 0 l/semaine
+    modérée: 1 l/semaine
+    importante: 5 l/semaine
+  par défaut: 2 l/semaine
+
+alimentation . boisson . alcool:
+  unité: kgCO2e
+  description: |
+    Étonnamment, notre consommation d'alcool prend un rôle important dans notre empreinte. 
+
+    La bonne nouvelle, c'est que nous pouvons l'améliorer de façon très simple : plus que l'alimentation, une boisson est lourde, voyage beaucoup, et son emballage a une empreinte significative. 
+
+    > Prenons l'exemple d'une 🍺 bière de 25cl : brassée au bout du monde, elle a voyagé des milliers de kilomètres et son contenu (la boisson) est emballé dans un contenant qui fait presque le même poids (200g de verre). 
+
+    > En privilégiant une bière brassée localement, servie à la pression (le fût étant réutilisé des années), on peut réduire drastiquement l'empreinte sans changer la consommation.
+  formule: litres * nombre de semaines * facteur
+
+alimentation . boisson . alcool . facteur:
+  formule: (facteur bière + facteur vin + facteur coktail) / 3
+  note: Le vin n'a pas la même empreinte que la bière au litre, c'est une grosse simplification.
+
+alimentation . boisson . alcool . facteur bière:
+  formule: 1.09
+  unité: kgCO2e/l
+  note: FE issu d'agribalyse, 1.09 kgCO2e/kg. On considère que la masse volumique de la bière est de 1kg/l.
+
+alimentation . boisson . alcool . facteur vin:
+  formule: 1.14
+  unité: kgCO2e/l
+  note: FE issu d'agribalyse, 1.14 kgCO2e/kg. On considère que la masse volumique du vin est de 1kg/l.
+
+alimentation . boisson . alcool . facteur coktail:
+  formule: 1.08
+  unité: kgCO2e/l
+  note: FE issu d'agribalyse (coktail type punch), 1.08 kgCO2e/kg. On considère que la masse volumique d'un coktail est de 1kg/l.
+
+alimentation . boisson . alcool . litres:
+  titre: Consommation d'alcool
+  question: Quelle est votre consommation par semaine d'alcool (vin, bière, etc.) ?
+  suggestions:
+    nulle: 0
+    modérée: .5
+    importante: 2
+  unité: l/semaine
+  par défaut: 1 l/semaine
