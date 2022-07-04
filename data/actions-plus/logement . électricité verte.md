@@ -57,15 +57,11 @@ tenir les objectifs climatiques à l’échelle nationale. Qui plus est, si l’
 l’orée d’une probable très forte augmentation de la consommation électrique (électrification progressive du parc automobile, déploiement de la 5G et 
 multiplication des objets électroniques connectés qui l’accompagneront, émergence de la smart city, etc.). 
 
-Ainsi, souscrire à un contrat d’électricité « verte » est donc un bon moyen pour être en phase avec ses valeurs, participer à la création d’emplois non
-délocalisables et contribuer à l’atteinte d’une France neutre en carbone. De plus, le nucléaire n’est pas sans risque et contribue à de nombreux autres 
-impacts environnementaux, en commençant par la génération de déchets nucléaires difficiles à traiter et dont la durée de vie peut dépasser plusieurs 
-centaines de milliers d’années.
+Ainsi, souscrire à un contrat d’électricité « verte » est donc un bon moyen pour être en phase avec ses valeurs et contribuer à l’atteinte d’une France neutre en carbone. Pour d'autres, c'est aussi le moyen d'éviter les autres impacts environnementaux du nucléaires et notamment la génération de déchets radioactifs à très longue durée de vie (pouvant dépasser plusieurs centaines de milliers d'années) et difficile à traiter. Mais attention toutefois à ne pas négliger, non plus, les impacts environnementaux des installations d'énergie renouvelable. **Il n'y a pas d'énergie parfaitement propre et la meilleure énérgie restera toujours celle qu'on ne consomme pas !**
 
-**Attention !** Beaucoup de fournisseurs d’électricité verte ne sont pas très sérieux.
+**A savoir !** Beaucoup de fournisseurs d’électricité verte ne sont pas très sérieux. Privilégiez donc les acteurs cités dans [l’avis technique de l’ADEME](https://presse.ademe.fr/wp-content/uploads/2018/12/Avis-de-lademe_Offres_Vertes_Decembre2018.pdf) [^6]: Enercoop, Ilek, Energie d’Ici et EkWateur (uniquement l’offre « petits producteurs indépendants ») ainsi que ceux disposant du label [VertVolt](https://agirpourlatransition.ademe.fr/particuliers/vertvolt).
 
-Privilégiez donc les acteurs cités dans l’avis technique de l’ADEME [^6]: Enercoop, Ilek, Energie d’Ici et EkWateur (uniquement l’offre « petits producteurs 
-indépendants ») ainsi que ceux disposant du label VertVolt.
+> **Attention !** Avec la flambée des prix de l’électricité et de l'énergie en général (depuis maintenant plus d'un an et amplifié par la guerre en Ukraine) de nombreux fournisseurs d'électricité verte doivent se tourner vers le nucléaire et se refusent à prendre de nouveaux clients. Beaucoup d'entres eux sont proches de la faillite et ont, pour l'éviter, recours à l'Arenh, mécanisme contraignant EDF à vendre l’électricité produite par ses centrales nucléaires très largement en dessous des prix du marché (42 euros par mégawattheure (MWh) au lieu de 300 euros sur le marché) plutôt que d'augmenter de manière disproportionnée le prix de leur électricité/abonnement.
 
 ## Passer à l'action
 
