@@ -4,7 +4,7 @@
 
 L’impact GES de notre alimentation est directement corrélé à notre consommation de produits carnés.[^1] Cependant, toutes les viandes n’ont pas le même impact climat. Certaines contribuent à émettre plus de GES que d’autres. Ainsi, la viande rouge est la viande ayant le plus fort impact carbone.
 
-![](https://ecolab-data.netlify.app/images/Chiffres-cles_reduire_sa_consommation_viande_v2.png)
+![Infographie : la production d'un kilogramme de viande émet 5 à 10 fois plus de GES que celle d'un kilogramme de céréale](https://ecolab-data.netlify.app/images/Chiffres-cles_reduire_sa_consommation_viande_v2.png)
 
 ## Impact GES de l’action
 
@@ -13,10 +13,10 @@ L’impact GES de notre alimentation est directement corrélé à notre consomma
 
 ## Ordre de grandeur GES
 
-![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/reduction-viande-fig1-1.jpg)
-`Figure 1 : Impact GES d'un kg de viande en sortie de ferme et ingéré (source Agrybalise)`
+![Graphique : impact GES d'un kg de viande en sortie de ferme et ingéré](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/reduction-viande-fig1-1.jpg)
+`Figure 1 : Impact GES d'un kg de viande en sortie de ferme et ingéré (source Agribalyse)`
 
-![](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/reduction-viande-fig2.jpg)
+![Graphique : impact GES pour différents types de repas](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/reduction-viande-fig2.jpg)
 `Figure 2 : Impact GES pour différents types de repas`
 
 ## Budget
@@ -47,10 +47,10 @@ Enfin, en plus des émissions GES, les élevages et la forte mobilisation des so
 
 ## Sources
 
-[^1]: [Empreinte carbone d’un français moyen en 2010, Terra Eco, Carbone 4](https://www.terraeco.net/1990-2010-Notre-r-evolution,19337.html)
+[^1]: Empreinte carbone d’un français moyen en 2010, Terra Eco, Carbone 4 
 [^2]: [Les nouvelles générations transforment la consommation de viande, CREDOC - Septembre 2018](https://www.credoc.fr/publications/les-nouvelles-generations-transforment-la-consommation-de-viande)
 [^3]: [Haut Conseil pour le Climat. La position du Haut Conseil pour le Climat. Juin 2019](https://www.hautconseilclimat.fr/publications/rapport-2019/)
-[^4]: [Vers une alimentation bas carbone, saine et abordable. Rapport WWF, 2017](https://www.wwf.fr/sites/default/files/doc-2020-11/MAJ201905_Rapport_Vers-une-alimentation-bas-carbone_Volet1_WWF.pdf)
+[^4]: [Vers une alimentation bas carbone, saine et abordable. Rapport WWF, 2017]([https://www.wwf.fr/sites/default/files/doc-2020-11/MAJ201905_Rapport_Vers-une-alimentation-bas-carbone_Volet1_WWF.pdf](https://www.wwf.fr/vous-informer/actualites/pour-le-meme-prix-manger-mieux-tout-en-reduisant-notre-impact-sur-la-planete-cest-possible) 
 [^5]: [Une voie étroite pour la sécurité alimentaire d'ici à 2050. Philippe Collomb / Le défi alimentaire à l’horizon 2050. Rapport d’information, 11 mai 2020, Sénat.](https://www.fao.org/3/x3002f/x3002f00.htm)
 [^6]: [Scénario Afterres 2050, version 2016, Solagro](https://afterres2050.solagro.org/wp-content/uploads/2015/11/solagro_afterres2050_version2016.pdf)
 [^7]: [Retour d’expérience Clim’Agri – Pays Basque](https://www.ademe.fr/sites/default/files/assets/documents/8070_pays_basque_climagri_ademe_v3_bd.pdf)
