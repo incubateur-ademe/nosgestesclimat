@@ -21,8 +21,7 @@ Cependant, à titre d'informations, il est présenté ci-dessous l'impact carbon
 
 ## Budget
 
-Les fournisseurs d’électricité verte sont tout aussi compétitif que les fournisseurs d’électricité « classique ». N'hésitez pas à consulter un comparateur
-de prix tel que [Prix-Elec](https://prix-elec.com/)
+Avant la flambée des prix de l'énergie, les fournisseurs d’électricité verte réellement producteurs proposaient des tarifs aussi compétitifs que les fournisseurs d’électricité « classique ». La situation est maintenant différente et beaucoup ne prennent plus de nouveaux clients (cf. fin de la section Explication). Si vous voulez changez de contrat et/ou de fournisseur, n'hésitez pas à consulter un comparateur de prix tel que [Prix-Elec](https://prix-elec.com/)
 
 ## Chiffres clés à retenir
 
