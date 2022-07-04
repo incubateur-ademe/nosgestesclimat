@@ -4,7 +4,7 @@
 
 A notre échelle, il est facile de se laisser convaincre que nos actions n’ont que peu d’impact. Néanmoins, la transition écologique a besoin de 
 transformation opérant à petite comme à grande échelle. En revanche, soyons clairs, nos changements de comportement individuels ne seront pas suffisants 
-pour limiter le réchauffement à +2° tant qu'ils ne se généralisent pas à l'ensemble de la société, ce qui passe notamment par des lois. 
+pour limiter le réchauffement à +2° tant qu'ils ne se généralisent pas à l'ensemble de la société. 
 
 Ce n’est donc pas aux citoyens de porter seuls l’ensemble du poids de la transition, mais pourtant les engagements et changements de mode de vie sont incontournables dans l'institutionnalisation de cette transition dans notre démocratie. Il est tentant de ne voir que l'oppoition des perspectives individu *versus* État, mais c'est ignorer la complexité de notre société représentée par les échelons divers que sont la famille, la copropriété, la commune, la collectivité territoriale, les entreprises et associations, et la société dans son ensemble.
 
@@ -68,6 +68,7 @@ ainsi à les convaincre de faire de même. Dans notre exemple, d'abord une simpl
   -	Je comprends les enjeux du changement climatique et de la transition avec les [MOOC Energie Climat](https://www.youtube.com/user/AvenirClimatique/playlists?view=50&sort=dd&shelf_id=5) de l’[Association Bilan Carbone](https://www.associationbilancarbone.fr/) et [Avenir Climatique](https://avenirclimatique.org/)
   -	J’essaie de planifier la transition vers un monde 2 °C avec l’atelier « [2 tonnes](https://www.2tonnes.org/) »
   -	Je m’intéresse à d’autres enjeux environnementaux avec la Fresque Océane
+  - Je découvre toutes les [Fresques existantes](https://fresqueduclimat.org/wiki/index.php?title=Les_fresques_amies)
 -	Je rejoins des [alternatives concrètes](https://alternatiba.eu/une-nouvelle-plateforme-pour-promouvoir-la-transition/)
 -	Je rejoins une [association impliquée près de chez moi](https://reseauactionclimat.org/association/associations-membres/)
 -	Je définis un scénario de transition 1.5° pour la France avec [Mission Climat](http://mission-climat.io/)
