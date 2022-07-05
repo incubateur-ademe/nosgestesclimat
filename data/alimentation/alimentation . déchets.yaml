@@ -1,21 +1,33 @@
 alimentation . déchets:
-  formule: 
-    somme:
-      - alimentation . déchets . omr
-      - alimentation . déchets . collecte separee
-      - alimentation . déchets . dechetterie
+  icônes: 🚮
+  description: |
+    Nous avons rangé cette catégorie dans `alimentation` car une grande partie de nos déchets ont une origine alimentaire (85% des emballages jetés par 
+    les ménages sont des emballages alimentaires)
+  formule:
+    variations:
+      - si: zéro déchets . niveau d'engagement = 'affirmatif'
+        alors: zéro déchets  
+      - sinon:
+          somme:
+            - omr
+            - collecte separee
+            - dechetterie
+            - compostage biodéchets
+            - gaspillage alimentaire
+            - stop pub
+  références:
 
 #Calcul de l'impact GES du traitement des OMR
 
 alimentation . déchets . omr:
   formule: 
     somme:
-      - alimentation . déchets . omr . putrescibles
-      - alimentation . déchets . omr . papier carton
-      - alimentation . déchets . omr . plastique
-      - alimentation . déchets . omr . verre
-      - alimentation . déchets . omr . metaux
-      - alimentation . déchets . omr . autre
+      - omr . putrescibles
+      - omr . papier carton
+      - omr . plastique
+      - omr . verre
+      - omr . metaux
+      - omr . autre
 
 alimentation . déchets . omr . part DAE:
   formule: 20%
@@ -398,12 +410,12 @@ alimentation . déchets . omr . autre . incinération . impact:
 alimentation . déchets . collecte separee:
 formule: 
   somme:
-  - alimentation . déchets . collecte separee . putrescibles
-  - alimentation . déchets . collecte separee . papier carton
-  - alimentation . déchets . collecte separee . plastique
-  - alimentation . déchets . collecte separee . verre
-  - alimentation . déchets . collecte separee . metaux
-  - alimentation . déchets . collecte separee . autre
+  - collecte separee . putrescibles
+  - collecte separee . papier carton
+  - collecte separee . plastique
+  - collecte separee . verre
+  - collecte separee . metaux
+  - collecte separee . autre
 
 alimentation . déchets . collecte separee . part DAE:
   formule: 15%
@@ -750,15 +762,15 @@ alimentation . déchets . collecte separee . autre . incinération . impact:
 
 #Calcul de l'impact GES du traitement des déchets amenés en déchetterie
 
-alimentation . déchets . dechetterie . total:
+alimentation . déchets . dechetterie:
   formule: 
     somme:
-      - alimentation . déchets . dechetterie . putrescibles
-      - alimentation . déchets . dechetterie . papier carton
-      - alimentation . déchets . dechetterie . plastique
-      - alimentation . déchets . dechetterie . verre
-      - alimentation . déchets . dechetterie . metaux
-      - alimentation . déchets . dechetterie . autre
+      - dechetterie . putrescibles
+      - dechetterie . papier carton
+      - dechetterie . plastique
+      - dechetterie . verre
+      - dechetterie . metaux
+      - dechetterie . autre
 
 alimentation . déchets . dechetterie . part DAE:
   formule: 17%
@@ -1375,3 +1387,121 @@ alimentation . déchets . dechetterie . emcombrants et tout-venant . fin de vie 
   note : 
     Le FE considéré est : Déchets du bâtiment - Déchets non dangereux en mélange (DIB) - Fin de vie moyenne - Impacts
 
+
+#Zéro déchets
+alimentation . déchets . zéro déchets . niveau d'engagement:
+  titre: Engagement zéro déchet
+  question: Êtes-vous engagé dans une démarche zéro déchet ?
+  description: |
+    Si vous ne savez pas, répondez non. Si vous pratiquez quelques gestes pour réduire la quantité de déchets, répondez en partie. Répondez oui uniquement
+    si vous êtes réellement engagé dans une démarche zéro déchets et que vous traquez le moindre déchets.
+    Pour en savoir plus, sur les modes de vie zéro déchets, c'est [ici](https://www.zerowastefrance.org/passer-a-laction/adopter-zero-dechet/)
+    Sachez qu'en cas d'engagement "zéro déchet", nous considérons tout de même des émissions de gaz à effet (mais largement réduite) car il est très difficile
+    voire impossible de ne plus générer aucun déchet et il fréquent que certain soit invisible.
+  par défaut: "'pas du tout'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - pas du tout
+        - en partie
+        - affirmatif
+alimentation . déchets . zéro déchets . niveau d'engagement . pas du tout:
+alimentation . déchets . zéro déchets . niveau d'engagement . en partie:
+alimentation . déchets . zéro déchets . niveau d'engagement . affirmatif:
+  titre: oui
+
+alimentation . déchets . zéro déchets:
+  applicable si: niveau d'engagement = 'affirmatif'
+  formule: 
+    somme:
+      - omr . putrescibles + omr . putrescibles . compostés  #on met un signe + car la variable putrescibles compostés est négative
+      - omr . papier carton / 4
+      - omr . plastique / 4
+      - omr . verre / 4
+      - omr . metaux / 4
+      - omr . autre / 4
+      - collecte separee / 4
+      - dechetterie / 4
+  note: |
+    On considère que la part de gens vivant réellement sans générer aucun déchets est peu représentative même au sein du mouvement zéro déchets. Ainsi, 
+    on considère qu'un mode de vie zéro déchets correspond au compostage des biodéchets ET à une division par 4 de toutes les autres quantitées de déchets 
+    (OMR, CS et déchetterie).
+
+#Liste des gestes pour réduire la quantité de déchets
+
+alimentation . déchets . compostage biodéchets . présent:
+  question: Compostez-vous vos biodéchets ?
+  par défaut: non
+  description: |
+    Les biodéchets regroupe les déchets alimentaires (mais pas tous !), les papiers et cartons souillés et une partie des déchets verts
+
+alimentation . déchets . compostage biodéchets:
+  icônes: 🍅💩
+  applicable si: présent
+  formule: 0 - omr . putrescibles . compostés
+  unité: kgCO2e
+  note: |
+    On considère que seulement seul le gisement de déchets putrescibles est réellement composté. Le reste des déchets (11,48 kg) suit l'exutoire classique 
+    des OMR
+  
+alimentation . déchets . omr . putrescibles . compostés:
+  formule: omr . putrescibles * ((quantité réel - gisement réduction) / quantité réel) + gisement réduction * compost domestique . impact
+  unité: kgCO2e
+  note: |
+    On considère que seulement seul le gisement de déchets putrescibles est réellement composté. Le reste des déchets (11,48 kg) suit l'exutoire classique 
+    des OMR
+    
+alimentation . déchets . omr . putrescibles . gisement réduction:
+  formule: 55
+  unité: kg
+  note: |
+    Source : potentiel de réduction du gisement située entre 40 et 70 kg issu de la section 4.13.3.3. page 84 de [l'étude ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/2520-etude-d-evaluation-des-gisements-d-evitement-des-potentiels-de-reduction-de-dechets-et-des-impacts-environnementaux-evites.html)
+  
+alimentation . déchets . omr . putrescibles . compost domestique . impact:
+  formule: 0.009
+  unité: kgCO2e/kg
+  note: Le FE considéré est : Déchets de cuisine et déchets verts - Compostage domestique en bac - Impacts 
+
+alimentation . déchets . gaspillage alimentaire . présent:
+  question: Cherchez-vous à réduire le gaspillage alimentaire (que les produits aient été cuisinés ou non) ?
+  par défaut: non
+  description: |
+    Si vous faites peu ou pas d'efforts pour éviter de jeter vos aliments, répondez non. En moyenne, le gaspillage alimentaire reste la norme.
+
+alimentation . déchets . gaspillage alimentaire:
+  icônes: 🚯
+  applicable si: présent
+  formule: 0 - 31
+  unité: kgCO2e
+  note: |
+    Dans le document en référence, page 7 pour l'empreinte du gaspillage et page 36 pour la réduction moyenne.
+    Notons que l'étude n'est pas forcément évidente à suivre, car le détail du calcul des l'empreinte climat n'y est pas. Le calcul est fait sur une population non représentative, puis corrigée avec des statistiques MODECOM, qui font passer l'empreinte de 34kgCO2e à 60kgCO2e. 
+    Notons aussi que le détail n'est pas donné quand à l'empreinte des 60kgCO2e : inclut-elle l'empreinte des déchets "inévitables" ? Cette empreinte n'est-elle pas un double comptage avec une empreinte déjà intégrée dans les variables repas ? Nous mettons de côté ces interrogations pour prévilégier le fait de communiquer déjà cet ordre de grandeur.
+    Pour aller plus loin dans cette discussion, notamment les questions de périmètre et de comparaison avec l'étude internationale de la FAO, voir nos commentaires [ici](https://github.com/datagir/nosgestesclimat/pull/1096#issuecomment-945158967).
+  références:
+    - https://www.ademe.fr/sites/default/files/assets/documents/estimer-impacts-du-gaspillage-alimentaire-des-menages.pdf
+    
+  #OU
+  #formule: 0 - 30
+  #note: |
+  #  Source : Tableau page 111 de [l'étude ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/2520-etude-d-evaluation-des-gisements-d-evitement-des-potentiels-de-reduction-de-dechets-et-des-impacts-environnementaux-evites.html)
+    
+alimentation . déchets . stop pub . présent:
+  question: Avez-vous un stop pub sur votre boîte aux lettres ?
+  par défaut: non
+
+alimentation . déchets . stop pub:
+  icônes: 📬
+  applicable si: présent
+  formule: 0 - (gain prospectus * 3 * 52)
+  unité: kgCO2e
+  note: |
+    On considère 3 prospectus par semaine dans sa boite aux lettres
+    
+alimentation . déchets . stop pub . gain prospectus:
+  titre: réduction d'émissions de GES liée à la non fabrication d'un prospectus
+  formule: 0,083
+  note: |
+    Source : Cas 2 du tableau page 103 de [l'étude ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/2520-etude-d-evaluation-des-gisements-d-evitement-des-potentiels-de-reduction-de-dechets-et-des-impacts-environnementaux-evites.html)
+    C'est le cas le plus défavorable car il inclut le report vers une communication électronique
