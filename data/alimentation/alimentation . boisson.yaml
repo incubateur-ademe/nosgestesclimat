@@ -6,22 +6,24 @@ alimentation . boisson:
       - froide
 
 alimentation . boisson . chaude:
+  titre: Empreinte boissons chaudes par semaine
   icônes: ☕️🫖
+  description: |
+    Vos consommations de boissons chaudes pour une semaine type. Un café par jour ? Un thé tous les soirs ? Un chocolat chaud au petit déjeuner ? 
+
+    A noter que vous pourrez sélectionner le type de lait que vous consommez dans une autre question !
+
+    > Le café ou thé que vous consommez au petit déjeuner sont à prendre en compte ici !
   formule: par semaine * nombre de semaines
   unité: kgCO2e
 
 alimentation . boisson . chaude . par semaine:
-  titre: Empreinte boissons chaudes par semaine
-  description: |
-    A choisir : une estimation de sa consommation moyenne de boissons chaudes sur une semaine-type (petit déjeuner inclus). 
-
-    Ceci est la somme de l'empreinte de sa consommation de boissons chaudes sur une semaine.
-  unité: kgCO2e/semaine
   formule:
     somme:
       - café
       - thé
       - chocolat chaud
+    unité: kgCO2e/semaine
 
 alimentation . boisson . chaude . café:
   icônes: ☕
@@ -93,7 +95,7 @@ alimentation . boisson . tasse de chocolat chaud:
   formule:
     somme:
       - empreinte cacao en poudre * quantité cacao par tasse
-      - empreinte lait de vache * quantité lait par tasse
+      - empreinte lait * quantité lait par tasse
   unité: kgCO2e/tasse
 
 alimentation . boisson . tasse de chocolat chaud . empreinte cacao en poudre:
@@ -107,11 +109,54 @@ alimentation . boisson . tasse de chocolat chaud . quantité cacao par tasse:
   unité: kg/tasse
   note: on fait l'hypothèse qu'une tasse de chocolat chaud contient en moyenne 20 grammes de cacao en poudre.
 
-alimentation . boisson . tasse de chocolat chaud . empreinte lait de vache:
+alimentation . boisson . tasse de chocolat chaud . empreinte lait:
+  formule:
+    variations:
+      - si: type de lait = 'lait de vache'
+        alors: empreinte lait de vache
+      - si: type de lait = 'lait de soja'
+        alors: empreinte lait de soja
+      - si: type de lait = 'lait d'avoine'
+        alors: empreinte lait d'avoine
+  unité: kgCO2e/kg
+
+alimentation . type de lait:
+  applicable si:
+    une de ces conditions:
+      - boisson . chaude . chocolat chaud . nombre > 0
+      - petit déjeuner . type = 'lait céréales'
+  question: Le lait que vous consommez est-il d'origine animale ou végétale ?
+  par défaut: "'lait de vache'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - lait de vache
+        - lait de soja
+        - lait d'avoine
+
+alimentation . type de lait . lait de vache:
+alimentation . type de lait . lait de soja:
+alimentation . type de lait . lait d'avoine:
+
+alimentation . empreinte lait de vache:
   formule: 1.49
   unité: kgCO2e/kg
   références:
     - https://agribalyse.ademe.fr/app/aliments/19042#Lait_demi-%C3%A9cr%C3%A9m%C3%A9,_pasteuris%C3%A9
+
+alimentation . empreinte lait de soja:
+  formule: 0.42
+  unité: kgCO2e/kg
+  références:
+    - https://agribalyse.ademe.fr/app/aliments/18900#Boisson_au_soja,_nature
+
+alimentation . empreinte lait d'avoine:
+  titre: lait d'avoine
+  formule: 0.36
+  unité: kgCO2e/kg
+  références:
+    - https://agribalyse.ademe.fr/app/aliments/18905#Boisson_à_base_d'avoine,_nature
 
 alimentation . boisson . tasse de chocolat chaud . quantité lait par tasse:
   formule: 0.200
@@ -129,9 +174,6 @@ alimentation . boisson . froide:
 alimentation . boisson . eau en bouteille:
   applicable si: affirmatif
   formule: consommation annuelle * empreinte
-
-  références:
-    - http://www.bilans-ges.ademe.fr/
 
 alimentation . boisson . eau en bouteille . consommation annuelle:
   formule: 365 * 1.5
