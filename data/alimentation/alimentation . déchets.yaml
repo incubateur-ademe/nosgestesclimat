@@ -5,8 +5,10 @@ alimentation . déchets:
     les ménages sont des emballages alimentaires)
   formule:
     variations:
-      - si: zéro déchets . niveau d'engagement = 'affirmatif'
-        alors: zéro déchets
+      - si: niveau d'engagement = 'affirmatif'
+        alors: niveau zéro déchets
+      - si: niveau d'engagement = 'en partie'
+        alors: niveau intermédiaire
       - sinon:
           somme:
             - omr
@@ -15,6 +17,61 @@ alimentation . déchets:
             - compostage biodéchets
             - gaspillage alimentaire
             - stop pub
+
+alimentation . déchets . niveau d'engagement:
+  titre: Engagement zéro déchet
+  question: Êtes-vous engagé dans une démarche zéro déchet ?
+  description: |
+    Si vous ne savez pas, répondez non. Si vous pratiquez quelques gestes pour réduire la quantité de déchets, répondez en partie. Répondez oui uniquement
+    si vous êtes réellement engagé dans une démarche zéro déchets et que vous traquez le moindre déchets.
+    Pour en savoir plus, sur les modes de vie zéro déchets, c'est [ici](https://www.zerowastefrance.org/passer-a-laction/adopter-zero-dechet/)
+    Sachez qu'en cas d'engagement "zéro déchet", nous considérons tout de même des émissions de gaz à effet (mais largement réduite) car il est très difficile
+    voire impossible de ne plus générer aucun déchet et il fréquent que certain soit invisible.
+  par défaut: "'pas du tout'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - pas du tout
+        - en partie
+        - affirmatif
+
+alimentation . déchets . niveau d'engagement . pas du tout:
+alimentation . déchets . niveau d'engagement . en partie:
+alimentation . déchets . niveau d'engagement . affirmatif:
+  titre: oui
+
+alimentation . déchets . niveau zéro déchets:
+  formule:
+    somme:
+      - omr . putrescibles + omr . putrescibles . compostés #on met un signe + car la variable putrescibles compostés est négative
+      - omr . papier carton / 4
+      - omr . plastiques / 4
+      - omr . verre / 4
+      - omr . metaux / 4
+      - omr . autre / 4
+      - collecte separee / 4
+      - dechetterie / 4
+  note: |
+    On considère que la part de gens vivant réellement sans générer aucun déchets est peu représentative même au sein du mouvement zéro déchets. Ainsi,
+    on considère qu'un mode de vie zéro déchets correspond au compostage des biodéchets ET à une division par 4 de toutes les autres quantitées de déchets
+    (OMR, CS et déchetterie).
+
+alimentation . déchets . niveau intermédiaire:
+  formule:
+    somme:
+      - omr . putrescibles + omr . putrescibles . compostés #on met un signe + car la variable putrescibles compostés est négative
+      - omr . papier carton / 2
+      - omr . plastiques / 2
+      - omr . verre / 2
+      - omr . metaux / 2
+      - omr . autre / 2
+      - collecte separee / 2
+      - dechetterie / 2
+  note: |
+    On considère que la part de gens vivant réellement sans générer aucun déchets est peu représentative même au sein du mouvement zéro déchets. Ainsi,
+    on considère qu'un mode de vie zéro déchets correspond au compostage des biodéchets ET à une division par 4 de toutes les autres quantitées de déchets
+    (OMR, CS et déchetterie).
 
 #Calcul de l'impact GES du traitement des OMR
 
@@ -1388,44 +1445,6 @@ alimentation . déchets . dechetterie . emcombrants et tout-venant . fin de vie 
     Le FE considéré est : Déchets du bâtiment - Déchets non dangereux en mélange (DIB) - Fin de vie moyenne - Impacts
 
 #Zéro déchets
-alimentation . déchets . zéro déchets . niveau d'engagement:
-  titre: Engagement zéro déchet
-  question: Êtes-vous engagé dans une démarche zéro déchet ?
-  description: |
-    Si vous ne savez pas, répondez non. Si vous pratiquez quelques gestes pour réduire la quantité de déchets, répondez en partie. Répondez oui uniquement
-    si vous êtes réellement engagé dans une démarche zéro déchets et que vous traquez le moindre déchets.
-    Pour en savoir plus, sur les modes de vie zéro déchets, c'est [ici](https://www.zerowastefrance.org/passer-a-laction/adopter-zero-dechet/)
-    Sachez qu'en cas d'engagement "zéro déchet", nous considérons tout de même des émissions de gaz à effet (mais largement réduite) car il est très difficile
-    voire impossible de ne plus générer aucun déchet et il fréquent que certain soit invisible.
-  par défaut: "'pas du tout'"
-  formule:
-    une possibilité:
-      choix obligatoire: oui
-      possibilités:
-        - pas du tout
-        - en partie
-        - affirmatif
-alimentation . déchets . zéro déchets . niveau d'engagement . pas du tout:
-alimentation . déchets . zéro déchets . niveau d'engagement . en partie:
-alimentation . déchets . zéro déchets . niveau d'engagement . affirmatif:
-  titre: oui
-
-alimentation . déchets . zéro déchets:
-  applicable si: niveau d'engagement = 'affirmatif'
-  formule:
-    somme:
-      - omr . putrescibles + omr . putrescibles . compostés #on met un signe + car la variable putrescibles compostés est négative
-      - omr . papier carton / 4
-      - omr . plastiques / 4
-      - omr . verre / 4
-      - omr . metaux / 4
-      - omr . autre / 4
-      - collecte separee / 4
-      - dechetterie / 4
-  note: |
-    On considère que la part de gens vivant réellement sans générer aucun déchets est peu représentative même au sein du mouvement zéro déchets. Ainsi,
-    on considère qu'un mode de vie zéro déchets correspond au compostage des biodéchets ET à une division par 4 de toutes les autres quantitées de déchets
-    (OMR, CS et déchetterie).
 
 #Liste des gestes pour réduire la quantité de déchets
 
