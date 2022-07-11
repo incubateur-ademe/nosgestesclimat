@@ -77,18 +77,29 @@ alimentation . devenir végétarien:
       - alimentation . réduire viande . par deux
       - alimentation . réduire viande . par quatre
       - alimentation . viande faible empreinte
-  formule: par semaine * 52
+  formule: différence par semaine * 52
   icônes: 🥗🧀
   description: |
     Adopter un régime végétarien, donc sans viande ni poisson (mais avec des oeufs, du lait, du fromage, des yaourts).
 
     Moins fort que le régime végétalien, il permet déjà une réduction très importante de l'empreinte sur le climat.
   effort: conséquent
-alimentation . devenir végétarien . par semaine:
-  titre: Différence par semaine
-  formule: plats - une semaine végétarien
 
-alimentation . une semaine végétarien:
+alimentation . devenir végétarien . différence par semaine:
+  titre: Différence par semaine
+  formule:
+    somme:
+      - différence par semaine repas
+      - différence par semaine petits déjeuners
+
+alimentation . devenir végétarien . différence par semaine repas:
+  formule: plats - une semaine plats végétarien
+
+alimentation . devenir végétarien . différence par semaine petits déjeuners:
+  applicable si: alimentation . petit déjeuner . type = 'britannique'
+  formule: alimentation . petit déjeuner . par semaine - une semaine petit déjeuner végétalien
+
+alimentation . une semaine plats végétarien:
   formule: 14 * plats . végétarien . empreinte
 
 alimentation . devenir végétalien:
@@ -103,16 +114,46 @@ alimentation . devenir végétalien:
       - alimentation . réduire viande . par quatre
       - alimentation . viande faible empreinte
       - alimentation . devenir végétarien
-  formule: par semaine * 52
+  formule: différence par semaine * 52
   icônes: 🥗🌾
   description: Adopter un régime végétalien, donc sans produits animaux.
 
-alimentation . devenir végétalien . par semaine:
+alimentation . devenir végétalien . différence par semaine:
   titre: Différence par semaine
-  formule: plats - une semaine végétalien
+  formule:
+    somme:
+      - différence par semaine repas
+      - différence par semaine petits déjeuners
+      - différence par semaine chocolat chaud
 
-alimentation . une semaine végétalien:
+alimentation . devenir végétalien . différence par semaine repas:
+  formule: plats - une semaine plats végétalien
+
+alimentation . devenir végétalien . différence par semaine petits déjeuners:
+  applicable si:
+    une de ces conditions:
+      - alimentation . petit déjeuner . type = 'britannique'
+      - toutes ces conditions:
+          - alimentation . petit déjeuner . type = 'lait céréales'
+          - alimentation . type de lait = 'lait de vache'
+  formule: alimentation . petit déjeuner . par semaine - une semaine petit déjeuner végétalien
+
+alimentation . devenir végétalien . différence par semaine chocolat chaud:
+  applicable si:
+    toutes ces conditions:
+      - alimentation . type de lait = 'lait de vache'
+      - alimentation . boisson . chaude . chocolat chaud . nombre > 0
+  formule: alimentation . petit déjeuner . par semaine - une semaine petit déjeuner végétalien
+
+alimentation . une semaine plats végétalien:
   formule: 14 * plats . végétalien . empreinte
+
+alimentation . une semaine petit déjeuner végétalien:
+  formule:
+    recalcul:
+      règle: petit déjeuner . par semaine
+      avec:
+        alimentation . petit déjeuner . type: "'végétalien'"
 
 alimentation . viande faible empreinte:
   applicable si: plats . viande 2 . nombre > 0
