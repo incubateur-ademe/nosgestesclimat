@@ -6,7 +6,7 @@ Apport quotidien vital à notre survie, la façon dont nous consommons l’eau j
 
 ![Infographie : l'impact d'une bouteille d'eau en plaqtique est 450 fois supérieur à celui de l'eau du robinet](https://ecolab-data.netlify.app/images/Chiffres-cles_eau.png)
 
-## Impact GES de l’action
+## Impact GES moyen de l’action
 
 Je bois l’eau du robinet plutôt que de l’eau en bouteille : **- 215 kg CO2eq/an**
 
