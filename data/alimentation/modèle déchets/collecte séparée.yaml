@@ -10,28 +10,31 @@ alimentation . déchets . collecte separee:
       - collecte separee . verre
       - collecte separee . metaux
       - collecte separee . autre
+  note: |
+    Les quantités de déchets sont issues du tableau 3 page 16 de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html).
+
+    La répartition des types de traitement pour chaque catégorie (en poucentage) issue d'un calcul basé sur les chiffres de 
+    [Déchets, chiffres clés - ADEME - L'essentiel 2021](https://librairie.ademe.fr/cadic/6912/dechets-chiffres-cles-lessentiel-2021-011723.pdf) 
+    et [La collecte des déchets par le service public en France – Résultats et zooms thématiques 2019 - ADEME 2021](https://librairie.ademe.fr/dechets-economie-circulaire/4804-la-collecte-des-dechets-par-le-service-public-en-france.html#/44-type_de_produit-format_electronique)
 
 alimentation . déchets . collecte separee . part DAE:
   formule: 15%
   note: |
     Dans la collecte des déchets des ménages il y a toujours une part de déchets issus des DAE (Déchets des Activités Economiques)
-    p13 de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html)
+    Voir page 13 de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html).
+
+    On estimera donc la quantité réelle de déchets à l'échelle de l'invidu après déduction de la part des DAE (Déchets des Activités Economiques) contenue
+    dans les collectes.
 
 #Déchets . putrescibles_____________________________________________________________________________________________
 
 alimentation . déchets . collecte separee . putrescibles . quantité:
   formule: 0.8
   unité: kg
-  note: |
-    Issue de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html)
-    Tableau 14 page 36
 
 alimentation . déchets . collecte separee . putrescibles . quantité réelle:
   formule: quantité * (1 - collecte separee . part DAE)
   unité: kg
-  note: |
-    on estime la quantité réelle de déchets putrescibles à l'échelle de l'invidu en fonction de la part des DAE (Déchets des Activités Economiques) contenu
-    dans les collectes
 
 alimentation . déchets . collecte separee . putrescibles:
   formule:
@@ -46,9 +49,6 @@ alimentation . déchets . collecte separee . putrescibles . compost:
 
 alimentation . déchets . collecte separee . putrescibles . compost . pourcentage:
   formule: 50%
-  note: |
-    On considère 50 % de compost pour les déchets putrescibles
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
 
 alimentation . déchets . collecte separee . putrescibles . compost . impact:
   formule: 0.140
@@ -63,9 +63,6 @@ alimentation . déchets . collecte separee . putrescibles . méthanisation:
 
 alimentation . déchets . collecte separee . putrescibles . méthanisation . pourcentage:
   formule: 50%
-  note: |
-    On considère 50 % de méthanisation pour les déchets putrescibles
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
 
 alimentation . déchets . collecte separee . putrescibles . méthanisation . impact:
   formule: 0.173
@@ -78,22 +75,16 @@ alimentation . déchets . collecte separee . putrescibles . méthanisation . imp
 alimentation . déchets . collecte separee . papier carton . quantité:
   formule: 22.9 + 12.6
   unité: kg
-  note: |
-    Issue de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html)
-    Tableau 14 page 36
 
 alimentation . déchets . collecte separee . papier carton . quantité réelle:
   formule: quantité * (1 - collecte separee . part DAE)
   unité: kg
-  note: |
-    on estime la quantité réelle de déchets de type papier carton à l'échelle de l'invidu en fonction de la part des DAE (Déchets des Activités Economiques) contenu
-    dans les collectes
 
 alimentation . déchets . collecte separee . papier carton:
   formule:
     somme:
       - recyclage
-      - valo orga
+      - stockage
       - incinération
 
 #_ papier carton . recyclage _____________________________
@@ -102,10 +93,7 @@ alimentation . déchets . collecte separee . papier carton . recyclage:
   unité: kgCO2e
 
 alimentation . déchets . collecte separee . papier carton . recyclage . pourcentage:
-  formule: 83%
-  note: |
-    On considère 83 % de recyclagepour les déchets papier carton
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+  formule: 82%
 
 alimentation . déchets . collecte separee . papier carton . recyclage . impact:
   formule: 0.992
@@ -113,22 +101,19 @@ alimentation . déchets . collecte separee . papier carton . recyclage . impact:
   note: |
     Le FE considéré est : Emballages - Carton - Recyclage - Impacts
 
-#_ papier carton . valo orga _____________________________
-alimentation . déchets . collecte separee . papier carton . valo orga:
-  formule: quantité réelle * valo orga . pourcentage * valo orga . impact
+#_ papier carton . stockage _____________________________
+alimentation . déchets . collecte separee . papier carton . stockage:
+  formule: quantité réelle * stockage . pourcentage * stockage . impact
   unité: kgCO2e
 
-alimentation . déchets . collecte separee . papier carton . valo orga . pourcentage:
-  formule: 14%
-  note: |
-    On considère 14 % de valo orga pour les déchets papier carton
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+alimentation . déchets . collecte separee . papier carton . stockage . pourcentage:
+  formule: 4.5%
 
-alimentation . déchets . collecte separee . papier carton . valo orga . impact:
-  formule: 0.140
+alimentation . déchets . collecte separee . papier carton . stockage . impact:
+  formule: 0.950
   unité: kgCO2e/kg
   note: |
-    Le FE considéré est : Déchets de cuisine et déchets verts - Compostage industriel - Impacts
+    Le FE considéré est : Emballages - Carton - Stockage - Impacts
 
 #_ papier carton . incinération _____________________________
 alimentation . déchets . collecte separee . papier carton . incinération:
@@ -136,7 +121,7 @@ alimentation . déchets . collecte separee . papier carton . incinération:
   unité: kgCO2e
 
 alimentation . déchets . collecte separee . papier carton . incinération . pourcentage:
-  formule: 3%
+  formule: 13.5%
   note: |
     On considère 3 % d'incinération pour les déchets papier carton
     SAdapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
@@ -152,21 +137,16 @@ alimentation . déchets . collecte separee . papier carton . incinération . imp
 alimentation . déchets . collecte separee . plastiques . quantité:
   formule: 7.6
   unité: kg
-  note: |
-    Issue de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html)
-    Tableau 14 page 36
 
 alimentation . déchets . collecte separee . plastiques . quantité réelle:
   formule: quantité * (1 - collecte separee . part DAE)
   unité: kg
-  note: |
-    on estime la quantité réelle de déchets plastiques à l'échelle de l'invidu en fonction de la part des DAE (Déchets des Activités Economiques) contenu
-    dans les collectes
 
 alimentation . déchets . collecte separee . plastiques:
   formule:
     somme:
       - recyclage
+      - stockage
       - incinération
 
 #_ plastiques . recyclage _____________________________
@@ -175,10 +155,7 @@ alimentation . déchets . collecte separee . plastiques . recyclage:
   unité: kgCO2e
 
 alimentation . déchets . collecte separee . plastiques . recyclage . pourcentage:
-  formule: 83%
-  note: |
-    On considère 83 % de recyclagepour les déchets plastiques
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+  formule: 82%
 
 alimentation . déchets . collecte separee . plastiques . recyclage . impact:
   formule: 0.662
@@ -186,16 +163,27 @@ alimentation . déchets . collecte separee . plastiques . recyclage . impact:
   note: |
     Le FE considéré est : Emballages - Plastique rigide PET bouteilles - Recyclage - Impacts
 
+#_ plastiques . stockage _____________________________
+alimentation . déchets . collecte separee . plastiques . stockage:
+  formule: quantité réelle * stockage . pourcentage * stockage . impact
+  unité: kgCO2e
+
+alimentation . déchets . collecte separee . plastiques . stockage . pourcentage:
+  formule: 4.5%
+
+alimentation . déchets . collecte separee . plastiques . stockage . impact:
+  formule: 0.041
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Plastique pétrosourcé PET - Stockage - Impacts
+
 #_ plastiques . incinération _____________________________
 alimentation . déchets . collecte separee . plastiques . incinération:
   formule: quantité réelle * incinération . pourcentage * incinération . impact
   unité: kgCO2e
 
 alimentation . déchets . collecte separee . plastiques . incinération . pourcentage:
-  formule: 17%
-  note: |
-    On considère 17 % d'incinération pour les déchets plastiques
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+  formule: 13.5%
 
 alimentation . déchets . collecte separee . plastiques . incinération . impact:
   formule: 2.139
@@ -208,21 +196,16 @@ alimentation . déchets . collecte separee . plastiques . incinération . impact
 alimentation . déchets . collecte separee . verre . quantité:
   formule: 30.1
   unité: kg
-  note: |
-    Issue de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html)
-    Tableau 14 page 36
 
 alimentation . déchets . collecte separee . verre . quantité réelle:
   formule: quantité * (1 - collecte separee . part DAE)
   unité: kg
-  note: |
-    on estime la quantité réelle de déchets en verre à l'échelle de l'invidu en fonction de la part des DAE (Déchets des Activités Economiques) contenu
-    dans les collectes
 
 alimentation . déchets . collecte separee . verre:
   formule:
     somme:
       - recyclage
+      - stockage
       - incinération
 
 #_ verre . recyclage _____________________________
@@ -231,10 +214,7 @@ alimentation . déchets . collecte separee . verre . recyclage:
   unité: kgCO2e
 
 alimentation . déchets . collecte separee . verre . recyclage . pourcentage:
-  formule: 97%
-  note: |
-    On considère 97 % de recyclagepour les déchets verre
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+  formule: 82%
 
 alimentation . déchets . collecte separee . verre . recyclage . impact:
   formule: 0.639
@@ -242,16 +222,27 @@ alimentation . déchets . collecte separee . verre . recyclage . impact:
   note: |
     Le FE considéré est : Emballages - Verre - Recyclage - Impacts
 
+#_ verre . stockage _____________________________
+alimentation . déchets . collecte separee . verre . stockage:
+  formule: quantité réelle * stockage . pourcentage * stockage . impact
+  unité: kgCO2e
+
+alimentation . déchets . collecte separee . verre . stockage . pourcentage:
+  formule: 4.5%
+
+alimentation . déchets . collecte separee . verre . stockage . impact:
+  formule: 0.041
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Verre - Stockage - Impacts
+
 #_ verre . incinération _____________________________
 alimentation . déchets . collecte separee . verre . incinération:
   formule: quantité réelle * incinération . pourcentage * incinération . impact
   unité: kgCO2e
 
 alimentation . déchets . collecte separee . verre . incinération . pourcentage:
-  formule: 3%
-  note: |
-    On considère 3 % d'incinération pour les déchets verre
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+  formule: 13.5%
 
 alimentation . déchets . collecte separee . verre . incinération . impact:
   formule: 0.130
@@ -264,21 +255,16 @@ alimentation . déchets . collecte separee . verre . incinération . impact:
 alimentation . déchets . collecte separee . metaux . quantité:
   formule: 2.5
   unité: kg
-  note: |
-    Issue de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html)
-    Tableau 14 page 36
 
 alimentation . déchets . collecte separee . metaux . quantité réelle:
   formule: quantité * (1 - collecte separee . part DAE)
   unité: kg
-  note: |
-    on estime la quantité réelle de déchets métalliques à l'échelle de l'invidu en fonction de la part des DAE (Déchets des Activités Economiques) contenu
-    dans les collectes
 
 alimentation . déchets . collecte separee . metaux:
   formule:
     somme:
       - recyclage
+      - stockage
       - incinération
 
 #_ metaux . recyclage _____________________________
@@ -287,10 +273,7 @@ alimentation . déchets . collecte separee . metaux . recyclage:
   unité: kgCO2e
 
 alimentation . déchets . collecte separee . metaux . recyclage . pourcentage:
-  formule: 97%
-  note: |
-    On considère 97 % de recyclagepour les déchets metaux
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+  formule: 82%
 
 alimentation . déchets . collecte separee . metaux . recyclage . impact:
   formule: 0.873
@@ -298,16 +281,27 @@ alimentation . déchets . collecte separee . metaux . recyclage . impact:
   note: |
     Le FE considéré est : Emballages - Aluminium - Recyclage - Impacts
 
+#_ metaux . stockage _____________________________
+alimentation . déchets . collecte separee . metaux . stockage:
+  formule: quantité réelle * stockage . pourcentage * stockage . impact
+  unité: kgCO2e
+
+alimentation . déchets . collecte separee . metaux . stockage . pourcentage:
+  formule: 4.5%
+
+alimentation . déchets . collecte separee . metaux . stockage . impact:
+  formule: 0.041
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Acier - Stockage - Impacts
+
 #_ metaux . incinération _____________________________
 alimentation . déchets . collecte separee . metaux . incinération:
   formule: quantité réelle * incinération . pourcentage * incinération . impact
   unité: kgCO2e
 
 alimentation . déchets . collecte separee . metaux . incinération . pourcentage:
-  formule: 3%
-  note: |
-    On considère 3 % d'incinération pour les déchets metaux
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+  formule: 13.5%
 
 alimentation . déchets . collecte separee . metaux . incinération . impact:
   formule: 0.110
@@ -320,21 +314,30 @@ alimentation . déchets . collecte separee . metaux . incinération . impact:
 alimentation . déchets . collecte separee . autre . quantité:
   formule: 1.1 + 0.2 + 0.4 + 0.6 + 0.3 + 0.3 + 0.9
   unité: kg
-  note: |
-    Issue de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html)
-    Tableau 14 page 36
 
 alimentation . déchets . collecte separee . autre . quantité réelle:
   formule: quantité * (1 - collecte separee . part DAE)
   unité: kg
-  note: |
-    On estime la quantité réelle de déchets "autres" à l'échelle de l'invidu en fonction de la part des DAE (Déchets des Activités Economiques) contenu
-    dans les collectes
 
 alimentation . déchets . collecte separee . autre:
   formule:
     somme:
+      - stockage
       - incinération
+
+#_ autre . stockage _____________________________
+alimentation . déchets . collecte separee . autre . stockage:
+  formule: quantité réelle * stockage . pourcentage * stockage . impact
+  unité: kgCO2e
+
+alimentation . déchets . collecte separee . autre . stockage . pourcentage:
+  formule: 25%
+
+alimentation . déchets . collecte separee . autre . stockage . impact:
+  formule: 0.412
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Ordures ménagères résiduelles - Stockage - Impacts
 
 #_ autre . incinération _____________________________
 alimentation . déchets . collecte separee . autre . incinération:
@@ -342,10 +345,7 @@ alimentation . déchets . collecte separee . autre . incinération:
   unité: kgCO2e
 
 alimentation . déchets . collecte separee . autre . incinération . pourcentage:
-  formule: 100%
-  note: |
-    On considère 100 % d'incinération pour les déchets autre
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+  formule: 75%
 
 alimentation . déchets . collecte separee . autre . incinération . impact:
   formule: 0.374

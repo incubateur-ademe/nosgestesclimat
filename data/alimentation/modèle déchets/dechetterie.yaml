@@ -15,15 +15,23 @@ alimentation . déchets . dechetterie:
       - dechetterie . dechets dangereux
       - dechetterie . emcombrants et tout-venant
       - dechetterie . autre
+  note: |
+    Les quantités de déchets sont issues du tableau 3 page 16 de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html).
+
+    La répartition des types de traitement pour chaque catégorie (en poucentage) issue d'un calcul basé sur les chiffres de 
+    [Déchets, chiffres clés - ADEME - L'essentiel 2021](https://librairie.ademe.fr/cadic/6912/dechets-chiffres-cles-lessentiel-2021-011723.pdf) 
+    et [La collecte des déchets par le service public en France – Résultats et zooms thématiques 2019 - ADEME 2021](https://librairie.ademe.fr/dechets-economie-circulaire/4804-la-collecte-des-dechets-par-le-service-public-en-france.html#/44-type_de_produit-format_electronique)
 
 alimentation . déchets . dechetterie . part DAE:
   formule: 17%
   note: |
     Dans la collecte des déchets des ménages il y a toujours une part de déchets issus des DAE (Déchets des Activités Economiques)
-    p13 de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html)
+    Voir page 13 de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html).
+
+    On estimera donc la quantité réelle de déchets à l'échelle de l'invidu après déduction de la part des DAE (Déchets des Activités Economiques) contenue
+    dans les collectes.
 
 #Déchets verts_____________________________________________________________________________________________
-
 alimentation . déchets . dechetterie . dechets verts . quantité:
   formule: 67
   unité: kg
@@ -42,6 +50,7 @@ alimentation . déchets . dechetterie . dechets verts:
   formule:
     somme:
       - compost
+      - méthanisation
 
 #_ dechets verts . compost _____________________________
 alimentation . déchets . dechetterie . dechets verts . compost:
@@ -49,10 +58,7 @@ alimentation . déchets . dechetterie . dechets verts . compost:
   unité: kgCO2e
 
 alimentation . déchets . dechetterie . dechets verts . compost . pourcentage:
-  formule: 100%
-  note: |
-    On considère 100 % de compost pour les déchets dechets verts
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+  formule: 50%
 
 alimentation . déchets . dechetterie . dechets verts . compost . impact:
   formule: 0.140
@@ -60,27 +66,35 @@ alimentation . déchets . dechetterie . dechets verts . compost . impact:
   note: |
     Le FE considéré est : Déchets de cuisine et déchets verts - Compostage industriel - Impacts
 
+#_ dechets vert . méthanisation _____________________________
+alimentation . déchets . dechetterie . dechets verts . méthanisation:
+  formule: quantité réelle * méthanisation . pourcentage * méthanisation . impact
+  unité: kgCO2e
+
+alimentation . déchets . dechetterie . dechets verts . méthanisation . pourcentage:
+  formule: 50%
+
+alimentation . déchets . dechetterie . dechets verts . méthanisation . impact:
+  formule: 0.173
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Déchets de cuisine - Méthanisation - Impacts
+
 #Déchets papier carton _____________________________________________________________________________________________
 
 alimentation . déchets . dechetterie . papier carton . quantité:
   formule: 6
   unité: kg
-  note: |
-    Issue de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html)
-    Tableau 20 page 48
 
 alimentation . déchets . dechetterie . papier carton . quantité réelle:
   formule: quantité * (1 - dechetterie . part DAE)
   unité: kg
-  note: |
-    On estime la quantité réelle de déchets de type papier carton à l'échelle de l'invidu en fonction de la part des DAE (Déchets des Activités Economiques) amenés
-    en déchetterie
 
 alimentation . déchets . dechetterie . papier carton:
   formule:
     somme:
       - incinération
-      - compost
+      - stockage
       - recyclage
 
 #_ papier carton . incinération _____________________________
@@ -89,10 +103,7 @@ alimentation . déchets . dechetterie . papier carton . incinération:
   unité: kgCO2e
 
 alimentation . déchets . dechetterie . papier carton . incinération . pourcentage:
-  formule: 20.5%
-  note: |
-    On considère 20.5 % d'incinération pour les déchets papier carton
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+  formule: 10%
 
 alimentation . déchets . dechetterie . papier carton . incinération . impact:
   formule: 0.120
@@ -101,21 +112,18 @@ alimentation . déchets . dechetterie . papier carton . incinération . impact:
     Le FE considéré est : Emballages - Carton - Incinération - Impacts
 
 #_ papier carton . compost _____________________________
-alimentation . déchets . dechetterie . papier carton . compost:
-  formule: quantité réelle * compost . pourcentage * compost . impact
+alimentation . déchets . dechetterie . papier carton . stockage:
+  formule: quantité réelle * stockage . pourcentage * stockage . impact
   unité: kgCO2e
 
-alimentation . déchets . dechetterie . papier carton . compost . pourcentage:
-  formule: 41.5%
-  note: |
-    On considère 41.5 % de compost pour les déchets papier carton
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+alimentation . déchets . dechetterie . papier carton . stockage . pourcentage:
+  formule: 35%
 
-alimentation . déchets . dechetterie . papier carton . compost . impact:
-  formule: 0.140
+alimentation . déchets . dechetterie . papier carton . stockage . impact:
+  formule: 0.950
   unité: kgCO2e/kg
   note: |
-    Le FE considéré est : Déchets de cuisine et déchets verts - Compostage industriel - Impacts
+    Le FE considéré est : Emballages - Carton - Stockage - Impacts
 
 #_ papier carton . recyclage _____________________________
 alimentation . déchets . dechetterie . papier carton . recyclage:
@@ -123,10 +131,7 @@ alimentation . déchets . dechetterie . papier carton . recyclage:
   unité: kgCO2e
 
 alimentation . déchets . dechetterie . papier carton . recyclage . pourcentage:
-  formule: 37%
-  note: |
-    On considère 37 % de recyclage pour les déchets papier carton
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+  formule: 55%
 
 alimentation . déchets . dechetterie . papier carton . recyclage . impact:
   formule: 0.992
@@ -153,26 +158,9 @@ alimentation . déchets . dechetterie . plastiques . quantité réelle:
 alimentation . déchets . dechetterie . plastiques:
   formule:
     somme:
-      - stockage
       - incinération
+      - stockage
       - recyclage
-
-#_ plastiques . stockage _____________________________
-alimentation . déchets . dechetterie . plastiques . stockage:
-  formule: quantité réelle * stockage . pourcentage * stockage . impact
-  unité: kgCO2e
-
-alimentation . déchets . dechetterie . plastiques . stockage . pourcentage:
-  formule: 27%
-  note: |
-    On considère 27 % de stockage pour les déchets plastiques
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
-
-alimentation . déchets . dechetterie . plastiques . stockage . impact:
-  formule: 0.041
-  unité: kgCO2e/kg
-  note: |
-    Le FE considéré est : Emballages - Plastique pétrosourcé PET - Stockage - Impacts
 
 #_ plastiques . incinération _____________________________
 alimentation . déchets . dechetterie . plastiques . incinération:
@@ -180,10 +168,7 @@ alimentation . déchets . dechetterie . plastiques . incinération:
   unité: kgCO2e
 
 alimentation . déchets . dechetterie . plastiques . incinération . pourcentage:
-  formule: 7%
-  note: |
-    On considère 7 % d'incinération pour les déchets plastiques
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+  formule: 10%
 
 alimentation . déchets . dechetterie . plastiques . incinération . impact:
   formule: 2.139
@@ -191,16 +176,27 @@ alimentation . déchets . dechetterie . plastiques . incinération . impact:
   note: |
     Le FE considéré est : Emballages - Plastique pétrosourcé PET - Incinération - Impacts
 
+#_ plastiques . stockage _____________________________
+alimentation . déchets . dechetterie . plastiques . stockage:
+  formule: quantité réelle * stockage . pourcentage * stockage . impact
+  unité: kgCO2e
+
+alimentation . déchets . dechetterie . plastiques . stockage . pourcentage:
+  formule: 35%
+
+alimentation . déchets . dechetterie . plastiques . stockage . impact:
+  formule: 0.041
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Plastique pétrosourcé PET - Stockage - Impacts
+
 #_ plastiques . recyclage _____________________________
 alimentation . déchets . dechetterie . plastiques . recyclage:
   formule: quantité réelle * recyclage . pourcentage * recyclage . impact
   unité: kgCO2e
 
 alimentation . déchets . dechetterie . plastiques . recyclage . pourcentage:
-  formule: 65%
-  note: |
-    On considère 65 % de recyclagepour les déchets plastiques
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+  formule: 55%
 
 alimentation . déchets . dechetterie . plastiques . recyclage . impact:
   formule: 0.662
@@ -213,41 +209,17 @@ alimentation . déchets . dechetterie . plastiques . recyclage . impact:
 alimentation . déchets . dechetterie . dechets bois . quantité:
   formule: 21
   unité: kg
-  note: |
-    Issue de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html)
-    Tableau 20 page 48
 
 alimentation . déchets . dechetterie . dechets bois . quantité réelle:
   formule: quantité * (1 - dechetterie . part DAE)
   unité: kg
-  note: |
-    on estime la quantité réelle de déchets bois à l'échelle de l'invidu en fonction de la part des DAE (Déchets des Activités Economiques) amenés
-    en déchetterie
 
 alimentation . déchets . dechetterie . dechets bois:
   formule:
     somme:
-      - compostage
       - recyclage
       - stockage
       - incinération
-
-#_ dechets bois . compostage _____________________________
-alimentation . déchets . dechetterie . dechets bois . compostage:
-  formule: quantité réelle * compostage . pourcentage * compostage . impact
-  unité: kgCO2e
-
-alimentation . déchets . dechetterie . dechets bois . compostage . pourcentage:
-  formule: 28%
-  note: |
-    On considère 28 % de compostage pour les déchets dechets bois
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
-
-alimentation . déchets . dechetterie . dechets bois . compostage . impact:
-  formule: 0.140
-  unité: kgCO2e/kg
-  note: |
-    Le FE considéré est : Déchets de cuisine et déchets verts - Compostage industriel - Impacts
 
 #_ dechets bois . recyclage _____________________________
 alimentation . déchets . dechetterie . dechets bois . recyclage:
@@ -255,10 +227,7 @@ alimentation . déchets . dechetterie . dechets bois . recyclage:
   unité: kgCO2e
 
 alimentation . déchets . dechetterie . dechets bois . recyclage . pourcentage:
-  formule: 37%
-  note: |
-    On considère 37 % de recyclagepour les déchets dechets bois
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+  formule: 55%
 
 alimentation . déchets . dechetterie . dechets bois . recyclage . impact:
   formule: 0.992
@@ -272,10 +241,7 @@ alimentation . déchets . dechetterie . dechets bois . stockage:
   unité: kgCO2e
 
 alimentation . déchets . dechetterie . dechets bois . stockage . pourcentage:
-  formule: 27%
-  note: |
-    On considère 27 % de stockage pour les déchets dechets bois
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+  formule: 35%
 
 alimentation . déchets . dechetterie . dechets bois . stockage . impact:
   formule: 0.714
@@ -289,10 +255,7 @@ alimentation . déchets . dechetterie . dechets bois . incinération:
   unité: kgCO2e
 
 alimentation . déchets . dechetterie . dechets bois . incinération . pourcentage:
-  formule: 7%
-  note: |
-    On considère 7 % d'incinération pour les déchets dechets bois
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+  formule: 10%
 
 alimentation . déchets . dechetterie . dechets bois . incinération . impact:
   formule: 0.069
@@ -305,16 +268,11 @@ alimentation . déchets . dechetterie . dechets bois . incinération . impact:
 alimentation . déchets . dechetterie . dechets metalliques . quantité:
   formule: 8
   unité: kg
-  note: |
-    Issue de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html)
-    Tableau 20 page 48
 
 alimentation . déchets . dechetterie . dechets metalliques . quantité réelle:
   formule: quantité * (1 - dechetterie . part DAE)
   unité: kg
-  note: |
-    on estime la quantité réelle de déchets métalliques à l'échelle de l'invidu en fonction de la part des DAE (Déchets des Activités Economiques) amenés
-    en déchetterie
+
 alimentation . déchets . dechetterie . dechets metalliques:
   formule:
     somme:
@@ -328,10 +286,7 @@ alimentation . déchets . dechetterie . dechets metalliques . stockage:
   unité: kgCO2e
 
 alimentation . déchets . dechetterie . dechets metalliques . stockage . pourcentage:
-  formule: 27%
-  note: |
-    On considère 27 % de stockage pour les déchets dechets metalliques
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+  formule: 35%
 
 alimentation . déchets . dechetterie . dechets metalliques . stockage . impact:
   formule: 0.041
@@ -345,10 +300,7 @@ alimentation . déchets . dechetterie . dechets metalliques . incinération:
   unité: kgCO2e
 
 alimentation . déchets . dechetterie . dechets metalliques . incinération . pourcentage:
-  formule: 7%
-  note: |
-    On considère 7 % d'incinération pour les déchets dechets metalliques
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+  formule: 10%
 
 alimentation . déchets . dechetterie . dechets metalliques . incinération . impact:
   formule: 0.135
@@ -362,10 +314,7 @@ alimentation . déchets . dechetterie . dechets metalliques . recyclage:
   unité: kgCO2e
 
 alimentation . déchets . dechetterie . dechets metalliques . recyclage . pourcentage:
-  formule: 65%
-  note: |
-    On considère 65 % de recyclagepour les déchets dechets metalliques
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+  formule: 55%
 
 alimentation . déchets . dechetterie . dechets metalliques . recyclage . impact:
   formule: 0.873
@@ -378,21 +327,13 @@ alimentation . déchets . dechetterie . dechets metalliques . recyclage . impact
 alimentation . déchets . dechetterie . deee . quantité:
   formule: 6
   unité: kg
-  note: |
-    Issue de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html)
-    Tableau 20 page 48
 
 alimentation . déchets . dechetterie . deee . quantité réelle:
   formule: quantité * (1 - dechetterie . part DAE)
   unité: kg
-  note: |
-    on estime la quantité réelle de DEEE (déchets d'équipemments électriques et élecroniques) à l'échelle de l'invidu en fonction de la part des DAE
-    (Déchets des Activités Economiques) amenés en déchetterie
 
 alimentation . déchets . dechetterie . deee:
-  formule:
-    somme:
-      - fin de vie moyenne DEE
+  formule: fin de vie moyenne DEE
 
 #_ deee . fin de vie moyenne DEE _____________________________
 alimentation . déchets . dechetterie . deee . fin de vie moyenne DEE:
@@ -402,7 +343,7 @@ alimentation . déchets . dechetterie . deee . fin de vie moyenne DEE:
 alimentation . déchets . dechetterie . deee . fin de vie moyenne DEE . pourcentage:
   formule: 100%
   note: |
-    On considère 100 % de fin de vie moyenne DEE pour les déchets deee
+    On considère 100 % de fin de vie moyenne DEE pour les déchets DEEE.
 
 alimentation . déchets . dechetterie . deee . fin de vie moyenne DEE . impact:
   formule: 1.995
@@ -415,21 +356,15 @@ alimentation . déchets . dechetterie . deee . fin de vie moyenne DEE . impact:
 alimentation . déchets . dechetterie . mobilier . quantité:
   formule: 8
   unité: kg
-  note: |
-    Issue de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html)
-    Tableau 20 page 48
 
 alimentation . déchets . dechetterie . mobilier . quantité réelle:
   formule: quantité * (1 - dechetterie . part DAE)
   unité: kg
-  note: |
-    on estime la quantité réelle de DEA (déchets d'équipemments d'amueublement) à l'échelle de l'invidu en fonction de la part des DAE
-    (Déchets des Activités Economiques) amenés en déchetterie
 
 alimentation . déchets . dechetterie . mobilier:
   formule: fin de vie moyenne DEA
 
-#_ mobilier . fin de vie moyenne DEA _____________________________
+#_ mobilier . fin de vie moyenne DEA (Déchets d'élements d'ameublement)_____________________________
 alimentation . déchets . dechetterie . mobilier . fin de vie moyenne DEA:
   formule: quantité réelle * fin de vie moyenne DEA . pourcentage * fin de vie moyenne DEA . impact
   unité: kgCO2e
@@ -450,16 +385,10 @@ alimentation . déchets . dechetterie . mobilier . fin de vie moyenne DEA . impa
 alimentation . déchets . dechetterie . deblais et gravats . quantité:
   formule: 57
   unité: kg
-  note: |
-    Issue de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html)
-    Tableau 20 page 48
 
 alimentation . déchets . dechetterie . deblais et gravats . quantité réelle:
   formule: quantité * (1 - dechetterie . part DAE)
   unité: kg
-  note: |
-    on estime la quantité réelle de déblais et gravats à l'échelle de l'invidu en fonction de la part des DAE (Déchets des Activités Economiques) amenés
-    en déchetterie
 
 alimentation . déchets . dechetterie . deblais et gravats:
   formule: fin de vie moyenne gravats
@@ -485,35 +414,26 @@ alimentation . déchets . dechetterie . deblais et gravats . fin de vie moyenne 
 alimentation . déchets . dechetterie . dechets dangereux . quantité:
   formule: 2
   unité: kg
-  note: |
-    Issue de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html)
-    Tableau 20 page 48
 
 alimentation . déchets . dechetterie . dechets dangereux . quantité réelle:
   formule: quantité * (1 - dechetterie . part DAE)
   unité: kg
-  note: |
-    on estime la quantité réelle de déchets dangereux à l'échelle de l'invidu en fonction de la part des DAE (Déchets des Activités Economiques) amenés
-    en déchetterie
 
 alimentation . déchets . dechetterie . dechets dangereux:
   formule:
     somme:
-      - Sockage
+      - stockage
       - incinération
 
-#_ dechets dangereux . Sockage _____________________________
-alimentation . déchets . dechetterie . dechets dangereux . Sockage:
-  formule: quantité réelle * Sockage . pourcentage * Sockage . impact
+#_ dechets dangereux . stockage _____________________________
+alimentation . déchets . dechetterie . dechets dangereux . stockage:
+  formule: quantité réelle * stockage . pourcentage * stockage . impact
   unité: kgCO2e
 
-alimentation . déchets . dechetterie . dechets dangereux . Sockage . pourcentage:
-  formule: 27%
-  note: |
-    On considère 27 % de Sockage pour les déchets dechets dangereux
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+alimentation . déchets . dechetterie . dechets dangereux . stockage . pourcentage:
+  formule: 78%
 
-alimentation . déchets . dechetterie . dechets dangereux . Sockage . impact:
+alimentation . déchets . dechetterie . dechets dangereux . stockage . impact:
   formule: 0.128
   unité: kgCO2e/kg
   note: |
@@ -525,10 +445,7 @@ alimentation . déchets . dechetterie . dechets dangereux . incinération:
   unité: kgCO2e
 
 alimentation . déchets . dechetterie . dechets dangereux . incinération . pourcentage:
-  formule: 73%
-  note: |
-    On considère 73 % d'incinération pour les déchets dechets dangereux
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+  formule: 22%
 
 alimentation . déchets . dechetterie . dechets dangereux . incinération . impact:
   formule: 0.844
@@ -541,16 +458,10 @@ alimentation . déchets . dechetterie . dechets dangereux . incinération . impa
 alimentation . déchets . dechetterie . emcombrants et tout-venant . quantité:
   formule: 52
   unité: kg
-  note: |
-    Issue de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html)
-    Tableau 20 page 48
 
 alimentation . déchets . dechetterie . emcombrants et tout-venant . quantité réelle:
   formule: quantité * (1 - dechetterie . part DAE)
   unité: kg
-  note: |
-    on estime la quantité réelle de déchets encombrants et tout venant à l'échelle de l'invidu en fonction de la part des DAE (Déchets des Activités
-    Economiques) amenés en déchetterie
 
 alimentation . déchets . dechetterie . emcombrants et tout-venant:
   formule: fin de vie moyenne DIB
@@ -576,16 +487,10 @@ alimentation . déchets . dechetterie . emcombrants et tout-venant . fin de vie 
 alimentation . déchets . dechetterie . autre . quantité:
   formule: 2
   unité: kg
-  note: |
-    Issue de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html)
-    Tableau 20 page 48
 
 alimentation . déchets . dechetterie . autre . quantité réelle:
   formule: quantité * (1 - dechetterie . part DAE)
   unité: kg
-  note: |
-    on estime la quantité réelle de déchets "autres" à l'échelle de l'invidu en fonction de la part des DAE (Déchets des Activités Economiques) amenés
-    en déchetterie
 
 alimentation . déchets . dechetterie . autre:
   formule:
@@ -599,10 +504,7 @@ alimentation . déchets . dechetterie . autre . stockage:
   unité: kgCO2e
 
 alimentation . déchets . dechetterie . autre . stockage . pourcentage:
-  formule: 50%
-  note: |
-    On considère 50 % de stockage pour les déchets autre
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+  formule: 78%
 
 alimentation . déchets . dechetterie . autre . stockage . impact:
   formule: 0.412
@@ -616,10 +518,7 @@ alimentation . déchets . dechetterie . autre . incinération:
   unité: kgCO2e
 
 alimentation . déchets . dechetterie . autre . incinération . pourcentage:
-  formule: 50%
-  note: |
-    On considère 50 % d'incinération pour les déchets autre
-    Adapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+  formule: 22%
 
 alimentation . déchets . dechetterie . autre . incinération . impact:
   formule: 0.374
