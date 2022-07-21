@@ -5,43 +5,43 @@ alimentation . déchets:
     les ménages sont des emballages alimentaires)
   formule:
     variations:
-      - si: niveau d'engagement = 'affirmatif'
+      - si: quantité jetée = 'zéro déchet'
         alors: niveau zéro déchets
-      - si: niveau d'engagement = 'en partie'
+      - si: quantité jetée = 'peu'
         alors: niveau intermédiaire
-      - sinon: niveau base
+      - sinon: niveau normal
 
-alimentation . déchets . niveau d'engagement:
+alimentation . déchets . quantité jetée:
   titre: Engagement zéro déchet
-  question: Êtes-vous engagé dans une démarche zéro déchet ?
+  question: Comment estimeriez-vous la quantité de déchets que vous jetez ?
   description: |
-    Si vous ne savez pas, répondez 'Pas du tout'. Si vous pratiquez quelques gestes pour réduire la quantité de déchets, répondez 'En partie'. Répondez 'Oui' uniquement
-    si vous êtes réellement engagé dans une démarche zéro déchets et que vous traquez le moindre déchet.
+    Si vous ne savez pas, répondez 'Normale'. Si vous pratiquez quelques gestes pour réduire la quantité de déchets (réduction des emballages, vrac), répondez 'Faible'. Répondez 'Zéro Déchet' uniquement
+    si vous traquez le moindre déchet.
     Pour en savoir plus sur les modes de vie zéro déchets, visitez le site [Zero Waste France](https://www.zerowastefrance.org/passer-a-laction/adopter-zero-dechet/).
 
     > Sachez qu'en cas d'engagement "zéro déchet", nous considérons tout de même des émissions de gaz à effet (mais largement réduites) car il est très difficile
     voire impossible de ne plus générer aucun déchet, certains étant invisibles et inévitables.
-  par défaut: "'pas du tout'"
+  par défaut: "'normal'"
   formule:
     une possibilité:
       choix obligatoire: oui
       possibilités:
-        - pas du tout
-        - en partie
-        - affirmatif
+        - normale
+        - faible
+        - zéro déchet
 
-alimentation . déchets . niveau d'engagement . pas du tout:
+alimentation . déchets . quantité jetée . normale:
   description: Vous considérez que vous vous situez au niveau de la moyenne Française.
-alimentation . déchets . niveau d'engagement . en partie:
-  description: Vous adoptez les éco-gestes du quotidien (compost, stop pub, pas de gaspillage) mais avez encore du progrès à faire sur la taille de votre poubelle.
-alimentation . déchets . niveau d'engagement . affirmatif:
-  titre: Oui
+alimentation . déchets . quantité jetée . faible:
+  description: Vous tentez de réduire vos déchets (plus de vrac, moins d'emballages) mais vous avez encore des efforts à faire.
+alimentation . déchets . quantité jetée . zéro déchet:
+  titre: Je suis zéro-déchet
   description: Un niveau d'engagement particulièrement fort ! La taille de votre poubelle est minimale.
 
 alimentation . déchets . niveau zéro déchets:
   formule:
     somme:
-      - omr . putrescibles . non compostable + omr . putrescibles . compostés
+      - omr . putrescibles
       - omr . papier carton / 4
       - omr . plastiques / 4
       - omr . verre / 4
@@ -49,38 +49,39 @@ alimentation . déchets . niveau zéro déchets:
       - omr . autre / 4
       - collecte separee / 4
       - dechetterie / 4
+      - gestes
   note: |
     On considère que la part de gens vivant réellement sans générer aucun déchets est peu représentative même au sein du mouvement zéro déchets. Ainsi,
     on considère qu'un mode de vie zéro déchets correspond à une division par 4 de toutes les autres quantitées de déchets (OMR, CS et déchetterie).
-    On fait également l'hypothèse qu'une personne zéro déchet fait déjà du compost. Enfin, on considère que les réductions associées à ce niveau d'engagement (division par 4) 
-    prennent déjà en compte le stop pub et un gaspillage alimentaire limité.
+    Seuls les déchets putrescibles sont exclus des réduction opérées car ils ne concernent pas les emballages.
 
 alimentation . déchets . niveau intermédiaire:
   formule:
     somme:
-      - omr . putrescibles . non compostable + omr . putrescibles . compostés
+      - omr . putrescibles
       - omr . plastiques / 2
       - omr . verre / 2
       - omr . metaux / 2
       - omr . autre / 2
       - collecte separee / 2
       - dechetterie / 2
+      - gestes
   note: |
     On considère qu'un mode de vie "presque" zéro déchets correspond à une division par 2 de toutes les autres quantitées de déchets (OMR, CS et déchetterie).
     On fait également l'hypothèse qu'une personne sur la voie du zéro déchet fait déjà du compost. Enfin, on considère que les réductions associées à ce niveau d'engagement (division par 2) 
     prennent déjà en compte le stop pub et un gaspillage alimentaire limité.
 
-alimentation . déchets . niveau base:
+alimentation . déchets . niveau normal:
   formule:
     somme:
       - omr
       - collecte separee
       - dechetterie
-      - bonus
+      - gestes
   description: |
-    Ce niveau correspond à la moyenne française. Des "bonus" sont néanmoins possibles selon ses actions personelles sur la gestion de ses déchets.
+    Ce niveau correspond à la moyenne française.
 
-alimentation . déchets . niveau base . bonus:
+alimentation . déchets . gestes:
   description: Les différents gestes que vous pourriez déjà mettre en place pour réduire l'empreinte de votre poubelle.
   formule:
     somme:
@@ -147,7 +148,7 @@ alimentation . déchets . gaspillage alimentaire . présent:
     Si vous faites peu ou pas d'efforts pour éviter de jeter vos aliments, répondez non. En moyenne, le gaspillage alimentaire reste la norme.
 
 alimentation . déchets . gaspillage alimentaire:
-  titre: Je ne gaspille pas d'aliments
+  titre: Je ne gaspille jamais d'aliments
   icônes: 🚯
   applicable si: présent
   formule: (-1) * empreinte gaspillage alimentaire
@@ -179,7 +180,6 @@ alimentation . déchets . stop pub:
   unité: kgCO2e
 
 alimentation . déchets . bonus stop pub:
-  icônes: 📬
   formule: gain prospectus * 3 * 52
   unité: kgCO2e
   note: |
