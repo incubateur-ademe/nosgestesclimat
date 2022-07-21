@@ -7,8 +7,6 @@ alimentation . déchets:
     variations:
       - si: quantité jetée = 'zéro déchet'
         alors: niveau zéro déchets
-      - si: quantité jetée = 'faible'
-        alors: niveau intermédiaire
       - sinon: niveau normal
 
 alimentation . déchets . quantité jetée:
@@ -27,10 +25,10 @@ alimentation . déchets . quantité jetée:
       choix obligatoire: oui
       possibilités:
         - normale
-        - faible
         - zéro déchet
 
 alimentation . déchets . quantité jetée . normale:
+  titre: Je jète régulièrement
   description: Vous considérez que vous vous situez au niveau de la moyenne Française.
 alimentation . déchets . quantité jetée . faible:
   description: Vous tentez de réduire vos déchets (plus de vrac, moins d'emballages) mais vous avez encore des efforts à faire.
@@ -41,7 +39,7 @@ alimentation . déchets . quantité jetée . zéro déchet:
 alimentation . déchets . niveau zéro déchets:
   formule:
     somme:
-      - omr . putrescibles
+      - omr . putrescibles . non compostable + omr . putrescibles . compostés
       - omr . papier carton / 4
       - omr . plastiques / 4
       - omr . verre / 4
@@ -49,7 +47,6 @@ alimentation . déchets . niveau zéro déchets:
       - omr . autre / 4
       - collecte separee / 4
       - dechetterie / 4
-      - gestes
   note: |
     On considère que la part de gens vivant réellement sans générer aucun déchets est peu représentative même au sein du mouvement zéro déchets. Ainsi,
     on considère qu'un mode de vie zéro déchets correspond à une division par 4 de toutes les autres quantitées de déchets (OMR, CS et déchetterie).
