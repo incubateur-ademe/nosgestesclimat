@@ -80,6 +80,7 @@ alimentation . déchets . gestes:
       - compostage biodéchets
       - gaspillage alimentaire
       - stop pub
+      - acheter en vrac
   note: |
     Une mosaïque pour les éco-gestes zéro-déchets.
 
@@ -183,3 +184,52 @@ alimentation . déchets . bonus stop pub . gain prospectus:
   note: |
     Source : Cas 2 du tableau page 103 de [l'étude ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/2520-etude-d-evaluation-des-gisements-d-evitement-des-potentiels-de-reduction-de-dechets-et-des-impacts-environnementaux-evites.html)
     C'est le cas le plus défavorable car il inclut le report vers une communication électronique
+
+alimentation . déchets . acheter en vrac . présent:
+  question: Achetez-vous en vrac ?
+  description: |
+    C'est un autocollant à placer sur votre boîte aux lettres qui informe les distributeurs de pub que vous refusez de recevoir des catalogues, des promotions, menus de restaurant et publicités en tout genre.
+
+    Cela n'empêche pas toute publicité, mais envoie un signal fort et réduit en général considérablement la quantité de déchets papiers reçus.
+  par défaut: non
+  inactif: oui
+
+alimentation . déchets . acheter en vrac:
+  titre: J'achète en vrac
+  icônes: 🧺
+  applicable si: présent
+  formule: (-1) * bonus acheter en vrac
+  unité: kgCO2e
+
+alimentation . déchets . bonus acheter en vrac:
+  formule: gisement réduction * empreinte emballages évités
+  unité: kgCO2e
+  note: |
+    Une étude plus récente et plus complète à investiguer pour précisier cette action : https://librairie.ademe.fr/consommer-autrement/5064-panorama-et-evaluation-environnementale-du-vrac-en-france.html.
+
+alimentation . déchets . bonus acheter en vrac . empreinte emballages évités:
+  titre: Non production des l'emballage
+  formule: 22% * empreinte carton + 78% * empreinte plastique
+  unité: kg
+  note: |
+    Source : Page 47 de [l'étude ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/2520-etude-d-evaluation-des-gisements-d-evitement-des-potentiels-de-reduction-de-dechets-et-des-impacts-environnementaux-evites.html)
+    Selon le tableau 22% des emballages évités sont en papier/carton, 78% sont en plastique.
+
+alimentation . déchets . bonus acheter en vrac . gisement réduction:
+  titre: Réduction moyenne par habitant de l'action "acheter en vrac"
+  formule: 2.4
+  unité: kg
+  note: |
+    Source : Page 47 de [l'étude ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/2520-etude-d-evaluation-des-gisements-d-evitement-des-potentiels-de-reduction-de-dechets-et-des-impacts-environnementaux-evites.html)
+    Basé 11 catégories de produits détaillées ci-dessus, le gisement d’évitement d’emballages visé par l’alternative de la vente en vrac peut être estimé à 2.4 kg/hab./an en 2012 au niveau national. Ces résultats ne concernent qu’un nombre limité de produits, 
+    mais ce sont ceux qui sont souvent proposés à la vente en vrac. Ces données prennent en compte la suppression de l’emballage du produit par le dispositif de vrac, mais ne prennent pas en compte les contenants proposés aux clients pour cet achat, l’évitement réel de l’action est donc moindre.
+
+alimentation . déchets . bonus acheter en vrac . empreinte plastique:
+  formule: 2.383
+  unité: kgCO2e/kg
+  référence: Base Carbone - Plastique - moyenne - neuf
+
+alimentation . déchets . bonus acheter en vrac . empreinte carton:
+  formule: 0.390
+  unité: kgCO2e/kg
+  référence: Base Carbone - Carton - neuf
