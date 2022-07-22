@@ -7,34 +7,44 @@ alimentation . déchets:
     variations:
       - si: quantité jetée = 'zéro déchet'
         alors: niveau zéro déchets
-      - sinon: niveau normal
+      - sinon: niveau moyen
 
 alimentation . déchets . quantité jetée:
-  titre: Engagement zéro déchet
   question: Comment estimeriez-vous la quantité de déchets que vous jetez ?
   description: |
-    Si vous ne savez pas, répondez 'Normale'. Si vous pratiquez quelques gestes pour réduire la quantité de déchets (réduction des emballages, vrac), répondez 'Faible'. Répondez 'Zéro Déchet' uniquement
-    si vous traquez le moindre déchet.
+    Si vous ne savez pas, répondez 'Je jète régulièrement'. Répondez 'Zéro Déchet' uniquement si vous traquez le moindre déchet.
+
     Pour en savoir plus sur les modes de vie zéro déchets, visitez le site [Zero Waste France](https://www.zerowastefrance.org/passer-a-laction/adopter-zero-dechet/).
 
     > Sachez qu'en cas d'engagement "zéro déchet", nous considérons tout de même des émissions de gaz à effet (mais largement réduites) car il est très difficile
     voire impossible de ne plus générer aucun déchet, certains étant invisibles et inévitables.
-  par défaut: "'normal'"
+  par défaut: "'base'"
   formule:
     une possibilité:
       choix obligatoire: oui
       possibilités:
-        - normale
+        - base
         - zéro déchet
 
-alimentation . déchets . quantité jetée . normale:
+alimentation . déchets . quantité jetée . base:
   titre: Je jète régulièrement
-  description: Vous considérez que vous vous situez au niveau de la moyenne Française.
-alimentation . déchets . quantité jetée . faible:
-  description: Vous tentez de réduire vos déchets (plus de vrac, moins d'emballages) mais vous avez encore des efforts à faire.
+  description: |
+    Vous considérez que vous n'avez pas atteint le niveau zéro déchet. Si vous tentez de réduire vos déchets mais que vous avez encore 
+    du progrès à faire, cochez cette proposition, vous pourrez sélectionner vos éco-gestes dans la question suivante !
+
 alimentation . déchets . quantité jetée . zéro déchet:
-  titre: Zéro-déchet
-  description: Un niveau d'engagement particulièrement fort ! La taille de votre poubelle est minimale.
+  titre: Je suis zéro-déchet
+  description: |
+    Un niveau d'engagement particulièrement fort ! La taille de votre poubelle est minimale,
+    vous ne jetez *presque* jamais !
+
+alimentation . déchets . notif zéro déchet:
+  type: notification
+  formule: quantité jetée = 'zéro déchet'
+  description: |
+    Vous avez renseigné un mode de vie zéro déchet. Il faut savoir que ce niveau d'engagement
+    correspond à une personne qui est investie à **100% dans la démarche de réduction de ses déchets**.
+    Consommer en vrac n'est pas suffisant pour être zéro-déchet.
 
 alimentation . déchets . niveau zéro déchets:
   formule:
@@ -51,24 +61,9 @@ alimentation . déchets . niveau zéro déchets:
     On considère que la part de gens vivant réellement sans générer aucun déchets est peu représentative même au sein du mouvement zéro déchets. Ainsi,
     on considère qu'un mode de vie zéro déchets correspond à une division par 4 de toutes les autres quantitées de déchets (OMR, CS et déchetterie).
     Seuls les déchets putrescibles sont exclus des réduction opérées car ils ne concernent pas les emballages.
+  référence: https://librairie.ademe.fr/dechets-economie-circulaire/1906-bien-vivre-en-zero-dechet.html
 
-alimentation . déchets . niveau intermédiaire:
-  formule:
-    somme:
-      - omr . putrescibles
-      - omr . plastiques / 2
-      - omr . verre / 2
-      - omr . metaux / 2
-      - omr . autre / 2
-      - collecte separee / 2
-      - dechetterie / 2
-      - gestes
-  note: |
-    On considère qu'un mode de vie "presque" zéro déchets correspond à une division par 2 de toutes les autres quantitées de déchets (OMR, CS et déchetterie).
-    On fait également l'hypothèse qu'une personne sur la voie du zéro déchet fait déjà du compost. Enfin, on considère que les réductions associées à ce niveau d'engagement (division par 2) 
-    prennent déjà en compte le stop pub et un gaspillage alimentaire limité.
-
-alimentation . déchets . niveau normal:
+alimentation . déchets . niveau moyen:
   formule:
     somme:
       - omr
@@ -99,7 +94,7 @@ alimentation . déchets . compostage biodéchets . présent:
 
 alimentation . déchets . compostage biodéchets:
   titre: Je composte
-  icônes: 🍅 🚮
+  icônes: 🍃
   applicable si: présent
   formule: (-1) * bonus compostage biodéchets
   unité: kgCO2e
