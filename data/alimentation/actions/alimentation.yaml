@@ -264,13 +264,15 @@ alimentation . boisson . eau en bouteille . arrêter:
 
     Sources : [Écobilan de l’eau potable](http://esu-services.ch/fileadmin/download/jungbluth-2015-ecobilan-eau.pdf) et [Ministère de la Transition Ecologique p106](https://www.economie.gouv.fr/files/files/directions_services/cge/filieres-dechets-recyclage.pdf)
 
-alimentation . gaspillage alimentaire . réduire:
-  non applicable si: fréquence = 'jamais'
-  icônes: 🍲🚯
-  titre: Moins gaspiller
-  formule: gaspillage alimentaire - réduit
+alimentation . déchets . réduire gaspillage:
+  titre: Réduire le gaspillage alimentaire
+  icônes: 🚯
+  applicable si: quantité jetée = 'base'
+  non applicable si: gaspillage alimentaire . présent
+  effort: moyen
+  formule: empreinte gaspillage alimentaire
   description: |
-    En France le gaspillage alimentaire moyen est évalué à 32 kg par personne et par an dont 7 kg d’aliments encore emballés ! 
+    En France le gaspillage alimentaire moyen est évalué à 30 kg par personne et par an dont 7 kg d’aliments encore emballés !
 
     Si l’on prend du recule et que l'on considère l’ensemble de la chaîne de valeur (c'est-à-dire du champ à l’assiette) c’est environ 10 millions de tonnes d'aliments qui sont gaspillées par an, soit 150 kg par habitant.
 
@@ -278,17 +280,31 @@ alimentation . gaspillage alimentaire . réduire:
 
     Vous trouverez des conseils et des pratiques utiles [ici](https://agirpourlatransition.ademe.fr/particuliers/conso/alimentation/pourquoi-gaspillons-autant-nourriture)
 
-alimentation . gaspillage alimentaire . réduit:
-  formule:
-    recalcul:
-      règle: alimentation . gaspillage alimentaire
-      avec:
-        fréquence: "'jamais'"
+alimentation . déchets . avoir un stop pub:
+  titre: Avoir un stop pub
+  icônes: 📬
+  applicable si: quantité jetée = 'base'
+  non applicable si: stop pub . présent
+  effort: faible
+  formule: bonus stop pub
+  description: |
+    C'est un autocollant à placer sur votre boîte aux lettres qui informe les distributeurs de pub que vous refusez de recevoir des catalogues, des promotions, menus de restaurant et publicités en tout genre.
+
+    Cela n'empêche pas toute publicité, mais envoie un signal fort et réduit en général considérablement la quantité de déchets papiers reçus.
 
 alimentation . déchets . composter:
   titre: Composter
   icônes: 🐛🌱
-  inactive: oui
+  applicable si: quantité jetée = 'base'
+  non applicable si: compostage biodéchets . présent
+  effort: faible
+  formule: bonus compostage biodéchets
+  description: |
+    Nos biodéchets, c’est à dire les déchets putrescibles issus de notre alimentation (épluchures, restes de repas, etc.),
+    représentent une grande partie du poids de notre poubelle grise contribuant ainsi à majorer l’empreinte carbone associée
+    à la gestion de nos déchets. Ces déchets sont très souvent peu ou mal valorisés malgré le bénéfice environnemental qu’ils peuvent apporter :
+    un compost, substance organique riche et bénéfique pour les sols. Composter nos biodéchets (de manière individuelle ou collective) permet donc de réduire
+    la taille de nos poubelles et de favoriser la création de ce compost pouvant à terme être utilisé comme alternative aux engrais chimiques.
 
 alimentation . déchets . recyclage:
   titre: Recycler mes déchets
@@ -299,7 +315,7 @@ alimentation . déchets . vrac:
   titre: Acheter en vrac
   icônes: ⚖️🌾
   inactive: oui
-  
+
 alimentation . bio:
   titre: Manger bio
   icônes: ☮️🌾
@@ -309,7 +325,7 @@ alimentation . jardiner:
   titre: Créer son potager
   icônes: ☮️🌾
   inactive: oui
-  
+
 alimentation . restaurant:
   titre: Choisir des plats respectueux du climat au restaurant
   icônes: ☮️🌾
