@@ -15,7 +15,7 @@ l’échelle de la société.
 
 ## Ordre de grandeur GES
 
-![Graphique : impact GES pour différents types de trajets, de modes de transports et en fonction du nombre de passage (pour l’avion et le train)](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/alternative-bas-carbone-fig1.jpg)
+![Graphique : impact GES pour différents types de trajets, de modes de transports et en fonction du nombre de passage (pour l’avion et le train)](https://ecolab-data.netlify.app/images/alternative-bas-carbone-fig1.jpg)
 
 `Figure 1 : Impact GES pour différents types de trajets, de modes de transports et en fonction du nombre de passage (pour l’avion et le train)`
 
