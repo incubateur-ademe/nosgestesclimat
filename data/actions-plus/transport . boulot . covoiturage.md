@@ -15,7 +15,7 @@ En considérant un trajet domicile-travail de 40 km aller-retour :
 
 ## Ordre de grandeur GES
 
-![Graphique : impact GES d'un déplacement de 40 km aller-retour pour différents types de véhicules et en fonction du nombre de passager](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/covoiturage-d-t-fig2.jpg)
+![Graphique : impact GES d'un déplacement de 40 km aller-retour pour différents types de véhicules et en fonction du nombre de passager](https://ecolab-data.netlify.app/images/covoiturage-d-t-fig1.jpg)
 
 `Figure 1 : Impact GES d'un déplacement de 40 km aller-retour pour différents types de véhicules et en fonction du nombre de passager`
 
