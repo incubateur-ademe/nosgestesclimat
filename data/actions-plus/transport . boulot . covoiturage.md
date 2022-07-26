@@ -13,9 +13,11 @@ En considérant un trajet domicile-travail de 40 km aller-retour :
 - Covoiturer avec un 1 autre passager : **-850 kgCO2eq/an**
 - Covoiturer avec 2 autres passagers : **-1200 kgCO2eq/an**
 
+![Graphique : impact GES d'un déplacement de 40 km aller-retour pour différents types de véhicules et en fonction du nombre de passager](https://ecolab-data.netlify.app/images/covoiturage-d-t-fig1.jpg)
+
 ## Ordre de grandeur GES
 
-![Graphique : impact GES d'un déplacement de 40 km aller-retour pour différents types de véhicules et en fonction du nombre de passager](https://ecolab-data.netlify.app/images/covoiturage-d-t-fig1.jpg)
+![Graphique : impact GES d'un déplacement de 40 km aller-retour pour différents types de véhicules et en fonction du nombre de passager](https://ecolab-data.netlify.app/images/covoiturage-d-t-fig2.jpg)
 
 `Figure 1 : Impact GES d'un déplacement de 40 km aller-retour pour différents types de véhicules et en fonction du nombre de passager`
 
