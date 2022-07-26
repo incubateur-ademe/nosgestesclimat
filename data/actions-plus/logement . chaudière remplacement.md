@@ -14,7 +14,7 @@ Remplacer son système de chauffage par un système de chauffage plus performant
 
 ## Ordre de grandeur GES
 
-![Graphique : impact GES par kWh de différents types procédés de chauffage](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/chaudiere-logement-fig1.jpg)
+![Graphique : impact GES par kWh de différents types procédés de chauffage](https://ecolab-data.netlify.app/images/chaudiere-logement-fig1.jpg)
 
 `Figure 1 : Impact GES par kWh de différents types procédés de chauffage - source Base Carbone®`
 
@@ -22,7 +22,7 @@ Remplacer son système de chauffage par un système de chauffage plus performant
 
 Les chaudières et équipements bois sont relativement plus chers à l’achat que des installations au gaz ou au fioul électriques mais ont l’avantage d’utiliser un combustible peu cher et renouvelable : le bois. Les pompes à chaleur, quant à elles, sont des équipements vraiment plus chers qui demandent un investissement plus conséquent et qui seront donc mieux rentabilisés dans des habitats à fort besoin de chauffage. A titre de comparaison, l’ADEME met en avant des prix comparatifs moyens [^2]:
 
-![Tableau : prix indicatifs d’installation de chauffage central](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/chaudiere-logement-tab1.jpg)
+![Tableau : prix indicatifs d’installation de chauffage central](https://ecolab-data.netlify.app/images/chaudiere-logement-tab1.jpg)
 
 `Tableau 1 : prix indicatifs d’installation de chauffage central`
 
