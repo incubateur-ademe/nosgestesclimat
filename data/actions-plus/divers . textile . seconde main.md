@@ -12,11 +12,11 @@ L’essor de la fast-fashion et sa diffusion progressive à travers le monde com
 
 ## Ordre de grandeur GES
 
-![Graphique : impact GES des phases amont et aval pour plusieurs produits d’habillement](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/mode-2nd-main-fig1.jpg)
+![Graphique : impact GES des phases amont et aval pour plusieurs produits d’habillement](https://ecolab-data.netlify.app/images/mode-2nd-main-fig1.jpg)
 
 `Figure 1 : Impact GES des phases amont et aval pour plusieurs produits d’habillement, données élaborées à partir des données de l’étude`[^3]
 
-![Graphique : impact GES pour plusieurs produits d’habillement neufs et de seconde main](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/mode-2nd-main-fig2.jpg)
+![Graphique : impact GES pour plusieurs produits d’habillement neufs et de seconde main](https://ecolab-data.netlify.app/images/mode-2nd-main-fig2.jpg)
 
 `Figure 2 : Impact GES pour plusieurs produits d’habillement neufs et de seconde main, données élaborées à partir des données de l’étude`[^3]
 
