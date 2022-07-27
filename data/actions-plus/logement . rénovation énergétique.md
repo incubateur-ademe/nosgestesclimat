@@ -9,13 +9,13 @@ Cette forte consommation énergétique s’explique souvent par des logements é
 
 ## Impact GES moyen de l’action et ordre de grandeur
 
-![Graphique : impact GES (réduction des émissions GES) sur une année pour différents types de rénovation et pour différents systèmes de chauffage](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/renovation-energetique-fig1.jpg)
+![Graphique : impact GES (réduction des émissions GES) sur une année pour différents types de rénovation et pour différents systèmes de chauffage](https://ecolab-data.netlify.app/images/renovation-energetique-fig1.jpg)
 
 `Figure 1 : Impact GES (réduction des émissions GES) sur une année pour différents types de rénovation et pour différents systèmes de chauffage pour une consommation initiale de 10 000 kWh/an `
 
 ## Budget
 
-![Graphique : economies (en €) sur une année pour différents types de rénovation énergétique et pour différents systèmes de chauffage](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/renovation-energetique-fig2.jpg)
+![Graphique : economies (en €) sur une année pour différents types de rénovation énergétique et pour différents systèmes de chauffage](https://ecolab-data.netlify.app/images/renovation-energetique-fig2.jpg)
 
 `Figure 2 : Economies (en €) sur une année pour différents types de rénovation énergétique et pour différents systèmes de chauffage pour une consommation initiale de 10 000 kWh/an `
 
