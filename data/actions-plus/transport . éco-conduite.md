@@ -16,7 +16,7 @@ De manière générale, l’éco-conduite permet une réduction de sa consommati
 
 ## Ordre de grandeur GES
 
-![Graphique : impact GES avec et sans éco-conduite pour un trajet de 1000 km](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eco-conduite-fig1.jpg)
+![Graphique : impact GES avec et sans éco-conduite pour un trajet de 1000 km](https://ecolab-data.netlify.app/images/eco-conduite-fig1.jpg)
 
 `Figure 1 : Impact GES avec et sans éco-conduite pour un trajet de 1000 km`
 
