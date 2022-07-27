@@ -12,13 +12,13 @@ Box internet, téléviseur, tablettes numériques, cafetière, gros électromén
 
 Et bien d’autres éco-gestes sur les publications grand public de l’Ademe [^2] [^3].
 
-![Tableau : exemples d'éco-gestes pour économiser l'énergie dans son logement](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/maitrise-conso-elec-logement-tab1.jpg)
+![Tableau : exemples d'éco-gestes pour économiser l'énergie dans son logement](https://ecolab-data.netlify.app/images/maitrise-conso-elec-logement-tab1.jpg)
 
 `Tableau 1 : Exemples d'éco-gestes pour économiser l'énergie dans son logement`
 
 ## Ordre de grandeur GES
 
-![Graphique : impact GES associé à la consommation électrique sur une année d'ampoules classiques et d’ampoules basses consommation de type LED](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/maitrise-conso-elec-logement-fig1.jpg)
+![Graphique : impact GES associé à la consommation électrique sur une année d'ampoules classiques et d’ampoules basses consommation de type LED](https://ecolab-data.netlify.app/images/maitrise-conso-elec-logement-fig1.jpg)
 
 `Figure 1 : Impact GES associé à la consommation électrique sur une année d'ampoules classiques et d’ampoules basses consommation de type LED`
 
