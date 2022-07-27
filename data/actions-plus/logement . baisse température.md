@@ -8,7 +8,7 @@
 
 ## Impact GES moyen de l’action et ordre de grandeur
 
-![Graphique : impact GES (réduction des émissions GES) sur une année d’une baisse de la température](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/temperature-logement-fig1.jpg)
+![Graphique : impact GES (réduction des émissions GES) sur une année d’une baisse de la température](https://ecolab-data.netlify.app/images/temperature-logement-fig1.jpg)
 
 `Figure 1 : Impact GES (réduction des émissions GES) sur une année d’une baisse de la température par rapport à une température initiale de 23°C pour une consommation initiale de 10 000 kWh/an `
 
@@ -16,7 +16,7 @@
 
 Les économies d’énergie sont très variables d’un type d’énergie à l’autre et sont bien évidement d’autant plus importantes que la diminution en température est grande. Comme le monte la Figure 2 elles peuvent aller de quelques dizaines d’euros à plus de 100 euros par an.
 
-![Graphique : economies (en €) sur une année en fonction d’une baisse de la température](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/temperature-logement-fig2.jpg)
+![Graphique : economies (en €) sur une année en fonction d’une baisse de la température](https://ecolab-data.netlify.app/images/temperature-logement-fig2.jpg)
 
 `Figure 2 : Economies (en €) sur une année en fonction d’une baisse de la température par rapport à une température initiale de 23°C et pour une consommation initiale de 10 000 kWh/an `
 
