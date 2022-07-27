@@ -13,10 +13,10 @@ L’impact GES de notre alimentation est directement corrélé à notre consomma
 
 ## Ordre de grandeur GES
 
-![Graphique : impact GES d'un kg de viande en sortie de ferme et ingéré](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/reduction-viande-fig1-1.jpg)
+![Graphique : impact GES d'un kg de viande en sortie de ferme et ingéré](https://ecolab-data.netlify.app/images/reduction-viande-fig1-1.jpg)
 `Figure 1 : Impact GES d'un kg de viande en sortie de ferme et ingéré (source Agribalyse)`
 
-![Graphique : impact GES pour différents types de repas](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/reduction-viande-fig2.jpg)
+![Graphique : impact GES pour différents types de repas](https://ecolab-data.netlify.app/images/reduction-viande-fig2.jpg)
 `Figure 2 : Impact GES pour différents types de repas`
 
 ## Budget
