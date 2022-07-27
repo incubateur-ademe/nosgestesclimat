@@ -14,11 +14,11 @@ J'équipe mon (petit) appartement avec du mobilier de 2nd main (au lieu de neufs
 
 ## Ordre de grandeur GES
 
-![Graphique : Impact GES des phases amont et aval pour plusieurs biens d'ameublement, données élaborées depuis l’étude](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/meubles-2nd-main-fig1.jpg)
+![Graphique : Impact GES des phases amont et aval pour plusieurs biens d'ameublement, données élaborées depuis l’étude](https://ecolab-data.netlify.app/images/eee-2nd-main-fig1.jpg)
 
 `Figure 1 : Impact GES des phases amont et aval pour plusieurs biens d'ameublement, données élaborées depuis l’étude`[^3]
 
-![Graphique : Impact GES pour plusieurs biens d'ameublement neufs et de seconde main, données élaborées depuis l’étude](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/meubles-2nd-main-fig2.jpg)
+![Graphique : Impact GES pour plusieurs biens d'ameublement neufs et de seconde main, données élaborées depuis l’étude](https://ecolab-data.netlify.app/images/eee-2nd-main-fig2.jpg)
 
 `Figure 2 : Impact GES pour plusieurs biens d'ameublement neufs et de seconde main, données élaborées depuis l’étude`[^3]
 
