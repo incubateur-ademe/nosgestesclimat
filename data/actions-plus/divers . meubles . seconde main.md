@@ -18,7 +18,7 @@ J'équipe mon (petit) appartement avec du mobilier de 2nd main (au lieu de neufs
 
 `Figure 1 : Impact GES des phases amont et aval pour plusieurs biens d'ameublement, données élaborées depuis l’étude`[^3]
 
-![Graphique : Impact GES pour plusieurs biens d'ameublement neufs et de seconde main, données élaborées depuis l’étude](https://ecolab-data.netlify.app/images/meubles-2nd-main-fig1.jpg)
+![Graphique : Impact GES pour plusieurs biens d'ameublement neufs et de seconde main, données élaborées depuis l’étude](https://ecolab-data.netlify.app/images/meubles-2nd-main-fig2.jpg)
 
 `Figure 2 : Impact GES pour plusieurs biens d'ameublement neufs et de seconde main, données élaborées depuis l’étude`[^3]
 
