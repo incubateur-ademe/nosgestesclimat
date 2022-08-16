@@ -10,7 +10,7 @@ Les épisodes de forte chaleur sont amenés à gagner en intensité et en fréqu
 
 ## Ordre de grandeur GES
 
-![Graphique : impact GES associé à la consommation électrique d’une climatisation moyenne et d’un ventilateur](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/climatisation-fig1.jpg)
+![Graphique : impact GES associé à la consommation électrique d’une climatisation moyenne et d’un ventilateur](https://ecolab-data.netlify.app/images/climatisation-fig1.jpg)
 
 `Figure 1 : Impact GES associé à la consommation électrique d’une climatisation moyenne et d’un ventilateur. Sur la base d’une utilisation de 6h/jour pendant 4 mois`.
 

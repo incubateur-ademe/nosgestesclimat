@@ -15,7 +15,7 @@ Recycler, même à son échelle, c’est donc participer à cette économie de m
 
 ## Ordre de grandeur GES
 
-![Graphique : impact GES de la réincorporation d’une tonne de matériaux](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/trier-dechets-consommation-fig1.jpg)
+![Graphique : impact GES de la réincorporation d’une tonne de matériaux](https://ecolab-data.netlify.app/images/trier-dechets-consommation-fig1.jpg)
 
 `Figure 1 : Impact GES de la réincorporation d’une tonne de matériaux`[^9]
 

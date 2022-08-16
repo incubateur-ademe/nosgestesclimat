@@ -12,15 +12,15 @@ De l’électroménager à la dernière tablette numérique, les équipements é
 
 ## Ordre de grandeur GES
 
-![Graphique : impact GES des phases amont et aval pour plusieurs équipements à forte composante électronique](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eee-2nd-main-fig1.jpg)
+![Graphique : impact GES des phases amont et aval pour plusieurs équipements à forte composante électronique](https://ecolab-data.netlify.app/images/eee-2nd-main-fig1.jpg)
 
 `Figure 1 : Impact GES des phases amont et aval pour plusieurs équipements à forte composante électronique, données élaborées depuis`[^2]
 
-![Graphique : impact GES des phases amont et aval pour plusieurs équipements électroménager](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eee-2nd-main-fig2.jpg)
+![Graphique : impact GES des phases amont et aval pour plusieurs équipements électroménager](https://ecolab-data.netlify.app/images/eee-2nd-main-fig2.jpg)
 
 `Figure 2 : Impact GES des phases amont et aval pour plusieurs équipements électroménager, données élaborées depuis`[^2]
 
-![Graphique : impact GES sur une année associé au fonctionnement d’équipements classiques et d’équipements à faible consommation énergétique](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eee-2nd-main-fig3.jpg)
+![Graphique : impact GES sur une année associé au fonctionnement d’équipements classiques et d’équipements à faible consommation énergétique](https://ecolab-data.netlify.app/images/eee-2nd-main-fig3.jpg)
 
 `Figure 3 : Impact GES sur une année associé au fonctionnement d’équipements classiques et d’équipements à faible consommation énergétique, à partir des consommations données dans`[^3]
 
@@ -52,7 +52,7 @@ C’est pourquoi, afin de réduire son impact sur le climat, il est pertinent d�
 
 Néanmoins, si l’on souhaite acheter neuf, il existe aussi plusieurs moyens de réduire l’impact GES de ses achats. Pour se faire il faut se tourner vers des produits efficaces (c'est-à-dire à faible consommation d’énergie, aussi appelés à haute performance énergétique) et/ou éco-conçus. Le caractère “efficace” est primordial dans le cas d’appareil électroménager ou la consommation d’énergie sur la phase d’utilisation représente souvent une part significative de l’impact GES d’un produit. Pour aider le consommateur à s’y retrouver dans le choix de ses appareils, des “étiquettes énergie” équipent maintenant tout nouveau produit électroménager. Ces étiquettes par une graduation claire permettent d’identifier clairement les produits performants énergétiquement et à consommation réduite.
 
-![Figure : exemple d'étiquette d'énergie pour un réfrigérateur/congélateur 2 portes](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/eee-2nd-main-fig4.png)
+![Figure : exemple d'étiquette d'énergie pour un réfrigérateur/congélateur 2 portes](https://ecolab-data.netlify.app/images/eee-2nd-main-fig4.png)
 
 `Figure 4 : Exemple d'étiquette d'énergie pour un réfrigérateur/congélateur 2 portes`
 

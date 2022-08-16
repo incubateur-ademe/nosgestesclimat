@@ -15,7 +15,7 @@ Sur la base des données de l’Enquête Nationale Transport et Déplacements [^
 
 ## Ordre de grandeur GES
 
-![Graphique : impact CO2 d'un déplacement d’un km pour différent moyen de transport](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/velo-voiture-5km-fig1.jpg)
+![Graphique : impact CO2 d'un déplacement d’un km pour différent moyen de transport](https://ecolab-data.netlify.app/images/velo-voiture-5km-fig1.jpg)
 
 `Figure 1 : Impact CO2 d'un déplacement d’un km pour différent moyen de transport - Source Base Carbone®`
 

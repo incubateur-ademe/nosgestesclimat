@@ -12,7 +12,7 @@ La dépendance à la voiture individuelle dans nos déplacements quotidiens est 
 
 ## Ordre de grandeur GES
 
-![Graphique : impact GES d'un km parcouru en fonction de différents modes de transports](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/transport-commun-fig1.jpg)
+![Graphique : impact GES d'un km parcouru en fonction de différents modes de transports](https://ecolab-data.netlify.app/images/transport-commun-fig1.jpg)
 
 `Figure 1 : Impact GES d'un km parcouru en fonction de différents modes de transports (données issues de la Base Carbone® )`
 

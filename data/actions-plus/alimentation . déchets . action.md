@@ -52,7 +52,7 @@ L’autre enjeu fondamental quand on parle de nos déchets est l’aspect matiè
 
 Réduire le volume de nos poubelles, c’est donc oeuvrer à la source pour préserver les ressources et éviter toutes les émissions de GES associées à la confection des produits (extraction, transformation, transport, etc.). Réutiliser et réparer plutôt que jeter et acheter sont donc des gestes fort pour éviter de consommer de la matière et générer des impacts superflus sur le climat. En France, la hiérarchie des modes de traitement place au plus haut niveau la notion de prévention, ceci afin d’éviter de produire des déchets (Figure 1). C’est en ce sens et en faisant sien l’adage disant que le “meilleur déchet est celui qu’on ne produit pas”, qu’est apparu le mouvement dit “zéro déchet”. Ce concept pousse “au maximum” les concepts de déchet évité et/ou du réemploi de la hiérarchie des modes de traitements afin comme son nom l’indique d’éviter de générer des déchets.
 
-![Figure : hiérarchie des modes de traitements en France](https://www.associationbilancarbone.fr/wp-content/uploads/2020/12/zero-dechets-fig1.png)
+![Figure : hiérarchie des modes de traitements en France](https://ecolab-data.netlify.app/images/zero-dechets-fig1.png)
 `Figure 1 : hiérarchie des modes de traitements en France (source : Zéro Waste France)`
 
 Nécessitant un engagement personnel important et faisant encore débat quant à son impossible généralisation à tous, ce mode de vie contribue néanmoins à réduire significativement son impact sur les ressources tout en réduisant son empreinte carbone individuelle. Il se structure autour de trois gestes clefs : le compostage des biodéchets, l’achat en vrac et sur le fait d’éviter d’acheter neuf.
