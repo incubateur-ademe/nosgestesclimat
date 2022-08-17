@@ -1,7 +1,7 @@
 let yaml = require('yaml')
 let fs = require('fs')
 
-const personasYaml = 'scripts/personas.yaml'
+const personasYaml = 'data/personas.yaml'
 const data = fs.readFileSync('./' + personasYaml, 'utf8')
 const personas = yaml.parse(data)
 
