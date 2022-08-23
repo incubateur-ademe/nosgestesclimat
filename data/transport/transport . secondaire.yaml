@@ -1,0 +1,307 @@
+transport . vacances . secondaire:
+  icônes: 🏠2️⃣
+  formule: empreinte / habitants
+  
+transport . vacances . secondaire . propriétaire:
+  question: Possédez-vous une maison secondaire ?
+  par défaut: non
+  
+transport . vacances . secondaire . empreinte:
+  applicable si: présent
+  formule:
+    somme:
+      - construction
+      - entretien
+      - piscine
+      - électricité
+      - chauffage
+
+transport . vacances . secondaire . habitants:
+  question: Combien de personnes en moyenne utilisent votre résidence secondaire ?
+  description: |
+    Il s'agit de savoir combien de personnes partagent votre résidence secondaire afin de répartir entre tous les utilisateurs les impacts qu'elle entraîne
+    (construction, chauffage, etc).
+    Ne renseignez que les utilisateurs réguliers (famille et amis notamment) qui jouissent du logement. Si vous faites de la location saisonnière occasionelle,
+    merci de ne pas prendre en compte les occupants. De même, si vous disposez de bien a vocation locative saisonnière, merci de ne pas le prendre en compte.
+    > Si vous en profitez en couple, répondez `2`.
+    > Si vous en profitez avec vos deux enfants, répondez `4`.
+    > Si vous la partagez avec une autre famille de 4 personnes, répondez `8`.
+  par défaut: 2 personnes
+  suggestions:
+    seul: 1
+    en couple: 2
+    en famille: 4
+    en famille élargie: 8
+  unité: personnes
+
+### Construction ###
+transport . vacances . secondaire . surface:
+  question: Quelle est la surface de votre résidence secondaire ?
+  par défaut: 80 m2
+  note: |
+    Vérifier s'il n'y a pas un rapport INSEE sur la surface moyenne des résidences secondaires
+    > Si vous vivez dans une résidence secondaire qui sort de l'ordinaire comme par exemple une péniche, une cabane, renseignez simplement les m² de ce logement.
+  suggestions:
+    studio: 25
+    3 pièces: 70
+    maison: 120
+    château 🏰: 1000
+  unité: m2
+
+transport . vacances . secondaire . annuelle et par surface:
+  formule: par surface / durée d'amortissement
+  unité: kgCO2e/m2
+  
+transport . vacances . secondaire . appartement:
+  question: Votre résidence secondaire est-elle un appartement ?
+  par défaut: non
+  description: |
+    XXX
+  note: |
+    XXX
+  références:
+    INSEE: https://www.insee.fr/fr/statistiques/3676693?sommaire=3696937
+
+transport . vacances . secondaire . éco-construit:
+  question: Votre logement est-il fait en bois, paille, pierre ou terre (éco-construit) ?
+  par défaut: non
+  notes: |
+    L'entrée dans la base carbone ne donne pas plus d'informations sur cette catégorie de méthode de construction.
+    Le facteur d'émission titre "Maison éco-construite", faute d'informations nous considérons qu'il est le même pour un appartement éco-construit. Cependant, l'étude Carbone 4 l'affirme (réduction de 55% du béton au bois pour la maison, et de 60% pour l'appartement).
+  références:
+    Base carbone: https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=Maison+éco-construite+«+bois
+    Carbone 4: http://www.carbone4.com/wp-content/uploads/2015/05/Note-de-communication-filière-bois-vf.pdf
+
+transport . vacances . secondaire . construction . par surface:
+  formule:
+    variations:
+      - si: éco-construit
+        alors: 144 kgCO2e/m2
+      - si: appartement
+        alors: 525 kgCO2e/m2
+      - sinon: 425 kgCO2e/m2
+  note: |
+    Notons que pour le logement éco-construit, le CO2 biogénique stocké n'est pas comptabilisé, seul le CO2 fossile émis l'est.
+    Pour le logement éco-construit, nous retenons le facteur d'émission de la base carbone, mais il semble confirmé en ordre de grandeur dans l'étude Carbone 4.
+    > Gains observés sur le CO2 fossile du poste gros-œuvre (fondations et structure), en comparaison au béton. Le stockage de carbone dans le produit  bois  n’est  pas  pris  en  compte.  Gains  liés  à  la  substitution  matériau  :  MI  bois  CLT  :  118  kgCO2e/m2  SHON,  soit  473  kgCO2e/m3  de produit bois. MI bois ossature : 83 kgCO2e/m2 SHON, soit 2495 kgCO2e/m3 de produit bois. LC bois CLT : 231 kgCO2e/m2 SHON, soit 699 kgCO2e/m3 de produit bois. LC bois ossature : 139 kgCO2e/m2 SHON, soit 3172 kgCO2e/m3 de produit bois.
+  rérénces:
+    éco-construit: https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=Maison+éco-construite+«+bois
+    appartement et maison: https://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Batiments
+    Carbone 4: http://www.carbone4.com/wp-content/uploads/2015/05/Note-de-communication-filière-bois-vf.pdf
+
+transport . vacances . secondaire . construction . durée d'amortissement:
+  formule: 50 ans
+  note: |
+    Ces valeurs tiennent compte de l’entretien et de l’éventuel remplacement des produits et équipements durant la vie du bâtiment fixée à 50 ans.
+  références:
+    base carbone: https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?batiments.htm
+
+transport . vacances . secondaire . âge:
+  question: Quel est l'âge de votre logement ?
+  par défaut: 45 ans
+  description: |
+    En France, 24% du parc de logements date d'avant 1949 et 24% entre 1949 et 1974.
+    Pour Paris, [cette carte](https://www.comeetie.fr/galerie/BatiParis) interactive est fascinante si la question de l'âge de ses logements vous intéresse.
+  références:
+    INSEE: 24% du parc de logements date d'avant 1949 et 24% entre 1949 et 1974 par exemple (https://www.insee.fr/fr/statistiques/fichier/2586377/LOGFRA17.pdf).
+  suggestions:
+    neuf: 0 ans
+    récent: 10 ans
+    années 70: 45 ans
+    après-guerre: 70 ans
+    un siècle: 100 ans
+
+transport . vacances . secondaire . notif amortissement:
+  type: notification
+  formule: âge > construction . durée d'amortissement
+  description: |
+    Si votre logement a moins de **50 ans**, nous vous attribuons un cinquantième de l'empreinte de sa construction. **Sinon, zéro : le logement est amorti.**
+    Les questions sur les caractéristiques de votre logement ne vous seront pas posées car l'empreinte annuelle de sa contruction est considérée comme nulle.
+
+transport . vacances . secondaire . construction:
+  icônes: 🧱
+  formule:
+    variations:
+      - si: âge < durée d'amortissement
+        alors: surface * annuelle et par surface
+      - sinon: 0
+  note: |
+    Un logement va en moyenne durer au moins 50 ans. C'est une valeur conservative. 
+    Nous considérons ici que l'empreinte de la construction d'un logement est attributée chaque année au 50ième aux habitants des 50 premières années. 
+    Par la suite, l'empreinte de construction du logement est mise à zéro.
+    Amélioration possible : nous manquons de données, mais il devrait être possible d'attribuer une empreinte annuelle d'entretien du logement (ravalement, isolation, travaux intérieurs, etc.).
+  unité: kgCO2e
+  
+### Entretien ###
+transport . vacances . secondaire . entretien:
+  formule: 0.360 * montant
+  unité: kgCO2e
+  note: Ratio monétaire "Service - Construction" de la Base Carbone
+  
+transport . vacances . secondaire . entretien . montant:
+  formule:
+  question: Combien dépensez-vous par an pour des travaux d'entretien de votre résidence secondaire ?
+  description: |
+    Le terme travaux d'entretien fait référence aux réparations techniques et aux travaux de plus ou moins gros oeuvres. Ne prenez pas en compte vos dépenses
+    de nettoyage intérieure.
+
+### Piscine ###
+### Reprendre le modèle déjà existant ###
+transport . vacances . secondaire . piscine:
+  applicable si: présent
+  formule: 500
+  unité: kgCO2e
+ 
+transport . vacances . secondaire . piscine . présent:
+  question: Votre résidence secondaire dispose t'elle d'une piscine
+  par défaut: oui
+
+### Electricité ###
+### On utilise une approche temps passé afin de limiter le nombre de question. Avec cette approche on répartit la conso entre logement principal et résidence
+### secondaire (ce qu'on ne consomme pas en un lieu on le consomme ailleurs). 
+### Les questions de consommation élec ne seront posées que si la résidence secondaire est chauffée à l'électricité (et pas la résidence principale)
+
+transport . vacances . secondaire . temps passé:
+  question: Combien de temps en semaine passez-vous dans votre résidence secondaire ?
+  par défaut: 5
+  descritption: |
+    En fonction du temps passé dans votre résidence secondaire nous extrapolons une consommation électrique en nous basant sur la consommation électrique 
+    de votre résidence principale
+
+transport . vacances . secondaire . électricité:
+  icônes: ⚡️
+  formule:
+    variations:
+      - si:
+        toutes ces conditions:
+          - chauffage . électricité . présent
+          - logement . chauffage . électricité . présent
+        alors: (temps passé / 52) * logement . électricité
+      - si : chauffage . électricité . présent ##en réalité cela devrait être "chauffage . électricité . présent ET logement . chauffage . électricité non présent"
+        alors: consommation * logement . électricité . intensité carbone
+      - sinon: (temps passé / 52) * logement . électricité ##cas du chauffage électrique présent dans aucun des logements
+  
+transport . vacances . secondaire . électricité . consommation:
+  icônes: ⚡
+  question: Quelle est la consommation annuelle d'électricité de votre résidence secondaire ?
+  unité: kWh
+  par défaut: 500 kWh
+  aide: estimation via le coût
+  description: |
+    Astuce : vous trouverez la consommation annuelle d'électricité sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
+    Si vous vivez dans plusieurs logements (par exemple, si vous avez une residence secondaire), essayez de "ramener" ces consommations dans celles du logement principal afin d'avoir l'estimation la plus juste possible.
+
+transport . vacances . secondaire . électricité . estimation via le coût:
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  unité: €/kWh
+  formule: 0.1933 #à mettre à jour
+  description: |
+    Cette formule nous permet de passer des €/mois aux kWh/an. 
+    Le chiffre inclut un coût de l'abonnement, et représente donc une moyenne. Ce n'est pas le prix du kWh marginal. Il inclut les taxes.
+  références:
+    Eurostat household first half 2021: https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Electricity_price_statistics
+
+### Chauffage ####
+### On demande type de chauffage résidence secondaire puis si identique à logement principal, on suit la même méthode que pour la conso élec (temps passé)
+### Si chauffage différent on demande les détails comme dans le cadre du logement principal
+
+transport . vacances . secondaire . chauffage . gaz . présent:
+  question: Votre résidence secondaire est-elle chauffée au gaz ?
+  par défaut: non
+  
+transport . vacances . secondaire . chauffage . gaz:
+  icônes: 🔥
+  formule:
+    variations:
+      - si:
+        toutes ces conditions:
+          - présent
+          - logement . chauffage . gaz . présent
+        alors: (temps passé / 52) * logement . chauffage . gaz
+      - si: présent #en réalité cela devrait être "présent et logement . chauffage . gaz non présent"
+        alors: consommation * logement . chauffage . gaz . intensité carbone
+        
+transport . vacances . secondaire . chauffage . gaz . estimation via le coût:
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  unité: €/kWh
+  formule: gaz . prix
+  description: |
+    Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois. 
+    Voir l'onglet "Calcul consommation Energie" du [tableur MicMac](https://avenirclimatique.org/wp-content/uploads/2020/04/2020-04-12_MicMac_V2.6.xlsx)
+    Mis à jour via un petit algorithme de calcul en janvier 2022, suite aux hausses historiques du prix en 2021.
+    La valeur pour 2022 est approximativement de 0.104 €/kWh.
+
+transport . vacances . secondaire . chauffage . gaz . consommation:
+  question: Quelle est la consommation annuelle de gaz de votre résidence secondaire ?
+  par défaut: gaz . consommation par défaut
+  unité: kWh
+  aide: estimation via le coût
+  description: |
+    Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
+          
+transport . vacances . secondaire . chauffage . fioul . présent:
+  question: Votre résidence secondaire est-elle chauffée au fioul ?
+  par défaut: non
+  
+transport . vacances . secondaire . chauffage . fioul:
+  icônes: 🛢
+  formule:
+    variations:
+      - si:
+        toutes ces conditions:
+          - présent
+          - logement . chauffage . fioul . présent
+        alors: (temps passé / 52) * logement . chauffage . fioul
+      - si: présent #en réalité cela devrait être "présent et logement . chauffage . fioul non présent"
+        alors: consommation * logement . chauffage . fioul . intensité carbone litre
+
+transport . vacances . secondaire . chauffage . fioul . estimation via le prix:
+  question: Pas de facture ? Entrez vos dépenses approximatives en fioul par mois
+  unité: €/litre
+  formule: 0.8887
+  description: |
+    Cette formule nous permet de passer des €/mois aux litres/an.
+    Source : Fioul domestique 2000 à 4999 litres, semestre 2 2021.
+  références:
+    écologie.gouv.fr: https://www.ecologie.gouv.fr/prix-des-produits-petroliers
+
+transport . vacances . secondaire . chauffage . fioul . consommation:
+  question: Quelle est la consommation annuelle de fioul domestique de votre résidence secondaire ?
+  unité: litre
+  description: |
+    Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
+    > Il est estimé que la consommation d'une maison récente de 100m² chauffée au fioul consomme entre 1200 et 2400 litres par an. Pour une maison ancienne dans une région froide, elle peut atteindre 6000 litres par an. [Source lenergietoutcompris.fr](https://www.lenergietoutcompris.fr/faq/fioul/quelle-est-la-consommation-moyenne-de-fioul-au-m2).
+  par défaut: 1800 litres
+  aide: estimation via le prix
+
+transport . vacances . secondaire . chauffage . électricité . présent:
+  question: Votre résidence secondaire est-elle chauffée à l'électricité ?
+  par défaut: oui
+  
+transport . vacances . secondaire . chauffage . électricité:
+  icônes: ⚡️
+
+transport . vacances . secondaire . chauffage . PAC:
+  titre: Pompe à chaleur
+  icônes: 🌡️
+
+transport . vacances . secondaire . chauffage . PAC . présent:
+  question: Votre résidence secondaire est-elle chauffée via une pompe à chaleur ?
+  par défaut: non
+
+transport . vacances . secondaire . chauffage . notif électrique:
+  type: notification
+  formule:
+    une de ces conditions:
+      - PAC . présent = oui
+      - électricité . présent = oui
+  description: |
+    Vous avez renseigné une pompe à chaleur ou un chauffage électrique : leur consommation est prise en compte via votre facture globale d'électricité.
+
+
+
+
+
+
+
+
