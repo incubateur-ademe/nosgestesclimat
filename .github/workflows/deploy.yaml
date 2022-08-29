@@ -23,11 +23,39 @@ jobs:
     outputs:
       env-name: ${{ steps.deploy-env.outputs.name }}
       fr_url: ${{ steps.base-urls.outputs.fr }}
+      compile_output: ${{ steps.compile.ouput }}
     steps:
       - id: deploy-env
         run: echo "::set-output name=name::${{ github.event.number || '${GITHUB_REF#refs/*/}' }}"
       - id: base-urls
-        run: echo "::set-output name=fr::${{ steps.deploy-env.outputs.name == 'master' && 'https://nosgestesclimat.fr' || format('https://nosgestesclimat.fr?PR={0}', steps.deploy-env.outputs.name) }}";
+        run: echo "::set-output name=fr::${{ steps.deploy-env.outputs.name == 'master' && 'https://nosgestesclimat.fr' || format('https://nosgestesclimat.fr?PR={0}', steps.deploy-env.outputs.name) }}"
+      - id: compile
+        run: |
+          body="$(yarn compile)"
+          echo "::set-output name=output::$body"
+
+  post-comment:
+    runs-on: ubuntu-18.04
+    if: github.event_name == 'pull_request'
+    needs: [deploy-preview, deploy-context]
+    steps:
+      - name: Find Comment
+        uses: peter-evans/find-comment@v1
+        id: find-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }} #e.g. 1
+          comment-author: 'github-actions[bot]'
+          body-includes: La branche est déployée
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          edit-mode: replace
+          body: |
+            🚀 La branche est déployée !
+            - NGC : ${{ needs.deploy-context.outputs.fr_url }}
+            - output : ${{ steps.deploy-context.compile_output }}
 
   build:
     needs: deploy-context
