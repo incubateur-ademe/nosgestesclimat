@@ -1,0 +1,167 @@
+name: Déploiement
+on:
+  pull_request:
+    types: [opened, synchronize]
+  push:
+    branches:
+      - '*'
+
+  # We display the release notes in the "news" section of mon-entreprise.urssaf.fr so
+  # we want to re-deploy the site when a new release is published or edited on
+  # GitHub.
+  release:
+    types: [published, edited]
+
+  # The /stats data is generated during the build. To keep the daily data fresh,
+  # we relaunch a nightly full build of the app
+  schedule:
+    - cron: '0 4 * * *'
+
+jobs:
+  deploy-context:
+    runs-on: ubuntu-22.04
+    outputs:
+      env-name: ${{ steps.deploy-env.outputs.name }}
+      fr_url: ${{ steps.base-urls.outputs.fr }}
+      test: ${{ steps.test.outputs.body }}
+      test2: ${{ steps.test2.outputs.body }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '17'
+          cache: 'yarn'
+      - id: deploy-env
+        run: echo "::set-output name=name::${{ github.event.number || '${GITHUB_REF#refs/*/}' }}"
+      - run: yarn install --immutable
+      - id: test
+        run: |
+          echo "::set-output name=body::$(yarn install --immutable && (yarn compile | echo))"
+      - id: test2
+        run: |
+          yarn install --immutable
+          body="$(yarn compile | cat | tail --lines=+3 | head --lines=-1)"
+          body="${body//'%'/'%25'}"
+          body="${body//$'\n'/'%0A'}"
+          body="${body//$'\r'/'%0D'}"
+          echo "::set-output name=body::${body}"
+
+      - id: base-urls
+        # run: echo "::set-output name=fr::${$(yarn install --immutable && yarn compile)}"
+        run: echo "::set-output name=fr::${{ steps.deploy-env.outputs.name == 'master' && 'https://nosgestesclimat.fr' || format('https://nosgestesclimat.fr?PR={0}', steps.deploy-env.outputs.name) }}"
+      # - id: compile
+      #   run: |
+      #     body="$(yarn compile)"
+      #     echo "::set-output name=output::$body"
+
+  build:
+    needs: deploy-context
+    env:
+      VITE_FR_BASE_URL: ${{ needs.deploy-context.outputs.fr_url }}
+    runs-on: ubuntu-22.04
+    outputs:
+      compilation-result: ${{ steps.compilation.result }}
+      test: ${{ steps.test.result }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '17'
+          cache: 'yarn'
+      - run: yarn install --immutable
+      - id: compilation
+        run: |
+          result="$(yarn compile | cat)"
+          echo "::set-output name=result::${result}"
+      - id: test
+        run: |
+          result="(yarn compile | cat)"
+          echo "::set-output name=result::test"
+
+  # deploy-preview:
+  #   needs: [build, deploy-context]
+  #   runs-on: ubuntu-22.04
+  #   if: needs.deploy-context.outputs.env-name != 'master'
+  #   strategy:
+  #     matrix:
+  #       site: ['']
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     # - uses: actions/download-artifact@v2
+  #     #   with:
+  #     #     name: static-site
+  #     - id: deploy-netlify
+  #       uses: nwtgck/actions-netlify@v1.1
+  #       with:
+  #         publish-dir: './dist'
+  #         netlify-config-path: ./netlify.toml
+  #         production-deploy: false
+  #         github-token: ${{ secrets.GITHUB_TOKEN }}
+  #         enable-commit-status: true
+  #         enable-commit-comment: false
+  #         github-deployment-environment: ${{ needs.deploy-context.outputs.env-name }}
+  #         alias: ${{ needs.deploy-context.outputs.env-name }}${{ matrix.site && format('-{0}', matrix.site) }}
+  #         deploy-message: ${{ github.event.pull_request.title || needs.deploy-context.outputs.env-name }} (${{ matrix.site || 'fr' }})
+  #
+  #         # Disabled because we create our own customized comment
+  #         enable-pull-request-comment: false
+  #       env:
+  #         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+  #         NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+  #       timeout-minutes: 1
+  #
+  # deploy-prod:
+  #   needs: [build, deploy-context]
+  #   runs-on: ubuntu-22.04
+  #   if: needs.deploy-context.outputs.env-name == 'master'
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     # - uses: actions/download-artifact@v2
+  #     #   with:
+  #     #     name: static-site
+  #     - id: deploy-netlify
+  #       uses: nwtgck/actions-netlify@v1.1
+  #       with:
+  #         publish-dir: './dist'
+  #         netlify-config-path: ./netlify.toml
+  #         production-deploy: true
+  #         github-token: ${{ secrets.GITHUB_TOKEN }}
+  #         enable-commit-status: true
+  #         enable-commit-comment: false
+  #         github-deployment-environment: master
+  #         deploy-message: Deploy production branch
+  #       env:
+  #         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+  #         NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+  #       timeout-minutes: 1
+
+  post-comment:
+    env:
+      RES: ${{ needs.build.outputs.compilation-result }}
+      TEST: ${{ needs.build.outputs.test }}
+    runs-on: ubuntu-22.04
+    if: github.event_name == 'pull_request'
+    needs: deploy-context
+    steps:
+      - name: Find Comment
+        uses: peter-evans/find-comment@v2
+        id: find-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }} #e.g. 1
+          comment-author: 'github-actions[bot]'
+          body-includes: La branche est déployée
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          edit-mode: replace
+          body: |
+            🚀 La branche est déployée !
+            - NGC : ${{ needs.deploy-context.outputs.fr_url }}
+
+            **Résultat de la compilation du modèle** :
+            ```
+            ${{ needs.deploy-context.outputs.test2 }}
+            ```
+
