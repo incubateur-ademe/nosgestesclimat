@@ -1,0 +1,354 @@
+#Calcul de l'impact GES du traitement de la collecte séparée
+
+alimentation . déchets . collecte separee:
+  titre: Collecte séparée
+  formule:
+    somme:
+      - collecte separee . putrescibles
+      - collecte separee . papier carton
+      - collecte separee . plastiques
+      - collecte separee . verre
+      - collecte separee . metaux
+      - collecte separee . autre
+  note: |
+    Les quantités de déchets sont issues du tableau 3 page 16 de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html).
+
+    La répartition des types de traitement pour chaque catégorie (en poucentage) issue d'un calcul basé sur les chiffres de 
+    [Déchets, chiffres clés - ADEME - L'essentiel 2021](https://librairie.ademe.fr/cadic/6912/dechets-chiffres-cles-lessentiel-2021-011723.pdf) 
+    et [La collecte des déchets par le service public en France – Résultats et zooms thématiques 2019 - ADEME 2021](https://librairie.ademe.fr/dechets-economie-circulaire/4804-la-collecte-des-dechets-par-le-service-public-en-france.html#/44-type_de_produit-format_electronique)
+
+alimentation . déchets . collecte separee . part DAE:
+  formule: 15%
+  note: |
+    Dans la collecte des déchets des ménages il y a toujours une part de déchets issus des DAE (Déchets des Activités Economiques)
+    Voir page 13 de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html).
+
+    On estimera donc la quantité réelle de déchets à l'échelle de l'invidu après déduction de la part des DAE (Déchets des Activités Economiques) contenue
+    dans les collectes.
+
+#Déchets . putrescibles_____________________________________________________________________________________________
+
+alimentation . déchets . collecte separee . putrescibles . quantité:
+  formule: 0.8
+  unité: kg
+
+alimentation . déchets . collecte separee . putrescibles . quantité réelle:
+  formule: quantité * (1 - collecte separee . part DAE)
+  unité: kg
+
+alimentation . déchets . collecte separee . putrescibles:
+  formule:
+    somme:
+      - compost
+      - méthanisation
+
+#_ putrescibles . compost _____________________________
+alimentation . déchets . collecte separee . putrescibles . compost:
+  formule: quantité réelle * compost . pourcentage * compost . impact
+  unité: kgCO2e
+
+alimentation . déchets . collecte separee . putrescibles . compost . pourcentage:
+  formule: 50%
+
+alimentation . déchets . collecte separee . putrescibles . compost . impact:
+  formule: 0.140
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Déchets de cuisine et déchets verts - Compostage industriel - Impacts
+
+#_ putrescibles . méthanisation _____________________________
+alimentation . déchets . collecte separee . putrescibles . méthanisation:
+  formule: quantité réelle * méthanisation . pourcentage * méthanisation . impact
+  unité: kgCO2e
+
+alimentation . déchets . collecte separee . putrescibles . méthanisation . pourcentage:
+  formule: 50%
+
+alimentation . déchets . collecte separee . putrescibles . méthanisation . impact:
+  formule: 0.173
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Déchets de cuisine - Méthanisation - Impacts
+
+#Déchets papier carton _____________________________________________________________________________________________
+
+alimentation . déchets . collecte separee . papier carton . quantité:
+  formule: 22.9 + 12.6
+  unité: kg
+
+alimentation . déchets . collecte separee . papier carton . quantité réelle:
+  formule: quantité * (1 - collecte separee . part DAE)
+  unité: kg
+
+alimentation . déchets . collecte separee . papier carton:
+  formule:
+    somme:
+      - recyclage
+      - stockage
+      - incinération
+
+#_ papier carton . recyclage _____________________________
+alimentation . déchets . collecte separee . papier carton . recyclage:
+  formule: quantité réelle * recyclage . pourcentage * recyclage . impact
+  unité: kgCO2e
+
+alimentation . déchets . collecte separee . papier carton . recyclage . pourcentage:
+  formule: 82%
+
+alimentation . déchets . collecte separee . papier carton . recyclage . impact:
+  formule: 0.992
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Carton - Recyclage - Impacts
+
+#_ papier carton . stockage _____________________________
+alimentation . déchets . collecte separee . papier carton . stockage:
+  formule: quantité réelle * stockage . pourcentage * stockage . impact
+  unité: kgCO2e
+
+alimentation . déchets . collecte separee . papier carton . stockage . pourcentage:
+  formule: 4.5%
+
+alimentation . déchets . collecte separee . papier carton . stockage . impact:
+  formule: 0.950
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Carton - Stockage - Impacts
+
+#_ papier carton . incinération _____________________________
+alimentation . déchets . collecte separee . papier carton . incinération:
+  formule: quantité réelle * incinération . pourcentage * incinération . impact
+  unité: kgCO2e
+
+alimentation . déchets . collecte separee . papier carton . incinération . pourcentage:
+  formule: 13.5%
+  note: |
+    On considère 3 % d'incinération pour les déchets papier carton
+    SAdapté de la répartition des exutoires donnée en page 11 Déchets, chiffres clés - Ademe 2019
+
+alimentation . déchets . collecte separee . papier carton . incinération . impact:
+  formule: 0.120
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Carton - Incinération - Impacts
+
+#Déchets plastiques _____________________________________________________________________________________________
+
+alimentation . déchets . collecte separee . plastiques . quantité:
+  formule: 7.6
+  unité: kg
+
+alimentation . déchets . collecte separee . plastiques . quantité réelle:
+  formule: quantité * (1 - collecte separee . part DAE)
+  unité: kg
+
+alimentation . déchets . collecte separee . plastiques:
+  formule:
+    somme:
+      - recyclage
+      - stockage
+      - incinération
+
+#_ plastiques . recyclage _____________________________
+alimentation . déchets . collecte separee . plastiques . recyclage:
+  formule: quantité réelle * recyclage . pourcentage * recyclage . impact
+  unité: kgCO2e
+
+alimentation . déchets . collecte separee . plastiques . recyclage . pourcentage:
+  formule: 82%
+
+alimentation . déchets . collecte separee . plastiques . recyclage . impact:
+  formule: 0.662
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Plastique rigide PET bouteilles - Recyclage - Impacts
+
+#_ plastiques . stockage _____________________________
+alimentation . déchets . collecte separee . plastiques . stockage:
+  formule: quantité réelle * stockage . pourcentage * stockage . impact
+  unité: kgCO2e
+
+alimentation . déchets . collecte separee . plastiques . stockage . pourcentage:
+  formule: 4.5%
+
+alimentation . déchets . collecte separee . plastiques . stockage . impact:
+  formule: 0.041
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Plastique pétrosourcé PET - Stockage - Impacts
+
+#_ plastiques . incinération _____________________________
+alimentation . déchets . collecte separee . plastiques . incinération:
+  formule: quantité réelle * incinération . pourcentage * incinération . impact
+  unité: kgCO2e
+
+alimentation . déchets . collecte separee . plastiques . incinération . pourcentage:
+  formule: 13.5%
+
+alimentation . déchets . collecte separee . plastiques . incinération . impact:
+  formule: 2.139
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Plastique pétrosourcé PET - Incinération - Impacts
+
+#Déchets verre _____________________________________________________________________________________________
+
+alimentation . déchets . collecte separee . verre . quantité:
+  formule: 30.1
+  unité: kg
+
+alimentation . déchets . collecte separee . verre . quantité réelle:
+  formule: quantité * (1 - collecte separee . part DAE)
+  unité: kg
+
+alimentation . déchets . collecte separee . verre:
+  formule:
+    somme:
+      - recyclage
+      - stockage
+      - incinération
+
+#_ verre . recyclage _____________________________
+alimentation . déchets . collecte separee . verre . recyclage:
+  formule: quantité réelle * recyclage . pourcentage * recyclage . impact
+  unité: kgCO2e
+
+alimentation . déchets . collecte separee . verre . recyclage . pourcentage:
+  formule: 82%
+
+alimentation . déchets . collecte separee . verre . recyclage . impact:
+  formule: 0.639
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Verre - Recyclage - Impacts
+
+#_ verre . stockage _____________________________
+alimentation . déchets . collecte separee . verre . stockage:
+  formule: quantité réelle * stockage . pourcentage * stockage . impact
+  unité: kgCO2e
+
+alimentation . déchets . collecte separee . verre . stockage . pourcentage:
+  formule: 4.5%
+
+alimentation . déchets . collecte separee . verre . stockage . impact:
+  formule: 0.041
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Verre - Stockage - Impacts
+
+#_ verre . incinération _____________________________
+alimentation . déchets . collecte separee . verre . incinération:
+  formule: quantité réelle * incinération . pourcentage * incinération . impact
+  unité: kgCO2e
+
+alimentation . déchets . collecte separee . verre . incinération . pourcentage:
+  formule: 13.5%
+
+alimentation . déchets . collecte separee . verre . incinération . impact:
+  formule: 0.130
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Verre - Incinération - Impacts
+
+#Déchets metaux _____________________________________________________________________________________________
+
+alimentation . déchets . collecte separee . metaux . quantité:
+  formule: 2.5
+  unité: kg
+
+alimentation . déchets . collecte separee . metaux . quantité réelle:
+  formule: quantité * (1 - collecte separee . part DAE)
+  unité: kg
+
+alimentation . déchets . collecte separee . metaux:
+  formule:
+    somme:
+      - recyclage
+      - stockage
+      - incinération
+
+#_ metaux . recyclage _____________________________
+alimentation . déchets . collecte separee . metaux . recyclage:
+  formule: quantité réelle * recyclage . pourcentage * recyclage . impact
+  unité: kgCO2e
+
+alimentation . déchets . collecte separee . metaux . recyclage . pourcentage:
+  formule: 82%
+
+alimentation . déchets . collecte separee . metaux . recyclage . impact:
+  formule: 0.873
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Aluminium - Recyclage - Impacts
+
+#_ metaux . stockage _____________________________
+alimentation . déchets . collecte separee . metaux . stockage:
+  formule: quantité réelle * stockage . pourcentage * stockage . impact
+  unité: kgCO2e
+
+alimentation . déchets . collecte separee . metaux . stockage . pourcentage:
+  formule: 4.5%
+
+alimentation . déchets . collecte separee . metaux . stockage . impact:
+  formule: 0.041
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Acier - Stockage - Impacts
+
+#_ metaux . incinération _____________________________
+alimentation . déchets . collecte separee . metaux . incinération:
+  formule: quantité réelle * incinération . pourcentage * incinération . impact
+  unité: kgCO2e
+
+alimentation . déchets . collecte separee . metaux . incinération . pourcentage:
+  formule: 13.5%
+
+alimentation . déchets . collecte separee . metaux . incinération . impact:
+  formule: 0.110
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Aluminium - Incinération - Impacts
+
+#Déchets autres _____________________________________________________________________________________________
+
+alimentation . déchets . collecte separee . autre . quantité:
+  formule: 1.1 + 0.2 + 0.4 + 0.6 + 0.3 + 0.3 + 0.9
+  unité: kg
+
+alimentation . déchets . collecte separee . autre . quantité réelle:
+  formule: quantité * (1 - collecte separee . part DAE)
+  unité: kg
+
+alimentation . déchets . collecte separee . autre:
+  formule:
+    somme:
+      - stockage
+      - incinération
+
+#_ autre . stockage _____________________________
+alimentation . déchets . collecte separee . autre . stockage:
+  formule: quantité réelle * stockage . pourcentage * stockage . impact
+  unité: kgCO2e
+
+alimentation . déchets . collecte separee . autre . stockage . pourcentage:
+  formule: 25%
+
+alimentation . déchets . collecte separee . autre . stockage . impact:
+  formule: 0.412
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Ordures ménagères résiduelles - Stockage - Impacts
+
+#_ autre . incinération _____________________________
+alimentation . déchets . collecte separee . autre . incinération:
+  formule: quantité réelle * incinération . pourcentage * incinération . impact
+  unité: kgCO2e
+
+alimentation . déchets . collecte separee . autre . incinération . pourcentage:
+  formule: 75%
+
+alimentation . déchets . collecte separee . autre . incinération . impact:
+  formule: 0.374
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Ordures ménagères résiduelles - Incinération - Impacts

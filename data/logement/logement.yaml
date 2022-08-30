@@ -1,13 +1,13 @@
 logement:
   abbréviation: logmt.
   description: |
-    On peut voir notre logement comme un bâti passif qui n'impacterait pas le climat... on aurait tort ! 
+    On peut voir notre logement comme un bâti passif qui n'impacterait pas le climat... on aurait tort !
 
     Le poste d'émission le plus important du logement en France consiste à chauffer l'air dans lequel on vit. L'empreinte ne sera pas du tout la même en fonction de la technologie de chauffage.
 
     Mais ce n'est pas tout : construction, entretien, chauffage de l'eau chaude, électricité, tant de postes qui dépendent avant tout d'un seul paramètre : le nombre de m².
   couleur: '#04a4ac'
-  icônes: 🏘
+  icônes: 🏠
   formule: impact / habitants
 
 logement . impact:
@@ -125,17 +125,24 @@ logement . âge:
     après-guerre: 70 ans
     un siècle: 100 ans
 
+logement . notif amortissement:
+  type: notification
+  formule: âge > construction . durée d'amortissement
+  description: |
+    Si votre logement a moins de **50 ans**, nous vous attribuons un cinquantième de l'empreinte de sa construction. **Sinon, zéro : le logement est amorti.**
+    Les questions sur les caractéristiques de votre logement ne vous seront pas posées car l'empreinte annuelle de sa contruction est considérée comme nulle.
+
 logement . construction:
-  icônes: 🏗️
+  icônes: 🧱
   formule:
     variations:
-      - si: âge < 50 ans
+      - si: âge < durée d'amortissement
         alors: surface * annuelle et par surface
       - sinon: 0
   note: |
-    Un logement va en moyenne durer au moins 50 ans. C'est une valeur conservative. 
+    Un logement va en moyenne durer au moins 50 ans. C'est une valeur conservative.
 
-    Nous considérons ici que l'empreinte de la construction d'un logement est attributée chaque année au 50ième aux habitants des 50 premières années. 
+    Nous considérons ici que l'empreinte de la construction d'un logement est attributée chaque année au 50ième aux habitants des 50 premières années.
 
     Par la suite, l'empreinte de construction du logement est mise à zéro.
 
@@ -163,7 +170,7 @@ logement . électricité . estimation via le coût:
   unité: €/kWh
   formule: 0.1630
   description: |
-    Cette formule nous permet de passer des €/mois aux kWh/an. 
+    Cette formule nous permet de passer des €/mois aux kWh/an.
 
     Le chiffre inclut un coût de l'abonnement, et représente donc une moyenne. Il s'agit du prix TTC du kWh résidentiel (tarif bleu résidentiel) en Guadeloupe en 2022.
   références: https://www.edf.gp/sites/default/files/sei/pdf/tarif-bleu-residentiel-ttc-guadeloupe_01022022.pdf
@@ -177,7 +184,8 @@ logement . électricité . intensité carbone:
 logement . chauffage:
   icônes: 🌡️
   description: |
-    Certains logements sont chauffés entièrement à l'électricité, d'autres sont entièrement chauffés au gaz, et plus rarement au bois ou au fioul. 
+    Certains logements sont chauffés entièrement à l'électricité, d'autres sont entièrement chauffés au gaz, et plus rarement au bois ou au fioul.
+
     Dans d'autres situations encore, un logement peut être chauffé principalement via des chauffages électriques ou une pompe à chaleur, mais avec un appoint bois, par exemple.
     Ici nous faisons la somme de l'empreinte des modes de chauffage autres que l'électricité, dont la facture est commune à tous ses usages.
   formule:
@@ -230,14 +238,16 @@ logement . chauffage . gaz . présent:
   question: Votre logement est-il chauffé au gaz ?
   par défaut: oui
   note: |
-    Bien que le chauffage majoritaire en France soit électrique [source](https://fr.statista.com/statistiques/856283/types-chauffage-logement-principal-france), nous mettons ici la valeur par défaut à oui pour se rapprocher de la moyenne d'empreinte du logement. 
+    Bien que le chauffage majoritaire en France soit électrique [source](https://fr.statista.com/statistiques/856283/types-chauffage-logement-principal-france), nous mettons ici la valeur par défaut à oui pour se rapprocher de la moyenne d'empreinte du logement.
+    
     On touche aux limites actuelles de ce système de situation par défaut.
 logement . chauffage . gaz . estimation via le coût:
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
   unité: €/kWh
   formule: gaz . prix
   description: |
-    Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois. 
+    Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois.
+
     Voir l'onglet "Calcul consommation Energie" du [tableur MicMac](https://avenirclimatique.org/wp-content/uploads/2020/04/2020-04-12_MicMac_V2.6.xlsx)
     Mis à jour via un petit algorithme de calcul en janvier 2022, suite aux hausses historiques du prix en 2021.
     La valeur pour 2022 est approximativement de 0.104 €/kWh.

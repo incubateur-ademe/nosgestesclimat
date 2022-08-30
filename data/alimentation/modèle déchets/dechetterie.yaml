@@ -1,0 +1,527 @@
+#Calcul de l'impact GES du traitement des déchets amenés en déchetterie
+
+alimentation . déchets . dechetterie:
+  titre: Déchetterie
+  formule:
+    somme:
+      - dechetterie . dechets verts
+      - dechetterie . papier carton
+      - dechetterie . plastiques
+      - dechetterie . dechets bois
+      - dechetterie . dechets metalliques
+      - dechetterie . deee
+      - dechetterie . mobilier
+      - dechetterie . deblais et gravats
+      - dechetterie . dechets dangereux
+      - dechetterie . emcombrants et tout-venant
+      - dechetterie . autre
+  note: |
+    Les quantités de déchets sont issues du tableau 3 page 16 de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html).
+
+    La répartition des types de traitement pour chaque catégorie (en poucentage) issue d'un calcul basé sur les chiffres de 
+    [Déchets, chiffres clés - ADEME - L'essentiel 2021](https://librairie.ademe.fr/cadic/6912/dechets-chiffres-cles-lessentiel-2021-011723.pdf) 
+    et [La collecte des déchets par le service public en France – Résultats et zooms thématiques 2019 - ADEME 2021](https://librairie.ademe.fr/dechets-economie-circulaire/4804-la-collecte-des-dechets-par-le-service-public-en-france.html#/44-type_de_produit-format_electronique)
+
+alimentation . déchets . dechetterie . part DAE:
+  formule: 17%
+  note: |
+    Dans la collecte des déchets des ménages il y a toujours une part de déchets issus des DAE (Déchets des Activités Economiques)
+    Voir page 13 de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html).
+
+    On estimera donc la quantité réelle de déchets à l'échelle de l'invidu après déduction de la part des DAE (Déchets des Activités Economiques) contenue
+    dans les collectes.
+
+#Déchets verts_____________________________________________________________________________________________
+alimentation . déchets . dechetterie . dechets verts . quantité:
+  formule: 67
+  unité: kg
+  note: |
+    Issue de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html)
+    Tableau 20 page 48
+
+alimentation . déchets . dechetterie . dechets verts . quantité réelle:
+  formule: quantité * (1 - dechetterie . part DAE)
+  unité: kg
+  note: |
+    on estime la quantité réelle de déchets verts à l'échelle de l'invidu en fonction de la part des DAE (Déchets des Activités Economiques) amenés
+    en déchetterie
+
+alimentation . déchets . dechetterie . dechets verts:
+  formule:
+    somme:
+      - compost
+      - méthanisation
+
+#_ dechets verts . compost _____________________________
+alimentation . déchets . dechetterie . dechets verts . compost:
+  formule: quantité réelle * compost . pourcentage * compost . impact
+  unité: kgCO2e
+
+alimentation . déchets . dechetterie . dechets verts . compost . pourcentage:
+  formule: 50%
+
+alimentation . déchets . dechetterie . dechets verts . compost . impact:
+  formule: 0.140
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Déchets de cuisine et déchets verts - Compostage industriel - Impacts
+
+#_ dechets vert . méthanisation _____________________________
+alimentation . déchets . dechetterie . dechets verts . méthanisation:
+  formule: quantité réelle * méthanisation . pourcentage * méthanisation . impact
+  unité: kgCO2e
+
+alimentation . déchets . dechetterie . dechets verts . méthanisation . pourcentage:
+  formule: 50%
+
+alimentation . déchets . dechetterie . dechets verts . méthanisation . impact:
+  formule: 0.173
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Déchets de cuisine - Méthanisation - Impacts
+
+#Déchets papier carton _____________________________________________________________________________________________
+
+alimentation . déchets . dechetterie . papier carton . quantité:
+  formule: 6
+  unité: kg
+
+alimentation . déchets . dechetterie . papier carton . quantité réelle:
+  formule: quantité * (1 - dechetterie . part DAE)
+  unité: kg
+
+alimentation . déchets . dechetterie . papier carton:
+  formule:
+    somme:
+      - incinération
+      - stockage
+      - recyclage
+
+#_ papier carton . incinération _____________________________
+alimentation . déchets . dechetterie . papier carton . incinération:
+  formule: quantité réelle * incinération . pourcentage * incinération . impact
+  unité: kgCO2e
+
+alimentation . déchets . dechetterie . papier carton . incinération . pourcentage:
+  formule: 10%
+
+alimentation . déchets . dechetterie . papier carton . incinération . impact:
+  formule: 0.120
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Carton - Incinération - Impacts
+
+#_ papier carton . compost _____________________________
+alimentation . déchets . dechetterie . papier carton . stockage:
+  formule: quantité réelle * stockage . pourcentage * stockage . impact
+  unité: kgCO2e
+
+alimentation . déchets . dechetterie . papier carton . stockage . pourcentage:
+  formule: 35%
+
+alimentation . déchets . dechetterie . papier carton . stockage . impact:
+  formule: 0.950
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Carton - Stockage - Impacts
+
+#_ papier carton . recyclage _____________________________
+alimentation . déchets . dechetterie . papier carton . recyclage:
+  formule: quantité réelle * recyclage . pourcentage * recyclage . impact
+  unité: kgCO2e
+
+alimentation . déchets . dechetterie . papier carton . recyclage . pourcentage:
+  formule: 55%
+
+alimentation . déchets . dechetterie . papier carton . recyclage . impact:
+  formule: 0.992
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Carton - Recyclage - Impacts
+
+#Déchets plastiques _____________________________________________________________________________________________
+
+alimentation . déchets . dechetterie . plastiques . quantité:
+  formule: 1
+  unité: kg
+  note: |
+    Issue de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html)
+    Tableau 20 page 48
+
+alimentation . déchets . dechetterie . plastiques . quantité réelle:
+  formule: quantité * (1 - dechetterie . part DAE)
+  unité: kg
+  note: |
+    On estime la quantité réelle de déchets plastiques à l'échelle de l'invidu en fonction de la part des DAE (Déchets des Activités Economiques) amenés
+    en déchetterie
+
+alimentation . déchets . dechetterie . plastiques:
+  formule:
+    somme:
+      - incinération
+      - stockage
+      - recyclage
+
+#_ plastiques . incinération _____________________________
+alimentation . déchets . dechetterie . plastiques . incinération:
+  formule: quantité réelle * incinération . pourcentage * incinération . impact
+  unité: kgCO2e
+
+alimentation . déchets . dechetterie . plastiques . incinération . pourcentage:
+  formule: 10%
+
+alimentation . déchets . dechetterie . plastiques . incinération . impact:
+  formule: 2.139
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Plastique pétrosourcé PET - Incinération - Impacts
+
+#_ plastiques . stockage _____________________________
+alimentation . déchets . dechetterie . plastiques . stockage:
+  formule: quantité réelle * stockage . pourcentage * stockage . impact
+  unité: kgCO2e
+
+alimentation . déchets . dechetterie . plastiques . stockage . pourcentage:
+  formule: 35%
+
+alimentation . déchets . dechetterie . plastiques . stockage . impact:
+  formule: 0.041
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Plastique pétrosourcé PET - Stockage - Impacts
+
+#_ plastiques . recyclage _____________________________
+alimentation . déchets . dechetterie . plastiques . recyclage:
+  formule: quantité réelle * recyclage . pourcentage * recyclage . impact
+  unité: kgCO2e
+
+alimentation . déchets . dechetterie . plastiques . recyclage . pourcentage:
+  formule: 55%
+
+alimentation . déchets . dechetterie . plastiques . recyclage . impact:
+  formule: 0.662
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Plastique rigide PET bouteilles - Recyclage - Impacts
+
+#Déchets bois _____________________________________________________________________________________________
+
+alimentation . déchets . dechetterie . dechets bois . quantité:
+  formule: 21
+  unité: kg
+
+alimentation . déchets . dechetterie . dechets bois . quantité réelle:
+  formule: quantité * (1 - dechetterie . part DAE)
+  unité: kg
+
+alimentation . déchets . dechetterie . dechets bois:
+  formule:
+    somme:
+      - recyclage
+      - stockage
+      - incinération
+
+#_ dechets bois . recyclage _____________________________
+alimentation . déchets . dechetterie . dechets bois . recyclage:
+  formule: quantité réelle * recyclage . pourcentage * recyclage . impact
+  unité: kgCO2e
+
+alimentation . déchets . dechetterie . dechets bois . recyclage . pourcentage:
+  formule: 55%
+
+alimentation . déchets . dechetterie . dechets bois . recyclage . impact:
+  formule: 0.992
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Carton - Recyclage - Impacts
+
+#_ dechets bois . stockage _____________________________
+alimentation . déchets . dechetterie . dechets bois . stockage:
+  formule: quantité réelle * stockage . pourcentage * stockage . impact
+  unité: kgCO2e
+
+alimentation . déchets . dechetterie . dechets bois . stockage . pourcentage:
+  formule: 35%
+
+alimentation . déchets . dechetterie . dechets bois . stockage . impact:
+  formule: 0.714
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Bois - Stockage - Impacts
+
+#_ dechets bois . incinération _____________________________
+alimentation . déchets . dechetterie . dechets bois . incinération:
+  formule: quantité réelle * incinération . pourcentage * incinération . impact
+  unité: kgCO2e
+
+alimentation . déchets . dechetterie . dechets bois . incinération . pourcentage:
+  formule: 10%
+
+alimentation . déchets . dechetterie . dechets bois . incinération . impact:
+  formule: 0.069
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Bois - Incinération - Impacts
+
+#Déchets metalliques _____________________________________________________________________________________________
+
+alimentation . déchets . dechetterie . dechets metalliques . quantité:
+  formule: 8
+  unité: kg
+
+alimentation . déchets . dechetterie . dechets metalliques . quantité réelle:
+  formule: quantité * (1 - dechetterie . part DAE)
+  unité: kg
+
+alimentation . déchets . dechetterie . dechets metalliques:
+  formule:
+    somme:
+      - stockage
+      - incinération
+      - recyclage
+
+#_ dechets metalliques . stockage _____________________________
+alimentation . déchets . dechetterie . dechets metalliques . stockage:
+  formule: quantité réelle * stockage . pourcentage * stockage . impact
+  unité: kgCO2e
+
+alimentation . déchets . dechetterie . dechets metalliques . stockage . pourcentage:
+  formule: 35%
+
+alimentation . déchets . dechetterie . dechets metalliques . stockage . impact:
+  formule: 0.041
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Acier - Stockage - Impacts
+
+#_ dechets metalliques . incinération _____________________________
+alimentation . déchets . dechetterie . dechets metalliques . incinération:
+  formule: quantité réelle * incinération . pourcentage * incinération . impact
+  unité: kgCO2e
+
+alimentation . déchets . dechetterie . dechets metalliques . incinération . pourcentage:
+  formule: 10%
+
+alimentation . déchets . dechetterie . dechets metalliques . incinération . impact:
+  formule: 0.135
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Acier - Incinération - Impacts
+
+#_ dechets metalliques . recyclage _____________________________
+alimentation . déchets . dechetterie . dechets metalliques . recyclage:
+  formule: quantité réelle * recyclage . pourcentage * recyclage . impact
+  unité: kgCO2e
+
+alimentation . déchets . dechetterie . dechets metalliques . recyclage . pourcentage:
+  formule: 55%
+
+alimentation . déchets . dechetterie . dechets metalliques . recyclage . impact:
+  formule: 0.873
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Aluminium - Recyclage - Impacts
+
+#Déchet DEEE _____________________________________________________________________________________________
+
+alimentation . déchets . dechetterie . deee . quantité:
+  formule: 6
+  unité: kg
+
+alimentation . déchets . dechetterie . deee . quantité réelle:
+  formule: quantité * (1 - dechetterie . part DAE)
+  unité: kg
+
+alimentation . déchets . dechetterie . deee:
+  formule: fin de vie moyenne DEE
+
+#_ deee . fin de vie moyenne DEE _____________________________
+alimentation . déchets . dechetterie . deee . fin de vie moyenne DEE:
+  formule: quantité réelle * fin de vie moyenne DEE . pourcentage * fin de vie moyenne DEE . impact
+  unité: kgCO2e
+
+alimentation . déchets . dechetterie . deee . fin de vie moyenne DEE . pourcentage:
+  formule: 100%
+  note: |
+    On considère 100 % de fin de vie moyenne DEE pour les déchets DEEE.
+
+alimentation . déchets . dechetterie . deee . fin de vie moyenne DEE . impact:
+  formule: 1.995
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : DEEE - DEEE moyen (par défaut) - Fin de vie moyenne filière - Impacts
+
+#Déchets mobilier _____________________________________________________________________________________________
+
+alimentation . déchets . dechetterie . mobilier . quantité:
+  formule: 8
+  unité: kg
+
+alimentation . déchets . dechetterie . mobilier . quantité réelle:
+  formule: quantité * (1 - dechetterie . part DAE)
+  unité: kg
+
+alimentation . déchets . dechetterie . mobilier:
+  formule: fin de vie moyenne DEA
+
+#_ mobilier . fin de vie moyenne DEA (Déchets d'élements d'ameublement)_____________________________
+alimentation . déchets . dechetterie . mobilier . fin de vie moyenne DEA:
+  formule: quantité réelle * fin de vie moyenne DEA . pourcentage * fin de vie moyenne DEA . impact
+  unité: kgCO2e
+
+alimentation . déchets . dechetterie . mobilier . fin de vie moyenne DEA . pourcentage:
+  formule: 100%
+  note: |
+    On considère 100 % de fin de vie moyenne DEA pour les déchets mobilier
+
+alimentation . déchets . dechetterie . mobilier . fin de vie moyenne DEA . impact:
+  formule: 0.531
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : DEA Moyen - Fin de vie moyenne filière - Impacts
+
+#Déchets deblais et gravats _____________________________________________________________________________________________
+
+alimentation . déchets . dechetterie . deblais et gravats . quantité:
+  formule: 57
+  unité: kg
+
+alimentation . déchets . dechetterie . deblais et gravats . quantité réelle:
+  formule: quantité * (1 - dechetterie . part DAE)
+  unité: kg
+
+alimentation . déchets . dechetterie . deblais et gravats:
+  formule: fin de vie moyenne gravats
+
+#_ deblais et gravats . fin de vie moyenne gravats _____________________________
+alimentation . déchets . dechetterie . deblais et gravats . fin de vie moyenne gravats:
+  formule: quantité réelle * fin de vie moyenne gravats . pourcentage * fin de vie moyenne gravats . impact
+  unité: kgCO2e
+
+alimentation . déchets . dechetterie . deblais et gravats . fin de vie moyenne gravats . pourcentage:
+  formule: 100%
+  note: |
+    On considère 100 % de fin de vie moyenne gravats pour les déchets deblais et gravats
+
+alimentation . déchets . dechetterie . deblais et gravats . fin de vie moyenne gravats . impact:
+  formule: 0.013
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Déchets du bâtiment - Déchets inertes en mélange (Gravats) - Fin de vie moyenne - Impacts
+
+#Déchets dangereux _____________________________________________________________________________________________
+
+alimentation . déchets . dechetterie . dechets dangereux . quantité:
+  formule: 2
+  unité: kg
+
+alimentation . déchets . dechetterie . dechets dangereux . quantité réelle:
+  formule: quantité * (1 - dechetterie . part DAE)
+  unité: kg
+
+alimentation . déchets . dechetterie . dechets dangereux:
+  formule:
+    somme:
+      - stockage
+      - incinération
+
+#_ dechets dangereux . stockage _____________________________
+alimentation . déchets . dechetterie . dechets dangereux . stockage:
+  formule: quantité réelle * stockage . pourcentage * stockage . impact
+  unité: kgCO2e
+
+alimentation . déchets . dechetterie . dechets dangereux . stockage . pourcentage:
+  formule: 78%
+
+alimentation . déchets . dechetterie . dechets dangereux . stockage . impact:
+  formule: 0.128
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : DIS - Stockage - Impacts
+
+#_ dechets dangereux . incinération _____________________________
+alimentation . déchets . dechetterie . dechets dangereux . incinération:
+  formule: quantité réelle * incinération . pourcentage * incinération . impact
+  unité: kgCO2e
+
+alimentation . déchets . dechetterie . dechets dangereux . incinération . pourcentage:
+  formule: 22%
+
+alimentation . déchets . dechetterie . dechets dangereux . incinération . impact:
+  formule: 0.844
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : DIS - Incinération - Impacts
+
+#Déchets emcombrants et tout-venant _____________________________________________________________________________________________
+
+alimentation . déchets . dechetterie . emcombrants et tout-venant . quantité:
+  formule: 52
+  unité: kg
+
+alimentation . déchets . dechetterie . emcombrants et tout-venant . quantité réelle:
+  formule: quantité * (1 - dechetterie . part DAE)
+  unité: kg
+
+alimentation . déchets . dechetterie . emcombrants et tout-venant:
+  formule: fin de vie moyenne DIB
+
+#_ emcombrants et tout-venant . fin de vie moyenne DIB _____________________________
+alimentation . déchets . dechetterie . emcombrants et tout-venant . fin de vie moyenne DIB:
+  formule: quantité réelle * fin de vie moyenne DIB . pourcentage * fin de vie moyenne DIB . impact
+  unité: kgCO2e
+
+alimentation . déchets . dechetterie . emcombrants et tout-venant . fin de vie moyenne DIB . pourcentage:
+  formule: 100%
+  note: |
+    On considère 100 % de fin de vie moyenne DIB pour les déchets emcombrants et tout-venant
+
+alimentation . déchets . dechetterie . emcombrants et tout-venant . fin de vie moyenne DIB . impact:
+  formule: 0.087
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Déchets du bâtiment - Déchets non dangereux en mélange (DIB) - Fin de vie moyenne - Impacts
+
+#Déchets autres _____________________________________________________________________________________________
+
+alimentation . déchets . dechetterie . autre . quantité:
+  formule: 2
+  unité: kg
+
+alimentation . déchets . dechetterie . autre . quantité réelle:
+  formule: quantité * (1 - dechetterie . part DAE)
+  unité: kg
+
+alimentation . déchets . dechetterie . autre:
+  formule:
+    somme:
+      - stockage
+      - incinération
+
+#_ autre . stockage _____________________________
+alimentation . déchets . dechetterie . autre . stockage:
+  formule: quantité réelle * stockage . pourcentage * stockage . impact
+  unité: kgCO2e
+
+alimentation . déchets . dechetterie . autre . stockage . pourcentage:
+  formule: 78%
+
+alimentation . déchets . dechetterie . autre . stockage . impact:
+  formule: 0.412
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Ordures ménagères résiduelles - Stockage - Impacts
+
+#_ autre . incinération _____________________________
+alimentation . déchets . dechetterie . autre . incinération:
+  formule: quantité réelle * incinération . pourcentage * incinération . impact
+  unité: kgCO2e
+
+alimentation . déchets . dechetterie . autre . incinération . pourcentage:
+  formule: 22%
+
+alimentation . déchets . dechetterie . autre . incinération . impact:
+  formule: 0.374
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Ordures ménagères résiduelles - Incinération - Impacts

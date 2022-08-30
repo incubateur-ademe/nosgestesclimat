@@ -1,0 +1,323 @@
+#Calcul de l'impact GES du traitement des OMR
+
+alimentation . déchets . omr:
+  titre: Ordures ménagères résiduelles
+  formule:
+    somme:
+      - omr . putrescibles
+      - omr . papier carton
+      - omr . plastiques
+      - omr . verre
+      - omr . metaux
+      - omr . autre
+  note: |
+    Les quantités de déchets sont issues du tableau 3 page 16 de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html).
+
+    La répartition des types de traitement pour chaque catégorie (en poucentage) issue d'un calcul basé sur les chiffres de 
+    [Déchets, chiffres clés - ADEME - L'essentiel 2021](https://librairie.ademe.fr/cadic/6912/dechets-chiffres-cles-lessentiel-2021-011723.pdf) 
+    et [La collecte des déchets par le service public en France – Résultats et zooms thématiques 2019 - ADEME 2021](https://librairie.ademe.fr/dechets-economie-circulaire/4804-la-collecte-des-dechets-par-le-service-public-en-france.html#/44-type_de_produit-format_electronique)
+
+alimentation . déchets . omr . part DAE:
+  formule: 20%
+  note: |
+    Dans la collecte des déchets des ménages il y a toujours une part de déchets issus des DAE (Déchets des Activités Economiques)
+    Voir page 13 de l'étude [ADEME MODECOM 2017](https://librairie.ademe.fr/dechets-economie-circulaire/4351-modecom-2017-campagne-nationale-de-caracterisation-des-dechets-menagers-et-assimiles.html).
+
+    On estimera donc la quantité réelle de déchets à l'échelle de l'invidu après déduction de la part des DAE (Déchets des Activités Economiques) contenue
+    dans les collectes.
+
+#Déchets putrecibles _____________________________________________________________________________________________
+alimentation . déchets . omr . putrescibles . quantité:
+  formule: 83.1
+  unité: kg
+
+alimentation . déchets . omr . putrescibles . quantité réelle:
+  formule: quantité * (1 - omr . part DAE)
+  unité: kg
+
+alimentation . déchets . omr . putrescibles:
+  formule:
+    somme:
+      - stockage
+      - incinération
+      - compost
+      - méthanisation
+
+#_ putrescibles . stockage _____________________________
+alimentation . déchets . omr . putrescibles . stockage:
+  formule: quantité réelle * stockage . pourcentage * stockage . impact
+  unité: kgCO2e
+
+alimentation . déchets . omr . putrescibles . stockage . pourcentage:
+  formule: 24%
+
+alimentation . déchets . omr . putrescibles . stockage . impact:
+  formule: 0.692
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Déchets putrescibles - Stockage - Impacts
+
+#_ putrescibles . incinération _____________________________
+alimentation . déchets . omr . putrescibles . incinération:
+  formule: quantité réelle * incinération . pourcentage * incinération . impact
+  unité: kgCO2e
+
+alimentation . déchets . omr . putrescibles . incinération . pourcentage:
+  formule: 68%
+
+alimentation . déchets . omr . putrescibles . incinération . impact:
+  formule: 0.045
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Déchets putrescibles - Incinération - Impacts
+
+#_ putrescibles . compost _____________________________
+alimentation . déchets . omr . putrescibles . compost:
+  formule: quantité réelle * compost . pourcentage * compost . impact
+  unité: kgCO2e
+
+alimentation . déchets . omr . putrescibles . compost . pourcentage:
+  formule: 4%
+
+alimentation . déchets . omr . putrescibles . compost . impact:
+  formule: 0.140
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Déchets de cuisine et déchets verts - Compostage industriel - Impacts
+
+#_ putrescibles . méthanisation _____________________________
+alimentation . déchets . omr . putrescibles . méthanisation:
+  formule: quantité réelle * méthanisation . pourcentage * méthanisation . impact
+  unité: kgCO2e
+
+alimentation . déchets . omr . putrescibles . méthanisation . pourcentage:
+  formule: 4%
+
+alimentation . déchets . omr . putrescibles . méthanisation . impact:
+  formule: 0.173
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Déchets de cuisine - Méthanisation - Impacts
+
+#Déchets papier carton _____________________________________________________________________________________________
+
+alimentation . déchets . omr . papier carton . quantité:
+  formule: 21.9 + 16.3
+  unité: kg
+
+alimentation . déchets . omr . papier carton . quantité réelle:
+  formule: quantité * (1 - omr . part DAE)
+  unité: kg
+
+alimentation . déchets . omr . papier carton:
+  formule:
+    somme:
+      - stockage
+      - incinération
+
+#_ papier carton . stockage _____________________________
+alimentation . déchets . omr . papier carton . stockage:
+  formule: quantité réelle * stockage . pourcentage * stockage . impact
+  unité: kgCO2e
+
+alimentation . déchets . omr . papier carton . stockage . pourcentage:
+  formule: 26%
+
+alimentation . déchets . omr . papier carton . stockage . impact:
+  formule: 0.950
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Carton - Stockage - Impacts
+
+#_ papier carton . incinération _____________________________
+alimentation . déchets . omr . papier carton . incinération:
+  formule: quantité réelle * incinération . pourcentage * incinération . impact
+  unité: kgCO2e
+
+alimentation . déchets . omr . papier carton . incinération . pourcentage:
+  formule: 74%
+
+alimentation . déchets . omr . papier carton . incinération . impact:
+  formule: 0.120
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Carton - Incinération - Impacts
+
+#Déchets plastiques _____________________________________________________________________________________________
+
+alimentation . déchets . omr . plastiques . quantité:
+  formule: 37.3
+  unité: kg
+
+alimentation . déchets . omr . plastiques . quantité réelle:
+  formule: quantité * (1 - omr . part DAE)
+  unité: kg
+
+alimentation . déchets . omr . plastiques:
+  formule:
+    somme:
+      - stockage
+      - incinération
+
+#_ plastiques . stockage _____________________________
+alimentation . déchets . omr . plastiques . stockage:
+  formule: quantité réelle * stockage . pourcentage * stockage . impact
+  unité: kgCO2e
+
+alimentation . déchets . omr . plastiques . stockage . pourcentage:
+  formule: 26%
+
+alimentation . déchets . omr . plastiques . stockage . impact:
+  formule: 0.041
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Plastique pétrosourcé PET - Stockage - Impacts
+
+#_ plastiques . incinération _____________________________
+alimentation . déchets . omr . plastiques . incinération:
+  formule: quantité réelle * incinération . pourcentage * incinération . impact
+  unité: kgCO2e
+
+alimentation . déchets . omr . plastiques . incinération . pourcentage:
+  formule: 74%
+
+alimentation . déchets . omr . plastiques . incinération . impact:
+  formule: 2.139
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Plastique pétrosourcé PET - Incinération - Impacts
+
+#Déchets verre _____________________________________________________________________________________________
+
+alimentation . déchets . omr . verre . quantité:
+  formule: 13.6
+  unité: kg
+
+alimentation . déchets . omr . verre . quantité réelle:
+  formule: quantité * (1 - omr . part DAE)
+  unité: kg
+  note: |
+    on estime la quantité réelle de déchets en verre à l'échelle de l'invidu en fonction de la part des DAE (Déchets des Activités Economiques) contenu
+    dans les collectes
+
+alimentation . déchets . omr . verre:
+  formule:
+    somme:
+      - stockage
+      - incinération
+
+#_ verre . stockage _____________________________
+alimentation . déchets . omr . verre . stockage:
+  formule: quantité réelle * stockage . pourcentage * stockage . impact
+  unité: kgCO2e
+
+alimentation . déchets . omr . verre . stockage . pourcentage:
+  formule: 26%
+
+alimentation . déchets . omr . verre . stockage . impact:
+  formule: 0.041
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Verre - Stockage - Impacts
+
+#_ verre . incinération _____________________________
+alimentation . déchets . omr . verre . incinération:
+  formule: quantité réelle * incinération . pourcentage * incinération . impact
+  unité: kgCO2e
+
+alimentation . déchets . omr . verre . incinération . pourcentage:
+  formule: 74%
+
+alimentation . déchets . omr . verre . incinération . impact:
+  formule: 0.130
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Verre - Incinération - Impacts
+
+#Déchets métaux _____________________________________________________________________________________________
+
+alimentation . déchets . omr . metaux . quantité:
+  formule: 8.7
+  unité: kg
+
+alimentation . déchets . omr . metaux . quantité réelle:
+  formule: quantité * (1 - omr . part DAE)
+  unité: kg
+
+alimentation . déchets . omr . metaux:
+  formule:
+    somme:
+      - stockage
+      - incinération
+
+#_ metaux . stockage _____________________________
+alimentation . déchets . omr . metaux . stockage:
+  formule: quantité réelle * stockage . pourcentage * stockage . impact
+  unité: kgCO2e
+
+alimentation . déchets . omr . metaux . stockage . pourcentage:
+  formule: 32%
+
+alimentation . déchets . omr . metaux . stockage . impact:
+  formule: 0.041
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Aluminium - Stockage - Impacts
+
+#_ metaux . incinération _____________________________
+alimentation . déchets . omr . metaux . incinération:
+  formule: quantité réelle * incinération . pourcentage * incinération . impact
+  unité: kgCO2e
+
+alimentation . déchets . omr . metaux . incinération . pourcentage:
+  formule: 68%
+
+alimentation . déchets . omr . metaux . incinération . impact:
+  formule: 0.110
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Emballages - Aluminium - Incinération - Impacts
+
+#Déchets autres _____________________________________________________________________________________________
+
+alimentation . déchets . omr . autre . quantité:
+  formule: 5.9 + 7.7 + 35.3 + 11.6 + 10.8 + 1.6
+  unité: kg
+
+alimentation . déchets . omr . autre . quantité réelle:
+  formule: quantité * (1 - omr . part DAE)
+  unité: kg
+
+alimentation . déchets . omr . autre:
+  formule:
+    somme:
+      - stockage
+      - incinération
+
+#_ autre . stockage _____________________________
+alimentation . déchets . omr . autre . stockage:
+  formule: quantité réelle * stockage . pourcentage * stockage . impact
+  unité: kgCO2e
+
+alimentation . déchets . omr . autre . stockage . pourcentage:
+  formule: 32%
+
+alimentation . déchets . omr . autre . stockage . impact:
+  formule: 0.412
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Ordures ménagères résiduelles - Stockage - Impacts
+
+#_ autre . incinération _____________________________
+alimentation . déchets . omr . autre . incinération:
+  formule: quantité réelle * incinération . pourcentage * incinération . impact
+  unité: kgCO2e
+
+alimentation . déchets . omr . autre . incinération . pourcentage:
+  formule: 68%
+
+alimentation . déchets . omr . autre . incinération . impact:
+  formule: 0.374
+  unité: kgCO2e/kg
+  note: |
+    Le FE considéré est : Ordures ménagères résiduelles - Incinération - Impacts
