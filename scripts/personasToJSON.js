@@ -10,6 +10,6 @@ fs.writeFile(
 	JSON.stringify(personas),
 	function (err) {
 		if (err) return console.error(err)
-		console.log('Le fichier personas.yaml a été converti avec succès !')
+		console.log(' ✅ Le fichier personas.yaml a été converti avec succès !')
 	}
 )
