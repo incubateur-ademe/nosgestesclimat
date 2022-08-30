@@ -1,8 +1,7 @@
-let yaml = require('yaml')
 let fs = require('fs')
 let glob = require('glob')
 
-glob('documentation/*/*.md', (err2, mdFiles) => {
+glob('documentation/*/*.md', (_err2, mdFiles) => {
 	const data = mdFiles.reduce((memo, filename) => {
 		const content = fs.readFileSync('./' + filename, 'utf8')
 		const dottedName = filename.replace(/(documentation\/|\.md)/g, '')
@@ -16,7 +15,7 @@ glob('documentation/*/*.md', (err2, mdFiles) => {
 		function (err) {
 			if (err) return console.error(err)
 			console.log(
-				'Les fichiers .md de documentation/ en ont été exposées dans public/ en JSON avec succès, bravo !'
+				' ✅ Les fichiers .md de documentation/ en ont été exposées dans public/ en JSON avec succès, bravo !'
 			)
 		}
 	)
