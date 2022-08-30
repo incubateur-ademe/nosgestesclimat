@@ -1,10 +1,6 @@
 # International
 
-:::warning
-
-For now, Nos Gestes Climat website and model programming language Publi.codes are only available in French. We intend to provide international solution of Nos Gestes Climat to help you to adapt the calculator to your country within few weeks. We are testing a multi-model version for francophones, that's why this guide is written in French.
-
-:::
+> For now, Nos Gestes Climat website and model programming language Publi.codes are only available in French. We intend to provide international solution of Nos Gestes Climat to help you to adapt the calculator to your country within few weeks. We are testing a multi-model version for francophones, that's why this guide is written in French.
 
 L'internationalisation de Nos Gestes Climat est complexe : il n'est pas seulement question de simple traduction linguistique mais de la mise en place d'une solution permettant d'adapter la langue et le modèle de calcul en fonction du pays.
 
@@ -23,19 +19,19 @@ N'hésitez pas à contribuer !
 
 Réalisez ensuitre un _fork_ :
 
-![](https://codimd.s3.shivering-isles.com/demo/uploads/107d511a306d420f67cf67f1a.gif)
+![fork](https://user-images.githubusercontent.com/55186402/187473855-57274d05-5678-4f83-9274-ad11e024b7f9.gif)
 
 C'est une copie du code source vers votre espace. Vous pouvez alors modifier le code de votre coté.
 
 **Etape 3 :** RDV dans le dossier Data et lancez-vous dans votre première modification !
 
-![](https://codimd.s3.shivering-isles.com/demo/uploads/107d511a306d420f67cf67f1b.gif)
+![commit](https://user-images.githubusercontent.com/55186402/187473938-aedc3076-eabd-4198-828b-80c34431e325.gif)
 
 **Etape 4 :** Vous êtes satisfait de votre modification ? Faites une PR.
 
 Une PR ? Une Pull Request : cette manip vous permet d'envoyer vos modifications vers le code source du projet. Vous apparaissez ensuite dans la liste des PR en cours et vos modifications futures seront reliées à cette PR.
 
-![](https://codimd.s3.shivering-isles.com/demo/uploads/107d511a306d420f67cf67f1c.gif)
+![PR](https://user-images.githubusercontent.com/55186402/187473975-493ec81e-3c2b-423d-a37d-8f228a993b88.gif)
 
 Si vous faites des erreurs dans l'écriture de vos règles, pas de panique, un commentaire apparaitra pour vous les signaler.
 
