@@ -15,7 +15,7 @@ glob('documentation/*/*.md', (_err2, mdFiles) => {
 		function (err) {
 			if (err) return console.error(err)
 			console.log(
-				' ✅ Les fichiers .md de documentation/ en ont été exposées dans public/ en JSON avec succès, bravo !'
+				' ✅ Les fichiers .md de documentation/ en ont été exposées dans public/ en JSON avec succès !'
 			)
 		}
 	)
