@@ -1,0 +1,66 @@
+name: Update PR comments
+
+on:
+  workflow_run:
+    workflows: [ "Vérification de la PR" ]
+    types: [ completed ]
+  #
+  # pull_request:
+  #   types: [ opened, synchronize ]
+  # # This number should correspond to the IGNORE_RUNS_OLDER_THAN value below.
+  # # When setting up for the first time, use "on: push" instead of "on: schedule"
+  # # and set IGNORE_RUNS_OLDER_THAN to a very high number until it runs once.
+  # push:
+  #   branches:
+  #     - '*'
+  # # schedule:
+  # #   - cron: '*/15 * * * *'
+
+jobs:
+  pr_comment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          # This snippet is public-domain, taken from
+          # https://github.com/oprypin/nightly.link/blob/master/.github/workflows/pr-comment.yml
+          script: |
+            async function upsertComment(owner, repo, issue_number, purpose, body) {
+              const {data: comments} = await github.rest.issues.listComments(
+                {owner, repo, issue_number});
+              const marker = '<!-- bot: ' + purpose + ' -->';
+              body = marker + '\n' + body;
+              const existing = comments.filter((c) => c.body.includes(marker));
+              if (existing.length > 0) {
+                const last = existing[existing.length - 1];
+                core.info('Updating comment' + last.id);
+                await github.rest.issues.updateComment({
+                  owner, repo,
+                  body,
+                  comment_id: last.id,
+                });
+              } else {
+                core.info('Creating a comment in issue / PR #' + issue_number);
+                await github.rest.issues.createComment({issue_number, body, owner, repo});
+              }
+            }
+            const {owner, repo} = context.repo;
+            console.log(context.repo);
+            const run_id = context.runId;
+            const pull_requests = await github.rest.pulls.list(context.repo);
+            console.log('Found ' + pull_requests.data.length + ' PRs...');
+            if (!pull_requests.data.length) {
+              return core.error("This workflow doesn't match any pull requests!");
+            }
+            const artifacts = await github.paginate(
+              github.rest.actions.listWorkflowRunArtifacts, {owner, repo, run_id});
+            console.log('Artifacts: ', artifacts);
+            if (!artifacts.length) {
+              return core.error('No artifacts found');
+            }
+            let body = 'Download the artifacts for this pull request:\n';
+            core.info("Review thread message body:", body);
+            //for (const pr of pull_requests) {
+             // await upsertComment(owner, repo, pr.number,
+              //  "nightly-link", body);
+            //}
