@@ -1,8 +1,5 @@
 name: Vérification de la PR
 on:
-  pull_request_target:
-    branches:
-      - '*'
   pull_request:
     types: [ opened, synchronize ]
   push:
@@ -44,26 +41,50 @@ jobs:
     if: github.event_name == 'pull_request'
     needs: build
     steps:
-      - name: Find Comment
-        uses: peter-evans/find-comment@v2
-        id: find-comment
+      - name: Create artifact
+        run: |
+          mkdir -p artifacts
+          echo "
+          ## 🚀 La _pull request_ #${{ github.event.pull_request.number }}  est ouverte \!
+          > Tester le modèle depuis le site : ${{ needs.build.outputs.test-url }}
+
+          Résultat de la compilation du modèle :
+
+          \`\`\`
+          ${{ needs.build.outputs.compilation-result }}
+          \`\`\`
+          " > artifacts/result.md
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1
         with:
-          issue-number: ${{ github.event.pull_request.number }} #e.g. 1
-          comment-author: 'github-actions[bot]'
-          body-includes: '> Tester le modèle depuis le site'
-      - name: Create comment
-        uses: peter-evans/create-or-update-comment@v2
-        with:
-          comment-id: ${{ steps.find-comment.outputs.comment-id }}
-          issue-number: ${{ github.event.pull_request.number }}
-          edit-mode: replace
-          body: |
-            ## 🚀 La _pull request_ #${{ github.event.pull_request.number }}  est ouverte !
+          name: pr_message
+          path: artifacts
 
-            > Tester le modèle depuis le site : ${{ needs.build.outputs.test-url }}
-
-            Résultat de la compilation du modèle :
-
-            ```
-            ${{ needs.build.outputs.compilation-result }}
-            ```
+  # post-comment:
+  #   runs-on: ubuntu-22.04
+  #   if: github.event_name == 'pull_request'
+  #   needs: build
+  #   steps:
+  #     - name: Find Comment
+  #       uses: peter-evans/find-comment@v2
+  #       id: find-comment
+  #       with:
+  #         issue-number: ${{ github.event.pull_request.number }} #e.g. 1
+  #         comment-author: 'github-actions[bot]'
+  #         body-includes: '> Tester le modèle depuis le site'
+  #     - name: Create comment
+  #       uses: peter-evans/create-or-update-comment@v2
+  #       with:
+  #         comment-id: ${{ steps.find-comment.outputs.comment-id }}
+  #         issue-number: ${{ github.event.pull_request.number }}
+  #         edit-mode: replace
+  #         body: |
+  #           ## 🚀 La _pull request_ #${{ github.event.pull_request.number }}  est ouverte !
+  #
+  #           > Tester le modèle depuis le site : ${{ needs.build.outputs.test-url }}
+  #
+  #           Résultat de la compilation du modèle :
+  #
+  #           ```
+  #           ${{ needs.build.outputs.compilation-result }}
+  #           ```
