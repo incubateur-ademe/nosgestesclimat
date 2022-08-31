@@ -30,7 +30,10 @@ glob('data/**/*.yaml', (_, files) => {
 		new Engine(rules).evaluate('bilan')
 		console.log(' ✅ Les règles ont été évaluées sans erreur !')
 		fs.writeFile(outputJSONFileName, JSON.stringify(rules), function (err) {
-			if (err) return console.error(err)
+			if (err) {
+				console.error(err)
+				exit(-1)
+			}
 			console.log(
 				' ✅ Les règles en JSON ont été écrites avec succès dans le fichier:',
 				outputJSONFileName
@@ -47,5 +50,6 @@ glob('data/**/*.yaml', (_, files) => {
 			}
 		}
 		console.log()
+		exit(-1)
 	}
 })
