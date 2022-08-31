@@ -6,8 +6,8 @@ L'internationalisation de Nos Gestes Climat est complexe : il n'est pas seulemen
 
 Toutes les réflexions sont visibles ici :
 
-- https://github.com/datagir/nosgestesclimat/issues/1385
-- https://github.com/datagir/nosgestesclimat-site/issues/470
+- [Traduction linguistique](https://github.com/datagir/nosgestesclimat/issues/1385)
+- [Enjeux liés au modèle](https://github.com/datagir/nosgestesclimat-site/issues/470)
 
 N'hésitez pas à contribuer !
 
@@ -17,19 +17,19 @@ N'hésitez pas à contribuer !
 
 **Etape 2 :** Github est une plateforme particulièrement intéressante pour la gestion des versions du code. Pour commencer votre déclinaison, créer votre compte Github et rendez vous sur le dépôt "nosgestesclimat" : https://github.com/datagir/nosgestesclimat.
 
-Réalisez ensuitre un _fork_ :
+Réalisez ensuite un _fork_ :
 
 ![fork](https://user-images.githubusercontent.com/55186402/187473855-57274d05-5678-4f83-9274-ad11e024b7f9.gif)
 
 C'est une copie du code source vers votre espace. Vous pouvez alors modifier le code de votre coté.
 
-**Etape 3 :** RDV dans le dossier Data et lancez-vous dans votre première modification !
+**Etape 3 :** RDV dans le dossier `data` et lancez-vous dans votre première modification !
 
 ![commit](https://user-images.githubusercontent.com/55186402/187473938-aedc3076-eabd-4198-828b-80c34431e325.gif)
 
 **Etape 4 :** Vous êtes satisfait de votre modification ? Faites une PR.
 
-Une PR ? Une Pull Request : cette manip vous permet d'envoyer vos modifications vers le code source du projet. Vous apparaissez ensuite dans la liste des PR en cours et vos modifications futures seront reliées à cette PR.
+Une PR ? _Une Pull Request_ : cette manip vous permet d'envoyer une demande d'ajouts de vos modifications vers le code source du projet. Vous apparaissez ensuite dans la liste des PR en cours et vos modifications futures y seront affichées.
 
 ![PR](https://user-images.githubusercontent.com/55186402/187473975-493ec81e-3c2b-423d-a37d-8f228a993b88.gif)
 
@@ -37,4 +37,4 @@ Si vous faites des erreurs dans l'écriture de vos règles, pas de panique, un c
 
 **Etape 5 :** Votre version du modèle est maintenant reliée au code source et donc au site Nos Gestes Climat (via cette PR). Votre site est en ligne à l'adresse suivante : https://nosgestesclimat.fr/simulateur/bilan?PR={NUMERO DE VOTRE PR ICI : 1348}
 
-**Etape 6 :** L'équipe Nos Gestes Climat est active sur Github et pourra répondre à vos question. L'objectif est de proposer une version du modèle propre à un pays ou une région. Lorsque votre modèle sera valider, nous le mettrons en ligne sur nosgestesclimat.fr. Ainsi, si les utilisateurs se connectent depuis le pays ou la région pour lequel/laquelle le modèle a été créé, ils verront la version correspondante.
+**Etape 6 :** L'équipe Nos Gestes Climat est active sur Github et pourra répondre à vos questions. L'objectif est de proposer une version du modèle propre à un pays ou une région. Lorsque votre modèle sera validé, nous le mettrons en ligne sur nosgestesclimat.fr. Ainsi, si les utilisateurs se connectent depuis le pays ou la région pour lequel/laquelle le modèle a été créé, ils verront la version correspondante.
