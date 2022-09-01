@@ -20,7 +20,19 @@ jobs:
   pr_comment:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/github-script@v6
+      - name: Checkout Repository
+        uses: actions/checkout@v2.3.4
+
+      - name: Downloading Artifacts from Previous Workflow...
+        uses: synergy-au/download-workflow-artifacts-action@v1
+        with:
+          # Only needed for private repos
+          auth-token: ${{ secrets.GITHUB_TOKEN }}
+          # You can get this from the workflow_run event. A workflow run ID is required.
+          workflow-run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Running the script...
+        uses: actions/github-script@v6
         with:
           # This snippet is public-domain, taken from
           # https://github.com/oprypin/nightly.link/blob/master/.github/workflows/pr-comment.yml
