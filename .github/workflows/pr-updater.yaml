@@ -19,6 +19,7 @@ on:
 jobs:
   pr_comment:
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2.3.4
@@ -76,7 +77,17 @@ jobs:
             if (!artifacts.length) {
               return core.error('No artifacts found');
             }
-            let body = 'Download the artifacts for this pull request:\n';
+
+            const fs = require('fs');
+
+            fs.readFile('result.md', 'utf8', (err, data) => {
+              if (err) {
+                console.error(err);
+                return;
+              }
+              console.log('result.md content:', data);
+            });
+
             core.info("Review thread message body:", body);
             console.log('Test github variable: ${{ github.event.pull_request.number }}');
             //for (const pr of pull_requests) {
