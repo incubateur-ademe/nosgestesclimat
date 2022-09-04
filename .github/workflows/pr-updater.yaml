@@ -36,15 +36,7 @@ jobs:
             if (!pull_requests.data.length) {
               return core.error("Currently, there is no open PR.");
             }
-            core.info('Found ' + pull_requests.data.length + ' PR...');
-
-            const artifacts = await github.paginate(
-              github.rest.actions.listWorkflowRunArtifacts,
-              {owner, repo, run_id}
-            );
-            if (!artifacts.length) {
-              return core.error('No artifacts found.');
-            }
+            core.info('Found ' + pull_requests.data.length + ' PR');
 
             var triggered_pr;
             for (const pr of pull_requests.data) {
@@ -56,6 +48,7 @@ jobs:
               return core.error('The corresponding RP could not be found.');
 
             }
+            core.info('Found the corresponding PR: #' + triggered_pr.number);
 
             const marker = 'yarn-compile-result';
             var body = '<!-- bot: ' + marker + ' -->\n' + fs.readFileSync('result.md', 'utf8');
