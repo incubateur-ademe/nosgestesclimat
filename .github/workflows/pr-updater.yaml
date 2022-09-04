@@ -60,34 +60,42 @@ jobs:
 
             const fs = require('fs');
 
-            fs.readFile('result.md', 'utf8', (err, data) => {
+            var data = fs.readFile('result.md', 'utf8', (err, data) => {
               if (err) {
                 console.error(err);
-                return;
+                exit(-1);
               }
-              core.info("Review thread message body:", data);
-              // TODO: find the corresponding PR (context.payload.head_sha == pr.head.sha)
-              for (const pr of pull_requests) {
-                console.log('pr.head.sha:', pr.head.sha);
-                console.log('context.payload.head_sha', context.payload.head_sha);
-                if (pr.head.sha == context.payload.head_sha) {
-                    const {data: comments} = await github.rest.issues.listComments(
-                      {owner, repo, issue_number});
-                    const marker = '<!-- bot: ' + purpose + ' -->';
-                    body = marker + '\n' + body;
-                    const existing = comments.filter((c) => c.body.includes(marker));
-                    if (existing.length > 0) {
-                      const last = existing[existing.length - 1];
-                      core.info('Updating comment' + last.id);
-                      await github.rest.issues.updateComment({
-                        owner, repo,
-                        body,
-                        comment_id: last.id,
-                      });
-                    } else {
-                      core.info('Creating a comment in issue / PR #' + issue_number);
-                      await github.rest.issues.createComment({issue_number, body, owner, repo});
-                    }
-                }
+              return data;
             });
+            core.info("Review thread message body:", data);
+            // TODO: find the corresponding PR (context.payload.head_sha == pr.head.sha)
+            var triggered_pr;
+            for (const pr of pull_requests) {
+              console.log('pr.head.sha:', pr.head.sha);
+              console.log('context.payload.head_sha', context.payload.head_sha);
+              if (pr.head.sha == context.payload.head_sha) {
+                triggered_pr = pr;
+              }
+            }
+            console.log('triggered_pr:', triggered_pr);
+
+            //        const {data: comments} = await github.rest.issues.listComments(
+            //          {owner, repo, issue_number});
+            //        const marker = '<!-- bot: ' + purpose + ' -->';
+            //        body = marker + '\n' + body;
+            //        const existing = comments.filter((c) => c.body.includes(marker));
+            //        if (existing.length > 0) {
+            //          const last = existing[existing.length - 1];
+            //          core.info('Updating comment' + last.id);
+            //          await github.rest.issues.updateComment({
+            //            owner, repo,
+            //            body,
+            //            comment_id: last.id,
+            //          });
+            //        } else {
+            //          core.info('Creating a comment in issue / PR #' + issue_number);
+            //          await github.rest.issues.createComment({issue_number, body, owner, repo});
+            //        }
+            //    }
+            //});
 
