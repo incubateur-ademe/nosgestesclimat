@@ -84,12 +84,13 @@ jobs:
                 console.error(err);
                 return;
               }
-              console.log('result.md content:', data);
+              core.info("Review thread message body:", data);
+              // TODO: find the corresponding PR (context.payload.head_sha == pr.head.sha)
+              for (const pr of pull_requests) {
+                console.log('pr.head.sha:', pr.head.sha);
+                console.log('context.payload.head_sha', context.payload.head_sha);
+                if (pr.head.sha == context.payload.head_sha) {
+                   await upsertComment(owner, repo, pr.number, "yarn-build-result", data);
+                }
             });
 
-            core.info("Review thread message body:", body);
-            console.log('Test github variable: ${{ github.event.pull_request.number }}');
-            //for (const pr of pull_requests) {
-             // await upsertComment(owner, repo, pr.number,
-              //  "nightly-link", body);
-            //}
