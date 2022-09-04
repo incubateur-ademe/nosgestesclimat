@@ -1,20 +1,13 @@
+# This CI is triggered each time a workflow named "Vérification de la PR" is
+# completed. It retrieves the artifact containing the result of the `yarn
+# compile` command, and update/create a new comment on the corresponding PR.
+
 name: Update PR comments
 
 on:
   workflow_run:
     workflows: [ "Vérification de la PR" ]
     types: [ completed ]
-  #
-  # pull_request:
-  #   types: [ opened, synchronize ]
-  # # This number should correspond to the IGNORE_RUNS_OLDER_THAN value below.
-  # # When setting up for the first time, use "on: push" instead of "on: schedule"
-  # # and set IGNORE_RUNS_OLDER_THAN to a very high number until it runs once.
-  # push:
-  #   branches:
-  #     - '*'
-  # # schedule:
-  # #   - cron: '*/15 * * * *'
 
 jobs:
   pr_comment:
@@ -26,63 +19,59 @@ jobs:
       - name: Downloading Artifacts from Previous Workflow...
         uses: synergy-au/download-workflow-artifacts-action@v1
         with:
-          # Only needed for private repos
           auth-token: ${{ secrets.GITHUB_TOKEN }}
-          # You can get this from the workflow_run event. A workflow run ID is required.
           workflow-run-id: ${{ github.event.workflow_run.id }}
 
-      - name: Reading the downloaded artifact
-        run: |
-          cat result.md
-
-      - name: Running the script...
+      - name: Updating the PR
         uses: actions/github-script@v6
         with:
-          # This snippet is public-domain, taken from
-          # https://github.com/oprypin/nightly.link/blob/master/.github/workflows/pr-comment.yml
           script: |
             const fs = require('fs');
 
             const {owner, repo} = context.repo;
-            console.log('context: ', context);
             const run_id = context.payload.workflow_run.id;
-            console.log('workflow_run.id:', run_id);
+            core.info('Triggered workflow run:', run_id);
+
             const pull_requests = await github.rest.pulls.list(context.repo);
-            console.log('Found ' + pull_requests.data.length + ' PRs...');
             if (!pull_requests.data.length) {
-              return core.error("This workflow doesn't match any pull requests!");
+              return core.error("Currently, there is no open PR.");
             }
+            core.info('Found ' + pull_requests.data.length + ' PR...');
+
             const artifacts = await github.paginate(
-              github.rest.actions.listWorkflowRunArtifacts, {owner, repo, run_id});
-            console.log('Artifacts: ', artifacts);
+              github.rest.actions.listWorkflowRunArtifacts,
+              {owner, repo, run_id}
+            );
             if (!artifacts.length) {
-              return core.error('No artifacts found');
+              return core.error('No artifacts found.');
             }
 
-            // TODO: find the corresponding PR (context.payload.head_sha == pr.head.sha)
             var triggered_pr;
             for (const pr of pull_requests.data) {
-              console.log('pr.head.sha:', pr.head.sha);
-              console.log('context.payload.workflow_run.head_sha', context.payload.workflow_run.head_sha);
               if (pr.head.sha == context.payload.workflow_run.head_sha) {
                 triggered_pr = pr;
               }
             }
-            const issue_number = triggered_pr.number;
-            const comments = await github.rest.issues.listComments({owner, repo, issue_number});
+            if (!triggered_pr) {
+              return core.error('The corresponding RP could not be found.');
+
+            }
+
             const marker = 'yarn-compile-result';
             var body = '<!-- bot: ' + marker + ' -->\n' + fs.readFileSync('result.md', 'utf8');
-            console.log('after body:', body);
+
+            const issue_number = triggered_pr.number;
+            const comments = await github.rest.issues.listComments({owner, repo, issue_number});
             const existing = comments.data.filter((c) => c.body.includes(marker));
             if (existing.length > 0) {
               const last = existing[existing.length - 1];
-              core.info('Updating comment' + last.id);
+              core.info('Updating the comment ' + last.id);
               await github.rest.issues.updateComment({
                 owner, repo,
                 body,
                 comment_id: last.id,
               });
             } else {
-              core.info('Creating a comment in issue / PR #' + issue_number);
+              core.info('Creating a comment in the PR #' + issue_number);
               await github.rest.issues.createComment({issue_number, body, owner, repo});
             }
