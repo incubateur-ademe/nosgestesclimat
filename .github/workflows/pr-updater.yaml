@@ -72,7 +72,7 @@ jobs:
             const comments = await github.rest.issues.listComments({owner, repo, issue_number});
             const marker = 'yarn-compile-result';
             var body = '<!-- bot: ' + marker + ' -->\n';
-            fs.readFile('result.md', 'utf8', (err, data) => {
+            var body2 = await fs.readFile('result.md', 'utf8', (err, data) => {
               if (err) {
                 console.error(err);
                 return;
@@ -80,8 +80,10 @@ jobs:
               console.log('before body:', body);
               console.log('before data:', data);
               body = body + data;
+              return body;
             });
             console.log('after body:', body);
+            console.log('after body2:', body2);
             const existing = comments.data.filter((c) => c.body.includes(marker));
             if (existing.length > 0) {
               const last = existing[existing.length - 1];
