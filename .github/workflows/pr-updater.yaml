@@ -41,25 +41,6 @@ jobs:
           # This snippet is public-domain, taken from
           # https://github.com/oprypin/nightly.link/blob/master/.github/workflows/pr-comment.yml
           script: |
-            async function upsertComment(owner, repo, issue_number, purpose, body) {
-              const {data: comments} = await github.rest.issues.listComments(
-                {owner, repo, issue_number});
-              const marker = '<!-- bot: ' + purpose + ' -->';
-              body = marker + '\n' + body;
-              const existing = comments.filter((c) => c.body.includes(marker));
-              if (existing.length > 0) {
-                const last = existing[existing.length - 1];
-                core.info('Updating comment' + last.id);
-                await github.rest.issues.updateComment({
-                  owner, repo,
-                  body,
-                  comment_id: last.id,
-                });
-              } else {
-                core.info('Creating a comment in issue / PR #' + issue_number);
-                await github.rest.issues.createComment({issue_number, body, owner, repo});
-              }
-            }
             const {owner, repo} = context.repo;
             console.log('context: ', context);
             const run_id = context.payload.workflow_run.id;
@@ -90,7 +71,23 @@ jobs:
                 console.log('pr.head.sha:', pr.head.sha);
                 console.log('context.payload.head_sha', context.payload.head_sha);
                 if (pr.head.sha == context.payload.head_sha) {
-                   await upsertComment(owner, repo, pr.number, "yarn-build-result", data);
+                    const {data: comments} = await github.rest.issues.listComments(
+                      {owner, repo, issue_number});
+                    const marker = '<!-- bot: ' + purpose + ' -->';
+                    body = marker + '\n' + body;
+                    const existing = comments.filter((c) => c.body.includes(marker));
+                    if (existing.length > 0) {
+                      const last = existing[existing.length - 1];
+                      core.info('Updating comment' + last.id);
+                      await github.rest.issues.updateComment({
+                        owner, repo,
+                        body,
+                        comment_id: last.id,
+                      });
+                    } else {
+                      core.info('Creating a comment in issue / PR #' + issue_number);
+                      await github.rest.issues.createComment({issue_number, body, owner, repo});
+                    }
                 }
             });
 
