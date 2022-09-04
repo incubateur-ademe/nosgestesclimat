@@ -41,6 +41,8 @@ jobs:
           # This snippet is public-domain, taken from
           # https://github.com/oprypin/nightly.link/blob/master/.github/workflows/pr-comment.yml
           script: |
+            const fs = require('fs');
+
             const {owner, repo} = context.repo;
             console.log('context: ', context);
             const run_id = context.payload.workflow_run.id;
@@ -57,16 +59,6 @@ jobs:
               return core.error('No artifacts found');
             }
 
-            const fs = require('fs');
-
-            var body = fs.readFile('result.md', 'utf8', (err, data) => {
-              if (err) {
-                console.error(err);
-                exit(-1);
-              }
-              return data;
-            });
-            core.info("Review thread message body:", body);
             // TODO: find the corresponding PR (context.payload.head_sha == pr.head.sha)
             var triggered_pr;
             for (const pr of pull_requests.data) {
@@ -76,12 +68,17 @@ jobs:
                 triggered_pr = pr;
               }
             }
-            console.log('triggered_pr:', triggered_pr);
             const issue_number = triggered_pr.number;
             const comments = await github.rest.issues.listComments({owner, repo, issue_number});
-            console.log('comments.data:', comments.data);
             const marker = 'yarn-compile-result';
-            body = '<!-- bot: ' + marker + ' -->\n' + body;
+            var body = '<!-- bot: ' + marker + ' -->\n';
+            fs.readFile('result.md', 'utf8', (err, data) => {
+              if (err) {
+                console.error(err);
+                return;
+              }
+              body = body + data;
+            });
             console.log('body:', body);
             const existing = comments.data.filter((c) => c.body.includes(marker));
             if (existing.length > 0) {
