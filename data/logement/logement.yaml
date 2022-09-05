@@ -176,7 +176,19 @@ logement . électricité . consommation:
   unité: kWh
   par défaut:
     variations:
-      - si: logement . chauffage . électricité . présent
+      - si:
+          toutes ces conditions:
+            - logement . chauffage . par défaut = oui
+            - une de ces conditions:
+                - logement . chauffage . électricité . présent
+                - logement . chauffage . PAC . présent
+        alors: parc français . consommation électricité totale relative
+      - si:
+          toutes ces conditions:
+            - logement . chauffage . par défaut = non
+            - une de ces conditions:
+                - logement . chauffage . électricité . présent
+                - logement . chauffage . PAC . présent
         alors: parc français . consommation électricité totale
       - sinon: parc français . consommation électricité autre moyenne
 
@@ -222,12 +234,32 @@ logement . chauffage:
 
     Cochez tous les modes que vous utilisez.
   formule:
-    somme:
-      - gaz
-      - fioul
-      - bois . empreinte
-      - réseau de chaleur
-      # chauffage électrique et PAC déjà compté dans la conso électrique
+    variations:
+      - si: par défaut
+        alors:
+          somme:
+            - parc français . chauffage . consommation gaz moyenne relative * gaz . intensité carbone
+            - parc français . chauffage . consommation fioul moyenne relative en litres * fioul . intensité carbone litre
+            # chauffage électrique et PAC déjà compté dans la conso électrique
+      - sinon:
+          somme:
+            - gaz
+            - fioul
+            - bois . empreinte
+            - réseau de chaleur
+            # chauffage électrique et PAC déjà compté dans la conso électrique
+
+logement . chauffage . par défaut:
+  question: l'utilisateur a-t-il répondu "Je ne sais pas" à la question du type de chauffage ?
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - électricité . présent = non
+            - gaz . présent = non
+            - fioul . présent = non
+        alors: non
+      - sinon: oui
 
 logement . chauffage . réseau de chaleur:
   icônes: 🏭
@@ -290,7 +322,7 @@ logement . chauffage . gaz . estimation via le coût:
 logement . chauffage . gaz . consommation:
   icônes: 🔥
   question: Quelle est la consommation annuelle de gaz de votre foyer ?
-  par défaut: parc français . chauffage . consommation gaz moyenne relative
+  par défaut: parc français . chauffage . consommation gaz moyenne
   unité: kWh
   aide: estimation via le coût
   description: |
@@ -332,9 +364,7 @@ logement . chauffage . fioul . consommation:
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
     Si vous utilisez plusieurs logements (par exemple une residence secondaire) il faut se débrouiller pour "ramener" ces consommations dans celles du logement principal.
 
-    > Il est estimé que la consommation d'une maison récente de 100m² chauffée au fioul consomme entre 1200 et 2400 litres par an. Pour une maison ancienne dans une région froide, elle peut atteindre 6000 litres par an. [Source lenergietoutcompris.fr](https://www.lenergietoutcompris.fr/faq/fioul/quelle-est-la-consommation-moyenne-de-fioul-au-m2).
-
-  par défaut: parc français . chauffage . consommation fioul moyenne relative en litres
+  par défaut: parc français . chauffage . consommation fioul moyenne en litres
   aide: estimation via le prix
 
 logement . chauffage . fioul . intensité carbone:
