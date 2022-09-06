@@ -244,6 +244,9 @@ logement . chauffage:
           somme:
             - parc français . chauffage . consommation gaz moyenne relative * gaz . intensité carbone
             - parc français . chauffage . consommation fioul moyenne relative en litres * fioul . intensité carbone litre
+            - parc français . chauffage . consommation bois moyenne relative * ((facteur d'émission . bûche + facteur d'émission . granulés) / 2)
+            - parc français . chauffage . consommation réseau de chaleur moyenne relative * réseau de chaleur . intensité carbone
+            - parc français . chauffage . consommation GPL moyenne relative * GPL . intensité carbone
             # chauffage électrique et PAC déjà compté dans la conso électrique
       - sinon:
           somme:
@@ -274,6 +277,11 @@ logement . chauffage . réseau de chaleur . présent:
   question: Votre logement est-il chauffé via un réseau de chaleur ?
   par défaut: non
   inactif: oui
+  
+logement . chauffage . réseau de chaleur . intensité carbone:
+  formule: 0.114
+  unité: kgCO2e/kWh
+  note: FE issu de la moyenne de tous les réseaux de chaleur de la Base Carbone
 
 logement . chauffage . PAC:
   titre: Pompe à chaleur
@@ -380,3 +388,10 @@ logement . chauffage . fioul . intensité carbone litre:
   unité: kgCO2e/litre
   références:
     - https://www.bilans-ges.ademe.fr - Fioul domestique France continental
+
+logement . chauffage . GPL . intensité carbone:
+  formule: 0.272
+  unité: kgCO2e/kWh
+  référence:
+    - https://www.bilans-ges.ademe.fr - GPL pour véhicule routier
+  #Il n'y a pas de GPL de "maison" dans la Base Carbone. Pointer directement sur le FE gaz naturel ?
