@@ -1,0 +1,70 @@
+# This CI is triggered each time a workflow named "Generate PR artifact" is
+# completed. It retrieves the artifact containing the result of the `yarn
+# compile` command, and update/create a new comment on the corresponding PR.
+
+name: Update PR comments
+
+on:
+  workflow_run:
+    workflows: [ "Generate PR artifact" ]
+    types: [ completed ]
+
+jobs:
+  pr_comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2.3.4
+
+      - name: Downloading Artifacts from Previous Workflow...
+        uses: synergy-au/download-workflow-artifacts-action@v1
+        with:
+          auth-token: ${{ secrets.GITHUB_TOKEN }}
+          workflow-run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Updating the PR
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+
+            const {owner, repo} = context.repo;
+            const run_id = context.payload.workflow_run.id;
+            core.info('Triggered workflow run:', run_id);
+
+            const pull_requests = await github.rest.pulls.list(context.repo);
+            if (!pull_requests.data.length) {
+              return core.error("Currently, there is no open PR.");
+            }
+            core.info('Found ' + pull_requests.data.length + ' PR');
+
+            var triggered_pr;
+            for (const pr of pull_requests.data) {
+              if (pr.head.sha == context.payload.workflow_run.head_sha) {
+                triggered_pr = pr;
+              }
+            }
+            if (!triggered_pr) {
+              return core.error('The corresponding RP could not be found.');
+
+            }
+            core.info('Found the corresponding PR: #' + triggered_pr.number);
+
+            const marker = 'yarn-compile-result';
+            var body = '<!-- bot: ' + marker + ' -->\n' + fs.readFileSync('result.md', 'utf8');
+
+            const issue_number = triggered_pr.number;
+            const comments = await github.rest.issues.listComments({owner, repo, issue_number});
+            const existing = comments.data.filter((c) => c.body.includes(marker));
+            if (existing.length > 0) {
+              const last = existing[existing.length - 1];
+              core.info('Updating the comment ' + last.id);
+              await github.rest.issues.updateComment({
+                owner, repo,
+                body,
+                comment_id: last.id,
+              });
+            } else {
+              core.info('Creating a comment in the PR #' + issue_number);
+              await github.rest.issues.createComment({issue_number, body, owner, repo});
+            }

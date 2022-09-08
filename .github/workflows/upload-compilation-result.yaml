@@ -1,13 +1,21 @@
-name: Vérification de la PR
+# Generates an artifact containing the result of the `yarn compile` command.
+
+name: Generate PR artifact
+
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [ opened, synchronize ]
   push:
     branches:
       - '*'
 
+permissions:
+  pull-requests: write
+  issues: write
+  repository-projects: write
+
 jobs:
-  build:
+  compile:
     runs-on: ubuntu-22.04
     outputs:
       compilation-result: ${{ steps.compilation.outputs.result }}
@@ -31,31 +39,26 @@ jobs:
         # Setups the NGC url with the corresponding PR number: https://nosgestesclimat.fr?PR=<pr_number>
         run: echo "::set-output name=fr::${{ steps.deploy-env.outputs.name == 'master' && 'https://nosgestesclimat.fr' || format('https://nosgestesclimat.fr?PR={0}', github.event.pull_request.number) }}"
 
-  post-comment:
+  upload-artifact:
     runs-on: ubuntu-22.04
     if: github.event_name == 'pull_request'
-    needs: build
+    needs: compile
     steps:
-      - name: Find Comment
-        uses: peter-evans/find-comment@v2
-        id: find-comment
+      - name: Create artifact
+        run: |
+          mkdir -p artifacts
+          echo "
+          ## 🚀 La _pull request_ #${{ github.event.pull_request.number }}  est ouverte \!
+          > Tester le modèle depuis le site : ${{ needs.compile.outputs.test-url }}
+
+          Résultat de la compilation du modèle :
+
+          \`\`\`
+          ${{ needs.compile.outputs.compilation-result }}
+          \`\`\`
+          " > artifacts/result.md
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1
         with:
-          issue-number: ${{ github.event.pull_request.number }} #e.g. 1
-          comment-author: 'github-actions[bot]'
-          body-includes: '> Tester le modèle depuis le site'
-      - name: Create comment
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          comment-id: ${{ steps.find-comment.outputs.comment-id }}
-          issue-number: ${{ github.event.pull_request.number }}
-          edit-mode: replace
-          body: |
-            ## 🚀 La _pull request_ #${{ github.event.pull_request.number }}  est ouverte !
-
-            > Tester le modèle depuis le site : ${{ needs.build.outputs.test-url }}
-
-            Résultat de la compilation du modèle :
-
-            ```
-            ${{ needs.build.outputs.compilation-result }}
-            ```
+          name: pr_message
+          path: artifacts
