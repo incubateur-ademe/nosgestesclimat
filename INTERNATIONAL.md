@@ -23,7 +23,7 @@ Réalisez ensuite un _fork_ :
 
 C'est une copie du code source vers votre espace. Vous pouvez alors modifier le code de votre coté.
 
-**Etape 3 :** RDV dans le dossier `data` et lancez-vous dans votre première modification !
+**Etape 3 :** RDV dans le dossier `data` et lancez-vous dans votre première modification ! Sachez que le code du modèle peut contenir certaines subtilités (notamment pour la gestions des questions "Mosaïques"), n'hésitez pas à nous contacter si vous bloquez !
 
 ![commit](https://user-images.githubusercontent.com/55186402/187473938-aedc3076-eabd-4198-828b-80c34431e325.gif)
 
