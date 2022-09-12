@@ -288,9 +288,32 @@ logement . chauffage . gaz . consommation:
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
     Si vous utilisez plusieurs logements (par exemple une residence secondaire) il faut se débrouiller pour "ramener" ces consommations dans celles du logement principal.
 
+logement . chauffage . gaz . biogaz:
+  question: Avez-vous souscrit à un contrat 100% biogaz (ou biométhane) ?
+  description: |
+    Le biogaz ou biométhane, est un gaz fabriqué à partir de déchets organiques (déchets ménagers, fumier, déchets de pelouse, cultures etc.), contrairement au gaz fossile aussi appelé de façon trompeuse "naturel", qui lui est extrait comme le pétrole depuis le sous-sol norvégien, russe etc. 
+
+    Depuis quelques années, il est possible de souscire à un contrat qui garantit l'injection sur le réseau de gaz français de la même quantité de biométhane que sa propre consommation. Le gaz que vous consommez dans votre logement sera de toutes façon un mélange principalement composé de la molécule méthane (CH₄), mais pour chaque kWh de gaz consommeré, il aura été injecté "en votre nom" 1 kWh de biométhane.
+
+    > Contrairement au gaz, l'électricité *ne se stocke pas*, c'est pourquoi nous ne proposons pas d'option "électricité verte" dans le simulateur.
+
+    Attention, il existe des offres à 10%, 20% de biométhane seulement, si c'est le cas répondez "non".
+  note: |
+    Le biométhane pose des problèmes à ce jour pas encore résolus, voir [cette note](https://github.com/datagir/nosgestesclimat/issues/982#issuecomment-1242956263) pour plus d'informations.
+  par défaut: non
 logement . chauffage . gaz . intensité carbone:
-  formule: 0.227
+  formule:
+    variations:
+      - si: biogaz
+        alors: 0.0444
+      - sinon: 0.227
   unité: kgCO2e/kWh
+  note: |
+    Il s'agit de kgCO2e/kWh *PCI*.
+
+    Gaz fossile : Gaz naturel - 2015 - mix moyen - consommation
+
+    Biogaz : Biométhane - Injecté dans les réseaux - Mix moyen
 
 logement . chauffage . fioul:
   icônes: 🛢
