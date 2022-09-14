@@ -14,16 +14,60 @@ logement . climatisation . présent:
   par défaut: non
 
 logement . climatisation . empreinte unitaire:
-  formule: 114
-  unité: kgCO2e/unité
-  note: |
-    Nous utilisons la valeur d'émission de GES lié aux fuites d'HFC, présent dans les climatiseurs électriques. 
+  formule: fuite annuelle . empreinte + fuite fin de vie . empreinte . amortie + (climatiseur . empreinte / durée de vie)
+  unité: kgCO2e
 
-    Sources : https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Refrigeration_et_climatisation & GESTIS Substance Database . 
+logement . climatisation . charge moyenne:
+  formule: 1.72
+  unité: kg
+  note: moyenne des charges moyennes du tableau résidentielle donné [ici](https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Refrigeration_et_climatisation)
 
-    Ces 2 gaz sont le R410a et le R407c.
+logement . climatisation . taux de fuite annuel:
+  formule: 4.2
+  note: moyenne des taux de fuites annuel du tableau résidentielle donné [ici](https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Refrigeration_et_climatisation)
+
+logement . climatisation . taux de fuite fin de vie:
+  formule: 66,4
+  note: moyenne des taux de fuites en fin de vie du tableau résidentielle donné [ici](https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Refrigeration_et_climatisation)
+
+logement . climatisation . fuite annuelle:
+  formule: charge moyenne * taux de fuite annuel
+  unité: kg
+
+logement . climatisation . fuite annuelle . empreinte:
+  formule: fuite annuelle * fluide frigo empreinte
+  unité: kgCO2e
+
+logement . climatisation . fuite fin de vie:
+  formule: charge moyenne * taux de fuite fin de vie
+  unité: kg
+
+logement . climatisation . fuite fin de vie . empreinte:
+  formule: fuite fin de vie * fluide frigo empreinte
+  unité: kgCO2e
+
+logement . climatisation . fuite fin de vie . empreinte . amortie:
+  formule: fuite fin de vie . empreinte / durée vie climatiseur
+  unité: kgCO2e
+  
+logement . climatisation . fluide frigo empreinte:
+  formule: 1924
+  unité: kgCO2e
+  note: R410a considéré et FE issu de la Base Carbone
+  #envisager une moyenne pondérée en fonction des proportions de chaque réfrigérant utiisé
+  
+logement . climatisation . durée de vie:
+  formule: 6
+  unité: ans
+  note: issu Tab 4-5 p33 de cette étude [ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/127-modelisation-et-evaluation-environnementale-de-produits-de-consommation-et-biens-d-equipement.html)
+
+logement . climatisation . climatiseur . empreinte:
+  formule: 239
+  unité: kgCO2e
+  note: Censé représenter l'impact de la construction d'un climatiseur mais je reprends le FE "climatiseur mobile"
+  #Vérifier que c'est bien un périmètre cradle-to-gate
+  #Mais ces données ne semblent significativement plus forte (en termes de chiffrage GES) que l'étude ADEME mentionnée dans les sources de la Base Carbone (cf. plus haut)
 
 logement . climatisation . nombre:
   question: Combien de climatiseurs électriques possédez-vous ?
-  unité: unités
   par défaut: 1
