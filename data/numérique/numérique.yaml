@@ -8,20 +8,8 @@ numérique:
   icônes: 📺
   formule:
     somme:
-      - téléphone
-      - TV
-      - ordinateur portable
-      - ordinateur fixe
       - internet
-      - tablette
-      - vidéoprojecteur
-      - appareil photo
-      - home cinéma
-      - enceinte bluetooth
-      - enceinte vocale
-      - montre connectée
-      - console de salon
-      - console portable
+      - appareils
 
 numérique . internet:
   icônes: 🌐
@@ -59,6 +47,160 @@ numérique . internet . durée journalière:
     zéro: 0
     modérément: 2
     je ne décroche pas: 8
+
+numérique . préservation:
+  question: Quel effort faites-vous pour garder vos appareils électroniques le plus longtemps possible ?
+  description: |
+    Pour éviter de vous demander de renseigner l'âge précis de tous les appareils électroniques que vous possédez, nous utilisons une grille d'âge moyen
+    constaté pour chaque appareil que l'on fait évoluer en fonction de vos efforts à les préserver ou non.
+
+    Vous pouvez explorer la durée moyenne et l'empreinte de chaque appareil [ici](/documentation/numérique).
+
+    A vous donc de juger vos efforts pour les faire durer le plus longtemps possible
+
+    > Répondre "Je rachète souvent neuf" est la réponse la plus impactante car elle signifie que vous remplacez vos appareils précocément avant même qu'ils soient hors d'usage.
+
+  par défaut: "'moyen'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - achat neuf
+        - faible
+        - moyen
+        - maximum
+
+numérique . préservation . faible:
+  titre: Peu d'effort
+numérique . préservation . achat neuf:
+  titre: Je rachète souvent neuf
+numérique . préservation . moyen:
+  titre: Effort moyen
+numérique . préservation . maximum:
+  titre: Effort maximal
+
+numérique . coefficient préservation:
+  note: |
+    Nous définissons une grille de comportements de consommation, de l'acheteur neuf presque compulsif à celui qui fait un effort important pour garder ses appareils le plus longtemps possible. 
+
+    L'acheteur répondant "j'achète beaucoup de neuf" garde ses appareils la moitié de leur durée de vie moyenne constatée, à l'inverse celui qui conserve repousse une durée de vie moyenne de 10 ans à 13 ans.
+
+    Cette grille pourra évoluer si de nouvelles sources, études viennent compléter tout cela.
+  formule:
+    variations:
+      - si: préservation = 'achat neuf'
+        alors: 1 / 2
+      - si: préservation = 'faible'
+        alors: 2 / 3
+      - si: préservation = 'moyen'
+        alors: 1
+      - sinon: 4 / 3
+
+numérique . appareils:
+  formule:
+    somme:
+      - téléphone
+      - TV
+      - ordinateur portable
+      - ordinateur fixe
+      - tablette
+      - vidéoprojecteur
+      - appareil photo
+      - home cinéma
+      - enceinte bluetooth
+      - enceinte vocale
+      - montre connectée
+      - console de salon
+      - console portable
+
+numérique . téléphone . présent:
+  question: Utilisez-vous un téléphone ?
+  par défaut: oui
+
+numérique . téléphone:
+  icônes: 📱
+  applicable si: présent
+  formule: impact / (durée * coefficient préservation)
+  description: >
+    Les téléphones, et particulièrement les smartphones récents, sont le symbole
+    par excellence de la *high-tech*, qui est réputée consommer beaucoup de
+    ressources.
+
+    La question est d'autant plus importante qu'ils sont souvent renouvelés régulièrement, par exemple à chaque sortie annuelle du nouvel iPhone.
+
+    En réalité, notamment en comparaison du nombre d'heures que nous passons sur ces petits objets, leur empreinte climat pourrait être compatible avec un style de vie durable. Illustration : 
+
+    Un téléphone haut de gamme (iPhone X) c'est < 100kgCO2e. En supposant qu'on achète ce smartphone dernier cri tous les 2 ans, on a < 50kgCO2e/an.
+    Cela représente un demi-pourcent de l'empreinte moyenne d'un français (11 tonnes). Et 2.5% d'une empreinte durable de 2 tonnes / an.
+  note: Nous estimons que l'appareil va durer un an de plus que l'âge renseigné au moment de l'estimation.
+
+numérique . téléphone . type:
+  icônes: 🤙📱
+  applicable si: présent
+  question: Quel téléphone avez-vous ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - téléphone basique
+        - smartphone classique
+        - smartphone haut de gamme
+  description: |
+
+    Un smartphone haut de gamme, c'est par exemple un iPhone récent avec un grand écran (> iPhone X), ou un Samsung Galaxy S ou Note récent.
+
+    Si vous n'avez pas de téléphone mobile, il y a de grandes chances pour que vous ayez un fixe. Répondez à la question en fonction de la sophistication de votre téléphone fixe, notamment la taille de l'écran. Si vous n'avez ni fixe ni mobile, désolé...
+
+  par défaut: "'smartphone classique'"
+
+numérique . téléphone . durée:
+  formule: 2.5
+  unité: ans
+  note: La durée de vie est issue de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
+
+numérique . téléphone . impact:
+  icônes: 📱✨
+  applicable si: présent
+  exposé: oui
+  unité: kgCO₂e
+  références:
+    - https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=Smartphone
+    - https://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/produits_informatiques__electr
+    - https://www.apple.com/environment/pdf/products/iphone/iPhone_11_PER_sept2019.pdf
+  description: |
+
+    Nous segmentons les possibilités de cette question en trois catégories.
+
+    ## Téléphone basique
+
+    Aussi appelé "feature phone", qui sont aujourd'hui au croisement entre le fameux Nokia 3310 et le smartphone, dont l'écran reste petit et les composants bas de gamme
+
+    > Son empreinte est donnée par la base bilan-GES.
+
+
+    ## Smartphone classique
+
+    Milieu de gamme, qui représente l'écrasante majorité des ventes. Tous les smartphones vendus en 2021 ou presque ont un écran supérieur à 5.5 pouces. 
+
+    > Son empreinte est donnée par la base bilan-GES.
+
+    ## Smartphone haut de gamme 
+
+    La base bilan-GES n'inclut pas de catégories "téléphone haut de gamme" ou "écran > 6 pouces". De plus, l'empreinte d'un iPhone 11 estimée par Apple elle-même est de 72kg de CO2e, dont 79% donc ~57kg juste pour la production. 
+    A moins que le périmètre des études ne soit pas le même, mais un périmètre plus important pris par l'entreprise que par l'authorité environnementale est pour le moins étonnant, nous retenons la valeur du fabricant.
+
+  formule:
+    variations:
+      - si: type = 'téléphone basique'
+        alors: 16.5
+      - si: type = 'smartphone classique'
+        alors: 39.1
+      - si: type = 'smartphone haut de gamme'
+        alors: 57
+
+numérique . téléphone . type . téléphone basique:
+numérique . téléphone . type . smartphone classique:
+numérique . téléphone . type . smartphone haut de gamme:
 
 numérique . appareil photo . présent:
   note: On range l'appareil photo dans la catégorie numérique vu la rareté des appareils argentiques aujourd'hui.
@@ -133,92 +275,6 @@ numérique . ordinateur fixe . écran:
   note: Valeur pour un écran de 23,8 pouces.
   références:
     Ecran - 23,8 pouces: https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=écran
-
-numérique . téléphone . présent:
-  question: Utilisez-vous un téléphone ?
-  par défaut: oui
-
-numérique . téléphone . type:
-  applicable si: présent
-  icônes: 🤙📱
-  question: Quel téléphone avez-vous ?
-  formule:
-    une possibilité:
-      choix obligatoire: oui
-      possibilités:
-        - téléphone basique
-        - smartphone classique
-        - smartphone haut de gamme
-  description: |
-
-    Un smartphone haut de gamme, c'est par exemple un iPhone récent avec un grand écran (> iPhone X), ou un Samsung Galaxy S ou Note récent.
-
-    Si vous n'avez pas de téléphone mobile, il y a de grandes chances pour que vous ayez un fixe. Répondez à la question en fonction de la sophistication de votre téléphone fixe, notamment la taille de l'écran. Si vous n'avez ni fixe ni mobile, désolé...
-
-  par défaut: "'smartphone classique'"
-
-numérique . téléphone . durée:
-  formule: 2.5
-  unité: ans
-  note: La durée de vie est issue de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
-
-numérique . téléphone:
-  applicable si: présent
-  icônes: 📱
-  formule: impact / (durée * coefficient préservation)
-  description: >
-    Les téléphones, et particulièrement les smartphones récents, sont le symbole
-    par excellence de la *high-tech*, qui est réputée consommer beaucoup de
-    ressources.
-
-    La question est d'autant plus importante qu'ils sont souvent renouvelés régulièrement, par exemple à chaque sortie annuelle du nouvel iPhone.
-
-    En réalité, notamment en comparaison du nombre d'heures que nous passons sur ces petits objets, leur empreinte climat pourrait être compatible avec un style de vie durable. Illustration : 
-
-    Un téléphone haut de gamme (iPhone X) c'est < 100kgCO2e. En supposant qu'on achète ce smartphone dernier cri tous les 2 ans, on a < 50kgCO2e/an.
-    Cela représente un demi-pourcent de l'empreinte moyenne d'un français (11 tonnes). Et 2.5% d'une empreinte durable de 2 tonnes / an.
-  note: Nous estimons que l'appareil va durer un an de plus que l'âge renseigné au moment de l'estimation.
-
-numérique . téléphone . impact:
-  icônes: 📱✨
-  exposé: oui
-  unité: kgCO₂e
-  références:
-    - https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=Smartphone
-    - https://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/produits_informatiques__electr
-    - https://www.apple.com/environment/pdf/products/iphone/iPhone_11_PER_sept2019.pdf
-  description: |
-
-    Nous segmentons les possibilités de cette question en trois catégories.
-
-    ## Téléphone basique
-
-    Aussi appelé "feature phone", qui sont aujourd'hui au croisement entre le fameux Nokia 3310 et le smartphone, dont l'écran reste petit et les composants bas de gamme
-
-    > Son empreinte est donnée par la base bilan-GES.
-
-
-    ## Smartphone classique
-
-    Milieu de gamme, qui représente l'écrasante majorité des ventes. Tous les smartphones vendus en 2021 ou presque ont un écran supérieur à 5.5 pouces. 
-
-    > Son empreinte est donnée par la base bilan-GES.
-
-    ## Smartphone haut de gamme 
-
-    La base bilan-GES n'inclut pas de catégories "téléphone haut de gamme" ou "écran > 6 pouces". De plus, l'empreinte d'un iPhone 11 estimée par Apple elle-même est de 72kg de CO2e, dont 79% donc ~57kg juste pour la production. A moins que le périmètre des études ne soit pas le même, mais un périmètre plus important pris par l'entreprise que par l'authorité environnementale est pour le moins étonnant, nous retenons la valeur du fabricant.
-  formule:
-    variations:
-      - si: type = 'téléphone basique'
-        alors: 16.5
-      - si: type = 'smartphone classique'
-        alors: 39.1
-      - si: type = 'smartphone haut de gamme'
-        alors: 57
-
-numérique . téléphone . type . téléphone basique:
-numérique . téléphone . type . smartphone classique:
-numérique . téléphone . type . smartphone haut de gamme:
 
 numérique . tablette . présent:
   question: Utilisez-vous une tablette ?
@@ -344,51 +400,3 @@ numérique . console portable:
   applicable si: présent
   formule: 30.8 / (durée * coefficient préservation)
   unité: kgCO2e
-
-numérique . préservation:
-  question: Quel effort faites-vous pour garder vos appareils électroniques le plus longtemps possible ?
-  description: |
-    Pour éviter de vous demander de renseigner l'âge précis de tous les appareils électroniques que vous possédez, nous utilisons une grille d'âge moyen
-    constaté pour chaque appareil que l'on fait évoluer en fonction de vos efforts à les préserver ou non.
-
-    Vous pouvez explorer la durée moyenne et l'empreinte de chaque appareil [ici](/documentation/numérique).
-
-    A vous donc de juger vos efforts pour les faire durer le plus longtemps possible
-
-    > Répondre "Je rachète souvent neuf" est la réponse la plus impactante car elle signifie que vous remplacez vos appareils précocément avant même qu'ils soient hors d'usage.
-
-  par défaut: "'moyen'"
-  formule:
-    une possibilité:
-      choix obligatoire: oui
-      possibilités:
-        - achat neuf
-        - faible
-        - moyen
-        - maximum
-
-numérique . préservation . faible:
-  titre: Peu d'effort
-numérique . préservation . achat neuf:
-  titre: Je rachète souvent neuf
-numérique . préservation . moyen:
-  titre: Effort moyen
-numérique . préservation . maximum:
-  titre: Effort maximal
-
-numérique . coefficient préservation:
-  note: |
-    Nous définissons une grille de comportements de consommation, de l'acheteur neuf presque compulsif à celui qui fait un effort important pour garder ses appareils le plus longtemps possible. 
-
-    L'acheteur répondant "j'achète beaucoup de neuf" garde ses appareils la moitié de leur durée de vie moyenne constatée, à l'inverse celui qui conserve repousse une durée de vie moyenne de 10 ans à 13 ans.
-
-    Cette grille pourra évoluer si de nouvelles sources, études viennent compléter tout cela.
-  formule:
-    variations:
-      - si: préservation = 'achat neuf'
-        alors: 1 / 2
-      - si: préservation = 'faible'
-        alors: 2 / 3
-      - si: préservation = 'moyen'
-        alors: 1
-      - sinon: 4 / 3
