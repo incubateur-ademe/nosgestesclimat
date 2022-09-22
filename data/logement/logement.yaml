@@ -180,11 +180,11 @@ logement . électricité . consommation:
   unité: kWh
   par défaut:
     variations:
-      - si: logement . chauffage . pas de choix utilisateur = oui
+      - si: logement . chauffage . choix utilisateur = non
         alors: parc français . consommation électricité totale relative
       - si:
           toutes ces conditions:
-            - logement . chauffage . pas de choix utilisateur = non
+            - logement . chauffage . choix utilisateur = oui
             - une de ces conditions:
                 - logement . chauffage . électricité . présent
                 - logement . chauffage . PAC . présent
@@ -224,6 +224,8 @@ logement . chauffage:
   mosaique:
     type: selection
     clé: présent
+    suggestions:
+      pas de chauffage: aucun choix
   icônes: 🌡️
   question: Comment est chauffé votre logement ?
   description: |
@@ -234,25 +236,30 @@ logement . chauffage:
     Cochez tous les modes que vous utilisez.
   formule:
     variations:
-      - si: pas de choix utilisateur
-        alors:
-          somme:
-            - parc français . chauffage . consommation gaz moyenne relative * intensité carbone gaz
-            - parc français . chauffage . consommation fioul moyenne relative en litres * intensité carbone fioul litre
-            - parc français . chauffage . consommation bois moyenne relative * ((bois . facteur d'émission . bûche + bois . facteur d'émission . granulés) / 2)
-            - parc français . chauffage . consommation réseau de chaleur moyenne relative * intensité carbone réseau de chaleur
-            - parc français . chauffage . consommation GPL moyenne relative * intensité carbone GPL
-            # chauffage électrique et PAC déjà compté dans la conso électrique
-      - sinon:
-          somme:
-            - gaz
-            - fioul
-            - bois . empreinte
-            - réseau de chaleur
-            # chauffage électrique et PAC déjà compté dans la conso électrique
+      - si: choix utilisateur
+        alors: empreinte totale
+      - sinon: empreinte par défaut
 
-logement . chauffage . pas de choix utilisateur:
-  question: l'utilisateur a-t-il répondu "Je ne sais pas" à la question du type de chauffage ?
+logement . chauffage . empreinte totale:
+  formule:
+    somme:
+      - gaz
+      - fioul
+      - bois . empreinte
+      - réseau de chaleur
+      # chauffage électrique et PAC déjà compté dans la conso électrique
+
+logement . chauffage . empreinte par défaut:
+  formule:
+    somme:
+      - parc français . chauffage . consommation gaz moyenne relative * intensité carbone gaz
+      - parc français . chauffage . consommation fioul moyenne relative en litres * intensité carbone fioul litre
+      - parc français . chauffage . consommation bois moyenne relative * ((bois . facteur d'émission . bûche + bois . facteur d'émission . granulés) / 2)
+      - parc français . chauffage . consommation réseau de chaleur moyenne relative * intensité carbone réseau de chaleur
+      - parc français . chauffage . consommation GPL moyenne relative * intensité carbone GPL
+
+logement . chauffage . choix utilisateur:
+  question: l'utilisateur a-t-il fait un choix de chauffage ?
   formule:
     variations:
       - si:
@@ -262,8 +269,8 @@ logement . chauffage . pas de choix utilisateur:
             - gaz . présent
             - fioul . présent
             - bois . présent
-        alors: non
-      - sinon: oui
+        alors: oui
+      - sinon: non
 
 logement . chauffage . réseau de chaleur:
   icônes: 🏭
