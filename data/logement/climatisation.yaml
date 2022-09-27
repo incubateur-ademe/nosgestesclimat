@@ -26,7 +26,7 @@ logement . climatisation . présent:
     La climatisation utilise de l'électricité, que vous devez saisir en kWh ou en € dans la question électricité. L'empreinte de l'électricité consommée par le climatiseur est donc déjà calculée. 
 
     Mais en plus de cela, un climatiseur rejette d'autres gaz à effet de serre : d'où la nécessité de poser cette question.
-  par défaut: non
+  par défaut: oui # valeur par défaut à oui pour l'intégrer dans l'empreinte moyenne
 
 logement . climatisation . rappel kWh:
   type: notification
@@ -100,5 +100,15 @@ logement . climatisation . construction:
 
 logement . climatisation . nombre:
   question: Combien de climatiseurs électriques possédez-vous ?
-  par défaut: 1 climatiseur
+  par défaut:
+    variations:
+      - si: appartement
+        alors: 0.20
+      - sinon: 0.31
   unité: climatiseur
+  note: |
+    Source pour le chiffre par défaut : [La climatisation de confort dans les bâtiments résidentiels et tertiaires, état des lieux 2020, juin 2021](https://librairie.ademe.fr/air-et-bruit/4745-la-climatisation-de-confort-dans-les-batiments-residentiels-et-tertiaires.html), page 3.
+
+    > Pour sa part l’enquête réalisée à l’été 2020 par CODA Stratégies auprès de 800 ménages dans le cadre de la présente étude, a constaté un taux d’équipement de 25 % cohérent avec les données récoltées par EDF environ un an avant.
+
+    > Ce taux moyen de 25 % recouvre de fortes disparités. Ainsi les possesseurs de maisons individuelles sont-ils 31 % à posséder un équipement de climatisation contre seulement 20 % des ménages habitant en logement collectif.
