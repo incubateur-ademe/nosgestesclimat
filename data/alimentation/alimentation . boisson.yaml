@@ -6,6 +6,24 @@ alimentation . boisson:
       - froide
 
 alimentation . boisson . chaude:
+  mosaique:
+    type: nombre
+    clé: nombre
+    suggestions:
+      Pas de boisson chaude:
+        café . nombre: 0
+        thé . nombre: 0
+        chocolat chaud . nombre: 0
+      un café par jour:
+        café . nombre: 7
+      beaucoup de café:
+        café . nombre: 28
+      un café et un thé par jour:
+        café . nombre: 7
+        thé . nombre: 7
+      un chocolat chaud le matin:
+        chocolat chaud . nombre: 7
+  question: Quelle est votre consommation de boissons chaudes pour une semaine type (nombre de tasses par semaine)?
   titre: Empreinte boissons chaudes par semaine
   icônes: ☕️🫖
   description: |
@@ -76,12 +94,27 @@ alimentation . boisson . tasse de café . quantité café par tasse:
 
 alimentation . boisson . tasse de thé:
   titre: Empreinte d'une tasse de thé
-  formule: empreinte thé infusé * quantité thé par tasse
+  formule: empreinte thé infusé sans consommation * quantité thé par tasse
   unité: kgCO2e/tasse
+
+alimentation . boisson . tasse de thé . empreinte thé infusé sans consommation:
+  formule: empreinte thé infusé * (1 - part consommation empreinte thé infusé)
+  unité: kgCO2e/kg
+  note: |
+    Pour l'empreinte d'une tasse de café ou chocolat chaud, la part liée à la consommation (chauffage de l'eau notamment) n'est pas prise en compte dans le facteur d'émission 
+    ce qui n'est pas le cas du facteur d'émission du thé issu d'Agribalyse. Si la boisson est bue à domicile, la consommation est déjà incluse dans la facture électrique du logement.
+    En revanche, si elle est prise dans un café, l'empreinte de la consommation doit être ajoutée. 
+    Nous faisons le choix de ne pas inclure la consommation dans les boissons chaudes 
+    (la part liée à la consommation étant négligeable pour le café et chocolat chaud devant les grains de café ou le cacao)
 
 alimentation . boisson . tasse de thé . empreinte thé infusé:
   formule: 0.05
   unité: kgCO2e/kg
+  références:
+    - https://agribalyse.ademe.fr/app/aliments/18020#Th%C3%A9_infus%C3%A9,_non_sucr%C3%A9
+
+alimentation . boisson . tasse de thé . part consommation empreinte thé infusé:
+  formule: 30%
   références:
     - https://agribalyse.ademe.fr/app/aliments/18020#Th%C3%A9_infus%C3%A9,_non_sucr%C3%A9
 
