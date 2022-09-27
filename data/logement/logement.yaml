@@ -30,7 +30,8 @@ logement . habitants:
 
     > Si vous êtes séparé avec un enfant qui alterne entre votre logement et un autre, vous pouvez saisir `1,5`.
 
-  par défaut: 2 personnes
+  par défaut: 2.2
+  note: valeur par défaut d'après https://www.insee.fr/fr/statistiques/2381486.
   suggestions:
     seul: 1
     en couple: 2
@@ -45,11 +46,15 @@ logement . notif minimum habitants:
 
 logement . surface:
   question: Quelle est la surface de votre logement ?
-  par défaut: 80 m2
+  par défaut:
+    variations:
+      - si: appartement
+        alors: parc français . surface moyenne appartement
+      - sinon: parc français . surface moyenne maison
   note: |
-    Valeur par défaut obtenue dans [ce rapport de l'INSEE](https://www.insee.fr/fr/statistiques/2586377).
+    Valeur par défaut obtenue dans [ce jeu de données du Ceren et SDES](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel).
 
-    > Les logements ont une surface moyenne d’un peu plus de 80 m2.
+    > Les logements ont une surface moyenne d’environ 91 m2.
 
     > Si vous vivez dans un logement original, par exemple un camping car / un camion / une péniche, renseignez simplement les m² de ce logement.
   suggestions:
@@ -173,7 +178,19 @@ logement . électricité . consommation:
   icônes: ⚡
   question: Quelle est la consommation annuelle d'électricité de votre foyer ?
   unité: kWh
-  par défaut: 5000 kWh
+  par défaut:
+    variations:
+      - si: logement . chauffage . choix utilisateur = non
+        alors: parc français . consommation électricité totale relative
+      - si:
+          toutes ces conditions:
+            - logement . chauffage . choix utilisateur = oui
+            - une de ces conditions:
+                - logement . chauffage . électricité . présent
+                - logement . chauffage . PAC . présent
+        alors: parc français . consommation électricité totale
+      - sinon: parc français . consommation électricité autre moyenne
+
   aide: estimation via le coût
   description: |
     Astuce : vous trouverez la consommation annuelle d'électricité sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
@@ -183,13 +200,13 @@ logement . électricité . consommation:
 logement . électricité . estimation via le coût:
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
   unité: €/kWh
-  formule: 0.1933
+  formule: 0.2022
   description: |
     Cette formule nous permet de passer des €/mois aux kWh/an.
 
     Le chiffre inclut un coût de l'abonnement, et représente donc une moyenne. Ce n'est pas le prix du kWh marginal. Il inclut les taxes.
   références:
-    Eurostat household first half 2021: https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Electricity_price_statistics
+    Eurostat household second half 2021: https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Electricity_price_statistics
 
 logement . électricité . intensité carbone:
   formule: intensité électricité
@@ -207,6 +224,14 @@ logement . chauffage:
   mosaique:
     type: selection
     clé: présent
+    suggestions:
+      pas de chauffage:
+        PAC . présent: non
+        électricité . présent: non
+        gaz . présent: non
+        fioul . présent: non
+        bois . présent: non
+
   icônes: 🌡️
   question: Comment est chauffé votre logement ?
   description: |
@@ -216,12 +241,42 @@ logement . chauffage:
 
     Cochez tous les modes que vous utilisez.
   formule:
+    variations:
+      - si: choix utilisateur
+        alors: empreinte totale
+      - sinon: empreinte par défaut
+
+logement . chauffage . empreinte totale:
+  formule:
     somme:
       - gaz
       - fioul
       - bois . empreinte
       - réseau de chaleur
       # chauffage électrique et PAC déjà compté dans la conso électrique
+
+logement . chauffage . empreinte par défaut:
+  formule:
+    somme:
+      - parc français . chauffage . consommation gaz moyenne relative * intensité carbone gaz
+      - parc français . chauffage . consommation fioul moyenne relative en litres * intensité carbone fioul litre
+      - parc français . chauffage . consommation bois moyenne relative * ((bois . facteur d'émission . bûche + bois . facteur d'émission . granulés) / 2)
+      - parc français . chauffage . consommation réseau de chaleur moyenne relative * intensité carbone réseau de chaleur
+      - parc français . chauffage . consommation GPL moyenne relative * intensité carbone GPL
+
+logement . chauffage . choix utilisateur:
+  question: l'utilisateur a-t-il fait un choix de chauffage ?
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - électricité . présent
+            - PAC . présent
+            - gaz . présent
+            - fioul . présent
+            - bois . présent
+        alors: oui
+      - sinon: non
 
 logement . chauffage . réseau de chaleur:
   icônes: 🏭
@@ -232,6 +287,11 @@ logement . chauffage . réseau de chaleur . présent:
   question: Votre logement est-il chauffé via un réseau de chaleur ?
   par défaut: non
   inactif: oui
+
+logement . chauffage . intensité carbone réseau de chaleur:
+  formule: 0.114
+  unité: kgCO2e/kWh
+  note: FE issu de la moyenne de tous les réseaux de chaleur de la Base Carbone
 
 logement . chauffage . PAC:
   titre: Pompe à chaleur
@@ -255,16 +315,16 @@ logement . chauffage . électricité:
 
 logement . chauffage . électricité . présent:
   question: Votre logement est-il chauffé à l'électricité ?
-  par défaut: oui
+  par défaut: non
 
 logement . chauffage . gaz:
   icônes: 🔥
   applicable si: présent
-  formule: consommation * intensité carbone
+  formule: consommation * intensité carbone gaz
 
 logement . chauffage . gaz . présent:
   question: Votre logement est-il chauffé au gaz ?
-  par défaut: oui
+  par défaut: non
   note: |
     Bien que le chauffage majoritaire en France soit électrique [source](https://fr.statista.com/statistiques/856283/types-chauffage-logement-principal-france), nous mettons ici la valeur par défaut à oui pour se rapprocher de la moyenne d'empreinte du logement.
 
@@ -284,22 +344,25 @@ logement . chauffage . gaz . estimation via le coût:
 logement . chauffage . gaz . consommation:
   icônes: 🔥
   question: Quelle est la consommation annuelle de gaz de votre foyer ?
-  par défaut: gaz . consommation par défaut
+  par défaut: parc français . chauffage . consommation gaz moyenne
   unité: kWh
   aide: estimation via le coût
   description: |
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
     Si vous utilisez plusieurs logements (par exemple une residence secondaire) il faut se débrouiller pour "ramener" ces consommations dans celles du logement principal.
 
-logement . chauffage . gaz . intensité carbone:
+logement . chauffage . intensité carbone gaz:
   formule: 0.227
+  note: kgCO2e/kWh PCI
+  références:
+    - https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Gaz
   unité: kgCO2e/kWh
 
 logement . chauffage . fioul:
   icônes: 🛢
   applicable si: présent
   titre: Fioul domestique
-  formule: consommation * intensité carbone litre
+  formule: consommation * intensité carbone fioul litre
 
 logement . chauffage . fioul . présent:
   question: Votre logement est-il chauffé au fioul ?
@@ -323,17 +386,22 @@ logement . chauffage . fioul . consommation:
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
     Si vous utilisez plusieurs logements (par exemple une residence secondaire) il faut se débrouiller pour "ramener" ces consommations dans celles du logement principal.
 
-    > Il est estimé que la consommation d'une maison récente de 100m² chauffée au fioul consomme entre 1200 et 2400 litres par an. Pour une maison ancienne dans une région froide, elle peut atteindre 6000 litres par an. [Source lenergietoutcompris.fr](https://www.lenergietoutcompris.fr/faq/fioul/quelle-est-la-consommation-moyenne-de-fioul-au-m2).
-
-  par défaut: 1800 litres
+  par défaut: parc français . chauffage . consommation fioul moyenne en litres
   aide: estimation via le prix
 
-logement . chauffage . fioul . intensité carbone:
+logement . chauffage . intensité carbone fioul:
   formule: 0.324
   unité: kgCO2e/kWh
 
-logement . chauffage . fioul . intensité carbone litre:
+logement . chauffage . intensité carbone fioul litre:
   formule: 3.25
   unité: kgCO2e/litre
   références:
     - https://www.bilans-ges.ademe.fr - Fioul domestique France continental
+
+logement . chauffage . intensité carbone GPL:
+  formule: 0.272
+  unité: kgCO2e/kWh
+  référence:
+    - https://www.bilans-ges.ademe.fr - GPL pour véhicule routier
+  #Il n'y a pas de GPL de "maison" dans la Base Carbone. Pointer directement sur le FE gaz naturel ?
