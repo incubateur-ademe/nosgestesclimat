@@ -9,12 +9,23 @@ const outputJSONFileName = './public/co2.json'
 // this file is kindof a duplicate of RulesProvider (which serves for the local watched webpack environment) in ecolab-climat
 // if it grows more than 20 lines, it should be shared
 
-glob('data/**/*.yaml', (_, files) => {
+glob('data/numérique/streaming>.yaml', (_, files) => {
 	const rules = files.reduce((memo, filename) => {
 		try {
 			const data = fs.readFileSync('./' + filename, 'utf8')
 			const rules = yaml.parse(data)
-			return { ...memo, ...rules }
+			const splitName = filename.replace('data/numérique/', '').split('>.yaml')
+			const prefixedRuleSet =
+				splitName.length > 1
+					? Object.fromEntries(
+							Object.entries(rules).map(([k, v]) => [
+								k === 'index' ? splitName[0] : splitName[0] + ' . ' + k,
+								v,
+							])
+					  )
+					: rules
+			console.log(prefixedRuleSet)
+			return { ...memo, ...prefixedRuleSet }
 		} catch (err) {
 			console.log(
 				' ❌ Une erreur est survenue lors de la lecture du fichier',
@@ -27,7 +38,7 @@ glob('data/**/*.yaml', (_, files) => {
 	}, {})
 
 	try {
-		new Engine(rules).evaluate('bilan')
+		new Engine(rules).evaluate('streaming')
 		console.log(' ✅ Les règles ont été évaluées sans erreur !')
 		fs.writeFile(outputJSONFileName, JSON.stringify(rules), function (err) {
 			if (err) return console.error(err)
