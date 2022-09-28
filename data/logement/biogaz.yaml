@@ -9,8 +9,9 @@ logement . chauffage . gaz . biogaz:
     > Contrairement au gaz, l'électricité *ne se stocke pas*, c'est pourquoi nous ne proposons pas d'option "électricité verte" dans le simulateur.
 
     Attention, il existe des offres à 10%, 20% de biométhane seulement, si c'est le cas répondez "non".
-  note: |
 
+logement . gaz . biogaz:
+  note: |
     La base carbone retient le facteur d'émission biogaz suivant : `0.0444 kgCO2e/kWhPCI`. 
 
     Voici davantage de documentation sur l'intégration de ce chiffres et ses limites.
@@ -56,19 +57,24 @@ logement . chauffage . gaz . biogaz:
 
     > Le biométhane réduit **énormément** les émissions de CO2 du gaz que vous consommez, mais la production actuelle est **incapable de passer à l'échelle** : la réduction globale de toute consommation de gaz reste **essentielle**, que l'on consomme du biogaz ou du gaz fossile.
 
-logement . chauffage . gaz . avertissement biogaz:
+logement . gaz . avertissement biogaz:
   formule: biogaz
   type: notification
   sévérité: avertissement
   description: |
     Vous constaterez que le choix du biogaz réduit énormément l'empreinte climat du gaz que vous consommez, mais notez bien que la production actuelle est incapable de passer à l'échelle : la réduction globale de toute consommation de gaz reste essentielle, que l'on consomme du biogaz ou du gaz fossile.
 
-logement . chauffage . gaz . biogaz . facteur d'émission:
-  formule: 0.0444 * part + facteur d'émission * (1 - part)
+logement . gaz . biogaz . facteur d'émission:
+  formule: biogaz . facteur d'émission base carbone * part + gaz . facteur d'émission base carbone * (1 - part)
   description: |
     Biogaz : Biométhane - Injecté dans les réseaux - Mix moyen
 
-logement . chauffage . gaz . biogaz . part:
+logement . gaz . biogaz . facteur d'émission base carbone:
+  formule: 0.0444
+  description: |
+    Biogaz : Biométhane - Injecté dans les réseaux - Mix moyen
+
+logement . gaz . biogaz . part:
   question: Quelle est la part de biogaz garantie par votre contrat de gaz ?
   description: |
     Il existe peu de vendeurs de gaz proposant des contrats 100% biogaz, mais il en existe (en septembre 2022). 
