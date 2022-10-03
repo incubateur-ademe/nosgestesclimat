@@ -1,0 +1,114 @@
+logement . climatisation:
+  icônes: ❄️
+  titre: Empreinte de la climatisation
+  applicable si: présent
+  formule: empreinte unitaire * nombre
+  unité: kgCO2e
+  description: |
+    Nous estions ici l'empreinte de la climatisation. Son empreinte est quadruple :   
+    - la consommation d'électricité (elle est incluse dans la consommation du logement)
+    - l'empreinte de la construction du matériel
+    - l'empreinte des fuites du liquide caloriporteur
+      - annuelle
+      - en fin de vie
+  note: |
+    Nous avons une certaine différence avec l'étude ADEME car les hypothèses sont différentes de celles de la Base Carbone alors que cette dernière dit s'appuyer sur cette étude.
+
+    Les principales différences proviennent
+
+    - du taux de fuite annuelle considéré : 1% dans l'étude ADEME (tab p38) là ou mon modèle fait la moyenne des taux de fuites annuel du secteur résidentiel donnés dans la Base Carbone (soit 4,2 %)
+    - du fait que l'étude ADEME ne semble pas prendre en compte le taux de fuite en fin de vie (même amorti) qui lui est énorme dans la Base Carbone (moyenne de 66,4 %)
+    - du fait que je considère en première estimation le fluide frigo R410a là ou l'étude considère le R134a
+
+logement . climatisation . présent:
+  question: Utilisez-vous un climatiseur électrique pour refroidir votre logement ?
+  description: |
+    La climatisation utilise de l'électricité, que vous devez saisir en kWh ou en € dans la question électricité. L'empreinte de l'électricité consommée par le climatiseur est donc déjà calculée. 
+
+    Mais en plus de cela, un climatiseur rejette d'autres gaz à effet de serre : d'où la nécessité de poser cette question.
+  par défaut: oui # valeur par défaut à oui pour l'intégrer dans l'empreinte moyenne
+
+logement . climatisation . rappel kWh:
+  type: notification
+  sévérité: information
+  description: |
+    Vous avez une climatisation : sa consommation d'électricité sera simplement à inclure dans la facture d'électricité, comme tous les appareils électriques du logement.
+  formule: présent
+
+logement . climatisation . empreinte unitaire:
+  formule: fuite annuelle . empreinte + fuite fin de vie . empreinte . amortie + (construction / durée de vie)
+  unité: kgCO2e/climatiseur
+
+logement . climatisation . charge moyenne:
+  formule: 1.72
+  unité: kg
+  note: moyenne des charges moyennes du tableau résidentielle donné [ici](https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Refrigeration_et_climatisation)
+
+logement . climatisation . taux de fuite annuel:
+  formule: 4.2%
+  note: moyenne des taux de fuites annuel du tableau résidentielle donné [ici](https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Refrigeration_et_climatisation)
+
+logement . climatisation . taux de fuite fin de vie:
+  formule: 66.4%
+  note: moyenne des taux de fuites en fin de vie du tableau résidentielle donné [ici](https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Refrigeration_et_climatisation)
+
+logement . climatisation . fuite annuelle:
+  formule: charge moyenne * taux de fuite annuel
+  unité: kg
+
+logement . climatisation . fuite annuelle . empreinte:
+  titre: Empreinte des fuites annuelles du climatiseur
+  formule: fuite annuelle * fluide frigo empreinte
+  unité: kgCO2e
+
+logement . climatisation . fuite fin de vie:
+  formule: charge moyenne * taux de fuite fin de vie
+  unité: kg
+
+logement . climatisation . fuite fin de vie . empreinte:
+  formule: fuite fin de vie * fluide frigo empreinte
+  unité: kgCO2e
+
+logement . climatisation . fuite fin de vie . empreinte . amortie:
+  titre: Empreinte amortie des fuites de fin de vie du climatiseur
+  formule: fuite fin de vie . empreinte / durée de vie
+  unité: kgCO2e
+
+logement . climatisation . fluide frigo empreinte:
+  formule: 1924
+  unité: kgCO2e/kg
+  note: |
+    Le fluide considéré est le R410a et son facteur d'émission issu de la Base Carbone.
+
+    Note que l'on trouve dans l'étude [Modélisation et évaluation environnementale de produits de consommation et biens d'équipement](https://librairie.ademe.fr/dechets-economie-circulaire/127-modelisation-et-evaluation-environnementale-de-produits-de-consommation-et-biens-d-equipement.html) :
+
+    > Le fluide frigorigène est le principal contributeur au cycle de vie des climatiseurs. Selon le fluide utilisé, les impacts peuvent être très différents, en effet, on voit aujourd'hui de nouvelles technologies utilisant du pentane, gaz à faible pouvoir de réchauffement global en comparaison avec le R134a.
+
+    On peut envisager une moyenne pondérée en fonction des proportions de chaque réfrigérant utiisé.
+
+logement . climatisation . durée de vie:
+  formule: 6
+  unité: ans
+  note: issu Tab 4-5 p33 de cette étude [ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/127-modelisation-et-evaluation-environnementale-de-produits-de-consommation-et-biens-d-equipement.html)
+
+logement . climatisation . construction:
+  formule: 239
+  unité: kgCO2e
+  note: Censé représenter l'impact de la construction d'un climatiseur mais je reprends le FE "climatiseur mobile"
+  #Vérifier que c'est bien un périmètre cradle-to-gate
+  #Mais ces données ne semblent significativement plus forte (en termes de chiffrage GES) que l'étude ADEME mentionnée dans les sources de la Base Carbone (cf. plus haut)
+
+logement . climatisation . nombre:
+  question: Combien de climatiseurs électriques possédez-vous ?
+  par défaut:
+    variations:
+      - si: appartement
+        alors: 0.20
+      - sinon: 0.31
+  unité: climatiseur
+  note: |
+    Source pour le chiffre par défaut : [La climatisation de confort dans les bâtiments résidentiels et tertiaires, état des lieux 2020, juin 2021](https://librairie.ademe.fr/air-et-bruit/4745-la-climatisation-de-confort-dans-les-batiments-residentiels-et-tertiaires.html), page 3.
+
+    > Pour sa part l’enquête réalisée à l’été 2020 par CODA Stratégies auprès de 800 ménages dans le cadre de la présente étude, a constaté un taux d’équipement de 25 % cohérent avec les données récoltées par EDF environ un an avant.
+
+    > Ce taux moyen de 25 % recouvre de fortes disparités. Ainsi les possesseurs de maisons individuelles sont-ils 31 % à posséder un équipement de climatisation contre seulement 20 % des ménages habitant en logement collectif.
