@@ -230,7 +230,6 @@ logement . chauffage:
         gaz . présent: non
         fioul . présent: non
         bois . présent: non
-
   icônes: 🌡️
   question: Comment est chauffé votre logement ?
   description: |
@@ -257,7 +256,7 @@ logement . chauffage . empreinte totale:
 logement . chauffage . empreinte par défaut:
   formule:
     somme:
-      - parc français . chauffage . consommation gaz moyenne relative * intensité carbone gaz
+      - parc français . chauffage . consommation gaz moyenne relative * gaz . facteur d'émission base carbone
       - parc français . chauffage . consommation fioul moyenne relative en litres * intensité carbone fioul litre
       - parc français . chauffage . consommation bois moyenne relative * ((bois . facteur d'émission . bûche + bois . facteur d'émission . granulés) / 2)
       - parc français . chauffage . consommation réseau de chaleur moyenne relative * intensité carbone réseau de chaleur
@@ -316,47 +315,6 @@ logement . chauffage . électricité . présent:
   question: Votre logement est-il chauffé à l'électricité ?
   par défaut: non
 
-logement . chauffage . gaz:
-  icônes: 🔥
-  applicable si: présent
-  formule: consommation * intensité carbone gaz
-
-logement . chauffage . gaz . présent:
-  question: Votre logement est-il chauffé au gaz ?
-  par défaut: non
-  note: |
-    Bien que le chauffage majoritaire en France soit électrique [source](https://fr.statista.com/statistiques/856283/types-chauffage-logement-principal-france), nous mettons ici la valeur par défaut à oui pour se rapprocher de la moyenne d'empreinte du logement.
-
-    On touche aux limites actuelles de ce système de situation par défaut.
-
-logement . chauffage . gaz . estimation via le coût:
-  question: Pas de facture ? Entrez vos dépenses approximatives par mois
-  unité: €/kWh
-  formule: gaz . prix
-  description: |
-    Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois.
-
-    Voir l'onglet "Calcul consommation Energie" du [tableur MicMac](https://avenirclimatique.org/wp-content/uploads/2020/04/2020-04-12_MicMac_V2.6.xlsx)
-    Mis à jour via un petit algorithme de calcul en janvier 2022, suite aux hausses historiques du prix en 2021.
-    La valeur pour 2022 est approximativement de 0.104 €/kWh.
-
-logement . chauffage . gaz . consommation:
-  icônes: 🔥
-  question: Quelle est la consommation annuelle de gaz de votre foyer ?
-  par défaut: parc français . chauffage . consommation gaz moyenne
-  unité: kWh
-  aide: estimation via le coût
-  description: |
-    Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
-    Si vous utilisez plusieurs logements (par exemple une residence secondaire) il faut se débrouiller pour "ramener" ces consommations dans celles du logement principal.
-
-logement . chauffage . intensité carbone gaz:
-  formule: 0.227
-  note: kgCO2e/kWh PCI
-  références:
-    - https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Gaz
-  unité: kgCO2e/kWh
-
 logement . chauffage . fioul:
   icônes: 🛢
   applicable si: présent
@@ -397,6 +355,81 @@ logement . chauffage . intensité carbone fioul litre:
   unité: kgCO2e/litre
   références:
     - https://www.bilans-ges.ademe.fr - Fioul domestique France continental
+
+logement . chauffage . gaz:
+  icônes: 🔥
+  applicable si: présent
+  formule: consommation * gaz . intensité carbone gaz utilisateur
+
+logement . chauffage . gaz . présent:
+  question: Votre logement est-il chauffé au gaz ?
+  par défaut: non
+  note: |
+    Bien que le chauffage majoritaire en France soit électrique [source](https://fr.statista.com/statistiques/856283/types-chauffage-logement-principal-france), nous mettons ici la valeur par défaut à oui pour se rapprocher de la moyenne d'empreinte du logement.
+
+    On touche aux limites actuelles de ce système de situation par défaut.
+
+logement . chauffage . gaz . estimation via le coût:
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  unité: €/kWh
+  formule: gaz . prix
+  description: |
+    Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois.
+
+    Voir l'onglet "Calcul consommation Energie" du [tableur MicMac](https://avenirclimatique.org/wp-content/uploads/2020/04/2020-04-12_MicMac_V2.6.xlsx)
+    Mis à jour via un petit algorithme de calcul en janvier 2022, suite aux hausses historiques du prix en 2021.
+    La valeur pour 2022 est approximativement de 0.104 €/kWh.
+
+logement . chauffage . gaz . consommation:
+  icônes: 🔥
+  question: Quelle est la consommation annuelle de gaz de votre foyer ?
+  par défaut: parc français . chauffage . consommation gaz moyenne
+  unité: kWh
+  aide: estimation via le coût
+  description: |
+    Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
+    Si vous utilisez plusieurs logements (par exemple une residence secondaire) il faut se débrouiller pour "ramener" ces consommations dans celles du logement principal.
+
+logement . chauffage . gaz . biogaz:
+  question: Avez-vous souscrit à un contrat gaz incluant du biogaz (ou biométhane) ?
+  par défaut: non
+  description: |
+    Le biogaz ou biométhane, est un gaz fabriqué à partir de déchets organiques (déchets ménagers, fumier, déchets de pelouse, cultures etc.), contrairement au gaz fossile aussi appelé de façon trompeuse "naturel", qui lui est extrait comme le pétrole depuis le sous-sol norvégien, russe etc. 
+
+    Depuis quelques années, il est possible de souscire à un contrat qui garantit l'injection sur le réseau de gaz français de la même quantité de biométhane que sa propre consommation. Le gaz que vous consommez dans votre logement sera de toutes façon un mélange principalement composé de la molécule méthane (CH₄), mais pour chaque kWh de gaz consommeré, il aura été injecté "en votre nom" 1 kWh de biométhane.
+
+    > Contrairement au gaz, l'électricité *ne se stocke pas*, c'est pourquoi nous ne proposons pas d'option "électricité verte" dans le simulateur.
+
+    Attention, il existe des offres à 10%, 20% de biométhane seulement, si c'est le cas répondez "non".
+
+logement . chauffage . gaz . avertissement biogaz:
+  formule: biogaz
+  type: notification
+  sévérité: avertissement
+  description: |
+    Vous constaterez que le choix du biogaz réduit énormément l'empreinte climat du gaz que vous consommez, mais notez bien que la production actuelle est incapable de passer à l'échelle : la réduction globale de toute consommation de gaz reste essentielle, que l'on consomme du biogaz ou du gaz fossile.
+
+logement . gaz:
+
+logement . gaz . intensité carbone gaz utilisateur:
+  formule:
+    variations:
+      - si: chauffage . gaz . biogaz
+        alors: gaz . biogaz . facteur d'émission
+      - sinon: gaz . facteur d'émission base carbone
+  références:
+    - https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Gaz
+  unité: kgCO2e/kWh
+  note: |
+    Il s'agit de kgCO2e/kWh *PCI*.
+
+logement . gaz . facteur d'émission base carbone:
+  titre: Intensité carbone gaz naturel
+  valeur: 0.227
+  note: |
+    Il s'agit de kgCO2e/kWh *PCI*.
+
+    Gaz fossile : Gaz naturel - 2015 - mix moyen - consommation
 
 logement . chauffage . intensité carbone GPL:
   formule: 0.272
