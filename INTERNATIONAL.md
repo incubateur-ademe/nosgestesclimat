@@ -1,6 +1,6 @@
 # International
 
-> For now, Nos Gestes Climat website and model programming language Publi.codes are only available in French. We intend to provide international solution of Nos Gestes Climat to help you to adapt the calculator to your country within few weeks. We are testing a multi-model version for francophones, that's why this guide is written in French.
+> 🇬🇧 For now, the programming language used by Nos Gestes Climat, named publi.codes, is only available in French. We intend to provide an easy framework to help you adapt the calculator to your country within a few weeks. We are testing a multi-region but only for francophone regions for now, which is why this guide is written in French.
 
 L'internationalisation de Nos Gestes Climat est complexe : il n'est pas seulement question de simple traduction linguistique mais de la mise en place d'une solution permettant d'adapter la langue et le modèle de calcul en fonction du pays.
 
