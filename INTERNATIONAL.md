@@ -33,8 +33,10 @@ Une PR ? _Une Pull Request_ : cette manip vous permet d'envoyer une demande d'aj
 
 ![PR](https://user-images.githubusercontent.com/55186402/187473975-493ec81e-3c2b-423d-a37d-8f228a993b88.gif)
 
+> Par exemple, la manipulation ci-dessus a créé la [PR numéro 1348](https://github.com/datagir/nosgestesclimat/pull/1348), que nous avons fermé depuis car elle n'était là que pour l'exemple. 
+
 Si vous faites des erreurs dans l'écriture de vos règles, pas de panique, un commentaire apparaitra pour vous les signaler.
 
-**Etape 5 :** Votre version du modèle est maintenant reliée au code source et donc au site Nos Gestes Climat (via cette PR). Votre site est en ligne à l'adresse suivante : https://nosgestesclimat.fr/simulateur/bilan?PR={NUMERO DE VOTRE PR ICI : 1348}
+**Etape 5 :** Votre version du modèle est maintenant reliée au code source et donc au site Nos Gestes Climat (via cette PR). Votre site est en ligne à l'adresse suivante : `https://nosgestesclimat.fr/simulateur/bilan?PR={NUMERO DE VOTRE PR ICI}`
 
 **Etape 6 :** L'équipe Nos Gestes Climat est active sur Github et pourra répondre à vos questions. L'objectif est de proposer une version du modèle propre à un pays ou une région. Lorsque votre modèle sera validé, nous le mettrons en ligne sur nosgestesclimat.fr. Ainsi, si les utilisateurs se connectent depuis le pays ou la région pour lequel/laquelle le modèle a été créé, ils verront la version correspondante.
