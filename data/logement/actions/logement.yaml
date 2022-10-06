@@ -9,7 +9,7 @@ logement . baisse température:
 
     Source : ADEME - [40 trucs et astuces pour économiser l'eau et l'énergie](https://www.ademe.fr/40-trucs-astuces-economiser-leau-lenergie)
   applicable si: température > 19
-  formule: (nombre degrés * gains 1 degré * empreinte chauffage) / habitants
+  formule: (nombre degrés * gains 1 degré * empreinte chauffage air) / habitants
 
 logement . baisse température . nombre degrés:
   question: De combien de degrés seriez-vous prêt à diminuer la température consigne de votre logement ?
@@ -47,44 +47,54 @@ logement . baisse température . gains 1 degré:
   note: |
     Où est la source pour ces 7% ? Peut-on décliner ce chiffre pour chaque type d'énergie (bois, gaz, etc.) ? Quelle est la sensibilité de ce chiffre au type de logement, son isolation, etc. ?
 
-logement . empreinte chauffage:
+logement . empreinte chauffage air:
+  formule:
+    variations:
+      - si: chauffage . choix utilisateur
+        alors: empreinte chauffage air utilisateur
+      - sinon: empreinte par défaut chauffage air
+  description: |
+    Pour chaque kWh de chaque type d'énergie, quelle est la part utilisée pour le chauffage de l'air d'un foyer ?
+
+    > Nous utilions ici [les données du CEREN](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel) 
+    via le travail réalisé dans le fichier [chiffres parc logements français.yaml](https://github.com/datagir/nosgestesclimat/blob/master/data/logement/chiffres%20parc%20logements%20fran%C3%A7ais.yaml).
+
+logement . empreinte chauffage air utilisateur:
   formule:
     somme:
       - chauffage . électricité . présent * électricité * part chauffage électricité
       - chauffage . gaz . présent * chauffage . gaz * part chauffage gaz
       - chauffage . bois . présent * chauffage . bois . empreinte * part chauffage bois
       - chauffage . fioul . présent * chauffage . fioul * part chauffage fioul
-  description: |
-    Pour chaque kWh de chaque type d'énergie, quelle est la part utilisée pour le chauffage de l'air d'un foyer ?
+      - chauffage . réseau de chaleur . présent * chauffage . réseau de chaleur * part chauffage réseau de chaleur
 
-    > Nous utilions ici [les données du CEREN](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel.
-    L'excel 'Les consommations d'énergie du parc résidentiel par usage - 2019' (onglet `Conso 1982-2019`) permet de calculer 
-    la part de la consommation électrique totale utilisée pour le chauffage de son logement à partir des données nationales 
-    de la consommation énergétique par secteur résidentiel.
+logement . empreinte par défaut chauffage air:
+  formule:
+    somme:
+      - parc français . consommation électricité totale relative * électricité . intensité carbone * part chauffage électricité
+      - parc français . chauffage . consommation gaz moyenne relative * gaz . facteur d'émission base carbone * part chauffage gaz
+      - parc français . chauffage . consommation fioul moyenne relative en litres * chauffage . intensité carbone fioul litre * part chauffage fioul
+      - parc français . chauffage . consommation bois moyenne relative * ((chauffage . bois . facteur d'émission . bûche + chauffage . bois . facteur d'émission . granulés) / 2) * part chauffage bois
+      - parc français . chauffage . consommation réseau de chaleur moyenne relative * chauffage . intensité carbone réseau de chaleur * part chauffage réseau de chaleur
+      - parc français . chauffage . consommation GPL moyenne relative * chauffage . intensité carbone GPL * part chauffage GPL
 
 logement . part chauffage électricité:
-  formule: 34.4 / 143.4
-  note: |
-    En 2019, pour l'électricité, la consommation dédiée au chauffage était 
-    de 34,4 TWh pour une consommation totale de 143,4 TWh.
+  formule: parc français . chauffage . consommation électricité . chauffage / (parc français . chauffage . consommation électricité + parc français . consommation électricité autre)
 
 logement . part chauffage gaz:
-  formule: 117.7 / 143.1
-  note: |
-    En 2019, pour le gaz, la consommation dédiée au chauffage était 
-    de 117,7 TWh pour une consommation totale de 143,1 TWh.
+  formule: parc français . chauffage . consommation gaz . chauffage / parc français . chauffage . consommation gaz
 
 logement . part chauffage bois:
-  formule: 81.4 / 81.8
-  note: |
-    En 2019, pour le bois, la consommation dédiée au chauffage était 
-    de 81,4 TWh pour une consommation totale de 81,8 TWh.
+  formule: parc français . chauffage . consommation bois . chauffage / parc français . chauffage . consommation bois
 
 logement . part chauffage fioul:
-  formule: 35.9 / 41.2
-  note: |
-    En 2019, pour le fioul, la consommation dédiée au chauffage était 
-    de 35,9 TWh pour une consommation totale de 41,2 TWh.
+  formule: parc français . chauffage . consommation fioul . chauffage / parc français . chauffage . consommation fioul
+
+logement . part chauffage réseau de chaleur:
+  formule: parc français . chauffage . consommation réseau de chaleur . chauffage / parc français . chauffage . consommation réseau de chaleur
+
+logement . part chauffage GPL:
+  formule: parc français . chauffage . consommation GPL . chauffage / parc français . chauffage . consommation GPL
 
 logement . éteindre appareils:
   formule: empreinte du foyer / habitants
@@ -243,7 +253,7 @@ logement . climatisation . réduction:
 logement . rénovation énergétique:
   titre: Rénover mon logement
   icônes: 🏚️✨
-  formule: (logement . empreinte chauffage * gain rénovation) / habitants
+  formule: (logement . empreinte chauffage air * gain rénovation) / habitants
   effort: conséquent
   applicable si: propriétaire
   inactive: non
@@ -278,7 +288,7 @@ logement . rénovation énergétique BBC:
       - logement . rénovation énergétique
   titre: Rénover mon logement en BBC
   icônes: 🏠✨
-  formule: (logement . empreinte chauffage * gain rénovation) / habitants
+  formule: (logement . empreinte chauffage air * gain rénovation) / habitants
   effort: conséquent
   applicable si: propriétaire
   description: |
