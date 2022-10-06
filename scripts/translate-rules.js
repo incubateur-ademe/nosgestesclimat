@@ -19,7 +19,7 @@ const defaultLang = availableLanguages[0]
 const translator = new deepl.Translator(process.env.DEEPL_API_KEY)
 
 const NO_TRANS_CHAR = ' '
-const TEST_MODE = true
+const TEST_MODE = false
 
 const fetchTranslation = async (
 	text,
@@ -39,7 +39,7 @@ const fetchTranslation = async (
 			preserveFormatting: true,
 		})
 		.catch((err) => {
-			console.error(`Error: while fetching the request: ${err}`)
+			console.error(`Error: while fetching the request for '${text}': ${err}`)
 			process.exit(-1)
 		})
 
@@ -188,7 +188,7 @@ const getArgs = (description) => {
 		return l !== srcLang
 	})
 
-	const srcFile = argv.file ?? '**/*.yaml'
+	const srcFile = argv.file ?? 'data/**/*.yaml'
 
 	return { srcLang, destLangs, force: argv.force, remove: argv.remove, srcFile }
 }
@@ -198,25 +198,42 @@ const { srcLang, destLangs, srcFile } = getArgs(
 	summaries and suggestions.`
 )
 
-const keysToTranslate = ['titre', 'description', 'question', 'résumé', 'note']
+const keysToTranslate = [
+	'titre',
+	'description',
+	'question',
+	'résumé',
+	'note',
+	'suggestions',
+]
 
 const getMissingRules = (srcRules, targetRules) => {
 	return Object.entries(srcRules)
-		.reduce((acc, [key, val]) => {
-			let targetRule = targetRules[key]
-			const filteredValEntries = Object.entries(val).filter(([attr, _]) =>
-				keysToTranslate.includes(attr)
+		.filter(([_, val]) => val !== null && val !== undefined)
+		.reduce((acc, [rule, val]) => {
+			let targetRule = targetRules[rule]
+			const filteredValEntries = Object.entries(val).filter(
+				([attr, val]) => keysToTranslate.includes(attr) && val !== ''
 			)
 			if (targetRule) {
 				acc.push(
 					filteredValEntries.reduce((acc, [attr, refVal]) => {
 						if (keysToTranslate.includes(attr)) {
 							const targetRef = targetRule[attr + '.ref']
-							if (targetRef && targetRef === refVal) {
+							let hasTheSameRefValue = targetRef && targetRef === refVal
+
+							if ('suggestions' === attr) {
+								refVal = Object.keys(refVal)
+								hasTheSameRefValue =
+									JSON.stringify(targetRef, { sortMapEntries: true }) ===
+									JSON.stringify(refVal, { sortMapEntries: true })
+							}
+
+							if (hasTheSameRefValue && targetRule[attr]) {
 								// The rule is already translated.
 								return acc
 							}
-							acc.push({ key, attr, refVal })
+							acc.push({ rule, attr, refVal })
 						}
 						return acc
 					}, [])
@@ -225,7 +242,10 @@ const getMissingRules = (srcRules, targetRules) => {
 				// The rule doesn't exist in the target, so all attributes need to be translated.
 				acc.push(
 					filteredValEntries.map(([attr, refVal]) => {
-						return { key, attr, refVal }
+						if ('suggestions' === attr) {
+							refVal = Object.keys(refVal)
+						}
+						return { rule, attr, refVal }
 					})
 				)
 			}
@@ -234,10 +254,20 @@ const getMissingRules = (srcRules, targetRules) => {
 		.flat()
 }
 
-const translateTo = async (srcLang, destLang, destPath, rulesToTranslate) => {
-	let translatedRules = rulesToTranslate
-	const updateRules = (idx, key, value) => {
-		translatedRules[idx] = R.assocPath(key, value, translatedRules[idx])
+const translateTo = async (
+	srcLang,
+	destLang,
+	destPath,
+	entryToTranslate,
+	translatedRules
+) => {
+	const updateTranslatedRules = (rule, attr, transVal, refVal) => {
+		translatedRules = R.assocPath([rule, attr], transVal, translatedRules)
+		translatedRules = R.assocPath(
+			[rule, attr + '.ref'],
+			refVal,
+			translatedRules
+		)
 	}
 	const translate = (value) => {
 		return fetchTranslation(
@@ -256,74 +286,32 @@ const translateTo = async (srcLang, destLang, destPath, rulesToTranslate) => {
 	}
 
 	await Promise.all(
-		rulesToTranslate.map(async (rule, idx) => {
-			await Promise.all(
-				Object.entries(rule).map(async ([key, val]) => {
-					const valKeys = Object.keys(val)
-					const toTranslate = valKeys.reduce(
-						(acc, key) => {
-							if (keysToTranslate.includes(key)) {
-								acc[key] = val[key]
-								return acc
-							}
-							return acc
-						},
-						// Creates an object with **ordered** attributes corresponding to [keysToTranslate]
-						Object.fromEntries(keysToTranslate.map((key) => [key, undefined]))
-					)
-					const translated = await translate(
-						Object.entries(toTranslate).map(([key, val]) => {
-							return undefined === val || 'description' === key
-								? NO_TRANS_CHAR
-								: val
-						})
-					)
-
-					if (toTranslate.description) {
-						// [1] because it's second element of [keyToTranslate]
-						translated[1] = await translateMarkdown(toTranslate.description)
-					}
-
-					keysToTranslate.forEach((keyToTranslate, translatedIdx) => {
-						const trans = translated[translatedIdx]
-						if (NO_TRANS_CHAR !== trans) {
-							updateRules(idx, [key, keyToTranslate], trans)
-						}
-					})
-
-					// For suggestions, keys need to be translated not the values.
-					if (valKeys.includes('suggestions')) {
-						const suggestionsKeys = Object.keys(val.suggestions)
-						const translatedSuggestionsKeys = await translate(suggestionsKeys)
-						const translatedSuggestions = translatedSuggestionsKeys.reduce(
-							(acc, translatedKey, idx) => {
-								acc[translatedKey] = val.suggestions[suggestionsKeys[idx]]
-								return acc
-							},
-							{}
-						)
-						updateRules(idx, [key, 'suggestions'], translatedSuggestions)
-					}
-				})
-			)
+		Object.values(entryToTranslate).map(async ({ rule, attr, refVal }) => {
+			const translatedValue =
+				'description' === attr || 'note' === attr
+					? await translateMarkdown(refVal)
+					: await translate(refVal)
+			updateTranslatedRules(rule, attr, translatedValue, refVal)
 		})
 	)
-	// fs.writeFile(
-	// 	destPath,
-	// 	yaml.stringify(translatedRules, {
-	// 		sortMapEntries: false,
-	// 		blockQuote: 'literal',
-	// 	}),
-	// 	'utf8',
-	// 	(err) => {
-	// 		if (err) {
-	// 			printErr(`An error occured while writting to '${destPath}':`)
-	// 			printErr(err)
-	// 			return
-	// 		}
-	// 		console.log(`Translated rules written in '${destPath}'.`)
-	// 	}
-	// )
+	fs.writeFile(
+		destPath,
+		yaml.stringify(translatedRules, {
+			sortMapEntries: true,
+			blockQuote: 'literal',
+		}),
+		'utf8',
+		(err) => {
+			if (err) {
+				printErr(`An error occured while writting to '${destPath}':`)
+				printErr(err)
+				return
+			}
+			console.log(
+				`${entryToTranslate.length} new translated attributes written in '${destPath}'.`
+			)
+		}
+	)
 }
 
 glob(`${srcFile}`, (_, files) => {
@@ -345,8 +333,8 @@ glob(`${srcFile}`, (_, files) => {
 	destLangs.forEach(async (destLang) => {
 		const destPath = `data/translated-rules-${destLang}.yaml`
 		const destRules = R.mergeAll(yaml.parse(fs.readFileSync(destPath, 'utf8')))
+
 		const missingRules = getMissingRules(rules, destRules)
-		console.log('missingRules:', missingRules)
-		// translateTo(srcLang, destLang, destPath, missingRules)
+		translateTo(srcLang, destLang, destPath, missingRules, destRules)
 	})
 })
