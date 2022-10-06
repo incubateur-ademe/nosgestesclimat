@@ -10,7 +10,7 @@ const outputJSONFileName = './public/co2.json'
 // watched webpack environment) in ecolab-climat if it grows more than 20
 // lines, it should be shared
 
-glob('data/**/*.yaml', (_, files) => {
+glob('data/**/*.yaml', { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 	const rules = files.reduce((memo, filename) => {
 		try {
 			const data = fs.readFileSync('./' + filename, 'utf8')
