@@ -1,13 +1,14 @@
-let yaml = require('yaml')
-let fs = require('fs')
-let glob = require('glob')
+const yaml = require('yaml')
+const fs = require('fs')
+const glob = require('glob')
 const { exit } = require('process')
 const Engine = require('publicodes').default
 
 const outputJSONFileName = './public/co2.json'
 
-// this file is kindof a duplicate of RulesProvider (which serves for the local watched webpack environment) in ecolab-climat
-// if it grows more than 20 lines, it should be shared
+// this file is kindof a duplicate of RulesProvider (which serves for the local
+// watched webpack environment) in ecolab-climat if it grows more than 20
+// lines, it should be shared
 
 glob('data/**/*.yaml', (_, files) => {
 	const rules = files.reduce((memo, filename) => {
