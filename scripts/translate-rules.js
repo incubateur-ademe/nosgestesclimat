@@ -8,6 +8,7 @@ const yaml = require('yaml')
 const fs = require('fs')
 const glob = require('glob')
 const yargs = require('yargs')
+const nodePandoc = require('node-pandoc-promise')
 const R = require('ramda')
 const { exit } = require('process')
 const deepl = require('deepl-node')
@@ -17,15 +18,18 @@ const defaultLang = availableLanguages[0]
 
 const translator = new deepl.Translator(process.env.DEEPL_API_KEY)
 
+const NO_TRANS_CHAR = ' '
+const TEST_MODE = true
+
 const fetchTranslation = async (
 	text,
 	sourceLang,
 	targetLang,
-	tagHandling = 'xml',
-	fake = false
+	tagHandling = 'xml'
 ) => {
-	if (fake) {
-		const tradOrEmpty = (t) => (t === '' ? '' : '[TRAD] ' + t)
+	if (TEST_MODE) {
+		const tradOrEmpty = (t) =>
+			t === NO_TRANS_CHAR ? NO_TRANS_CHAR : '[TRAD] ' + t
 		return text instanceof Array ? text.map(tradOrEmpty) : tradOrEmpty(text)
 	}
 	const resp = await translator
@@ -42,6 +46,64 @@ const fetchTranslation = async (
 	return resp instanceof Array
 		? resp.map((translation) => translation.text)
 		: resp.text
+}
+
+const markdownToHtml = async (srcMd) => {
+	const srcHtml = await nodePandoc(srcMd, [
+		'-f',
+		'markdown_strict',
+		'-t',
+		'html',
+	])
+	return srcHtml
+}
+
+const htmlToMarkdown = async (srcHtml) => {
+	const srcMd = await nodePandoc(srcHtml, [
+		'-f',
+		'html',
+		'-t',
+		'markdown_strict',
+		'--atx-headers',
+	])
+	return srcMd
+}
+
+const fetchTranslationMarkdown = async (srcMd, sourceLang, targetLang) => {
+	const getSrcHtml = async () => {
+		if (srcMd instanceof Array) {
+			const srcHtml = []
+			await Promise.all(
+				srcMd.map(async (src) => {
+					srcHtml.push(await markdownToHtml(src))
+				})
+			)
+			return srcHtml
+		} else {
+			return await markdownToHtml(srcMd)
+		}
+	}
+
+	const srcHtml = await getSrcHtml()
+	const htmlTrans = await fetchTranslation(
+		srcHtml,
+		sourceLang,
+		targetLang,
+		'html'
+	)
+
+	if (htmlTrans instanceof Array) {
+		let res = []
+		await Promise.all(
+			htmlTrans.map(async (src) => {
+				res.push(await htmlToMarkdown(src))
+			})
+		)
+		return res
+	}
+	const res = await htmlToMarkdown(htmlTrans)
+
+	return res
 }
 
 const colors = {
@@ -136,97 +198,155 @@ const { srcLang, destLangs, srcFile } = getArgs(
 	summaries and suggestions.`
 )
 
-const keysToTranslate = ['question', 'note', 'description', 'titre']
+const keysToTranslate = ['titre', 'description', 'question', 'résumé', 'note']
 
-const translateTo = async (srcLang, destLang, rules) => {
-	const destFileName = `data/translated-rules-${destLang}.yaml`
+const getMissingRules = (srcRules, targetRules) => {
+	return Object.entries(srcRules)
+		.reduce((acc, [key, val]) => {
+			let targetRule = targetRules[key]
+			const filteredValEntries = Object.entries(val).filter(([attr, _]) =>
+				keysToTranslate.includes(attr)
+			)
+			if (targetRule) {
+				acc.push(
+					filteredValEntries.reduce((acc, [attr, refVal]) => {
+						if (keysToTranslate.includes(attr)) {
+							const targetRef = targetRule[attr + '.ref']
+							if (targetRef && targetRef === refVal) {
+								// The rule is already translated.
+								return acc
+							}
+							acc.push({ key, attr, refVal })
+						}
+						return acc
+					}, [])
+				)
+			} else {
+				// The rule doesn't exist in the target, so all attributes need to be translated.
+				acc.push(
+					filteredValEntries.map(([attr, refVal]) => {
+						return { key, attr, refVal }
+					})
+				)
+			}
+			return acc
+		}, [])
+		.flat()
+}
 
+const translateTo = async (srcLang, destLang, destPath, rulesToTranslate) => {
+	let translatedRules = rulesToTranslate
 	const updateRules = (idx, key, value) => {
-		rules[idx] = R.assocPath(key, value, rules[idx])
+		translatedRules[idx] = R.assocPath(key, value, translatedRules[idx])
 	}
-
-	const translate = (value, tagHandling = 'xml') => {
+	const translate = (value) => {
 		return fetchTranslation(
 			value,
 			srcLang.toUpperCase(),
 			destLang.toUpperCase(),
-			tagHandling,
-			true
+			'xml'
+		)
+	}
+	const translateMarkdown = (value) => {
+		return fetchTranslationMarkdown(
+			value,
+			srcLang.toUpperCase(),
+			destLang.toUpperCase()
 		)
 	}
 
 	await Promise.all(
-		rules.map(async (rule, idx) => {
-			Object.entries(rule).map(async ([key, val]) => {
-				// TODO: translate markdown for description
-				const valKeys = Object.keys(val)
-				const toTranslate = valKeys.reduce(
-					(acc, key) => {
-						if (keysToTranslate.includes(key)) {
-							acc[key] = val[key]
-							return acc
-						}
-						return acc
-					},
-					{
-						question: undefined,
-						note: undefined,
-						description: undefined,
-						titre: undefined,
-					}
-				)
-				const translated = await translate(
-					Object.entries(toTranslate).map(([_, val]) => val ?? '')
-				)
-
-				keysToTranslate.forEach((keyToTranslate, translatedIdx) => {
-					const trans = translated[translatedIdx]
-					if ('' !== trans) {
-						updateRules(idx, [key, keyToTranslate], trans)
-					}
-				})
-
-				// For suggestions, keys need to be translated not the values.
-				if (valKeys.includes('suggestions')) {
-					const suggestionsKeys = Object.keys(val.suggestions)
-					const translatedSuggestionsKeys = await translate(suggestionsKeys)
-					const translatedSuggestions = translatedSuggestionsKeys.reduce(
-						(acc, translatedKey, idx) => {
-							acc[translatedKey] = val.suggestions[suggestionsKeys[idx]]
+		rulesToTranslate.map(async (rule, idx) => {
+			await Promise.all(
+				Object.entries(rule).map(async ([key, val]) => {
+					const valKeys = Object.keys(val)
+					const toTranslate = valKeys.reduce(
+						(acc, key) => {
+							if (keysToTranslate.includes(key)) {
+								acc[key] = val[key]
+								return acc
+							}
 							return acc
 						},
-						{}
+						// Creates an object with **ordered** attributes corresponding to [keysToTranslate]
+						Object.fromEntries(keysToTranslate.map((key) => [key, undefined]))
 					)
-					updateRules(idx, [key, 'suggestions'], translatedSuggestions)
-				}
-			})
+					const translated = await translate(
+						Object.entries(toTranslate).map(([key, val]) => {
+							return undefined === val || 'description' === key
+								? NO_TRANS_CHAR
+								: val
+						})
+					)
+
+					if (toTranslate.description) {
+						// [1] because it's second element of [keyToTranslate]
+						translated[1] = await translateMarkdown(toTranslate.description)
+					}
+
+					keysToTranslate.forEach((keyToTranslate, translatedIdx) => {
+						const trans = translated[translatedIdx]
+						if (NO_TRANS_CHAR !== trans) {
+							updateRules(idx, [key, keyToTranslate], trans)
+						}
+					})
+
+					// For suggestions, keys need to be translated not the values.
+					if (valKeys.includes('suggestions')) {
+						const suggestionsKeys = Object.keys(val.suggestions)
+						const translatedSuggestionsKeys = await translate(suggestionsKeys)
+						const translatedSuggestions = translatedSuggestionsKeys.reduce(
+							(acc, translatedKey, idx) => {
+								acc[translatedKey] = val.suggestions[suggestionsKeys[idx]]
+								return acc
+							},
+							{}
+						)
+						updateRules(idx, [key, 'suggestions'], translatedSuggestions)
+					}
+				})
+			)
 		})
 	)
-	fs.writeFile(destFileName, yaml.stringify(rules), 'utf8', (err) => {
-		if (err) {
-			printErr(`An error occured while writting to '${destFileName}':`)
-			printErr(err)
-			return
-		}
-		console.log(`Translated rules written in '${destFileName}'.`)
-	})
+	// fs.writeFile(
+	// 	destPath,
+	// 	yaml.stringify(translatedRules, {
+	// 		sortMapEntries: false,
+	// 		blockQuote: 'literal',
+	// 	}),
+	// 	'utf8',
+	// 	(err) => {
+	// 		if (err) {
+	// 			printErr(`An error occured while writting to '${destPath}':`)
+	// 			printErr(err)
+	// 			return
+	// 		}
+	// 		console.log(`Translated rules written in '${destPath}'.`)
+	// 	}
+	// )
 }
 
 glob(`${srcFile}`, (_, files) => {
 	console.log(`Parsing rules of '${srcFile}'`)
-	let rules = files.reduce((acc, filename) => {
-		try {
-			const data = fs.readFileSync('./' + filename, 'utf8')
-			const rules = yaml.parse(data)
-			return acc.concat(rules)
-		} catch (err) {
-			printErr('An error occured while reading the file ' + filename + '')
-			printErr(err)
-			exit(-1)
-		}
-	}, [])
+	const rules = R.mergeAll(
+		files.reduce((acc, filename) => {
+			try {
+				const data = fs.readFileSync('./' + filename, 'utf8')
+				const rules = yaml.parse(data)
+				return acc.concat(rules)
+			} catch (err) {
+				printErr('An error occured while reading the file ' + filename + '')
+				printErr(err)
+				exit(-1)
+			}
+		}, [])
+	)
 
 	destLangs.forEach(async (destLang) => {
-		translateTo(srcLang, destLang, rules)
+		const destPath = `data/translated-rules-${destLang}.yaml`
+		const destRules = R.mergeAll(yaml.parse(fs.readFileSync(destPath, 'utf8')))
+		const missingRules = getMissingRules(rules, destRules)
+		console.log('missingRules:', missingRules)
+		// translateTo(srcLang, destLang, destPath, missingRules)
 	})
 })
