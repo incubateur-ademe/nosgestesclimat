@@ -4,6 +4,7 @@
 
 	Command: yarn translate:rules -- [options]
 */
+
 const yaml = require('yaml')
 const fs = require('fs')
 const glob = require('glob')
@@ -16,7 +17,10 @@ const deepl = require('deepl-node')
 const availableLanguages = ['fr', 'en-us', 'es', 'it']
 const defaultLang = availableLanguages[0]
 
-const translator = new deepl.Translator(process.env.DEEPL_API_KEY)
+const translator = new deepl.Translator(process.env.DEEPL_API_KEY, {
+	maxRetries: 5,
+	minTimeout: 2000,
+})
 
 const NO_TRANS_CHAR = ' '
 const TEST_MODE = false
@@ -218,6 +222,7 @@ const getMissingRules = (srcRules, targetRules) => {
 			if (targetRule) {
 				acc.push(
 					filteredValEntries.reduce((acc, [attr, refVal]) => {
+						// console.log('refVal:', refVal)
 						if (keysToTranslate.includes(attr)) {
 							const targetRef = targetRule[attr + '.ref']
 							let hasTheSameRefValue = targetRef && targetRef === refVal
@@ -233,6 +238,12 @@ const getMissingRules = (srcRules, targetRules) => {
 								// The rule is already translated.
 								return acc
 							}
+							if (!hasTheSameRefValue) {
+								// console.log(`diff for ${rule}:`)
+								// console.log(`--- refVal: '${refVal}'`)
+								// console.log(`--- targetRef: '${targetRef}'`)
+							}
+							// console.log(`new: `, { rule, attr, refVal })
 							acc.push({ rule, attr, refVal })
 						}
 						return acc
@@ -314,7 +325,7 @@ const translateTo = async (
 	)
 }
 
-glob(`${srcFile}`, (_, files) => {
+glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 	console.log(`Parsing rules of '${srcFile}'`)
 	const rules = R.mergeAll(
 		files.reduce((acc, filename) => {
@@ -334,7 +345,16 @@ glob(`${srcFile}`, (_, files) => {
 		const destPath = `data/translated-rules-${destLang}.yaml`
 		const destRules = R.mergeAll(yaml.parse(fs.readFileSync(destPath, 'utf8')))
 
+		console.log(`Getting missing rule for ${destLang}...`)
 		const missingRules = getMissingRules(rules, destRules)
-		translateTo(srcLang, destLang, destPath, missingRules, destRules)
+
+		if (0 < missingRules.length) {
+			console.log(
+				`Translating ${missingRules.length} new entries to ${destLang}...`
+			)
+			translateTo(srcLang, destLang, destPath, missingRules, destRules)
+		} else {
+			console.log(`Found no new entry to translate...`)
+		}
 	})
 })

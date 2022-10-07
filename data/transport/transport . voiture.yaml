@@ -6,7 +6,7 @@ transport . voiture:
 
     La voiture est aujourd'hui en France essentiellement thermique (essence, diesel), bien que l'électrique progresse lentement.
 
-    Pourtant, électrique ou thermique, elle reste un moyen de déplacement très peu efficient : 
+    Pourtant, électrique ou thermique, elle reste un moyen de déplacement très peu efficient :
     **il s'agit en moyenne de déplacer un humain de 80kg dans une boîte en métal de 1200kg**.
 
     Un peu comme si chaque midi, nous faisions à manger pour 10 avant de jeter 90% de la nourriture, ou que nous décidions de chauffer tout le pâté de maison plutôt que l'intérieur de chacune des 10 maisons.
@@ -28,7 +28,7 @@ transport . voiture . empreinte:
 transport . voiture . voyageurs:
   question: Quel est le nombre moyen de voyageurs dans la voiture ?
   description: |
-    Une voiture consomme à peu près autant qu'elle ait 1, 2 ou 5 voyageurs à bord. Voyager à plusieurs, c'est donc potentiellement diviser par 5 l'empreinte individuelle ! 
+    Une voiture consomme à peu près autant qu'elle ait 1, 2 ou 5 voyageurs à bord. Voyager à plusieurs, c'est donc potentiellement diviser par 5 l'empreinte individuelle !
 
     🤔 Mais cette question n'est pas facile : il est probable que dans une année vous soyez parti en vacances à 3, ayez pris la voiture quotidiennement tout seul, etc.
 
@@ -61,16 +61,16 @@ transport . voiture . ratio voyageurs:
   question: Si l'utilisateur a été assisté pour remplir son nombre de kilomètres, quel est le rapport entre la somme brute des kilomètres, et la somme des kilomètres divisés par le nombre de voyageur du trajet ?
   note: |
 
-    L'enjeu de cette variable concerne l'attribution des émissions de la construction de la voiture. 
+    L'enjeu de cette variable concerne l'attribution des émissions de la construction de la voiture.
     La partie "usage" prend déjà en compte le nombre de voyageurs dans la voiture via les kms proratisés.
 
-    Deux solution se présentent à nous : 
+    Deux solution se présentent à nous :
 
     Utiliser le nombre de voyageurs moyens (pondéré par les kms) : voyageurs moyens = (A*a+B*b+C*c) / (A+B+C)
 
     OU
 
-    Utiliser le ratio km bruts / km réel proratisés : km brut = A + B + C ; km réel proratisés = A/a + B/b + C/c 
+    Utiliser le ratio km bruts / km réel proratisés : km brut = A + B + C ; km réel proratisés = A/a + B/b + C/c
 
     Nous avons simulé les 2 options : https://docs.google.com/spreadsheets/d/1TMe_49JW0djDFHLtejWcIs3CRCt4vh3PJUvm7NtH0co.
 
@@ -113,7 +113,9 @@ transport . voiture . motorisation:
 transport . voiture . motorisation . thermique:
   titre: Thermique (diesel/essence)
 transport . voiture . motorisation . électrique:
+  titre: Électrique
 transport . voiture . motorisation . hybride:
+  titre: Hybride
 
 transport . voiture . thermique: oui # sans le 'oui', une question vide est posée
 
@@ -121,7 +123,7 @@ transport . voiture . gabarit:
   applicable si: km > 0
   question: Quel est le gabarit de la voiture ?
   description: |
-    Plus une voiture est lourde et haute donc avec une forte prise au vent, plus elle consomme donc plus elle pollue ! 
+    Plus une voiture est lourde et haute donc avec une forte prise au vent, plus elle consomme donc plus elle pollue !
 
     Comme pour la motorisation, si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.
 
@@ -136,9 +138,13 @@ transport . voiture . gabarit:
         - SUV
 
 transport . voiture . gabarit . petite:
+  titre: Petite
 transport . voiture . gabarit . moyenne:
+  titre: Moyenne
 transport . voiture . gabarit . berline:
+  titre: Berline
 transport . voiture . gabarit . SUV:
+  titre: SUV
 
 transport . voiture . thermique . consommation aux 100:
   question: Connaissez-vous la consommation moyenne de la voiture ?
@@ -151,7 +157,7 @@ transport . voiture . thermique . consommation aux 100:
 
 transport . voiture . consommation estimée:
   note: |
-    Le tableau de correspondance n'est qu'indicatif, il est loin d'être rigoureusement reglé sur les statistiques des voitures en circulation en France : l'essentiel est que l'utilisateur saisisse sa consommation *réelle*. 
+    Le tableau de correspondance n'est qu'indicatif, il est loin d'être rigoureusement reglé sur les statistiques des voitures en circulation en France : l'essentiel est que l'utilisateur saisisse sa consommation *réelle*.
 
     Cela dit, le gabarit "moyen" est calé sur la valeur moyenne **diesel** (carburant le plus commun, 2x essence) de 6,1l/100km en 2019 du bilan transport du ministère de l'environnement : [source](https://www.statistiques.developpement-durable.gouv.fr/bilan-annuel-des-transports-en-2019-0) figure G3-4 page 9.
 
@@ -188,7 +194,7 @@ transport . voiture . électrique . empreinte au kilomètre:
         alors: 0.0198
       - sinon: 0.0273
   note: |
-    Nous faisons la correspondance suivante entre notre gabarit et les données de la base bilan-GES: 
+    Nous faisons la correspondance suivante entre notre gabarit et les données de la base bilan-GES:
       - petite -> "entrée de gamme - véhicule léger"
       - moyenne -> "coeur de gamme - véhicule compact"
       - berline et SUV -> "haut de gamme - berline"
@@ -212,24 +218,24 @@ transport . voiture . empreinte . au kilomètre:
         alors: thermique . empreinte au kilomètre * 0.85
       - sinon: électrique . empreinte au kilomètre
   note: |
-    Pour la voiture hybride, nous n'avons pour l'instant pas utilisé les valeurs de la base bilan-GES, car elles sont compliquées à interprêter : 
+    Pour la voiture hybride, nous n'avons pour l'instant pas utilisé les valeurs de la base bilan-GES, car elles sont compliquées à interprêter :
       - la catégorie "hybride rechargeable" a une empreinte étonnamment faible (du niveau de l'électrique), mais surtout 0 émissions à la combustion. Ce serait donc un véhicule essence qui n'utilise pas d'essence à l'usage ? [Un sujet récent] sur le forum de bilan-GES n'explique pas l'incohérence.
       - la différence entre Hybride full Prius et Hybride full P2 n'est pas expliquée
       - dans ces 2 catégories, il n'y pas l'entrée de gamme.
 
-    L'étude FNH-Carbone4 pourrait être utilisée pour l'empreinte au km des véhicules hybrides rechargeables. Voici l'hypothèse structurante retenue : 
+    L'étude FNH-Carbone4 pourrait être utilisée pour l'empreinte au km des véhicules hybrides rechargeables. Voici l'hypothèse structurante retenue :
 
     > Répartition des modes de roulage (thermique / électrique) pour les hybrides : 50% / 50% en 2016
 
     Mais on notera la controverse récente sur l'empreinte des véhicules hybrides rechargeable suite à [une étude](https://www.transportenvironment.org/press/les-hybrides-rechargeables-au-cœur-d’un-nouveau-scandale-d’émissions-des-tests-révèlent-des) de Transport & Environnement faisant état d'une empreinte réelle incomparable à l'empreinte annoncée par les constructeurs.
 
-    Nous avons donc pour l'instant retenu le calcul du calculateur MicMac qui est la base de Nos Gestes Climat, dont la source est malheureusement inaccessible : 
+    Nous avons donc pour l'instant retenu le calcul du calculateur MicMac qui est la base de Nos Gestes Climat, dont la source est malheureusement inaccessible :
 
     > Hybride : enlever 15% aux consommations ci-dessus (source ADEME: http://www2.ademe.fr/servlet/KBaseShow?catid=13655)
 
 transport . voiture . thermique . empreinte au litre:
   description: |
-    Les empreintes sont disponibles de façon assez détaillée sur [la base carbone](https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=diesel), ici par exemple pour le "diesel". Idem pour "essence". 
+    Les empreintes sont disponibles de façon assez détaillée sur [la base carbone](https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=diesel), ici par exemple pour le "diesel". Idem pour "essence".
     Pour les retrouver facilement, filtrez par unité "kgCO2e/litre" et par géographie "France continentale".
 
     À noter que pour le gazole, le FE choisi est la moyenne entre le gazole B7 et le gazole B10.
@@ -246,9 +252,9 @@ transport . voiture . thermique . empreinte au litre:
 transport . voiture . thermique . carburant:
   question: Quel type de carburant votre voiture consomme-t-elle ?
   description: |
-    Pour comprendre les différents types de carburants, [cet article pédagogique](https://www.francetvinfo.fr/economie/automobile/essence/les-carburants-changent-de-nom-a-la-pompe-voici-comment-vous-y-retrouver_2967013.html) est très utile. 
+    Pour comprendre les différents types de carburants, [cet article pédagogique](https://www.francetvinfo.fr/economie/automobile/essence/les-carburants-changent-de-nom-a-la-pompe-voici-comment-vous-y-retrouver_2967013.html) est très utile.
 
-    [Cet article](https://www.ecologie.gouv.fr/carburants-et-combustibles-autorises-en-france) du ministère de l'écologie explique plus en détail les carburants légaux en France. 
+    [Cet article](https://www.ecologie.gouv.fr/carburants-et-combustibles-autorises-en-france) du ministère de l'écologie explique plus en détail les carburants légaux en France.
 
     > Attention, si le type de carburant fait varier de façon significative l'empreinte climat au litre, la consommation en litre par 100km elle aussi varie. Veillez à saisir une consommation au litre basée sur votre moyenne réelle.
 
@@ -265,8 +271,8 @@ transport . voiture . thermique . carburant:
 
     Par contre, parmi les véhicules neufs, l'essence domine aujourd'hui.
 
-    Le facteur d'émission associé au biocarburant E85 n'est pas représentatif des conséquences environnementales liées à l'utilisation des biocarburants. 
-    En effet, au vu des problématiques liées au changement d'affectation des sols et autres impacts environnementaux liés à la culture du maïs par exemple, les **biocarburants** ne sont pas pris en compte 
+    Le facteur d'émission associé au biocarburant E85 n'est pas représentatif des conséquences environnementales liées à l'utilisation des biocarburants.
+    En effet, au vu des problématiques liées au changement d'affectation des sols et autres impacts environnementaux liés à la culture du maïs par exemple, les **biocarburants** ne sont pas pris en compte
     (le facteur d'émission de la base carbone étant particulièrement incertain). Voir nos discussions [ici](https://github.com/datagir/nosgestesclimat/pull/1324).
 
 transport . voiture . thermique . carburant . gazole B7 ou B10:
@@ -297,11 +303,11 @@ transport . voiture . empreinte . construction:
   description: |
     ![](https://i.imgur.com/uIlZcEjl.jpg)
 
-    Une voiture est un gros, très gros objet, qui pèse souvent plus d'une tonne et demi. En conséquence, sa construction a une empreinte importante. 
+    Une voiture est un gros, très gros objet, qui pèse souvent plus d'une tonne et demi. En conséquence, sa construction a une empreinte importante.
 
     En particulier, la construction d'une voiture électrique de gamme équivalente à une thermique émet plus de gaz à effet de serre. C'est notamment du à la batterie et son poids important.
 
-    Malgré cela, en France, sur la durée de vie de la voiture et donc les km parcourus, le choix de la voiture électrique est nettement mieux pour le climat. 
+    Malgré cela, en France, sur la durée de vie de la voiture et donc les km parcourus, le choix de la voiture électrique est nettement mieux pour le climat.
 
     Mieux, mais loin d'être faible ! En 2020, il ne s'agit plus seulement de comparer des solutions techniques entre elles, il s'agit d'évaluer ses achats par rapport aux objectifs climat.
 
@@ -415,7 +421,7 @@ transport . voiture . empreinte . construction amortie:
 
 transport . voiture . amortissement particulier:
   description: |
-    Quand on achète une voiture, on fait émettre une quantité donnée de GES. Disons par exemple, 10 tonnes, pour une durée de vie de la voiture de 10 ans. Ces gaz sont émis l'année de l'achat, ou plus ou moins (certains composants auront déjà été produits). 
+    Quand on achète une voiture, on fait émettre une quantité donnée de GES. Disons par exemple, 10 tonnes, pour une durée de vie de la voiture de 10 ans. Ces gaz sont émis l'année de l'achat, ou plus ou moins (certains composants auront déjà été produits).
 
     Il serait donc logique du point de vue de l'empreinte sur le climat, d'attribuer les émissions de la construction à la 1ère année : l'effet de serre réchauffant commence dès l'achat !
 
