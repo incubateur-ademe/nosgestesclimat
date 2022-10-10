@@ -1,0 +1,20 @@
+# https://tommoa.me/blog/github-auto-update-submodules/
+
+name: Dispatch to repo
+
+on: [push, workflow_dispatch]
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        repo: ["datagir/nosgestesclimat-site"]
+    steps:
+      - name: Push to repo
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.PAT }}
+          repository: ${{ matrix.repo }}
+          event-type: update
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "module": "owner/submodule", "branch": "master"}'
