@@ -7,14 +7,11 @@ on: [push, workflow_dispatch]
 jobs:
   dispatch:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        repo: ["datagir/nosgestesclimat-site"]
     steps:
       - name: Push to repo
-        uses: peter-evans/repository-dispatch@v1
+        uses: peter-evans/repository-dispatch@v2
         with:
-          token: ${{ secrets.PAT }}
-          repository: ${{ matrix.repo }}
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          repository: datagir/nosgestesclimat-site
           event-type: update
           client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "module": "datagir/nosgestesclimat", "branch": "master"}'
