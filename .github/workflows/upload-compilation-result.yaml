@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-22.04
     outputs:
       compilation-result: ${{ steps.compilation.outputs.result }}
+      check-translation-result: ${{ steps.check-translation.outputs.result }}
       test-url: ${{ steps.set-test-url.outputs.fr }}
     steps:
       - uses: actions/checkout@v2
@@ -35,6 +36,15 @@ jobs:
           body="${body//$'\n'/'%0A'}"
           body="${body//$'\r'/'%0D'}"
           echo "::set-output name=result::${body}"
+      - id: check-translation
+        run: |
+          # Checks the rules translation
+          body="$(yarn translate:check)"
+          body="${body//'%'/'%25'}"
+          body="${body//$'\n'/'%0A'}"
+          body="${body//$'\r'/'%0D'}"
+          echo "::set-output name=result::${body}"
+
       - id: set-test-url
         # Setups the NGC url with the corresponding PR number: https://nosgestesclimat.fr?PR=<pr_number>
         run: echo "::set-output name=fr::${{ steps.deploy-env.outputs.name == 'master' && 'https://nosgestesclimat.fr' || format('https://nosgestesclimat.fr?PR={0}', github.event.pull_request.number) }}"
@@ -47,13 +57,19 @@ jobs:
         run: |
           mkdir -p artifacts
           echo "
-          ## 🚀 La _pull request_ #${{ github.event.pull_request.number }}  est ouverte \!
-          > Tester le modèle depuis le site : ${{ needs.compile.outputs.test-url }}
+          ## 🚀 The pull request #${{ github.event.pull_request.number }} is open\!
+          > Test the model from the website: ${{ needs.compile.outputs.test-url }}
 
-          Résultat de la compilation du modèle :
+          Current model compilation status:
 
           \`\`\`
           ${{ needs.compile.outputs.compilation-result }}
+          \`\`\`
+
+          Rules translation status:
+
+          \`\`\`
+          ${{ needs.compile.outputs.check-translation-result }}
           \`\`\`
           " > artifacts/result.md
       - name: Upload artifact
