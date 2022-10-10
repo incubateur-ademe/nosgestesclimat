@@ -88,18 +88,45 @@ const addTranslationToBaseRules = (baseRules, translatedRules) => {
 		baseRules = R.assocPath(key, val, baseRules)
 	}
 
+	const updateBaseRulesWithSuggestions = (
+		baseKey,
+		baseRuleSuggestions,
+		translatedSuggestionsKeys
+	) => {
+		const suggestionValues = Object.values(baseRuleSuggestions)
+		const translatedSuggestions = Object.fromEntries(
+			translatedSuggestionsKeys.map((translatedKey, i) => [
+				translatedKey,
+				suggestionValues[i],
+			])
+		)
+		updateBaseRules(baseKey, translatedSuggestions)
+	}
+
 	Object.entries(translatedRules).forEach(([rule, attrs]) => {
 		Object.entries(attrs)
 			.filter(([attr, _]) => !attr.endsWith('.ref')) // TODO: extract to constant
-			.forEach(([attr, val]) => {
-				if ('suggestions' === attr) {
-					const suggestionValues = Object.values(baseRules[rule].suggestions)
-					const translatedSuggestions = Object.fromEntries(
-						val.map((translatedKey, i) => [translatedKey, suggestionValues[i]])
-					)
-					updateBaseRules([rule, attr], translatedSuggestions)
-				} else {
-					updateBaseRules([rule, attr], val)
+			.forEach(([attr, transVal]) => {
+				switch (attr) {
+					case 'suggestions': {
+						updateBaseRulesWithSuggestions(
+							[rule, attr],
+							baseRules[rule].suggestions,
+							transVal
+						)
+						break
+					}
+					case 'mosaique': {
+						updateBaseRulesWithSuggestions(
+							[rule, attr, 'suggestions'],
+							baseRules[rule].mosaique.suggestions,
+							transVal.suggestions
+						)
+						break
+					}
+					default:
+						updateBaseRules([rule, attr], transVal)
+						break
 				}
 			})
 	})

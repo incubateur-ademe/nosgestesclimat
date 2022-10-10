@@ -209,41 +209,60 @@ const keysToTranslate = [
 	'résumé',
 	'note',
 	'suggestions',
+	'mosaique',
 ]
+
+const areEqual = (s1, s2) => {
+	return (
+		JSON.stringify(s1, { sortMapEntries: true }) ===
+		JSON.stringify(s2, { sortMapEntries: true })
+	)
+}
 
 const getMissingRules = (srcRules, targetRules) => {
 	return Object.entries(srcRules)
 		.filter(([_, val]) => val !== null && val !== undefined)
 		.reduce((acc, [rule, val]) => {
 			let targetRule = targetRules[rule]
-			const filteredValEntries = Object.entries(val).filter(
-				([attr, val]) => keysToTranslate.includes(attr) && val !== ''
-			)
+			const filteredValEntries = Object.entries(val).filter(([attr, val]) => {
+				const mosaiqueIncludeSuggestions =
+					// φ => ψ === ¬φ ∨ ψ
+					'mosaique' !== attr || val.suggestions
+				return (
+					keysToTranslate.includes(attr) &&
+					val !== '' &&
+					mosaiqueIncludeSuggestions
+				)
+			})
 			if (targetRule) {
 				acc.push(
 					filteredValEntries.reduce((acc, [attr, refVal]) => {
-						// console.log('refVal:', refVal)
 						if (keysToTranslate.includes(attr)) {
-							const targetRef = targetRule[attr + '.ref']
+							let targetRef = targetRule[attr + '.ref']
 							let hasTheSameRefValue = targetRef && targetRef === refVal
 
-							if ('suggestions' === attr) {
-								refVal = Object.keys(refVal)
-								hasTheSameRefValue =
-									JSON.stringify(targetRef, { sortMapEntries: true }) ===
-									JSON.stringify(refVal, { sortMapEntries: true })
+							switch (attr) {
+								case 'suggestions': {
+									refVal = Object.keys(refVal)
+									hasTheSameRefValue = targetRef && areEqual(targetRef, refVal)
+									break
+								}
+								case 'mosaique': {
+									targetRef = targetRule[attr]?.['suggestions.ref']
+									refVal = Object.keys(refVal.suggestions)
+									hasTheSameRefValue =
+										targetRef &&
+										areEqual(targetRef.suggestions, refVal.suggestions)
+									break
+								}
+								default:
+									break
 							}
 
 							if (hasTheSameRefValue && targetRule[attr]) {
 								// The rule is already translated.
 								return acc
 							}
-							if (!hasTheSameRefValue) {
-								// console.log(`diff for ${rule}:`)
-								// console.log(`--- refVal: '${refVal}'`)
-								// console.log(`--- targetRef: '${targetRef}'`)
-							}
-							// console.log(`new: `, { rule, attr, refVal })
 							acc.push({ rule, attr, refVal })
 						}
 						return acc
@@ -253,10 +272,14 @@ const getMissingRules = (srcRules, targetRules) => {
 				// The rule doesn't exist in the target, so all attributes need to be translated.
 				acc.push(
 					filteredValEntries.map(([attr, refVal]) => {
-						if ('suggestions' === attr) {
-							refVal = Object.keys(refVal)
+						switch (attr) {
+							case 'suggestions':
+								return { rule, attr, refVal: Object.keys(refVal) }
+							case 'mosaique':
+								return { rule, attr, refVal: Object.keys(refVal.suggestions) }
+							default:
+								return { rule, attr, refVal }
 						}
-						return { rule, attr, refVal }
 					})
 				)
 			}
@@ -273,12 +296,16 @@ const translateTo = async (
 	translatedRules
 ) => {
 	const updateTranslatedRules = (rule, attr, transVal, refVal) => {
-		translatedRules = R.assocPath([rule, attr], transVal, translatedRules)
-		translatedRules = R.assocPath(
-			[rule, attr + '.ref'],
-			refVal,
-			translatedRules
-		)
+		let key = [rule, attr]
+		let refKey = [rule, attr + '.ref']
+
+		if ('mosaique' === attr) {
+			key = [rule, attr, 'suggestions']
+			refKey = [rule, attr, 'suggestions.ref']
+		}
+
+		translatedRules = R.assocPath(key, transVal, translatedRules)
+		translatedRules = R.assocPath(refKey, refVal, translatedRules)
 	}
 	const translate = (value) => {
 		return fetchTranslation(
