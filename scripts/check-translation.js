@@ -127,6 +127,11 @@ const getArgs = (description) => {
 			type: 'boolean',
 			description: `Remove the unused keys from the translation files.`,
 		})
+		.option('markdown', {
+			alias: 'm',
+			type: 'boolean',
+			description: `Prints the result in a Markdown table.`,
+		})
 		.option('target', {
 			alias: 't',
 			type: 'string',
@@ -155,10 +160,17 @@ const getArgs = (description) => {
 
 	const srcFile = argv.file ?? 'data/**/*.yaml'
 
-	return { srcLang, destLangs, force: argv.force, remove: argv.remove, srcFile }
+	return {
+		srcLang,
+		destLangs,
+		force: argv.force,
+		remove: argv.remove,
+		srcFile,
+		markdown: argv.markdown,
+	}
 }
 
-const { srcLang, destLangs, srcFile } = getArgs(
+const { srcLang, destLangs, srcFile, markdown } = getArgs(
 	`Checks all rules have been translated.`
 )
 
@@ -177,6 +189,11 @@ glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 		}, [])
 	)
 
+	if (markdown) {
+		console.log(`| Language | Nb. missing translations | Status |`)
+		console.log(`|:--------:|:------------------------:|:------:|`)
+	}
+
 	destLangs.forEach((destLang) => {
 		const destPath = `data/translated-rules-${destLang}.yaml`
 		const destRules = R.mergeAll(yaml.parse(fs.readFileSync(destPath, 'utf8')))
@@ -184,10 +201,16 @@ glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 
 		if (missingRules.length > 0) {
 			console.log(
-				`❌ Missing ${missingRules.length} rules for the '${destLang}' translation!`
+				markdown
+					? `| ${destLang} | ${missingRules.length} | ❌ |`
+					: `❌ Missing ${missingRules.length} rules for the '${destLang}' translation!`
 			)
 		} else {
-			console.log('✅ The rules translation are up to date for:', destLang)
+			console.log(
+				markdown
+					? `| ${destLang} | Ø | ✅ |`
+					: `✅ The rules translation are up to date for: ${destLang}`
+			)
 		}
 	})
 })
