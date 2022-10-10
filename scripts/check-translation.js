@@ -202,13 +202,13 @@ glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 		if (missingRules.length > 0) {
 			console.log(
 				markdown
-					? `| ${destLang} | ${missingRules.length} | ❌ |`
+					? `| _${destLang}_ | ${missingRules.length} | ❌ |`
 					: `❌ Missing ${missingRules.length} rules for the '${destLang}' translation!`
 			)
 		} else {
 			console.log(
 				markdown
-					? `| ${destLang} | Ø | ✅ |`
+					? `| _${destLang}_ | Ø | :heavy_check_mark: |`
 					: `✅ The rules translation are up to date for: ${destLang}`
 			)
 		}

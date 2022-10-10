@@ -50,6 +50,11 @@ const getArgs = (description) => {
 			type: 'boolean',
 			description: `Remove the unused keys from the translation files.`,
 		})
+		.option('markdown', {
+			alias: 'm',
+			type: 'boolean',
+			description: `Prints the result in a Markdown table.`,
+		})
 		.option('target', {
 			alias: 't',
 			type: 'string',
@@ -78,10 +83,19 @@ const getArgs = (description) => {
 
 	const srcFile = argv.file ?? 'data/**/*.yaml'
 
-	return { srcLang, destLangs, force: argv.force, remove: argv.remove, srcFile }
+	return {
+		srcLang,
+		destLangs,
+		force: argv.force,
+		remove: argv.remove,
+		srcFile,
+		markdown: argv.markdown,
+	}
 }
 
-const { destLangs } = getArgs(`Aggregates the model to an unique JSON file.`)
+const { destLangs, markdown } = getArgs(
+	`Aggregates the model to an unique JSON file.`
+)
 
 const addTranslationToBaseRules = (baseRules, translatedRules) => {
 	const updateBaseRules = (key, val) => {
@@ -134,14 +148,24 @@ const addTranslationToBaseRules = (baseRules, translatedRules) => {
 	return baseRules
 }
 
-const writeRules = (rules, path) => {
+const writeRules = (rules, path, destLang) => {
 	fs.writeFile(path, JSON.stringify(rules), function (err) {
 		if (err) {
-			console.log(' ❌ An error occured while writting rules in:', path)
-			console.log(err.message)
+			if (markdown) {
+				console.log(
+					`| Rules compilation to JSON for _${destLang}_ | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
+				)
+			} else {
+				console.log(' ❌ An error occured while writting rules in:', path)
+				console.log(err.message)
+			}
 			exit(-1)
 		}
-		console.log(' ✅ The rules have been correctly written in JSON in:', path)
+		console.log(
+			markdown
+				? `| Rules compilation to JSON for _${destLang}_ | :heavy_check_mark: | Ø |`
+				: ` ✅ The rules have been correctly written in JSON in: ${path}`
+		)
 	})
 }
 
@@ -165,31 +189,48 @@ glob('data/**/*.yaml', { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 
 	try {
 		new Engine(baseRules).evaluate('bilan')
-		console.log(' ✅ Les règles ont été évaluées sans erreur !')
 
-		writeRules(baseRules, defaultDestPath)
+		if (markdown) {
+			console.log('| Task | Status | Message |')
+			console.log('|:-----|:------:|:-------:|')
+		}
+		console.log(
+			markdown
+				? `| Rules evaluation | :heavy_check_mark: | Ø |`
+				: ' ✅ Les règles ont été évaluées sans erreur !'
+		)
+
+		writeRules(baseRules, defaultDestPath, defaultLang)
 
 		destLangs.forEach((destLang) => {
 			const destPath = path.join(outputJSONPath, `co2-${destLang}.json`)
-			const translatedRuleAttrs = yaml.parse(
-				fs.readFileSync(`data/translated-rules-${destLang}.yaml`, 'utf8')
-			)
+			const translatedRuleAttrs =
+				yaml.parse(
+					fs.readFileSync(`data/translated-rules-${destLang}.yaml`, 'utf8')
+				) ?? {}
 			const translatedRules = addTranslationToBaseRules(
 				baseRules,
 				translatedRuleAttrs
 			)
-			writeRules(translatedRules, destPath)
+			writeRules(translatedRules, destPath, destLang)
 		})
 	} catch (err) {
-		console.log(
-			' ❌ Une erreur est survenue lors de la compilation des règles:\n'
-		)
-		let lines = err.message.split('\n')
-		for (let i = 0; i < 9; ++i) {
-			if (lines[i]) {
-				console.log('  ', lines[i])
+		if (markdown) {
+			console.log(
+				`| Rules evaluation | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
+			)
+			console.log(err)
+		} else {
+			console.log(
+				' ❌ Une erreur est survenue lors de la compilation des règles:\n'
+			)
+			let lines = err.message.split('\n')
+			for (let i = 0; i < 9; ++i) {
+				if (lines[i]) {
+					console.log('  ', lines[i])
+				}
 			}
+			console.log()
 		}
-		console.log()
 	}
 })

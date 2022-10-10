@@ -32,7 +32,7 @@ jobs:
       - id: compilation
         run: |
           # Compiles the model and stores the result -- with escaped special characters.
-          body="$(yarn compile 2> /dev/null | tail --lines=+3 | head --lines=-1)"
+          body="$(yarn compile:md 2> /dev/null | tail --lines=+3 | head --lines=-1)"
           body="${body//'%'/'%25'}"
           body="${body//$'\n'/'%0A'}"
           body="${body//$'\r'/'%0D'}"
@@ -61,17 +61,17 @@ jobs:
           ## 🚀 The pull request #${{ github.event.pull_request.number }} is open\!
           > Test the model from the website: ${{ needs.compile.outputs.test-url }}
 
-          Current model compilation status:
+          ---
 
-          \`\`\`
+          ### Current model compilation status
+
           ${{ needs.compile.outputs.compilation-result }}
-          \`\`\`
 
-          Rules translation status:
+          ---
 
-          \`\`\`
+          ### Rules translation status
+
           ${{ needs.compile.outputs.check-translation-result }}
-          \`\`\`
           " > artifacts/result.md
       - name: Upload artifact
         uses: actions/upload-artifact@v1

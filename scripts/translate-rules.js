@@ -2,9 +2,10 @@
 	Calls the DeepL API to translate the rule questions, titles, notes,
 	summaries and suggestions.
 
-	Command: yarn translate:rules -- [options]
+	Command: yarn translate -- [options]
 */
 
+const cliProgress = require('cli-progress')
 const yaml = require('yaml')
 const fs = require('fs')
 const glob = require('glob')
@@ -23,7 +24,7 @@ const translator = new deepl.Translator(process.env.DEEPL_API_KEY, {
 })
 
 const NO_TRANS_CHAR = ' '
-const TEST_MODE = false
+const TEST_MODE = true
 
 const fetchTranslation = async (
 	text,
@@ -43,7 +44,8 @@ const fetchTranslation = async (
 			preserveFormatting: true,
 		})
 		.catch((err) => {
-			console.error(`Error: while fetching the request for '${text}': ${err}`)
+			console.error(`Error: while fetching the request for '${text}'`)
+			console.error(err)
 			process.exit(-1)
 		})
 
@@ -202,6 +204,16 @@ const { srcLang, destLangs, srcFile } = getArgs(
 	summaries and suggestions.`
 )
 
+const progressBars = new cliProgress.MultiBar(
+	{
+		stopOnComplete: true,
+		clearOnComplete: true,
+		forceRedraw: true,
+		format: '{lang} | {value}/{total} | {bar} | {msg} ',
+	},
+	cliProgress.Presets.shades_grey
+)
+
 const keysToTranslate = [
 	'titre',
 	'description',
@@ -234,6 +246,7 @@ const getMissingRules = (srcRules, targetRules) => {
 					mosaiqueIncludeSuggestions
 				)
 			})
+
 			if (targetRule) {
 				acc.push(
 					filteredValEntries.reduce((acc, [attr, refVal]) => {
@@ -323,13 +336,46 @@ const translateTo = async (
 		)
 	}
 
+	let bar = progressBars.create(entryToTranslate.length, 0)
+
 	await Promise.all(
 		Object.values(entryToTranslate).map(async ({ rule, attr, refVal }) => {
-			const translatedValue =
-				'description' === attr || 'note' === attr
-					? await translateMarkdown(refVal)
-					: await translate(refVal)
-			updateTranslatedRules(rule, attr, translatedValue, refVal)
+			try {
+				const translatedValue =
+					'description' === attr || 'note' === attr
+						? await translateMarkdown(refVal)
+						: await translate(refVal)
+				bar.increment({
+					msg: `Translating ${rule}...`,
+					lang: destLang,
+				})
+				updateTranslatedRules(rule, attr, translatedValue, refVal)
+			} catch (err) {
+				bar.stop()
+				console.error(`Error: while fetching the request for '${rule}}':`)
+				console.error(err.message)
+				fs.writeFile(
+					destPath,
+					yaml.stringify(translatedRules, {
+						sortMapEntries: true,
+						blockQuote: 'literal',
+					}),
+					'utf8',
+					(err) => {
+						if (err) {
+							printErr(`An error occured while writting to '${destPath}':`)
+							printErr(err)
+							bar.stop()
+							progressBars.remove(bar)
+							return
+						}
+						console.log(
+							`${entryToTranslate.length} new translated attributes written in '${destPath}'.`
+						)
+					}
+				)
+				process.exit(-1)
+			}
 		})
 	)
 	fs.writeFile(
@@ -343,6 +389,8 @@ const translateTo = async (
 			if (err) {
 				printErr(`An error occured while writting to '${destPath}':`)
 				printErr(err)
+				bar.stop()
+				progressBars.remove(bar)
 				return
 			}
 			console.log(
@@ -352,36 +400,47 @@ const translateTo = async (
 	)
 }
 
-glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
-	console.log(`Parsing rules of '${srcFile}'`)
-	const rules = R.mergeAll(
-		files.reduce((acc, filename) => {
-			try {
-				const data = fs.readFileSync('./' + filename, 'utf8')
-				const rules = yaml.parse(data)
-				return acc.concat(rules)
-			} catch (err) {
-				printErr('An error occured while reading the file ' + filename + '')
-				printErr(err)
-				exit(-1)
-			}
-		}, [])
-	)
+const main = () => {
+	glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
+		console.log(`Parsing rules of '${srcFile}'`)
+		const rules = R.mergeAll(
+			files.reduce((acc, filename) => {
+				try {
+					const data = fs.readFileSync('./' + filename, 'utf8')
+					const rules = yaml.parse(data)
+					return acc.concat(rules)
+				} catch (err) {
+					printErr('An error occured while reading the file ' + filename + '')
+					printErr(err)
+					exit(-1)
+				}
+			}, [])
+		)
 
-	destLangs.forEach(async (destLang) => {
-		const destPath = `data/translated-rules-${destLang}.yaml`
-		const destRules = R.mergeAll(yaml.parse(fs.readFileSync(destPath, 'utf8')))
-
-		console.log(`Getting missing rule for ${destLang}...`)
-		const missingRules = getMissingRules(rules, destRules)
-
-		if (0 < missingRules.length) {
-			console.log(
-				`Translating ${missingRules.length} new entries to ${destLang}...`
+		destLangs.forEach(async (destLang) => {
+			const destPath = `data/translated-rules-${destLang}.yaml`
+			const destRules = R.mergeAll(
+				yaml.parse(fs.readFileSync(destPath, 'utf8'))
 			)
-			translateTo(srcLang, destLang, destPath, missingRules, destRules)
-		} else {
-			console.log(`Found no new entry to translate...`)
-		}
+
+			console.log(`Getting missing rule for ${destLang}...`)
+			const missingRules = getMissingRules(rules, destRules)
+
+			if (0 < missingRules.length) {
+				console.log(
+					`Translating ${missingRules.length} new entries to ${destLang}...`
+				)
+				translateTo(srcLang, destLang, destPath, missingRules, destRules)
+			} else {
+				console.log(`Found no new entry to translate...`)
+			}
+		})
 	})
-})
+}
+
+// main()
+
+module.exports = {
+	getMissingRules,
+	getArgs,
+}
