@@ -99,7 +99,7 @@ const getArgs = (description, opts) => {
 		return l !== srcLang
 	})
 
-	const srcFile = argv.file ?? '*.md'
+	const srcFile = argv.file ?? opts.defaultSrcFile
 
 	return { srcLang, destLangs, force: argv.force, remove: argv.remove, srcFile }
 }
