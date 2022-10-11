@@ -40,7 +40,7 @@ const printWarn = (message) => console.warn(withStyle(colors.fgYellow, message))
 const getArgs = (description, opts) => {
 	let args = yargs.usage(`${description}\n\nUsage: node $0 [options]`)
 
-	if (opts.source !== false) {
+	if (opts.source) {
 		args = args.option('source', {
 			alias: 's',
 			type: 'string',
@@ -49,7 +49,7 @@ const getArgs = (description, opts) => {
 			description: `The source language to translate from.`,
 		})
 	}
-	if (opts.force !== false) {
+	if (opts.force) {
 		args = args.option('force', {
 			alias: 'f',
 			type: 'boolean',
@@ -57,21 +57,21 @@ const getArgs = (description, opts) => {
 				'Force translation of all the keys. Its overwrites the existing translations.',
 		})
 	}
-	if (opts.file !== false) {
+	if (opts.file) {
 		args = args.option('file', {
 			alias: 'p',
 			type: 'string',
 			description: `The source file to translate from inside the 'locales/pages' directory. If not specified, all the files in 'locales/pages' will be translated.`,
 		})
 	}
-	if (opts.remove !== false) {
+	if (opts.remove) {
 		args = args.option('remove', {
 			alias: 'r',
 			type: 'boolean',
 			description: `Remove the unused keys from the translation files.`,
 		})
 	}
-	if (opts.target !== false) {
+	if (opts.target) {
 		args = args.option('target', {
 			alias: 't',
 			type: 'string',
