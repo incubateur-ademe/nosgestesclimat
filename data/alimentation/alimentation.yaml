@@ -42,10 +42,12 @@ alimentation . laitages:
 
 alimentation . déjeuner et dîner:
   icônes: 🍽️
+  titre: Déjeuners et dîners
   formule: par semaine * nombre de semaines
   unité: kgCO2e
 
 alimentation . déjeuner et dîner . par semaine:
+  titre: Déjeuners et dîners par semaine
   formule: plats
 
 alimentation . plats:
@@ -92,14 +94,22 @@ alimentation . plats:
       - poisson 2
 
   note: |
+    Pour le moment, nous proposons 6 repas-type pour 6 régimes différents. Il a été choisi de limiter la granularité du modèle via 6 menus représentatifs des régimes associés pour simplifier l'estimation de l'empreinte du poste alimentation pour l'utilisateur (les spécificités de l'alimentation de chacun pourrait donner lieu à un simulateur complet dédié à l'alimentation).
+    Ils sont basés sur les régimes représentatifs [documentés par l'ADEME](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm), actualisés avec les facteurs d'émission disponibles via Agribalyse.
 
-    Nous limitons le choix pour l'instant à 4 régimes. Ils sont basés sur les régimes représentatifs [documentés par l'ADEME](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm).
+    La répartition moyenne des repas est basée sur une consolidation multi-facteurs (quantité totale d'aliments consommés, quantité de viande et poisson consommés, apports énergétiques, empreinte carbone moyenne d'un repas) 
+    basé sur les données de [l'étude INCA 3](https://www.anses.fr/fr/system/files/NUT2014SA0234Ra.pdf) et [le travail réalisé pour les repas de la base carbone](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm).
+    permettant de se rapprocher du régime moyen d'un Français.
 
-    Les repas viande ne sont déclinés qu'avec une quantité "classique" de viande.
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1SVYvBaaYDOUDcg5jX0eZFEColnWWIL8PCLMGrPR000o/edit#gid=1694091424) sous forme de tableur.
 
-    Nous y ajoutons le régime végétalien, variation du végétarien.
-  références:
-    - https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23
+    Quelques hypothèses importantes :
+      - Les repas "viande" et "poisson" ne sont déclinés qu'avec une quantité "normale" de viande et poisson.
+      - Pour chaque repas, les fruits et légumes sont considérés comme étant "hors saison" pour permettre le bonus "de saison"
+      - Pour chaque repas, les ingédients sont considérés comme étant "non locaux" pour permettre le bonus "local"
+      - Tous les aliments sont considérés comme étant crus dans les menus proposés. 2 enjeux associés
+        - Eviter le double comptage lié à la part "consommation" du FE Agribalsye, déjà comprise dans votre facture d'électricité ou gaz.
+        - Raisonner en "quantité réelle" avant cuisson qui assèche l'aliment et donc diminue son poids.
 
 alimentation . plats . végétalien:
   formule: empreinte * nombre
@@ -109,43 +119,37 @@ alimentation . plats . végétalien:
 
     Voici le menu type utilisé pour notre calcul.
 
-    | Ingrédients                                                  | Qte (g) | Kcal  | Protéines (g) | Lipides (g) | kgCO2e /kg | gCO2e  |
-    | ------------------------------------------------------------ | ------- | ----- | ------------- | ----------- | ---------- | ------ |
-    |     Entrée : légumes à la grecque                            |         |       |               |             |            |        |
-    | Tomates (hors saison)                                        | 200     | 38,6  | 1,72          | 0,52        | 1,96       | 392,00 |
-    | Noix fraiche                                                 | 10      | 71    | 1,29          | 3,18        | 4,17       | 41,70  |
-    | huile d'olive (1/2 c.s.)                                     | 7       | 63    | 0,035         | 6,993       | 1,00       | 7,00   |
-    |     Plat principal : tofu mariné, pommes de terre et oignons |         |       |               |             |            |        |
-    | Tofu                                                         | 150     | 128   | 16            | 8           | 0,67       | 100,50 |
-    | pommes de terre                                              | 200     | 152,8 | 3,76          | 0,6         | 0,37       | 74,00  |
-    | huile d'olive (1/2 c.s.)                                     | 7       | 63    | 0,035         | 6,993       | 1,00       | 7,00   |
-    |     Dessert : salade de fruits                               |         |       |               |             |            |        |
-    | fraises (hors saison)                                        | 200     | 77,2  | 1,26          | 1           | 0,55       | 110,00 |
-    | Pain                                                         | 50      | 143,5 | 4,135         | 0,7         | 0,67       | 33,48  |
-    | Total                                                        | 824     | 737,1 | 28,235        | 27,986      |            | 765,68 |
+    | Ingrédients                                                  | CIQUAL | Qte (g) | Kcal  | Protéines (g) | Lipides (g) | kgCO2e /kg | gCO2e  |
+    | ------------------------------------------------------------ | ------ | ------- | ----- | ------------- | ----------- | ---------- | ------ |
+    |     Entrée : légumes à la grecque                            |        |         |       |               |             |            |        |
+    | Tomates (hors saison)                                        | 20047  | 200     | 38,6  | 1,72          | 0,52        | 1,96       | 392,00 |
+    | Noix fraiche                                                 | 15023  | 10      | 71    | 1,29          | 3,18        | 4,17       | 41,70  |
+    | huile d'olive (1/2 c.s.)                                     | 17270  | 7       | 63    | 0,035         | 6,993       | 1,00       | 7,00   |
+    |     Plat principal : tofu mariné, pommes de terre et oignons |        |         |       |               |             |            |        |
+    | Tofu                                                         | 20904  | 150     | 222   | 16            | 8           | 0,67       | 100,50 |
+    | pommes de terre                                              | 4023   | 200     | 152,8 | 3,76          | 0,6         | 0,37       | 74,00  |
+    | oignon                                                       | 20034  | 50      | 20,1  | 0,55          | 0,3         | 0,39       | 19,5   |
+    | huile d'olive (1/2 c.s.)                                     | 17270  | 7       | 63    | 0,035         | 6,993       | 1,00       | 7,00   |
+    |     Dessert : salade de fruits                               |        |         |       |               |             |            |        |
+    | fraises (hors saison)                                        | 13014  | 200     | 77,2  | 1,26          | 1           | 0,55       | 110,00 |
+    | Pain                                                         | 7001   | 50      | 143,5 | 4,135         | 0,7         | 0,67       | 33,48  |
+    | Total                                                        |        | 874     | 851,2 | 28,785        | 28,286      |            | 785,18 |
 
 alimentation . plats . végétalien . empreinte:
   titre: Empreinte d'un repas végétalien
-  formule: 0.766
+  formule: 0.785
   unité: kgCO2e
   note: |
-    Pour l'instant, en l'absence de repas type végétalien dans la [base carbone](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm), nous prenons l'empreinte du repas végétarien, dans lequel nous substituons les 2 oeufs par du tofu et des noix dans l'entrée qui devient alors une salade, en gardant approximativement les mêmes quantités de calories et de protéines. 
-    > Note : on peut se demander pourquoi la recette fait mention d'une omelette aux oignons sans inclure les oignons. Négligeables ?
+    Pour l'instant, en l'absence de repas type végétalien dans la [base carbone](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm), 
+    nous prenons l'empreinte du repas végétarien, dans lequel nous substituons les 2 oeufs par du tofu et des noix dans l'entrée qui devient alors une salade,
+    en gardant approximativement les mêmes quantités de calories et de protéines. 
 
-    #### Ajout du tofu
-
-    Nous nous basons pour le tofu sur l'étude [Greenhouse Gas Emissions Generated by Tofu Production: A Case Study](https://www.researchgate.net/publication/317987931_Greenhouse_Gas_Emissions_Generated_by_Tofu_Production_A_Case_Study#read). La concordance des deux méthodes d'évaluation de l'empreinte reste à vérifier, et notons que l'étude elle-même metionne d'autres études évaluant une empreinte 2 fois plus importante (ce qui reste beaucoup moins que les produits animaux). L'étude nous dit les choses suivantes : 
-
-    > Total CO2e from packaged tofu were 982 g/kg, 9820 g/kg of protein, 1150 g/1000 calories, and 336 g/retail packet of 396g. 
-    > our tofu contained 850 kcal and 109 g protein per kilogram. 
-
-    Nous considérons que le tofu contient 5g de lipides pour 100g.
+    > Note : on peut se demander pourquoi la recette fait mention d'une omelette aux oignons sans inclure les oignons. Négligeables ? Nous les avons ajouté.
 
     Notons finalement que le tofu considéré ici pourrait être remplacé par du soja français et une fabrication du tofu française décarbonée, notamment pour éviter la déforestation et réduire encore plus les émissions, donnant lieu à un régime végétalien local. Voir [ce papier](https://www.nature.com/articles/s43016-020-0106-x) à ce propos du soja et de la déforestation.
 
-    #### Ajout des noix
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1SVYvBaaYDOUDcg5jX0eZFEColnWWIL8PCLMGrPR000o/edit#gid=1694091424) sous forme de tableur.
 
-    Pour les noix, nous ajoutons 1 cerneau (10g sans la coquille), et nous utilisons l'empreinte climat de la base [FoodGES](https://www.bilans-ges.ademe.fr/fr/actualite/actualite/detail/id/23) de l'ADEME, `1,3kgCO2e/kg ingéré`, et les valeurs nutritives de [la page Wikipedia](https://fr.wikipedia.org/wiki/Noix#Valeur_nutritive).
 alimentation . plats . végétalien . nombre:
   question: Nombre de plats végétaliens par semaine
   par défaut: 2
@@ -159,27 +163,32 @@ alimentation . plats . végétarien:
 
     Voici le menu type utilisé pour notre calcul:
 
-    | Ingrédients                                                      | Qte (g) | Kcal   | Protéines (g) | Lipides (g) | gCO2e /kg | gCO2e  |
-    | ---------------------------------------------------------------- | ------- | ------ | ------------- | ----------- | --------- | ------ |
-    |     Entrée : soupe tomate                                        |         |        |               |             |           |        |
-    | Tomates (hors saison)                                            | 200     | 38,6   | 1,72          | 0,52        | 1,96      | 392,0  |
-    | crème fraîche                                                    | 10      | 19,4   | 0,256         | 1,87        | 2,45      | 24,5   |
-    |     Plat principal : omelette aux pommes de terre et aux oignons |         |        |               |             |           |        |
-    | 2 œufs                                                           | 100     | 140    | 12,7          | 9,83        | 3,19      | 319    |
-    | pommes de terre                                                  | 200     | 152,8  | 3,76          | 0,6         | 0,37      | 74     |
-    | oignon                                                           | 50      | 0      | 0,55          | 0,3         | 0,39      | 19,5   |
-    | huile d'olive (1/2 c.s.)                                         | 7       | 63     | 0,035         | 6,993       | 1,00      | 7      |
-    |     Dessert : fromage et salade de fruits                        |         |        |               |             |           |        |
-    | fraises (hors saison)                                            | 200     | 77,2   | 1,26          | 1           | 0,55      | 110,00 |
-    | Fromage à pâte molle                                             | 25      | 77,75  | 5,075         | 6,425       | 5,42      | 135,5  |
-    | Pain                                                             | 50      | 143,5  | 4,135         | 0,7         | 0,67      | 33,5   |
-    | Total                                                            | 842     | 712,25 | 29,491        | 28,238      |           | 1115,0 |
+    | Ingrédients                                                      | CIQUAL | Qte (g) | Kcal   | Protéines (g) | Lipides (g) | gCO2e /kg | gCO2e  |
+    | ---------------------------------------------------------------- | ------ | ------- | ------ | ------------- | ----------- | --------- | ------ |
+    |     Entrée : soupe tomate                                        |        |         |        |               |             |           |        |
+    | Tomates (hors saison)                                            | 20047  | 200     | 38,6   | 1,72          | 0,52        | 1,96      | 392,0  |
+    | crème fraîche                                                    | 19430  | 10      | 19,4   | 0,256         | 1,87        | 2,45      | 24,5   |
+    |     Plat principal : omelette aux pommes de terre et aux oignons |        |         |        |               |             |           |        |
+    | 2 œufs                                                           | 22000  | 100     | 140    | 12,7          | 9,83        | 3,19      | 319    |
+    | pommes de terre                                                  | 4023   | 200     | 152,8  | 3,76          | 0,6         | 0,37      | 74     |
+    | oignon                                                           | 20034  | 50      | 20,1   | 0,55          | 0,3         | 0,39      | 19,5   |
+    | huile d'olive (1/2 c.s.)                                         | 17270  | 7       | 63     | 0,035         | 6,993       | 1,00      | 7      |
+    |     Dessert : fromage et salade de fruits                        |        |         |        |               |             |           |        |
+    | fraises (hors saison)                                            | 13014  | 200     | 77,2   | 1,26          | 1           | 0,55      | 110,00 |
+    | Fromage à pâte molle                                             | 12047  | 25      | 77,75  | 5,075         | 6,425       | 5,42      | 135,5  |
+    | Pain                                                             | 7001   | 50      | 143,5  | 4,135         | 0,7         | 0,67      | 33,5   |
+    | Total                                                            |        | 842     | 732,35 | 29,491        | 28,238      |           | 1115,0 |
 
 alimentation . plats . végétarien . empreinte:
   titre: Empreinte d'un repas végétarien
   formule: 1.115
   unité: kgCO2e
-  note: C'est le "Repas végétarien 1" [ici](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm).
+  note: |
+    C'est le "Repas végétarien 1" [ici](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm), [actualisé avec les facteurs d'émission Agribalyse](https://docs.google.com/spreadsheets/d/1SVYvBaaYDOUDcg5jX0eZFEColnWWIL8PCLMGrPR000o/edit#gid=1694091424).
+
+    > Note : on peut se demander pourquoi la recette fait mention d'une omelette aux oignons sans inclure les oignons. Négligeables ? Nous les avons ajouté.
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1SVYvBaaYDOUDcg5jX0eZFEColnWWIL8PCLMGrPR000o/edit#gid=1694091424) sous forme de tableur.
 
 alimentation . plats . végétarien . nombre:
   question: Nombre de plats végétariens par semaine
@@ -195,24 +204,32 @@ alimentation . plats . viande 1:
 
     Voici le menu type utilisé pour notre calcul:
 
-    | Ingrédients                        | Qte (g) | Kcal   | Protéines (g) | Lipides (g) | gCO2e /kg | gCO2e       |
-    | ---------------------------------- | ------- | ------ | ------------- | ----------- | --------- | ----------- |
-    |     Entrée : légumes à la grecque  |         |        |               |             |           |             |
-    | Tomates, hors saison               | 200     | 38,6   | 1,72          | 0,52        | 1,96      | 392         |
-    | huile d'olive (1/2 c.s.)           | 7       | 63     | 0,035         | 6,993       | 1,00      | 7           |
-    |     Plat principal : poulet au riz |         |        |               |             |           |             |
-    | poulet                             | 150     | 288    | 25,95         | 20,25       | 8,18      | 1227,118248 |
-    | riz                                | 60      | 211,2  | 4,224         | 0,54        | 2,76      | 165,6       |
-    |     Plateau de fromages            |         |        |               |             |           |             |
-    | fromage à pâte molle               | 25      | 77,75  | 5,075         | 6,425       | 5,42      | 135,5       |
-    | fromage à pâte dure                | 25      | 59,5   | 7,25          | 3,45        | 5,49      | 137,25      |
-    | Pain                               | 50      | 143,5  | 4,135         | 0,7         | 0,67      | 33,478384   |
-    | Total                              | 517     | 881,55 | 48,389        | 38,878      |           | 2097,946632 |
+    | Ingrédients                        | CIQUAL | Qte (g) | Kcal   | Protéines (g) | Lipides (g) | gCO2e /kg | gCO2e  |
+    | ---------------------------------- | ------ | ------- | ------ | ------------- | ----------- | --------- | ------ |
+    |     Entrée : légumes à la grecque  |        |         |        |               |             |           |        |
+    | Tomates, hors saison               | 20047  | 200     | 38,6   | 1,72          | 0,52        | 1,96      | 392    |
+    | huile d'olive (1/2 c.s.)           | 17270  | 7       | 63     | 0,035         | 6,993       | 1,00      | 7      |
+    |     Plat principal : poulet au riz |        |         |        |               |             |           |        |
+    | poulet                             | 36017  | 150     | 288    | 25,95         | 20,25       | 8,18      | 1227,1 |
+    | riz                                | 9100   | 60      | 211,2  | 4,224         | 0,54        | 2,76      | 165,6  |
+    |     Plateau de fromages            |        |         |        |               |             |           |        |
+    | fromage à pâte molle               | 12047  | 25      | 77,75  | 5,075         | 6,425       | 5,42      | 135,5  |
+    | fromage à pâte dure                | 12705  | 25      | 59,5   | 7,25          | 3,45        | 5,49      | 137,25 |
+    | Pain                               | 7001   | 50      | 143,5  | 4,135         | 0,7         | 0,67      | 33,5   |
+    | Total                              |        | 517     | 881,55 | 48,389        | 38,878      |           | 2097,9 |
 
 alimentation . plats . viande 1 . empreinte:
   titre: Empreinte d'un repas de type viande 1 (poulet, porc, fromage)
   formule: 2.098
   unité: kgCO2e
+  note: |
+    C'est le "Repas classique 1 (avec poulet)" [ici](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm), actualisé avec les facteurs d'émission Agribalyse.
+
+    Le facteur d'émission associé à l'ingrédient principal (ici le la pièce de volaille ou porc) correspond à une moyenne de facteurs d'émissions associés au porc (pièce de viande et charcuterie), poulet, dinde, canard d'Agribalyse. 
+    Cette moyenne est pondérée selon les consommations réelles des français par type de viande animale.
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1SVYvBaaYDOUDcg5jX0eZFEColnWWIL8PCLMGrPR000o/edit#gid=1200865486) sous forme de tableur.
+
 alimentation . plats . viande 1 . nombre:
   question: Nombre de plats viande 1 par semaine
   par défaut: 4
@@ -227,23 +244,31 @@ alimentation . plats . viande 2:
 
     Voici le menu type utilisé pour notre calcul: 
 
-    | Ingrédients                           | Qte (g) | Kcal   | Protéines (g) | Lipides (g) | gCO2e /kg | gCO2e      |
-    | ------------------------------------- | ------- | ------ | ------------- | ----------- | --------- | ---------- |
-    | yaourt                                | 125     | 71     | 4,85          | 2,875       | 2,12      | 265        |
-    | concombre                             | 75      | 11,7   | 0,48          | 0,0825      | 0,47      | 35,25      |
-    | huile d'olive (1/2 c.s.)              | 7       | 63     | 0,035         | 6,993       | 1,00      | 7          |
-    |     Plat principal : bifteck - frites |         |        |               |             |           |            |
-    | pièce de viande rouge                 | 150     | 346,5  | 29,1          | 25,65       | 32,45     | 4866,77742 |
-    | pommes de terre                       | 200     | 152,8  | 3,76          | 0,6         | 0,37      | 74,00      |
-    |     Dessert : tarte aux poires        |         |        |               |             |           |            |
-    | tarte aux poires                      | 100     | 281,55 | 2,55          | 14,6        | 2,62      | 262        |
-    | Total                                 | 657     | 926,55 | 40,775        | 50,8005     |           | 5510,02742 |
+    | Ingrédients                           | CIQUAL | Qte (g) | Kcal   | Protéines (g) | Lipides (g) | gCO2e /kg | gCO2e  |
+    | ------------------------------------- | ------ | ------- | ------ | ------------- | ----------- | --------- | ------ |
+    | Entrée : tzatziki                     |        |         |        |               |             |           |        |
+    | yaourt                                | 19860  | 125     | 71     | 4,85          | 2,875       | 2,12      | 265    |
+    | concombre                             | 20019  | 75      | 11,7   | 0,48          | 0,0825      | 0,47      | 35,25  |
+    | huile d'olive (1/2 c.s.)              | 17270  | 7       | 63     | 0,035         | 6,993       | 1,00      | 7      |
+    |     Plat principal : bifteck - frites |        |         |        |               |             |           |        |
+    | pièce de viande rouge                 | 6212   | 150     | 346,5  | 29,1          | 25,65       | 32,45     | 4866,8 |
+    | pommes de terre                       | 4023   | 200     | 152,8  | 3,76          | 0,6         | 0,37      | 74,00  |
+    |     Dessert : tarte aux poires        |        |         |        |               |             |           |        |
+    | tarte aux poires                      | 24663  | 100     | 281,55 | 2,55          | 14,6        | 2,62      | 262    |
+    | Total                                 |        | 657     | 926,55 | 40,775        | 50,8005     |           | 5510,0 |
 
 alimentation . plats . viande 2 . empreinte:
   titre: Empreinte d'un repas de type viande 2 (boeuf, veau, agneau)
   formule: 5.510
   unité: kgCO2e
-  note: C'est le "Repas classique 2 (avec bœuf)" [ici](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm).
+  note: |
+    C'est le "Repas classique 2 (avec bœuf)" [ici](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm), actualisé avec les facteurs d'émission Agribalyse.
+
+    Le facteur d'émission associé à l'ingrédient principal (ici le la pièce de viande rouge) correspond à une moyenne de facteurs d'émissions associés au boeuf, agneau, veau d'Agribalyse. 
+    Cette moyenne est pondérée selon les consommations réelles des français par type de viande animale.
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1SVYvBaaYDOUDcg5jX0eZFEColnWWIL8PCLMGrPR000o/edit#gid=1200865486) sous forme de tableur.
+
 alimentation . plats . viande 2 . nombre:
   question: Nombre de plats viande 2 par semaine
   par défaut: 3
@@ -260,20 +285,20 @@ alimentation . plats . poisson 1:
 
     Voici le menu type utilisé pour notre calcul.
 
-    | Ingrédients                                     | Qte (g) | Kcal    | Protéines (g) | Lipides (g) | gCO2e /kg | gCO2e  |
-    | ----------------------------------------------- | ------- | ------- | ------------- | ----------- | --------- | ------ |
-    |     Entrée : légumes à la grecque               |         |         |               |             |           |        |
-    | Tomates, hors saison                            | 200     | 38,6    | 1,72          | 0,52        | 1,96      | 392,00 |
-    | huile d'olive (1/2 c.s.)                        | 7       | 63      | 0,035         | 6,993       | 1,00      | 7,00   |
-    |     Plat principal : portion de tarte au saumon |         |         |               |             |           |        |
-    | saumon                                          | 100     | 194     | 20,5          | 12,4        | 6,12      | 612,1  |
-    | pate feuilletée                                 | 60      | 243     | 3,6           | 18          | 3,64      | 218,40 |
-    | lait demi-écrémé pasteurisé                     | 5       | 2,25    | 0,165         | 0,077       | 1,32      | 6,60   |
-    | crème légère                                    | 5       | 8,5     | 0,125         | 0,75        | 2,45      | 12,25  |
-    | Oeuf, cru                                       | 37,5    | 54,375  | 4,6125        | 3,8625      | 3,19      | 119,63 |
-    |     Dessert : tarte aux poires                  |         |         |               |             |           |        |
-    | tarte aux poires                                | 100     | 281,55  | 2,55          | 14,6        | 2,62      | 262    |
-    | Total                                           | 514,5   | 885,275 | 33,3075       | 57,2025     |           | 1630,0 |
+    | Ingrédients                                     | CIQUAL | Qte (g) | Kcal    | Protéines (g) | Lipides (g) | gCO2e /kg | gCO2e  |
+    | ----------------------------------------------- | ------ | ------- | ------- | ------------- | ----------- | --------- | ------ |
+    |     Entrée : légumes à la grecque               |        |         |         |               |             |           |        |
+    | Tomates, hors saison                            | 20047  | 200     | 38,6    | 1,72          | 0,52        | 1,96      | 392,00 |
+    | huile d'olive (1/2 c.s.)                        | 17270  | 7       | 63      | 0,035         | 6,993       | 1,00      | 7,00   |
+    |     Plat principal : portion de tarte au saumon |        |         |         |               |             |           |        |
+    | saumon                                          | 26037  | 100     | 194     | 20,5          | 12,4        | 6,12      | 612,1  |
+    | pate feuilletée                                 | 23424  | 60      | 243     | 3,6           | 18          | 3,64      | 218,4  |
+    | lait demi-écrémé pasteurisé                     | 19042  | 5       | 2,25    | 0,165         | 0,077       | 1,32      | 6,60   |
+    | crème légère                                    | 19430  | 5       | 8,5     | 0,125         | 0,75        | 2,45      | 12,25  |
+    | Oeuf, cru                                       | 22000  | 37,5    | 54,375  | 4,6125        | 3,8625      | 3,19      | 119,63 |
+    |     Dessert : tarte aux poires                  |        |         |         |               |             |           |        |
+    | tarte aux poires                                | 24663  | 100     | 281,55  | 2,55          | 14,6        | 2,62      | 262    |
+    | Total                                           |        | 514,5   | 885,275 | 33,3075       | 57,2025     |           | 1630,0 |
 
 alimentation . plats . poisson 1 . empreinte:
   titre: Empreinte d'un repas de type poisson 1 (thon, saumon, sardine, maquereau)
@@ -285,8 +310,9 @@ alimentation . plats . poisson 1 . empreinte:
 
     Le plat principal est une tarte au saumon. Le facteur d'émission associé à l'ingrédient principal (ici le saumon)
     correspond à une moyenne de facteurs d'émissions associés au thon, saumon, sardine ou maquereau d'Agribalyse.
+    Cette moyenne est pondérée selon les consommations réelles des français par type de poisson et conditionnement.
 
-    🧮 Le calcul détaillé est [disponible ici](https://github.com/datagir/nosgestesclimat/blob/master/data/alimentation/menus-poisson-v1.ods) sous forme de tableur.
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1SVYvBaaYDOUDcg5jX0eZFEColnWWIL8PCLMGrPR000o/edit#gid=731092178) sous forme de tableur.
 
 alimentation . plats . poisson 1 . nombre:
   question: Nombre de plats poisson 1 par semaine
@@ -301,18 +327,18 @@ alimentation . plats . poisson 2:
 
     Voici le menu type utilisé pour notre calcul.
 
-    | Ingrédients                                     | Qte (g) | Kcal   | Protéines (g) | Lipides (g) | gCO2e /kg | gCO2e  |
-    | ----------------------------------------------- | ------- | ------ | ------------- | ----------- | --------- | ------ |
-    |     Entrée : légumes à la grecque               |         |        |               |             |           |        |
-    | légumes (tomates)                               | 200     | 38,6   | 1,72          | 0,52        | 1,96      | 392    |
-    | huile d'olive (1/2 c.s.)                        | 7       | 63     | 0,035         | 6,993       | 1,00      | 7      |
-    |     Plat principal : poisson sauce beurre blanc |         |        |               |             |           |        |
-    | poisson blanc                                   | 150     | 116,4  | 27,15         | 0,9         | 9,4       | 1410,2 |
-    | riz                                             | 60      | 214    | 5             | 1           | 2,76      | 165,6  |
-    | sauce beurre blanc préamballée                  | 30      | 56,4   | 0,21          | 6           | 4,37      | 131,1  |
-    |     Dessert : tarte aux poires                  |         |        |               |             |           |        |
-    | tarte aux poires                                | 100     | 281,55 | 2,55          | 14,6        | 2,62      | 262    |
-    | Total                                           | 547     | 769,95 | 36,665        | 30,013      |           | 2367,9 |
+    | Ingrédients                                     | CIQUAL | Qte (g) | Kcal   | Protéines (g) | Lipides (g) | gCO2e /kg | gCO2e  |
+    | ----------------------------------------------- | ------ | ------- | ------ | ------------- | ----------- | --------- | ------ |
+    |     Entrée : légumes à la grecque               |        |         |        |               |             |           |        |
+    | légumes (tomates)                               | 20047  | 200     | 38,6   | 1,72          | 0,52        | 1,96      | 392    |
+    | huile d'olive (1/2 c.s.)                        | 17270  | 7       | 63     | 0,035         | 6,993       | 1,00      | 7      |
+    |     Plat principal : poisson sauce beurre blanc |        |         |        |               |             |           |        |
+    | poisson blanc                                   | 26043  | 150     | 116,4  | 27,15         | 0,9         | 9,4       | 1410,2 |
+    | riz                                             | 9100   | 60      | 214    | 5             | 1           | 2,76      | 165,6  |
+    | sauce beurre blanc préamballée                  | 11140  | 30      | 56,4   | 0,21          | 6           | 4,37      | 131,1  |
+    |     Dessert : tarte aux poires                  |        |         |        |               |             |           |        |
+    | tarte aux poires                                | 24663  | 100     | 281,55 | 2,55          | 14,6        | 2,62      | 262    |
+    | Total                                           |        | 547     | 769,95 | 36,665        | 30,013      |           | 2367,9 |
 
 alimentation . plats . poisson 2 . empreinte:
   titre: Empreinte d'un repas de type poisson blanc
@@ -322,10 +348,12 @@ alimentation . plats . poisson 2 . empreinte:
     Pour l'instant, en l'absence de repas type poisson dans la [base carbone](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm), 
     nous proposons un menu poisson à partir des "repas classiques" de la base carbone. 
 
-    Le plat principal est un filet de poisson blanc, sauce beurre blanc. Le facteur d'émission associé à l'ingrédient principal (ici le saumon)
+    Le plat principal est un filet de poisson blanc, sauce beurre blanc. Le facteur d'émission associé à l'ingrédient principal (ici le poisson blanc)
     correspond à une moyenne de facteurs d'émissions associésà divers poissons blancs (bar, cabillaud, lotte, merlu...) d'Agribalyse.
+    Cette moyenne est pondérée selon les consommations réelles des français par type de poisson.
 
-    🧮 Le calcul détaillé est [disponible ici](https://github.com/datagir/nosgestesclimat/blob/master/data/alimentation/menus-poisson-v1.ods) sous forme de tableur.
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1SVYvBaaYDOUDcg5jX0eZFEColnWWIL8PCLMGrPR000o/edit#gid=731092178) sous forme de tableur.
+
 alimentation . plats . poisson 2 . nombre:
   question: Nombre de plats poisson 2 par semaine
   par défaut: 0
