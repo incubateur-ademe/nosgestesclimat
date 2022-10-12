@@ -1,12 +1,10 @@
 require('dotenv').config()
 require('isomorphic-fetch')
 const fs = require('fs')
-const path = require('path')
 const R = require('ramda')
 const yaml = require('yaml')
 const deepl = require('deepl-node')
 const nodePandoc = require('node-pandoc-promise')
-const { sources } = require('webpack')
 
 const NO_TRANS_CHAR = ' '
 const LOCK_KEY_EXT = '.lock'
@@ -38,7 +36,7 @@ const getUiMissingTranslations = (sourcePath, targetPath, override = false) => {
 		fs.writeFileSync(targetPath, '{}')
 	}
 
-	const freshEntries = readYAML(sources).entries
+	const freshEntries = readYAML(sourcePath).entries
 	const translatedEntries = readYAML(targetPath).entries
 
 	const missingTranslations = Object.entries(freshEntries)
@@ -130,16 +128,11 @@ const fetchTranslation = async (
 			t === NO_TRANS_CHAR ? NO_TRANS_CHAR : '[TRAD] ' + t
 		return text instanceof Array ? text.map(tradOrEmpty) : tradOrEmpty(text)
 	}
-	const resp = await translator
-		.translateText(text, sourceLang, targetLang, {
-			tagHandling,
-			ignoreTags: ['a', 'ignore'],
-			preserveFormatting: true,
-		})
-		.catch((err) => {
-			console.error(`Error: while fetching the request: ${err}`)
-			process.exit(-1)
-		})
+	const resp = await translator.translateText(text, sourceLang, targetLang, {
+		tagHandling,
+		ignoreTags: ['a', 'ignore'],
+		preserveFormatting: true,
+	})
 
 	return resp instanceof Array
 		? resp.map((translation) => translation.text)

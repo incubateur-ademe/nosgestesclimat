@@ -160,6 +160,7 @@ const translateTo = async (
 	}
 
 	let bar = progressBars.create(entryToTranslate.length, 0)
+	let skippedValue = []
 
 	await Promise.all(
 		Object.values(entryToTranslate).map(async ({ rule, attr, refVal }) => {
@@ -172,55 +173,28 @@ const translateTo = async (
 					msg: `Translating ${rule}...`,
 					lang: destLang,
 				})
-				updateTranslatedRules(rule, attr, translatedValue, refVal)
+				if (!translatedValue) {
+					skippedValue.push({
+						rule,
+						msg: 'an error occurred while translating',
+					})
+				} else {
+					updateTranslatedRules(rule, attr, translatedValue, refVal)
+				}
 			} catch (err) {
-				bar.stop()
-				console.error(`Error: while fetching the request for '${rule}}':`)
-				console.error(err.message)
-				fs.writeFile(
-					destPath,
-					yaml.stringify(translatedRules, {
-						sortMapEntries: true,
-						blockQuote: 'literal',
-					}),
-					'utf8',
-					(err) => {
-						if (err) {
-							cli.printErr(`An error occured while writting to '${destPath}':`)
-							cli.printErr(err)
-							bar.stop()
-							progressBars.remove(bar)
-							return
-						}
-						console.log(
-							`${entryToTranslate.length} new translated attributes written in '${destPath}'.`
-						)
-					}
-				)
-				process.exit(-1)
+				bar.increment({
+					msg: `Translating ${rule}...`,
+					lang: destLang,
+				})
+				skippedValue.push({ rule, msg: err.message })
 			}
 		})
 	)
-	fs.writeFile(
-		destPath,
-		yaml.stringify(translatedRules, {
-			sortMapEntries: true,
-			blockQuote: 'literal',
-		}),
-		'utf8',
-		(err) => {
-			if (err) {
-				cli.printErr(`An error occured while writting to '${destPath}':`)
-				cli.printErr(err)
-				bar.stop()
-				progressBars.remove(bar)
-				return
-			}
-			console.log(
-				`${entryToTranslate.length} new translated attributes written in '${destPath}'.`
-			)
-		}
-	)
+	skippedValue.forEach(({ rule, msg }) => {
+		cli.printWarn(`[SKIPPED] - ${rule}:`)
+		console.log(msg)
+	})
+	utils.writeYAML(destPath, translatedRules)
 }
 
 glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
@@ -244,7 +218,8 @@ glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 		const destRules = R.mergeAll(yaml.parse(fs.readFileSync(destPath, 'utf8')))
 
 		console.log(`Getting missing rule for ${destLang}...`)
-		const missingRules = getMissingRules(rules, destRules)
+		let missingRules = getMissingRules(rules, destRules)
+		missingRules = missingRules.slice(0, missingRules.length / 2)
 
 		if (0 < missingRules.length) {
 			console.log(
@@ -252,6 +227,7 @@ glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 					destLang
 				)}...`
 			)
+
 			translateTo(srcLang, destLang, destPath, missingRules, destRules)
 		} else {
 			console.log(`Found no new entry to translate...`)
