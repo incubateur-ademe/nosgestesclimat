@@ -16,6 +16,10 @@ const Engine = require('publicodes').default
 const outputJSONPath = './public'
 const outputJSONFileName = './public/co2.json'
 
+const {
+	addTranslationToBaseRules,
+} = require('./i18n/addTranslationToBaseRules')
+
 // this file is kindof a duplicate of RulesProvider (which serves for the local
 // watched webpack environment) in ecolab-climat if it grows more than 20
 // lines, it should be shared
@@ -96,57 +100,6 @@ const getArgs = (description) => {
 const { destLangs, markdown } = getArgs(
 	`Aggregates the model to an unique JSON file.`
 )
-
-const addTranslationToBaseRules = (baseRules, translatedRules) => {
-	const updateBaseRules = (key, val) => {
-		baseRules = R.assocPath(key, val, baseRules)
-	}
-
-	const updateBaseRulesWithSuggestions = (
-		baseKey,
-		baseRuleSuggestions,
-		translatedSuggestionsKeys
-	) => {
-		const suggestionValues = Object.values(baseRuleSuggestions)
-		const translatedSuggestions = Object.fromEntries(
-			translatedSuggestionsKeys.map((translatedKey, i) => [
-				translatedKey,
-				suggestionValues[i],
-			])
-		)
-		updateBaseRules(baseKey, translatedSuggestions)
-	}
-
-	Object.entries(translatedRules).forEach(([rule, attrs]) => {
-		Object.entries(attrs)
-			.filter(([attr, _]) => !attr.endsWith('.ref')) // TODO: extract to constant
-			.forEach(([attr, transVal]) => {
-				switch (attr) {
-					case 'suggestions': {
-						updateBaseRulesWithSuggestions(
-							[rule, attr],
-							baseRules[rule].suggestions,
-							transVal
-						)
-						break
-					}
-					case 'mosaique': {
-						updateBaseRulesWithSuggestions(
-							[rule, attr, 'suggestions'],
-							baseRules[rule].mosaique.suggestions,
-							transVal.suggestions
-						)
-						break
-					}
-					default:
-						updateBaseRules([rule, attr], transVal)
-						break
-				}
-			})
-	})
-
-	return baseRules
-}
 
 const writeRules = (rules, path, destLang) => {
 	fs.writeFile(path, JSON.stringify(rules), function (err) {
