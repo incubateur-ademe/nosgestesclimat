@@ -11,13 +11,16 @@ const path = require('path')
 const { exit } = require('process')
 const Engine = require('publicodes').default
 
+const utils = require('./i18n/utils')
+const cli = require('./i18n/cli')
+
 const outputJSONPath = './public'
 
 const {
 	addTranslationToBaseRules,
 } = require('./i18n/addTranslationToBaseRules')
 
-const { srcLang, srcFile, destLangs, markdown } = getArgs(
+const { srcLang, srcFile, destLangs, markdown } = cli.getArgs(
 	`Aggregates the model to an unique JSON file.`,
 
 	{
@@ -80,7 +83,7 @@ glob(srcFile, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 				: ' ✅ Les règles ont été évaluées sans erreur !'
 		)
 
-		writeRules(baseRules, defaultDestPath, defaultLang)
+		writeRules(baseRules, defaultDestPath, srcLang)
 
 		destLangs.forEach((destLang) => {
 			const destPath = path.join(outputJSONPath, `co2-${destLang}.json`)
