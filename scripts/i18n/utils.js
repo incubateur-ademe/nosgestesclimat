@@ -180,27 +180,37 @@ const nestedObjectToDotNotation = (obj) => {
 	return result
 }
 
-const getMissingPersonas = (refPersonas, destPersonas) => {
-	const attrsToTranslate = ['nom', 'description']
+const getMissingPersonas = (refPersonas, destPersonas, force = false) => {
+	const attrsToTranslate = ['nom', 'description', 'résumé']
 	const isAttrToTranslate = ([key, _]) => attrsToTranslate.includes(key)
 	const missingTranslations = Object.entries(refPersonas).flatMap(
 		([freshKey, refPersonaAttrs]) => {
 			const destPersona = destPersonas[freshKey]
 
 			if (!destPersona) {
-				return attrsToTranslate.map((attr) => ({
-					personaId: freshKey,
-					attr,
-					refVal: refPersonaAttrs[attr],
-				}))
+				return attrsToTranslate.map((attr) => {
+					const refVal = refPersonaAttrs[attr]
+					return refVal
+						? {
+								personaId: freshKey,
+								attr,
+								refVal,
+						  }
+						: {}
+				})
 			}
 			return Object.entries(refPersonaAttrs)
 				.filter(isAttrToTranslate)
 				.reduce((acc, [attr, refVal]) => {
 					const destVal = destPersona[attr]
-					if (!destVal || destPersona[attr + LOCK_KEY_EXT] !== refVal) {
-						return acc.push({ personaId: freshKey, attr, refVal })
+					if (
+						!destVal ||
+						destPersona[attr + LOCK_KEY_EXT] !== refVal ||
+						force
+					) {
+						acc.push({ personaId: freshKey, attr, refVal })
 					}
+					return acc
 				}, [])
 		}
 	)

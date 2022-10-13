@@ -7,98 +7,26 @@
 const yaml = require('yaml')
 const fs = require('fs')
 const glob = require('glob')
-const yargs = require('yargs')
 const path = require('path')
-const R = require('ramda')
 const { exit } = require('process')
 const Engine = require('publicodes').default
 
 const outputJSONPath = './public'
-const outputJSONFileName = './public/co2.json'
 
 const {
 	addTranslationToBaseRules,
 } = require('./i18n/addTranslationToBaseRules')
 
-// this file is kindof a duplicate of RulesProvider (which serves for the local
-// watched webpack environment) in ecolab-climat if it grows more than 20
-// lines, it should be shared
+const { srcLang, srcFile, destLangs, markdown } = getArgs(
+	`Aggregates the model to an unique JSON file.`,
 
-// TODO: to factorizes with all scripts
-const availableLanguages = ['fr', 'en-us', 'es', 'it']
-const defaultLang = availableLanguages[0]
-
-const getArgs = (description) => {
-	const argv = yargs
-		.usage(`${description}\n\nUsage: node $0 [options]`)
-		.option('force', {
-			alias: 'f',
-			type: 'boolean',
-			description:
-				'Force translation of all the keys. Its overwrites the existing translations.',
-		})
-		.option('source', {
-			alias: 's',
-			type: 'string',
-			default: defaultLang,
-			choices: availableLanguages,
-			description: `The source language to translate from.`,
-		})
-		.option('file', {
-			alias: 'p',
-			type: 'string',
-			description: `The source file to translate from inside the 'locales/pages' directory. If not specified, all the files in 'locales/pages' will be translated.`,
-		})
-		.option('remove', {
-			alias: 'r',
-			type: 'boolean',
-			description: `Remove the unused keys from the translation files.`,
-		})
-		.option('markdown', {
-			alias: 'm',
-			type: 'boolean',
-			description: `Prints the result in a Markdown table.`,
-		})
-		.option('target', {
-			alias: 't',
-			type: 'string',
-			array: true,
-			default: availableLanguages.filter((l) => l !== defaultLang),
-			choices: availableLanguages,
-			description: 'The target language(s) to translate to.',
-		})
-		.help()
-		.alias('help', 'h').argv
-
-	const srcLang = argv.source ?? defaultLang
-
-	if (!availableLanguages.includes(srcLang)) {
-		printErr(`ERROR: the language '${srcLang}' is not supported.`)
-		process.exit(-1)
+	{
+		source: true,
+		target: true,
+		file: true,
+		defaultSrcFile: 'data/**/*.yaml',
+		markdown: true,
 	}
-
-	const destLangs = (argv.target ?? availableLanguages).filter((l) => {
-		if (!availableLanguages.includes(l)) {
-			printWarn(`SKIP: the language '${l}' is not supported.`)
-			return false
-		}
-		return l !== srcLang
-	})
-
-	const srcFile = argv.file ?? 'data/**/*.yaml'
-
-	return {
-		srcLang,
-		destLangs,
-		force: argv.force,
-		remove: argv.remove,
-		srcFile,
-		markdown: argv.markdown,
-	}
-}
-
-const { destLangs, markdown } = getArgs(
-	`Aggregates the model to an unique JSON file.`
 )
 
 const writeRules = (rules, path, destLang) => {
@@ -122,12 +50,11 @@ const writeRules = (rules, path, destLang) => {
 	})
 }
 
-glob('data/**/*.yaml', { ignore: ['data/translated-*.yaml'] }, (_, files) => {
-	const defaultDestPath = path.join(outputJSONPath, `co2-${defaultLang}.json`)
+glob(srcFile, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
+	const defaultDestPath = path.join(outputJSONPath, `co2-${srcLang}.json`)
 	const baseRules = files.reduce((acc, filename) => {
 		try {
-			const data = fs.readFileSync('./' + filename, 'utf8')
-			const rules = yaml.parse(data)
+			const rules = utils.readYAML(path.resolve(filename))
 			return { ...acc, ...rules }
 		} catch (err) {
 			console.log(
@@ -158,8 +85,8 @@ glob('data/**/*.yaml', { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 		destLangs.forEach((destLang) => {
 			const destPath = path.join(outputJSONPath, `co2-${destLang}.json`)
 			const translatedRuleAttrs =
-				yaml.parse(
-					fs.readFileSync(`data/translated-rules-${destLang}.yaml`, 'utf8')
+				utils.readYAML(
+					path.resolve(`data/translated-rules-${destLang}.yaml`)
 				) ?? {}
 			const translatedRules = addTranslationToBaseRules(
 				baseRules,

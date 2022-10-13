@@ -14,9 +14,6 @@ const { exit } = require('process')
 const utils = require('./i18n/utils')
 const cli = require('./i18n/cli')
 
-const yellow = (str) => cli.withStyle(cli.colors.fgYellow, str)
-const green = (str) => cli.withStyle(cli.colors.fgGreen, str)
-
 const { srcLang, destLangs, srcFile } = cli.getArgs(
 	`Calls the DeepL API to translate the rule questions, titles, notes,
 	summaries and suggestions.`,
@@ -130,9 +127,9 @@ glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 
 		if (0 < missingRules.length) {
 			console.log(
-				`Translating ${green(missingRules.length)} new entries to ${yellow(
-					destLang
-				)}...`
+				`Translating ${cli.green(
+					missingRules.length
+				)} new entries to ${cli.yellow(destLang)}...`
 			)
 
 			translateTo(srcLang, destLang, destPath, missingRules, destRules)

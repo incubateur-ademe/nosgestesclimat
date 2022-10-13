@@ -37,6 +37,10 @@ const withStyle = (color, text) => `${color}${text}${colors.reset}`
 const printErr = (message) => console.error(withStyle(colors.fgRed, message))
 const printWarn = (message) => console.warn(withStyle(colors.fgYellow, message))
 
+const yellow = (str) => withStyle(colors.fgYellow, str)
+const red = (str) => withStyle(colors.fgRed, str)
+const green = (str) => withStyle(colors.fgGreen, str)
+
 const getArgs = (description, opts) => {
 	let args = yargs.usage(`${description}\n\nUsage: node $0 [options]`)
 
@@ -133,10 +137,12 @@ const exitIfError = (error, msg = undefined, progressBar = undefined) => {
 
 module.exports = {
 	colors,
-	printErr,
-	withStyle,
-	printWarn,
-	printErr,
-	getArgs,
 	exitIfError,
+	getArgs,
+	green,
+	printErr,
+	printWarn,
+	red,
+	withStyle,
+	yellow,
 }
