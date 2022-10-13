@@ -15,7 +15,7 @@ jobs:
     outputs:
       compilation-result: ${{ steps.compilation.outputs.result }}
       check-translation-result: ${{ steps.check-translation.outputs.result }}
-      check-personas-result-result: ${{ steps.check-personas.outputs.result }}
+      check-personas-result: ${{ steps.check-personas.outputs.result }}
       test-url: ${{ steps.set-test-url.outputs.fr }}
     steps:
       - uses: actions/checkout@v2
@@ -28,7 +28,6 @@ jobs:
       - id: compilation
         run: |
           # Compiles the model and stores the result -- with escaped special characters.
-          yarn compile:md
           body="$(yarn compile:md 2> /dev/null | tail --lines=+3 | head --lines=-1)"
           body="${body//'%'/'%25'}"
           body="${body//$'\n'/'%0A'}"
