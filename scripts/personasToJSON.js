@@ -4,6 +4,9 @@ const fs = require('fs')
 
 const utils = require('./i18n/utils')
 const cli = require('./i18n/cli')
+const {
+	addTranslationToBasePersonas,
+} = require('./addTranslationToBasePersonas')
 
 const outputJSONPath = './public'
 
@@ -15,20 +18,6 @@ const { srcLang, destLangs, markdown } = cli.getArgs(
 		target: true,
 	}
 )
-
-const addTranslationToBasePersonas = (basePersonas, translatedPersonas) => {
-	var resPersonas = basePersonas
-
-	Object.entries(translatedPersonas).forEach(([personaId, attrs]) => {
-		Object.entries(attrs)
-			.filter(([attr, _]) => !attr.endsWith(utils.LOCK_KEY_EXT))
-			.forEach(([attr, transVal]) => {
-				resPersonas = R.assocPath([personaId, attr], transVal, resPersonas)
-			})
-	})
-
-	return resPersonas
-}
 
 const writePersonas = (personas, path, lang) => {
 	fs.writeFile(path, JSON.stringify(personas), function (err) {
