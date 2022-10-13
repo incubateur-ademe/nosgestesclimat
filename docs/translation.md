@@ -48,7 +48,7 @@ by error.**
 
 Like for the precedent workflow, you need to first check if there are missing translations
 by running the command [`yarn translate:personas:check`](#check-personasjs).
-Then if needed, you can automatically translate them with the [`yarn
+Then , if needed, you can automatically translate them with the [`yarn
 translate:personas`](#tranlsate-personasjs) command.
 
 Once the translations generated you have the possibility to correct them by
@@ -62,15 +62,17 @@ by error.**
 
 ### DeepL API key
 
-To be able to run all available scripts you need to have defined the env
+To be able to run all available scripts you need to have defined the _env_
 variable `DEEPL_API_KEY` with a valid [DeepL API
 key](https://www.deepl.com/fr/docs-api/introduction/).
 
-> You can specified it when running the command like:
+> You can specify it when running the command like:
 >
 > ```
 > DEEPL_API_KEY=<your-api-key> yarn <cmd>
 > ```
+>
+> or saving it in your `.bashrc` file -- or other terminal config file.
 
 ### Dev dependencies
 
@@ -98,7 +100,7 @@ Currently, the model and the website UI are available in:
 Scripts related to the translation are stored in the folder
 [`scripts/i18n`](https://github.com/datagir/nosgestesclimat-site/tree/master/scripts/i18n).
 
-For each scripts you can specify different options -- e.g. source language,
+For each script you can specify different options -- e.g. source language,
 target languages, etc....
 All available options can be shown by providing the `(-h | --help)` flag.
 
@@ -124,9 +126,9 @@ The translated [_mécanismes_](https://publi.codes/docs/m%C3%A9canismes) are:
 
 **The method**
 
-The method used for the rules translation consists in storing for each targeted
-languages, both the _reference_ value and its translation in a separated file
-(`./data/translated-rules-<lang>.yaml`):
+The method used for the rules translation consists in storing for each
+[supported language](#available-languages), both the _reference_ value and its
+translation in a separated file (`./data/translated-rules-<lang>.yaml`):
 
 ```yaml
 # Example from .data/translated-rules-en-us.yaml
@@ -141,7 +143,7 @@ alimentation . boisson . alcool . facteur:
 This allows to automatically detect missing translation and those which are not
 up to date.
 
-At the end to compile JSON file parsed by the website's engine, the script
+At the end to compile the JSON file parsed by the website's engine, the script
 [`rulesToJSON.js`](#rulestojsonjs) will override the _mécanismes_ of the model
 by the ones present in the corresponding `translated-rules-<lang>.yaml` file.
 
@@ -158,7 +160,7 @@ This script allows to get missing model's rules translations.
 ### `rulesToJSON.js`
 
 This script allows bundles all the model's rules into a single JSON file for
-each [supported languages](#available-languages) to be used by the website's
+each [supported language](#available-languages) to be used by the website's
 engine.
 
 It generates `public/co2-<lang>.json` files.
@@ -188,7 +190,7 @@ The translated [_mécanismes_](https://publi.codes/docs/m%C3%A9canismes) are:
 **The method**
 
 The method used for the rules translation consists in storing for each
-[available languages](#available-languages), both the _reference_ value and its
+[available language](#available-languages), both the _reference_ value and its
 translation in a separated file (`./personas/personas-<lang>.yaml`):
 
 ```yaml
@@ -215,7 +217,7 @@ At the end to compile the JSON file used by the website, the script
 ### `personasToJSON.js`
 
 This script allows bundles all the personas files into a single JSON file for
-each [supported languages](#available-languages).
+each [supported language](#available-languages).
 
 It generates `public/personas-<lang>.json` files.
 
