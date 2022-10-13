@@ -124,7 +124,6 @@ glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 
 		console.log(`Getting missing rule for ${destLang}...`)
 		let missingRules = utils.getMissingRules(rules, destRules)
-		// missingRules = missingRules.slice(0, missingRules.length / 2)
 
 		if (0 < missingRules.length) {
 			console.log(
