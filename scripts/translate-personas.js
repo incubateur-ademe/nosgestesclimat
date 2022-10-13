@@ -2,6 +2,7 @@ const R = require('ramda')
 const path = require('path')
 const utils = require('./i18n/utils')
 const cli = require('./i18n/cli')
+const deepl = require('./i18n/deepl')
 
 const { srcLang, destLangs, force } = cli.getArgs(
 	`Calls the DeepL API to translate the rule questions, titles, notes,
@@ -19,7 +20,7 @@ const translateTo = async (
 
 	await Promise.all(
 		missingTranslations.map(async ({ personaId, attr, refVal }) => {
-			const transVal = await utils.fetchTranslation(
+			const transVal = await deepl.fetchTranslation(
 				refVal,
 				srcLang.toUpperCase(),
 				destLang.toUpperCase()

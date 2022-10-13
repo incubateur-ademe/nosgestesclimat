@@ -13,6 +13,7 @@ const { exit } = require('process')
 
 const utils = require('./i18n/utils')
 const cli = require('./i18n/cli')
+const deepl = require('./i18n/deepl')
 
 const { srcLang, destLangs, srcFile } = cli.getArgs(
 	`Calls the DeepL API to translate the rule questions, titles, notes,
@@ -50,7 +51,7 @@ const translateTo = async (
 		translatedRules = R.assocPath(refKey, refVal, translatedRules)
 	}
 	const translate = (value) => {
-		return utils.fetchTranslation(
+		return deepl.fetchTranslation(
 			value,
 			srcLang.toUpperCase(),
 			destLang.toUpperCase(),
@@ -58,7 +59,7 @@ const translateTo = async (
 		)
 	}
 	const translateMarkdown = (value) => {
-		return utils.fetchTranslationMarkdown(
+		return deepl.fetchTranslationMarkdown(
 			value,
 			srcLang.toUpperCase(),
 			destLang.toUpperCase()
