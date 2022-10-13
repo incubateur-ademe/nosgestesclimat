@@ -1,9 +1,10 @@
 /*
 	Checks all rules have been translated.
 
-	Command: yarn translate:check -- [options]
+	Command: yarn translate:rules:check -- [options]
 */
 
+const path = require('path')
 const glob = require('glob')
 const R = require('ramda')
 const fs = require('fs')
@@ -44,20 +45,24 @@ glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 
 	destLangs.forEach((destLang) => {
 		const destPath = `data/translated-rules-${destLang}.yaml`
-		const destRules = R.mergeAll(yaml.parse(fs.readFileSync(destPath, 'utf8')))
+		const destRules = R.mergeAll(utils.readYAML(path.resolve(destPath)))
 		const missingRules = utils.getMissingRules(rules, destRules)
 
 		if (missingRules.length > 0) {
 			console.log(
 				markdown
 					? `| _${destLang}_ | ${missingRules.length} | ❌ |`
-					: `❌ Missing ${missingRules.length} rules for the '${destLang}' translation!`
+					: `❌ Missing ${cli.red(
+							missingRules.length
+					  )} rules for the ${cli.yellow(destLang)} translation!`
 			)
 		} else {
 			console.log(
 				markdown
 					? `| _${destLang}_ | Ø | :heavy_check_mark: |`
-					: `✅ The rules translation are up to date for: ${destLang}`
+					: `✅ The rules translation are up to date for ${cli.yellow(
+							destLang
+					  )}`
 			)
 		}
 	})
