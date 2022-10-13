@@ -14,7 +14,10 @@ const addTranslationToBasePersonas = (basePersonas, translatedPersonas) => {
 		Object.entries(attrs)
 			.filter(([attr, _]) => !attr.endsWith('.lock'))
 			.forEach(([attr, transVal]) => {
-				resPersonas = R.assocPath([personaId, attr], transVal, resPersonas)
+				if (R.path(key, baseRules)) {
+					// TODO: automatically removed from translated file entries which aren't anymore in the ref personas.
+					resPersonas = R.assocPath([personaId, attr], transVal, resPersonas)
+				}
 			})
 	})
 
