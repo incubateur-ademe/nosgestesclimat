@@ -180,16 +180,132 @@ const nestedObjectToDotNotation = (obj) => {
 	return result
 }
 
+const getMissingPersonas = (refPersonas, destPersonas) => {
+	const attrsToTranslate = ['nom', 'description']
+	const isAttrToTranslate = ([key, _]) => attrsToTranslate.includes(key)
+	const missingTranslations = Object.entries(refPersonas).flatMap(
+		([freshKey, refPersonaAttrs]) => {
+			const destPersona = destPersonas[freshKey]
+
+			if (!destPersona) {
+				return attrsToTranslate.map((attr) => ({
+					personaId: freshKey,
+					attr,
+					refVal: refPersonaAttrs[attr],
+				}))
+			}
+			return Object.entries(refPersonaAttrs)
+				.filter(isAttrToTranslate)
+				.reduce((acc, [attr, refVal]) => {
+					const destVal = destPersona[attr]
+					if (!destVal || destPersona[attr + LOCK_KEY_EXT] !== refVal) {
+						return acc.push({ personaId: freshKey, attr, refVal })
+					}
+				}, [])
+		}
+	)
+	return missingTranslations
+}
+
+const getMissingRules = (srcRules, targetRules) => {
+	const keysToTranslate = [
+		'titre',
+		'description',
+		'question',
+		'résumé',
+		'note',
+		'suggestions',
+		'mosaique',
+	]
+
+	const areEqual = (s1, s2) => {
+		return (
+			JSON.stringify(s1, { sortMapEntries: true }) ===
+			JSON.stringify(s2, { sortMapEntries: true })
+		)
+	}
+
+	return Object.entries(srcRules)
+		.filter(([_, val]) => val !== null && val !== undefined)
+		.reduce((acc, [rule, val]) => {
+			let targetRule = targetRules[rule]
+			const filteredValEntries = Object.entries(val).filter(([attr, val]) => {
+				const mosaiqueIncludeSuggestions =
+					// φ => ψ === ¬φ ∨ ψ
+					'mosaique' !== attr || val.suggestions
+				return (
+					keysToTranslate.includes(attr) &&
+					val !== '' &&
+					mosaiqueIncludeSuggestions
+				)
+			})
+
+			if (targetRule) {
+				acc.push(
+					filteredValEntries.reduce((acc, [attr, refVal]) => {
+						if (keysToTranslate.includes(attr)) {
+							let targetRef = targetRule[attr + '.ref']
+							let hasTheSameRefValue = targetRef && targetRef === refVal
+
+							switch (attr) {
+								case 'suggestions': {
+									refVal = Object.keys(refVal)
+									hasTheSameRefValue = targetRef && areEqual(targetRef, refVal)
+									break
+								}
+								case 'mosaique': {
+									targetRef = targetRule[attr]?.['suggestions.ref']
+									refVal = Object.keys(refVal.suggestions)
+									hasTheSameRefValue =
+										targetRef &&
+										areEqual(targetRef.suggestions, refVal.suggestions)
+									break
+								}
+								default:
+									break
+							}
+
+							if (hasTheSameRefValue && targetRule[attr]) {
+								// The rule is already translated.
+								return acc
+							}
+							acc.push({ rule, attr, refVal })
+						}
+						return acc
+					}, [])
+				)
+			} else {
+				// The rule doesn't exist in the target, so all attributes need to be translated.
+				acc.push(
+					filteredValEntries.map(([attr, refVal]) => {
+						switch (attr) {
+							case 'suggestions':
+								return { rule, attr, refVal: Object.keys(refVal) }
+							case 'mosaique':
+								return { rule, attr, refVal: Object.keys(refVal.suggestions) }
+							default:
+								return { rule, attr, refVal }
+						}
+					})
+				)
+			}
+			return acc
+		}, [])
+		.flat()
+}
+
 module.exports = {
+	availableLanguages,
+	defaultLang,
+	dotNotationToNestedObject,
 	fetchTranslation,
 	fetchTranslationMarkdown,
+	getMissingPersonas,
+	getMissingRules,
 	getUiMissingTranslations,
-	dotNotationToNestedObject,
-	nestedObjectToDotNotation,
-	defaultLang,
-	availableLanguages,
 	isI18nKey,
 	LOCK_KEY_EXT,
+	nestedObjectToDotNotation,
 	readYAML,
 	writeYAML,
 }

@@ -5,15 +5,11 @@
 	Command: yarn translate -- [options]
 */
 
+const path = require('path')
 const cliProgress = require('cli-progress')
-const yaml = require('yaml')
-const fs = require('fs')
 const glob = require('glob')
-const yargs = require('yargs')
-const nodePandoc = require('node-pandoc-promise')
 const R = require('ramda')
 const { exit } = require('process')
-const deepl = require('deepl-node')
 
 const utils = require('./i18n/utils')
 const cli = require('./i18n/cli')
@@ -36,93 +32,6 @@ const progressBars = new cliProgress.MultiBar(
 	},
 	cliProgress.Presets.shades_grey
 )
-
-const keysToTranslate = [
-	'titre',
-	'description',
-	'question',
-	'résumé',
-	'note',
-	'suggestions',
-	'mosaique',
-]
-
-const areEqual = (s1, s2) => {
-	return (
-		JSON.stringify(s1, { sortMapEntries: true }) ===
-		JSON.stringify(s2, { sortMapEntries: true })
-	)
-}
-
-const getMissingRules = (srcRules, targetRules) => {
-	return Object.entries(srcRules)
-		.filter(([_, val]) => val !== null && val !== undefined)
-		.reduce((acc, [rule, val]) => {
-			let targetRule = targetRules[rule]
-			const filteredValEntries = Object.entries(val).filter(([attr, val]) => {
-				const mosaiqueIncludeSuggestions =
-					// φ => ψ === ¬φ ∨ ψ
-					'mosaique' !== attr || val.suggestions
-				return (
-					keysToTranslate.includes(attr) &&
-					val !== '' &&
-					mosaiqueIncludeSuggestions
-				)
-			})
-
-			if (targetRule) {
-				acc.push(
-					filteredValEntries.reduce((acc, [attr, refVal]) => {
-						if (keysToTranslate.includes(attr)) {
-							let targetRef = targetRule[attr + '.ref']
-							let hasTheSameRefValue = targetRef && targetRef === refVal
-
-							switch (attr) {
-								case 'suggestions': {
-									refVal = Object.keys(refVal)
-									hasTheSameRefValue = targetRef && areEqual(targetRef, refVal)
-									break
-								}
-								case 'mosaique': {
-									targetRef = targetRule[attr]?.['suggestions.ref']
-									refVal = Object.keys(refVal.suggestions)
-									hasTheSameRefValue =
-										targetRef &&
-										areEqual(targetRef.suggestions, refVal.suggestions)
-									break
-								}
-								default:
-									break
-							}
-
-							if (hasTheSameRefValue && targetRule[attr]) {
-								// The rule is already translated.
-								return acc
-							}
-							acc.push({ rule, attr, refVal })
-						}
-						return acc
-					}, [])
-				)
-			} else {
-				// The rule doesn't exist in the target, so all attributes need to be translated.
-				acc.push(
-					filteredValEntries.map(([attr, refVal]) => {
-						switch (attr) {
-							case 'suggestions':
-								return { rule, attr, refVal: Object.keys(refVal) }
-							case 'mosaique':
-								return { rule, attr, refVal: Object.keys(refVal.suggestions) }
-							default:
-								return { rule, attr, refVal }
-						}
-					})
-				)
-			}
-			return acc
-		}, [])
-		.flat()
-}
 
 const translateTo = async (
 	srcLang,
@@ -202,9 +111,7 @@ glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 	const rules = R.mergeAll(
 		files.reduce((acc, filename) => {
 			try {
-				const data = fs.readFileSync('./' + filename, 'utf8')
-				const rules = yaml.parse(data)
-				return acc.concat(rules)
+				return acc.concat(utils.readYAML(filename))
 			} catch (err) {
 				cli.printErr('An error occured while reading the file ' + filename + '')
 				cli.printErr(err)
@@ -214,12 +121,12 @@ glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 	)
 
 	destLangs.forEach(async (destLang) => {
-		const destPath = `data/translated-rules-${destLang}.yaml`
-		const destRules = R.mergeAll(yaml.parse(fs.readFileSync(destPath, 'utf8')))
+		const destPath = path.resolve(`data/translated-rules-${destLang}.yaml`)
+		const destRules = R.mergeAll(utils.readYAML(destPath))
 
 		console.log(`Getting missing rule for ${destLang}...`)
-		let missingRules = getMissingRules(rules, destRules)
-		missingRules = missingRules.slice(0, missingRules.length / 2)
+		let missingRules = utils.getMissingRules(rules, destRules)
+		// missingRules = missingRules.slice(0, missingRules.length / 2)
 
 		if (0 < missingRules.length) {
 			console.log(

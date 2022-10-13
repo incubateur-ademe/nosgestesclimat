@@ -81,6 +81,13 @@ const getArgs = (description, opts) => {
 			description: 'The target language(s) to translate to.',
 		})
 	}
+	if (opts.markdown) {
+		args = args.option('markdown', {
+			alias: 'm',
+			type: 'boolean',
+			description: 'Prints the result in a Markdown table format.',
+		})
+	}
 
 	const argv = args.help().alias('help', 'h').argv
 
@@ -101,7 +108,14 @@ const getArgs = (description, opts) => {
 
 	const srcFile = argv.file ?? opts.defaultSrcFile
 
-	return { srcLang, destLangs, force: argv.force, remove: argv.remove, srcFile }
+	return {
+		srcLang,
+		destLangs,
+		force: argv.force,
+		remove: argv.remove,
+		srcFile,
+		markdown: argv.markdown,
+	}
 }
 
 const exitIfError = (error, msg = undefined, progressBar = undefined) => {
