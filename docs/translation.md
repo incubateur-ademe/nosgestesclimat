@@ -2,6 +2,9 @@
 
 <p align="center">This file contains all the information about the translation of the model of <a href="https://nosgestesclimat.fr/">nosgestesclimat.fr</a>.</p>
 
+> For the translation of the website's UI, please refer to the dedicated
+> [file](https:/github.com/datagir/nosgestesclimat-site/blob/master/docs/translating.md).
+
 ---
 
 <!-- vim-markdown-toc GitLab -->
