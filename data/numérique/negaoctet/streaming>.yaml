@@ -1,0 +1,278 @@
+index:
+  formule:
+    somme:
+      - terminaux
+      - transmission
+      - data center
+  unité: gCO2e
+
+qualité:
+  avec:
+    SD:
+    HD:
+    ultra HD:
+      titre: 4K
+  titre: qualité de la vidéo
+  question: Quelle est la qualité de la vidéo ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - SD
+        - HD
+        - ultra HD
+  par défaut: "'HD'"
+
+qualité . facteur qualité:
+  formule:
+    variations:
+      - si: qualité = 'SD'
+        alors: 0.7
+      - si: qualité = 'HD'
+        alors: 3
+      - si: qualité = 'ultra HD'
+        alors: 7
+  unité: Go/heure
+
+durée:
+  titre: Temps de visionnage
+  question: Quelle est la durée de la vidéo ?
+  par défaut: 60
+  unité: minute
+
+durée en heure:
+  formule: durée / 60
+  unité: heure
+
+taille:
+  titre: Taille de la vidéo
+  formule: durée en heure * qualité . facteur qualité
+  unité: Go
+
+terminaux:
+  formule:
+    somme:
+      - construction
+      - usage
+  unité: gCO2e
+
+appareil:
+  avec:
+    ordinateur et écran:
+      titre: ordinateur fixe
+    ordinateur portable:
+    tablette:
+    smartphone:
+    TV:
+  question: Quel appareil utlisez-vous ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - ordinateur et écran
+        - ordinateur portable
+        - tablette
+        - smartphone
+        - TV
+    par défaut: "'moyenne'" # default value has to be set to make sure rules using "appareil" are defined
+
+appareil . moyenne utilisation ordinateur et écran: 0%
+appareil . moyenne utilisation ordinateur portable: 15%
+appareil . moyenne utilisation tablette: 10%
+appareil . moyenne utilisation smartphone: 5%
+appareil . moyenne utilisation TV: 70%
+
+terminaux . construction:
+  formule:
+    variations:
+      - si: appareil = 'smartphone'
+        alors: smartphone
+      - si: appareil = 'tablette'
+        alors: tablette
+      - si: appareil = 'ordinateur portable'
+        alors: ordinateur portable
+      - si: appareil = 'TV'
+        alors: TV
+      - si: appareil = 'ordinateur et écran'
+        alors: ordinateur et écran
+      - sinon: construction moyenne
+  unité: gCO2e
+
+terminaux . construction . smartphone:
+  formule: smartphone . construction * (durée en heure / smartphone . durée d'usage)
+
+terminaux . construction . tablette:
+  formule: tablette . construction * (durée en heure / tablette . durée d'usage)
+
+terminaux . construction . ordinateur portable:
+  formule: ordinateur portable . construction * (durée en heure / ordinateur portable . durée d'usage)
+
+terminaux . construction . TV:
+  formule: TV . construction * (durée en heure / TV . durée d'usage)
+
+terminaux . construction . ordinateur et écran:
+  formule:
+    somme:
+      - ordinateur fixe . construction * (durée en heure / ordinateur fixe . durée d'usage)
+      - écran . construction * (durée en heure / écran . durée d'usage)
+
+terminaux . construction . construction moyenne:
+  formule:
+    somme:
+      - appareil . moyenne utilisation ordinateur et écran * ordinateur et écran
+      - appareil . moyenne utilisation ordinateur portable * ordinateur portable
+      - appareil . moyenne utilisation tablette * tablette
+      - appareil . moyenne utilisation smartphone * smartphone
+      - appareil . moyenne utilisation TV * TV
+
+terminaux . usage:
+  formule: consommation électricité * facteur électricité
+  unité: gCO2e
+
+terminaux . usage . facteur électricité:
+  formule:
+    variations:
+      - si: région = 'France'
+        alors: électricité . FE France
+      - si: région = 'Europe'
+        alors: électricité . FE Europe
+      - si: région = 'Chine'
+        alors: électricité . FE Chine
+      - si: région = 'USA'
+        alors: électricité . FE USA
+  unité: gCO2e/kWh
+
+terminaux . usage . région:
+  avec:
+    France:
+    Europe:
+    Chine:
+    USA:
+  question: Dans quelle zone géographique se situe le terminal ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - France
+        - Europe
+        - Chine
+        - USA
+  par défaut: "'France'"
+
+terminaux . usage . consommation électricité:
+  formule: durée en heure * consommation électricité par heure / 1000
+  unité: kWh
+
+terminaux . usage . consommation électricité par heure:
+  formule:
+    variations:
+      - si: appareil = 'smartphone'
+        alors: consommation électricité par heure smartphone
+      - si: appareil = 'tablette'
+        alors: consommation électricité par heure tablette
+      - si: appareil = 'ordinateur portable'
+        alors: consommation électricité par heure ordinateur portable
+      - si: appareil = 'TV'
+        alors: consommation électricité par heure TV
+      - si: appareil = 'ordinateur et écran'
+        alors: consommation électricité par heure ordinateur et écran
+      - sinon: consommation électricité par heure moyenne
+  unité: Wh
+
+terminaux . usage . consommation électricité par heure smartphone: smartphone . consommation en mode actif
+terminaux . usage . consommation électricité par heure tablette: tablette . consommation en mode actif
+terminaux . usage . consommation électricité par heure ordinateur portable: ordinateur portable . consommation en mode actif
+terminaux . usage . consommation électricité par heure TV: TV . consommation en mode actif
+terminaux . usage . consommation électricité par heure ordinateur et écran:
+  formule:
+    somme:
+      - ordinateur fixe . consommation en mode actif
+      - écran . consommation en mode actif
+terminaux . usage . consommation électricité par heure moyenne:
+  formule:
+    somme:
+      - appareil . moyenne utilisation ordinateur et écran * consommation électricité par heure ordinateur et écran
+      - appareil . moyenne utilisation ordinateur portable * consommation électricité par heure ordinateur portable
+      - appareil . moyenne utilisation tablette * consommation électricité par heure tablette
+      - appareil . moyenne utilisation smartphone * consommation électricité par heure smartphone
+      - appareil . moyenne utilisation TV * consommation électricité par heure TV
+
+transmission:
+  formule: facteur réseau * taille
+  unité: gCO2e
+
+transmission . facteur réseau:
+  formule:
+    variations:
+      - si: réseau = 'fixe'
+        alors: 9.26934695867389
+      - si: réseau = 'mobile'
+        alors: 24.6836791969497
+  unité: gCO2e/Go
+
+transmission . réseau:
+  avec:
+    mobile:
+    fixe:
+  question: Utilisez-vous le réseau fixe ou mobile ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - mobile
+        - fixe
+  par défaut: "'fixe'"
+
+data center:
+  formule:
+    somme:
+      - construction
+      - usage
+  unité: gCO2e
+
+data center . construction:
+  formule: 0.237
+  unité: gCO2e
+  note: Durée, taille, réseau ou localisation n'ont pas d'impact sur ce poste.
+
+data center . usage:
+  formule: consommation électricité * facteur électricité
+  unité: gCO2e
+
+data center . usage . facteur électricité:
+  formule:
+    variations:
+      - si: région = 'France'
+        alors: électricité . FE France
+      - si: région = 'Europe'
+        alors: électricité . FE Europe
+      - si: région = 'Chine'
+        alors: électricité . FE Chine
+      - si: région = 'USA'
+        alors: électricité . FE USA
+  unité: gCO2e/kWh
+
+data center . usage . région:
+  avec:
+    France:
+    Europe:
+    Chine:
+    USA:
+  question: Dans quelle zone géographique se situe le data center ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - France
+        - Europe
+        - Chine
+        - USA
+  par défaut: "'France'"
+
+data center . usage . consommation électricité:
+  formule: taille * électricité par Go / 1000
+  unité: kWh
+
+data center . usage . électricité par Go:
+  formule: 1.947079
+  unité: Wh/Go
