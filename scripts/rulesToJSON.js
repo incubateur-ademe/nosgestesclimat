@@ -11,9 +11,9 @@ const { srcFolder, destFile, rulesToEvaluate } = cli.getArgs(
 	`Convert rules to JSON in public folder`
 )
 
-const outputJSONFileName = `../public/${destFile}.json`
+const outputJSONFileName = `./public/${destFile}.json`
 
-glob(`../data/${srcFolder}/*.yaml`, (_, files) => {
+glob(`./data/${srcFolder}/*.yaml`, (_, files) => {
 	const rules = files.reduce((memo, filename) => {
 		try {
 			const data = fs.readFileSync('./' + filename, 'utf8')
