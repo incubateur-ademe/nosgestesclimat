@@ -157,7 +157,7 @@ This script allows to get missing model's rules translations.
 >   To run with `yarn`:
 >
 >   ```
->   yarn translate:rules:check -h
+>   yarn check:rules -h
 >   ```
 
 ### `rulesToJSON.js`
@@ -237,5 +237,5 @@ This script allows to get missing personas translations.
 >   To run with `yarn`:
 >
 >   ```
->   yarn translate:personas:check -h
+>   yarn check:personas -h
 >   ```

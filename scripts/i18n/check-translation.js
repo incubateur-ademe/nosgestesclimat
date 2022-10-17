@@ -1,7 +1,7 @@
 /*
 	Checks all rules have been translated.
 
-	Command: yarn translate:rules:check -- [options]
+	Command: yarn check:rules -- [options]
 */
 
 const path = require('path')
@@ -36,34 +36,13 @@ glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 		}, [])
 	)
 
-	if (markdown) {
-		console.log(`| Language | Nb. missing translations | Status |`)
-		console.log(`|:--------:|:------------------------:|:------:|`)
-	}
+	cli.printChecksResultTableHeader(markdown)
 
 	destLangs.forEach((destLang) => {
 		const destPath = `data/translated-rules-${destLang}.yaml`
 		const destRules = R.mergeAll(utils.readYAML(path.resolve(destPath)))
 		const missingRules = utils.getMissingRules(rules, destRules)
 
-		// console.log('missingRules:', missingRules)
-
-		if (missingRules.length > 0) {
-			console.log(
-				markdown
-					? `| _${destLang}_ | ${missingRules.length} | ❌ |`
-					: `❌ Missing ${cli.red(
-							missingRules.length
-					  )} rules for the ${cli.yellow(destLang)} translation!`
-			)
-		} else {
-			console.log(
-				markdown
-					? `| _${destLang}_ | Ø | :heavy_check_mark: |`
-					: `✅ The rules translation are up to date for ${cli.yellow(
-							destLang
-					  )}`
-			)
-		}
+		cli.printChecksResult(missingRules.length, 'rules', destLang, markdown)
 	})
 })

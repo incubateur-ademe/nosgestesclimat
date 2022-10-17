@@ -1,7 +1,7 @@
 /*
 	Checks all personas have been translated.
 
-	Command: yarn translate:personas:check -- [options]
+	Command: yarn check:personas -- [options]
 */
 
 const path = require('path')
@@ -26,10 +26,7 @@ const basePersonas = utils.readYAML(
 	path.resolve(`personas/personas-${srcLang}.yaml`)
 )
 
-if (markdown) {
-	console.log(`| Language | Nb. missing translations | Status |`)
-	console.log(`|:--------:|:------------------------:|:------:|`)
-}
+cli.printChecksResultTableHeader(markdown)
 
 destLangs.forEach((destLang) => {
 	const destPath = `personas/personas-${destLang}.yaml`
@@ -41,21 +38,5 @@ destLangs.forEach((destLang) => {
 		translatedPersonas
 	)
 
-	if (missingRules.length > 0) {
-		console.log(
-			markdown
-				? `| _${destLang}_ | ${missingRules.length} | ❌ |`
-				: `❌ Missing ${
-						missingRules.length
-				  } personas translations for ${cli.yellow(destLang)}_ !`
-		)
-	} else {
-		console.log(
-			markdown
-				? `| _${destLang}_ | Ø | :heavy_check_mark: |`
-				: `✅ The personas translation are up to date for ${cli.yellow(
-						destLang
-				  )}`
-		)
-	}
+	cli.printChecksResult(missingRules.length, 'personas', destLang, markdown)
 })

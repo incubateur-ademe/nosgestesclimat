@@ -41,6 +41,31 @@ const yellow = (str) => withStyle(colors.fgYellow, str)
 const red = (str) => withStyle(colors.fgRed, str)
 const green = (str) => withStyle(colors.fgGreen, str)
 
+const printChecksResultTableHeader = (markdown) => {
+	if (markdown) {
+		console.log(`| Language | Nb. missing translations | Status |`)
+		console.log(`|:--------:|:------------------------:|:------:|`)
+	}
+}
+
+const printChecksResult = (nbMissing, what, destLang, markdown) => {
+	if (nbMissing > 0) {
+		console.log(
+			markdown
+				? `| _${destLang}_ | ${nbMissing} | :x: |`
+				: `❌ Missing ${red(nbMissing)} ${what} translations for ${yellow(
+						destLang
+				  )}!`
+		)
+	} else {
+		console.log(
+			markdown
+				? `| _${destLang}_ | Ø | :heavy_check_mark: |`
+				: `✅ The ${what} translation are up to date for ${yellow(destLang)}`
+		)
+	}
+}
+
 const getArgs = (description, opts) => {
 	let args = yargs.usage(`${description}\n\nUsage: node $0 [options]`)
 
@@ -145,4 +170,6 @@ module.exports = {
 	red,
 	withStyle,
 	yellow,
+	printChecksResult,
+	printChecksResultTableHeader,
 }
