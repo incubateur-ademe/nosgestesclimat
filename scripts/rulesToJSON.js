@@ -1,20 +1,26 @@
 let yaml = require('yaml')
 let fs = require('fs')
 let glob = require('glob')
+let path = require('path')
 const { exit } = require('process')
 const Engine = require('publicodes').default
 
-const outputJSONFileName = './public/co2.json'
+const cli = require('./cli')
 
-// this file is kindof a duplicate of RulesProvider (which serves for the local watched webpack environment) in ecolab-climat
-// if it grows more than 20 lines, it should be shared
+const { srcFolder, destFile, rulesToEvaluate } = cli.getArgs(
+	`Convert rules to JSON in public folder`
+)
 
-glob('data/numérique/streaming>.yaml', (_, files) => {
+const outputJSONFileName = `../public/${destFile}.json`
+
+glob(`../data/${srcFolder}/*.yaml`, (_, files) => {
 	const rules = files.reduce((memo, filename) => {
 		try {
 			const data = fs.readFileSync('./' + filename, 'utf8')
 			const rules = yaml.parse(data)
-			const splitName = filename.replace('data/numérique/', '').split('>.yaml')
+			const splitName = filename
+				.replace(`${path.dirname(filename)}/`, '')
+				.split('>.yaml')
 			const prefixedRuleSet =
 				splitName.length > 1
 					? Object.fromEntries(
@@ -24,7 +30,7 @@ glob('data/numérique/streaming>.yaml', (_, files) => {
 							])
 					  )
 					: rules
-			console.log(prefixedRuleSet)
+			// console.log(prefixedRuleSet)
 			return { ...memo, ...prefixedRuleSet }
 		} catch (err) {
 			console.log(
@@ -38,8 +44,11 @@ glob('data/numérique/streaming>.yaml', (_, files) => {
 	}, {})
 
 	try {
-		new Engine(rules).evaluate('streaming')
-		console.log(' ✅ Les règles ont été évaluées sans erreur !')
+		const engine = new Engine(rules)
+		rulesToEvaluate.split(',').map((rule) => {
+			engine.evaluate(rule)
+			console.log(` ✅ La règle ${rule} a été évaluée sans erreur !`)
+		})
 		fs.writeFile(outputJSONFileName, JSON.stringify(rules), function (err) {
 			if (err) return console.error(err)
 			console.log(
