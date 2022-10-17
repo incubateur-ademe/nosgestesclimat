@@ -13,6 +13,7 @@ glob('data/**/*.yaml', (_, files) => {
 	const rules = files.reduce((memo, filename) => {
 		try {
 			const data = fs.readFileSync('./' + filename, 'utf8')
+			if (!filename.includes('bilan')) return memo
 			const rules = yaml.parse(data)
 			return { ...memo, ...rules }
 		} catch (err) {
