@@ -2,9 +2,19 @@
 
 Bienvenue 👋 ! 
 
-Ce dépôt contient un modèle d'empreinte carbone personnelle annuelle, écrit en YAML. Pas de panique, on vous explique plus bas ce que ça veut dire et comment le modifier.
+Ce dépôt contient un modèle d'empreinte carbone personnelle annuelle, écrit en YAML. Pas de panique, ce n'est pas sorcier, on vous explique en 5 minutes ce que ça veut dire et comment y contribuer.
 
-Ce modèle pose des questions sur les aspects de la vie d'un individu qui émettent le plus de gaz à effet de serre (GES) mesuré en CO2e. L'objectif n'est pas d'en faire une comptabilité parfaite, mais la plus représentative en posant un nombre de question qui reste acceptable pour tous, à hauteur de l'engagement personnel moyen aujourd'hui en 2020.
+Ce modèle pose des questions sur les aspects de la vie d'un individu et ses choix de consommation d'un individu qui conduisent à émettre des gaz à effet de serre (GES) mesuré en CO2e. L'objectif n'est pas d'en faire une comptabilité parfaite, mais la plus représentative en posant un nombre de question qui reste acceptable pour tous, à hauteur de l'engagement personnel moyen aujourd'hui dans les années 2020.
+
+## ✒️ Les textes
+
+Sans rentrer dans le calcul, il y a des plein de textes à améliorer ! Un exemple facile pour commencer : voici [le texte de la question sur la surface du logement](https://github.com/datagir/nosgestesclimat/blob/master/data/logement/logement.yaml#L49). Autre exemple : [le texte d'aide de la question "Votre logement est-il un appartement ?" ](https://github.com/datagir/nosgestesclimat/blob/master/data/logement/logement.yaml#L82). 
+
+Mais ce n'est pas tout ! Il y a aussi des articles de texte entiers, comme [l'action "éco-conduite"](https://github.com/datagir/nosgestesclimat/blob/master/documentation/actions-plus/transport%20.%20%C3%A9co-conduite.md). 
+
+Du côté du site (le dépôt "nosgestesclimat-site"), il y a aussi la [FAQ](https://github.com/datagir/nosgestesclimat-site/blob/master/source/sites/publicodes/FAQ.yaml) par exemple. 
+
+Comment moifier ces textes ? Rendez-vous dans la section ["🏗️ En pratique" ci-dessous](https://github.com/datagir/nosgestesclimat/blob/master/CONTRIBUTING.md#%EF%B8%8F-en-pratique).
 
 ## 💾 Les modèles carbone
 
@@ -39,6 +49,8 @@ Il y a de grandes chances que ce soit déjà le cas : direction [l'onglet *issue
 ### Si vous n'avez que ⌛ 2 minutes pour faire une remarque
 
 Si vous avez un compte Github, [créez simplement une issue](https://github.com/datagir/nosgestesclimat/issues/new) qui parle de votre idée ou correction et qui contient le calcul ou les interrogations en français.
+
+S'il s'agit de corriger un texte, n'hésitez pas à nous proposer une suggestion, ça accélérera le traitement. 
 
 Sinon, écrivez-nous sur [notre formulaire de retour](https://nosgestesclimat.fr/contribuer).
 
