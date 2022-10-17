@@ -12,12 +12,12 @@ const readYAML = (path) => {
 	return yaml.parse(fs.readFileSync(path, 'utf-8'))
 }
 
-const writeYAML = (path, content) => {
+const writeYAML = (path, content, blockQuote = 'folded') => {
 	fs.writeFileSync(
 		path,
 		yaml.stringify(content, {
 			sortMapEntries: true,
-			blockQuote: 'folded',
+			blockQuote,
 		})
 	)
 }

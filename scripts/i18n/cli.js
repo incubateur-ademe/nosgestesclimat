@@ -105,7 +105,6 @@ const getArgs = (description, opts) => {
 			alias: 't',
 			type: 'string',
 			array: true,
-			default: utils.availableLanguages.filter((l) => l !== utils.defaultLang),
 			choices: utils.availableLanguages,
 			description: 'The target language(s) to translate to.',
 		})
@@ -139,7 +138,10 @@ const getArgs = (description, opts) => {
 
 	return {
 		srcLang,
-		destLangs,
+		destLangs:
+			!argv.target && opts.target === 'all'
+				? utils.availableLanguages
+				: destLangs,
 		force: argv.force,
 		remove: argv.remove,
 		srcFile,
