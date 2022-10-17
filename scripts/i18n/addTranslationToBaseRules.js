@@ -32,7 +32,7 @@ const addTranslationToBaseRules = (baseRules, translatedRules) => {
 
 	Object.entries(translatedRules).forEach(([rule, attrs]) => {
 		Object.entries(attrs)
-			.filter(([attr, _]) => !attr.endsWith('.ref')) // TODO: extract to constant
+			.filter(([attr, _]) => !attr.endsWith('.lock'))
 			.forEach(([attr, transVal]) => {
 				switch (attr) {
 					case 'suggestions': {

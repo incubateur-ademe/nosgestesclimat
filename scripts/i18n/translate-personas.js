@@ -1,8 +1,8 @@
 const R = require('ramda')
 const path = require('path')
-const utils = require('./i18n/utils')
-const cli = require('./i18n/cli')
-const deepl = require('./i18n/deepl')
+const utils = require('./utils')
+const cli = require('./cli')
+const deepl = require('./deepl')
 
 const { srcLang, destLangs, force } = cli.getArgs(
 	`Calls the DeepL API to translate the rule questions, titles, notes,

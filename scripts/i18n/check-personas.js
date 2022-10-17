@@ -5,14 +5,12 @@
 */
 
 const path = require('path')
-const glob = require('glob')
 const R = require('ramda')
 const fs = require('fs')
 const yaml = require('yaml')
-const { exit } = require('process')
 
-const cli = require('./i18n/cli')
-const utils = require('./i18n/utils')
+const cli = require('./cli')
+const utils = require('./utils')
 
 const { srcLang, destLangs, markdown } = cli.getArgs(
 	`Checks all personas have been translated.

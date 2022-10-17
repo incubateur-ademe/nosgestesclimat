@@ -11,9 +11,9 @@ const glob = require('glob')
 const R = require('ramda')
 const { exit } = require('process')
 
-const utils = require('./i18n/utils')
-const cli = require('./i18n/cli')
-const deepl = require('./i18n/deepl')
+const utils = require('./utils')
+const cli = require('./cli')
+const deepl = require('./deepl')
 
 const { srcLang, destLangs, srcFile } = cli.getArgs(
 	`Calls the DeepL API to translate the rule questions, titles, notes,
@@ -40,11 +40,11 @@ const translateTo = async (
 ) => {
 	const updateTranslatedRules = (rule, attr, transVal, refVal) => {
 		let key = [rule, attr]
-		let refKey = [rule, attr + '.ref']
+		let refKey = [rule, attr + utils.LOCK_KEY_EXT]
 
 		if ('mosaique' === attr) {
 			key = [rule, attr, 'suggestions']
-			refKey = [rule, attr, 'suggestions.ref']
+			refKey = [rule, attr, 'suggestions' + utils.LOCK_KEY_EXT]
 		}
 
 		translatedRules = R.assocPath(key, transVal, translatedRules)

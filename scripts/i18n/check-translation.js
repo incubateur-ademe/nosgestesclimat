@@ -7,12 +7,10 @@
 const path = require('path')
 const glob = require('glob')
 const R = require('ramda')
-const fs = require('fs')
-const yaml = require('yaml')
 const { exit } = require('process')
 
-const cli = require('./i18n/cli')
-const utils = require('./i18n/utils')
+const cli = require('./cli')
+const utils = require('./utils')
 
 const { destLangs, srcFile, markdown } = cli.getArgs(
 	`Checks all rules have been translated.`,
@@ -47,6 +45,8 @@ glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 		const destPath = `data/translated-rules-${destLang}.yaml`
 		const destRules = R.mergeAll(utils.readYAML(path.resolve(destPath)))
 		const missingRules = utils.getMissingRules(rules, destRules)
+
+		// console.log('missingRules:', missingRules)
 
 		if (missingRules.length > 0) {
 			console.log(

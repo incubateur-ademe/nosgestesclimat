@@ -6,7 +6,7 @@ const utils = require('./i18n/utils')
 const cli = require('./i18n/cli')
 const {
 	addTranslationToBasePersonas,
-} = require('./addTranslationToBasePersonas')
+} = require('./i18n/addTranslationToBasePersonas')
 
 const outputJSONPath = './public'
 

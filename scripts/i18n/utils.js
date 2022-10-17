@@ -168,7 +168,7 @@ const getMissingRules = (srcRules, targetRules) => {
 				acc.push(
 					filteredValEntries.reduce((acc, [attr, refVal]) => {
 						if (keysToTranslate.includes(attr)) {
-							let targetRef = targetRule[attr + '.ref']
+							let targetRef = targetRule[attr + LOCK_KEY_EXT]
 							let hasTheSameRefValue = targetRef && targetRef === refVal
 
 							switch (attr) {
@@ -178,7 +178,7 @@ const getMissingRules = (srcRules, targetRules) => {
 									break
 								}
 								case 'mosaique': {
-									targetRef = targetRule[attr]?.['suggestions.ref']
+									targetRef = targetRule[attr]?.['suggestions' + LOCK_KEY_EXT]
 									refVal = Object.keys(refVal.suggestions)
 									hasTheSameRefValue =
 										targetRef &&
