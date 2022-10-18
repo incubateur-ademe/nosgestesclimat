@@ -2,6 +2,7 @@ require('dotenv').config()
 const fs = require('fs')
 const R = require('ramda')
 const yaml = require('yaml')
+const prettier = require('prettier')
 
 const LOCK_KEY_EXT = '.lock'
 
@@ -13,12 +14,17 @@ const readYAML = (path) => {
 }
 
 const writeYAML = (path, content, blockQuote = 'folded') => {
-	fs.writeFileSync(
-		path,
-		yaml.stringify(content, {
-			sortMapEntries: true,
-			blockQuote,
-		})
+	prettier.resolveConfig(path).then((options) =>
+		fs.writeFileSync(
+			path,
+			prettier.format(
+				yaml.stringify(content, {
+					sortMapEntries: true,
+					blockQuote,
+				}),
+				{ parser: 'yaml', ...options }
+			)
+		)
 	)
 }
 
