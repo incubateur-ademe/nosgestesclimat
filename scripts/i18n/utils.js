@@ -1,5 +1,6 @@
 require('dotenv').config()
 const fs = require('fs')
+const { format, resolveConfig } = require('prettier')
 const R = require('ramda')
 const yaml = require('yaml')
 const prettier = require('prettier')
@@ -14,15 +15,15 @@ const readYAML = (path) => {
 }
 
 const writeYAML = (path, content, blockQuote = 'folded') => {
-	prettier.resolveConfig(path).then((options) =>
+	resolveConfig(process.cwd()).then((prettierConfig) =>
 		fs.writeFileSync(
 			path,
-			prettier.format(
+			format(
 				yaml.stringify(content, {
 					sortMapEntries: true,
 					blockQuote,
 				}),
-				{ parser: 'yaml', ...options }
+				{ ...prettierConfig, parser: 'yaml' }
 			)
 		)
 	)
