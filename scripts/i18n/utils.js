@@ -3,7 +3,6 @@ const fs = require('fs')
 const { format, resolveConfig } = require('prettier')
 const R = require('ramda')
 const yaml = require('yaml')
-const prettier = require('prettier')
 
 const LOCK_KEY_EXT = '.lock'
 
