@@ -21,6 +21,83 @@ jours par an:
   formule: 365
   unité: jour/an
 
+facteur réseau:
+  formule:
+    variations:
+      - si: réseau = 'fixe FR'
+        alors: facteur réseau fixe FR
+      - si: réseau = 'mobile FR'
+        alors: facteur réseau mobile FR
+      - si: réseau = 'fixe EU'
+        alors: facteur réseau fixe EU
+      - si: réseau = 'mobile EU'
+        alors: facteur réseau mobile EU
+  unité: gCO2e/Go
+
+facteur réseau . réseau:
+  avec:
+    fixe FR:
+    mobile FR:
+    fixe EU:
+    mobile EU:
+  question: Utilisez-vous le réseau fixe ou mobile ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - fixe FR
+        - mobile FR
+        - fixe EU
+        - mobile EU
+
+facteur réseau fixe FR:
+  formule: 9.26934695867389
+  unité: gCO2e/Go
+
+facteur réseau mobile FR:
+  formule: 24.6836791969497
+  unité: gCO2e/Go
+
+facteur réseau fixe EU:
+  formule: 30.8081869990301
+  unité: gCO2e/Go
+
+facteur réseau mobile EU:
+  formule: 96.0097311973246
+  unité: gCO2e/Go
+
+facteur réseau fixe FR hors box:
+  formule: 2.59
+  unité: gCO2e/Go
+
+facteur réseau fixe EU hors box:
+  formule: 14.4
+  unité: gCO2e/Go
+
+serveur:
+
+serveur . puissance:
+  formule: 367
+  unité: W
+  note: source Borderstep
+
+serveur . puissance par utilisateur:
+  formule: 0.22
+  unité: W
+  note: Source Google’s Green Computing Efficiency at Scale (GMAIL)
+
+serveur . nombre d'utilisateurs par serveur:
+  formule: puissance / puissance par utilisateur
+
+serveur . PUE:
+  formule: 1.16
+  note: power usage effectiveness Source Google’s Green Computing Efficiency at Scale (GMAIL)
+
+serveur . capacité:
+  formule: 3.5524 * 1024 * 1024
+  unité: Mo
+  note: pas de source..
+
 smartphone:
 smartphone . construction:
   formule: 82730
@@ -153,3 +230,53 @@ ordinateur et écran . consommation en mode actif:
     somme:
       - ordinateur fixe . consommation en mode actif
       - écran . consommation en mode actif
+
+firewall:
+firewall . construction:
+  formule: 355000
+  unité: gCO2e
+firewall . durée de vie:
+  formule: 5
+  unité: an
+
+switch:
+switch . construction:
+  formule: 367000
+  unité: gCO2e
+switch . durée de vie:
+  formule: 5
+  unité: an
+
+routeur:
+routeur . construction:
+  formule: 41200
+  unité: gCO2e
+routeur . durée de vie:
+  formule: 5
+  unité: an
+
+serveur . construction:
+  formule: 748000
+  unité: gCO2e
+serveur . durée de vie:
+  formule: 5
+  unité: an
+
+stockage:
+stockage . construction:
+  formule: 144000
+  unité: gCO2e
+stockage . durée de vie:
+  formule: 5
+  unité: an
+stockage . puissance en mode actif:
+  formule: 6
+  unité: W
+
+équipements support:
+équipements support . construction:
+  formule: 187000
+  unité: gCO2e/m2
+équipements support . durée de vie:
+  formule: 25
+  unité: an

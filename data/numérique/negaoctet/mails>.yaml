@@ -1,0 +1,454 @@
+index:
+  formule:
+    somme:
+      - terminaux
+      - transmission
+      - data center
+  unité: gCO2e
+
+taille:
+  question: Quelle est la taille du mail?
+  par défaut: 1
+  unité: Mo
+
+taille en Go:
+  formule: taille / 1024
+  unité: Go
+
+destinataires:
+  question: Quelle est le nombre de destinataires?
+  par défaut: 1
+
+durée stockage mail:
+  question: Quelle est la durée de stockage du mail ?
+  par défaut: 10
+  unité: an
+  note: on fait l'hypothèse que la durée de stockage coté émetteur et récepteur est la même.
+
+redondances sauvegarde émetteur:
+  question: Quelle est le nombre de redondances de sauvagardes émetteur ?
+  par défaut: 3
+  référence: |
+    Analyse comparée des impacts environnementaux de la communication par voie électronique
+    Volet courrier électronique : Rapport final" - BioIS pour l'ADEME, 5 juillet 2011
+
+redondances sauvegarde récepteur:
+  question: Quelle est le nombre de redondances de sauvagardes récepteur ?
+  par défaut: 3
+  référence: |
+    Analyse comparée des impacts environnementaux de la communication par voie électronique
+    Volet courrier électronique : Rapport final" - BioIS pour l'ADEME, 5 juillet 2011
+
+taux moyen de remplissage du stockage:
+  question: quel est le taux moyen de remplissage du stockage ?
+  par défaut: 50%
+  référence: |
+    Analyse comparée des impacts environnementaux de la communication par voie électronique
+    Volet courrier électronique : Rapport final" - BioIS pour l'ADEME, 5 juillet 2011
+
+nombre de mails envoyés et reçus par jour et par personne:
+  question: Combien de mails envoyés et réçus par jour et par personne ?
+  par défaut: 117.7
+  référence: Email Statistics Report, 2015-2019, The Radicati group
+
+appareil:
+  avec:
+    ordinateur et écran:
+      titre: ordinateur fixe
+    ordinateur portable:
+    tablette:
+    smartphone:
+  question: Quel appareil utlisez-vous ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - ordinateur et écran
+        - ordinateur portable
+        - tablette
+        - smartphone
+  par défaut: "'moyenne'" #default value has to be set to make sure rules using "appareil" are defined
+
+appareil . moyenne utilisation ordinateur et écran: 24%
+appareil . moyenne utilisation ordinateur portable: 24%
+appareil . moyenne utilisation tablette: 8%
+appareil . moyenne utilisation smartphone: 45%
+
+terminaux:
+  formule:
+    somme:
+      - construction
+      - usage
+
+terminaux . construction:
+  formule:
+    variations:
+      - si: appareil = 'smartphone'
+        alors: smartphone
+      - si: appareil = 'tablette'
+        alors: tablette
+      - si: appareil = 'ordinateur portable'
+        alors: ordinateur portable
+      - si: appareil = 'ordinateur et écran'
+        alors: ordinateur et écran
+      - sinon: construction moyenne
+  unité: gCO2e
+
+terminaux . temps écriture:
+  question: Quel est le temps d'écriture du mail ?
+  par défaut: 3
+  unité: minute
+
+terminaux . temps écriture en heure:
+  formule: temps écriture / 60
+  unité: heure
+
+terminaux . pourcentage lecture:
+  question: Quel est le pourcentage de lecture du mail ?
+  par défaut: 100%
+
+terminaux . temps lecture récepteur:
+  question: Quel est le temps de lecture du mail ?
+  par défaut: 10 / 60
+  unité: minute
+
+terminaux . temps lecture total:
+  formule: destinataires * pourcentage lecture * temps lecture récepteur
+  unité: minute
+
+terminaux . temps lecture en heure:
+  formule: temps lecture total / 60
+  unité: heure
+
+terminaux . construction . smartphone:
+  formule: smartphone . construction * ((temps écriture en heure + temps lecture en heure) / smartphone . durée d'usage)
+
+terminaux . construction . tablette:
+  formule: tablette . construction * ((temps écriture en heure + temps lecture en heure) / tablette . durée d'usage)
+
+terminaux . construction . ordinateur portable:
+  formule: ordinateur portable . construction * ((temps écriture en heure + temps lecture en heure) / ordinateur portable . durée d'usage)
+
+terminaux . construction . ordinateur et écran:
+  formule:
+    somme:
+      - ordinateur fixe . construction * ((temps écriture en heure + temps lecture en heure) / ordinateur fixe . durée d'usage)
+      - écran . construction * ((temps écriture en heure + temps lecture en heure) / écran . durée d'usage)
+
+terminaux . construction . construction moyenne:
+  formule:
+    somme:
+      - appareil . moyenne utilisation ordinateur et écran * ordinateur et écran
+      - appareil . moyenne utilisation ordinateur portable * ordinateur portable
+      - appareil . moyenne utilisation tablette * tablette
+      - appareil . moyenne utilisation smartphone * smartphone
+
+terminaux . usage:
+  formule: consommation électricité * facteur électricité
+  unité: gCO2e
+
+terminaux . usage . facteur électricité:
+  formule:
+    variations:
+      - si: région = 'France'
+        alors: électricité . FE France
+      - si: région = 'Europe'
+        alors: électricité . FE Europe
+      - si: région = 'Chine'
+        alors: électricité . FE Chine
+      - si: région = 'USA'
+        alors: électricité . FE USA
+  unité: gCO2e/kWh
+
+terminaux . usage . région:
+  avec:
+    France:
+    Europe:
+    Chine:
+    USA:
+  question: Dans quelle zone géographique se situe le terminal ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - France
+        - Europe
+        - Chine
+        - USA
+  par défaut: "'France'"
+
+terminaux . usage . consommation électricité:
+  formule: (temps écriture en heure + temps lecture en heure) * consommation électricité par heure / 1000
+  unité: kWh
+
+terminaux . usage . consommation électricité par heure:
+  formule:
+    variations:
+      - si: appareil = 'smartphone'
+        alors: smartphone . consommation en mode actif
+      - si: appareil = 'tablette'
+        alors: tablette . consommation en mode actif
+      - si: appareil = 'ordinateur portable'
+        alors: ordinateur portable . consommation en mode actif
+      - si: appareil = 'ordinateur et écran'
+        alors: ordinateur et écran . consommation en mode actif
+      - sinon: consommation en mode actif moyenne
+  unité: Wh
+
+terminaux . usage . consommation en mode actif moyenne:
+  formule:
+    somme:
+      - appareil . moyenne utilisation ordinateur et écran * ordinateur et écran . consommation en mode actif
+      - appareil . moyenne utilisation ordinateur portable * ordinateur portable . consommation en mode actif
+      - appareil . moyenne utilisation tablette * tablette . consommation en mode actif
+      - appareil . moyenne utilisation smartphone * smartphone . consommation en mode actif
+
+transmission:
+  formule:
+    somme:
+      - émetteur
+      - récepteur
+      - redondances sauvegarde
+  unité: gCO2e
+
+transmission . émetteur:
+  formule: facteur réseau * taille en Go
+  unité: gCO2e
+
+transmission . émetteur . facteur réseau:
+  titre: Facteur réseau transmission émetteur
+  formule:
+    variations:
+      - si: réseau = 'fixe FR'
+        alors: facteur réseau fixe FR
+      - si: réseau = 'mobile FR'
+        alors: facteur réseau mobile FR
+      - si: réseau = 'fixe EU'
+        alors: facteur réseau fixe EU
+      - si: réseau = 'mobile EU'
+        alors: facteur réseau mobile EU
+  unité: gCO2e/Go
+
+transmission . émetteur . réseau:
+  avec:
+    fixe FR:
+    mobile FR:
+    fixe EU:
+    mobile EU:
+  question: Utilisez-vous le réseau fixe ou mobile ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - fixe FR
+        - mobile FR
+        - fixe EU
+        - mobile EU
+  par défaut: "'fixe FR'"
+
+transmission . récepteur:
+  titre: Facteur réseau transmission récepteur
+  formule: destinataires * facteur réseau * taille en Go
+  unité: gCO2e
+
+transmission . récepteur . facteur réseau:
+  formule:
+    recalcul:
+      règle: émetteur . facteur réseau
+      avec:
+        réseau: réseau
+
+transmission . récepteur . réseau:
+  avec:
+    fixe FR:
+    mobile FR:
+    fixe EU:
+    mobile EU:
+  question: Utilisez-vous le réseau fixe ou mobile ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - fixe FR
+        - mobile FR
+        - fixe EU
+        - mobile EU
+  par défaut: "'fixe FR'"
+
+transmission . redondances sauvegarde:
+  # formule: (redondances sauvegarde émetteur + destinataires * redondances sauvegarde récepteur) * taille en Go * facteur réseau
+  formule: destinataires * taille en Go * facteur réseau * (1 + redondances sauvegarde émetteur + redondances sauvegarde récepteur)
+  note: Formule peu documentée, non comprise, je pense que ce poste est à précisier/définir
+  unité: Go
+
+transmission . redondances sauvegarde . facteur réseau:
+  titre: Facteur réseau transmission sauvegarde
+  formule:
+    variations:
+      - si: réseau = 'fixe FR hors box'
+        alors: facteur réseau fixe FR hors box
+      - si: réseau = 'fixe FR hors box'
+        alors: facteur réseau fixe EU hors box
+  unité: gCO2e/Go
+
+transmission . redondances sauvegarde . réseau:
+  avec:
+    fixe FR hors box:
+    fixe EU hors box:
+  question: Utilisez-vous le réseau fixe ou mobile ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - fixe FR hors box
+        - fixe EU hors box
+  par défaut: "'fixe FR hors box'"
+
+data center:
+  formule:
+    somme:
+      - construction
+      - usage
+  unité: gCO2e
+
+# data center . usage: 0.0692 + 0.0692
+
+data center . construction:
+  formule:
+    somme:
+      - émetteur
+      - récepteur
+  unité: gCO2e
+
+data center . construction . émetteur:
+  formule:
+    somme:
+      - firewall
+      - switch
+      - routeur
+      - serveur
+      - stockage
+      - équipements support
+  unité: gCO2e
+
+data center . construction . émetteur . serveur:
+  formule: facteur d'allocation * serveur . construction
+
+data center . construction . émetteur . serveur . facteur d'allocation:
+  formule: 1 / (serveur . nombre d'utilisateurs par serveur * nombre de mails envoyés et reçus par jour et par personne * 365 * serveur . durée de vie)
+  note: Allocation au nombre de mail par an et par utilisateur, et d'utilisateur par serveur
+
+data center . construction . émetteur . firewall:
+  formule: facteur d'allocation * firewall . construction
+
+data center . construction . émetteur . firewall . facteur d'allocation:
+  formule: 0.0358 * serveur . facteur d'allocation
+  référence: considérant 0,0358 firewall par serveur (données APL Datacenter basées sur une moyenne du marché)
+
+data center . construction . émetteur . switch:
+  formule: facteur d'allocation * switch . construction
+
+data center . construction . émetteur . switch . facteur d'allocation:
+  formule: 1.468 * serveur . facteur d'allocation
+  référence: considérant 1,468 switchs par serveur (données APL Datacenter basées sur une moyenne du marché)
+
+data center . construction . émetteur . routeur:
+  formule: facteur d'allocation * routeur . construction
+
+data center . construction . émetteur . routeur . facteur d'allocation:
+  formule: 0.286 * serveur . facteur d'allocation
+  référence: considérant 0,286 routeurs par serveur (données APL Datacenter basées sur une moyenne du marché)
+
+data center . construction . émetteur . stockage:
+  formule: facteur d'allocation * stockage . construction
+  unité: gCO2e
+
+data center . construction . émetteur . stockage . facteur d'allocation:
+  formule: taille mails * ratio total / taux moyen de remplissage du stockage
+  note: |
+    Negaoctet : Allocation à la taille de stockage du mail et de ses redondances ramenée à la capacité de stockage 
+    Besoin d'explications sur cette formule ..
+
+data center . construction . émetteur . stockage . facteur d'allocation . taille mails:
+  formule: taille * redondances sauvegarde émetteur
+  unité: Mo
+
+data center . construction . émetteur . stockage . facteur d'allocation . ratio total:
+  formule: durée stockage mail / (serveur . capacité * stockage . durée de vie)
+
+data center . construction . émetteur . équipements support:
+  formule: facteur d'allocation * équipements support . construction
+
+data center . construction . émetteur . équipements support . facteur d'allocation:
+  formule: 0.68 m2 * serveur . facteur d'allocation * serveur . durée de vie / équipements support . durée de vie
+  note: formule me semble fausse, pourquoi inclure la durée de vie du serveur ?
+  référence: |
+    "Allocation au m2 utilisé par serveur, en considérant 0,68m de salle IT par serveur (données APL Datacenter basées sur une moyenne du marché)
+    Sont exclus les consommations de fioul, d'eau et les fuites frigorigènes, négligeables."
+
+data center . construction . récepteur:
+  formule:
+    recalcul:
+      règle: construction . émetteur
+      avec:
+        construction . émetteur . stockage . facteur d'allocation . taille mails: taille * redondances sauvegarde récepteur * destinataires
+
+data center . usage:
+  formule:
+    somme:
+      - émetteur
+      - récepteur
+  unité: gCO2e
+
+data center . usage . facteur électricité:
+  formule:
+    variations:
+      - si: région = 'France'
+        alors: électricité . FE France
+      - si: région = 'Europe'
+        alors: électricité . FE Europe
+      - si: région = 'Chine'
+        alors: électricité . FE Chine
+      - si: région = 'USA'
+        alors: électricité . FE USA
+  unité: gCO2e/kWh
+
+data center . usage . région:
+  avec:
+    France:
+    Europe:
+    Chine:
+    USA:
+  question: Dans quelle zone géographique se situe le data center ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - France
+        - Europe
+        - Chine
+        - USA
+  par défaut: "'France'"
+
+data center . usage . émetteur:
+  formule: consommation électricité réelle * facteur électricité
+  unité: gCO2e
+
+data center . usage . émetteur . consommation électricité réelle:
+  formule: consommation électricité * serveur . PUE / 1000
+  unité: kWh
+
+data center . usage . émetteur . consommation électricité:
+  formule: consommation serveur par mail + consommation serveur stockage
+  unité: Wh
+
+data center . usage . émetteur . consommation électricité . consommation serveur par mail:
+  formule: serveur . puissance par utilisateur * 24 / nombre de mails envoyés et reçus par jour et par personne
+  unité: Wh
+
+data center . usage . émetteur . consommation électricité . consommation serveur stockage:
+  formule: taille * redondances sauvegarde émetteur / (serveur . capacité * taux moyen de remplissage du stockage) * stockage . puissance en mode actif * 24 * 365 * durée stockage mail
+  unité: Wh
+
+data center . usage . récepteur:
+  formule: usage . émetteur * destinataires
