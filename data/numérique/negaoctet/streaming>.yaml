@@ -195,24 +195,32 @@ transmission:
 transmission . facteur réseau:
   formule:
     variations:
-      - si: réseau = 'fixe'
-        alors: 9.26934695867389
-      - si: réseau = 'mobile'
-        alors: 24.6836791969497
+      - si: réseau = 'fixe FR'
+        alors: facteur réseau fixe FR
+      - si: réseau = 'mobile FR'
+        alors: facteur réseau mobile FR
+      - si: réseau = 'fixe EU'
+        alors: facteur réseau fixe EU
+      - si: réseau = 'mobile EU'
+        alors: facteur réseau mobile EU
   unité: gCO2e/Go
 
 transmission . réseau:
   avec:
-    mobile:
-    fixe:
+    fixe FR:
+    mobile FR:
+    fixe EU:
+    mobile EU:
   question: Utilisez-vous le réseau fixe ou mobile ?
   formule:
     une possibilité:
       choix obligatoire: oui
       possibilités:
-        - mobile
-        - fixe
-  par défaut: "'fixe'"
+        - fixe FR
+        - mobile FR
+        - fixe EU
+        - mobile EU
+  par défaut: "'fixe FR'"
 
 data center:
   formule:
@@ -261,9 +269,44 @@ data center . usage . région:
   par défaut: "'France'"
 
 data center . usage . consommation électricité:
-  formule: taille * électricité par Go / 1000
+  formule: taille * électricité par Go en Wh / 1000
   unité: kWh
 
-data center . usage . électricité par Go:
-  formule: 1.947079
+data center . usage . électricité par Go en Wh:
+  formule: électricité par Go * 1000000
   unité: Wh/Go
+
+data center . usage . électricité par Go:
+  formule: (électricité directe consommée par an + électricité indirecte consommée par an) / volume total de transfert de données
+  unité: MWh/Go
+
+data center . usage . électricité directe consommée par an:
+  formule: 94000
+  unité: MWh
+  référence: Netflix Environmental Social Governance 2019
+
+data center . usage . électricité indirecte consommée par an:
+  formule: 357000
+  unité: MWh
+  référence: Netflix Environmental Social Governance 2019
+
+data center . usage . consommation de donnée moyenne par heure de visionnage:
+  formule: 1.9
+  unité: Go
+  référence: |
+    "Factcheck: What is the carbon footprint of streaming video on Netflix?" CarbonBrief
+
+data center . usage . nombre d'utilisateurs par an:
+  formule: 167000000
+  référence: |
+    "Factcheck: What is the carbon footprint of streaming video on Netflix?" CarbonBrief
+
+data center . usage . nombre d'heures de visionnage par an:
+  formule: 2 * 365 * nombre d'utilisateurs par an
+  note: |
+    On a ici une hypothèse importante: les utilisateurs passeraient 2 heures sur Netflix par jour en moyenne.
+  référence: |
+    "Factcheck: What is the carbon footprint of streaming video on Netflix?" CarbonBrief
+
+data center . usage . volume total de transfert de données:
+  formule: nombre d'heures de visionnage par an * consommation de donnée moyenne par heure de visionnage
