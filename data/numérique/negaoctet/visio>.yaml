@@ -242,9 +242,12 @@ data center:
   unité: gCO2e
 
 data center . construction:
-  formule: 0.237
-  unité: gCO2e
-  note: Durée, taille, réseau ou localisation n'ont pas d'impact sur ce poste.
+  formule:
+    recalcul:
+      règle: construction data center
+      avec:
+        construction data center . serveur . facteur d'allocation: streaming . data center . nombre de serveurs / streaming . nombre d'heures de visionnage par an / serveur . durée de vie * durée en heure
+  note: ici, sont reprises les données issues des études sur le streaming.
 
 data center . usage:
   formule: consommation électricité * facteur électricité
@@ -285,5 +288,6 @@ data center . usage . consommation électricité:
   unité: kWh
 
 data center . usage . électricité par Go:
-  formule: 1.947079
+  formule: streaming . data center . usage . électricité par Go
   unité: Wh/Go
+  note: chiffre issu du streaming ici

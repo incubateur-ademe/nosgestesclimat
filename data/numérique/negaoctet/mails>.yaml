@@ -311,8 +311,6 @@ data center:
       - usage
   unité: gCO2e
 
-# data center . usage: 0.0692 + 0.0692
-
 data center . construction:
   formule:
     somme:
@@ -322,76 +320,35 @@ data center . construction:
 
 data center . construction . émetteur:
   formule:
-    somme:
-      - firewall
-      - switch
-      - routeur
-      - serveur
-      - stockage
-      - équipements support
-  unité: gCO2e
+    recalcul:
+      règle: construction data center
+      avec:
+        construction data center . serveur . facteur d'allocation: data center . construction . émetteur . facteur d'allocation serveur
+        construction data center . stockage . facteur d'allocation: data center . construction . émetteur . facteur d'allocation stockage
 
-data center . construction . émetteur . serveur:
-  formule: facteur d'allocation * serveur . construction
-
-data center . construction . émetteur . serveur . facteur d'allocation:
+data center . construction . émetteur . facteur d'allocation serveur:
   formule: 1 / (serveur . nombre d'utilisateurs par serveur * nombre de mails envoyés et reçus par jour et par personne * 365 * serveur . durée de vie)
   note: Allocation au nombre de mail par an et par utilisateur, et d'utilisateur par serveur
 
-data center . construction . émetteur . firewall:
-  formule: facteur d'allocation * firewall . construction
-
-data center . construction . émetteur . firewall . facteur d'allocation:
-  formule: 0.0358 * serveur . facteur d'allocation
-  référence: considérant 0,0358 firewall par serveur (données APL Datacenter basées sur une moyenne du marché)
-
-data center . construction . émetteur . switch:
-  formule: facteur d'allocation * switch . construction
-
-data center . construction . émetteur . switch . facteur d'allocation:
-  formule: 1.468 * serveur . facteur d'allocation
-  référence: considérant 1,468 switchs par serveur (données APL Datacenter basées sur une moyenne du marché)
-
-data center . construction . émetteur . routeur:
-  formule: facteur d'allocation * routeur . construction
-
-data center . construction . émetteur . routeur . facteur d'allocation:
-  formule: 0.286 * serveur . facteur d'allocation
-  référence: considérant 0,286 routeurs par serveur (données APL Datacenter basées sur une moyenne du marché)
-
-data center . construction . émetteur . stockage:
-  formule: facteur d'allocation * stockage . construction
-  unité: gCO2e
-
-data center . construction . émetteur . stockage . facteur d'allocation:
-  formule: taille mails * ratio total / taux moyen de remplissage du stockage
+data center . construction . émetteur . facteur d'allocation stockage:
+  formule: taille mails * ratio total
   note: |
     Negaoctet : Allocation à la taille de stockage du mail et de ses redondances ramenée à la capacité de stockage 
     Besoin d'explications sur cette formule ..
 
-data center . construction . émetteur . stockage . facteur d'allocation . taille mails:
+data center . construction . émetteur . facteur d'allocation stockage . taille mails:
   formule: taille * redondances sauvegarde émetteur
   unité: Mo
 
-data center . construction . émetteur . stockage . facteur d'allocation . ratio total:
-  formule: durée stockage mail / (serveur . capacité * stockage . durée de vie)
-
-data center . construction . émetteur . équipements support:
-  formule: facteur d'allocation * équipements support . construction
-
-data center . construction . émetteur . équipements support . facteur d'allocation:
-  formule: 0.68 m2 * serveur . facteur d'allocation * serveur . durée de vie / équipements support . durée de vie
-  note: formule me semble fausse, pourquoi inclure la durée de vie du serveur ?
-  référence: |
-    "Allocation au m2 utilisé par serveur, en considérant 0,68m de salle IT par serveur (données APL Datacenter basées sur une moyenne du marché)
-    Sont exclus les consommations de fioul, d'eau et les fuites frigorigènes, négligeables."
+data center . construction . émetteur . facteur d'allocation stockage . ratio total:
+  formule: durée stockage mail / (serveur . capacité * taux moyen de remplissage du stockage * stockage . durée de vie)
 
 data center . construction . récepteur:
   formule:
     recalcul:
       règle: construction . émetteur
       avec:
-        construction . émetteur . stockage . facteur d'allocation . taille mails: taille * redondances sauvegarde récepteur * destinataires
+        data center . construction . émetteur . facteur d'allocation stockage . taille mails: taille * redondances sauvegarde récepteur * destinataires
 
 data center . usage:
   formule:
@@ -435,7 +392,7 @@ data center . usage . émetteur:
   unité: gCO2e
 
 data center . usage . émetteur . consommation électricité réelle:
-  formule: consommation électricité * serveur . PUE / 1000
+  formule: consommation électricité * serveur . PUE mails / 1000
   unité: kWh
 
 data center . usage . émetteur . consommation électricité:
