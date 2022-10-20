@@ -167,35 +167,26 @@ terminaux . usage . consommation électricité par heure:
   formule:
     variations:
       - si: appareil = 'smartphone'
-        alors: consommation électricité par heure smartphone
+        alors: smartphone . consommation en mode actif
       - si: appareil = 'tablette'
-        alors: consommation électricité par heure tablette
+        alors: tablette . consommation en mode actif
       - si: appareil = 'ordinateur portable'
-        alors: consommation électricité par heure ordinateur portable
-      - si: appareil = 'TV'
-        alors: consommation électricité par heure TV
+        alors: ordinateur portable . consommation en mode actif
       - si: appareil = 'ordinateur et écran'
-        alors: consommation électricité par heure ordinateur et écran
-      - sinon: consommation électricité par heure moyenne
+        alors: ordinateur et écran . consommation en mode actif
+      - si: appareil = 'TV'
+        alors: TV . consommation en mode actif
+      - sinon: consommation en mode actif moyenne
   unité: Wh
 
-terminaux . usage . consommation électricité par heure smartphone: smartphone . consommation en mode actif
-terminaux . usage . consommation électricité par heure tablette: tablette . consommation en mode actif
-terminaux . usage . consommation électricité par heure ordinateur portable: ordinateur portable . consommation en mode actif
-terminaux . usage . consommation électricité par heure TV: TV . consommation en mode actif
-terminaux . usage . consommation électricité par heure ordinateur et écran:
+terminaux . usage . consommation en mode actif moyenne:
   formule:
     somme:
-      - ordinateur fixe . consommation en mode actif
-      - écran . consommation en mode actif
-terminaux . usage . consommation électricité par heure moyenne:
-  formule:
-    somme:
-      - appareil . moyenne utilisation ordinateur et écran * consommation électricité par heure ordinateur et écran
-      - appareil . moyenne utilisation ordinateur portable * consommation électricité par heure ordinateur portable
-      - appareil . moyenne utilisation tablette * consommation électricité par heure tablette
-      - appareil . moyenne utilisation smartphone * consommation électricité par heure smartphone
-      - appareil . moyenne utilisation TV * consommation électricité par heure TV
+      - appareil . moyenne utilisation ordinateur et écran * ordinateur et écran . consommation en mode actif
+      - appareil . moyenne utilisation ordinateur portable * ordinateur portable . consommation en mode actif
+      - appareil . moyenne utilisation tablette * tablette . consommation en mode actif
+      - appareil . moyenne utilisation smartphone * smartphone . consommation en mode actif
+      - appareil . moyenne utilisation TV * TV . consommation en mode actif
 
 transmission:
   formule: facteur réseau * taille
