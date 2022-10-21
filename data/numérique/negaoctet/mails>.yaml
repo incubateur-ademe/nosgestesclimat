@@ -69,12 +69,12 @@ terminaux . construction:
     recalcul:
       règle: construction réelle
       avec:
-        construction réelle . appareil: appareil
-        construction réelle . durée en heure: temps écriture en heure + temps lecture en heure
-        construction réelle . moyenne utilisation ordinateur et écran: appareil . moyenne utilisation ordinateur et écran
-        construction réelle . moyenne utilisation ordinateur portable: appareil . moyenne utilisation ordinateur portable
-        construction réelle . moyenne utilisation tablette: appareil . moyenne utilisation tablette
-        construction réelle . moyenne utilisation smartphone: appareil . moyenne utilisation smartphone
+        appareil par défaut: appareil
+        durée en heure par défaut: appareil . durée totale sollicitation
+        moyenne utilisation ordinateur et écran par défaut: appareil . moyenne utilisation ordinateur et écran
+        moyenne utilisation ordinateur portable par défaut: appareil . moyenne utilisation ordinateur portable
+        moyenne utilisation tablette par défaut: appareil . moyenne utilisation tablette
+        moyenne utilisation smartphone par défaut: appareil . moyenne utilisation smartphone
         ordinateur et écran . durée de vie par défaut: appareil . ordinateur et écran . durée de vie
         ordinateur portable . durée de vie par défaut: appareil . ordinateur portable . durée de vie
         tablette . durée de vie par défaut: appareil . tablette . durée de vie
@@ -103,6 +103,9 @@ appareil . moyenne utilisation ordinateur et écran: 24%
 appareil . moyenne utilisation ordinateur portable: 24%
 appareil . moyenne utilisation tablette: 8%
 appareil . moyenne utilisation smartphone: 45%
+
+appareil . durée totale sollicitation:
+  formule: terminaux . temps écriture en heure + terminaux . temps lecture en heure
 
 appareil . smartphone . durée de vie:
   titre: Durée de vie smartphone
@@ -158,65 +161,16 @@ terminaux . temps lecture en heure:
   unité: heure
 
 terminaux . usage:
-  formule: consommation électricité * facteur électricité
-  unité: gCO2e
-
-terminaux . usage . facteur électricité:
   formule:
-    variations:
-      - si: région = 'France'
-        alors: électricité . FE France
-      - si: région = 'Europe'
-        alors: électricité . FE Europe
-      - si: région = 'Chine'
-        alors: électricité . FE Chine
-      - si: région = 'USA'
-        alors: électricité . FE USA
-  unité: gCO2e/kWh
-
-terminaux . usage . région:
-  titre: Région d'utilisation du terminal
-  avec:
-    France:
-    Europe:
-    Chine:
-    USA:
-  question: Dans quelle zone géographique se situe le terminal ?
-  formule:
-    une possibilité:
-      choix obligatoire: oui
-      possibilités:
-        - France
-        - Europe
-        - Chine
-        - USA
-  par défaut: "'France'"
-
-terminaux . usage . consommation électricité:
-  formule: (temps écriture en heure + temps lecture en heure) * consommation électricité par heure / 1000
-  unité: kWh
-
-terminaux . usage . consommation électricité par heure:
-  formule:
-    variations:
-      - si: appareil = 'smartphone'
-        alors: smartphone . consommation en mode actif
-      - si: appareil = 'tablette'
-        alors: tablette . consommation en mode actif
-      - si: appareil = 'ordinateur portable'
-        alors: ordinateur portable . consommation en mode actif
-      - si: appareil = 'ordinateur et écran'
-        alors: ordinateur et écran . consommation en mode actif
-      - sinon: consommation en mode actif moyenne
-  unité: Wh
-
-terminaux . usage . consommation en mode actif moyenne:
-  formule:
-    somme:
-      - appareil . moyenne utilisation ordinateur et écran * ordinateur et écran . consommation en mode actif
-      - appareil . moyenne utilisation ordinateur portable * ordinateur portable . consommation en mode actif
-      - appareil . moyenne utilisation tablette * tablette . consommation en mode actif
-      - appareil . moyenne utilisation smartphone * smartphone . consommation en mode actif
+    recalcul:
+      règle: usage réel
+      avec:
+        appareil par défaut: appareil
+        durée en heure par défaut: appareil . durée totale sollicitation
+        moyenne utilisation ordinateur et écran par défaut: appareil . moyenne utilisation ordinateur et écran
+        moyenne utilisation ordinateur portable par défaut: appareil . moyenne utilisation ordinateur portable
+        moyenne utilisation tablette par défaut: appareil . moyenne utilisation tablette
+        moyenne utilisation smartphone par défaut: appareil . moyenne utilisation smartphone
 
 transmission:
   formule:

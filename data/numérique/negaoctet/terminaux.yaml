@@ -3,60 +3,108 @@ construction réelle:
     produit:
       assiette:
         variations:
-          - si: appareil = 'smartphone'
+          - si: appareil par défaut = 'smartphone'
             alors: smartphone
-          - si: appareil = 'tablette'
+          - si: appareil par défaut = 'tablette'
             alors: tablette
-          - si: appareil = 'ordinateur portable'
+          - si: appareil par défaut = 'ordinateur portable'
             alors: ordinateur portable
-          - si: appareil = 'TV'
+          - si: appareil par défaut = 'TV'
             alors: TV
-          - si: appareil = 'ordinateur et écran'
+          - si: appareil par défaut = 'ordinateur et écran'
             alors: ordinateur et écran
-          - si: appareil = 'moyenne'
+          - si: appareil par défaut = 'moyenne'
             alors: moyenne
-      facteur: nombre terminaux
   unité: gCO2e
-
-construction réelle . nombre terminaux:
-  par défaut: 1
-
-construction réelle . appareil:
-  par défaut: "'moyenne'"
 
 construction réelle . moyenne:
   formule:
     somme:
-      - moyenne utilisation ordinateur et écran * ordinateur et écran
-      - moyenne utilisation ordinateur portable * ordinateur portable
-      - moyenne utilisation tablette * tablette
-      - moyenne utilisation smartphone * smartphone
-      - moyenne utilisation TV * TV
-
-construction réelle . moyenne utilisation ordinateur et écran: 0%
-construction réelle . moyenne utilisation ordinateur portable: 0%
-construction réelle . moyenne utilisation tablette: 0%
-construction réelle . moyenne utilisation smartphone: 0%
-construction réelle . moyenne utilisation TV: 0%
-
-construction réelle . durée en heure:
-  formule: 0
-  unité: heure
+      - moyenne utilisation ordinateur et écran par défaut * ordinateur et écran
+      - moyenne utilisation ordinateur portable par défaut * ordinateur portable
+      - moyenne utilisation tablette par défaut * tablette
+      - moyenne utilisation smartphone par défaut * smartphone
+      - moyenne utilisation TV par défaut * TV
 
 construction réelle . smartphone:
-  formule: smartphone . construction * (durée en heure / smartphone . durée d'usage)
+  formule: smartphone . construction * (durée en heure par défaut / smartphone . durée d'usage)
 
 construction réelle . tablette:
-  formule: tablette . construction * (durée en heure / tablette . durée d'usage)
+  formule: tablette . construction * (durée en heure par défaut / tablette . durée d'usage)
 
 construction réelle . ordinateur portable:
-  formule: ordinateur portable . construction * (durée en heure / ordinateur portable . durée d'usage)
+  formule: ordinateur portable . construction * (durée en heure par défaut / ordinateur portable . durée d'usage)
 
 construction réelle . TV:
-  formule: TV . construction * (durée en heure / TV . durée d'usage)
+  formule: TV . construction * (durée en heure par défaut / TV . durée d'usage)
 
 construction réelle . ordinateur et écran:
-  formule: ordinateur et écran . construction * (durée en heure / ordinateur et écran . durée d'usage)
+  formule: ordinateur et écran . construction * (durée en heure par défaut / ordinateur et écran . durée d'usage)
+
+usage réel:
+  formule: consommation électricité * facteur électricité
+  unité: gCO2e
+
+usage réel . facteur électricité:
+  formule:
+    variations:
+      - si: région = 'France'
+        alors: électricité . FE France
+      - si: région = 'Europe'
+        alors: électricité . FE Europe
+      - si: région = 'Chine'
+        alors: électricité . FE Chine
+      - si: région = 'USA'
+        alors: électricité . FE USA
+  unité: gCO2e/kWh
+
+usage réel . région:
+  par défaut: "'France'"
+
+usage réel . consommation électricité:
+  formule: durée en heure par défaut * consommation électricité par heure / 1000
+  unité: kWh
+
+usage réel . consommation électricité par heure:
+  formule:
+    variations:
+      - si: appareil par défaut = 'smartphone'
+        alors: smartphone . consommation en mode actif
+      - si: appareil par défaut = 'tablette'
+        alors: tablette . consommation en mode actif
+      - si: appareil par défaut = 'ordinateur portable'
+        alors: ordinateur portable . consommation en mode actif
+      - si: appareil par défaut = 'ordinateur et écran'
+        alors: ordinateur et écran . consommation en mode actif
+      - si: appareil par défaut = 'TV'
+        alors: TV . consommation en mode actif
+      - sinon: consommation en mode actif moyenne
+  unité: Wh
+
+usage réel . consommation en mode actif moyenne:
+  formule:
+    somme:
+      - moyenne utilisation ordinateur et écran par défaut * ordinateur et écran . consommation en mode actif
+      - moyenne utilisation ordinateur portable par défaut * ordinateur portable . consommation en mode actif
+      - moyenne utilisation tablette par défaut * tablette . consommation en mode actif
+      - moyenne utilisation smartphone par défaut * smartphone . consommation en mode actif
+      - moyenne utilisation TV par défaut * TV . consommation en mode actif
+
+appareil par défaut:
+  par défaut: "'moyenne'"
+durée en heure par défaut:
+  par défaut: 0
+  unité: heure
+moyenne utilisation ordinateur et écran par défaut:
+  par défaut: 0%
+moyenne utilisation ordinateur portable par défaut:
+  par défaut: 0%
+moyenne utilisation tablette par défaut:
+  par défaut: 0%
+moyenne utilisation smartphone par défaut:
+  par défaut: 0%
+moyenne utilisation TV par défaut:
+  par défaut: 0%
 
 smartphone:
 smartphone . construction:
