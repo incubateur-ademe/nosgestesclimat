@@ -227,30 +227,25 @@ transmission:
   unité: gCO2e
 
 transmission . émetteur:
-  formule: facteur réseau * taille en Go
-  unité: gCO2e
-
-transmission . émetteur . facteur réseau:
-  titre: Facteur réseau transmission émetteur
   formule:
-    variations:
-      - si: réseau = 'fixe FR'
-        alors: facteur réseau fixe FR
-      - si: réseau = 'mobile FR'
-        alors: facteur réseau mobile FR
-      - si: réseau = 'fixe EU'
-        alors: facteur réseau fixe EU
-      - si: réseau = 'mobile EU'
-        alors: facteur réseau mobile EU
-  unité: gCO2e/Go
+    recalcul:
+      règle: transmission par défaut
+      avec:
+        taille par défaut: taille en Go
+        réseau par défaut: réseau
+  unité: gCO2e
 
 transmission . émetteur . réseau:
   titre: Type de réseau utilisé pour l'émission
   avec:
     fixe FR:
+      titre: Réseau fixe en France
     mobile FR:
+      titre: Réseau mobile en France
     fixe EU:
+      titre: Réseau fixe en Europe
     mobile EU:
+      titre: Réseau mobile en Europe
   question: Utilisez-vous le réseau fixe ou mobile ?
   formule:
     une possibilité:
@@ -263,24 +258,25 @@ transmission . émetteur . réseau:
   par défaut: "'fixe FR'"
 
 transmission . récepteur:
-  titre: Facteur réseau transmission récepteur
-  formule: destinataires * facteur réseau * taille en Go
-  unité: gCO2e
-
-transmission . récepteur . facteur réseau:
   formule:
     recalcul:
-      règle: émetteur . facteur réseau
+      règle: transmission par défaut
       avec:
-        réseau: réseau
+        taille par défaut: destinataires * taille en Go
+        réseau par défaut: réseau
+  unité: gCO2e
 
 transmission . récepteur . réseau:
   titre: Type de réseau utilisé pour le réception
   avec:
     fixe FR:
+      titre: Réseau fixe en France
     mobile FR:
+      titre: Réseau mobile en France
     fixe EU:
+      titre: Réseau fixe en Europe
     mobile EU:
+      titre: Réseau mobile en Europe
   question: Utilisez-vous le réseau fixe ou mobile ?
   formule:
     une possibilité:
