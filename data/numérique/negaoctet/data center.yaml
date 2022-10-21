@@ -1,0 +1,134 @@
+serveur:
+
+serveur . puissance:
+  formule: 367
+  unité: W
+  note: source Borderstep
+
+serveur . puissance par utilisateur:
+  formule: 0.22
+  unité: W
+  note: Source Google’s Green Computing Efficiency at Scale (GMAIL)
+
+serveur . nombre d'utilisateurs par serveur:
+  formule: puissance / puissance par utilisateur
+
+serveur . PUE mails:
+  formule: 1.16
+  note: power usage effectiveness Source Google’s Green Computing Efficiency at Scale (GMAIL)
+
+serveur . PUE streaming:
+  formule: 1.3
+  note: hypothèse
+
+serveur . capacité:
+  formule: 3.5524 * 1024 * 1024
+  unité: Mo
+  note: pas de source..
+
+serveur . construction:
+  formule: 748000
+  unité: gCO2e
+serveur . durée de vie:
+  par défaut: 5
+  unité: an
+
+firewall:
+firewall . construction:
+  formule: 355000
+  unité: gCO2e
+firewall . durée de vie:
+  par défaut: 5
+  unité: an
+
+switch:
+switch . construction:
+  formule: 367000
+  unité: gCO2e
+switch . durée de vie:
+  par défaut: 5
+  unité: an
+
+routeur:
+routeur . construction:
+  formule: 41200
+  unité: gCO2e
+routeur . durée de vie:
+  par défaut: 5
+  unité: an
+
+stockage:
+stockage . construction:
+  formule: 144000
+  unité: gCO2e
+stockage . durée de vie:
+  par défaut: 5
+  unité: an
+stockage . puissance en mode actif:
+  formule: 6
+  unité: W
+
+équipements support:
+équipements support . construction:
+  formule: 187000
+  unité: gCO2e/m2
+équipements support . durée de vie:
+  par défaut: 25
+  unité: an
+
+construction data center:
+  formule:
+    somme:
+      - firewall
+      - switch
+      - routeur
+      - serveur
+      - stockage
+      - équipements support
+  unité: gCO2e
+
+construction data center . serveur:
+  formule: facteur d'allocation * serveur . construction
+
+construction data center . serveur . facteur d'allocation:
+  formule: 0
+  note: A remplacer dans le recalcul
+
+construction data center . firewall:
+  formule: facteur d'allocation * firewall . construction
+
+construction data center . firewall . facteur d'allocation:
+  formule: 0.0358 * serveur . facteur d'allocation
+  référence: considérant 0,0358 firewall par serveur (données APL Datacenter basées sur une moyenne du marché)
+
+construction data center . switch:
+  formule: facteur d'allocation * switch . construction
+
+construction data center . switch . facteur d'allocation:
+  formule: 1.468 * serveur . facteur d'allocation
+  référence: considérant 1,468 switchs par serveur (données APL Datacenter basées sur une moyenne du marché)
+
+construction data center . routeur:
+  formule: facteur d'allocation * routeur . construction
+
+construction data center . routeur . facteur d'allocation:
+  formule: 0.286 * serveur . facteur d'allocation
+  référence: considérant 0,286 routeurs par serveur (données APL Datacenter basées sur une moyenne du marché)
+
+construction data center . stockage:
+  formule: facteur d'allocation * stockage . construction
+  unité: gCO2e
+
+construction data center . stockage . facteur d'allocation:
+  formule: 0
+  note: A remplacer dans le recalcul
+
+construction data center . équipements support:
+  formule: facteur d'allocation * équipements support . construction
+
+construction data center . équipements support . facteur d'allocation:
+  formule: 0.68 m2 * serveur . facteur d'allocation * serveur . durée de vie / équipements support . durée de vie
+  note: formule me semble fausse, pourquoi inclure la durée de vie du serveur ?
+  référence: |
+    "Allocation au m2 utilisé par serveur, en considérant 0,68m de salle IT par serveur (données APL Datacenter basées sur une moyenne du marché)
+    Sont exclus les consommations de fioul, d'eau et les fuites frigorigènes, négligeables."

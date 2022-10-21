@@ -58,6 +58,32 @@ emplacements:
   question: Combien d'appareils sont connectées à la visio ?
   par défaut: 2
 
+terminaux:
+  formule:
+    somme:
+      - construction
+      - usage
+  unité: gCO2e
+
+terminaux . construction:
+  formule:
+    recalcul:
+      règle: construction réelle
+      avec:
+        construction réelle . nombre terminaux: emplacements
+        construction réelle . appareil: appareil
+        construction réelle . durée en heure: durée en heure
+        construction réelle . moyenne utilisation ordinateur et écran: appareil . moyenne utilisation ordinateur et écran
+        construction réelle . moyenne utilisation ordinateur portable: appareil . moyenne utilisation ordinateur portable
+        construction réelle . moyenne utilisation tablette: appareil . moyenne utilisation tablette
+        construction réelle . moyenne utilisation smartphone: appareil . moyenne utilisation smartphone
+        construction réelle . moyenne utilisation TV: appareil . moyenne utilisation TV
+        ordinateur et écran . durée de vie par défaut: appareil . ordinateur et écran . durée de vie
+        ordinateur portable . durée de vie par défaut: appareil . ordinateur portable . durée de vie
+        tablette . durée de vie par défaut: appareil . tablette . durée de vie
+        smartphone . durée de vie par défaut: appareil . smartphone . durée de vie
+        TV . durée de vie par défaut: appareil . TV . durée de vie
+
 appareil:
   titre: Appareil utilisé
   avec:
@@ -77,7 +103,7 @@ appareil:
         - tablette
         - smartphone
         - TV
-  par défaut: "'moyenne'" # default value has to be set to make sure rules using "appareil" are defined
+    par défaut: "'moyenne'" # default value has to be set to make sure rules using "appareil" are defined
 
 appareil . moyenne utilisation ordinateur et écran: 0%
 appareil . moyenne utilisation ordinateur portable: 100%
@@ -85,58 +111,30 @@ appareil . moyenne utilisation tablette: 0%
 appareil . moyenne utilisation smartphone: 0%
 appareil . moyenne utilisation TV: 0%
 
-terminaux:
-  formule:
-    somme:
-      - construction
-      - usage
-  unité: gCO2e
+appareil . smartphone . durée de vie:
+  question: Quelle est la durée de vie du smartphone ?
+  unité: an
+  par défaut: smartphone . durée de vie par défaut
 
-terminaux . construction:
-  formule:
-    produit:
-      assiette:
-        variations:
-          - si: appareil = 'smartphone'
-            alors: smartphone
-          - si: appareil = 'tablette'
-            alors: tablette
-          - si: appareil = 'ordinateur portable'
-            alors: ordinateur portable
-          - si: appareil = 'ordinateur et écran'
-            alors: ordinateur et écran
-          - si: appareil = 'TV'
-            alors: TV
-          - sinon: construction moyenne
-      facteur: emplacements
-  unité: gCO2e
+appareil . tablette . durée de vie:
+  question: Quelle est la durée de vie de la tablette ?
+  unité: an
+  par défaut: tablette . durée de vie par défaut
 
-terminaux . construction . smartphone:
-  formule: smartphone . construction * (durée en heure / smartphone . durée d'usage)
+appareil . ordinateur portable . durée de vie:
+  question: Quelle est la durée de vie de l'ordinateur portable ?
+  unité: an
+  par défaut: ordinateur portable . durée de vie par défaut
 
-terminaux . construction . tablette:
-  formule: tablette . construction * (durée en heure / tablette . durée d'usage)
+appareil . TV . durée de vie:
+  question: Quelle est la durée de vie de la TV ?
+  unité: an
+  par défaut: TV . durée de vie par défaut
 
-terminaux . construction . ordinateur portable:
-  formule: ordinateur portable . construction * (durée en heure / ordinateur portable . durée d'usage)
-
-terminaux . construction . ordinateur et écran:
-  formule:
-    somme:
-      - ordinateur fixe . construction * (durée en heure / ordinateur fixe . durée d'usage)
-      - écran . construction * (durée en heure / écran . durée d'usage)
-
-terminaux . construction . TV:
-  formule: TV . construction * (durée en heure / TV . durée d'usage)
-
-terminaux . construction . construction moyenne:
-  formule:
-    somme:
-      - appareil . moyenne utilisation ordinateur et écran * ordinateur et écran
-      - appareil . moyenne utilisation ordinateur portable * ordinateur portable
-      - appareil . moyenne utilisation tablette * tablette
-      - appareil . moyenne utilisation smartphone * smartphone
-      - appareil . moyenne utilisation smartphone * TV
+appareil . ordinateur et écran . durée de vie:
+  question: Quelle est la durée de vie de votre ordinateur et écran ?
+  unité: an
+  par défaut: ordinateur et écran . durée de vie par défaut
 
 terminaux . usage:
   formule: emplacements * consommation électricité * facteur électricité

@@ -1,0 +1,196 @@
+construction réelle:
+  formule:
+    produit:
+      assiette:
+        variations:
+          - si: appareil = 'smartphone'
+            alors: smartphone
+          - si: appareil = 'tablette'
+            alors: tablette
+          - si: appareil = 'ordinateur portable'
+            alors: ordinateur portable
+          - si: appareil = 'TV'
+            alors: TV
+          - si: appareil = 'ordinateur et écran'
+            alors: ordinateur et écran
+          - si: appareil = 'moyenne'
+            alors: moyenne
+      facteur: nombre terminaux
+  unité: gCO2e
+
+construction réelle . nombre terminaux:
+  par défaut: 1
+
+construction réelle . appareil:
+  par défaut: "'moyenne'"
+
+construction réelle . moyenne:
+  formule:
+    somme:
+      - moyenne utilisation ordinateur et écran * ordinateur et écran
+      - moyenne utilisation ordinateur portable * ordinateur portable
+      - moyenne utilisation tablette * tablette
+      - moyenne utilisation smartphone * smartphone
+      - moyenne utilisation TV * TV
+
+construction réelle . moyenne utilisation ordinateur et écran: 0%
+construction réelle . moyenne utilisation ordinateur portable: 0%
+construction réelle . moyenne utilisation tablette: 0%
+construction réelle . moyenne utilisation smartphone: 0%
+construction réelle . moyenne utilisation TV: 0%
+
+construction réelle . durée en heure:
+  formule: 0
+  unité: heure
+
+construction réelle . smartphone:
+  formule: smartphone . construction * (durée en heure / smartphone . durée d'usage)
+
+construction réelle . tablette:
+  formule: tablette . construction * (durée en heure / tablette . durée d'usage)
+
+construction réelle . ordinateur portable:
+  formule: ordinateur portable . construction * (durée en heure / ordinateur portable . durée d'usage)
+
+construction réelle . TV:
+  formule: TV . construction * (durée en heure / TV . durée d'usage)
+
+construction réelle . ordinateur et écran:
+  formule: ordinateur et écran . construction * (durée en heure / ordinateur et écran . durée d'usage)
+
+smartphone:
+smartphone . construction:
+  formule: 82730
+  unité: gCO2e
+
+smartphone . durée d'usage:
+  formule: jours par an * durée de vie par défaut * profil utilisation
+  unité: heure
+
+smartphone . durée de vie par défaut:
+  par défaut: 2
+  unité: an
+
+smartphone . profil utilisation:
+  formule: 2.68
+  unité: heure/jour
+
+smartphone . consommation en mode actif:
+  formule: 5.6
+  unité: Wh
+
+tablette:
+tablette . construction:
+  formule: 97020
+  unité: gCO2e
+
+tablette . durée d'usage:
+  formule: jours par an * durée de vie par défaut * profil utilisation
+  unité: heure
+
+tablette . durée de vie par défaut:
+  par défaut: 3
+  unité: an
+
+tablette . profil utilisation:
+  formule: 3.45
+  unité: heure/jour
+
+tablette . consommation en mode actif:
+  formule: 15
+  unité: Wh
+
+ordinateur portable:
+ordinateur portable . construction:
+  formule: 173769
+  unité: gCO2e
+
+ordinateur portable . durée d'usage:
+  formule: jours par an * durée de vie par défaut * profil utilisation
+  unité: heure
+
+ordinateur portable . durée de vie par défaut:
+  par défaut: 4
+  unité: an
+
+ordinateur portable . profil utilisation:
+  formule: 3.45
+  unité: heure/jour
+
+ordinateur portable . consommation en mode actif:
+  formule: 25
+  unité: Wh
+
+TV:
+TV . construction:
+  formule: 177000
+  unité: gCO2e
+
+TV . durée d'usage:
+  formule: jours par an * durée de vie par défaut * profil utilisation
+  unité: heure
+
+TV . durée de vie par défaut:
+  par défaut: 6
+  unité: an
+
+TV . profil utilisation:
+  formule: 2.78
+  unité: heure/jour
+
+TV . consommation en mode actif:
+  formule: 65
+  unité: Wh
+
+ordinateur fixe:
+ordinateur fixe . construction:
+  formule: 267428.5
+  unité: gCO2e
+
+ordinateur fixe . durée de vie par défaut:
+  par défaut: 6
+  unité: an
+
+ordinateur fixe . consommation en mode actif:
+  formule: 50
+  unité: Wh
+
+écran:
+écran . construction:
+  formule: 62797.2
+  unité: gCO2e
+
+écran . durée de vie par défaut:
+  par défaut: 6
+  unité: an
+
+écran . consommation en mode actif:
+  formule: 30
+  unité: Wh
+
+ordinateur et écran:
+ordinateur et écran . construction:
+  formule:
+    somme:
+      - ordinateur fixe . construction
+      - écran . construction
+  unité: gCO2e
+
+ordinateur et écran . durée d'usage:
+  formule: jours par an * durée de vie par défaut * profil utilisation
+  unité: heure
+
+ordinateur et écran . durée de vie par défaut:
+  par défaut: (ordinateur fixe . durée de vie par défaut + écran . durée de vie par défaut) / 2
+  unité: an
+
+ordinateur et écran . profil utilisation:
+  formule: 3.45
+  unité: heure/jour
+
+ordinateur et écran . consommation en mode actif:
+  formule:
+    somme:
+      - ordinateur fixe . consommation en mode actif
+      - écran . consommation en mode actif
+  unité: Wh

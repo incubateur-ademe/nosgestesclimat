@@ -58,6 +58,28 @@ nombre de mails envoyés et reçus par jour et par personne:
   par défaut: 117.7
   référence: Email Statistics Report, 2015-2019, The Radicati group
 
+terminaux:
+  formule:
+    somme:
+      - construction
+      - usage
+
+terminaux . construction:
+  formule:
+    recalcul:
+      règle: construction réelle
+      avec:
+        construction réelle . appareil: appareil
+        construction réelle . durée en heure: temps écriture en heure + temps lecture en heure
+        construction réelle . moyenne utilisation ordinateur et écran: appareil . moyenne utilisation ordinateur et écran
+        construction réelle . moyenne utilisation ordinateur portable: appareil . moyenne utilisation ordinateur portable
+        construction réelle . moyenne utilisation tablette: appareil . moyenne utilisation tablette
+        construction réelle . moyenne utilisation smartphone: appareil . moyenne utilisation smartphone
+        ordinateur et écran . durée de vie par défaut: appareil . ordinateur et écran . durée de vie
+        ordinateur portable . durée de vie par défaut: appareil . ordinateur portable . durée de vie
+        tablette . durée de vie par défaut: appareil . tablette . durée de vie
+        smartphone . durée de vie par défaut: appareil . smartphone . durée de vie
+
 appareil:
   titre: Appareil utilisé
   avec:
@@ -82,25 +104,25 @@ appareil . moyenne utilisation ordinateur portable: 24%
 appareil . moyenne utilisation tablette: 8%
 appareil . moyenne utilisation smartphone: 45%
 
-terminaux:
-  formule:
-    somme:
-      - construction
-      - usage
+appareil . smartphone . durée de vie:
+  question: Quelle est la durée de vie du smartphone ?
+  unité: an
+  par défaut: smartphone . durée de vie par défaut
 
-terminaux . construction:
-  formule:
-    variations:
-      - si: appareil = 'smartphone'
-        alors: smartphone
-      - si: appareil = 'tablette'
-        alors: tablette
-      - si: appareil = 'ordinateur portable'
-        alors: ordinateur portable
-      - si: appareil = 'ordinateur et écran'
-        alors: ordinateur et écran
-      - sinon: construction moyenne
-  unité: gCO2e
+appareil . tablette . durée de vie:
+  question: Quelle est la durée de vie de la tablette ?
+  unité: an
+  par défaut: tablette . durée de vie par défaut
+
+appareil . ordinateur portable . durée de vie:
+  question: Quelle est la durée de vie de l'ordinateur portable ?
+  unité: an
+  par défaut: ordinateur portable . durée de vie par défaut
+
+appareil . ordinateur et écran . durée de vie:
+  question: Quelle est la durée de vie de votre ordinateur et écran ?
+  unité: an
+  par défaut: ordinateur et écran . durée de vie par défaut
 
 terminaux . temps écriture:
   titre: Temps d'écriture du mail
@@ -130,29 +152,6 @@ terminaux . temps lecture total:
 terminaux . temps lecture en heure:
   formule: temps lecture total / 60
   unité: heure
-
-terminaux . construction . smartphone:
-  formule: smartphone . construction * ((temps écriture en heure + temps lecture en heure) / smartphone . durée d'usage)
-
-terminaux . construction . tablette:
-  formule: tablette . construction * ((temps écriture en heure + temps lecture en heure) / tablette . durée d'usage)
-
-terminaux . construction . ordinateur portable:
-  formule: ordinateur portable . construction * ((temps écriture en heure + temps lecture en heure) / ordinateur portable . durée d'usage)
-
-terminaux . construction . ordinateur et écran:
-  formule:
-    somme:
-      - ordinateur fixe . construction * ((temps écriture en heure + temps lecture en heure) / ordinateur fixe . durée d'usage)
-      - écran . construction * ((temps écriture en heure + temps lecture en heure) / écran . durée d'usage)
-
-terminaux . construction . construction moyenne:
-  formule:
-    somme:
-      - appareil . moyenne utilisation ordinateur et écran * ordinateur et écran
-      - appareil . moyenne utilisation ordinateur portable * ordinateur portable
-      - appareil . moyenne utilisation tablette * tablette
-      - appareil . moyenne utilisation smartphone * smartphone
 
 terminaux . usage:
   formule: consommation électricité * facteur électricité
@@ -348,7 +347,7 @@ data center . construction . émetteur . facteur d'allocation serveur:
 data center . construction . émetteur . facteur d'allocation stockage:
   formule: taille mails * ratio total
   note: |
-    Negaoctet : Allocation à la taille de stockage du mail et de ses redondances ramenée à la capacité de stockage 
+    Negaoctet : Allocation à la taille de stockage du mail et de ses redondances ramenée à la capacité de stockage
     Besoin d'explications sur cette formule ..
 
 data center . construction . émetteur . facteur d'allocation stockage . taille mails:
