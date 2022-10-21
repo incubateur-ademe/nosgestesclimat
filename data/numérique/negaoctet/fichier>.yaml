@@ -1,0 +1,120 @@
+index:
+  formule:
+    somme:
+      - transmission
+      - data center
+  unité: gCO2e
+  note: |
+    Les terminaux ne sont pas pris en compte 
+    (hypothèse : le téléchargement / l'upload de fichier se fait en tâche de fond, en même temps que d'autres actions)
+
+taille:
+  titre: Taille de mail
+  question: Quelle est la taille du mail (en Go)?
+  par défaut: 1
+  unité: Go
+
+transmission:
+  formule: facteur réseau * taille
+  unité: gCO2e
+
+transmission . facteur réseau:
+  formule:
+    variations:
+      - si: réseau = 'fixe FR'
+        alors: facteur réseau fixe FR
+      - si: réseau = 'mobile FR'
+        alors: facteur réseau mobile FR
+      - si: réseau = 'fixe EU'
+        alors: facteur réseau fixe EU
+      - si: réseau = 'mobile EU'
+        alors: facteur réseau mobile EU
+  unité: gCO2e/Go
+
+transmission . réseau:
+  titre: Type de réseau utilisé
+  avec:
+    fixe FR:
+    mobile FR:
+    fixe EU:
+    mobile EU:
+  question: Utilisez-vous le réseau fixe ou mobile ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - fixe FR
+        - mobile FR
+        - fixe EU
+        - mobile EU
+  par défaut: "'fixe FR'"
+
+data center:
+  formule:
+    somme:
+      - construction
+      - usage
+  unité: gCO2e
+
+data center . construction:
+  formule:
+    recalcul:
+      règle: construction data center
+      avec:
+        construction data center . serveur . facteur d'allocation: facteur allocation serveur
+        construction data center . stockage . facteur d'allocation: 0
+  note: Stockage non pris en compte, considérant que le fichier peut être partagé par un grand nombre de personnes
+
+data center . facteur allocation serveur:
+  formule: streaming . data center . nombre de serveurs / streaming . data center . volume total de transfert de données / serveur . durée de vie
+  note: Idem streaming
+
+data center . usage:
+  formule: consommation électricité * facteur électricité
+  unité: gCO2e
+  note: |
+    La quantité de serveur dédié pour l'upload d'un fichier n'étant pas connue, 
+    il a été considéré par hypothèse que celle-ci est similaire à celle de la vidéo en ligne.
+
+data center . usage . facteur électricité:
+  formule:
+    variations:
+      - si: région = 'France'
+        alors: électricité . FE France
+      - si: région = 'Europe'
+        alors: électricité . FE Europe
+      - si: région = 'Chine'
+        alors: électricité . FE Chine
+      - si: région = 'USA'
+        alors: électricité . FE USA
+  unité: gCO2e/kWh
+
+data center . usage . région:
+  titre: Région d'utilisation du data center
+  avec:
+    France:
+    Europe:
+    Chine:
+    USA:
+  question: Dans quelle zone géographique se situe le data center ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - France
+        - Europe
+        - Chine
+        - USA
+  par défaut: "'France'"
+
+data center . usage . consommation électricité:
+  formule: taille * électricité par Go en Wh / 1000
+  unité: kWh
+
+data center . usage . électricité par Go en Wh:
+  formule: électricité par Go * 1000000
+  unité: Wh/Go
+
+data center . usage . électricité par Go:
+  formule: streaming . data center . usage . électricité par Go
+  unité: MWh/Go
