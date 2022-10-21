@@ -132,3 +132,27 @@ construction data center . équipements support . facteur d'allocation:
   référence: |
     "Allocation au m2 utilisé par serveur, en considérant 0,68m de salle IT par serveur (données APL Datacenter basées sur une moyenne du marché)
     Sont exclus les consommations de fioul, d'eau et les fuites frigorigènes, négligeables."
+
+usage data center:
+  formule: consommation électricité * facteur électricité
+  unité: gCO2e
+
+usage data center . consommation électricité:
+  par défaut: 0
+  unité: kWh
+
+usage data center . région:
+  par défaut: "'France'"
+
+usage data center . facteur électricité:
+  formule:
+    variations:
+      - si: région = 'France'
+        alors: électricité . FE France
+      - si: région = 'Europe'
+        alors: électricité . FE Europe
+      - si: région = 'Chine'
+        alors: électricité . FE Chine
+      - si: région = 'USA'
+        alors: électricité . FE USA
+  unité: gCO2e/kWh

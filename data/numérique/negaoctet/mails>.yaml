@@ -325,19 +325,6 @@ data center . usage:
       - récepteur
   unité: gCO2e
 
-data center . usage . facteur électricité:
-  formule:
-    variations:
-      - si: région = 'France'
-        alors: électricité . FE France
-      - si: région = 'Europe'
-        alors: électricité . FE Europe
-      - si: région = 'Chine'
-        alors: électricité . FE Chine
-      - si: région = 'USA'
-        alors: électricité . FE USA
-  unité: gCO2e/kWh
-
 data center . usage . région:
   titre: Région d'utilisation du data center
   avec:
@@ -357,7 +344,12 @@ data center . usage . région:
   par défaut: "'France'"
 
 data center . usage . émetteur:
-  formule: consommation électricité réelle * facteur électricité
+  formule:
+    recalcul:
+      règle: usage data center
+      avec:
+        usage data center . consommation électricité: consommation électricité réelle
+        usage data center . région: région
   unité: gCO2e
 
 data center . usage . émetteur . consommation électricité réelle:

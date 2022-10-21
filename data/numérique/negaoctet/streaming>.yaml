@@ -245,21 +245,13 @@ data center . construction:
 data center . construction . facteur d'allocation serveur: nombre de serveurs / nombre d'heures de visionnage par an / serveur . durée de vie
 
 data center . usage:
-  formule: consommation électricité * facteur électricité
-  unité: gCO2e
-
-data center . usage . facteur électricité:
   formule:
-    variations:
-      - si: région = 'France'
-        alors: électricité . FE France
-      - si: région = 'Europe'
-        alors: électricité . FE Europe
-      - si: région = 'Chine'
-        alors: électricité . FE Chine
-      - si: région = 'USA'
-        alors: électricité . FE USA
-  unité: gCO2e/kWh
+    recalcul:
+      règle: usage data center
+      avec:
+        usage data center . consommation électricité: consommation électricité
+        usage data center . région: région
+  unité: gCO2e
 
 data center . usage . région:
   titre: Région d'utilisation du data center
