@@ -1,0 +1,281 @@
+index:
+  formule:
+    somme:
+      - terminaux
+      - transmission
+      - data center
+  unité: gCO2e
+  note: |
+
+temps de saisie:
+  titre: Temps de saisie de la requête
+  question: Quelle est la durée de la saisie ?
+  par défaut: 50 / 60
+  unité: minute
+  référence: |
+    "Analyse comparée des impacts environnementaux de la communication par voie électronique - Volet requête web : Rapport final"
+    BioIS pour l'ADEME, 18 février 2011
+
+temps de saisie en heure:
+  formule: temps de saisie / 60
+  unité: heure
+
+taille de la requete:
+  titre: Taille de la requête
+  question: Quelle est la taille de la requete (en ko)?
+  par défaut: 16
+  unité: ko
+  note: Mesure Negaoctet
+
+taille de la requete en Mo:
+  formule: taille de la requete / 1024
+  unité: Mo
+
+taille de la requete en Go:
+  formule: taille de la requete / 1024 / 1024
+  unité: Go
+
+taille de la page:
+  titre: Taille de la page de résultats
+  question: Quelle est la taille de la page de résultats (en ko)?
+  par défaut: 144.5
+  unité: ko
+  référence: |
+    Basé sur la taille moyenne des pages des 10 recherches les plus effectuées en 2021 (source : google trends)
+
+taille de la page en Mo:
+  formule: taille de la page / 1024
+  unité: Mo
+
+taille de la page en Go:
+  formule: taille de la page / 1024 / 1024
+  unité: Go
+
+temps de consultation:
+  titre: Temps de consultation de la page de résultat
+  question: Quel est le temps de consultation de la page de résultat ?
+  par défaut: 1
+  unité: minute
+  référence: |
+    "Analyse comparée des impacts environnementaux de la communication par voie électronique - Volet requête web : Rapport final"
+    BioIS pour l'ADEME, 18 février 2011
+
+temps de consultation en heure:
+  formule: temps de consultation / 60
+  unité: heure
+
+nombre de pages de résultats lues:
+  titre: Nombre de pages de résultats consultées
+  question: Quel est le nombre de page de résultats consultées pour la recherche ?
+  par défaut: 1
+  référence: |
+    "Analyse comparée des impacts environnementaux de la communication par voie électronique - Volet requête web : Rapport final"
+    BioIS pour l'ADEME, 18 février 2011
+
+terminaux:
+  formule:
+    somme:
+      - construction
+      - usage
+  note: |
+    Cette étape comprend : 
+      - La sollicitation de l’ordinateur de l’utilisateur pendant la saisie de la requete (saisie des mots cles)
+      - La sollicitation de l’ordinateur de l’utilisateur pendant l’affichage de la page de resultats et la consultation des resultats
+
+terminaux . construction:
+  formule:
+    recalcul:
+      règle: construction réelle
+      avec:
+        appareil par défaut: appareil
+        durée en heure par défaut: appareil . durée totale sollicitation
+        moyenne utilisation ordinateur et écran par défaut: appareil . moyenne utilisation ordinateur et écran
+        moyenne utilisation ordinateur portable par défaut: appareil . moyenne utilisation ordinateur portable
+        moyenne utilisation tablette par défaut: appareil . moyenne utilisation tablette
+        moyenne utilisation smartphone par défaut: appareil . moyenne utilisation smartphone
+        ordinateur et écran . durée de vie par défaut: appareil . ordinateur et écran . durée de vie
+        ordinateur portable . durée de vie par défaut: appareil . ordinateur portable . durée de vie
+        tablette . durée de vie par défaut: appareil . tablette . durée de vie
+        smartphone . durée de vie par défaut: appareil . smartphone . durée de vie
+
+appareil:
+  titre: Appareil utilisé
+  avec:
+    ordinateur et écran:
+      titre: ordinateur fixe
+    ordinateur portable:
+    tablette:
+    smartphone:
+  question: Quel appareil utlisez-vous ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - ordinateur et écran
+        - ordinateur portable
+        - tablette
+        - smartphone
+  par défaut: "'moyenne'" #default value has to be set to make sure rules using "appareil" are defined
+
+appareil . moyenne utilisation ordinateur et écran: 24%
+appareil . moyenne utilisation ordinateur portable: 24%
+appareil . moyenne utilisation tablette: 8%
+appareil . moyenne utilisation smartphone: 45%
+
+appareil . durée totale sollicitation:
+  formule: temps de saisie en heure + temps de consultation en heure * nombre de pages de résultats lues
+  unité: heure
+
+appareil . smartphone . durée de vie:
+  titre: Durée de vie smartphone
+  question: Quelle est la durée de vie du smartphone ?
+  unité: an
+  par défaut: smartphone . durée de vie par défaut
+
+appareil . tablette . durée de vie:
+  titre: Durée de vie tablette
+  question: Quelle est la durée de vie de la tablette ?
+  unité: an
+  par défaut: tablette . durée de vie par défaut
+
+appareil . ordinateur portable . durée de vie:
+  titre: Durée de vie ordinateur portable
+  question: Quelle est la durée de vie de l'ordinateur portable ?
+  unité: an
+  par défaut: ordinateur portable . durée de vie par défaut
+
+appareil . ordinateur et écran . durée de vie:
+  titre: Durée de vie ordinateur et écran
+  question: Quelle est la durée de vie de votre ordinateur et écran ?
+  unité: an
+  par défaut: ordinateur et écran . durée de vie par défaut
+
+terminaux . usage:
+  formule:
+    recalcul:
+      règle: usage réel
+      avec:
+        appareil par défaut: appareil
+        durée en heure par défaut: appareil . durée totale sollicitation
+        moyenne utilisation ordinateur et écran par défaut: appareil . moyenne utilisation ordinateur et écran
+        moyenne utilisation ordinateur portable par défaut: appareil . moyenne utilisation ordinateur portable
+        moyenne utilisation tablette par défaut: appareil . moyenne utilisation tablette
+        moyenne utilisation smartphone par défaut: appareil . moyenne utilisation smartphone
+
+transmission:
+  formule:
+    recalcul:
+      règle: transmission par défaut
+      avec:
+        taille par défaut: (taille de la requete en Go + nombre de pages de résultats lues * taille de la page en Go)
+        réseau par défaut: réseau
+  unité: gCO2e
+  note: |
+    Cette étape comprend : 
+      - La transmission des informations relatives a la requête au sein de la boucle locale et du reseau Internet
+      - La transmission des informations d'affichage de la page de résutat au sein de la boucle locale et du reseau Internet
+
+transmission . réseau:
+  titre: Type de réseau utilisé
+  avec:
+    fixe FR:
+      titre: Réseau fixe en France
+    mobile FR:
+      titre: Réseau mobile en France
+    fixe EU:
+      titre: Réseau fixe en Europe
+    mobile EU:
+      titre: Réseau mobile en Europe
+  question: Utilisez-vous le réseau fixe ou mobile ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - fixe FR
+        - mobile FR
+        - fixe EU
+        - mobile EU
+  par défaut: "'fixe FR'"
+
+data center:
+  formule:
+    somme:
+      - construction
+      - usage
+  unité: gCO2e
+  note: |
+    Cette étape comprend :
+      - Le traitement des informations relatives a la requete au sein du Data Center du moteur de recherche
+      - Reception et transfert des informations via le routeur et serveur d’entree du Data Center ;
+      - Transfert des informations via des switchs (ou concentrateurs) et des serveurs assurant les fonctions firewall ;
+      - Recherche des resultats de la requete par les serveurs de calculs qui consultent les donnees indexees par le moteur de recherche (hypotheses : meme caracteristiques techniques que les serveurs de messagerie). Ces serveurs ont pour mission de recuperer les documents stockes (au sein des unites de stockage du moteur de recherche) correspondant a la requete et de generer des extraits decrivant les resultats obtenus. Il est difficile d’estimer le nombre de serveurs sollicites pour cette tache. D’apres nos echanges avec notamment avec Alain Heurtebise de Messaging Architects, un ordre de grandeur de 1000 serveurs a ete retenu pour le scenario de reference.
+      - Le traitement des informations permettant le renvoi des resultats depuis le Data Center du moteur de recherche
+      - Traitement des informations fournies par les serveurs de calculs au niveau du serveur de traitement de donnees ;
+      - Transfert des informations via des switchs (ou concentrateurs) et des serveurs assurant les fonctions firewall ;
+      - Transfert des informations via le routeur et serveur d’entree du Data Center ;
+
+data center . allocation serveur par Mo:
+  formule: 1 / 10052100000
+  note: |
+    "Allocation par rapport au volume d'information traité par les serveurs, avec :
+    Q informations traitées (Mo) = (taux de transfert des ports ethernet (Mo/s)) x 3600 x Temps d’utilisation (h/jr) x Taux moyen d’utilisation x Duree de vie en jours
+    Avec :
+    Taux de transfert des ports ethernet (Mo/s) : 255 Mo/s (basé sur le rapport, hypothèse pénalisante au vu des progrès réalisés depuis)
+    Temps d’utilisation (h/jr) : 24 h (utilisé en permanence)
+    Taux moyen d’utilisation : 25% (hypothèse rapport)
+    Duree de vie en jours : 1 825 jours (5 ans)
+
+    Soit, pour 1Mo d'information traitée, une règle d'allocation de :
+    1/10 052 100 000"
+
+data center . facteur d'allocation serveur:
+  formule: (taille de la requete en Mo + taille de la page en Mo) * allocation serveur par Mo
+  référence: |
+    "Analyse comparée des impacts environnementaux de la communication par voie électronique - Volet requête web : Rapport final"
+    BioIS pour l'ADEME, 18 février 2011
+
+data center . construction:
+  formule:
+    recalcul:
+      règle: construction data center
+      avec:
+        construction data center . serveur . facteur d'allocation: facteur d'allocation serveur
+  note: Stockage non pris en compte, considéré mutualisé entre un très grand nombre d'utilisateurs
+
+data center . usage:
+  formule:
+    recalcul:
+      règle: usage data center
+      avec:
+        usage data center . consommation électricité: consommation électricité
+        usage data center . région: région
+  unité: gCO2e
+
+data center . usage . région:
+  titre: Région d'utilisation du data center
+  avec:
+    France:
+    Europe:
+    Chine:
+    USA:
+  question: Dans quelle zone géographique se situe le data center ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - France
+        - Europe
+        - Chine
+        - USA
+  par défaut: "'France'"
+
+data center . usage . consommation électricité:
+  formule: consommation totale serveur * facteur d'allocation serveur * 1000
+  unité: kWh
+
+data center . usage . consommation totale serveur:
+  formule: consommation annuelle serveur * serveur . durée de vie
+
+data center . usage . consommation annuelle serveur:
+  formule: serveur . puissance en mode actif * 24 * 365 / 1000
+  unité: kWh / an
