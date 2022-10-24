@@ -9,7 +9,7 @@ const R = require('ramda')
 
 const addTranslationToBaseRules = (baseRules, translatedRules) => {
 	const updateBaseRules = (key, val) => {
-		if (R.path(key, baseRules)) {
+		if (R.path(key, baseRules) || key.includes('titre')) {
 			// TODO: automatically remove from translated file entries which aren't anymore in the ref model.
 			baseRules = R.assocPath(key, val, baseRules)
 		}

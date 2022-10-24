@@ -41,8 +41,8 @@ const getUiMissingTranslations = (sourcePath, targetPath, override = false) => {
 	const freshEntries = readYAML(sourcePath).entries
 	const translatedEntries = readYAML(targetPath).entries
 
-	const missingTranslations = Object.entries(freshEntries)
-		.filter(([freshKey, refVal]) => {
+	const missingTranslations = Object.entries(freshEntries).filter(
+		([freshKey, refVal]) => {
 			if (freshKey.match(/^\{.*\}$/)) {
 				// Skip keys of the form '{<str>}' as they are not meant to be translated
 				return false
@@ -54,9 +54,10 @@ const getUiMissingTranslations = (sourcePath, targetPath, override = false) => {
 				(isI18nKey(freshKey) &&
 					refVal !== translatedEntries[freshKey + LOCK_KEY_EXT])
 			)
-		})
-		.map(([key, _]) => key)
-	return R.pick(missingTranslations, freshEntries)
+		}
+	)
+
+	return missingTranslations
 }
 
 // Source: https://www.thiscodeworks.com/convert-javascript-dot-notation-object-to-nested-object-javascript/60e47841a2dbdc00144e9446
@@ -159,7 +160,15 @@ const getMissingRules = (srcRules, targetRules) => {
 		.filter(([_, val]) => val !== null && val !== undefined)
 		.reduce((acc, [rule, val]) => {
 			let targetRule = targetRules[rule]
-			const filteredValEntries = Object.entries(val).filter(([attr, val]) => {
+			const valEntries = Object.entries(val)
+
+			if (!valEntries.map(([key, _]) => key).includes('titre')) {
+				// Adds a default title if missing.
+				const splitedRule = rule.split(' . ')
+				valEntries.push(['titre', splitedRule[splitedRule.length - 1]])
+			}
+
+			const filteredValEntries = valEntries.filter(([attr, val]) => {
 				const mosaiqueIncludeSuggestions =
 					// φ => ψ === ¬φ ∨ ψ
 					'mosaique' !== attr || val.suggestions
