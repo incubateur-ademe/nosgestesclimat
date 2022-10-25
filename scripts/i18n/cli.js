@@ -90,7 +90,7 @@ const getArgs = (description, opts) => {
 		args = args.option('file', {
 			alias: 'p',
 			type: 'string',
-			description: `The source file to translate from inside the 'locales/pages' directory. If not specified, all the files in 'locales/pages' will be translated.`,
+			description: `The source file to translate from the 'locales/pages' directory. If not specified, all the files in 'locales/pages' will be translated.`,
 		})
 	}
 	if (opts.remove) {
@@ -106,7 +106,7 @@ const getArgs = (description, opts) => {
 			type: 'string',
 			array: true,
 			choices: utils.availableLanguages,
-			description: 'The target language(s) to translate to.',
+			description: 'The target language(s) to translate into.',
 		})
 	}
 	if (opts.markdown) {
