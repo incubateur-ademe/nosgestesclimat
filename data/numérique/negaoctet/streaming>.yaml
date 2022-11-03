@@ -98,68 +98,17 @@ appareil . moyenne utilisation smartphone: 5%
 appareil . moyenne utilisation TV: 70%
 
 terminaux . usage:
-  formule: consommation électricité * facteur électricité
-  unité: gCO2e
-
-terminaux . usage . facteur électricité:
   formule:
-    variations:
-      - si: région = 'France'
-        alors: électricité . FE France
-      - si: région = 'Europe'
-        alors: électricité . FE Europe
-      - si: région = 'Chine'
-        alors: électricité . FE Chine
-      - si: région = 'USA'
-        alors: électricité . FE USA
-  unité: gCO2e/kWh
-
-terminaux . usage . région:
-  titre: Région d'utilisation du terminal
-  avec:
-    France:
-    Europe:
-    Chine:
-    USA:
-  question: Dans quelle zone géographique se situe le terminal ?
-  formule:
-    une possibilité:
-      choix obligatoire: oui
-      possibilités:
-        - France
-        - Europe
-        - Chine
-        - USA
-  par défaut: "'France'"
-
-terminaux . usage . consommation électricité:
-  formule: durée en heure * consommation électricité par heure / 1000
-  unité: kWh
-
-terminaux . usage . consommation électricité par heure:
-  formule:
-    variations:
-      - si: appareil = 'smartphone'
-        alors: smartphone . consommation en mode actif
-      - si: appareil = 'tablette'
-        alors: tablette . consommation en mode actif
-      - si: appareil = 'ordinateur portable'
-        alors: ordinateur portable . consommation en mode actif
-      - si: appareil = 'ordinateur et écran'
-        alors: ordinateur et écran . consommation en mode actif
-      - si: appareil = 'TV'
-        alors: TV . consommation en mode actif
-      - sinon: consommation en mode actif moyenne
-  unité: Wh
-
-terminaux . usage . consommation en mode actif moyenne:
-  formule:
-    somme:
-      - appareil . moyenne utilisation ordinateur et écran * ordinateur et écran . consommation en mode actif
-      - appareil . moyenne utilisation ordinateur portable * ordinateur portable . consommation en mode actif
-      - appareil . moyenne utilisation tablette * tablette . consommation en mode actif
-      - appareil . moyenne utilisation smartphone * smartphone . consommation en mode actif
-      - appareil . moyenne utilisation TV * TV . consommation en mode actif
+    recalcul:
+      règle: usage réel
+      avec:
+        appareil par défaut: appareil
+        durée en heure par défaut: durée en heure
+        moyenne utilisation ordinateur et écran par défaut: appareil . moyenne utilisation ordinateur et écran
+        moyenne utilisation ordinateur portable par défaut: appareil . moyenne utilisation ordinateur portable
+        moyenne utilisation tablette par défaut: appareil . moyenne utilisation tablette
+        moyenne utilisation smartphone par défaut: appareil . moyenne utilisation smartphone
+        moyenne utilisation TV par défaut: appareil . moyenne utilisation TV
 
 transmission:
   formule:
