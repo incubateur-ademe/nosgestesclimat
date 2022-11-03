@@ -13,7 +13,13 @@ const { srcFolder, destFile, rulesToEvaluate } = cli.getArgs(
 
 const outputJSONFileName = `./public/${destFile}.json`
 
+const commonFile = './data/utils.yaml'
+
 glob(`./data/${srcFolder}/*.yaml`, (_, files) => {
+	if (!files.includes(commonFile)) {
+		files.push(commonFile)
+	}
+	console.log(files)
 	const rules = files.reduce((memo, filename) => {
 		try {
 			const data = fs.readFileSync('./' + filename, 'utf8')
