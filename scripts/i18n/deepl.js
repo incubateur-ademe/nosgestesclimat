@@ -47,9 +47,13 @@ const fetchTranslation = async (text, sourceLang, targetLang) => {
 			t === NO_TRANS_CHAR ? NO_TRANS_CHAR : '[TRAD] ' + t
 		return text instanceof Array ? text.map(tradOrEmpty) : tradOrEmpty(text)
 	}
+	const glossary = await translator.getGlossary(
+		'bfe1506b-b7e6-49c6-90f2-bcd4488ab270'
+	)
 	const resp = await translator.translateText(text, sourceLang, targetLang, {
 		ignoreTags: ['a', 'ignore'],
 		preserveFormatting: true,
+		glossary,
 	})
 
 	return resp instanceof Array
