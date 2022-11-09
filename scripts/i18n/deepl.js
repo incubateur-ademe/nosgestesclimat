@@ -1,82 +1,53 @@
 require('isomorphic-fetch')
 const deepl = require('deepl-node')
-const nodePandoc = require('node-pandoc-promise')
 
 const NO_TRANS_CHAR = ' '
 
 const translator = new deepl.Translator(process.env.DEEPL_API_KEY)
 
-const markdownToHtml = async (srcMd) => {
-	const srcHtml = await nodePandoc(srcMd, [
-		'-f',
-		'markdown_strict',
-		'-t',
-		'html',
-	])
-	return srcHtml
-}
+const simpleLinkRe = new RegExp(/[^!]\[(?<txt>.*?)\]\((?<url>.*?)\)/g)
+const imgInsideLinkRe = new RegExp(/\[(?<txt>!.*?\]\(.*?\))\]\((?<url>.*?)\)/g)
 
-const htmlToMarkdown = async (srcHtml) => {
-	const srcMd = await nodePandoc(srcHtml, [
-		'-f',
-		'html',
-		'-t',
-		'markdown_strict',
-		'--atx-headers',
-	])
-	return srcMd
+const escapeMarkdownLinks = (str) => {
+	const escape = (re, str, isImbricatedImgLink = false) => {
+		const elements = str.matchAll(re)
+		if (elements) {
+			for (el of elements) {
+				let matchedStr = el[0].trim()
+				if (isImbricatedImgLink || !matchedStr.startsWith('[!')) {
+					str = str.replace(
+						matchedStr,
+						`<a href="${el.groups.url}">${el.groups.txt}</a>`
+					)
+				}
+			}
+		}
+		return str
+	}
+
+	str = escape(simpleLinkRe, str)
+	str = escape(imgInsideLinkRe, str, true)
+	return str
 }
 
 const fetchTranslationMarkdown = async (srcMd, sourceLang, targetLang) => {
-	const getSrcHtml = async () => {
-		if (srcMd instanceof Array) {
-			const srcHtml = []
-			await Promise.all(
-				srcMd.map(async (src) => {
-					srcHtml.push(await markdownToHtml(src))
-				})
-			)
-			return srcHtml
-		} else {
-			return await markdownToHtml(srcMd)
-		}
-	}
+	const escapedMd =
+		srcMd instanceof Array
+			? srcMd.map(escapeMarkdownLinks)
+			: escapeMarkdownLinks(srcMd)
 
-	const srcHtml = await getSrcHtml()
-	const htmlTrans = await fetchTranslation(
-		srcHtml,
-		sourceLang,
-		targetLang,
-		'html'
-	)
+	const trans = await fetchTranslation(escapedMd, sourceLang, targetLang)
 
-	if (htmlTrans instanceof Array) {
-		let res = []
-		await Promise.all(
-			htmlTrans.map(async (src) => {
-				res.push(await htmlToMarkdown(src))
-			})
-		)
-		return res
-	}
-	const res = await htmlToMarkdown(htmlTrans)
-
-	return res
+	return trans
 }
 
-const fetchTranslation = async (
-	text,
-	sourceLang,
-	targetLang,
-	tagHandling = 'xml'
-) => {
+const fetchTranslation = async (text, sourceLang, targetLang) => {
 	if (process.env.TEST_MODE) {
 		const tradOrEmpty = (t) =>
 			t === NO_TRANS_CHAR ? NO_TRANS_CHAR : '[TRAD] ' + t
 		return text instanceof Array ? text.map(tradOrEmpty) : tradOrEmpty(text)
 	}
 	const resp = await translator.translateText(text, sourceLang, targetLang, {
-		tagHandling,
 		ignoreTags: ['a', 'ignore'],
 		preserveFormatting: true,
 	})

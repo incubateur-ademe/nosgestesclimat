@@ -54,8 +54,7 @@ const translateTo = async (
 		return deepl.fetchTranslation(
 			value,
 			srcLang.toUpperCase(),
-			destLang.toUpperCase(),
-			'xml'
+			destLang.toUpperCase()
 		)
 	}
 	const translateMarkdown = (value) => {
