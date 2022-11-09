@@ -19,7 +19,6 @@ glob(`./data/${srcFolder}/*.yaml`, (_, files) => {
 	if (!files.includes(commonFile)) {
 		files.push(commonFile)
 	}
-	console.log(files)
 	const rules = files.reduce((memo, filename) => {
 		try {
 			const data = fs.readFileSync('./' + filename, 'utf8')
@@ -36,7 +35,6 @@ glob(`./data/${srcFolder}/*.yaml`, (_, files) => {
 							])
 					  )
 					: rules
-			// console.log(prefixedRuleSet)
 			return { ...memo, ...prefixedRuleSet }
 		} catch (err) {
 			console.log(
