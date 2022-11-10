@@ -36,7 +36,9 @@ const fetchTranslationMarkdown = async (srcMd, sourceLang, targetLang) => {
 			? srcMd.map(escapeMarkdownLinks)
 			: escapeMarkdownLinks(srcMd)
 
-	const trans = await fetchTranslation(escapedMd, sourceLang, targetLang)
+	var trans = await fetchTranslation(escapedMd, sourceLang, targetLang)
+
+	trans = trans.replaceAll('&gt;', '>')
 
 	return trans
 }
@@ -51,9 +53,10 @@ const fetchTranslation = async (text, sourceLang, targetLang) => {
 		'bfe1506b-b7e6-49c6-90f2-bcd4488ab270'
 	)
 	const resp = await translator.translateText(text, sourceLang, targetLang, {
-		ignoreTags: ['a', 'ignore'],
+		ignoreTags: ['ignore'],
 		preserveFormatting: true,
 		glossary,
+		tagHandling: 'xml',
 	})
 
 	return resp instanceof Array
