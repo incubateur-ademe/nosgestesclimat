@@ -7,18 +7,15 @@ on:
     types: [ opened, synchronize ]
   push:
     branches:
-      - '*'
-
-permissions:
-  pull-requests: write
-  issues: write
-  repository-projects: write
+      - '!master'
 
 jobs:
   compile:
     runs-on: ubuntu-22.04
     outputs:
       compilation-result: ${{ steps.compilation.outputs.result }}
+      check-translation-result: ${{ steps.check-translation.outputs.result }}
+      check-personas-result: ${{ steps.check-personas.outputs.result }}
       test-url: ${{ steps.set-test-url.outputs.fr }}
     steps:
       - uses: actions/checkout@v2
@@ -27,10 +24,27 @@ jobs:
           node-version: '17'
           cache: 'yarn'
       - run: yarn install --immutable
+      - run: git log | head && git status
       - id: compilation
         run: |
           # Compiles the model and stores the result -- with escaped special characters.
-          body="$(yarn compile 2> /dev/null | cat | tail --lines=+3 | head --lines=-1)"
+          body="$(yarn compile:md 2> /dev/null | tail --lines=+3 | head --lines=-1)"
+          body="${body//'%'/'%25'}"
+          body="${body//$'\n'/'%0A'}"
+          body="${body//$'\r'/'%0D'}"
+          echo "::set-output name=result::${body}"
+      - id: check-translation
+        run: |
+          # Checks the rules translation
+          body="$(yarn check:rules --markdown 2> /dev/null | tail --lines=+3 | head --lines=-1)"
+          body="${body//'%'/'%25'}"
+          body="${body//$'\n'/'%0A'}"
+          body="${body//$'\r'/'%0D'}"
+          echo "::set-output name=result::${body}"
+      - id: check-personas
+        run: |
+          # Checks the personas translation
+          body="$(yarn check:personas --markdown 2> /dev/null | tail --lines=+3 | head --lines=-1)"
           body="${body//'%'/'%25'}"
           body="${body//$'\n'/'%0A'}"
           body="${body//$'\r'/'%0D'}"
@@ -47,14 +61,29 @@ jobs:
         run: |
           mkdir -p artifacts
           echo "
-          ## 🚀 La _pull request_ #${{ github.event.pull_request.number }}  est ouverte \!
-          > Tester le modèle depuis le site : ${{ needs.compile.outputs.test-url }}
+          <h1 align="center">Report for the pull request #${{ github.event.pull_request.number }}</h2>
 
-          Résultat de la compilation du modèle :
+          <p align="center">:rocket: Test the model from the website: <a href=\"${{ needs.compile.outputs.test-url }}\">${{ needs.compile.outputs.test-url }}</a></p>
 
-          \`\`\`
+          ---
+
+          ### :wrench: Model compilation status
+
           ${{ needs.compile.outputs.compilation-result }}
-          \`\`\`
+
+          ---
+
+          ### :globe_with_meridians: Translation status
+
+          #### Rules
+
+          ${{ needs.compile.outputs.check-translation-result }}
+
+          #### Personas
+
+          ${{ needs.compile.outputs.check-personas-result }}
+
+          > _You will find more information about the translation in the [dedicated file](https:/github.com/datagir/nosgestesclimat/blob/master/docs/translation.md)._
           " > artifacts/result.md
       - name: Upload artifact
         uses: actions/upload-artifact@v1
