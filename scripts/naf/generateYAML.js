@@ -1,10 +1,10 @@
 const fs = require('fs')
 const yaml = require('yaml')
 
-const sdesFileName = 'data/NAF/liste_SDES_traitée.json'
+const sdesFileName = 'scripts/naf/données/liste_SDES_traitée.json'
 const readFile = fs.readFileSync(sdesFileName, 'utf8')
 
-const répartitionFileName = 'data/NAF/répartition_NAF.yaml'
+const répartitionFileName = 'scripts/naf/données/répartition_NAF.yaml'
 const readFileRépartition = fs.readFileSync(répartitionFileName, 'utf8')
 
 const répartition = yaml.parse(readFileRépartition)
@@ -35,4 +35,7 @@ const data = JSON.parse(readFile).map(({ code_CPA, ...att }) => {
 const dataObject = Object.assign({}, ...data)
 
 console.log(yaml.stringify(dataObject))
-fs.writeFileSync('data/NAF/test_yaml.yaml', yaml.stringify(dataObject))
+fs.writeFileSync(
+	'scripts/naf/données/test_yaml.yaml',
+	yaml.stringify(dataObject)
+)

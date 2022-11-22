@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-const nafFileName = 'data/NAF/liste_NAF.json'
+const nafFileName = 'scripts/naf/données/liste_NAF.json'
 const readNAF = fs.readFileSync(nafFileName, 'utf8')
 const NAF_level2 = JSON.parse(readNAF).reduce((memo, elt) => {
 	const lastId = memo.length > 0 && memo[memo.length - 1].code_NAF
@@ -14,4 +14,4 @@ const NAF_level2 = JSON.parse(readNAF).reduce((memo, elt) => {
 	return memo
 }, [])
 
-// fs.writeFileSync('data/NAF/liste_NAF_level2.json', JSON.stringify(NAF_level2))
+// fs.writeFileSync('scripts/naf/données/liste_NAF_level2.json', JSON.stringify(NAF_level2))

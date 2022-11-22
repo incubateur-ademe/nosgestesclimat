@@ -5,9 +5,9 @@ const yaml = require('yaml')
 const roundValue = (x) => Math.round(x * 100) / 100
 
 // read files
-const nafFileName = 'data/NAF/liste_NAF_level2.json'
-const sdesFileName = 'data/NAF/liste_SDES.json'
-const divisionNAFFileName = 'data/NAF/division_NAF.yaml'
+const nafFileName = 'scripts/naf/données/liste_NAF_level2.json'
+const sdesFileName = 'scripts/naf/données/liste_SDES.json'
+const divisionNAFFileName = 'scripts/naf/données/division_NAF.yaml'
 
 const readNAF = fs.readFileSync(nafFileName, 'utf8')
 const NAF_level2 = JSON.parse(readNAF)
@@ -103,5 +103,5 @@ const dataSDES = JSON.parse(readSDES)
 	})
 	.flat()
 
-// fs.writeFileSync('data/NAF/liste_SDES_traitée.json', JSON.stringify(dataSDES))
+// fs.writeFileSync('scripts/naf/données/liste_SDES_traitée.json', JSON.stringify(dataSDES))
 // console.log(dataSDES)
