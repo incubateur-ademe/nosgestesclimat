@@ -13,6 +13,12 @@ const Engine = require('publicodes').default
 
 const utils = require('./i18n/utils')
 const cli = require('./i18n/cli')
+const {
+	dGraphToJSON,
+	getCompressibleNodes,
+	getDependencyGraphStats,
+	getDependencyGraph,
+} = require('./../../scripts/rulesCompression')
 
 const outputJSONPath = './public'
 
@@ -20,7 +26,7 @@ const {
 	addTranslationToBaseRules,
 } = require('./i18n/addTranslationToBaseRules')
 
-const { srcLang, srcFile, destLangs, markdown } = cli.getArgs(
+const { srcLang, srcFile, destLangs, markdown, compress } = cli.getArgs(
 	`Aggregates the model to an unique JSON file.`,
 
 	{
@@ -29,6 +35,7 @@ const { srcLang, srcFile, destLangs, markdown } = cli.getArgs(
 		file: true,
 		defaultSrcFile: 'data/**/*.yaml',
 		markdown: true,
+		compress: true,
 	}
 )
 
@@ -53,9 +60,127 @@ const writeRules = (rules, path, destLang) => {
 	})
 }
 
+// Retrieve the reference used for the [nodeName], if the rule is referenced in the
+// same parent namespace.
+//
+// For example, the [nodeName] 'a . b . c' is referenced by 'c' in the following rule
+// definition:
+//
+// a . b:
+//   formula: c * 2
+//
+// FIXME: needs to support 'b . c' and 'a . b .c'.
+const getRefNameOf = (nodeName, parsedRulesParents, directDependant) => {
+	const foundParent = parsedRulesParents.find(({ nodeKind, dottedName }) => {
+		if (nodeKind === 'reference') {
+			return dottedName === directDependant
+		}
+		return false
+	})
+
+	if (foundParent) {
+		const splittedParentDottedName = foundParent.dottedName.split(' . ')
+		const splittedNodeName = nodeName.split(' . ')
+
+		return splittedNodeName
+			.slice(splittedParentDottedName.length, splittedNodeName.length)
+			.join(' . ')
+	}
+	return nodeName
+}
+
+const getCompressedRules = (baseRules) => {
+	const engine = new Engine(baseRules)
+	const parsedRules = engine.getParsedRules()
+	const graph = getDependencyGraph(
+		baseRules,
+		engine.baseContext.referencesMaps.referencesIn
+	)
+
+	const { compressibleNodes } = getCompressibleNodes(
+		graph,
+		engine.getParsedRules()
+	)
+
+	return compressibleNodes.reduce((rules, nodeToCompress) => {
+		console.log('parsedRules:', parsedRules[nodeToCompress])
+		const parsedRule = parsedRules[nodeToCompress]
+		const formule = parsedRule.rawNode.formule
+
+		if (formule) {
+			switch (typeof formule) {
+				case 'string': {
+					// Replace all parent refs by the formula.
+					const directDependents = graph.directDependantsOf(nodeToCompress)
+
+					directDependents.forEach((directDep) => {
+						const directDepFormula = rules[directDep].formule
+						console.log('rules[parent].formula:', directDepFormula)
+
+						const refName = getRefNameOf(
+							nodeToCompress,
+							parsedRule.explanation.parents,
+							directDep
+						)
+						if (directDepFormula) {
+							switch (typeof directDepFormula) {
+								case 'string': {
+									rules[directDep].formule = directDepFormula.replaceAll(
+										refName,
+										'(' + formule + ')'
+									)
+									// console.log('Compressed', nodeToCompress, 'in', directDep)
+									// console.log('Formule:', rules[directDep].formule)
+									break
+								}
+								case 'object': {
+									rules[directDep].formule = Object.keys(
+										directDepFormula
+									).reduce((directDepFormula, attr) => {
+										switch (attr) {
+											case 'somme': {
+												const somme = directDepFormula.somme.map((term) => {
+													return term.replaceAll(refName, '(' + formule + ')')
+												})
+												console.log('Replaced:', somme)
+												return { ...directDepFormula, somme }
+											}
+											default:
+												console.log('Not found:', Object.keys(directDepFormula))
+										}
+									}, directDepFormula)
+								}
+								default:
+									console.log('Uncompressible formula:', formule)
+							}
+						} else {
+							console.error(
+								'Error for parent:',
+								directDep,
+								'of the node:',
+								nodeToCompress
+							)
+						}
+					})
+
+					console.log(
+						'directDependantsOf:',
+						graph.directDependantsOf(nodeToCompress)
+					)
+					break
+				}
+				default:
+					console.log('Uncompressible formula:', formule)
+			}
+		}
+		rules[nodeToCompress] = undefined
+		return rules
+	}, baseRules)
+}
+
 glob(srcFile, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 	const defaultDestPath = path.join(outputJSONPath, `co2-${srcLang}.json`)
-	const baseRules = files.reduce((acc, filename) => {
+	var baseRules = files.reduce((acc, filename) => {
 		try {
 			const rules = utils.readYAML(path.resolve(filename))
 			return { ...acc, ...rules }
@@ -70,8 +195,12 @@ glob(srcFile, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 		}
 	}, {})
 
+	if (compress) {
+		baseRules = getCompressedRules(baseRules)
+	}
+
 	try {
-		new Engine(baseRules).evaluate('bilan')
+		// new Engine(baseRules).evaluate('bilan')
 
 		if (markdown) {
 			console.log('| Task | Status | Message |')

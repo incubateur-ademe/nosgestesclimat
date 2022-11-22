@@ -117,6 +117,15 @@ const getArgs = (description, opts) => {
 		})
 	}
 
+	if (opts.compress) {
+		args = args.option('compress', {
+			alias: 'c',
+			type: 'boolean',
+			description:
+				'Compress rules by remplacing the ones by their compile time known values.',
+		})
+	}
+
 	const argv = args.help().alias('help', 'h').argv
 
 	const srcLang = argv.source ?? utils.defaultLang
@@ -146,6 +155,7 @@ const getArgs = (description, opts) => {
 		remove: argv.remove,
 		srcFile,
 		markdown: argv.markdown,
+		compress: argv.compress,
 	}
 }
 
