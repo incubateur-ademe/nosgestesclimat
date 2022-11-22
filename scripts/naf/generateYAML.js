@@ -24,10 +24,15 @@ const data = JSON.parse(readFile).map(({ code_CPA, ...att }) => {
 	if (répartition_SP) {
 		object[code_CPA]['services publics'] = répartition_SP
 	}
+	const répartition_SMS =
+		répartition['services marchands et sociétaux'][code_CPA]
+	if (répartition_SMS) {
+		object[code_CPA]['services marchands et sociétaux'] = répartition_SMS
+	}
 	return object
 })
 
 const dataObject = Object.assign({}, ...data)
 
-// console.log(yaml.stringify(dataObject))
-// fs.writeFileSync('data/NAF/test_yaml.yaml', yaml.stringify(dataObject))
+console.log(yaml.stringify(dataObject))
+fs.writeFileSync('data/NAF/test_yaml.yaml', yaml.stringify(dataObject))
