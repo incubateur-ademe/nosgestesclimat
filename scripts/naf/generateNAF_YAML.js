@@ -67,7 +67,7 @@ const SPobject = {
 	publics: {
 		titre: 'Services publics',
 		couleur: '#0c2461',
-		abbréviation: 'serv. publ.',
+		abbréviation: 'Public',
 		icônes: '🏛',
 		formule: { somme: SP_sum },
 		unité: 'ktCO2e',
@@ -77,8 +77,8 @@ const SPobject = {
 const SMSobject = {
 	'marchands et sociétaux': {
 		titre: 'Services marchands et sociétaux',
-		couleur: '#0c2461',
-		abbréviation: 'serv. march.',
+		couleur: '#3c0c61',
+		abbréviation: 'Marchand',
 		icônes: '✉️',
 		formule: { somme: SMS_sum },
 		unité: 'ktCO2e',
