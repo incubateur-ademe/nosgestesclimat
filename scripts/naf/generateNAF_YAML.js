@@ -26,7 +26,7 @@ const data = JSON.parse(readFile).map(({ code_CPA, ...att }) => {
 		},
 		[ruleCPAparHab]: {
 			titre: att['Libellé CPA'],
-			formule: `${code_CPA} * 1000000 / population`,
+			formule: `${code_CPA} * 1000000 kgCO2e/ktCO2e / population`,
 			unité: 'kgCO2e',
 		},
 	}
