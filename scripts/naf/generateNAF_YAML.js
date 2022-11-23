@@ -9,6 +9,9 @@ const readFileRépartition = fs.readFileSync(répartitionFileName, 'utf8')
 
 const répartition = yaml.parse(readFileRépartition)
 
+const SP_sum = []
+const SMS_sum = []
+
 const data = JSON.parse(readFile).map(({ code_CPA, ...att }) => {
 	const ruleCPA = `naf . ${code_CPA}`
 	const ruleCPAparHab = `naf . ${code_CPA} par hab`
@@ -34,17 +37,55 @@ const data = JSON.parse(readFile).map(({ code_CPA, ...att }) => {
 		const objavec = {}
 		object[[ruleCPAparHab]]['avec'] = {}
 		if (répartition_SP) {
-			objavec['services publics'] = répartition_SP
+			const ruleNameSP = `naf . ${code_CPA} par hab . services publics`
+			objavec['ratio services publics'] = répartition_SP
+			object[ruleNameSP] = {
+				titre: `attribution SP ${att['Libellé CPA']}`,
+				formule: `${code_CPA} par hab * ratio services publics`,
+				unité: 'tCO2e',
+			}
+			SP_sum.push(ruleNameSP)
 		}
 		if (répartition_SMS) {
-			objavec['services marchands et sociétaux'] = répartition_SMS
+			const ruleNameSMS = `naf . ${code_CPA} par hab . services marchands et sociétaux`
+			objavec['ratio services marchands et sociétaux'] = répartition_SMS
+			object[ruleNameSMS] = {
+				titre: `attribution SMS ${att['Libellé CPA']}`,
+				formule: `${code_CPA} par hab * ratio services marchands et sociétaux`,
+				unité: 'tCO2e',
+			}
+			SMS_sum.push(ruleNameSMS)
 		}
 		Object.assign(object[ruleCPAparHab]['avec'], objavec)
 	}
 	return object
 })
 
-const dataObject = Object.assign({}, ...data)
+const SMSobjectdataObject = Object.assign({}, ...data)
+
+const SPobject = {
+	'services publics': {
+		titre: 'Services publics',
+		couleur: '#0c2461',
+		abbréviation: 'serv. publ.',
+		icônes: '🏛',
+		formule: { somme: SP_sum },
+		unité: 'ktCO2e',
+	},
+}
+
+const SMSobject = {
+	'services marchands et sociétaux': {
+		titre: 'Services marchands et sociétaux',
+		couleur: '#0c2461',
+		abbréviation: 'serv. march.',
+		icônes: '✉️',
+		formule: { somme: SMS_sum },
+		unité: 'ktCO2e',
+	},
+}
 
 // console.log(yaml.stringify(dataObject))
-fs.writeFileSync('data/naf/naf.yaml', yaml.stringify(dataObject))
+// fs.writeFileSync('data/naf/naf.yaml', yaml.stringify(dataObject))
+// fs.writeFileSync('data/services publics/SP.yaml', yaml.stringify(SPobject))
+// fs.writeFileSync('data/services publics/SMS.yaml', yaml.stringify(SMSobject))
