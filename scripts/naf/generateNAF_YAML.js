@@ -26,8 +26,8 @@ const data = JSON.parse(readFile).map(({ code_CPA, ...att }) => {
 		},
 		[ruleCPAparHab]: {
 			titre: att['Libellé CPA'],
-			formule: `${code_CPA} * 1000 / population`,
-			unité: 'tCO2e',
+			formule: `${code_CPA} * 1000000 / population`,
+			unité: 'kgCO2e',
 		},
 	}
 	const répartition_SP = répartition['services publics'][code_CPA]
@@ -42,7 +42,7 @@ const data = JSON.parse(readFile).map(({ code_CPA, ...att }) => {
 			object[ruleNameSP] = {
 				titre: `attribution SP ${att['Libellé CPA']}`,
 				formule: `${code_CPA} par hab * ratio services publics`,
-				unité: 'tCO2e',
+				unité: 'kgCO2e',
 			}
 			SP_sum.push(ruleNameSP)
 		}
@@ -52,7 +52,7 @@ const data = JSON.parse(readFile).map(({ code_CPA, ...att }) => {
 			object[ruleNameSMS] = {
 				titre: `attribution SMS ${att['Libellé CPA']}`,
 				formule: `${code_CPA} par hab * ratio services marchands et sociétaux`,
-				unité: 'tCO2e',
+				unité: 'kgCO2e',
 			}
 			SMS_sum.push(ruleNameSMS)
 		}
@@ -61,10 +61,10 @@ const data = JSON.parse(readFile).map(({ code_CPA, ...att }) => {
 	return object
 })
 
-const SMSobjectdataObject = Object.assign({}, ...data)
+const dataObject = Object.assign({}, ...data)
 
 const SPobject = {
-	'services publics': {
+	publics: {
 		titre: 'Services publics',
 		couleur: '#0c2461',
 		abbréviation: 'serv. publ.',
@@ -75,7 +75,7 @@ const SPobject = {
 }
 
 const SMSobject = {
-	'services marchands et sociétaux': {
+	'marchands et sociétaux': {
 		titre: 'Services marchands et sociétaux',
 		couleur: '#0c2461',
 		abbréviation: 'serv. march.',
@@ -86,6 +86,6 @@ const SMSobject = {
 }
 
 // console.log(yaml.stringify(dataObject))
-// fs.writeFileSync('data/naf/naf.yaml', yaml.stringify(dataObject))
-// fs.writeFileSync('data/services publics/SP.yaml', yaml.stringify(SPobject))
-// fs.writeFileSync('data/services publics/SMS.yaml', yaml.stringify(SMSobject))
+fs.writeFileSync('data/naf/naf.yaml', yaml.stringify(dataObject))
+fs.writeFileSync('data/services publics/SP.yaml', yaml.stringify(SPobject))
+fs.writeFileSync('data/services publics/SMS.yaml', yaml.stringify(SMSobject))
