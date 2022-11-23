@@ -76,7 +76,7 @@ const dataSDES = JSON.parse(readSDES)
 				const facteur =
 					facteurPotentiel === 'défaut'
 						? 1 / compositionLength
-						: facteurPotentiel
+						: facteurPotentiel / 100
 				return {
 					code_CPA: elt,
 					'Libellé CPA': NAF_level2.find((obj) => obj.code_NAF === elt)[
