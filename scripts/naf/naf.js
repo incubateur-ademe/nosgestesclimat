@@ -7,13 +7,13 @@ const roundValue = (x) => Math.round(x * 100) / 100
 // read files
 const nafFileName = 'scripts/naf/données/liste_NAF_level2.json'
 const sdesFileName = 'scripts/naf/données/liste_SDES.json'
-const divisionNAFFileName = 'scripts/naf/données/division_NAF.yaml'
+const divisionNAFFileName = 'scripts/naf/données/division_NAF.json'
 
 const readNAF = fs.readFileSync(nafFileName, 'utf8')
 const NAF_level2 = JSON.parse(readNAF)
 
 const readDivision = fs.readFileSync(divisionNAFFileName, 'utf8')
-const division_NAF = yaml.parse(readDivision)
+const division_NAF = JSON.parse(readDivision)
 
 const checkDivision = (division_NAF) => {
 	Object.entries(division_NAF).map(([key, obj]) => {
@@ -30,11 +30,11 @@ const checkDivision = (division_NAF) => {
 				return acc
 			}
 		}, null)
-		if (!(checkSum === true || checkSum === 100)) {
-			throw new Error(
-				`La répartition des parts attribuées à chaque division doit couvrir 100% de ${key}`
-			)
-		}
+		// if (!(checkSum === true || checkSum === 100)) {
+		// 	throw new Error(
+		// 		`La répartition des parts attribuées à chaque division doit couvrir 100% de ${key}`
+		// 	)
+		// }
 	})
 }
 
@@ -70,13 +70,8 @@ const dataSDES = JSON.parse(readSDES)
 				{ length: indexes[1] - indexes[0] + 1 },
 				(_, i) => letter + String(indexes[0] + i).padStart(2, '0')
 			)
-			const compositionLength = newComposition.length
 			const newObjects = newComposition.map((elt) => {
-				const facteurPotentiel = division_NAF[CPA][elt].part
-				const facteur =
-					facteurPotentiel === 'défaut'
-						? 1 / compositionLength
-						: facteurPotentiel / 100
+				const facteur = division_NAF[CPA][elt].part / 100
 				return {
 					code_CPA: elt,
 					'Libellé CPA': NAF_level2.find((obj) => obj.code_NAF === elt)[
@@ -103,5 +98,8 @@ const dataSDES = JSON.parse(readSDES)
 	})
 	.flat()
 
-// fs.writeFileSync('scripts/naf/données/liste_SDES_traitée.json', JSON.stringify(dataSDES))
 // console.log(dataSDES)
+// fs.writeFileSync(
+// 	'scripts/naf/données/liste_SDES_traitée.json',
+// 	JSON.stringify(dataSDES)
+// )
