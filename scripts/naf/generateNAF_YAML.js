@@ -17,7 +17,7 @@ const readFiletitres = fs.readFileSync(titresFileName, 'utf8')
 const titres = yaml.parse(readFiletitres)
 
 const SP_sum = []
-const SMS_sum = []
+const SM_sum = []
 
 const findNumber = /\d{2}/
 
@@ -55,29 +55,31 @@ const data = JSON.parse(readFile).map(({ code_CPA, ...att }) => {
 		},
 	}
 	const répartition_SP = répartition['services publics'][code_CPA]
-	const répartition_SMS = répartition['services marchands'][code_CPA]
-	if (répartition_SP || répartition_SMS) {
+	const répartition_SM = répartition['services marchands'][code_CPA]
+	if (répartition_SP || répartition_SM) {
 		const objavec = {}
 		object[[ruleCPAparHab]]['avec'] = {}
 		if (répartition_SP) {
 			const ruleNameSP = `naf . ${code_CPA} par hab . services publics`
-			objavec['ratio services publics'] = répartition_SP
+			objavec['ratio services publics'] = répartition_SP.ratio
 			object[ruleNameSP] = {
-				titre: `${répartition_SP} ${titre_raccourci}`,
+				titre: `${répartition_SP.ratio} ${titre_raccourci}`,
+				description: répartition_SP.justification,
 				formule: `${code_CPA} par hab * ratio services publics`,
 				unité: 'kgCO2e',
 			}
 			SP_sum.push(ruleNameSP)
 		}
-		if (répartition_SMS) {
-			const ruleNameSMS = `naf . ${code_CPA} par hab . services marchands`
-			objavec['ratio services marchands'] = répartition_SMS
-			object[ruleNameSMS] = {
-				titre: `${répartition_SMS} ${titre_raccourci}`,
+		if (répartition_SM) {
+			const ruleNameSM = `naf . ${code_CPA} par hab . services marchands`
+			objavec['ratio services marchands'] = répartition_SM.ratio
+			object[ruleNameSM] = {
+				titre: `${répartition_SM.ratio} ${titre_raccourci}`,
+				description: répartition_SM.justification,
 				formule: `${code_CPA} par hab * ratio services marchands`,
 				unité: 'kgCO2e',
 			}
-			SMS_sum.push(ruleNameSMS)
+			SM_sum.push(ruleNameSM)
 		}
 		Object.assign(object[ruleCPAparHab]['avec'], objavec)
 	}
@@ -97,13 +99,13 @@ const SPobject = {
 	},
 }
 
-const SMSobject = {
+const SMobject = {
 	'services marchands': {
 		titre: 'Services marchands',
 		couleur: '#3c0c61',
 		abréviation: 'Marchands',
 		icônes: '✉️',
-		formule: { somme: SMS_sum },
+		formule: { somme: SM_sum },
 		unité: 'ktCO2e',
 	},
 }
@@ -116,5 +118,5 @@ fs.writeFileSync(
 )
 fs.writeFileSync(
 	'data/services sociétaux/services marchands.yaml',
-	yaml.stringify(SMSobject)
+	yaml.stringify(SMobject)
 )
