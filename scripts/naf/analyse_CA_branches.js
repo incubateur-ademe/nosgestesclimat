@@ -19,17 +19,18 @@ const getGroupSum = (groupObj) => {
 		}
 		return acc + +ca
 	}, 0)
-	const partCAConnue = 1 - countS / objLength
-	return sumCA / partCAConnue
+	if (countS === objLength) return 'S'
+	return sumCA
 }
 
-const getPart = (nafObj, groupObj) => {
-	if (nafObj['ca'] === 'S') {
-		const objLength = Object.keys(groupObj).length
-		return roundValuePoucent(1 / objLength)
-	} else {
-		const sumCA = getGroupSum(groupObj)
-		return roundValuePoucent(nafObj['ca'] / sumCA)
+const getPart = (nafObj, sumCA) => {
+	if (!sumCA || nafObj['ca'] === 'S') {
+		return 'S'
+	} else if (!+nafObj['ca']) {
+		return '0%'
+	}
+	{
+		return `${roundValuePoucent(nafObj['ca'] / sumCA)}%`
 	}
 }
 
@@ -65,8 +66,7 @@ Object.values(ca_lvl2).map((nafGroupObj) => {
 		return findCode
 	})
 	Object.values(nafComposition).map((nafObj) => {
-		const part = getPart(nafObj, nafComposition)
-		nafObj['part'] = `${part}%`
+		nafObj['part'] = ''
 	})
 	Object.values(nafComposition).map((nafObj) => {
 		const nafSubCode = nafObj['branche']
@@ -76,15 +76,32 @@ Object.values(ca_lvl2).map((nafGroupObj) => {
 			const findCode = branche.length === 4 && branche.match(findChildren)
 			return findCode
 		})
+		const nafSubCA =
+			nafObj['ca'] && nafObj['ca'] !== 'S'
+				? +nafObj['ca']
+				: getGroupSum(nafSubComposition)
+		nafObj['ca'] = nafSubCA
 		Object.values(nafSubComposition).map((nafObj) => {
-			const part = getPart(nafObj, nafSubComposition)
-			nafObj['part'] = `${part}%`
+			const part = getPart(nafObj, nafSubCA)
+			nafObj['part'] = part
 		})
 		nafObj['description'] = nafSubComposition
+	})
+	const nafCA =
+		nafGroupObj['ca'] && nafGroupObj['ca'] !== 'S'
+			? +nafGroupObj['ca']
+			: getGroupSum(nafComposition)
+	nafGroupObj['ca'] = nafCA
+	Object.values(nafComposition).map((nafObj) => {
+		const part = getPart(nafObj, nafCA)
+		nafObj['part'] = part
 	})
 	data[nafCode] = { ...nafGroupObj, composition: nafComposition }
 	nafGroupObj['composition'] = nafComposition
 })
 
-console.log(sortJSON(data))
-fs.writeFileSync('analyse_CA_naf.json', JSON.stringify(sortJSON(data)))
+// console.log(sortJSON(data))
+fs.writeFileSync(
+	'scripts/naf/données/analyse_CA_naf.json',
+	JSON.stringify(sortJSON(data))
+)
