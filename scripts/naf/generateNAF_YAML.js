@@ -111,12 +111,20 @@ const SMobject = {
 }
 
 console.log(yaml.stringify(dataObject))
-fs.writeFileSync('data/naf/naf.yaml', yaml.stringify(dataObject))
+
+const messageGénérationAuto = `# Ce fichier a été généré automatiquement via le script 'scripts/generateNAF_YAML.js' dans le dépôt nosgestesclimat. 
+# Le fichier permettant de modifier les données importantes de répartition et justification des services sociétaux
+# est 'scripts/données/répartition_NAF.yaml'. Pour en savoir plus, n'hésitez pas à parcourir notre guide !\n\n`
+
+fs.writeFileSync(
+	'data/naf/naf.yaml',
+	messageGénérationAuto + yaml.stringify(dataObject)
+)
 fs.writeFileSync(
 	'data/services sociétaux/services publics.yaml',
-	yaml.stringify(SPobject)
+	messageGénérationAuto + yaml.stringify(SPobject)
 )
 fs.writeFileSync(
 	'data/services sociétaux/services marchands.yaml',
-	yaml.stringify(SMobject)
+	messageGénérationAuto + yaml.stringify(SMobject)
 )
