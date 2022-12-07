@@ -19,7 +19,8 @@ const getGroupSum = (groupObj) => {
 		}
 		return acc + +ca
 	}, 0)
-	return [sumCA, 1 - countS / objLength]
+	const partCAConnue = 1 - countS / objLength
+	return sumCA / partCAConnue
 }
 
 const getPart = (nafObj, groupObj) => {
@@ -27,8 +28,8 @@ const getPart = (nafObj, groupObj) => {
 		const objLength = Object.keys(groupObj).length
 		return roundValuePoucent(1 / objLength)
 	} else {
-		const [sumCA, ratioCA] = getGroupSum(groupObj)
-		return roundValuePoucent((nafObj['ca'] / sumCA) * ratioCA)
+		const sumCA = getGroupSum(groupObj)
+		return roundValuePoucent(nafObj['ca'] / sumCA)
 	}
 }
 
