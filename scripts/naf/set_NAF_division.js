@@ -19,16 +19,19 @@ const getGroupSum = (groupObj) => {
 		}
 		return acc + +ca
 	}, 0)
-	return [sumCA, 1 - countS / objLength]
+	if (countS === objLength) return 'S'
+	return sumCA
 }
 
-const getPart = (naf, groupObj) => {
-	if (groupObj[naf]['ca'] === 'S') {
-		const objLength = Object.keys(groupObj).length
-		return roundValuePoucent(1 / objLength)
-	} else {
-		const [sumCA, ratioCA] = getGroupSum(groupObj)
-		return roundValuePoucent((groupObj[naf]['ca'] / sumCA) * ratioCA)
+const getPart = (nafObj, sumCA) => {
+	console.log(nafObj, sumCA)
+	if (!sumCA || nafObj['ca'] === 'S') {
+		return 'S'
+	} else if (!+nafObj['ca']) {
+		return 0
+	}
+	{
+		return roundValuePoucent(nafObj['ca'] / sumCA)
 	}
 }
 
@@ -48,12 +51,13 @@ const findNumber = /\d{2}/
 Object.entries(division).map(([key, nafGroupObj]) => {
 	Object.entries(nafGroupObj).map(([naf, nafObj]) => {
 		const nafCode = naf.match(findNumber)[0]
-		const findCa = ca_branches.find((obj) => obj.BRANCHE === nafCode)
-		const ca = findCa && findCa["Chiffre d'affaires de la branche"]
+		const findCa = ca_branches.find((obj) => obj.branche === nafCode)
+		const ca = findCa && findCa['ca']
 		nafObj['ca'] = ca //98 non présent dans 'ca_branches_2017'
 	})
 	Object.entries(nafGroupObj).map(([naf, nafObj]) => {
-		const part = getPart(naf, nafGroupObj)
+		const nafCA = getGroupSum(nafGroupObj)
+		const part = getPart(nafObj, nafCA)
 		nafObj['part'] = part
 	})
 	division[key] = nafGroupObj

@@ -19,7 +19,7 @@ const checkDivision = (division_NAF) => {
 	Object.entries(division_NAF).map(([key, obj]) => {
 		const checkSum = Object.values(obj).reduce((acc, att) => {
 			if (att.part || att.part === 0) {
-				if (att.part === 'défaut') {
+				if (att.part === 'S') {
 					return true
 				} else if (isNaN(att.part)) {
 					throw new Error("L'attribut `part` doit être un nombre")
@@ -71,7 +71,10 @@ const dataSDES = JSON.parse(readSDES)
 				(_, i) => letter + String(indexes[0] + i).padStart(2, '0')
 			)
 			const newObjects = newComposition.map((elt) => {
-				const facteur = division_NAF[CPA][elt].part / 100
+				const facteur =
+					division_NAF[CPA][elt].part === 'S'
+						? 0
+						: division_NAF[CPA][elt].part / 100
 				return {
 					code_CPA: elt,
 					'Libellé CPA': NAF_level2.find((obj) => obj.code_NAF === elt)[
@@ -99,7 +102,7 @@ const dataSDES = JSON.parse(readSDES)
 	.flat()
 
 // console.log(dataSDES)
-// fs.writeFileSync(
-// 	'scripts/naf/données/liste_SDES_traitée.json',
-// 	JSON.stringify(dataSDES)
-// )
+fs.writeFileSync(
+	'scripts/naf/données/liste_SDES_traitée.json',
+	JSON.stringify(dataSDES)
+)
