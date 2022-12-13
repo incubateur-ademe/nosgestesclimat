@@ -13,7 +13,7 @@ const readYAML = (path) => {
 	return yaml.parse(fs.readFileSync(path, 'utf-8'))
 }
 
-const writeYAML = (path, content, blockQuote = 'folded') => {
+const writeYAML = (path, content, blockQuote = 'literal') => {
 	resolveConfig(process.cwd()).then((prettierConfig) =>
 		fs.writeFileSync(
 			path,
