@@ -147,6 +147,7 @@ const getMissingRules = (srcRules, targetRules) => {
 		'note',
 		'suggestions',
 		'mosaique',
+		'abréviation',
 	]
 
 	const areEqual = (s1, s2) => {
