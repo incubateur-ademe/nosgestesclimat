@@ -1,5 +1,6 @@
 const fs = require('fs')
 const yaml = require('yaml')
+const { format, resolveConfig } = require('prettier')
 
 const sdesFileName = 'scripts/naf/données/liste_SDES_traitée.json'
 const readFile = fs.readFileSync(sdesFileName, 'utf8')
@@ -112,19 +113,27 @@ const SMobject = {
 
 console.log(yaml.stringify(dataObject))
 
+//Duplicate of writeYAML in i18n/utils.js
+const writeYAML = (path, content, blockQuote = 'literal') => {
+	resolveConfig(process.cwd()).then((prettierConfig) =>
+		fs.writeFileSync(
+			path,
+			format(
+				messageGénérationAuto +
+					yaml.stringify(content, {
+						sortMapEntries: true,
+						blockQuote,
+					}),
+				{ ...prettierConfig, parser: 'yaml' }
+			)
+		)
+	)
+}
+
 const messageGénérationAuto = `# Ce fichier a été généré automatiquement via le script 'scripts/generateNAF_YAML.js' dans le dépôt nosgestesclimat. 
 # Le fichier permettant de modifier les données importantes de répartition et justification des services sociétaux
 # est 'scripts/données/répartition_NAF.yaml'. Pour en savoir plus, n'hésitez pas à parcourir notre guide !\n\n`
 
-fs.writeFileSync(
-	'data/naf/naf.yaml',
-	messageGénérationAuto + yaml.stringify(dataObject)
-)
-fs.writeFileSync(
-	'data/services sociétaux/services publics.yaml',
-	messageGénérationAuto + yaml.stringify(SPobject)
-)
-fs.writeFileSync(
-	'data/services sociétaux/services marchands.yaml',
-	messageGénérationAuto + yaml.stringify(SMobject)
-)
+writeYAML('data/naf/naf.yaml', dataObject)
+writeYAML('data/services sociétaux/services publics.yaml', SPobject)
+writeYAML('data/services sociétaux/services marchands.yaml', SMobject)
