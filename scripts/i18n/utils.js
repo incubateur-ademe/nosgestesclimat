@@ -185,7 +185,7 @@ const getMissingRules = (srcRules, targetRules) => {
 					filteredValEntries.reduce((acc, [attr, refVal]) => {
 						if (keysToTranslate.includes(attr)) {
 							let targetRef = targetRule[attr + LOCK_KEY_EXT]
-							let hasTheSameRefValue = targetRef && targetRef === refVal
+							let hasTheSameRefValue
 
 							switch (attr) {
 								case 'suggestions': {
@@ -202,6 +202,10 @@ const getMissingRules = (srcRules, targetRules) => {
 									break
 								}
 								default:
+									hasTheSameRefValue =
+										targetRef &&
+										// NOTE: avoid false positive caused by non trimmed white spaces.
+										targetRef.replaceAll(' ', '') === refVal.replaceAll(' ', '')
 									break
 							}
 
