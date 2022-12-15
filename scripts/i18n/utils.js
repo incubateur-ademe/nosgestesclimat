@@ -9,6 +9,8 @@ const LOCK_KEY_EXT = '.lock'
 const availableLanguages = ['fr', 'en-us', 'es', 'it']
 const defaultLang = availableLanguages[0]
 
+// TODO(@EmileRolley): basic functions to be moved to a dedicated lib.
+
 const readYAML = (path) => {
 	return yaml.parse(fs.readFileSync(path, 'utf-8'))
 }
@@ -24,6 +26,18 @@ const writeYAML = (path, content, blockQuote = 'literal') => {
 				}),
 				{ ...prettierConfig, parser: 'yaml' }
 			)
+		)
+	)
+}
+
+const writeJSON = (path, content) => {
+	resolveConfig(process.cwd()).then((prettierConfig) =>
+		fs.writeFileSync(
+			path,
+			format(JSON.stringify(content), {
+				...prettierConfig,
+				parser: 'json',
+			})
 		)
 	)
 }
@@ -250,4 +264,5 @@ module.exports = {
 	nestedObjectToDotNotation,
 	readYAML,
 	writeYAML,
+	writeJSON,
 }
