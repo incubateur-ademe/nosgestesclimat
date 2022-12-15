@@ -13,6 +13,8 @@ const markdownToHtml = (md) => {
 
 const nhm = new NodeHtmlMarkdown({})
 
+// Translates a markdown string to HTML, before translating it to the target language
+// and finally converting it back to markdown.
 const fetchTranslationMarkdown = async (srcMd, sourceLang, targetLang) => {
 	const isAnArray = srcMd instanceof Array
 	const escapedMd = isAnArray
