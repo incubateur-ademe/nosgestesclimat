@@ -14,11 +14,18 @@ const { exit } = require('process')
 const utils = require('./utils')
 const cli = require('./cli')
 const deepl = require('./deepl')
+const { basename } = require('path')
 
-const { srcLang, destLangs, srcFile } = cli.getArgs(
+const { srcLang, destLangs, srcFile, remove } = cli.getArgs(
 	`Calls the DeepL API to translate the rule questions, titles, notes,
 	summaries and suggestions.`,
-	{ source: true, target: true, file: true, defaultSrcFile: 'data/**/*.yaml' }
+	{
+		source: true,
+		target: true,
+		file: true,
+		defaultSrcFile: 'data/**/*.yaml',
+		remove: true,
+	}
 )
 
 const progressBars = new cliProgress.MultiBar(
@@ -36,7 +43,8 @@ const translateTo = async (
 	destLang,
 	destPath,
 	entryToTranslate,
-	translatedRules
+	translatedRules,
+	frenchRules
 ) => {
 	const updateTranslatedRules = (rule, attr, transVal, refVal) => {
 		let key = [rule, attr]
@@ -100,7 +108,18 @@ const translateTo = async (
 		cli.printWarn(`[SKIPPED] - ${rule}:`)
 		console.log(msg)
 	})
-	utils.writeYAML(destPath, translatedRules)
+}
+
+function removeUnusedKeys(baseRules, targetRules) {
+	const frRuleKeys = Object.keys(baseRules)
+	return Object.fromEntries(
+		Object.entries(targetRules).filter(([key]) => {
+			if (!frRuleKeys.includes(key)) {
+				console.log(`[REMOVED] - ${key}`)
+			}
+			return frRuleKeys.includes(key)
+		})
+	)
 }
 
 glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
@@ -120,6 +139,7 @@ glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 	destLangs.forEach(async (destLang) => {
 		const destPath = path.resolve(`data/translated-rules-${destLang}.yaml`)
 		const destRules = R.mergeAll(utils.readYAML(destPath))
+		let translatedRules = R.clone(destRules)
 
 		console.log(`Getting missing rule for ${destLang}...`)
 		let missingRules = utils.getMissingRules(rules, destRules)
@@ -131,9 +151,20 @@ glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 				)} new entries to ${cli.yellow(destLang)}...`
 			)
 
-			translateTo(srcLang, destLang, destPath, missingRules, destRules)
+			translatedRules = translateTo(
+				srcLang,
+				destLang,
+				destPath,
+				missingRules,
+				destRules,
+				rules
+			)
 		} else {
 			console.log(`Found no new entry to translate...`)
 		}
+		utils.writeYAML(
+			destPath,
+			remove ? removeUnusedKeys(rules, translatedRules) : translatedRules
+		)
 	})
 })
