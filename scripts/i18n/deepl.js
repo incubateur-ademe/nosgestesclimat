@@ -1,63 +1,50 @@
 require('isomorphic-fetch')
 const deepl = require('deepl-node')
+const { marked } = require('marked')
+const { NodeHtmlMarkdown } = require('node-html-markdown')
 
 const NO_TRANS_CHAR = ' '
 
 const translator = new deepl.Translator(process.env.DEEPL_API_KEY)
 
-const simpleLinkRe = new RegExp(/[^!]\[(?<txt>.*?)\]\((?<url>.*?)\)/g)
-const imgInsideLinkRe = new RegExp(/\[(?<txt>!.*?\]\(.*?\))\]\((?<url>.*?)\)/g)
-
-const escapeMarkdownLinks = (str) => {
-	const escape = (re, str, isImbricatedImgLink = false) => {
-		const elements = str.matchAll(re)
-		if (elements) {
-			for (el of elements) {
-				let matchedStr = el[0].trim()
-				if (isImbricatedImgLink || !matchedStr.startsWith('[!')) {
-					str = str.replace(
-						matchedStr,
-						`<a href="${el.groups.url}">${el.groups.txt}</a>`
-					)
-				}
-			}
-		}
-		return str
-	}
-
-	str = escape(simpleLinkRe, str)
-	str = escape(imgInsideLinkRe, str, true)
-	return str
+const markdownToHtml = (md) => {
+	return marked.parse(md.replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]/, ''))
 }
+
+const nhm = new NodeHtmlMarkdown({})
 
 const fetchTranslationMarkdown = async (srcMd, sourceLang, targetLang) => {
-	const escapedMd =
-		srcMd instanceof Array
-			? srcMd.map(escapeMarkdownLinks)
-			: escapeMarkdownLinks(srcMd)
+	const isAnArray = srcMd instanceof Array
+	const escapedMd = isAnArray
+		? srcMd.map(markdownToHtml)
+		: markdownToHtml(srcMd)
 
-	var trans = await fetchTranslation(escapedMd, sourceLang, targetLang)
-
-	trans = trans.replaceAll('&gt;', '>')
-
-	return trans
+	var trans = await fetchTranslation(escapedMd, sourceLang, targetLang, 'html')
+	return isAnArray ? trans.map(nhm.translate) : nhm.translate(trans)
 }
 
-const fetchTranslation = async (text, sourceLang, targetLang) => {
+const fetchTranslation = async (
+	text,
+	sourceLang,
+	targetLang,
+	tagHandling = 'xml'
+) => {
 	if (process.env.TEST_MODE) {
 		const tradOrEmpty = (t) =>
 			t === NO_TRANS_CHAR ? NO_TRANS_CHAR : '[TRAD] ' + t
 		return text instanceof Array ? text.map(tradOrEmpty) : tradOrEmpty(text)
 	}
+
 	const glossary =
 		targetLang === 'en-us'
 			? await translator.getGlossary('bfe1506b-b7e6-49c6-90f2-bcd4488ab270')
 			: undefined
+
 	const resp = await translator.translateText(text, sourceLang, targetLang, {
 		ignoreTags: ['ignore'],
 		preserveFormatting: true,
 		glossary,
-		tagHandling: 'xml',
+		tagHandling,
 	})
 	// here we replace html special character &amp; to & but it should be done for all characters.
 	return resp instanceof Array
