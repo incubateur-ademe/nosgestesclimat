@@ -26,9 +26,11 @@
 
 ## Introduction
 
-Un pré-requis pour vous lancer dans ce guide est la lecture de notre article sur [l'implémentation des "services scoiétaux" dans Nos Gestes Climat](https://nosgestesclimat.fr/nouveaut%C3%A9s/l'empreinte-climat%20des%20%22services%20soci%C3%A9taux%22).
+> **Warning**
+> 
+> **Un pré-requis pour vous lancer dans ce guide est la lecture de notre article sur [l'implémentation des "services scoiétaux" dans Nos Gestes Climat](https://nosgestesclimat.fr/nouveaut%C3%A9s/l'empreinte-climat%20des%20%22services%20soci%C3%A9taux%22).**
 
-**En bref**, certains postes constituant l'empreinte carbone individuelle sont inhérentes à la société à laquelle nous appartenons et ne peuvent pas être captés autrement que via une approche macro-économique (ie l'approche "montante" utilisée dans le reste du test NGC et permettant de reconstituer l'empreinte individuelle via les données physiques de consommation n'est pas suffisante). Ils correspondent à l'empreinte des services publics français, et des services marchands que l'on peut considérer comme étant essentiels à la vie de chacun, divisées par la population du pays.
+**En bref**, certains postes constituant l'empreinte carbone individuelle sont inhérents à la société à laquelle nous appartenons et ne peuvent pas être captés autrement que via une approche macro-économique (ie l'approche "montante" utilisée dans le reste du test NGC et permettant de reconstituer l'empreinte individuelle via les données physiques de consommation n'est pas suffisante). Ils correspondent à l'empreinte des services publics français, et des services marchands que l'on peut considérer comme étant essentiels à la vie de chacun, divisée par la population du pays.
 
 La première catégorie "services publics" comprend par exemple l'empreinte des hôpitaux français, ou de la justice. Nous considérons que cette empreinte doit être également répartie pour tous les citoyens, car ce sont des postes "républicains" que seule la démocratie peut faire évoluer, pas directement par les choix de consommation individuels.
 
@@ -36,21 +38,21 @@ La deuxième catégorie "services marchands" comprend notamment le réseau de t�
 
 ## Principe général
 
-En France, le calcul de l'empreinte carbone nationale est géré par le Service des Données et Etudes Statistiques (SDES) du Ministère de l'Écologie. Le dernier résultat précis est disponible pour l'année 2017. C'est à partir de ces données que l'on retrouve l'ordre de grandeur des 10 tonnes de CO2e par an et par personne.
+En France, le calcul de l'empreinte carbone nationale est géré par le Service des Données et Etudes Statistiques (SDES) du Ministère de l'Écologie. Le dernier résultat précis est disponible pour l'année **2017**. C'est à partir de ces données que l'on retrouve l'ordre de grandeur des 10 tonnes de CO2e par an et par personne.
 
-Les données fournies par le SDES donnent une empreinte carbone correspondant à ce qui est consommé sur le territoire français par branche économique ou bien par groupement de branches économiques. Il est alors possible de diviser l'empreinte carbone calculée au niveau "macro" selon les secteurs d'activités et donc selon les postes de consommation.
+Les données fournies par le SDES donnent une empreinte carbone correspondant à ce qui est consommé sur le territoire français par branche économique ou bien par groupement de branches économiques. **Il est alors possible de diviser l'empreinte carbone calculée au niveau "macro" selon les secteurs d'activités et donc selon les postes de consommation.**
 
-Ainsi, l'objectif est de déterminer la part de cette empreinte carbone nationale non comptabilisée dans Nos Gestes Climat afin de produire un chiffre correspondant à une base d'empreinte commune à tous les Français : les services sociétaux.
+Ainsi, l'objectif est de **déterminer la part de cette empreinte carbone nationale non comptabilisée dans Nos Gestes Climat** afin de produire un chiffre correspondant à une base d'empreinte commune à tous les Français : les services sociétaux.
 
 Ce travail n'est pas évident : pour certaines données, elles sont aggrégées à un niveau au dessus du CPA, pour d'autres, il est nécessaire de descendre au niveau du sous-groupe CPA pour ne capter qu'une partie de la branche.
 
-Pour nous aider, nous disposons des chiffres d'affaires par branche économique _française_ permettant alors de décomposer les intensités carbone selon les intensité économique. Au-delà du fait que ces chiffres d'affaires sont nationaux, un autre problème apparait : certaines données étant confidentielles et donc secrètes. Alors que faire ? Nous avons fait l'hypothèse que ces données l'étaient également pour le calcul de l'empreinte carbone nationale. Faute d'informations supplémentaires, nous avons choisi de ne pas les considérer dans ces calculs de décomposition.
+Pour nous aider, nous disposons des chiffres d'affaires par branche économique _française_ permettant alors de décomposer les intensités carbone selon les intensité économique. Un problème apparait : certaines données étant confidentielles et donc secrètes. Alors que faire ? Nous avons fait l'hypothèse que ces données l'étaient également pour le calcul de l'empreinte carbone nationale. Faute d'informations supplémentaires, nous avons choisi de ne pas les considérer dans ces calculs de décomposition. Il semble que ces données sont connues à des fins statistiques par le SDES mais nous n'y avons pas accès (voir [Limites du calcul](#limites-du-calcul)).
 
-Pour illusttrer la cas de données aggrégées au niveau supérieur CPA, prenons l'exemple de la construction (= F41_43 = 54116 kTCO2e). Via les ratios issus des chiffres d'affaires, on a : F41=25%, F42=13.5%, F43=61.5%.
+Pour illustrer la cas de données aggrégées au niveau supérieur CPA, prenons l'exemple de la construction (= F41_43 = 54116 kTCO2e). Via les ratios issus des chiffres d'affaires, on a : F41=25%, F42=13.5%, F43=61.5%.
 
-Pour aller encore plus loin sur un niveau de précision plus important (sous-branches économiques), prenons l'exemple de E38 relatif à la collecte des déchets, seules les sous branches E3812 et E3822, concernant les déchets dangereux, étaient à inclure dans les services publics. Nous avons donc également utilisé la décomposition par chiffre d'affaire pour ressortir l'intensité carbone associées aux sous-branche en question au sein de E38.
+Pour aller encore plus loin sur un niveau de précision plus avancé (sous-branches économiques), prenons l'exemple de E38 relatif à la collecte des déchets, seules les sous branches E3812 et E3822, concernant les déchets dangereux, étaient à inclure dans les services publics. Nous avons donc également utilisé la décomposition par chiffre d'affaire pour ressortir l'intensité carbone associées aux sous-branche en question au sein de E38.
 
-Ainsi, nous disposons d'informations suffisantes pour proposer une première version de la décomposition des services sociétaux, "dans l'attente de mieux". Par ailleurs, et vous le verrez dans la suite du document, ces calculs sont automatisés via des scripts javascript qui permettent de reproduire ce travail d'analyse et mettre à jour le modèle avec de nouvelles données en quelques minutes !
+Ainsi, nous disposons d'informations suffisantes pour proposer une première version de la décomposition des services sociétaux, "dans l'attente de mieux". Par ailleurs, et vous le verrez dans la suite du document, ces calculs sont automatisés via des scripts javascript qui permettent de **reproduire ce travail d'analyse et mettre à jour le modèle avec de nouvelles données en quelques minutes** !
 
 ![](https://storage.gra.cloud.ovh.net/v1/AUTH_0f20d409cb2a4c9786c769e2edec0e06/imagespadincubateurnet/uploads/upload_cd83618ee65063258012cd3d4ce17933.png)
 
@@ -76,9 +78,9 @@ A venir
 
 ## Limites du calcul
 
-- Il est possible que le fichier dont nous disposons pour décomposer les intensités carbone des différentes branches ne soit pas adapté au fichier du SDES. (nomenclature NAF vs CPA) : est ce que le chiffre d'affaire couvre les même périmètres que pour les données du SDES (Territoire française, nomenclature ?)
-- Certaines valeurs de ce fichier sont "secrètes" : les budgets associées à la défense ne sont volontairement pas public. Dans une première approche nous avons omis ces postes pour la décomposition des postes d'émission en supposant qu'elles étaient également secrètes pour le SDES. Finalement il semble qu'elles sont connues a des fins statistiques et l'agrégation proposée ne permet pas de remonter jusqu'à ces chiffres. Nous n'avons pour le moment pas d'autres pistes pour résoudre les problèmes liés à cette approche par chiffre d'affaire. Il faudrait explorer d'autres méthodes afin de désagréger ces branches.
-- Une autre limite importante à cette méthode de calcul, qui concerne plus généralement l'approche macro-économique, est le caractère homogène ou non du contenu de chaque branche. Par exemple, dans le secteur de la construction, les émissions carbone associées à la construction d'un local en brique, d'une tiny house ou de prestations de finitions (peinture) pour un même investissement seront très hétérogènes. Il s'agira peut-être de creuser certains postes importants des services sociétaux afin de limiter les incertitudes (changements d'approche ?).
+- Il est possible que le fichier dont nous disposons pour décomposer les intensités carbone des différentes branches ne soit pas adapté au fichier du SDES. (**nomenclature NAF vs CPA**) : est ce que le chiffre d'affaire couvre les même périmètres que pour les données du SDES (Territoire française, nomenclature ?)
+- **Certaines valeurs de ce fichier sont "secrètes"** : les budgets associées à la défense ne sont volontairement pas public. Dans une première approche nous avons omis ces postes pour la décomposition des postes d'émission en supposant qu'elles étaient également secrètes pour le SDES. Finalement il semble qu'elles sont connues a des fins statistiques et l'agrégation proposée ne permet pas de remonter jusqu'à ces chiffres. Nous n'avons pour le moment pas d'autres pistes pour résoudre les problèmes liés à cette approche par chiffre d'affaire. Il faudrait explorer d'autres méthodes afin de désagréger ces branches.
+- Une autre limite importante à cette méthode de calcul, qui concerne plus généralement l'approche macro-économique, est le **caractère homogène ou non du contenu de chaque branche**. Par exemple, dans le secteur de la construction, les émissions carbone associées à la construction d'un local en brique, d'une tiny house ou de prestations de finitions (peinture) pour un même investissement seront très hétérogènes. Il s'agira peut-être de creuser certains postes importants des services sociétaux afin de limiter les incertitudes (changements d'approche ?).
 
 ## Scripts disponibles
 
