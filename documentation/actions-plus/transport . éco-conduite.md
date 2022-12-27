@@ -22,7 +22,7 @@ De manière générale, l’éco-conduite permet une réduction de sa consommati
 
 ## Budget
 
-Au-delà de l’impact sur le climat, c’est aussi sur votre budget que cette action va influer. En économisant un à deux litres de carburant pour 100 kilomètres, on peut réaliser des économies substantielles. Sur une base de 15 000 kilomètres par an, l’économie peut atteindre environ 300 € pour un véhicule diesel et 400 € pour un véhicule à essence (pour un prix du gasoil à 1,,20 € le litre et un prix du super sans plomb à 1,32 € le litre - données novembre 2020) [2]
+Au-delà de l’impact sur le climat, c’est aussi sur votre budget que cette action va influer. En économisant un à deux litres de carburant pour 100 kilomètres, on peut réaliser des économies substantielles. Sur une base de 15 000 kilomètres par an, l’économie peut atteindre environ 300 € pour un véhicule diesel et 400 € pour un véhicule à essence (pour un prix du gasoil à 1,20 € le litre et un prix du super sans plomb à 1,32 € le litre - données novembre 2020) [2]
 
 ## Chiffres clés à retenir :
 
@@ -38,11 +38,11 @@ Plus de ¾ (77 %) des trajets quotidiens des Français s’effectuent en voiture
 L’application de l’éco-conduite est d’autant plus pertinente en ville et zone urbaine où les arrêts et le redémarrage sont fréquents. Il existe des guides et des formations détaillés pour vous accompagner dans cette démarche dont nous pouvons tout de même citer quelques actions emblématiques de l’éco-conduite ci-après :
 
 - Rouler à vitesse modérée pendant les cinq premiers kilomètres : la surconsommation en ville peut atteindre 45 % sur le premier kilomètre, 25 % sur le second. La pollution aussi augmente sensiblement car les pots catalytiques ne fonctionnent pas de manière optimale à froid,
-- Enlever les coffres de toit, les galeries, les porte-vélos et porte-skis dès qu’ils ne sont pas utiles : ils peuvent entraîner une surconsommation de 10 à 20 %,
-- Vérifier souvent la pression des pneus : un sous gonflage de 0,3 bar entraîne 1,2 % de consommation en plus, de 0,5 bars 2,4 % de consommation en plus,
+- Enlever les coffres de toit, les galeries, les porte-vélos, porte-skis ou tout chargements dès qu’ils ne sont pas utiles : ils peuvent entraîner une surconsommation de 10 à 20 %,
+- Vérifier régulièrement la pression des pneus : un sous gonflage de 0,3 bar entraîne 1,2 % de consommation en plus, de 0,5 bar 2,4 % de consommation en plus,
 - Ne pas pousser le régime moteur peut faire économiser jusqu’à 20 % de carburant
 - Ne pas abuser de la climatisation : elle augmente la consommation de carburant de votre véhicule de 1 à 7 % suivant les climats, les véhicules et les usages.
-  Outre ces éléments, il est important de rappeler ici la nécessité plus générale de décarboner notre mobilité quotidienne et que donc l’éco-conduite ne peut-être une finalité en soi. En effet, il s’agit d’une solution utile et pertinente pour des personnes parcourant beaucoup de kilomètres mais elle ne remet pas en cause la place prépondérante de la voiture dans notre quotidien.
+  Outre ces éléments, il est important de rappeler ici la nécessité plus générale de décarboner notre mobilité quotidienne et que l’éco-conduite ne peut-être une fin en soi. En effet, il s’agit d’une solution utile et pertinente pour des personnes parcourant beaucoup de kilomètres mais elle ne remet pas en cause la place prépondérante de la voiture dans notre quotidien.
 
 ## Sources :
 
