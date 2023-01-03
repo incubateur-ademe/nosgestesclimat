@@ -12,13 +12,19 @@
 - [Principe général](#principe-général)
 - [Données de départ](#données-de-départ)
 - [Reproduire le calcul](#reproduire-le-calcul)
+  - [1) Préparer les données financières en vue de la décomposition des données du SDES](#1-préparer-les-données-financières-en-vue-de-la-décomposition-des-données-du-sdes)
+    - [Cas des valeurs "secrètes"](#cas-des-valeurs-secrètes)
+  - [2) Décomposer les données du SDES](#2-décomposer-les-données-du-sdes)
+  - [Exposer les données de l'empreinte carbone nationale](#exposer-les-données-de-lempreinte-carbone-nationale)
+  - [3) Etudier la composition de chacune des branches économiques et justifier les choix de répartition](#3-etudier-la-composition-de-chacune-des-branches-économiques-et-justifier-les-choix-de-répartition)
+  - [4) Générer les règles des services sociétaux](#4-générer-les-règles-des-services-sociétaux)
+  - [Justifier les choix de répartition](#justifier-les-choix-de-répartition)
 - [Limites du calcul](#limites-du-calcul)
 - [Scripts disponibles](#scripts-disponibles)
   - [`analyse_CA_branches.js`](#analyse_ca_branchesjs)
-  - [`generateNAF_YAML.js`](#generatenaf_yamljs)
-  - [`generateNAF2.js`](#generatenaf2js)
   - [`naf.js`](#nafjs)
-  - [`set_NAF_division.js`](#set_naf_divisionjs)
+  - [`generateNAF_YAML.js`](#generatenaf_yamljs)
+  - [`utils.js`](#utilsjs)
 
 </details>
 
@@ -27,7 +33,7 @@
 ## Introduction
 
 > **Warning**
-> 
+>
 > **Un pré-requis pour vous lancer dans ce guide est la lecture de notre article sur [l'implémentation des "services scoiétaux" dans Nos Gestes Climat](https://nosgestesclimat.fr/nouveaut%C3%A9s/l'empreinte-climat%20des%20%22services%20soci%C3%A9taux%22).**
 
 **En bref**, certains postes constituant l'empreinte carbone individuelle sont inhérents à la société à laquelle nous appartenons et ne peuvent pas être captés autrement que via une approche macro-économique (ie l'approche "montante" utilisée dans le reste du test NGC et permettant de reconstituer l'empreinte individuelle via les données physiques de consommation n'est pas suffisante). Ils correspondent à l'empreinte des services publics français, et des services marchands que l'on peut considérer comme étant essentiels à la vie de chacun, divisée par la population du pays.
@@ -62,7 +68,7 @@ Pour réaliser ce travail d'hybridation du modèle d'empreinte carbone individue
 
 - [Les données de décomposition de l’empreinte carbone de la demande finale de la France](https://www.statistiques.developpement-durable.gouv.fr/la-decomposition-de-lempreinte-carbone-de-la-demande-finale-de-la-france-par-postes-de-consommation) du SDES. On dispose alors de l'intensité carbone associée à la demande finale totale de la population française pour chaque branche économique (code CPA). Ici en [json](https://github.com/datagir/nosgestesclimat/blob/master/scripts/naf/donn%C3%A9es/liste_SDES.json).
 
-A noter que la nomenclature **CPA** correspond à la **Classification européenne des Produits par Activité** [parallèle de la nomenclature **NACE**](<https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Glossary:Statistical_classification_of_products_by_activity_(CPA)/fr>) qui correspond à la classification statistique des activités économiques dans les communautés européennes [dont découle les code **NAF** (Nomenclature d'Activité Française)](https://webmarche.adullact.org/?page=Entreprise.EntreprisePopupCodeNaf). Il semble la nomenclature entre CPA, NACE et NAF esu quasi-identique. Leur contenu ne l'est pas.
+A noter que la nomenclature **CPA** correspond à la **Classification européenne des Produits par Activité** [parallèle de la nomenclature **NACE**](<https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Glossary:Statistical_classification_of_products_by_activity_(CPA)/fr>) qui correspond à la classification statistique des activités économiques dans les communautés européennes [dont découlent les code **NAF** (Nomenclature d'Activité Française)](https://webmarche.adullact.org/?page=Entreprise.EntreprisePopupCodeNaf). Il semble la nomenclature entre CPA, NACE et NAF esu quasi-identique. Leur contenu ne l'est pas.
 
 [Un schéma sera plus parlant](<https://ec.europa.eu/eurostat/documents/1995700/1995914/CPA2008introductoryguidelinesFR.pdf/234336a7-1b86-476c-bb1b-fe0ce240090b#:~:text=Communaut%C3%A9s%20europ%C3%A9ennes%20(l'acronyme%20NACE,%C3%A9conomiques%20dans%20les%20Communaut%C3%A9s%20europ%C3%A9ennes).&text=CPC%20d%C3%A9signe%20la%20Classification%20centrale%20des%20produits%20des%20Nations%20unies.&text=CPA%20d%C3%A9signe%20la%20Classification%20europ%C3%A9enne%20des%20produits%20par%20activit%C3%A9.>):
 
@@ -74,7 +80,194 @@ A noter que la nomenclature **CPA** correspond à la **Classification européenn
 
 ## Reproduire le calcul
 
-A venir
+### 1) Préparer les données financières en vue de la décomposition des données du SDES
+
+Pour cette première étape, on utilise le script `analyze_NAF_CA` qui permet d'obtenir pour chaque branche et sous-branche la part de chiffre d'affaire (en %) de chaque élément au sein du groupe auquel il appartient.
+
+> N'oublions pas que l'objectif final est d'atribuer, parmi l'ensemble des branches écnomiques, celles qui composent les services sociétaux, ce qui nécessite parfois de descendre au niveau de la "sous-branche".
+
+> Le fichier d'entrée (`ca_branches_2017.json`) correspond au chiffre d'affaire par branche économique en France en 2017. Il est tout a fait possible de traiter de la même manière les données pour d'autres années.
+
+Le fichier de sortie est `analyse_CA_NAF.json`.
+
+Ainsi, en prenant l'exemple de la branche "08" (Autres industries extractives), on passe de
+
+```json
+{
+		"branche": "08",
+		"libellé": "Autres industries extractives",
+		"ca": "4903.8"
+	},
+	{
+		"branche": "081",
+		"libellé": "Extraction de pierres, de sables et d'argiles",
+		"ca": "4411.5"
+	},
+	{
+		"branche": "0811",
+		"libellé": "Extraction de pierres ornementales et de construction, de calcaire industriel, de gypse, de craie et d'ardoise",
+		"ca": "508.3"
+	},
+	{
+		"branche": "0811Z",
+		"libellé": "Extraction de pierres ornementales et de construction, de calcaire industriel, de gypse, de craie et d'ardoise",
+		"ca": "508.3"
+	},
+	{
+		"branche": "0812",
+		"libellé": "Exploitation de gravières et sablières, extraction d’argiles et de kaolin",
+		"ca": "3903.1"
+	},
+	{
+		"branche": "0812Z",
+		"libellé": "Exploitation de gravières et sablières, extraction d’argiles et de kaolin",
+		"ca": "3903.1"
+	},
+	{
+		"branche": "089",
+		"libellé": "Activités extractives n.c.a.",
+		"ca": "492.4"
+	},
+	{
+		"branche": "0891",
+		"libellé": "Extraction des minéraux chimiques et d'engrais minéraux",
+		"ca": "63.2"
+	},
+	{
+		"branche": "0891Z",
+		"libellé": "Extraction des minéraux chimiques et d'engrais minéraux",
+		"ca": "63.2"
+	},
+	{
+		"branche": "0892",
+		"libellé": "Extraction de tourbe",
+		"ca": "60.8"
+	},
+	{
+		"branche": "0892Z",
+		"libellé": "Extraction de tourbe",
+		"ca": "60.8"
+	},
+	{
+		"branche": "0893",
+		"libellé": "Production de sel",
+		"ca": "153.1"
+	},
+	{
+		"branche": "0893Z",
+		"libellé": "Production de sel",
+		"ca": "153.1"
+	},
+	{
+		"branche": "0899",
+		"libellé": "Autres activités extractives n.c.a.",
+		"ca": "215.2"
+	},
+	{
+		"branche": "0899Z",
+		"libellé": "Autres activités extractives n.c.a.",
+		"ca": "215.2"
+	}
+```
+
+à :
+
+```json
+"8":
+  {
+		"branche": "08",
+		"libellé": "Autres industries extractives",
+		"ca": 4903.8,
+		"composition": [
+			{
+				"branche": "081",
+				"libellé": "Extraction de pierres, de sables et d'argiles",
+				"ca": 4411.5,
+				"part": "90%",
+				"description": [
+					{
+						"branche": "0811",
+						"libellé": "Extraction de pierres ornementales et de construction, de calcaire industriel, de gypse, de craie et d'ardoise",
+						"ca": "508.3",
+						"part": "12%"
+					},
+					{
+						"branche": "0812",
+						"libellé": "Exploitation de gravières et sablières, extraction d’argiles et de kaolin",
+						"ca": "3903.1",
+						"part": "88%"
+					}
+				]
+			},
+			{
+				"branche": "089",
+				"libellé": "Activités extractives n.c.a.",
+				"ca": 492.4,
+				"part": "10%",
+				"description": [
+					{
+						"branche": "0891",
+						"libellé": "Extraction des minéraux chimiques et d'engrais minéraux",
+						"ca": "63.2",
+						"part": "13%"
+					},
+					{
+						"branche": "0892",
+						"libellé": "Extraction de tourbe",
+						"ca": "60.8",
+						"part": "12%"
+					},
+					{
+						"branche": "0893",
+						"libellé": "Production de sel",
+						"ca": "153.1",
+						"part": "31%"
+					},
+					{
+						"branche": "0899",
+						"libellé": "Autres activités extractives n.c.a.",
+						"ca": "215.2",
+						"part": "44%"
+					}
+				]
+			}
+		]
+	}
+```
+
+#### Cas des valeurs "secrètes"
+
+Certains chiffres d'affaire sont marquées "S" (ie, "soumises au secret statistique") : c'est le cas pour l'extraction de gaz naturel, l'industrie du tabac ou encore les engins militaires. Dans la suite nous prendrons l'exemple du groupement SDES C10_12 comprenant C10, C11 dont le CA est connu et C12 inconnu.
+
+Le SDES nous a confirmé, suite à des échanges en décembre 2022, que ces valeurs leur sont connues, ce qui implique que l'intensité carbone de chaque groupement de branches comprend les intensités carbone des branches "S".
+
+Une première possibilté de gestion de ces valeurs inconnues consistait à les prendre en compte sur la base d'un ratio basé sur le nombre de branche composant chaque groupement. Ansi considérer que C12 représente 33% et que C10 et C11 se partagent les 67% restants selon leurs parts de CA. Mais pour quelle raison devrait-on s'en tenir à une définition de nomenclature arbitraire ?
+
+Une autre option était d'ignorer les branches secrètes. On ne sait pas, il semble impossible d'estimer d'une manière ou d'une autre la part de ces branchs secrètes. En prenant du recul sur l'objectif de ce travail, on se rend compte que peu de branches secrètes sont intéressantes dans la composition des services sociétaux ce qui ne semble pas une hypothèse trop forte que de ne pas chercher à combler ces "trous". Cependant, il est important de garder en tête cette problématique pour la prochaine version.
+
+### 2) Décomposer les données du SDES
+
+La deuxième étape est la désagragation des données du SDES (`liste_SDES.json`) via les parts du chiffre d'affaire de chaque branche (`analyse_CA_NAF.json`). Pour rappel, les données de décomposition de l’empreinte carbone de la demande finale de la France sont rapportées parfois au niveau de la branche économique, parfois au niveau de la (exemple : CPA_E36 / CPA_E37_E39).
+
+> Ces aggrégations semblent d'ailleurs volontaire car elles permettent de ne pas pouvoir remonter aux valeurs statistiques secrètes. Elles sont également dépendantes du niveau de données accessibles pour les calculs intermédiaires.
+
+En étape intermédiaire, le script setNafDivision permet d'adapter le fichier
+
+Par la suite et pour prendre en compte le fichier précedemment créé, nous utilisons le script `naf.json`. Le fichier de sortie est `liste_SDES_traitée.json`.
+
+### Exposer les données de l'empreinte carbone nationale
+
+### 3) Etudier la composition de chacune des branches économiques et justifier les choix de répartition
+
+Générer les règles
+
+Troisième étape et non des moindres : définir le contenu des services sociétaux via les descriptions de chaque branches économiques.
+
+Ici pas de script, les
+
+### 4) Générer les règles des services sociétaux
+
+### Justifier les choix de répartition
 
 ## Limites du calcul
 
@@ -88,10 +281,8 @@ A venir
 
 ### `analyse_CA_branches.js`
 
-### `generateNAF_YAML.js`
-
-### `generateNAF2.js`
-
 ### `naf.js`
 
-### `set_NAF_division.js`
+### `generateNAF_YAML.js`
+
+### `utils.js`

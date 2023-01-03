@@ -1,28 +1,27 @@
-const fs = require('fs')
-const yaml = require('yaml')
-const { format, resolveConfig } = require('prettier')
+const utils = require('./utils')
 
-const sdesFileName = 'scripts/naf/données/liste_SDES_traitée.json'
-const readFile = fs.readFileSync(sdesFileName, 'utf8')
+const readFile = utils.readJSON(
+	'scripts/services-societaux/output/liste_SDES_traitée.json'
+)
 
-const répartitionFileName = 'scripts/naf/données/répartition_NAF.yaml'
-const readFileRépartition = fs.readFileSync(répartitionFileName, 'utf8')
-const répartition = yaml.parse(readFileRépartition)
+const analyseNAF = utils.readJSON(
+	'scripts/services-societaux/output/analyse_CA_NAF.json'
+)
 
-const analyseCANAFFileName = 'scripts/naf/données/analyse_CA_naf.json'
-const readFileanalyseCANAF = fs.readFileSync(analyseCANAFFileName, 'utf8')
-const analyseNAF = JSON.parse(readFileanalyseCANAF)
+const répartition = utils.readYAML(
+	'scripts/services-societaux/input/répartition_NAF.yaml'
+)
 
-const titresFileName = 'scripts/naf/données/titres_raccourcis.yaml'
-const readFiletitres = fs.readFileSync(titresFileName, 'utf8')
-const titres = yaml.parse(readFiletitres)
+const titres = utils.readYAML(
+	'scripts/services-societaux/input/titres_raccourcis.yaml'
+)
 
 const SP_sum = []
 const SM_sum = []
 
 const findNumber = /\d{2}/
 
-const data = JSON.parse(readFile).map(({ code_CPA, ...att }) => {
+const data = readFile.map(({ code_CPA, ...att }) => {
 	const ruleCPA = `naf . ${code_CPA}`
 	const ruleCPAparHab = `naf . ${code_CPA} par hab`
 	const titre = att['Libellé CPA']
@@ -111,29 +110,20 @@ const SMobject = {
 	},
 }
 
-console.log(yaml.stringify(dataObject))
-
-//Duplicate of writeYAML in i18n/utils.js
-const writeYAML = (path, content, blockQuote = 'literal') => {
-	resolveConfig(process.cwd()).then((prettierConfig) =>
-		fs.writeFileSync(
-			path,
-			format(
-				messageGénérationAuto +
-					yaml.stringify(content, {
-						sortMapEntries: true,
-						blockQuote,
-					}),
-				{ ...prettierConfig, parser: 'yaml' }
-			)
-		)
-	)
-}
+// console.log(yaml.stringify(dataObject))
 
 const messageGénérationAuto = `# Ce fichier a été généré automatiquement via le script 'scripts/generateNAF_YAML.js' dans le dépôt nosgestesclimat. 
 # Le fichier permettant de modifier les données importantes de répartition et justification des services sociétaux
 # est 'scripts/données/répartition_NAF.yaml'. Pour en savoir plus, n'hésitez pas à parcourir notre guide !\n\n`
 
-writeYAML('data/naf/naf.yaml', dataObject)
-writeYAML('data/services sociétaux/services publics.yaml', SPobject)
-writeYAML('data/services sociétaux/services marchands.yaml', SMobject)
+utils.writeYAML('data/naf/naf.yaml', dataObject, messageGénérationAuto)
+utils.writeYAML(
+	'data/services sociétaux/services publics.yaml',
+	SPobject,
+	messageGénérationAuto
+)
+utils.writeYAML(
+	'data/services sociétaux/services marchands.yaml',
+	SMobject,
+	messageGénérationAuto
+)

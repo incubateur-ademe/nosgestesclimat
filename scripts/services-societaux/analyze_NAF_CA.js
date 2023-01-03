@@ -1,9 +1,6 @@
-const fs = require('fs')
-const yaml = require('yaml')
+const utils = require('./utils')
 
 // utils
-const roundValuePoucent = (x) => Math.round(x * 100)
-
 const getGroupSum = (groupObj) => {
 	let countS = 0
 	const objLength = Object.keys(groupObj).length
@@ -30,22 +27,13 @@ const getPart = (nafObj, sumCA) => {
 		return '0%'
 	}
 	{
-		return `${roundValuePoucent(nafObj['ca'] / sumCA)}%`
+		return `${utils.roundValueToPercent(nafObj['ca'] / sumCA)}%`
 	}
 }
 
-const sortJSON = (unordered) =>
-	Object.keys(unordered)
-		.sort()
-		.reduce((obj, key) => {
-			obj[+key] = unordered[key]
-			return obj
-		}, {})
-
-// read files
-const ca_branchesFilename = 'scripts/naf/données/ca_branches_2017.json'
-const read_ca_branches = fs.readFileSync(ca_branchesFilename, 'utf8')
-const ca_branches = JSON.parse(read_ca_branches)
+const ca_branches = utils.readJSON(
+	'scripts/services-societaux/input/ca_branches_2017.json'
+)
 
 const findNumber = /\d{2}/
 
@@ -100,8 +88,9 @@ Object.values(ca_lvl2).map((nafGroupObj) => {
 	nafGroupObj['composition'] = nafComposition
 })
 
-// console.log(sortJSON(data))
-fs.writeFileSync(
-	'scripts/naf/données/analyse_CA_naf.json',
-	JSON.stringify(sortJSON(data))
+// console.log(utils.sortJSON(data))
+
+utils.writeJSON(
+	'scripts/services-societaux/output/analyse_CA_NAF.json',
+	utils.sortJSON(data)
 )
