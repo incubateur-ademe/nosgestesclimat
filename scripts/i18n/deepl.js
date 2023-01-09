@@ -58,10 +58,10 @@ const fetchTranslation = async (text, sourceLang, targetLang) => {
 		glossary,
 		tagHandling: 'xml',
 	})
-
+	// here we replace html special character &amp; to & but it should be done for all characters.
 	return resp instanceof Array
-		? resp.map((translation) => translation.text)
-		: resp.text
+		? resp.map((translation) => translation.text.replaceAll('&amp;', '&'))
+		: resp.text.replaceAll('&amp;', '&')
 }
 
 module.exports = {

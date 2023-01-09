@@ -13,7 +13,7 @@ const readYAML = (path) => {
 	return yaml.parse(fs.readFileSync(path, 'utf-8'))
 }
 
-const writeYAML = (path, content, blockQuote = 'folded') => {
+const writeYAML = (path, content, blockQuote = 'literal') => {
 	resolveConfig(process.cwd()).then((prettierConfig) =>
 		fs.writeFileSync(
 			path,
@@ -147,6 +147,7 @@ const getMissingRules = (srcRules, targetRules) => {
 		'note',
 		'suggestions',
 		'mosaique',
+		'abréviation',
 	]
 
 	const areEqual = (s1, s2) => {
@@ -184,7 +185,7 @@ const getMissingRules = (srcRules, targetRules) => {
 					filteredValEntries.reduce((acc, [attr, refVal]) => {
 						if (keysToTranslate.includes(attr)) {
 							let targetRef = targetRule[attr + LOCK_KEY_EXT]
-							let hasTheSameRefValue = targetRef && targetRef === refVal
+							let hasTheSameRefValue
 
 							switch (attr) {
 								case 'suggestions': {
@@ -201,6 +202,10 @@ const getMissingRules = (srcRules, targetRules) => {
 									break
 								}
 								default:
+									hasTheSameRefValue =
+										targetRef &&
+										// NOTE: avoid false positive caused by non trimmed white spaces.
+										targetRef.replaceAll(' ', '') === refVal.replaceAll(' ', '')
 									break
 							}
 

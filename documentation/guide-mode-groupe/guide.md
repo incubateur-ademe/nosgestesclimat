@@ -55,9 +55,9 @@ Si vous ne souhaitez pas vous focaliser sur résultats d'une personne en particu
 
   Je visite la page [Logement](./guide-logement) !
 
-- **🏛️ Services publics:** On a tous en tête cet objectif de 2 tonnes par an et par personne en 2050... mais en voyant le résultat du test, on est souvent dérouté par l'empreinte des services publics, qui représente 1,1 tonnes ! Doit-on arriver à la conclusion que cet objectif est inatteignable ? Bien sûre que non ! Nous allons voir ici que la transition individuelle de tous (chose absolument nécessaire) doit être avant tout pensée dans une dynamique collective de changement.
+- **🏛️ Services publics:** On a tous en tête cet objectif de 2 tonnes par an et par personne en 2050... mais en voyant le résultat du test, on est souvent dérouté par l'empreinte des services sociétaux, qui représente près des 3/4 de ce chiffre ! Doit-on arriver à la conclusion que cet objectif est inatteignable ? Bien sûre que non ! Nous allons voir ici que la transition individuelle de tous (chose absolument nécessaire) doit être avant tout pensée dans une dynamique collective de changement.
 
-  Je visite la page [Services Publics](./guide-services-publics) !
+  Je visite la page [Services Sociétaux](./guide-services-sociétaux) !
 
 - **📦 Divers:** Nos vies quotidiennes sont maintenant remplies de multitudes d'objets, vêtements et gadgets accumulés tout au long de notre vie. Venez découvrir ici les principes de la consommation responsable pour réduire l'empreinte carbone de votre consommation. Et oui, même si ce n'est jamais le poste le plus significatif en termes d'émissions de gaz à effet de serre, ses impacts sur l'environnement sont nombreux.
 
