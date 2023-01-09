@@ -13,13 +13,6 @@ const Engine = require('publicodes').default
 
 const utils = require('./i18n/utils')
 const cli = require('./i18n/cli')
-const {
-	dGraphToJSON,
-	getCompressibleNodes,
-	getDependencyGraphStats,
-	getDependencyGraph,
-} = require('./../../scripts/rulesCompression')
-
 const outputJSONPath = './public'
 
 const {
@@ -178,71 +171,149 @@ const getCompressedRules = (baseRules) => {
 	}, baseRules)
 }
 
-glob(srcFile, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
-	const defaultDestPath = path.join(outputJSONPath, `co2-${srcLang}.json`)
-	var baseRules = files.reduce((acc, filename) => {
-		try {
-			const rules = utils.readYAML(path.resolve(filename))
-			return { ...acc, ...rules }
-		} catch (err) {
-			console.log(
-				' ❌ Une erreur est survenue lors de la lecture du fichier',
-				filename,
-				':\n\n',
-				err.message
-			)
-			exit(-1)
-		}
-	}, {})
+// glob(srcFile, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
+// 	const defaultDestPath = path.join(outputJSONPath, `co2-${srcLang}.json`)
+// 	var baseRules = files.reduce((acc, filename) => {
+// 		try {
+// 			const rules = utils.readYAML(path.resolve(filename))
+// 			return { ...acc, ...rules }
+// 		} catch (err) {
+// 			console.log(
+// 				' ❌ Une erreur est survenue lors de la lecture du fichier',
+// 				filename,
+// 				':\n\n',
+// 				err.message
+// 			)
+// 			exit(-1)
+// 		}
+// 	}, {})
+//
+// 	if (compress) {
+// 		baseRules = getCompressedRules(baseRules)
+// 	}
+//
+// 	try {
+// 		// new Engine(baseRules).evaluate('bilan')
+//
+// 		if (markdown) {
+// 			console.log('| Task | Status | Message |')
+// 			console.log('|:-----|:------:|:-------:|')
+// 		}
+// 		console.log(
+// 			markdown
+// 				? `| Rules evaluation | :heavy_check_mark: | Ø |`
+// 				: ' ✅ Les règles ont été évaluées sans erreur !'
+// 		)
+//
+// 		writeRules(baseRules, defaultDestPath, srcLang)
+//
+// 		destLangs.forEach((destLang) => {
+// 			const destPath = path.join(outputJSONPath, `co2-${destLang}.json`)
+// 			const translatedRuleAttrs =
+// 				utils.readYAML(
+// 					path.resolve(`data/translated-rules-${destLang}.yaml`)
+// 				) ?? {}
+// 			const translatedRules = addTranslationToBaseRules(
+// 				baseRules,
+// 				translatedRuleAttrs
+// 			)
+// 			writeRules(translatedRules, destPath, destLang)
+// 		})
+// 	} catch (err) {
+// 		if (markdown) {
+// 			console.log(
+// 				`| Rules evaluation | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
+// 			)
+// 			console.log(err)
+// 		} else {
+// 			console.log(
+// 				' ❌ Une erreur est survenue lors de la compilation des règles:\n'
+// 			)
+// 			let lines = err.message.split('\n')
+// 			for (let i = 0; i < 9; ++i) {
+// 				if (lines[i]) {
+// 					console.log('  ', lines[i])
+// 				}
+// 			}
+// 			console.log()
+// 		}
+// 	}
+// })
+//
+// fs.copyFileSync('../data/co2-opti.yaml', outputJSONPath + '/co2-opti.json')
 
-	if (compress) {
-		baseRules = getCompressedRules(baseRules)
-	}
+glob(
+	'data/co2-opti.yaml',
+	{ ignore: ['data/translated-*.yaml'] },
+	(_, files) => {
+		const defaultDestPath = path.join(outputJSONPath, `co2-${srcLang}.json`)
 
-	try {
-		// new Engine(baseRules).evaluate('bilan')
-
-		if (markdown) {
-			console.log('| Task | Status | Message |')
-			console.log('|:-----|:------:|:-------:|')
-		}
-		console.log(
-			markdown
-				? `| Rules evaluation | :heavy_check_mark: | Ø |`
-				: ' ✅ Les règles ont été évaluées sans erreur !'
-		)
-
-		writeRules(baseRules, defaultDestPath, srcLang)
-
-		destLangs.forEach((destLang) => {
-			const destPath = path.join(outputJSONPath, `co2-${destLang}.json`)
-			const translatedRuleAttrs =
-				utils.readYAML(
-					path.resolve(`data/translated-rules-${destLang}.yaml`)
-				) ?? {}
-			const translatedRules = addTranslationToBaseRules(
-				baseRules,
-				translatedRuleAttrs
-			)
-			writeRules(translatedRules, destPath, destLang)
-		})
-	} catch (err) {
-		if (markdown) {
-			console.log(
-				`| Rules evaluation | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
-			)
-			console.log(err)
-		} else {
-			console.log(
-				' ❌ Une erreur est survenue lors de la compilation des règles:\n'
-			)
-			let lines = err.message.split('\n')
-			for (let i = 0; i < 9; ++i) {
-				if (lines[i]) {
-					console.log('  ', lines[i])
-				}
+		console.log('rules:', files)
+		var baseRules = files.reduce((acc, filename) => {
+			try {
+				const rules = utils.readYAML(path.resolve(filename))
+				return { ...acc, ...rules }
+			} catch (err) {
+				console.log(
+					' ❌ Une erreur est survenue lors de la lecture du fichier',
+					filename,
+					':\n\n',
+					err.message
+				)
+				exit(-1)
 			}
-			console.log()
+		}, {})
+
+		console.log('baseRules:', baseRules)
+		// if (compress) {
+		// 	baseRules = getCompressedRules(baseRules)
+		// }
+		//
+		try {
+			// new Engine(baseRules).evaluate('bilan')
+
+			if (markdown) {
+				console.log('| Task | Status | Message |')
+				console.log('|:-----|:------:|:-------:|')
+			}
+			console.log(
+				markdown
+					? `| Rules evaluation | :heavy_check_mark: | Ø |`
+					: ' ✅ Les règles ont été évaluées sans erreur !'
+			)
+
+			writeRules(baseRules, defaultDestPath, srcLang)
+
+			// destLangs.forEach((destLang) => {
+			// 	const destPath = path.join(outputJSONPath, `co2-${destLang}.json`)
+			// 	const translatedRuleAttrs =
+			// 		utils.readYAML(
+			// 			path.resolve(`data/translated-rules-${destLang}.yaml`)
+			// 		) ?? {}
+			// 	const translatedRules = addTranslationToBaseRules(
+			// 		baseRules,
+			// 		translatedRuleAttrs
+			// 	)
+			// 	writeRules(translatedRules, destPath, destLang)
+			// })
+		} catch (err) {
+			if (markdown) {
+				console.log(
+					`| Rules evaluation | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
+				)
+				console.log(err)
+			} else {
+				console.log(
+					' ❌ Une erreur est survenue lors de la compilation des règles:\n'
+				)
+				let lines = err.message.split('\n')
+				for (let i = 0; i < 9; ++i) {
+					if (lines[i]) {
+						console.log('  ', lines[i])
+					}
+				}
+				console.log()
+			}
 		}
 	}
-})
+)
