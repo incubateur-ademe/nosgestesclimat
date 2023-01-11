@@ -99,7 +99,7 @@ const SPobject = {
 		abréviation: 'Publics',
 		icônes: '🏛',
 		formule: { somme: SP_sum },
-		unité: 'ktCO2e',
+		unité: 'kgCO2e',
 	},
 }
 
@@ -110,7 +110,7 @@ const SMobject = {
 		abréviation: 'Marchands',
 		icônes: '✉️',
 		formule: { somme: SM_sum },
-		unité: 'ktCO2e',
+		unité: 'kgCO2e',
 	},
 }
 
