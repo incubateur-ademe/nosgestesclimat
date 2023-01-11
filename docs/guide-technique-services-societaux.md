@@ -15,15 +15,13 @@
 	- [1) Préparer les données financières en vue de la décomposition des données du SDES](#1-préparer-les-données-financières-en-vue-de-la-décomposition-des-données-du-sdes)
 		- [Cas des valeurs "secrètes"](#cas-des-valeurs-secrètes)
 	- [2) Décomposer les données du SDES](#2-décomposer-les-données-du-sdes)
-	- [Exposer les données de l'empreinte carbone nationale](#exposer-les-données-de-lempreinte-carbone-nationale)
 	- [3) Etudier la composition de chacune des branches économiques et justifier les choix de répartition](#3-etudier-la-composition-de-chacune-des-branches-économiques-et-justifier-les-choix-de-répartition)
 	- [4) Générer les règles des services sociétaux](#4-générer-les-règles-des-services-sociétaux)
-	- [Justifier les choix de répartition](#justifier-les-choix-de-répartition)
 - [Limites du calcul](#limites-du-calcul)
 - [Scripts disponibles](#scripts-disponibles)
-	- [`analyse_CA_branches.js`](#analyse_ca_branchesjs)
-	- [`naf.js`](#nafjs)
-	- [`generateNAF_YAML.js`](#generatenaf_yamljs)
+	- [`analyze_CA_NAF.js`](#analyze_ca_nafjs)
+	- [`desagregate_naf_SDES.js`](#desagregate_naf_sdesjs)
+	- [`genereate_rules.js`](#genereate_rulesjs)
 	- [`utils.js`](#utilsjs)
 
 </details>
@@ -82,7 +80,7 @@ A noter que la nomenclature **CPA** correspond à la **Classification européenn
 
 ### 1) Préparer les données financières en vue de la décomposition des données du SDES
 
-Pour cette première étape, on utilise le script `analyze_NAF_CA` qui permet d'obtenir pour chaque branche et sous-branche la part de chiffre d'affaire (en %) de chaque élément au sein du groupe auquel il appartient.
+Pour cette première étape, on utilise le script `analyze_NAF_CA.js` qui permet d'obtenir pour chaque branche et sous-branche la part de chiffre d'affaire (en %) de chaque élément au sein du groupe auquel il appartient.
 
 > N'oublions pas que l'objectif final est d'atribuer, parmi l'ensemble des branches écnomiques, celles qui composent les services sociétaux, ce qui nécessite parfois de descendre au niveau de la "sous-branche".
 
@@ -247,25 +245,39 @@ Une autre option était d'ignorer les branches secrètes. On ne sait pas, il sem
 
 ### 2) Décomposer les données du SDES
 
-La deuxième étape est la désagragation des données du SDES (`liste_SDES.json`) via les parts du chiffre d'affaire de chaque branche (`analyse_CA_NAF.json`). Pour rappel, les données de décomposition de l’empreinte carbone de la demande finale de la France sont rapportées parfois au niveau de la branche économique, parfois au niveau de la (exemple : CPA_E36 / CPA_E37_E39).
+La deuxième étape est la désagragation des données du SDES (`liste_SDES.json`) via les parts du chiffre d'affaire de chaque branche (`ca_branches_2017.json`). Pour rappel, les données de décomposition de l’empreinte carbone de la demande finale de la France sont rapportées parfois au niveau de la branche économique, parfois au niveau d'un regroupement de branches (exemple : CPA_E36 / CPA_E37_E39).
 
-> Ces aggrégations semblent d'ailleurs volontaire car elles permettent de ne pas pouvoir remonter aux valeurs statistiques secrètes. Elles sont également dépendantes du niveau de données accessibles pour les calculs intermédiaires.
+> Ces aggrégations semblent d'ailleurs volontaire car elles permettent de ne pas pouvoir remonter aux valeurs statistiques secrètes. Elles sont également dépendantes du niveau de données accessibles pour les calculs matriciels intermédiaires.
 
-Nous utilisons le script `naf.json`. Le fichier de sortie est `liste_SDES_traitée.json`.
+Nous utilisons le script `desagregate_naf_SDES.js`. Le fichier de sortie est `liste_SDES_traitée.json`.
 
-### Exposer les données de l'empreinte carbone nationale
+Un fichier intermédiaire pour effectuer ce calcul est `SDES_groups.json`, qui permet de gérer les groupements de branches évoqués précédemment. La création des clés de ce fichier a été géré "manuellement" lors de la création de ces scripts et est mis à jour dans le script (à condition que la consitution des groupement ne change pas).
 
 ### 3) Etudier la composition de chacune des branches économiques et justifier les choix de répartition
 
-Générer les règles
+Troisième étape et non des moindres : définir le contenu des services sociétaux via les descriptions de chaque branches économiques. En effet, l'idée de la première étape était également de rentrer au niveau de la sous classe pour exposer le contenu de chaque branche et les part de chaque sous-classe en terme de chiffre d'affaire. Pour comprendre chacune des catégories, il a également été nécessaire de parcourir [le site de l'INSEE](https://www.insee.fr/fr/metadonnees/nafr2/?champRecherche=true) ou encore des sites comme [NACEV2](https://nacev2.com/fr).
 
-Troisième étape et non des moindres : définir le contenu des services sociétaux via les descriptions de chaque branches économiques.
+Le travail était conséquent : l'idée était de passer en revue l'ensemble des branches afin d'essayer de savoir si tout ou partie de la branche était "comptabilisé (ou sensé l'être)" dans NGC. Dans le cas contraire, il fallait ensuite décider ce qui relevait des services publics et des services marchands et surtout le justifier, selon notre compréhension des choses (avec pour objectif d'ouvrir le débat avec des contributeurs) !
 
-Ici pas de script, les
+Ici pas de script, cette répartition est définie dans le fichier `répartition_services_sociétaux.yaml`.
 
 ### 4) Générer les règles des services sociétaux
 
-### Justifier les choix de répartition
+Quatrième et dernière étape, la génération des règles publicodes ! Et c'est le script `generate_rules.js` qui permet de le faire automatiquement à partir de 3 fichiers générés précédemment :
+
+- `liste_SDES_traitée.json`
+- `analyse_CA_NAF.json`
+- `répartition_services_sociétaux.yaml`
+
+Un autre fichier a été utilisé, nommé `titres_raccourcis.yaml` qui permet de simplifier certains libellés de branches pour que l'utilisateur ait une idée plus rapidement du contenu de la décomposition.
+
+3 fichiers de règles sont alors créés :
+
+- `empreinte par branche.yaml`
+- `services publics.yaml`
+- `services marchands.yaml`
+
+Le premier est à la base des règles appelées dans les 2 derniers mais aussi dans `empreinte nationale.yaml` permettant alors d'exposer dans [la documentation](https://nosgestesclimat.fr/documentation/empreinte-SDES) les chiffres du SDES qui mène à l'ordre de grandeur des 10 tonnes bien connu.
 
 ## Limites du calcul
 
@@ -277,10 +289,10 @@ Ici pas de script, les
 
 A venir
 
-### `analyse_CA_branches.js`
+### `analyze_CA_NAF.js`
 
-### `naf.js`
+### `desagregate_naf_SDES.js`
 
-### `generateNAF_YAML.js`
+### `genereate_rules.js`
 
 ### `utils.js`
