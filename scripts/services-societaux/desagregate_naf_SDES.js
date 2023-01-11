@@ -1,41 +1,11 @@
 const utils = require('./utils')
 
-const getGroupSum = (groupObj) => {
-	let countS = 0
-	const objLength = Object.keys(groupObj).length
-	const sumCA = Object.values(groupObj).reduce((acc, elt) => {
-		const ca = elt['ca']
-		if (!ca) {
-			elt['ca'] = 0
-			return acc
-		}
-		if (ca === 'S') {
-			countS++
-			return acc
-		}
-		return acc + +ca
-	}, 0)
-	if (countS === objLength) return 'S'
-	return sumCA
-}
-
-const getPart = (nafObj, sumCA) => {
-	if (!sumCA || nafObj['ca'] === 'S') {
-		return 'S'
-	} else if (!+nafObj['ca']) {
-		return 0
-	}
-	{
-		return utils.roundValueToPercent(nafObj['ca'] / sumCA)
-	}
-}
-
 // read files
 const readSDES = utils.readJSON(
 	'scripts/services-societaux/input/liste_SDES.json'
 )
-const division_NAF = utils.readJSON(
-	'scripts/services-societaux/input/division_NAF.json'
+const SDES_groups = utils.readJSON(
+	'scripts/services-societaux/input/SDES_groups.json'
 )
 const ca_branches = utils.readJSON(
 	'scripts/services-societaux/input/ca_branches_2017.json'
@@ -67,7 +37,7 @@ const NAF_niveau2 = readNAF.reduce((memo, elt) => {
 }, [])
 
 const findNumber = /\d{2}/
-Object.entries(division_NAF).map(([key, nafGroupObj]) => {
+Object.entries(SDES_groups).map(([key, nafGroupObj]) => {
 	Object.entries(nafGroupObj).map(([naf, nafObj]) => {
 		const nafCode = naf.match(findNumber)[0]
 		const findCa = ca_branches.find((obj) => obj.branche === nafCode)
@@ -75,11 +45,11 @@ Object.entries(division_NAF).map(([key, nafGroupObj]) => {
 		nafObj['ca'] = ca //98 non présent dans 'ca_branches_2017'
 	})
 	Object.entries(nafGroupObj).map(([naf, nafObj]) => {
-		const nafCA = getGroupSum(nafGroupObj)
-		const part = getPart(nafObj, nafCA)
+		const nafCA = utils.getGroupSum(nafGroupObj)
+		const part = utils.getPart(nafObj, nafCA)
 		nafObj['part'] = part
 	})
-	division_NAF[key] = nafGroupObj
+	SDES_groups[key] = nafGroupObj
 })
 
 const dataSDES = readSDES
@@ -102,9 +72,9 @@ const dataSDES = readSDES
 			)
 			const newObjects = newComposition.map((elt) => {
 				const facteur =
-					division_NAF[CPA][elt].part === 'S'
+					SDES_groups[CPA][elt].part === 'S'
 						? 0
-						: division_NAF[CPA][elt].part / 100
+						: SDES_groups[CPA][elt].part / 100
 				return {
 					code_CPA: elt,
 					'Libellé CPA': NAF_niveau2.find((obj) => obj.code_NAF === elt)[

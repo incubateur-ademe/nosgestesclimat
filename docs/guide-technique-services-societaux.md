@@ -12,19 +12,19 @@
 - [Principe général](#principe-général)
 - [Données de départ](#données-de-départ)
 - [Reproduire le calcul](#reproduire-le-calcul)
-  - [1) Préparer les données financières en vue de la décomposition des données du SDES](#1-préparer-les-données-financières-en-vue-de-la-décomposition-des-données-du-sdes)
-    - [Cas des valeurs "secrètes"](#cas-des-valeurs-secrètes)
-  - [2) Décomposer les données du SDES](#2-décomposer-les-données-du-sdes)
-  - [Exposer les données de l'empreinte carbone nationale](#exposer-les-données-de-lempreinte-carbone-nationale)
-  - [3) Etudier la composition de chacune des branches économiques et justifier les choix de répartition](#3-etudier-la-composition-de-chacune-des-branches-économiques-et-justifier-les-choix-de-répartition)
-  - [4) Générer les règles des services sociétaux](#4-générer-les-règles-des-services-sociétaux)
-  - [Justifier les choix de répartition](#justifier-les-choix-de-répartition)
+	- [1) Préparer les données financières en vue de la décomposition des données du SDES](#1-préparer-les-données-financières-en-vue-de-la-décomposition-des-données-du-sdes)
+		- [Cas des valeurs "secrètes"](#cas-des-valeurs-secrètes)
+	- [2) Décomposer les données du SDES](#2-décomposer-les-données-du-sdes)
+	- [Exposer les données de l'empreinte carbone nationale](#exposer-les-données-de-lempreinte-carbone-nationale)
+	- [3) Etudier la composition de chacune des branches économiques et justifier les choix de répartition](#3-etudier-la-composition-de-chacune-des-branches-économiques-et-justifier-les-choix-de-répartition)
+	- [4) Générer les règles des services sociétaux](#4-générer-les-règles-des-services-sociétaux)
+	- [Justifier les choix de répartition](#justifier-les-choix-de-répartition)
 - [Limites du calcul](#limites-du-calcul)
 - [Scripts disponibles](#scripts-disponibles)
-  - [`analyse_CA_branches.js`](#analyse_ca_branchesjs)
-  - [`naf.js`](#nafjs)
-  - [`generateNAF_YAML.js`](#generatenaf_yamljs)
-  - [`utils.js`](#utilsjs)
+	- [`analyse_CA_branches.js`](#analyse_ca_branchesjs)
+	- [`naf.js`](#nafjs)
+	- [`generateNAF_YAML.js`](#generatenaf_yamljs)
+	- [`utils.js`](#utilsjs)
 
 </details>
 
@@ -251,9 +251,7 @@ La deuxième étape est la désagragation des données du SDES (`liste_SDES.json
 
 > Ces aggrégations semblent d'ailleurs volontaire car elles permettent de ne pas pouvoir remonter aux valeurs statistiques secrètes. Elles sont également dépendantes du niveau de données accessibles pour les calculs intermédiaires.
 
-En étape intermédiaire, le script setNafDivision permet d'adapter le fichier
-
-Par la suite et pour prendre en compte le fichier précedemment créé, nous utilisons le script `naf.json`. Le fichier de sortie est `liste_SDES_traitée.json`.
+Nous utilisons le script `naf.json`. Le fichier de sortie est `liste_SDES_traitée.json`.
 
 ### Exposer les données de l'empreinte carbone nationale
 

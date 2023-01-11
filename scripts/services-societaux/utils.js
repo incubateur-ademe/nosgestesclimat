@@ -57,6 +57,36 @@ const roundValueToPercent = (x) => Math.round(x * 100)
 
 const roundValue = (x) => Math.round(x * 100) / 100
 
+const getGroupSum = (groupObj) => {
+	let countS = 0
+	const objLength = Object.keys(groupObj).length
+	const sumCA = Object.values(groupObj).reduce((acc, elt) => {
+		const ca = elt['ca']
+		if (!ca) {
+			elt['ca'] = 0
+			return acc
+		}
+		if (ca === 'S') {
+			countS++
+			return acc
+		}
+		return acc + +ca
+	}, 0)
+	if (countS === objLength) return 'S'
+	return sumCA
+}
+
+const getPart = (nafObj, sumCA) => {
+	if (!sumCA || nafObj['ca'] === 'S') {
+		return 'S'
+	} else if (!+nafObj['ca']) {
+		return 0
+	}
+	{
+		return roundValueToPercent(nafObj['ca'] / sumCA)
+	}
+}
+
 module.exports = {
 	readJSON,
 	writeJSON,
@@ -65,4 +95,6 @@ module.exports = {
 	writeYAML,
 	roundValueToPercent,
 	roundValue,
+	getGroupSum,
+	getPart,
 }

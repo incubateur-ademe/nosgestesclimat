@@ -1,36 +1,5 @@
 const utils = require('./utils')
 
-// utils
-const getGroupSum = (groupObj) => {
-	let countS = 0
-	const objLength = Object.keys(groupObj).length
-	const sumCA = Object.values(groupObj).reduce((acc, elt) => {
-		const ca = elt['ca']
-		if (!ca) {
-			elt['ca'] = 0
-			return acc
-		}
-		if (ca === 'S') {
-			countS++
-			return acc
-		}
-		return acc + +ca
-	}, 0)
-	if (countS === objLength) return 'S'
-	return sumCA
-}
-
-const getPart = (nafObj, sumCA) => {
-	if (!sumCA || nafObj['ca'] === 'S') {
-		return 'S'
-	} else if (!+nafObj['ca']) {
-		return '0%'
-	}
-	{
-		return `${utils.roundValueToPercent(nafObj['ca'] / sumCA)}%`
-	}
-}
-
 const ca_branches = utils.readJSON(
 	'scripts/services-societaux/input/ca_branches_2017.json'
 )
@@ -67,22 +36,22 @@ Object.values(ca_lvl2).map((nafGroupObj) => {
 		const nafSubCA =
 			nafObj['ca'] && nafObj['ca'] !== 'S'
 				? +nafObj['ca']
-				: getGroupSum(nafSubComposition)
+				: utils.getGroupSum(nafSubComposition)
 		nafObj['ca'] = nafSubCA
 		Object.values(nafSubComposition).map((nafObj) => {
-			const part = getPart(nafObj, nafSubCA)
-			nafObj['part'] = part
+			const part = utils.getPart(nafObj, nafSubCA)
+			nafObj['part'] = part === 'S' ? part : `${part}%`
 		})
 		nafObj['description'] = nafSubComposition
 	})
 	const nafCA =
 		nafGroupObj['ca'] && nafGroupObj['ca'] !== 'S'
 			? +nafGroupObj['ca']
-			: getGroupSum(nafComposition)
+			: utils.getGroupSum(nafComposition)
 	nafGroupObj['ca'] = nafCA
 	Object.values(nafComposition).map((nafObj) => {
-		const part = getPart(nafObj, nafCA)
-		nafObj['part'] = part
+		const part = utils.getPart(nafObj, nafCA)
+		nafObj['part'] = part === 'S' ? part : `${part}%`
 	})
 	data[nafCode] = { ...nafGroupObj, composition: nafComposition }
 	nafGroupObj['composition'] = nafComposition
