@@ -243,7 +243,7 @@ const getCompressedRules = (baseRules) => {
 // fs.copyFileSync('../data/co2-opti.yaml', outputJSONPath + '/co2-opti.json')
 
 glob(
-	'data/co2-opti.yaml',
+	'data/co2-opti.json',
 	{ ignore: ['data/translated-*.yaml'] },
 	(_, files) => {
 		const defaultDestPath = path.join(outputJSONPath, `co2-${srcLang}.json`)
