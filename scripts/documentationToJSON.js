@@ -11,16 +11,16 @@ const markdown = yargs
 	.help()
 	.alias('help', 'h').argv.markdown
 
-glob('documentation/*/*.md', (_err2, mdFiles) => {
+glob('contenu-ecrit/*/*.md', (_err2, mdFiles) => {
 	const data = mdFiles.reduce((memo, filename) => {
 		const content = fs.readFileSync('./' + filename, 'utf8')
-		const dottedName = filename.replace(/(documentation\/|\.md)/g, '')
+		const dottedName = filename.replace(/(contenu-ecrit\/|\.md)/g, '')
 
 		return { ...memo, [dottedName]: content }
 	}, {})
 
 	fs.writeFile(
-		'./public/documentation.json',
+		'./public/contenu-ecrit.json',
 		JSON.stringify(data),
 		function (err) {
 			if (err) {
