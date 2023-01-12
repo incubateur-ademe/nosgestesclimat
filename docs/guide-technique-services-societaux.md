@@ -279,6 +279,9 @@ Un autre fichier a été utilisé, nommé `titres_raccourcis.yaml` qui permet de
 
 Le premier est à la base des règles appelées dans les 2 derniers mais aussi dans `empreinte nationale.yaml` permettant alors d'exposer dans [la documentation](https://nosgestesclimat.fr/documentation/empreinte-SDES) les chiffres du SDES qui mène à l'ordre de grandeur des 10 tonnes bien connu.
 
+> **Note**
+> La commande `yarn generate:servicesRules` depuis `nosgestesclimat-site` permet de générer le fichier de règles et donc d'effectuer toutes les étapes précédentes en quelques secondes.
+
 ## Limites du calcul
 
 - Il est possible que le fichier dont nous disposons pour décomposer les intensités carbone des différentes branches ne soit pas adapté au fichier du SDES. (**nomenclature NAF vs CPA**) : est ce que le chiffre d'affaire couvre les même périmètres que pour les données du SDES (Territoire française, nomenclature ?)
