@@ -2,11 +2,13 @@
 
 ## D'où vient ce chiffre ?
 
-L'empreinte carbone liée aux services sociétaux est fixe, commune à tous les français. Ce chiffre prend en compte le fonctionnement des 16 ministères présentés ci-dessous (établissements publics et les 2,4 millions d'agents publics).
+Le modèle qui nous permet de calculer ces deux constantes "services publics" et "services marchands" se distingue du reste du modèle Nos Gestes Climat car il est dit "macroscopique". C'est une reconstition macroscopique qui est basée sur les volumes d'échanges d'argent en milliard d'€ par branches économiques du pays ou, pour le dire plus simplement, par secteur.
 
-![](https://codimd.s3.shivering-isles.com/demo/uploads/55c84c826662ee144f2d26f6c.png)
+L'inclusion de ce modèle macro permet d'hybrider le modèle NGC. On peut ainsi dire qu'il est à dominante micro avec une composante macro.
 
-Le principe de calcul est le suivant : pour chaque type de services (catégorisé par une nomenclature spécifique) on regarde l’ensemble des achats (en kilo euro) en France ou à l’étranger. Chaque poste d'achat est relié à une branche de l'économie, qui elle-même est associée à un ratio monétaire traduisant son intensité carbone (en tCO2eq/kilo euro). En multipliant l'intensité carbone d'une branche par le flux monétaire d'un service public on obtient l'impact carbone. Le total de l'ensemble des services sociétaux est ensuite ramené à l'individu (en divisant par la taille de la population française).
+Notre source pour les deux constantes macro est le calcul de l'empreinte nationale française par le Ministère de l'Écologie. Voici [l'article le plus récent](https://www.statistiques.developpement-durable.gouv.fr/lempreinte-carbone-de-la-france-de-1995-2021), qui nous donne d'ailleurs une estimation de l'empreinte nationale de 8,9 tonnes en 2021. Le chiffre est extrapolé avec sont lot d'incertitudes supplémentaires par rapport au chiffre de 9,2 tonnes en 2018.
+
+Pour comprendre plus précisément comment fonctionne ce modèle, n'hésitez pas à lire [notre article dédié](https://nosgestesclimat.fr/nouveaut%C3%A9s/l'empreinte-climat%20des%20%22services%20soci%C3%A9taux%22).
 
 ## Existe-t-il des leviers d'action ?
 
