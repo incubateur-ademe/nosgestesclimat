@@ -2,6 +2,8 @@
 
 <p align="center">Ce fichier contient les informations techniques permettant de comprendre et reproduire le calcul du poste "Services Sociétaux" de <a href="https://nosgestesclimat.fr/">nosgestesclimat.fr</a>.</p>
 
+> 🇬🇧 This guide is dedicated to public services calculation method for French citizens. It gives a method to compute a common carbon footprint base for every French citizen. It is not translated yet as this method is related to French avalaible data.
+
 ---
 
 <details open=true>
