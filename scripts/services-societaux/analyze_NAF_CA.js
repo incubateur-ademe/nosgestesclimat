@@ -63,3 +63,9 @@ utils.writeJSON(
 	'scripts/services-societaux/output/analyse_CA_NAF.json',
 	utils.sortJSON(data)
 )
+
+console.log(
+	'\x1b[32m',
+	"- Le fichier `ca_branches_2017.json` contenant les chiffres d'affaires des branches NAF a été traité avec succès pour donner `analyse_CA_NAF.json`",
+	'\x1b[0m'
+)

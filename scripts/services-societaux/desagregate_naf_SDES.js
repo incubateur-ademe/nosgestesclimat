@@ -106,3 +106,9 @@ utils.writeJSON(
 	'scripts/services-societaux/output/liste_SDES_traitée.json',
 	dataSDES
 )
+
+console.log(
+	'\x1b[32m',
+	'- Le fichier `liste_SDES.json` contenant les données de décomposition de l’empreinte carbone de la demande finale de la France a été traité avec succès pour donner `liste_SDES_traitée.json`',
+	'\x1b[0m'
+)

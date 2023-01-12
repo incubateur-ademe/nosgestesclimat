@@ -135,3 +135,11 @@ utils.writeYAML(
 	SMobject,
 	messageGénérationAuto
 )
+
+console.log(
+	'\x1b[32m',
+	'- Les règles `empreinte SDES/empreinte par branche.yaml`, `services sociétaux/services publics.yaml`, `services sociétaux/services marchands.yaml` ont été écrites avec succès.',
+	'\x1b[0m'
+)
+
+console.warn('\x1b[33m', 'Veillez à bien vérifier les diff.', '\x1b[0m')
