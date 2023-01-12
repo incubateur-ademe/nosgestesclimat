@@ -6,7 +6,7 @@ const yaml = require('yaml')
 
 const LOCK_KEY_EXT = '.lock'
 
-const availableLanguages = ['fr', 'en-us', 'es', 'it']
+const availableLanguages = ['fr', 'en-us'] //, 'es', 'it'] For now, we don't want es and it to be compile (it could create compilation errors).
 const defaultLang = availableLanguages[0]
 
 const readYAML = (path) => {
