@@ -7,7 +7,7 @@
 1. [**Home**](https://github.com/datagir/nosgestesclimat/wiki)
 2. [**Documentation**](https://github.com/datagir/nosgestesclimat/wiki/Documentation)
    - [Online rules documentation](https://github.com/datagir/nosgestesclimat/wiki/Documentation#online-rules-documentation)
-   - [_Guide Services Sociétaux (French)_](guide-technique-services-societaux.md)
+   - [_Guide Services Sociétaux_ (French)](https://github.com/datagir/nosgestesclimat/wiki/guide-technique-services-societaux)
 3. [**Publicodes**](https://github.com/datagir/nosgestesclimat/wiki/Publicodes)
    - [Custom mechanisms](https://github.com/datagir/nosgestesclimat/wiki/Publicodes#custom-mechanisms)
      - [`mosaic`](https://github.com/datagir/nosgestesclimat/wiki/mosaic)
