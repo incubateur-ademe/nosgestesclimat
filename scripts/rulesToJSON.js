@@ -9,6 +9,7 @@ const fs = require('fs')
 const glob = require('glob')
 const path = require('path')
 const { exit } = require('process')
+const { exec } = require('node:child_process')
 const Engine = require('publicodes').default
 
 const utils = require('./i18n/utils')
@@ -32,29 +33,58 @@ const { srcLang, srcFile, destLangs, markdown } = cli.getArgs(
 	}
 )
 
-const writeRules = (rules, path, destLang) => {
-	fs.writeFile(path, JSON.stringify(rules), function (err) {
+function writeRules(rules, path, destLang) {
+	try {
+		fs.writeFileSync(path, JSON.stringify(rules))
+		console.log(
+			markdown
+				? `| Rules compilation to JSON for _${destLang}_ | :heavy_check_mark: | Ø |`
+				: ` ✅ The rules have been correctly written in: ${path}`
+		)
+	} catch (err) {
+		if (markdown) {
+			console.log(
+				`| Rules compilation to JSON for _${destLang}_ | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
+			)
+		} else {
+			console.log(' ❌ An error occured while writting rules in:', path)
+			console.log(err.message)
+		}
+		exit(-1)
+	}
+}
+
+function compressRules(jsonPathWithoutExtension, destLang) {
+	const destPath = `${jsonPathWithoutExtension}-opti.json`
+	const cmd = `npx publiopti compile ${jsonPathWithoutExtension}.json ${destPath} -i data/**/*.yaml`
+	exec(cmd, function (err, _stdout, _stderr) {
 		if (err) {
 			if (markdown) {
 				console.log(
-					`| Rules compilation to JSON for _${destLang}_ | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
+					`| Rules compression for _${destLang}_ | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
 				)
 			} else {
-				console.log(' ❌ An error occured while writting rules in:', path)
+				console.log(
+					' ❌ An error occured while compressing rules in:',
+					destPath
+				)
 				console.log(err.message)
 			}
 			exit(-1)
 		}
 		console.log(
 			markdown
-				? `| Rules compilation to JSON for _${destLang}_ | :heavy_check_mark: | Ø |`
-				: ` ✅ The rules have been correctly written in JSON in: ${path}`
+				? `| Rules compression for _${destLang}_ | :heavy_check_mark: | Ø |`
+				: ` ✅ The rules have been correctly compressed in: ${destPath}`
 		)
 	})
 }
 
 glob(srcFile, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
-	const defaultDestPath = path.join(outputJSONPath, `co2-${srcLang}.json`)
+	const defaultDestPathWithoutExtension = path.join(
+		outputJSONPath,
+		`co2-${srcLang}`
+	)
 	const baseRules = files.reduce((acc, filename) => {
 		try {
 			const rules = utils.readYAML(path.resolve(filename))
@@ -83,10 +113,15 @@ glob(srcFile, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 				: ' ✅ Les règles ont été évaluées sans erreur !'
 		)
 
-		writeRules(baseRules, defaultDestPath, srcLang)
+		writeRules(baseRules, defaultDestPathWithoutExtension + '.json', srcLang)
+		compressRules(defaultDestPathWithoutExtension, srcLang)
 
 		destLangs.forEach((destLang) => {
-			const destPath = path.join(outputJSONPath, `co2-${destLang}.json`)
+			const destPathWithoutExtension = path.join(
+				outputJSONPath,
+				`co2-${destLang}`
+			)
+			const destPath = destPathWithoutExtension + '.json'
 			const translatedRuleAttrs =
 				utils.readYAML(
 					path.resolve(`data/translated-rules-${destLang}.yaml`)
@@ -96,6 +131,7 @@ glob(srcFile, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 				translatedRuleAttrs
 			)
 			writeRules(translatedRules, destPath, destLang)
+			compressRules(destPathWithoutExtension, destLang)
 		})
 	} catch (err) {
 		if (markdown) {
