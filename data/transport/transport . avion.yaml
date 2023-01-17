@@ -54,11 +54,20 @@ transport . avion . court courrier . empreinte par km:
   description: |
     Nous utilisons le facteur d'émission de la base carbone `Avion passagers - Court courrier, 2018 - AVEC trainées`.
   unité: kgCO2e/km
+transport . avion . court courrier . durée max:
+  titre: Durée trajet court courrier
+  arrondi: oui
+  formule: 1000km / vitesse moyenne
+  description: Distance caractérisant un vol court-courrier basé sur [cette discussion](https://bilans-ges.ademe.fr/forum/viewtopic.php?t=4192#p5530) du forum Base Carbone.
+transport . avion . court courrier . court courrier . km moyen:
+  formule: 2700000000
+  unité: km
+  description: |
+    Données 2016 issues de ce [document](https://www.statistiques.developpement-durable.gouv.fr/sites/default/files/2018-11/datalab-essentiel-138-mobilite-longue-distance-2016-fevrier2018.pdf) du MTE, notamment ce tableau : 
+<img width="650" alt="image" src="https://user-images.githubusercontent.com/55186402/212713769-96dce8f6-c5f4-4ae5-8456-8764adb2d84d.png">
 
 transport . avion . court courrier . heures de vol:
-  question:
-    texte: >
-      Combien d'heures par an voyagez-vous en avion pour des vols court-courrier (de moins de {{1000 / vitesse moyenne}}) ?
+  question: Combien d'heures par an voyagez-vous en avion pour des vols court-courrier (trajet de moins de 2h) ?
   description: |
     Comptez les heures que vous avez passé dans un avion pour des vols d'une distance inférieure à 1000km (à peu près). Si vous faites des escales, additionnez simplement les durées de chaque vol.
 
@@ -74,9 +83,9 @@ transport . avion . court courrier . heures de vol:
     Paris🔁Toulouse: 2.6
     Paris🔁Nice: 2.8
     Paris🔁Ajaccio: 3.2
-
   unité: h/an
   par défaut: 1 h/an
+  note: La caractérisation "court courrier" par le temps de trajet est donnée par la règle `court courrier . durée max` = 2.17h.
 
 transport . avion . moyen courrier:
   formule: heures de vol * vitesse moyenne * empreinte par km
@@ -90,9 +99,14 @@ transport . avion . moyen courrier . empreinte par km:
   description: |
     Nous utilisons le facteur d'émission de la base carbone `Avion passagers - Moyen courrier, 2018 - AVEC trainées`.
   unité: kgCO2e/km
+transport . avion . moyen courrier . durée max:
+  titre: Durée trajet moyen courrier
+  arrondi: oui
+  formule: 3500km / vitesse moyenne
+  description: Distance caractérisant un vol moyen-courrier basé sur [cette discussion](https://bilans-ges.ademe.fr/forum/viewtopic.php?t=4192#p5530) du forum Base Carbone.
 
 transport . avion . moyen courrier . heures de vol:
-  question: Combien d'heures par an voyagez-vous en avion vers l'Europe ou le bassin méditerranéen ?
+  question: Combien d'heures par an voyagez-vous en avion pour des vols moyen-courrier (trajet entre 2h et 6h) ?
   description: |
     Comptez les heures que vous avez passé dans un avion pour des vols d'une distance entre 1000km et 3500km (à peu près). Si vous faites des escales, additionnez simplement les durées de chaque vol.
 
@@ -110,6 +124,7 @@ transport . avion . moyen courrier . heures de vol:
 
   unité: h/an
   par défaut: 1 h/an
+  note: La caractérisation "moyen courrier" par le temps de trajet est donnée par la règle `court courrier . durée max`=2.17h et `moyen courrier . durée max` = 6.48h.
 
 transport . avion . long courrier:
   formule: heures de vol * vitesse moyenne * empreinte par km
@@ -125,7 +140,7 @@ transport . avion . long courrier . empreinte par km:
   unité: kgCO2e/km
 
 transport . avion . long courrier . heures de vol:
-  question: Combien d'heures par an voyagez-vous au-delà en vol long courrier ?
+  question: Combien d'heures par an voyagez-vous en avion pour des vols moyen-courrier (plus 6h) ?
   description: |
     Comptez les heures que vous avez passé dans un avion pour des vols d'une distance supérieure à 3500km, c'est-à-dire au-delà de l'Europe et du pourtour méditerranéen.
 
@@ -146,3 +161,4 @@ transport . avion . long courrier . heures de vol:
 
   unité: h/an
   par défaut: 1 h/an
+  note: La caractérisation "long courrier" par le temps de trajet est donnée par la règle `moyen courrier . durée max` = 6.48h.
