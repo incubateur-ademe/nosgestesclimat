@@ -39,7 +39,7 @@ transport . avion . usager:
 
     Ce n'est pas très rigoureux, mais l'avion a une telle empreinte sur le climat qu'il est important de prendre cela en compte.
 
-    > Par exemple, si vous avez pris un long-courrier de 20h en 2018 et que vous comptez le reprendre en 2022, nous pouvons partir du principe que vous le prenez tous les 4 ans environ : renseignez simplement `5 heures` à la question "long-courier".
+    > Par exemple, si vous avez pris un long-courrier de 20h en 2018 et que vous comptez le reprendre en 2022, nous pouvons partir du principe que vous le prenez tous les 4 ans environ : renseignez simplement `5 heures` à la question "long-courrier".
   par défaut: oui
 
 transport . avion . court courrier:
@@ -57,14 +57,26 @@ transport . avion . court courrier . empreinte par km:
 transport . avion . court courrier . durée max:
   titre: Durée trajet court courrier
   arrondi: oui
-  formule: 1000km / vitesse moyenne
+  formule: 1000 km / vitesse moyenne
   description: Distance caractérisant un vol court-courrier basé sur [cette discussion](https://bilans-ges.ademe.fr/forum/viewtopic.php?t=4192#p5530) du forum Base Carbone.
-transport . avion . court courrier . court courrier . km moyen:
+transport . avion . court courrier . km moyen:
+  titre: Distance totale parcourue par les Français sur des vols court-courrier en 2016
   formule: 2700000000
   unité: km
   description: |
     Données 2016 issues de ce [document](https://www.statistiques.developpement-durable.gouv.fr/sites/default/files/2018-11/datalab-essentiel-138-mobilite-longue-distance-2016-fevrier2018.pdf) du MTE, notamment ce tableau : 
-<img width="650" alt="image" src="https://user-images.githubusercontent.com/55186402/212713769-96dce8f6-c5f4-4ae5-8456-8764adb2d84d.png">
+    <img width="650" alt="image" src="https://user-images.githubusercontent.com/55186402/212713769-96dce8f6-c5f4-4ae5-8456-8764adb2d84d.png">
+transport . avion . court courrier . passager km moyen:
+  titre: Distance moyenne parcourue un Français sur des vols court-courrier
+  formule: km moyen * croissance 2016 2019 / population
+  unité: km
+  description: |
+    On travaille sur les données moyennes de la mobilité longue distance des Français pour obtenir une valeur moyenne concernant les habitudes de voyages en avion des français.
+    Nous utilisons un facteur de croissance du trafic aérien pour mettre à jour les données de 2016 dont nous disponsons.
+transport . avion . court courrier . durée moyennne:
+  titre: Durée moyenne passée par un Français dans les vols court-courrier
+  formule: passager km moyen / vitesse moyenne
+  unité: h
 
 transport . avion . court courrier . heures de vol:
   question: Combien d'heures par an voyagez-vous en avion pour des vols court-courrier (trajet de moins de 2h) ?
@@ -84,13 +96,13 @@ transport . avion . court courrier . heures de vol:
     Paris🔁Nice: 2.8
     Paris🔁Ajaccio: 3.2
   unité: h/an
-  par défaut: 1 h/an
+  par défaut: durée moyennne
   note: La caractérisation "court courrier" par le temps de trajet est donnée par la règle `court courrier . durée max` = 2.17h.
 
 transport . avion . moyen courrier:
   formule: heures de vol * vitesse moyenne * empreinte par km
 transport . avion . moyen courrier . vitesse moyenne:
-  formule: 1350 / 2.5
+  formule: 1350 km / 2.5 h
   unité: km/h
   note: |
     Nous utilisons la vitesse moyenne de vol pour un Paris Alger.
@@ -102,8 +114,26 @@ transport . avion . moyen courrier . empreinte par km:
 transport . avion . moyen courrier . durée max:
   titre: Durée trajet moyen courrier
   arrondi: oui
-  formule: 3500km / vitesse moyenne
+  formule: 3500 km / vitesse moyenne
   description: Distance caractérisant un vol moyen-courrier basé sur [cette discussion](https://bilans-ges.ademe.fr/forum/viewtopic.php?t=4192#p5530) du forum Base Carbone.
+transport . avion . moyen courrier . km moyen:
+  titre: Distance totale parcourue par les Français sur des vols moyen-courrier en 2016
+  formule: 8400000000
+  unité: km
+  description: |
+    Données 2016 issues de ce [document](https://www.statistiques.developpement-durable.gouv.fr/sites/default/files/2018-11/datalab-essentiel-138-mobilite-longue-distance-2016-fevrier2018.pdf) du MTE, notamment ce tableau : 
+    <img width="650" alt="image" src="https://user-images.githubusercontent.com/55186402/212713769-96dce8f6-c5f4-4ae5-8456-8764adb2d84d.png">
+transport . avion . moyen courrier . passager km moyen:
+  titre: Distance moyenne parcourue un Français sur des vols moyen-courrier
+  formule: km moyen * croissance 2016 2019 / population
+  unité: km
+  description: |
+    On travaille sur les données moyennes de la mobilité longue distance des Français pour obtenir une valeur moyenne concernant les habitudes de voyages en avion des français. 
+    Nous utilisons un facteur de croissance du trafic aérien pour mettre à jour les données de 2016 dont nous disponsons.
+transport . avion . moyen courrier . durée moyennne:
+  titre: Durée moyenne passée par un Français dans les vols moyen-courrier
+  formule: passager km moyen / vitesse moyenne
+  unité: h
 
 transport . avion . moyen courrier . heures de vol:
   question: Combien d'heures par an voyagez-vous en avion pour des vols moyen-courrier (trajet entre 2h et 6h) ?
@@ -123,7 +153,7 @@ transport . avion . moyen courrier . heures de vol:
     Paris🔁Liban: 8
 
   unité: h/an
-  par défaut: 1 h/an
+  par défaut: durée moyennne
   note: La caractérisation "moyen courrier" par le temps de trajet est donnée par la règle `court courrier . durée max`=2.17h et `moyen courrier . durée max` = 6.48h.
 
 transport . avion . long courrier:
@@ -138,6 +168,24 @@ transport . avion . long courrier . empreinte par km:
   description: |
     Nous utilisons le facteur d'émission de la base carone `Avion passagers - Long courrier, 2018 - AVEC trainées`.
   unité: kgCO2e/km
+transport . avion . long courrier . km moyen:
+  titre: Distance totale parcourue par les Français sur des vols long-courrier en 2016
+  formule: 101800000000
+  unité: km
+  description: |
+    Données 2016 issues de ce [document](https://www.statistiques.developpement-durable.gouv.fr/sites/default/files/2018-11/datalab-essentiel-138-mobilite-longue-distance-2016-fevrier2018.pdf) du MTE, notamment ce tableau : 
+    <img width="650" alt="image" src="https://user-images.githubusercontent.com/55186402/212713769-96dce8f6-c5f4-4ae5-8456-8764adb2d84d.png">
+transport . avion . long courrier . passager km moyen:
+  titre: Distance moyenne parcourue un Français sur des vols long-courrier
+  formule: km moyen * croissance 2016 2019 / population
+  unité: km
+  description: |
+    On travaille sur les données moyennes de la mobilité longue distance des Français pour obtenir une valeur moyenne concernant les habitudes de voyages en avion des français. 
+    Nous utilisons un facteur de croissance du trafic aérien pour mettre à jour les données de 2016 dont nous disponsons.
+transport . avion . long courrier . durée moyennne:
+  titre: Durée moyenne passée par un Français dans les vols long-courrier
+  formule: passager km moyen / vitesse moyenne
+  unité: h
 
 transport . avion . long courrier . heures de vol:
   question: Combien d'heures par an voyagez-vous en avion pour des vols moyen-courrier (plus 6h) ?
@@ -160,5 +208,22 @@ transport . avion . long courrier . heures de vol:
     Paris🔁Sydney: 40
 
   unité: h/an
-  par défaut: 1 h/an
+  par défaut: durée moyennne
   note: La caractérisation "long courrier" par le temps de trajet est donnée par la règle `moyen courrier . durée max` = 6.48h.
+
+transport . avion . croissance 2016 2019:
+  titre: Facteur de croissance du trafic aérien français
+  formule: 420.45 / 355.19
+  note: |
+    Pour obtenir ce facteur de croissance, nous travaillons sur les données du trafic des vols commerciaux transitants par la aéroports français ([d'après les chiffres du MTE](https://www.ecologie.gouv.fr/statistiques-du-trafic-aerien)) :
+
+    2016:
+    <img width="700" alt="image" src="https://user-images.githubusercontent.com/55186402/212965605-52c5013e-039e-4ff6-821a-015d9229f555.png">
+
+    2019:
+    <img width="700" alt="image" src="https://user-images.githubusercontent.com/55186402/212965653-1adac292-2a68-4726-827d-3fee114b6a77.png">
+
+  description: |
+    2019 peut-être considérée comme une année de trafic "normal" pré-covid, 2022 tend par ailleurs vers le trafic de 2019. On pouvait lire sur le site du MTE en janvier 2023 :
+
+    <img width="669" alt="image" src="https://user-images.githubusercontent.com/55186402/212965255-0d614dfe-74da-4e19-bb5c-0f168b04e6be.png">
