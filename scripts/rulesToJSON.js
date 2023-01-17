@@ -56,7 +56,7 @@ function writeRules(rules, path, destLang) {
 
 function compressRules(jsonPathWithoutExtension, destLang) {
 	const destPath = `${jsonPathWithoutExtension}-opti.json`
-	const cmd = `npx publiopti compile ${jsonPathWithoutExtension}.json ${destPath} -i data/**/*.yaml`
+	const cmd = `npx -y publiopti@latest compile ${jsonPathWithoutExtension}.json ${destPath} -i data/**/*.yaml`
 	exec(cmd, function (err, _stdout, _stderr) {
 		if (err) {
 			if (markdown) {
