@@ -8,6 +8,7 @@ const path = require('path')
 const glob = require('glob')
 const R = require('ramda')
 const { exit } = require('process')
+const inquirer = require('inquirer')
 
 const cli = require('./cli')
 const utils = require('./utils')
@@ -22,6 +23,15 @@ const { destLangs, srcFile, markdown } = cli.getArgs(
 		defaultSrcFile: 'data/**/*.yaml',
 	}
 )
+
+const questions = [
+	{
+		type: 'confirm',
+		name: 'expandMissingRules',
+		message: 'Do you want to log missing rules ?',
+		default: false,
+	},
+]
 
 glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 	const rules = R.mergeAll(
@@ -42,7 +52,10 @@ glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 		const destPath = `data/translated-rules-${destLang}.yaml`
 		const destRules = R.mergeAll(utils.readYAML(path.resolve(destPath)))
 		const missingRules = utils.getMissingRules(rules, destRules)
-
 		cli.printChecksResult(missingRules.length, 'rules', destLang, markdown)
+		inquirer.prompt(questions).then((answers) => {
+			answers.expandMissingRules &&
+				missingRules.map((obj) => cli.printWarn(obj.rule))
+		})
 	})
 })
