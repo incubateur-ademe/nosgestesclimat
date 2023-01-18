@@ -19,7 +19,7 @@ function constantFoldingFromJSONFile(
 	jsonDestPath,
 	ignore,
 	targets,
-	verbose = true
+	verbose = false
 ) {
 	const log = verbose ? console.log : function (_) {}
 	try {
