@@ -41,12 +41,17 @@ const translateTo = async (
 	const updateTranslatedRules = (rule, attr, transVal, refVal) => {
 		let key = [rule, attr]
 		let refKey = [rule, attr + utils.LOCK_KEY_EXT]
-
+		let previousKey = [rule, attr + utils.PREVIOUS_REVIEW_KEY_EXT]
 		if ('mosaique' === attr) {
 			key = [rule, attr, 'suggestions']
 			refKey = [rule, attr, 'suggestions' + utils.LOCK_KEY_EXT]
+			previousKey = [rule, attr, 'suggestions' + utils.PREVIOUS_REVIEW_KEY_EXT]
 		}
-
+		translatedRules = R.assocPath(
+			previousKey,
+			translatedRules[rule][attr],
+			translatedRules
+		)
 		translatedRules = R.assocPath(key, transVal, translatedRules)
 		translatedRules = R.assocPath(refKey, refVal, translatedRules)
 	}

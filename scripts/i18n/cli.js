@@ -58,7 +58,7 @@ const printChecksResult = (
 	if (nbMissing > 0) {
 		console.log(
 			markdown
-				? `| _${destLang}_ | ${nbMissing} | :x: ${missingRuleNames}|`
+				? `| _${destLang}_ | ${nbMissing} :arrow_right: _${missingRuleNames}_ | :x: |`
 				: `❌ Missing ${red(nbMissing)} ${what} translations for ${yellow(
 						destLang
 				  )}!`
