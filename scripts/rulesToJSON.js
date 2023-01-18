@@ -21,7 +21,7 @@ const {
 	addTranslationToBaseRules,
 } = require('./i18n/addTranslationToBaseRules')
 
-const publiopti = require('publiopti')
+const { constantFoldingFromJSONFile } = require('./modelOptim')
 
 const { srcLang, srcFile, destLangs, markdown } = cli.getArgs(
 	`Aggregates the model to an unique JSON file.`,
@@ -58,7 +58,7 @@ function writeRules(rules, path, destLang) {
 
 function compressRules(jsonPathWithoutExtension, destLang) {
 	const destPath = `${jsonPathWithoutExtension}-opti.json`
-	const err = publiopti.constantFoldingFromJSONFile(
+	const err = constantFoldingFromJSONFile(
 		jsonPathWithoutExtension + '.json',
 		destPath,
 		['**/translated-*.yaml']
@@ -71,7 +71,7 @@ function compressRules(jsonPathWithoutExtension, destLang) {
 			)
 		} else {
 			console.log(' ❌ An error occured while compressing rules in:', destPath)
-			console.log(err.message)
+			console.log(err)
 		}
 		exit(-1)
 	} else {
