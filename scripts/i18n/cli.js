@@ -48,11 +48,17 @@ const printChecksResultTableHeader = (markdown) => {
 	}
 }
 
-const printChecksResult = (nbMissing, what, destLang, markdown) => {
+const printChecksResult = (
+	nbMissing,
+	missingRuleNames,
+	what,
+	destLang,
+	markdown
+) => {
 	if (nbMissing > 0) {
 		console.log(
 			markdown
-				? `| _${destLang}_ | ${nbMissing} | :x: |`
+				? `| _${destLang}_ | ${nbMissing} | :x: ${missingRuleNames}|`
 				: `❌ Missing ${red(nbMissing)} ${what} translations for ${yellow(
 						destLang
 				  )}!`
@@ -65,6 +71,12 @@ const printChecksResult = (nbMissing, what, destLang, markdown) => {
 		)
 	}
 }
+
+// ${(
+// 	<details>
+// 		<summary>See missing rules</summary>${missingRuleNames}
+// 	</details>
+// )}
 
 const getArgs = (description, opts) => {
 	let args = yargs.usage(`${description}\n\nUsage: node $0 [options]`)
