@@ -21,6 +21,8 @@ const {
 	addTranslationToBaseRules,
 } = require('./i18n/addTranslationToBaseRules')
 
+const publiopti = require('publiopti')
+
 const { srcLang, srcFile, destLangs, markdown } = cli.getArgs(
 	`Aggregates the model to an unique JSON file.`,
 
@@ -56,28 +58,29 @@ function writeRules(rules, path, destLang) {
 
 function compressRules(jsonPathWithoutExtension, destLang) {
 	const destPath = `${jsonPathWithoutExtension}-opti.json`
-	const cmd = `npx -y publiopti@latest compile ${jsonPathWithoutExtension}.json ${destPath} -i data/**/*.yaml`
-	exec(cmd, function (err, _stdout, _stderr) {
-		if (err) {
-			if (markdown) {
-				console.log(
-					`| Rules compression for _${destLang}_ | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
-				)
-			} else {
-				console.log(
-					' ❌ An error occured while compressing rules in:',
-					destPath
-				)
-				console.log(err.message)
-			}
-			exit(-1)
+	const err = publiopti.constantFoldingFromJSONFile(
+		jsonPathWithoutExtension + '.json',
+		destPath,
+		['**/translated-*.yaml']
+	)
+
+	if (err) {
+		if (markdown) {
+			console.log(
+				`| Rules compression for _${destLang}_ | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
+			)
+		} else {
+			console.log(' ❌ An error occured while compressing rules in:', destPath)
+			console.log(err.message)
 		}
+		exit(-1)
+	} else {
 		console.log(
 			markdown
 				? `| Rules compression for _${destLang}_ | :heavy_check_mark: | Ø |`
 				: ` ✅ The rules have been correctly compressed in: ${destPath}`
 		)
-	})
+	}
 }
 
 glob(srcFile, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
