@@ -38,21 +38,37 @@ const translateTo = async (
 	entryToTranslate,
 	translatedRules
 ) => {
+	let previoulsyReviewedTranslation = []
+
 	const updateTranslatedRules = (rule, attr, transVal, refVal) => {
 		let key = [rule, attr]
 		let refKey = [rule, attr + utils.LOCK_KEY_EXT]
+		let autoKey = [rule, attr + utils.AUTO_KEY_EXT]
 		let previousKey = [rule, attr + utils.PREVIOUS_REVIEW_KEY_EXT]
+
 		if ('mosaique' === attr) {
 			key = [rule, attr, 'suggestions']
 			refKey = [rule, attr, 'suggestions' + utils.LOCK_KEY_EXT]
 			previousKey = [rule, attr, 'suggestions' + utils.PREVIOUS_REVIEW_KEY_EXT]
+			autoKey = [rule, attr, 'suggestions' + utils.AUTO_KEY_EXT]
 		}
-		translatedRules = R.assocPath(
-			previousKey,
-			translatedRules[rule][attr],
-			translatedRules
-		)
+		if (
+			translatedRules &&
+			translatedRules[rule] &&
+			translatedRules[rule][attr + utils.AUTO_KEY_EXT] &&
+			translatedRules[rule][attr] !==
+				translatedRules[rule][attr + utils.AUTO_KEY_EXT]
+		) {
+			translatedRules = R.assocPath(
+				previousKey,
+				translatedRules[rule][attr],
+				translatedRules
+			)
+			previoulsyReviewedTranslation.push(`${rule} - ${attr}`)
+		}
+
 		translatedRules = R.assocPath(key, transVal, translatedRules)
+		translatedRules = R.assocPath(autoKey, transVal, translatedRules)
 		translatedRules = R.assocPath(refKey, refVal, translatedRules)
 	}
 	const translate = (value) => {
@@ -105,6 +121,10 @@ const translateTo = async (
 		cli.printWarn(`[SKIPPED] - ${rule}:`)
 		console.log(msg)
 	})
+	previoulsyReviewedTranslation.forEach((rule) => {
+		cli.printWarn(`[PREVIOUSLY REVIEWED] : ${rule}`)
+	})
+
 	utils.writeYAML(destPath, translatedRules)
 }
 
@@ -125,7 +145,6 @@ glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 	destLangs.forEach(async (destLang) => {
 		const destPath = path.resolve(`data/translated-rules-${destLang}.yaml`)
 		const destRules = R.mergeAll(utils.readYAML(destPath))
-
 		console.log(`Getting missing rule for ${destLang}...`)
 		let missingRules = utils.getMissingRules(rules, destRules)
 

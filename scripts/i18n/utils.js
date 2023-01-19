@@ -5,6 +5,7 @@ const R = require('ramda')
 const yaml = require('yaml')
 
 const LOCK_KEY_EXT = '.lock'
+const AUTO_KEY_EXT = '.auto'
 const PREVIOUS_REVIEW_KEY_EXT = '.previous_review'
 
 const availableLanguages = ['fr', 'en-us'] //, 'es', 'it'] For now, we don't want es and it to be compile (it could create compilation errors).
@@ -21,6 +22,7 @@ const writeYAML = (path, content, blockQuote = 'literal') => {
 			format(
 				yaml.stringify(content, {
 					sortMapEntries: true,
+					aliasDuplicateObjects: false,
 					blockQuote,
 				}),
 				{ ...prettierConfig, parser: 'yaml' }
@@ -248,6 +250,7 @@ module.exports = {
 	getUiMissingTranslations,
 	isI18nKey,
 	LOCK_KEY_EXT,
+	AUTO_KEY_EXT,
 	PREVIOUS_REVIEW_KEY_EXT,
 	nestedObjectToDotNotation,
 	readYAML,
