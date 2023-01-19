@@ -117,6 +117,7 @@ const translateTo = async (
 			}
 		})
 	)
+	console.log('\n')
 	skippedValue.forEach(({ rule, msg }) => {
 		cli.printWarn(`[SKIPPED] - ${rule}:`)
 		console.log(msg)
