@@ -1,6 +1,6 @@
 # Lançons le débat : le guide de l'animateur
 
-Une première étape est souvent de calculer votre propre empreinte carbone ! Vous avez l'avez surement déjà fait grâce à Nos Gestes Climat ! Et ensuite ? Comment puis-je agir à mon échelle pour la transition écologique ?
+Une première étape est souvent de calculer votre propre empreinte carbone ! Vous l'avez sûrement déjà fait grâce à Nos Gestes Climat ! Et ensuite ? Comment puis-je agir à mon échelle pour la transition écologique ?
 
 Une solution simple est de partager [les simulateurs Datagir](https://datagir.ademe.fr) pour sensibiliser le plus grand nombre (sur les réseaux sociaux ou votre site en iframe) mais il est possible aujourd'hui d'aller plus loin en utilisant les fonctionnalités de l'outil Nos Gestes Climat via son mode de test "à plusieurs", et **vous êtes au bon endroit** !
 
@@ -15,7 +15,7 @@ Une fois la simulation terminée l'ensemble des participants verront les résult
 > - Pas de serveur dédié à la salle conférence
 > - Une technologie qui peut supporter une charge de centaines de participants
 > - Le partage des données se fait instantanément sur l'écran de visualisation
-> - Pas de données sauvegardées: c'est plus respectueux d'un point de vue RGPD
+> - Pas de données sauvegardées : c'est plus respectueux d'un point de vue RGPD
 
 A l'instar du mode conférence, le mode sondage permet de faire le test en groupe mais cette fois-ci, en permettant la sauvegarde des données de manière pérenne. L'objectif est de proposer à une organisation et ses membres de collecter les données issues de Nos Gestes Climat sur une période donnée. Il est possible d'utiliser le mode sondage de la même manière que le mode conférence (en réalisant les tests en simultané) mais la technologie du mode conférence est plus pertinente.
 
@@ -41,28 +41,28 @@ Nos Gestes Climat est un outil d'évaluation de l'empreinte carbone individuelle
 
 Par exemple, si vous êtes en atelier, il est possible de s'appuyer sur le graphe de distribution pour sélectionner un utilisateur à l'empreinte carbone faible (par poste ou non) et le faire témoigner, ceci afin que le reste du groupe puisse comprendre ce qu'il fait et ainsi lancer la discussion. Il est aussi tout à fait opportun de faire témoigner les gens sur les difficultés qu'ils rencontrent ou ont rencontrées ainsi que sur ce qui les aide à atteindre une empreinte plus faible.
 
-Si vous ne souhaitez pas vous focaliser sur résultats d'une personne en particulier ou si vous souhaitez connaitre les messages clés à passer, parcourez les fiches animateur. Elles mettent en avant, par thématique, les ordres de grandeur nécessaires à la compréhension des enjeux et fournissent des chiffres clés faciles à retenir pour s'engager dans la réduction de son empreinte carbone individuelle.
+Si vous ne souhaitez pas vous focaliser sur les résultats d'une personne en particulier ou si vous souhaitez connaitre les messages clés à passer, parcourez les fiches animateur. Elles mettent en avant, par thématique, les ordres de grandeur nécessaires à la compréhension des enjeux et fournissent des chiffres clés faciles à retenir pour s'engager dans la réduction de son empreinte carbone individuelle.
 
-- **🍽 Alimentation:** De grandes disparités peuvent apparaitre au sein de cette catégorie ; la différence entre l'empreinte carbone d'un repas végétarien et celle d'un repas à base de viande rouge étant particulièrement importante. Ces chiffres sont souvent très frappants pour ceux et celles qui les découvrent. L'alimentation est aussi un levier facilement actionnable à son échelle.
+- **🍽 Alimentation:** De grandes disparités peuvent apparaitre au sein de cette catégorie ; la différence entre l'empreinte carbone d'un repas végétarien et celle d'un repas à base de viande rouge étant particulièrement importante. Ces chiffres sont souvent très frappants pour celles et ceux qui les découvrent. L'alimentation est aussi un levier facilement actionnable à son échelle.
 
   Je visite la page [Alimentation](./guide-alimentation) !
 
-- **🚦 Transport:** Nos aménagements urbains sont pensés depuis maintenant des décennies avant tout pour la voiture. Mais ce modèle de développement est à bout de souffle et contribue à faire du transport le secteur le plus émetteurs de GES en France. Dans cette rubrique, découvrez les actions pertinentes pour réduire notre dépendance à la voiture individuelle. Nous évoquons également la place actuelle du transport aérien dans nos modes de vie.
+- **🚦 Transport :** Nos aménagements urbains sont pensés depuis maintenant des décennies avant tout pour la voiture. Mais ce modèle de développement est à bout de souffle et contribue à faire du transport le secteur le plus émetteur de GES en France. Dans cette rubrique, découvrez les actions pertinentes pour réduire notre dépendance à la voiture individuelle. Nous évoquons également la place actuelle du transport aérien dans nos modes de vie.
 
   Je visite la page [Transport](./guide-transport) !
 
-- **🏘 Logement:** Le logement est, pour beaucoup, un poste particulièrement significatif (en termes d'émissions de gaz à effet de serre) mais aussi souvent celui qui génère le plus de frustration... En effet, le champ d'action sur cette catégorie peut s'avérer faible et/ou couteux. Plusieurs raisons peuvent être évoquées pour expliquer les difficultés du passage à l'action : propriétaire ? surface du logement ? choix du chauffage ? mix énergétique ? Nous répondons à tous vos questions dans cette rubrique.
+- **🏘 Logement :** Le logement est, pour beaucoup, un poste particulièrement significatif (en termes d'émissions de gaz à effet de serre) mais aussi souvent celui qui génère le plus de frustration... En effet, le champ d'action sur cette catégorie peut s'avérer faible et/ou coûteux. Plusieurs raisons peuvent être évoquées pour expliquer les difficultés du passage à l'action : propriétaire ? surface du logement ? choix du chauffage ? mix énergétique ? Nous répondons à toutes vos questions dans cette rubrique.
 
   Je visite la page [Logement](./guide-logement) !
 
-- **🏛️ Services publics:** On a tous en tête cet objectif de 2 tonnes par an et par personne en 2050... mais en voyant le résultat du test, on est souvent dérouté par l'empreinte des services sociétaux, qui représente près des 3/4 de ce chiffre ! Doit-on arriver à la conclusion que cet objectif est inatteignable ? Bien sûre que non ! Nous allons voir ici que la transition individuelle de tous (chose absolument nécessaire) doit être avant tout pensée dans une dynamique collective de changement.
+- **🏛️ Services publics :** On a tous en tête cet objectif de 2 tonnes par an et par personne en 2050... mais en voyant le résultat du test, on est souvent dérouté par l'empreinte des services sociétaux, qui représente près des 3/4 de ce chiffre ! Doit-on arriver à la conclusion que cet objectif est inatteignable ? Bien sûr que non ! Nous allons voir ici que la transition individuelle de tous (chose absolument nécessaire) doit être avant tout pensée dans une dynamique collective de changement.
 
   Je visite la page [Services Sociétaux](./guide-services-sociétaux) !
 
-- **📦 Divers:** Nos vies quotidiennes sont maintenant remplies de multitudes d'objets, vêtements et gadgets accumulés tout au long de notre vie. Venez découvrir ici les principes de la consommation responsable pour réduire l'empreinte carbone de votre consommation. Et oui, même si ce n'est jamais le poste le plus significatif en termes d'émissions de gaz à effet de serre, ses impacts sur l'environnement sont nombreux.
+- **📦 Divers :** Nos vies quotidiennes sont maintenant remplies de multitudes d'objets, vêtements et gadgets accumulés tout au long de notre vie. Venez découvrir ici les principes de la consommation responsable pour réduire l'empreinte carbone de votre consommation. Et oui, même si ce n'est jamais le poste le plus significatif en termes d'émissions de gaz à effet de serre, ses impacts sur l'environnement sont nombreux.
 
   Je visite la page [Divers](./guide-divers) !
 
-- **📺 Numérique:** Depuis l’apparition d’internet il y a plus de 20 ans, les impacts du numérique n’ont cessé de croitre. Son immédiateté et son côté dématérialisé ont tendance à nous faire oublier que les impacts sur le climat et l'environnement sont tous sauf virtuels. Dans cette rubrique, on vous donne les pistes d'actions pour adopter un comportement numérique responsable.
+- **📺 Numérique :** Depuis l’apparition d’Internet il y a plus de 20 ans, les impacts du numérique n’ont cessé de croitre. Son immédiateté et son côté dématérialisé ont tendance à nous faire oublier que les impacts sur le climat et l'environnement sont tous sauf virtuels. Dans cette rubrique, on vous donne les pistes d'actions pour adopter un comportement numérique responsable.
 
   Je visite la page [Numérique](./guide-numérique) !
