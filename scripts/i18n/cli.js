@@ -109,6 +109,15 @@ const getArgs = (description, opts) => {
 			description: 'The target language(s) to translate into.',
 		})
 	}
+	if (opts.model) {
+		args = args.option('model', {
+			alias: 'o',
+			type: 'string',
+			array: true,
+			choices: utils.supportedModels,
+			description: 'The i18n models supported in NGC',
+		})
+	}
 	if (opts.markdown) {
 		args = args.option('markdown', {
 			alias: 'm',
@@ -134,6 +143,14 @@ const getArgs = (description, opts) => {
 		return l !== srcLang
 	})
 
+	const regions = (argv.model ?? utils.supportedModels).filter((r) => {
+		if (!utils.supportedModels.includes(r)) {
+			printWarn(`SKIP: the region '${r}' is not supported.`)
+			return false
+		}
+		return r !== srcLang //we consider srcLang as the default model as well for now('fr')
+	})
+
 	const srcFile = argv.file ?? opts.defaultSrcFile
 
 	return {
@@ -142,6 +159,8 @@ const getArgs = (description, opts) => {
 			!argv.target && opts.target === 'all'
 				? utils.availableLanguages
 				: destLangs,
+		regions:
+			!argv.model && opts.model === 'all' ? utils.supportedModels : regions,
 		force: argv.force,
 		remove: argv.remove,
 		srcFile,

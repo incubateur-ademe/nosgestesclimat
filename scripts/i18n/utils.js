@@ -9,6 +9,8 @@ const LOCK_KEY_EXT = '.lock'
 const availableLanguages = ['fr', 'en-us'] //, 'es', 'it'] For now, we don't want es and it to be compile (it could create compilation errors).
 const defaultLang = availableLanguages[0]
 
+const supportedModels = ['fr', 'ch']
+
 const readYAML = (path) => {
 	return yaml.parse(fs.readFileSync(path, 'utf-8'))
 }
@@ -241,6 +243,7 @@ const getMissingRules = (srcRules, targetRules) => {
 module.exports = {
 	availableLanguages,
 	defaultLang,
+	supportedModels,
 	dotNotationToNestedObject,
 	getMissingPersonas,
 	getMissingRules,

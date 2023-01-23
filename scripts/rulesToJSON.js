@@ -20,12 +20,15 @@ const {
 	addTranslationToBaseRules,
 } = require('./i18n/addTranslationToBaseRules')
 
-const { srcLang, srcFile, destLangs, markdown } = cli.getArgs(
+const { addRegionToBaseRules } = require('./i18n/addRegionToBaseRules')
+
+const { srcLang, srcFile, destLangs, regions, markdown } = cli.getArgs(
 	`Aggregates the model to an unique JSON file.`,
 
 	{
 		source: true,
 		target: true,
+		model: true,
 		file: true,
 		defaultSrcFile: 'data/**/*.yaml',
 		markdown: true,
@@ -53,7 +56,7 @@ const writeRules = (rules, path, destLang) => {
 	})
 }
 
-glob(srcFile, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
+glob(srcFile, { ignore: ['data/i18n/**'] }, (_, files) => {
 	const defaultDestPath = path.join(outputJSONPath, `co2-${srcLang}.json`)
 	const baseRules = files.reduce((acc, filename) => {
 		try {
@@ -85,11 +88,19 @@ glob(srcFile, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 
 		writeRules(baseRules, defaultDestPath, srcLang)
 
+		regions.forEach((region) => {
+			const destPath = path.join(outputJSONPath, `co2-model.${region}.json`)
+			const regionRuleAttrs =
+				utils.readYAML(path.resolve(`data/i18n/models/${region}.yaml`)) ?? {}
+			const translatedRules = addRegionToBaseRules(baseRules, regionRuleAttrs)
+			writeRules(translatedRules, destPath, region)
+		})
+
 		destLangs.forEach((destLang) => {
 			const destPath = path.join(outputJSONPath, `co2-${destLang}.json`)
 			const translatedRuleAttrs =
 				utils.readYAML(
-					path.resolve(`data/translated-rules-${destLang}.yaml`)
+					path.resolve(`data/i18n/t9n/translated-rules-${destLang}.yaml`)
 				) ?? {}
 			const translatedRules = addTranslationToBaseRules(
 				baseRules,
