@@ -56,11 +56,9 @@ const translateTo = async (
 		})
 	)
 
-	console.log('\n')
 	previoulsyReviewedTranslation.forEach((rule) => {
 		cli.printErr(`[PREVIOUSLY REVIEWED] : ${rule}`)
 	})
-	console.log('\n')
 
 	utils.writeYAML(destPath, translatedPersonas)
 	console.log(
