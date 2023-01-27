@@ -57,6 +57,7 @@ const translateTo = async (
 		if (
 			translatedRules &&
 			translatedRules[rule] &&
+			translatedRules[rule][attr + utils.AUTO_KEY_EXT] &&
 			translatedRules[rule][attr] !==
 				translatedRules[rule][attr + utils.AUTO_KEY_EXT]
 		) {
