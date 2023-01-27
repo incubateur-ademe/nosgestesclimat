@@ -47,8 +47,10 @@ destLangs.forEach((destLang) => {
 		basePersonas,
 		translatedPersonas
 	)
+	const missingRuleNames = missingRules.map(
+		(obj) => `${obj.personaId} -> ${obj.attr}`
+	)
 
-	const missingRuleNames = missingRules.map((obj) => obj.personaId)
 	const nbMissing = missingRules.length
 
 	cli.printChecksResult(
