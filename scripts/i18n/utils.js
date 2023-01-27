@@ -112,17 +112,19 @@ const getMissingPersonas = (refPersonas, destPersonas, force = false) => {
 			const destPersona = destPersonas[freshKey]
 
 			if (!destPersona) {
-				return attrsToTranslate.map((attr) => {
+				return attrsToTranslate.reduce((acc, attr) => {
 					const refVal = refPersonaAttrs[attr]
-					return refVal
-						? {
-								personaId: freshKey,
-								attr,
-								refVal,
-						  }
-						: {}
-				})
+					if (refVal) {
+						acc.push({
+							personaId: freshKey,
+							attr,
+							refVal,
+						})
+					}
+					return acc
+				}, [])
 			}
+
 			return Object.entries(refPersonaAttrs)
 				.filter(isAttrToTranslate)
 				.reduce((acc, [attr, refVal]) => {
