@@ -52,7 +52,9 @@ glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 		const destPath = `data/translated-rules-${destLang}.yaml`
 		const destRules = R.mergeAll(utils.readYAML(path.resolve(destPath)))
 		const missingRules = utils.getMissingRules(rules, destRules)
-		const missingRuleNames = missingRules.map((obj) => obj.rule)
+		const missingRuleNames = missingRules.map(
+			(obj) => `${obj.rule} -> ${obj.attr}`
+		)
 		const nbMissing = missingRules.length
 		cli.printChecksResult(
 			nbMissing,
