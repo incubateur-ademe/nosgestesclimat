@@ -48,11 +48,17 @@ const printChecksResultTableHeader = (markdown) => {
 	}
 }
 
-const printChecksResult = (nbMissing, what, destLang, markdown) => {
+const printChecksResult = (
+	nbMissing,
+	missingRuleNames,
+	what,
+	destLang,
+	markdown
+) => {
 	if (nbMissing > 0) {
 		console.log(
 			markdown
-				? `| _${destLang}_ | ${nbMissing} | :x: |`
+				? `| _${destLang}_ | ${nbMissing} :arrow_down: <details><summary>Check missing rules</summary>${missingRuleNames}</details> | :x: |`
 				: `❌ Missing ${red(nbMissing)} ${what} translations for ${yellow(
 						destLang
 				  )}!`
