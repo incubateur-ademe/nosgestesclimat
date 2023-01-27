@@ -201,9 +201,7 @@ const getMissingRules = (srcRules, targetRules) => {
 								case 'mosaique': {
 									targetRef = targetRule[attr]?.['suggestions' + LOCK_KEY_EXT]
 									refVal = Object.keys(refVal.suggestions)
-									hasTheSameRefValue =
-										targetRef &&
-										areEqual(targetRef.suggestions, refVal.suggestions)
+									hasTheSameRefValue = targetRef && areEqual(targetRef, refVal)
 									break
 								}
 								default:
