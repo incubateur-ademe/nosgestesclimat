@@ -24,11 +24,9 @@ const addRegionToBaseRules = (baseRules, translatedRules) => {
 			cli.printWarn(`[SKIPPED] - There is no rule "${rule}" in base rules.`)
 			return baseRules
 		}
-		Object.entries(attrs)
-			.filter(([attr, _]) => !attr.endsWith('.lock'))
-			.forEach(([attr, transVal]) => {
-				updateBaseRules([rule, attr], transVal)
-			})
+		Object.entries(attrs).forEach(([attr, transVal]) => {
+			updateBaseRules([rule, attr], transVal)
+		})
 	})
 	return baseRules
 }
