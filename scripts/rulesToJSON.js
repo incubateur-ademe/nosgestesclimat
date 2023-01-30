@@ -57,7 +57,10 @@ const writeRules = (rules, path, destLang) => {
 }
 
 glob(srcFile, { ignore: ['data/i18n/**'] }, (_, files) => {
-	const defaultDestPath = path.join(outputJSONPath, `co2-${srcLang}.json`)
+	const defaultDestPath = path.join(
+		outputJSONPath,
+		`co2-model.fr-lang.${srcLang}.json`
+	)
 	const baseRules = files.reduce((acc, filename) => {
 		try {
 			const rules = utils.readYAML(path.resolve(filename))
@@ -89,15 +92,21 @@ glob(srcFile, { ignore: ['data/i18n/**'] }, (_, files) => {
 		writeRules(baseRules, defaultDestPath, srcLang)
 
 		regions.forEach((region) => {
-			const destPath = path.join(outputJSONPath, `co2-model.${region}.json`)
+			const destPath = path.join(
+				outputJSONPath,
+				`co2-model.${region}-lang.fr.json`
+			)
 			const regionRuleAttrs =
 				utils.readYAML(path.resolve(`data/i18n/models/${region}.yaml`)) ?? {}
-			const translatedRules = addRegionToBaseRules(baseRules, regionRuleAttrs)
-			writeRules(translatedRules, destPath, region)
+			const rehydratedRules = addRegionToBaseRules(baseRules, regionRuleAttrs)
+			writeRules(rehydratedRules, destPath, region)
 		})
 
 		destLangs.forEach((destLang) => {
-			const destPath = path.join(outputJSONPath, `co2-${destLang}.json`)
+			const destPath = path.join(
+				outputJSONPath,
+				`co2-model.fr-lang.${destLang}.json`
+			)
 			const translatedRuleAttrs =
 				utils.readYAML(
 					path.resolve(`data/i18n/t9n/translated-rules-${destLang}.yaml`)
@@ -107,6 +116,21 @@ glob(srcFile, { ignore: ['data/i18n/**'] }, (_, files) => {
 				translatedRuleAttrs
 			)
 			writeRules(translatedRules, destPath, destLang)
+			regions.forEach((region) => {
+				const destPath = path.join(
+					outputJSONPath,
+					`co2-model.${region}-lang.${destLang}.json`
+				)
+				const regionRuleAttrs =
+					utils.readYAML(
+						path.resolve(`data/i18n/models/${region}-${destLang}.yaml`)
+					) ?? {}
+				const rehydratedRules = addRegionToBaseRules(
+					translatedRules,
+					regionRuleAttrs
+				)
+				writeRules(rehydratedRules, destPath, region)
+			})
 		})
 	} catch (err) {
 		if (markdown) {
