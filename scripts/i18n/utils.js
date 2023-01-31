@@ -9,7 +9,7 @@ const LOCK_KEY_EXT = '.lock'
 const availableLanguages = ['fr', 'en-us'] //, 'es', 'it'] For now, we don't want es and it to be compile (it could create compilation errors).
 const defaultLang = availableLanguages[0]
 
-const supportedModels = ['fr', 'ch']
+const supportedModels = ['FR', 'CH']
 
 const readYAML = (path) => {
 	return yaml.parse(fs.readFileSync(path, 'utf-8'))
