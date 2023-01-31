@@ -38,16 +38,35 @@ const translateTo = async (
 	entryToTranslate,
 	translatedRules
 ) => {
+	let previoulsyReviewedTranslation = []
+
 	const updateTranslatedRules = (rule, attr, transVal, refVal) => {
 		let key = [rule, attr]
 		let refKey = [rule, attr + utils.LOCK_KEY_EXT]
+		let autoKey = [rule, attr + utils.AUTO_KEY_EXT]
+		let previousKey = [rule, attr + utils.PREVIOUS_REVIEW_KEY_EXT]
+		let currentVal = translatedRules[rule][attr]
 
 		if ('mosaique' === attr) {
 			key = [rule, attr, 'suggestions']
 			refKey = [rule, attr, 'suggestions' + utils.LOCK_KEY_EXT]
+			previousKey = [rule, attr, 'suggestions' + utils.PREVIOUS_REVIEW_KEY_EXT]
+			autoKey = [rule, attr, 'suggestions' + utils.AUTO_KEY_EXT]
+			currentVal = translatedRules[rule][attr]['suggestions']
+		}
+		if (
+			translatedRules &&
+			translatedRules[rule] &&
+			translatedRules[rule][attr + utils.AUTO_KEY_EXT] &&
+			translatedRules[rule][attr] !==
+				translatedRules[rule][attr + utils.AUTO_KEY_EXT]
+		) {
+			translatedRules = R.assocPath(previousKey, currentVal, translatedRules)
+			previoulsyReviewedTranslation.push(`${rule} -> ${attr}`)
 		}
 
 		translatedRules = R.assocPath(key, transVal, translatedRules)
+		translatedRules = R.assocPath(autoKey, transVal, translatedRules)
 		translatedRules = R.assocPath(refKey, refVal, translatedRules)
 	}
 	const translate = (value) => {
@@ -96,10 +115,15 @@ const translateTo = async (
 			}
 		})
 	)
+	console.log('\n')
 	skippedValue.forEach(({ rule, msg }) => {
 		cli.printWarn(`[SKIPPED] - ${rule}:`)
 		console.log(msg)
 	})
+	previoulsyReviewedTranslation.forEach((rule) => {
+		cli.printErr(`[PREVIOUSLY REVIEWED] : ${rule}`)
+	})
+	console.log('\n')
 	utils.writeYAML(destPath, translatedRules)
 }
 
@@ -120,7 +144,6 @@ glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 	destLangs.forEach(async (destLang) => {
 		const destPath = path.resolve(`data/translated-rules-${destLang}.yaml`)
 		const destRules = R.mergeAll(utils.readYAML(destPath))
-
 		console.log(`Getting missing rule for ${destLang}...`)
 		let missingRules = utils.getMissingRules(rules, destRules)
 
