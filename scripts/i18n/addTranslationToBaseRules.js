@@ -5,20 +5,21 @@
 	NOTE: this function is used by the RulesProvider.js file of the website.
 */
 
-const R = require('ramda')
-
 const addTranslationToBaseRules = (baseRules, translatedRules) => {
 	const updateBaseRules = (ruleName, attributes, val) => {
 		const baseRule = baseRules[ruleName]
 		if (
 			baseRule &&
-			(R.path([ruleName, attributes], baseRules) ||
+			(baseRule[attributes] ||
 				// When the base rule hasn't a 'titre' attribute, it is automatically
 				// added during the translation process.
 				// Therefore, we need to add the 'titre' attribute to the base rule.
 				attributes.includes('titre'))
 		) {
-			baseRules = R.assocPath([ruleName, attributes], val, baseRules)
+			baseRules = {
+				...baseRules,
+				[ruleName]: { ...baseRule, [attributes]: val },
+			}
 		}
 	}
 
