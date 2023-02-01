@@ -5,18 +5,27 @@
 	NOTE: this function is used by the RulesProvider.js file of the website.
 */
 
-const R = require('ramda')
-
 const addTranslationToBaseRules = (baseRules, translatedRules) => {
-	const updateBaseRules = (key, val) => {
-		if (R.path(key, baseRules) || key.includes('titre')) {
-			// TODO: automatically remove from translated file entries which aren't anymore in the ref model.
-			baseRules = R.assocPath(key, val, baseRules)
+	const updateBaseRules = (ruleName, attributes, val) => {
+		const baseRule = baseRules[ruleName]
+		if (
+			baseRule &&
+			(baseRule[attributes] ||
+				// When the base rule hasn't a 'titre' attribute, it is automatically
+				// added during the translation process.
+				// Therefore, we need to add the 'titre' attribute to the base rule.
+				attributes.includes('titre'))
+		) {
+			baseRules = {
+				...baseRules,
+				[ruleName]: { ...baseRule, [attributes]: val },
+			}
 		}
 	}
 
 	const updateBaseRulesWithSuggestions = (
-		baseKey,
+		baseRuleName,
+		baseRuleAttributes,
 		baseRuleSuggestions,
 		translatedSuggestionsKeys
 	) => {
@@ -27,7 +36,7 @@ const addTranslationToBaseRules = (baseRules, translatedRules) => {
 				suggestionValues[i],
 			])
 		)
-		updateBaseRules(baseKey, translatedSuggestions)
+		updateBaseRules(baseRuleName, baseRuleAttributes, translatedSuggestions)
 	}
 
 	Object.entries(translatedRules).forEach(([rule, attrs]) => {
@@ -37,7 +46,8 @@ const addTranslationToBaseRules = (baseRules, translatedRules) => {
 				switch (attr) {
 					case 'suggestions': {
 						updateBaseRulesWithSuggestions(
-							[rule, attr],
+							rule,
+							attr,
 							baseRules[rule].suggestions,
 							transVal
 						)
@@ -45,14 +55,15 @@ const addTranslationToBaseRules = (baseRules, translatedRules) => {
 					}
 					case 'mosaique': {
 						updateBaseRulesWithSuggestions(
-							[rule, attr, 'suggestions'],
+							rule,
+							[attr, 'suggestions'],
 							baseRules[rule].mosaique.suggestions,
 							transVal.suggestions
 						)
 						break
 					}
 					default:
-						updateBaseRules([rule, attr], transVal)
+						updateBaseRules(rule, attr, transVal)
 						break
 				}
 			})
