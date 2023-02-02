@@ -37,7 +37,7 @@ export function constantFoldingFromJSONFile(
 		const engine = new Engine(rules, { logger: disabledLogger })
 
 		log('Constant folding pass...')
-		const foldedRules = constantFolding(engine, targets)
+		const foldedRules = constantFolding(engine /* , targets */)
 
 		log(`Writing in '${jsonDestPath}'...`)
 		writeFileSync(jsonDestPath, JSON.stringify(getRawNodes(foldedRules)))
