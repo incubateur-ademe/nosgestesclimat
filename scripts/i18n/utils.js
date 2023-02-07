@@ -258,14 +258,7 @@ const path = (pathAr, obj) => {
 }
 
 const assoc = (prop, val, obj) => {
-	const result = {}
-
-	for (var p in obj) {
-		result[p] = obj[p]
-	}
-
-	result[prop] = val
-	return result
+	return { ...obj, [prop]: val }
 }
 
 const customAssocPath = (path, val, obj) => {
