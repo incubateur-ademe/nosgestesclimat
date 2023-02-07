@@ -129,7 +129,14 @@ function compressRules(jsonPathWithoutExtension, destLang) {
 	const err = constantFoldingFromJSONFile(
 		jsonPathWithoutExtension + '.json',
 		destPath,
-		['**/translated-*.yaml']
+		['**/translated-*.yaml'],
+		[
+			'bilan',
+			'actions',
+			'transport',
+			'pétrole . pleins',
+			'transport . voiture . thermique',
+		]
 	)
 
 	if (err) {
