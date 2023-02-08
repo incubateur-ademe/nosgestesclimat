@@ -1,7 +1,7 @@
-const Engine = require('publicodes').default
-const path = require('path')
-const { readFileSync, writeFileSync } = require('fs')
-const { constantFolding, disabledLogger, getRawNodes } = require('publiopti')
+import Engine from 'publicodes'
+import path from 'path'
+import { readFileSync, writeFileSync } from 'fs'
+import { constantFolding, disabledLogger, getRawNodes } from 'publiopti'
 
 /**
  * Applies a constant folding optimization pass to the parsed rules from the [model] path.
@@ -14,7 +14,7 @@ const { constantFolding, disabledLogger, getRawNodes } = require('publiopti')
  *
  * @returns An error message if the optimization pass failed, undefined otherwise.
  */
-function constantFoldingFromJSONFile(
+export function constantFoldingFromJSONFile(
 	model,
 	jsonDestPath,
 	ignore,
@@ -44,8 +44,4 @@ function constantFoldingFromJSONFile(
 	} catch (error) {
 		return error
 	}
-}
-
-module.exports = {
-	constantFoldingFromJSONFile,
 }
