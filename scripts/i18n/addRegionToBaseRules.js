@@ -7,13 +7,13 @@
 
 const utils = require('./utils')
 
-const addRegionToBaseRules = (baseRules, translatedRules) => {
+const addRegionToBaseRules = (baseRules, newRegionalRules) => {
 	const updateBaseRules = (key, val) => {
 		if (utils.path(key, baseRules)) {
 			baseRules = utils.customAssocPath(key, val, baseRules)
 		}
 	}
-	Object.entries(translatedRules).forEach(([rule, attrs]) => {
+	Object.entries(newRegionalRules).forEach(([rule, attrs]) => {
 		if (!Object.keys(baseRules).includes(rule)) {
 			return baseRules
 		}
