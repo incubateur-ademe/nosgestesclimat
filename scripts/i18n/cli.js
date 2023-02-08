@@ -148,7 +148,7 @@ const getArgs = (description, opts) => {
 			printWarn(`SKIP: the region '${r}' is not supported.`)
 			return false
 		}
-		return r !== 'FR' //we consider srcLang as the default model as well for now('fr')
+		return r
 	})
 
 	const srcFile = argv.file ?? opts.defaultSrcFile

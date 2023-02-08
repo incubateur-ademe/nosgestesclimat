@@ -9,7 +9,10 @@ const LOCK_KEY_EXT = '.lock'
 const availableLanguages = ['fr', 'en-us'] //, 'es', 'it'] For now, we don't want es and it to be compile (it could create compilation errors).
 const defaultLang = availableLanguages[0]
 
-const supportedModels = ['FR', 'CH']
+const supportedModels = fs
+	.readdirSync('data/i18n/models')
+	.map((elt) => elt.match(/([A-Z]{2})/)[0])
+	.filter((code, index, self) => self.indexOf(code) === index)
 
 const readYAML = (path) => {
 	return yaml.parse(fs.readFileSync(path, 'utf-8'))
