@@ -15,18 +15,11 @@ import utils from './i18n/utils.js'
 import cli from './i18n/cli.js'
 
 import { addTranslationToBaseRules } from './i18n/addTranslationToBaseRules.js'
+import { addRegionToBaseRules } from './i18n/addRegionToBaseRules.js'
 
 import { constantFoldingFromJSONFile } from './modelOptim.mjs'
 
 const outputJSONPath = './public'
-
-const {
-	addTranslationToBaseRules,
-} = require('./i18n/addTranslationToBaseRules')
-
-const { addRegionToBaseRules } = require('./i18n/addRegionToBaseRules')
-
-const { constantFoldingFromJSONFile } = require('./modelOptim')
 
 const { srcLang, srcFile, destLangs, regions, markdown } = cli.getArgs(
 	`Aggregates the model to an unique JSON file.`,
