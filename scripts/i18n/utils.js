@@ -241,6 +241,42 @@ const getMissingRules = (srcRules, targetRules) => {
 		.flat()
 }
 
+const path = (pathAr, obj) => {
+	const flatPath = pathAr.flat()
+	let val = obj
+	let idx = 0
+	let p
+	while (idx < flatPath.length) {
+		if (val == null) {
+			return
+		}
+		p = flatPath[idx]
+		val = val[p]
+		idx += 1
+	}
+	return val
+}
+
+const assoc = (prop, val, obj) => {
+	return { ...obj, [prop]: val }
+}
+
+const customAssocPath = (path, val, obj) => {
+	if (!Array.isArray(path)) {
+		return { ...obj, [path]: val }
+	}
+	const flatPath = path.flat()
+	if (flatPath.length === 0) {
+		return val
+	}
+	const idx = flatPath[0]
+	if (flatPath.length > 1) {
+		const nextObj = Object.hasOwn(obj, idx) ? obj[idx] : {}
+		val = customAssocPath(flatPath.slice(1), val, nextObj)
+	}
+	return assoc(idx, val, obj)
+}
+
 module.exports = {
 	availableLanguages,
 	defaultLang,
@@ -255,4 +291,7 @@ module.exports = {
 	nestedObjectToDotNotation,
 	readYAML,
 	writeYAML,
+	path,
+	assoc,
+	customAssocPath,
 }
