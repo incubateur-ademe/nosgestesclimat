@@ -25,7 +25,7 @@ const { addRegionToBaseRules } = require('./i18n/addRegionToBaseRules')
 
 const { constantFoldingFromJSONFile } = require('./modelOptim')
 
-const { srcLang, srcFile, destLangs, markdown } = cli.getArgs(
+const { srcLang, srcFile, destLangs, regions, markdown } = cli.getArgs(
 	`Aggregates the model to an unique JSON file.`,
 
 	{
