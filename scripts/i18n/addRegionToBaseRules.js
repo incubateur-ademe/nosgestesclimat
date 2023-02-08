@@ -5,12 +5,12 @@
 	NOTE: this function is used by the RulesProvider.js file of the website.
 */
 
-const R = require('ramda')
+const utils = require('./utils')
 
 const addRegionToBaseRules = (baseRules, translatedRules) => {
 	const updateBaseRules = (key, val) => {
-		if (R.path(key, baseRules)) {
-			baseRules = R.assocPath(key, val, baseRules)
+		if (utils.path(key, baseRules)) {
+			baseRules = utils.customAssocPath(key, val, baseRules)
 		}
 	}
 	Object.entries(translatedRules).forEach(([rule, attrs]) => {
