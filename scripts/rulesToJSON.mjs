@@ -4,16 +4,19 @@
 	Command: yarn compile:rules -- [options]
 */
 
-const yaml = require('yaml')
-const fs = require('fs')
-const glob = require('glob')
-const path = require('path')
-const { exit } = require('process')
-const { exec } = require('node:child_process')
-const Engine = require('publicodes').default
+import fs from 'fs'
+import glob from 'glob'
+import path from 'path'
+import { exit } from 'process'
+import { exec } from 'node:child_process'
+import Engine from 'publicodes'
 
-const utils = require('./i18n/utils')
-const cli = require('./i18n/cli')
+import utils from './i18n/utils.js'
+import cli from './i18n/cli.js'
+
+import { addTranslationToBaseRules } from './i18n/addTranslationToBaseRules.js'
+
+import { constantFoldingFromJSONFile } from './modelOptim.mjs'
 
 const outputJSONPath = './public'
 
