@@ -9,6 +9,7 @@ const fs = require('fs')
 const glob = require('glob')
 const path = require('path')
 const { exit } = require('process')
+const { exec } = require('node:child_process')
 const Engine = require('publicodes').default
 
 const utils = require('./i18n/utils')
@@ -22,7 +23,9 @@ const {
 
 const { addRegionToBaseRules } = require('./i18n/addRegionToBaseRules')
 
-const { srcLang, srcFile, destLangs, regions, markdown } = cli.getArgs(
+const { constantFoldingFromJSONFile } = require('./modelOptim')
+
+const { srcLang, srcFile, destLangs, markdown } = cli.getArgs(
 	`Aggregates the model to an unique JSON file.`,
 
 	{
@@ -35,29 +38,56 @@ const { srcLang, srcFile, destLangs, regions, markdown } = cli.getArgs(
 	}
 )
 
-const writeRules = (rules, path, destLang) => {
-	fs.writeFile(path, JSON.stringify(rules), function (err) {
-		if (err) {
-			if (markdown) {
-				console.log(
-					`| Rules compilation to JSON for _${destLang}_ | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
-				)
-			} else {
-				console.log(' ❌ An error occured while writting rules in:', path)
-				console.log(err.message)
-			}
-			exit(-1)
-		}
+function writeRules(rules, path, destLang) {
+	try {
+		fs.writeFileSync(path, JSON.stringify(rules))
 		console.log(
 			markdown
 				? `| Rules compilation to JSON for _${destLang}_ | :heavy_check_mark: | Ø |`
-				: ` ✅ The rules have been correctly written in JSON in: ${path}`
+				: ` ✅ The rules have been correctly written in: ${path}`
 		)
-	})
+	} catch (err) {
+		if (markdown) {
+			console.log(
+				`| Rules compilation to JSON for _${destLang}_ | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
+			)
+		} else {
+			console.log(' ❌ An error occured while writting rules in:', path)
+			console.log(err.message)
+		}
+		exit(-1)
+	}
+}
+
+function compressRules(jsonPathWithoutExtension, destLang) {
+	const destPath = `${jsonPathWithoutExtension}-opti.json`
+	const err = constantFoldingFromJSONFile(
+		jsonPathWithoutExtension + '.json',
+		destPath,
+		['**/translated-*.yaml']
+	)
+
+	if (err) {
+		if (markdown) {
+			console.log(
+				`| Rules compression for _${destLang}_ | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
+			)
+		} else {
+			console.log(' ❌ An error occured while compressing rules in:', destPath)
+			console.log(err)
+		}
+		exit(-1)
+	} else {
+		console.log(
+			markdown
+				? `| Rules compression for _${destLang}_ | :heavy_check_mark: | Ø |`
+				: ` ✅ The rules have been correctly compressed in: ${destPath}`
+		)
+	}
 }
 
 glob(srcFile, { ignore: ['data/i18n/**'] }, (_, files) => {
-	const defaultDestPath = path.join(
+	const defaultDestPathWithoutExtension = path.join(
 		outputJSONPath,
 		`co2-model.fr-lang.${srcLang}.json`
 	)
@@ -89,7 +119,8 @@ glob(srcFile, { ignore: ['data/i18n/**'] }, (_, files) => {
 				: ' ✅ Les règles ont été évaluées sans erreur !'
 		)
 
-		writeRules(baseRules, defaultDestPath, srcLang)
+		writeRules(baseRules, defaultDestPathWithoutExtension + '.json', srcLang)
+		compressRules(defaultDestPathWithoutExtension, srcLang)
 
 		regions.forEach((region) => {
 			const destPath = path.join(
@@ -103,10 +134,11 @@ glob(srcFile, { ignore: ['data/i18n/**'] }, (_, files) => {
 		})
 
 		destLangs.forEach((destLang) => {
-			const destPath = path.join(
+			const destPathWithoutExtension = path.join(
 				outputJSONPath,
 				`co2-model.fr-lang.${destLang}.json`
 			)
+			const destPath = destPathWithoutExtension + '.json'
 			const translatedRuleAttrs =
 				utils.readYAML(
 					path.resolve(`data/i18n/t9n/translated-rules-${destLang}.yaml`)
@@ -131,6 +163,8 @@ glob(srcFile, { ignore: ['data/i18n/**'] }, (_, files) => {
 				)
 				writeRules(rehydratedRules, destPath, region)
 			})
+
+			compressRules(destPathWithoutExtension, destLang)
 		})
 	} catch (err) {
 		if (markdown) {

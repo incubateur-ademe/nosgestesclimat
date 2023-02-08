@@ -7,6 +7,8 @@ assignees: ''
 
 ---
 
+> ⚠️ Avant de créer une issue, lisez attentivement [notre FAQ](https://nosgestesclimat.fr/contribuer) qui explicite un bon nombre des limites du test nosgestesclimat.fr.
+
 ## Poser une question 
 
 *Décrivez ici le problème que vous avez eu, l'amélioration que vous souhaitez proposer, ou toute autre question ici.*

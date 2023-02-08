@@ -5,6 +5,8 @@ const R = require('ramda')
 const yaml = require('yaml')
 
 const LOCK_KEY_EXT = '.lock'
+const AUTO_KEY_EXT = '.auto'
+const PREVIOUS_REVIEW_KEY_EXT = '.previous_review'
 
 const availableLanguages = ['fr', 'en-us'] //, 'es', 'it'] For now, we don't want es and it to be compile (it could create compilation errors).
 const defaultLang = availableLanguages[0]
@@ -25,6 +27,7 @@ const writeYAML = (path, content, blockQuote = 'literal') => {
 			format(
 				yaml.stringify(content, {
 					sortMapEntries: true,
+					aliasDuplicateObjects: false,
 					blockQuote,
 				}),
 				{ ...prettierConfig, parser: 'yaml' }
@@ -114,17 +117,19 @@ const getMissingPersonas = (refPersonas, destPersonas, force = false) => {
 			const destPersona = destPersonas[freshKey]
 
 			if (!destPersona) {
-				return attrsToTranslate.map((attr) => {
+				return attrsToTranslate.reduce((acc, attr) => {
 					const refVal = refPersonaAttrs[attr]
-					return refVal
-						? {
-								personaId: freshKey,
-								attr,
-								refVal,
-						  }
-						: {}
-				})
+					if (refVal) {
+						acc.push({
+							personaId: freshKey,
+							attr,
+							refVal,
+						})
+					}
+					return acc
+				}, [])
 			}
+
 			return Object.entries(refPersonaAttrs)
 				.filter(isAttrToTranslate)
 				.reduce((acc, [attr, refVal]) => {
@@ -201,9 +206,7 @@ const getMissingRules = (srcRules, targetRules) => {
 								case 'mosaique': {
 									targetRef = targetRule[attr]?.['suggestions' + LOCK_KEY_EXT]
 									refVal = Object.keys(refVal.suggestions)
-									hasTheSameRefValue =
-										targetRef &&
-										areEqual(targetRef.suggestions, refVal.suggestions)
+									hasTheSameRefValue = targetRef && areEqual(targetRef, refVal)
 									break
 								}
 								default:
@@ -243,6 +246,42 @@ const getMissingRules = (srcRules, targetRules) => {
 		.flat()
 }
 
+const path = (pathAr, obj) => {
+	const flatPath = pathAr.flat()
+	let val = obj
+	let idx = 0
+	let p
+	while (idx < flatPath.length) {
+		if (val == null) {
+			return
+		}
+		p = flatPath[idx]
+		val = val[p]
+		idx += 1
+	}
+	return val
+}
+
+const assoc = (prop, val, obj) => {
+	return { ...obj, [prop]: val }
+}
+
+const customAssocPath = (path, val, obj) => {
+	if (!Array.isArray(path)) {
+		return { ...obj, [path]: val }
+	}
+	const flatPath = path.flat()
+	if (flatPath.length === 0) {
+		return val
+	}
+	const idx = flatPath[0]
+	if (flatPath.length > 1) {
+		const nextObj = Object.hasOwn(obj, idx) ? obj[idx] : {}
+		val = customAssocPath(flatPath.slice(1), val, nextObj)
+	}
+	return assoc(idx, val, obj)
+}
+
 module.exports = {
 	availableLanguages,
 	defaultLang,
@@ -253,7 +292,12 @@ module.exports = {
 	getUiMissingTranslations,
 	isI18nKey,
 	LOCK_KEY_EXT,
+	AUTO_KEY_EXT,
+	PREVIOUS_REVIEW_KEY_EXT,
 	nestedObjectToDotNotation,
 	readYAML,
 	writeYAML,
+	path,
+	assoc,
+	customAssocPath,
 }
