@@ -3,7 +3,6 @@
 */
 
 const yargs = require('yargs')
-const path = require('path')
 
 const utils = require('./utils')
 

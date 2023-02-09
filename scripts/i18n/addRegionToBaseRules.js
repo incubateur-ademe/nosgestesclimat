@@ -9,7 +9,7 @@ const utils = require('./utils')
 
 const addRegionToBaseRules = (baseRules, newRegionalRules) => {
 	const updateBaseRules = (key, val) => {
-		if (utils.path(key, baseRules)) {
+		if (utils.objPath(key, baseRules)) {
 			baseRules = utils.customAssocPath(key, val, baseRules)
 		}
 	}

@@ -1,5 +1,6 @@
 require('dotenv').config()
 const fs = require('fs')
+const path = require('path')
 const { format, resolveConfig } = require('prettier')
 const yaml = require('yaml')
 
@@ -11,7 +12,7 @@ const availableLanguages = ['fr', 'en-us'] //, 'es', 'it'] For now, we don't wan
 const defaultLang = availableLanguages[0]
 
 const supportedModels = fs
-	.readdirSync('data/i18n/models')
+	.readdirSync(path.resolve('nosgestesclimat/data/i18n/models'))
 	.map((elt) => elt.match(/([A-Z]{2})/)[0])
 	.filter((code, index, self) => self.indexOf(code) === index)
 
@@ -245,7 +246,7 @@ const getMissingRules = (srcRules, targetRules) => {
 		.flat()
 }
 
-const path = (pathAr, obj) => {
+const objPath = (pathAr, obj) => {
 	const flatPath = pathAr.flat()
 	let val = obj
 	let idx = 0
@@ -296,7 +297,7 @@ module.exports = {
 	nestedObjectToDotNotation,
 	readYAML,
 	writeYAML,
-	path,
+	objPath,
 	assoc,
 	customAssocPath,
 }

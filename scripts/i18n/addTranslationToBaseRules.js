@@ -16,7 +16,7 @@ const addTranslationToBaseRules = (baseRules, translatedRules) => {
 		}
 		if (
 			baseRule &&
-			(utils.path([ruleName, attributes], baseRules) ||
+			(utils.objPath([ruleName, attributes], baseRules) ||
 				// When the base rule hasn't a 'titre' attribute, it is automatically
 				// added during the translation process.
 				// Therefore, we need to add the 'titre' attribute to the base rule.
