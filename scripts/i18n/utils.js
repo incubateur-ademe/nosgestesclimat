@@ -11,10 +11,12 @@ const PREVIOUS_REVIEW_KEY_EXT = '.previous_review'
 const availableLanguages = ['fr', 'en-us'] //, 'es', 'it'] For now, we don't want es and it to be compile (it could create compilation errors).
 const defaultLang = availableLanguages[0]
 
-const supportedModels = fs
-	.readdirSync(path.resolve('nosgestesclimat/data/i18n/models'))
-	.map((elt) => elt.match(/([A-Z]{2})/)[0])
-	.filter((code, index, self) => self.indexOf(code) === index)
+const getSupportedModels = () => {
+	return fs
+		.readdirSync(path.resolve('nosgestesclimat/data/i18n/models'))
+		.map((elt) => elt.match(/([A-Z]{2})/)[0])
+		.filter((code, index, self) => self.indexOf(code) === index)
+}
 
 const readYAML = (path) => {
 	return yaml.parse(fs.readFileSync(path, 'utf-8'))
@@ -285,7 +287,7 @@ const customAssocPath = (path, val, obj) => {
 module.exports = {
 	availableLanguages,
 	defaultLang,
-	supportedModels,
+	getSupportedModels,
 	dotNotationToNestedObject,
 	getMissingPersonas,
 	getMissingRules,
