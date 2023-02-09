@@ -34,10 +34,33 @@ const { srcLang, srcFile, destLangs, destRegions, markdown } = cli.getArgs(
 	}
 )
 
-const suportedRegions = utils.getSupportedModels()
+const supportedRegions = fs
+	.readdirSync(path.resolve('data/i18n/models'))
+	.reduce((acc, filename) => {
+		if (!filename.match(/([A-Z]{2}).yaml/)) return acc
+		try {
+			const regionPath = path.resolve(`data/i18n/models/${filename}`)
+			const rules = utils.readYAML(regionPath)
+			return { ...acc, [rules.params.code]: rules['params'] }
+		} catch (err) {
+			console.log(
+				' ❌ Une erreur est survenue lors de la lecture du fichier',
+				filename,
+				':\n\n',
+				err.message
+			)
+			exit(-1)
+		}
+	}, {})
 
-const regions = (destRegions ?? suportedRegions).filter((r) => {
-	if (!suportedRegions.includes(r)) {
+fs.writeFileSync(
+	path.join(outputJSONPath, `supportedCountries.json`),
+	JSON.stringify(supportedRegions)
+)
+const supportedRegionCodes = Object.keys(supportedRegions)
+
+const regions = (destRegions ?? supportedRegionCodes).filter((r) => {
+	if (!supportedRegionCodes.includes(r)) {
 		cli.printWarn(`SKIP: the region '${r}' is not supported.`)
 		return false
 	}
