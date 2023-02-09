@@ -71,8 +71,6 @@ const printChecksResult = (
 	}
 }
 
-const supportedModels = utils.getSupportedModels()
-
 const getArgs = (description, opts) => {
 	let args = yargs.usage(`${description}\n\nUsage: node $0 [options]`)
 
@@ -121,8 +119,7 @@ const getArgs = (description, opts) => {
 			alias: 'o',
 			type: 'string',
 			array: true,
-			choices: supportedModels,
-			description: 'The i18n models supported in NGC',
+			description: 'The region code model',
 		})
 	}
 	if (opts.markdown) {
@@ -150,14 +147,6 @@ const getArgs = (description, opts) => {
 		return l !== srcLang
 	})
 
-	const regions = (argv.model ?? supportedModels).filter((r) => {
-		if (!supportedModels.includes(r)) {
-			printWarn(`SKIP: the region '${r}' is not supported.`)
-			return false
-		}
-		return r
-	})
-
 	const srcFile = argv.file ?? opts.defaultSrcFile
 
 	return {
@@ -166,7 +155,7 @@ const getArgs = (description, opts) => {
 			!argv.target && opts.target === 'all'
 				? utils.availableLanguages
 				: destLangs,
-		regions: !argv.model && opts.model === 'all' ? ssupportedModels : regions,
+		destRegions: argv.model,
 		force: argv.force,
 		remove: argv.remove,
 		srcFile,

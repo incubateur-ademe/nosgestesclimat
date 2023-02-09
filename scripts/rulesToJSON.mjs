@@ -21,7 +21,7 @@ import { constantFoldingFromJSONFile } from './modelOptim.mjs'
 
 const outputJSONPath = './public'
 
-const { srcLang, srcFile, destLangs, regions, markdown } = cli.getArgs(
+const { srcLang, srcFile, destLangs, destRegions, markdown } = cli.getArgs(
 	`Aggregates the model to an unique JSON file.`,
 
 	{
@@ -33,6 +33,16 @@ const { srcLang, srcFile, destLangs, regions, markdown } = cli.getArgs(
 		markdown: true,
 	}
 )
+
+const suportedRegions = utils.getSupportedModels()
+
+const regions = (destRegions ?? suportedRegions).filter((r) => {
+	if (!suportedRegions.includes(r)) {
+		cli.printWarn(`SKIP: the region '${r}' is not supported.`)
+		return false
+	}
+	return r
+})
 
 function writeRules(rules, path, destLang) {
 	try {
