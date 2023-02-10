@@ -8,14 +8,13 @@ import fs from 'fs'
 import glob from 'glob'
 import path from 'path'
 import { exit } from 'process'
-import { exec } from 'node:child_process'
 import Engine from 'publicodes'
 
-import utils from './i18n/utils.js'
 import cli from './i18n/cli.js'
+import utils from './i18n/utils.js'
 
-import { addTranslationToBaseRules } from './i18n/addTranslationToBaseRules.js'
 import { addRegionToBaseRules } from './i18n/addRegionToBaseRules.js'
+import { addTranslationToBaseRules } from './i18n/addTranslationToBaseRules.js'
 
 import { constantFoldingFromJSONFile } from './modelOptim.mjs'
 
@@ -121,7 +120,7 @@ function compressRules(jsonPathWithoutExtension, destLang) {
 glob(srcFile, { ignore: ['data/i18n/**'] }, (_, files) => {
 	const defaultDestPathWithoutExtension = path.join(
 		outputJSONPath,
-		`co2-model.fr-lang.${srcLang}.json`
+		`co2-model.FR-lang.${srcLang}`
 	)
 	const baseRules = files.reduce((acc, filename) => {
 		try {
@@ -157,7 +156,7 @@ glob(srcFile, { ignore: ['data/i18n/**'] }, (_, files) => {
 		regions.forEach((region) => {
 			const destPath = path.join(
 				outputJSONPath,
-				`co2-model.${region}-lang.fr.json`
+				`co2-model.${region.toUpperCase()}-lang.fr.json`
 			)
 			const regionRuleAttrs =
 				utils.readYAML(path.resolve(`data/i18n/models/${region}.yaml`)) ?? {}
@@ -168,7 +167,7 @@ glob(srcFile, { ignore: ['data/i18n/**'] }, (_, files) => {
 		destLangs.forEach((destLang) => {
 			const destPathWithoutExtension = path.join(
 				outputJSONPath,
-				`co2-model.fr-lang.${destLang}.json`
+				`co2-model.FR-lang.${destLang}`
 			)
 			const destPath = destPathWithoutExtension + '.json'
 			const translatedRuleAttrs =
