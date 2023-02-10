@@ -55,7 +55,7 @@ const supportedRegions = fs
 		{ FR: { nom: 'France métropolitaine', gentilé: 'française', code: 'FR' } }
 	)
 fs.writeFileSync(
-	path.join(outputJSONPath, `supportedCountries.json`),
+	path.join(outputJSONPath, `supportedRegions.json`),
 	JSON.stringify(supportedRegions)
 )
 const supportedRegionCodes = Object.keys(supportedRegions)
