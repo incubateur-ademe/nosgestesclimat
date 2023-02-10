@@ -36,23 +36,25 @@ const { srcLang, srcFile, destLangs, destRegions, markdown } = cli.getArgs(
 
 const supportedRegions = fs
 	.readdirSync(path.resolve('data/i18n/models'))
-	.reduce((acc, filename) => {
-		if (!filename.match(/([A-Z]{2}).yaml/)) return acc
-		try {
-			const regionPath = path.resolve(`data/i18n/models/${filename}`)
-			const rules = utils.readYAML(regionPath)
-			return { ...acc, [rules.params.code]: rules['params'] }
-		} catch (err) {
-			console.log(
-				' ❌ Une erreur est survenue lors de la lecture du fichier',
-				filename,
-				':\n\n',
-				err.message
-			)
-			exit(-1)
-		}
-	}, {})
-
+	.reduce(
+		(acc, filename) => {
+			if (!filename.match(/([A-Z]{2}).yaml/)) return acc
+			try {
+				const regionPath = path.resolve(`data/i18n/models/${filename}`)
+				const rules = utils.readYAML(regionPath)
+				return { ...acc, [rules.params.code]: rules['params'] }
+			} catch (err) {
+				console.log(
+					' ❌ Une erreur est survenue lors de la lecture du fichier',
+					filename,
+					':\n\n',
+					err.message
+				)
+				exit(-1)
+			}
+		},
+		{ FR: { nom: 'France métropolitaine', gentilé: 'française', code: 'FR' } }
+	)
 fs.writeFileSync(
 	path.join(outputJSONPath, `supportedCountries.json`),
 	JSON.stringify(supportedRegions)
@@ -64,6 +66,7 @@ const regions = (destRegions ?? supportedRegionCodes).filter((r) => {
 		cli.printWarn(`SKIP: the region '${r}' is not supported.`)
 		return false
 	}
+	if (r === 'FR') return false
 	return r
 })
 
