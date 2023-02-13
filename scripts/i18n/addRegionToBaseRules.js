@@ -1,5 +1,5 @@
 /*
-	Function used to combine translated attributes (e.g. questions, titles, notes) with
+	Function used to combine region attributes (e.g. questions, titles, notes) with
 	the base rules.
 
 	NOTE: this function is used by the RulesProvider.js file of the website.
