@@ -4,7 +4,7 @@
 
 L'internationalisation de Nos Gestes Climat est complexe : il n'est pas seulement question de simple traduction linguistique mais de la mise en place d'une solution permettant d'adapter la langue et le modèle de calcul en fonction du pays.
 
-N'hésitez pas à contribuer et surtout à nous contacter si besoin à l'adresse ou directement dans une issue Github !
+N'hésitez pas à contribuer et surtout à nous contacter si besoin à l'adresse contact@nosgestesclimat.fr ou directement dans une issue Github !
 
 ## Tutoriel : un nouveau modèle de calcul pour mon pays / ma région
 
