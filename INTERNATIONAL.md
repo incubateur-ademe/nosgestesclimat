@@ -52,7 +52,7 @@ Attention, pour que vos modifications soient prises en compte pour les anglophon
 ### Points d'attention
 
 - La traduction anglaise du fichier doit être faite à la main (cf paraphe précédent)
-- Il est plus facile de contribuer en faisant "tourner" le simulateur sur votre machine afin de voir vos modifications du modèle en temps réel (Voir https://github.com/datagir/nosgestesclimat/blob/master/CONTRIBUTING.md).
+- Il est plus facile de contribuer en faisant "tourner" le simulateur sur votre machine afin de voir vos modifications du modèle en temps réel (Voir  le [guide de contribution](https://github.com/datagir/nosgestesclimat/blob/master/CONTRIBUTING.md)).
 
 **Etape 4 :** Vous êtes satisfait de votre modification ? Faites une PR.
 
