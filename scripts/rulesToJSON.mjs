@@ -33,6 +33,7 @@ const { srcLang, srcFile, destLangs, destRegions, markdown } = cli.getArgs(
 	}
 )
 
+// The objective of supportedRegions function is to read regions models defined (only XX.yaml files) in 'data/i18n/models' and create a json file containing params of each region.
 const supportedRegions = fs
 	.readdirSync(path.resolve('data/i18n/models'))
 	.reduce(
@@ -41,7 +42,14 @@ const supportedRegions = fs
 			try {
 				const regionPath = path.resolve(`data/i18n/models/${filename}`)
 				const rules = utils.readYAML(regionPath)
-				return { ...acc, [rules.params.code]: rules['params'] }
+				const params = rules['params']
+				if (!params) {
+					console.log(
+						'Make sure a attribute "params" is defined in your region file'
+					)
+					exit(-1)
+				}
+				return { ...acc, [rules.params.code]: params }
 			} catch (err) {
 				console.log(
 					' ❌ Une erreur est survenue lors de la lecture du fichier',
