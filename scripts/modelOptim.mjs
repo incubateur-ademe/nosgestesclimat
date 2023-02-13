@@ -19,7 +19,7 @@ export function constantFoldingFromJSONFile(
 	jsonDestPath,
 	ignore,
 	targets,
-	verbose = true
+	verbose = false
 ) {
 	const log = verbose ? console.log : function (_) {}
 	try {
@@ -34,25 +34,10 @@ export function constantFoldingFromJSONFile(
 			rules = readRawRules(modelPath, ignore ?? [])
 		}
 
-		console.log(
-			'[BEFORE]: alimentation . plats . végétalien . nombre:',
-			rules['alimentation . plats . végétalien . nombre']
-		)
 		const engine = new Engine(rules, { logger: disabledLogger })
 
 		log('Constant folding pass...')
 		const foldedRules = constantFolding(engine, targets)
-
-		console.log(
-			'[AFTER]: alimentation . plats . végétalien . nombre:',
-			foldedRules['alimentation . plats . végétalien . nombre']
-		)
-		// const local = JSON.parse(readFileSync('local-fr-opti.json'), 'utf8')
-		// Object.keys(local).forEach((key) => {
-		// 	if (!foldedRules[key]) {
-		// 		console.log('Missing key:', key)
-		// 	}
-		// })
 
 		log(`Writing in '${jsonDestPath}'...`)
 		writeFileSync(jsonDestPath, JSON.stringify(getRawNodes(foldedRules)))

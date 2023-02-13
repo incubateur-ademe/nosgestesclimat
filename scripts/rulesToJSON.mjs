@@ -136,6 +136,8 @@ function compressRules(jsonPathWithoutExtension, destLang) {
 			'transport',
 			'pétrole . pleins',
 			'transport . voiture . thermique',
+			'alimentation . local',
+			'alimentation . de saison',
 		]
 	)
 
