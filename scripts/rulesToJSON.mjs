@@ -57,15 +57,13 @@ const supportedRegions = fs
 				nom: 'France métropolitaine',
 				gentilé: 'française',
 				code: 'FR',
-				'par défaut': 'oui',
 			},
 		}
 	)
 
 const supportedRegionCodes = Object.keys(supportedRegions)
-const defaultModel = supportedRegionCodes.find(
-	(code) => supportedRegions[code]['par défaut'] === 'oui'
-)
+const defaultModel = 'FR'
+
 const regions = (destRegions ?? supportedRegionCodes).filter((r) => {
 	if (!supportedRegionCodes.includes(r)) {
 		cli.printWarn(`SKIP: the region '${r}' is not supported.`)
