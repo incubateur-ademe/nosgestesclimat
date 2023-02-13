@@ -52,8 +52,28 @@ const supportedRegions = fs
 				exit(-1)
 			}
 		},
-		{ FR: { nom: 'France métropolitaine', gentilé: 'française', code: 'FR' } }
+		{
+			FR: {
+				nom: 'France métropolitaine',
+				gentilé: 'française',
+				code: 'FR',
+				'par défaut': 'oui',
+			},
+		}
 	)
+
+const supportedRegionCodes = Object.keys(supportedRegions)
+const defaultModel = supportedRegionCodes.find(
+	(code) => supportedRegions[code]['par défaut'] === 'oui'
+)
+const regions = (destRegions ?? supportedRegionCodes).filter((r) => {
+	if (!supportedRegionCodes.includes(r)) {
+		cli.printWarn(`SKIP: the region '${r}' is not supported.`)
+		return false
+	}
+	if (r === defaultModel) return false
+	return r
+})
 
 function writeSupportedRegions() {
 	const destPath = path.join(outputJSONPath, `supportedRegions.json`)
@@ -76,19 +96,6 @@ function writeSupportedRegions() {
 		exit(-1)
 	}
 }
-
-writeSupportedRegions()
-
-const supportedRegionCodes = Object.keys(supportedRegions)
-
-const regions = (destRegions ?? supportedRegionCodes).filter((r) => {
-	if (!supportedRegionCodes.includes(r)) {
-		cli.printWarn(`SKIP: the region '${r}' is not supported.`)
-		return false
-	}
-	if (r === 'FR') return false
-	return r
-})
 
 function writeRules(rules, path, destLang) {
 	try {
@@ -138,6 +145,7 @@ function compressRules(jsonPathWithoutExtension, destLang) {
 	}
 }
 
+writeSupportedRegions()
 glob(srcFile, { ignore: ['data/i18n/**'] }, (_, files) => {
 	const defaultDestPathWithoutExtension = path.join(
 		outputJSONPath,
