@@ -54,10 +54,31 @@ const supportedRegions = fs
 		},
 		{ FR: { nom: 'France métropolitaine', gentilé: 'française', code: 'FR' } }
 	)
-fs.writeFileSync(
-	path.join(outputJSONPath, `supportedRegions.json`),
-	JSON.stringify(supportedRegions)
-)
+
+function writeSupportedRegions() {
+	const destPath = path.join(outputJSONPath, `supportedRegions.json`)
+	try {
+		fs.writeFileSync(destPath, JSON.stringify(supportedRegions))
+		console.log(
+			markdown
+				? `| Supported Regions file | :heavy_check_mark: | Ø |`
+				: ` ✅ The rules have been correctly written in: ${destPath}`
+		)
+	} catch (err) {
+		if (markdown) {
+			console.log(
+				`| Supported Regions file | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
+			)
+		} else {
+			console.log(' ❌ An error occured while writting rules in:', destPath)
+			console.log(err.message)
+		}
+		exit(-1)
+	}
+}
+
+writeSupportedRegions()
+
 const supportedRegionCodes = Object.keys(supportedRegions)
 
 const regions = (destRegions ?? supportedRegionCodes).filter((r) => {
