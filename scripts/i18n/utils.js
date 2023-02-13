@@ -1,7 +1,8 @@
 require('dotenv').config()
+const glob = require('glob')
 const fs = require('fs')
+const path = require('path')
 const { format, resolveConfig } = require('prettier')
-const R = require('ramda')
 const yaml = require('yaml')
 
 const LOCK_KEY_EXT = '.lock'
@@ -241,7 +242,7 @@ const getMissingRules = (srcRules, targetRules) => {
 		.flat()
 }
 
-const path = (pathAr, obj) => {
+const objPath = (pathAr, obj) => {
 	const flatPath = pathAr.flat()
 	let val = obj
 	let idx = 0
@@ -291,7 +292,7 @@ module.exports = {
 	nestedObjectToDotNotation,
 	readYAML,
 	writeYAML,
-	path,
+	objPath,
 	assoc,
 	customAssocPath,
 }

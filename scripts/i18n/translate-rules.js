@@ -127,7 +127,7 @@ const translateTo = async (
 	utils.writeYAML(destPath, translatedRules)
 }
 
-glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
+glob(`${srcFile}`, { ignore: ['data/i18n/**'] }, (_, files) => {
 	console.log(`Parsing rules of '${srcFile}'`)
 	const rules = R.mergeAll(
 		files.reduce((acc, filename) => {
@@ -142,7 +142,9 @@ glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 	)
 
 	destLangs.forEach(async (destLang) => {
-		const destPath = path.resolve(`data/translated-rules-${destLang}.yaml`)
+		const destPath = path.resolve(
+			`data/i18n/t9n/translated-rules-${destLang}.yaml`
+		)
 		const destRules = R.mergeAll(utils.readYAML(destPath))
 		console.log(`Getting missing rule for ${destLang}...`)
 		let missingRules = utils.getMissingRules(rules, destRules)

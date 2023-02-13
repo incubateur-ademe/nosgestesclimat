@@ -15,7 +15,7 @@ const addTranslationToBasePersonas = (basePersonas, translatedPersonas) => {
 			.filter(([attr, _]) => !attr.endsWith('.lock'))
 			.forEach(([attr, transVal]) => {
 				const key = [personaId, attr]
-				if (utils.path(key, basePersonas)) {
+				if (utils.objPath(key, basePersonas)) {
 					// TODO: automatically remove from translated file entries which aren't anymore in the ref personas.
 					resPersonas = utils.customAssocPath(key, transVal, resPersonas)
 				}
