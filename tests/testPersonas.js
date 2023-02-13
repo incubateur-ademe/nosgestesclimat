@@ -65,9 +65,9 @@ fetch('https://data.nosgestesclimat.fr/co2-model.FR-lang.fr.json')
 				for (let name in results) {
 					const different = results[name] !== prodResults[name]
 					console.log(
-						`|${different ? '⚠️' : '✅'} ${name}|${results[name]}|${
-							prodResults[name]
-						}|`
+						`|${different ? '⚠️' : '✅'} ${name}|${Math.round(
+							results[name]
+						)} kg CO2e|${Math.round(prodResults[name])} kg CO2e|`
 					)
 				}
 			})
