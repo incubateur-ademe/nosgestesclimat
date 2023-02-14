@@ -124,23 +124,25 @@ function writeRules(rules, path, destLang) {
 	}
 }
 
+const rulesToKeep = [
+	'bilan',
+	'actions',
+	'transport',
+	'pétrole . pleins',
+	'transport . voiture . thermique',
+	'logement . gaz',
+	'pétrole . volume plein',
+]
+
 function compressRules(jsonPathWithoutExtension, destLang) {
 	const destPath = `${jsonPathWithoutExtension}-opti.json`
 	const err = constantFoldingFromJSONFile(
 		jsonPathWithoutExtension + '.json',
 		destPath,
 		['**/translated-*.yaml'],
-		[
-			'bilan',
-			'actions',
-			'transport',
-			'pétrole . pleins',
-			'transport . voiture . thermique',
-			'alimentation . local',
-			'alimentation . de saison',
-			'logement . gaz',
-			'pétrole . volume plein',
-		]
+		([ruleName, ruleNode]) => {
+			return rulesToKeep.includes(ruleName) || 'icônes' in ruleNode.rawNode
+		}
 	)
 
 	if (err) {

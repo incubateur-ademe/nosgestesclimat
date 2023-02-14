@@ -9,7 +9,7 @@ import { constantFolding, disabledLogger, getRawNodes } from 'publiopti'
  * @param model Path to the folder containing the Publicodes files or to a JSON file (the extension must be '.json' then).
  * @param json Path to the JSON file target.
  * @param ignore Regexp matching files to ignore from the model tree.
- * @param targets List of rules to target for the optimization pass.
+ * @param toKeep Predicate function to determine which rule should be kept.
  * @param verbose Whether to log the optimization pass.
  *
  * @returns An error message if the optimization pass failed, undefined otherwise.
@@ -18,7 +18,7 @@ export function constantFoldingFromJSONFile(
 	model,
 	jsonDestPath,
 	ignore,
-	targets,
+	toKeep,
 	verbose = false
 ) {
 	const log = verbose ? console.log : function (_) {}
@@ -37,7 +37,7 @@ export function constantFoldingFromJSONFile(
 		const engine = new Engine(rules, { logger: disabledLogger })
 
 		log('Constant folding pass...')
-		const foldedRules = constantFolding(engine, targets)
+		const foldedRules = constantFolding(engine, toKeep)
 
 		log(`Writing in '${jsonDestPath}'...`)
 		writeFileSync(jsonDestPath, JSON.stringify(getRawNodes(foldedRules)))
