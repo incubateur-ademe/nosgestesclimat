@@ -16,6 +16,33 @@ const translateTo = async (
 	destPersonas,
 	missingTranslations
 ) => {
+	let previoulsyReviewedTranslation = []
+	const updateTranslatedPersonas = (personaId, attr, transVal, refVal) => {
+		let key = [personaId, attr]
+		let refKey = [personaId, attr + utils.LOCK_KEY_EXT]
+		let autoKey = [personaId, attr + utils.AUTO_KEY_EXT]
+		let previousKey = [personaId, attr + utils.PREVIOUS_REVIEW_KEY_EXT]
+
+		if (
+			translatedPersonas &&
+			translatedPersonas[personaId] &&
+			translatedPersonas[personaId][attr + utils.AUTO_KEY_EXT] &&
+			translatedPersonas[personaId][attr] !==
+				translatedPersonas[personaId][attr + utils.AUTO_KEY_EXT]
+		) {
+			translatedPersonas = R.assocPath(
+				previousKey,
+				translatedPersonas[personaId][attr],
+				translatedPersonas
+			)
+			previoulsyReviewedTranslation.push(`${personaId} -> ${attr}`)
+		}
+
+		translatedPersonas = R.assocPath(key, transVal, translatedPersonas)
+		translatedPersonas = R.assocPath(autoKey, transVal, translatedPersonas)
+		translatedPersonas = R.assocPath(refKey, refVal, translatedPersonas)
+	}
+
 	var translatedPersonas = destPersonas
 
 	await Promise.all(
@@ -25,18 +52,13 @@ const translateTo = async (
 				srcLang.toUpperCase(),
 				destLang.toUpperCase()
 			)
-			translatedPersonas = R.assocPath(
-				[personaId, attr],
-				transVal,
-				translatedPersonas
-			)
-			translatedPersonas = R.assocPath(
-				[personaId, attr + utils.LOCK_KEY_EXT],
-				refVal,
-				translatedPersonas
-			)
+			updateTranslatedPersonas(personaId, attr, transVal, refVal)
 		})
 	)
+
+	previoulsyReviewedTranslation.forEach((rule) => {
+		cli.printErr(`[PREVIOUSLY REVIEWED] : ${rule}`)
+	})
 
 	utils.writeYAML(destPath, translatedPersonas)
 	console.log(
