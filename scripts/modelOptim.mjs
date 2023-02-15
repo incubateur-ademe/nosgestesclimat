@@ -1,7 +1,53 @@
+// Description: contains wrappers around the constant folding optimization pass from
+// 				[publiopti] to be used in the build scripts: rulesToJSON.
+//
+// [publiopti]: https:github.com/EmileRolley/publiopti
+
 import Engine from 'publicodes'
 import path from 'path'
 import { readFileSync, writeFileSync } from 'fs'
 import { constantFolding, disabledLogger, getRawNodes } from 'publiopti'
+
+// Rule names which should be kept in the optimized model.
+const rulesToKeep = [
+	'bilan',
+	'actions',
+	'transport',
+	'pétrole . pleins',
+	'transport . voiture . thermique',
+	'logement . gaz',
+	'pétrole . volume plein',
+]
+
+export function compressRules(jsonPathWithoutExtension, destLang, markdown) {
+	const destPath = `${jsonPathWithoutExtension}-opti.json`
+	const err = constantFoldingFromJSONFile(
+		jsonPathWithoutExtension + '.json',
+		destPath,
+		['**/translated-*.yaml'],
+		([ruleName, ruleNode]) => {
+			return rulesToKeep.includes(ruleName) || 'icônes' in ruleNode.rawNode
+		}
+	)
+
+	if (err) {
+		if (markdown) {
+			console.log(
+				`| Rules compression for _${destLang}_ | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
+			)
+		} else {
+			console.log(' ❌ An error occured while compressing rules in:', destPath)
+			console.log(err)
+		}
+		exit(-1)
+	} else {
+		console.log(
+			markdown
+				? `| Rules compression for _${destLang}_ | :heavy_check_mark: | Ø |`
+				: ` ✅ The rules have been correctly compressed in: ${destPath}`
+		)
+	}
+}
 
 /**
  * Applies a constant folding optimization pass to the parsed rules from the [model] path.
