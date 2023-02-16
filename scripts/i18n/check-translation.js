@@ -33,7 +33,7 @@ const questions = [
 	},
 ]
 
-glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
+glob(`${srcFile}`, { ignore: ['data/i18n/**'] }, (_, files) => {
 	const rules = R.mergeAll(
 		files.reduce((acc, filename) => {
 			try {
@@ -49,7 +49,7 @@ glob(`${srcFile}`, { ignore: ['data/translated-*.yaml'] }, (_, files) => {
 	cli.printChecksResultTableHeader(markdown)
 
 	destLangs.forEach((destLang) => {
-		const destPath = `data/translated-rules-${destLang}.yaml`
+		const destPath = `data/i18n/t9n/translated-rules-${destLang}.yaml`
 		const destRules = R.mergeAll(utils.readYAML(path.resolve(destPath)))
 		const missingRules = utils.getMissingRules(rules, destRules)
 		const missingRuleNames = missingRules.map(

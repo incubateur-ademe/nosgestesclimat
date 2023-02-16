@@ -5,21 +5,24 @@
 	NOTE: this function is used by the RulesProvider.js file of the website.
 */
 
+const utils = require('./utils')
+
 const addTranslationToBaseRules = (baseRules, translatedRules) => {
 	const updateBaseRules = (ruleName, attributes, val) => {
-		const baseRule = baseRules[ruleName]
+		let baseRule = baseRules[ruleName]
+		if (typeof baseRule !== 'object') {
+			// for rules with formula directly implemented (ex: transport . empreinte au km covoiturage: 0.2 kgCO2e/km)
+			baseRule = { ['formule']: baseRules[ruleName] }
+		}
 		if (
 			baseRule &&
-			(baseRule[attributes] ||
+			(utils.objPath([ruleName, attributes], baseRules) ||
 				// When the base rule hasn't a 'titre' attribute, it is automatically
 				// added during the translation process.
 				// Therefore, we need to add the 'titre' attribute to the base rule.
 				attributes.includes('titre'))
 		) {
-			baseRules = {
-				...baseRules,
-				[ruleName]: { ...baseRule, [attributes]: val },
-			}
+			baseRules = utils.customAssocPath([ruleName, attributes], val, baseRules)
 		}
 	}
 
@@ -68,7 +71,6 @@ const addTranslationToBaseRules = (baseRules, translatedRules) => {
 				}
 			})
 	})
-
 	return baseRules
 }
 
