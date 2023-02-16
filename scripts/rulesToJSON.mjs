@@ -94,7 +94,7 @@ const regions =
 		return r !== defaultModelCode
 	}) ?? supportedRegionCodes
 
-/// ---------------------- Writting helpers ----------------------
+/// ---------------------- Helper functions ----------------------
 
 function writeSupportedRegions() {
 	try {
@@ -141,6 +141,26 @@ function writeRules(rules, path, destLang) {
 	}
 }
 
+function getTranslatedRules(baseRules, destLang) {
+	if (destLang === srcLang) {
+		return baseRules
+	}
+	const translatedAttrs =
+		utils.readYAML(path.join(t9nDir, `translated-rules-${destLang}.yaml`)) ?? {}
+
+	return addTranslationToBaseRules(baseRules, translatedAttrs)
+}
+
+function getLocalizedRules(translatedBaseRules, regionCode, destLang) {
+	if (regionCode === defaultModelCode) {
+		return translatedBaseRules
+	}
+	const localizedAttrs = utils.readYAML(
+		path.join(regionsModelsPath, `${regionCode}-${destLang}.yaml`) ?? {}
+	)
+	return addRegionToBaseRules(translatedBaseRules, localizedAttrs)
+}
+
 /// ---------------------- Main ----------------------
 
 if (markdown) {
@@ -176,29 +196,13 @@ glob(srcFile, { ignore: ['data/i18n/**'] }, (_, files) => {
 
 		destLangs.push(srcLang)
 		destLangs.forEach((destLang) => {
-			const translatedBaseRules =
-				destLang === srcLang
-					? baseRules
-					: addTranslationToBaseRules(
-							baseRules,
-							utils.readYAML(
-								path.join(t9nDir, `translated-rules-${destLang}.yaml`)
-							) ?? {}
-					  )
+			const translatedBaseRules = getTranslatedRules(baseRules, destLang)
 			regions.forEach((regionCode) => {
-				const localizedTranslatedBaseRules =
-					regionCode === defaultModelCode
-						? translatedBaseRules
-						: addRegionToBaseRules(
-								translatedBaseRules,
-								utils.readYAML(
-									path.join(
-										regionsModelsPath,
-										`${regionCode}-${destLang}.yaml`
-									) ?? {}
-								)
-						  )
-
+				const localizedTranslatedBaseRules = getLocalizedRules(
+					translatedBaseRules,
+					regionCode,
+					destLang
+				)
 				const destPathWithoutExtension = path.join(
 					outputJSONPath,
 					`co2-model.${regionCode}-lang.${destLang}`
