@@ -1,15 +1,10 @@
 # International
 
-> 🇬🇧 For now, the programming language used by Nos Gestes Climat, named publi.codes, is only available in French. We intend to provide an easy framework to help you adapt the calculator to your country within a few weeks. We are testing a multi-region but only for francophone regions for now, which is why this guide is written in French.
+> 🇬🇧 For now, this guide is only available in French.
 
 L'internationalisation de Nos Gestes Climat est complexe : il n'est pas seulement question de simple traduction linguistique mais de la mise en place d'une solution permettant d'adapter la langue et le modèle de calcul en fonction du pays.
 
-Toutes les réflexions sont visibles ici :
-
-- [Traduction linguistique](https://github.com/datagir/nosgestesclimat/issues/1385)
-- [Enjeux liés au modèle](https://github.com/datagir/nosgestesclimat-site/issues/470)
-
-N'hésitez pas à contribuer !
+N'hésitez pas à contribuer et surtout à nous contacter si besoin à l'adresse contact@nosgestesclimat.fr ou directement dans une issue Github !
 
 ## Tutoriel : un nouveau modèle de calcul pour mon pays / ma région
 
@@ -17,23 +12,51 @@ N'hésitez pas à contribuer !
 
 **Etape 2 :** Github est une plateforme particulièrement intéressante pour la gestion des versions du code. Pour commencer votre déclinaison, créer votre compte Github et rendez vous sur le dépôt "nosgestesclimat" : https://github.com/datagir/nosgestesclimat.
 
-Réalisez ensuite un _fork_ :
+**Etape 3 :** Rendez-vous dans le dossier `data/i18n/models` contenant les modèles des régions supportées par Nos Gestes Climat !
 
-![fork](https://user-images.githubusercontent.com/55186402/187473855-57274d05-5678-4f83-9274-ad11e024b7f9.gif)
+Il faut savoir que ces fichiers contiennent de règles de calcul (format yaml) correspondant aux règles du modèle de base français (dans le dossier `data`).
 
-C'est une copie du code source vers votre espace. Vous pouvez alors modifier le code de votre coté.
+### Votre modèle n'est pas encore supporté dans NGC ?
 
-**Etape 3 :** RDV dans le dossier `data` et lancez-vous dans votre première modification ! Sachez que le code du modèle peut contenir certaines subtilités (notamment pour la gestions des questions "Mosaïques"), n'hésitez pas à nous contacter si vous bloquez !
+Créez le votre : votre fichier doit être nommé avec le code de votre pays suivi de l'extension `.yaml`, par exemple pour le Belgique, `BE.yaml`. Commencez ensuite par écrire votre première règle : `params` contenant les caractéristiques de votre région (les attributes nom et code sont obligatoires) :
 
-![commit](https://user-images.githubusercontent.com/55186402/187473938-aedc3076-eabd-4198-828b-80c34431e325.gif)
+```yaml
+params:
+  nom: Belgique
+  code: BE
+  gentilé: belge
+```
+
+Suivez ensuite les étapes du point suivant pour avancer sur votre modèle.
+
+### Vous souhaitez proposer un changement pour un modèle déjà existant ?
+
+Vous pouvez vous rendre dans le fichier correspondant à votre région (selon son code).
+
+L'idée est ensuite de réecrire dans ce fichier les règles du modèle "de base", français, que vous souhaitez modifier en veillant à reporter _exactement_ les clés du modèle (= nom des règles).
+
+Par exemple, le mix électrique est défini dans la règle `intensité électricité` du fichier `divers.yaml`. Pour modifier sa valeur et son titre dans le modèle nouvellement créé, il faut réécrire cette règle avec les bons attributs qui viendront écraser ceux du modèle français lors de la compilation. Exemple pour la Belgique :
+
+```yaml
+intensité électricité:
+  titre: Intensité climat du mix électrique belge
+  formule: 0.176
+  note: |
+    [Electricity Map](https://app.electricitymaps.com/map) vision 5 ans, 2022
+```
+
+Sachez que le code du modèle peut contenir certaines subtilités (notamment pour la gestions des questions "Mosaïques"), n'hésitez pas à nous contacter si vous bloquez !
+
+Attention, pour que vos modifications soient prises en compte pour les anglophones, il est nécessaire de créer un fichier jumeau `XX-en-us.yaml` contenant les règles identiques à votre fichier `XX.yaml` mais traduites. Pour le moment, nous n'avons pas encore créer de script peremettant d'automatiser la gestion de l'anglais pour les modèle régionaux (voir https://github.com/datagir/nosgestesclimat/issues/1710).
+
+### Points d'attention
+
+- La traduction anglaise du fichier doit être faite à la main (cf paraphe précédent)
+- Il est plus facile de contribuer en faisant "tourner" le simulateur sur votre machine afin de voir vos modifications du modèle en temps réel (Voir  le [guide de contribution](https://github.com/datagir/nosgestesclimat/blob/master/CONTRIBUTING.md)).
 
 **Etape 4 :** Vous êtes satisfait de votre modification ? Faites une PR.
 
 Une PR ? _Une Pull Request_ : cette manip vous permet d'envoyer une demande d'ajouts de vos modifications vers le code source du projet. Vous apparaissez ensuite dans la liste des PR en cours et vos modifications futures y seront affichées.
-
-![PR](https://user-images.githubusercontent.com/55186402/187473975-493ec81e-3c2b-423d-a37d-8f228a993b88.gif)
-
-> Par exemple, la manipulation ci-dessus a créé la [PR numéro 1348](https://github.com/datagir/nosgestesclimat/pull/1348), que nous avons fermé depuis car elle n'était là que pour l'exemple. 
 
 Si vous faites des erreurs dans l'écriture de vos règles, pas de panique, un commentaire apparaitra pour vous les signaler.
 
