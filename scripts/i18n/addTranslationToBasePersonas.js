@@ -5,7 +5,7 @@
 	NOTE: this function is used by the file Personas.tsx of the website.
 */
 
-const R = require('ramda')
+const utils = require('./utils')
 
 const addTranslationToBasePersonas = (basePersonas, translatedPersonas) => {
 	var resPersonas = basePersonas
@@ -15,9 +15,9 @@ const addTranslationToBasePersonas = (basePersonas, translatedPersonas) => {
 			.filter(([attr, _]) => !attr.endsWith('.lock'))
 			.forEach(([attr, transVal]) => {
 				const key = [personaId, attr]
-				if (R.path(key, basePersonas)) {
+				if (utils.objPath(key, basePersonas)) {
 					// TODO: automatically remove from translated file entries which aren't anymore in the ref personas.
-					resPersonas = R.assocPath(key, transVal, resPersonas)
+					resPersonas = utils.customAssocPath(key, transVal, resPersonas)
 				}
 			})
 	})

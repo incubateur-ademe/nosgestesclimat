@@ -3,7 +3,6 @@
 */
 
 const yargs = require('yargs')
-const path = require('path')
 
 const utils = require('./utils')
 
@@ -115,6 +114,14 @@ const getArgs = (description, opts) => {
 			description: 'The target language(s) to translate into.',
 		})
 	}
+	if (opts.model) {
+		args = args.option('model', {
+			alias: 'o',
+			type: 'string',
+			array: true,
+			description: 'The region code model',
+		})
+	}
 	if (opts.markdown) {
 		args = args.option('markdown', {
 			alias: 'm',
@@ -148,6 +155,7 @@ const getArgs = (description, opts) => {
 			!argv.target && opts.target === 'all'
 				? utils.availableLanguages
 				: destLangs,
+		destRegions: argv.model,
 		force: argv.force,
 		remove: argv.remove,
 		srcFile,
