@@ -19,7 +19,12 @@ const rulesToKeep = [
 	'pétrole . volume plein',
 ]
 
-export function compressRules(jsonPathWithoutExtension, destLang, markdown) {
+export function compressRules(
+	jsonPathWithoutExtension,
+	destLang,
+	markdown,
+	regionCode
+) {
 	const destPath = `${jsonPathWithoutExtension}-opti.json`
 	const err = constantFoldingFromJSONFile(
 		jsonPathWithoutExtension + '.json',
@@ -33,7 +38,7 @@ export function compressRules(jsonPathWithoutExtension, destLang, markdown) {
 	if (err) {
 		if (markdown) {
 			console.log(
-				`| Rules compression for _${destLang}_ | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
+				`| Rules compression for the region ${regionCode} in _${destLang}_ | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
 			)
 		} else {
 			console.log(' ❌ An error occured while compressing rules in:', destPath)
@@ -43,7 +48,7 @@ export function compressRules(jsonPathWithoutExtension, destLang, markdown) {
 	} else {
 		console.log(
 			markdown
-				? `| Rules compression for _${destLang}_ | :heavy_check_mark: | Ø |`
+				? `| Rules compression for the region ${regionCode} in _${destLang}_ | :heavy_check_mark: | Ø |`
 				: ` ✅ The rules have been correctly compressed in: ${destPath}`
 		)
 	}

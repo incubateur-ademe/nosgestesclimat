@@ -120,18 +120,18 @@ function writeSupportedRegions() {
 	}
 }
 
-function writeRules(rules, path, destLang) {
+function writeRules(rules, path, destLang, regionCode) {
 	try {
 		fs.writeFileSync(path, JSON.stringify(rules))
 		console.log(
 			markdown
-				? `| Rules compilation to JSON for _${destLang}_ | :heavy_check_mark: | Ø |`
+				? `| Rules compilation to JSON for the region ${regionCode} in _${destLang}_ | :heavy_check_mark: | Ø |`
 				: ` ✅ The rules have been correctly written in: ${path}`
 		)
 	} catch (err) {
 		if (markdown) {
 			console.log(
-				`| Rules compilation to JSON for _${destLang}_ | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
+				`| Rules compilation to JSON for the region ${regionCode} in _${destLang}_ | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
 			)
 		} else {
 			console.log(' ❌ An error occured while writting rules in:', path)
@@ -210,9 +210,10 @@ glob(srcFile, { ignore: ['data/i18n/**'] }, (_, files) => {
 				writeRules(
 					localizedTranslatedBaseRules,
 					destPathWithoutExtension + '.json',
-					destLang
+					destLang,
+					regionCode
 				)
-				compressRules(destPathWithoutExtension, destLang)
+				compressRules(destPathWithoutExtension, destLang, markdown, regionCode)
 			})
 		})
 	} catch (err) {
