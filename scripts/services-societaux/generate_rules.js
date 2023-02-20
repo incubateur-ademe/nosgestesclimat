@@ -47,13 +47,13 @@ const data = SDES_data.map(({ code_CPA, ...att }) => {
 					'Émissions contenues dans les biens et services adressés à la demande finale de la France'
 				],
 			unité: 'ktCO2e',
-			description: `${titre} \n\n> La description ci-dessous correspond à la part de chaque sous-classe de la branche (en % de chiffre d'affaire) \n${description}`,
+			description: `${titre}\n\n> La description ci-dessous correspond à la part de chaque sous-classe de la branche (en % de chiffre d'affaire)\n${description}`,
 		},
 		[ruleCPAparHab]: {
 			titre: `${titre_raccourci} par habitant`,
 			formule: `${code_CPA} * 1000000 kgCO2e/ktCO2e / population`,
 			unité: 'kgCO2e',
-			description: `${titre} par habitant \n\n> La description ci-dessous correspond à la part de chaque sous-classe de la branche (en % de chiffre d'affaire) \n${description}`,
+			description: `${titre} par habitant\n\n> La description ci-dessous correspond à la part de chaque sous-classe de la branche (en % de chiffre d'affaire)\n${description}`,
 		},
 	}
 	const répartition_SP =
