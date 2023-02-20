@@ -100,6 +100,8 @@ const SPobject = {
 		icônes: '🏛',
 		formule: { somme: SP_sum },
 		unité: 'kgCO2e',
+		description: `Les services publics ne sont qu'une partie des [services sociétaux](https://nosgestesclimat.fr/documentation/services-soci%C3%A9taux) dont le calcul est basé sur
+[l'estimation de l'empreinte nationale française par le Ministère de l'Écologie](https://www.statistiques.developpement-durable.gouv.fr/lempreinte-carbone-de-la-france-de-1995-2021).`,
 	},
 }
 
@@ -111,6 +113,8 @@ const SMobject = {
 		icônes: '✉️',
 		formule: { somme: SM_sum },
 		unité: 'kgCO2e',
+		description: `Les services marchands ne sont qu'une partie des [services sociétaux](https://nosgestesclimat.fr/documentation/services-soci%C3%A9taux) dont le calcul est basé sur
+[l'estimation de l'empreinte nationale française par le Ministère de l'Écologie](https://www.statistiques.developpement-durable.gouv.fr/lempreinte-carbone-de-la-france-de-1995-2021).`,
 	},
 }
 
