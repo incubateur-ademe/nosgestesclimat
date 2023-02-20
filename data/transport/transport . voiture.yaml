@@ -138,6 +138,7 @@ transport . voiture . gabarit:
         - moyenne
         - berline
         - SUV
+        - VUL
 
 transport . voiture . gabarit . petite:
   titre: Petite
@@ -147,6 +148,8 @@ transport . voiture . gabarit . berline:
   titre: Berline
 transport . voiture . gabarit . SUV:
   titre: SUV
+transport . voiture . gabarit . VUL:
+  titre: VUL
 
 transport . voiture . thermique . consommation aux 100:
   question: Connaissez-vous la consommation moyenne de la voiture ?
@@ -173,6 +176,8 @@ transport . voiture . consommation estimée:
         alors: 7 l/centkm
       - si: gabarit = 'SUV'
         alors: 8 l/centkm
+      - si: gabarit = 'VUL'
+        alors: 5.3 l/centkm
 
 transport . voiture . thermique . consommation au kilomètre:
   formule: consommation aux 100 / 100
@@ -199,7 +204,7 @@ transport . voiture . électrique . empreinte au kilomètre:
     Nous faisons la correspondance suivante entre notre gabarit et les données de la base bilan-GES:
       - petite -> "entrée de gamme - véhicule léger"
       - moyenne -> "coeur de gamme - véhicule compact"
-      - berline et SUV -> "haut de gamme - berline"
+      - berline, SUV et VUL -> "haut de gamme - berline"
 
   références:
     bilan-GES: https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=voiture
@@ -323,7 +328,7 @@ transport . voiture . empreinte . construction:
 
     ![](https://user-images.githubusercontent.com/1177762/107264406-3afdd980-6a43-11eb-87ad-a09681240949.png)
 
-    Nous prenons la "production et fin de vie" et lui retranchons les "crédits de recyclage", et les données de 2016 plutôt que le scénario prospectif 2030.
+    Nous prenons uniquement en compte la "production et fin de vie" et les données de 2016 plutôt que le scénario prospectif 2030.
 
     p. 57 et 58.
 
@@ -337,12 +342,14 @@ transport . voiture . empreinte . construction . barème thermique:
           une de ces conditions:
             - gabarit = 'petite'
             - gabarit = 'moyenne'
-        alors: 6700 - 1100
+        alors: 6700
       - si:
           une de ces conditions:
             - gabarit = 'berline'
             - gabarit = 'SUV'
-        alors: 7600 - 1300
+        alors: 7600
+      - si: gabarit = 'VUL'
+        alors: 6700 * ratio . poids . VUL . thermique 
   unité: kgCO2e
 
 transport . voiture . empreinte . construction . barème électrique:
@@ -352,12 +359,14 @@ transport . voiture . empreinte . construction . barème électrique:
           une de ces conditions:
             - gabarit = 'petite'
             - gabarit = 'moyenne'
-        alors: 10200 - 2200
+        alors: 10200
       - si:
           une de ces conditions:
             - gabarit = 'berline'
             - gabarit = 'SUV'
-        alors: 20200 - 6600
+        alors: 20200
+      - si: gabarit = 'VUL'
+        alors: 10200 * ratio . poids . VUL . electrique
   unité: kgCO2e
 
 transport . voiture . empreinte . construction . barème hybride:
@@ -367,14 +376,35 @@ transport . voiture . empreinte . construction . barème hybride:
           une de ces conditions:
             - gabarit = 'petite'
             - gabarit = 'moyenne'
-        alors: 9600 - 2000
+        alors: 9600
       - si:
           une de ces conditions:
             - gabarit = 'berline'
             - gabarit = 'SUV'
-        alors: 6900 - 2400
+        alors: 6900
+      - si: gabarit = 'VUL'
+        alors: 9600 * ratio . poids . VUL . thermique 
   unité: kgCO2e
   note: Ètonnamment, la berline a moins d'empreinte construction que la citadine... A voir si l'étude relève ce mystère.
+
+
+transport . voiture . ratio . poids . VUL . thermique:
+  formule: 1.18
+  note: |
+    L'étude de référence utilisée pour évaluer l'impact GES de la construction de véhicule ne considère pas de véhicule du type VUL. C'est pourquoi, nous
+    utilisons un ratio de poids entre la masse d'un véhicule thermique classique et celle d'un VUL. 
+    Le ratio est construit à partir des données de cette (ancienne) [étude](https://librairie.ademe.fr/mobilite-et-transport/3273-elaboration-selon-les-principes-des-acv-des-bilans-energetiques-des-emissions-de-gaz-a-effet-de-serre-et-des-autres-impacts-environnementaux.html)
+    qui a le mérite d'analyser une citadine et un VUL thermiques.
+    Le ratio est établi en considérant les masses hors carburant + bloc moteur et boîte de vitesse comme le montre le détail du calcul [ici](https://docs.google.com/spreadsheets/d/1y3obZzvUFERipbaFYLHxIRNc2owdSs4lggEOSH-tMW4/edit#gid=0)
+
+transport . voiture . ratio . poids . VUL . electrique:
+  formule: 1.17
+  note: |
+    L'étude de référence utilisée pour évaluer l'impact GES de la construction de véhicule ne considère pas de véhicule du type VUL. C'est pourquoi, nous
+    utilisons un ratio de poids entre la masse d'un véhicule thermique type citadine et celle d'un véhicule type VUL. 
+    Le ratio est construit à partir des données de cette (ancienne) [étude](https://librairie.ademe.fr/mobilite-et-transport/3273-elaboration-selon-les-principes-des-acv-des-bilans-energetiques-des-emissions-de-gaz-a-effet-de-serre-et-des-autres-impacts-environnementaux.html)
+    qui a le mérite d'analyser une citadine et un VUL électriques.
+    Le ratio est établi en considérant les masses avec bloc moteur et boîte de vitesse comme le montre le détail du calcul [ici](https://docs.google.com/spreadsheets/d/1y3obZzvUFERipbaFYLHxIRNc2owdSs4lggEOSH-tMW4/edit#gid=0)
 
 transport . voiture . gabarit . petite . poids:
   formule: 1138
