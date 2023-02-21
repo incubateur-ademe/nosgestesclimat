@@ -44,6 +44,7 @@ const addTranslationToBaseRules = (baseRules, translatedRules) => {
 	}
 
 	Object.entries(translatedRules).forEach(([rule, attrs]) => {
+		let baseRule = baseRules[rule]
 		if (baseRule) {
 			Object.entries(attrs)
 				.filter(([attr, _]) => !attr.endsWith('.lock'))
