@@ -16,6 +16,7 @@ const rulesToKeep = [
 	'pétrole . pleins',
 	'transport . voiture . thermique',
 	'logement . gaz',
+	'logement . gaz . biogaz',
 	'pétrole . volume plein',
 ]
 
