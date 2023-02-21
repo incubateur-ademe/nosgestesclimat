@@ -6,6 +6,7 @@
 */
 
 const utils = require('./utils')
+const cli = require('./cli')
 
 const addTranslationToBaseRules = (baseRules, translatedRules) => {
 	const updateBaseRules = (ruleName, attributes, val) => {
@@ -43,33 +44,39 @@ const addTranslationToBaseRules = (baseRules, translatedRules) => {
 	}
 
 	Object.entries(translatedRules).forEach(([rule, attrs]) => {
-		Object.entries(attrs)
-			.filter(([attr, _]) => !attr.endsWith('.lock'))
-			.forEach(([attr, transVal]) => {
-				switch (attr) {
-					case 'suggestions': {
-						updateBaseRulesWithSuggestions(
-							rule,
-							attr,
-							baseRules[rule].suggestions,
-							transVal
-						)
-						break
+		if (baseRule) {
+			Object.entries(attrs)
+				.filter(([attr, _]) => !attr.endsWith('.lock'))
+				.forEach(([attr, transVal]) => {
+					switch (attr) {
+						case 'suggestions': {
+							updateBaseRulesWithSuggestions(
+								rule,
+								attr,
+								baseRule.suggestions,
+								transVal
+							)
+							break
+						}
+						case 'mosaique': {
+							updateBaseRulesWithSuggestions(
+								rule,
+								[attr, 'suggestions'],
+								baseRule.mosaique.suggestions,
+								transVal.suggestions
+							)
+							break
+						}
+						default:
+							updateBaseRules(rule, attr, transVal)
+							break
 					}
-					case 'mosaique': {
-						updateBaseRulesWithSuggestions(
-							rule,
-							[attr, 'suggestions'],
-							baseRules[rule].mosaique.suggestions,
-							transVal.suggestions
-						)
-						break
-					}
-					default:
-						updateBaseRules(rule, attr, transVal)
-						break
-				}
-			})
+				})
+		} else {
+			cli.printWarn(
+				`Il semble que la règle "${rule}", traduite, n'est plus présente dans le modèle de base. Veillez à la supprimer du fichier de traduction.`
+			)
+		}
 	})
 	return baseRules
 }
