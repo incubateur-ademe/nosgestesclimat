@@ -1,7 +1,7 @@
 // Description: contains wrappers around the constant folding optimization pass from
 // 				[publiopti] to be used in the build scripts: rulesToJSON.
 //
-// [publiopti]: https:github.com/EmileRolley/publiopti
+// [publiopti]: https:github.com/datagir/publiopti
 
 import Engine from 'publicodes'
 import path from 'path'
@@ -9,15 +9,20 @@ import { readFileSync, writeFileSync } from 'fs'
 import { constantFolding, disabledLogger, getRawNodes } from 'publiopti'
 
 // Rule names which should be kept in the optimized model.
+//
+// We need to keep the rules below because they are used in the simulation
+// (e.g. 'bilan' or 'actions' are used to compute the total CO2 emissions).
+// We also need to keep rules which are used in the UI (e.g. 'pétrole . pleins'
+// and 'pétrole . volume plein' are used to compute the total volume of fuel), and
+// rules that contain the 'icônes' key.
 const rulesToKeep = [
-	'bilan',
 	'actions',
-	'transport',
-	'pétrole . pleins',
-	'transport . voiture . thermique',
+	'bilan',
 	'logement . gaz',
 	'logement . gaz . biogaz',
+	'pétrole . pleins',
 	'pétrole . volume plein',
+	'transport . voiture . thermique',
 ]
 
 export function compressRules(
