@@ -323,7 +323,7 @@ transport . voiture . empreinte . construction:
 
     ![](https://user-images.githubusercontent.com/1177762/107264406-3afdd980-6a43-11eb-87ad-a09681240949.png)
 
-    Nous prenons la "production et fin de vie" et lui retranchons les "crédits de recyclage", et les données de 2016 plutôt que le scénario prospectif 2030.
+    Nous prenons uniquement en compte la "production et fin de vie" et les données de 2016 plutôt que le scénario prospectif 2030.
 
     p. 57 et 58.
 
@@ -337,12 +337,12 @@ transport . voiture . empreinte . construction . barème thermique:
           une de ces conditions:
             - gabarit = 'petite'
             - gabarit = 'moyenne'
-        alors: 6700 - 1100
+        alors: 6700
       - si:
           une de ces conditions:
             - gabarit = 'berline'
             - gabarit = 'SUV'
-        alors: 7600 - 1300
+        alors: 7600
   unité: kgCO2e
 
 transport . voiture . empreinte . construction . barème électrique:
@@ -352,12 +352,12 @@ transport . voiture . empreinte . construction . barème électrique:
           une de ces conditions:
             - gabarit = 'petite'
             - gabarit = 'moyenne'
-        alors: 10200 - 2200
+        alors: 10200
       - si:
           une de ces conditions:
             - gabarit = 'berline'
             - gabarit = 'SUV'
-        alors: 20200 - 6600
+        alors: 20200
   unité: kgCO2e
 
 transport . voiture . empreinte . construction . barème hybride:
@@ -367,12 +367,12 @@ transport . voiture . empreinte . construction . barème hybride:
           une de ces conditions:
             - gabarit = 'petite'
             - gabarit = 'moyenne'
-        alors: 9600 - 2000
+        alors: 9600
       - si:
           une de ces conditions:
             - gabarit = 'berline'
             - gabarit = 'SUV'
-        alors: 6900 - 2400
+        alors: 6900
   unité: kgCO2e
   note: Ètonnamment, la berline a moins d'empreinte construction que la citadine... A voir si l'étude relève ce mystère.
 
@@ -458,15 +458,21 @@ transport . voiture . durée de vie:
     En effet, bon nombre de voitures sont par exemple achetées neuves par des entreprises de location, et seront ensuite aquises par un particulier d'occasion.
 
 transport . voiture . facteur location:
-  formule: km / 16300
+  titre: Part d'utilisation annuelle d'une voiture de service
+  formule: km / km par an voiture partagée
+  note: On attribue à l'utilisateur l'impact de la construction au pro rata de son utilisation par rapport au km parcourus par la voiture sur une année.
+
+transport . voiture . km par an voiture partagée:
+  titre: Kilomètres parcourus annuellement par une voiture en auto-partage
+  formule: 15130 km/an
   note: |
-    On attribue à l'utilisateur l'impact de la construction au pro rata de son utilisation par rapport au km parcourus par la voiture sur une année.
-  références:
-    - https://www.ademe.fr/sites/default/files/assets/documents/enquete-autopartage-2019-rapport.pdf
+    Page 80 de l'[Enquête Nationale Autopartage 2022](https://librairie.ademe.fr/cadic/7353/enquete-autopartage-2022-rapport.pdf):
+
+    > "Les données communiquées par les opérateurs nous permettent de retenir l’hypothèse de 15130 kilomètres parcourus en moyenne par an par voiture en autopartage."
 
 transport . voiture . propriétaire:
   question: Avez-vous votre propre voiture individuelle ?
-  description: |
+
     Par opposition à l'utilisation exclusive de voitures de location partagées par d'autres personnes le reste du temps, ou l'utilisation de la voiture d'un ami, de la famille.
 
     Si votre entreprise vous met à disposition une voiture dont vous êtes le principal utilisateur, vous pouvez considérer que c'est votre voiture individuelle.
