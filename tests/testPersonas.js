@@ -1,74 +1,80 @@
-/*
-  Test the rules against a set of personas and return the result for each, and then compare with production
-
-  Command: yarn test
-*/
-
-require('isomorphic-fetch')
+const fs = require('fs/promises')
 
 const Engine = require('publicodes').default
 
-const rules = require('../public/co2-model.FR-lang.fr.json')
-const personas = require('../public/personas-fr.json')
+function comparePersonas(country, language) {
+	const localRules = fs
+		.readFile(`./public/co2-model.${country}-lang.${language}.json`, {
+			encoding: 'utf8',
+		})
+		.then((res) => JSON.parse(res))
+	const localPersonas = fs
+		.readFile(`./public/personas-${language}.json`, {
+			encoding: 'utf8',
+		})
+		.then((res) => JSON.parse(res))
 
-const engine = new Engine(rules)
-const missingVariables = Object.keys(engine.evaluate('bilan').missingVariables)
+	const prodRules = fetch(
+		`https://data.nosgestesclimat.fr/co2-model.${country}-lang.${language}.json`
+	).then((res) => res.json())
+	const prodPersonas = fetch(
+		`https://data.nosgestesclimat.fr/personas-${language}.json`
+	).then((res) => res.json())
 
-const personasRules = Object.values(personas)
+	const allData = Promise.all([
+		localRules,
+		localPersonas,
+		prodRules,
+		prodPersonas,
+	])
 
-const results = {}
-
-for (persona of personasRules) {
-	const personaData = persona.data.situation || persona.data
-	const validPersonaRules = Object.keys(personaData).filter((rule) =>
-		missingVariables.includes(rule)
-	)
-
-	const validPersonaRulesObject = validPersonaRules.reduce(
-		(acc, cur) => ({ ...acc, [cur]: personaData[cur] }),
-		{}
-	)
-	engine.setSituation(validPersonaRulesObject)
-	results[persona.nom] = engine.evaluate('bilan').nodeValue
+	allData.then((res) => {
+		const localResults = testPersonas(res[0], res[1])
+		const prodResults = testPersonas(res[2], res[3])
+		writeResults(localResults, prodResults)
+	})
 }
 
-fetch('https://data.nosgestesclimat.fr/co2-model.FR-lang.fr.json')
-	.then((res) => res.json())
-	.then((prodRules) => {
-		fetch('https://data.nosgestesclimat.fr/personas-fr.json')
-			.then((res) => res.json())
-			.then((prodPersonas) => {
-				prodEngine = new Engine(prodRules)
-				const prodMissingVariables = Object.keys(
-					prodEngine.evaluate('bilan').missingVariables
-				)
+function testPersonas(rules, personas) {
+	const engine = new Engine(rules)
+	const missingVariables = Object.keys(
+		engine.evaluate('bilan').missingVariables
+	)
 
-				const prodPersonasRules = Object.values(prodPersonas)
+	const personasRules = Object.values(personas)
 
-				const prodResults = {}
+	const results = {}
 
-				for (persona of prodPersonasRules) {
-					const personaData = persona.data.situation || persona.data
-					const validPersonaRules = Object.keys(personaData).filter((rule) =>
-						prodMissingVariables.includes(rule)
-					)
+	for (persona of personasRules) {
+		const personaData = persona.data.situation || persona.data
+		const validPersonaRules = Object.keys(personaData).filter((rule) =>
+			missingVariables.includes(rule)
+		)
 
-					const validPersonaRulesObject = validPersonaRules.reduce(
-						(acc, cur) => ({ ...acc, [cur]: personaData[cur] }),
-						{}
-					)
-					prodEngine.setSituation(validPersonaRulesObject)
-					prodResults[persona.nom] = prodEngine.evaluate('bilan').nodeValue
-				}
-				console.log('| Nom | Total (PR) | Total (Prod) |')
-				console.log('|:-----|:------:|:------:|')
-				for (let name in results) {
-					const different = results[name] !== prodResults[name]
-					console.log(
-						`|${different ? '⚠️' : '✅'} ${name}|${Math.round(
-							results[name]
-						)} kg CO2e|${Math.round(prodResults[name])} kg CO2e|`
-					)
-				}
-			})
-	})
+		const validPersonaRulesObject = validPersonaRules.reduce(
+			(acc, cur) => ({ ...acc, [cur]: personaData[cur] }),
+			{}
+		)
+		engine.setSituation(validPersonaRulesObject)
+		results[persona.nom] = engine.evaluate('bilan').nodeValue
+	}
+
+	return results
+}
+
+function writeResults(localResults, prodResults) {
+	console.log(localResults)
+	console.log('| Nom | Total (PR) | Total (Prod) |')
+	console.log('|:-----|:------:|:------:|')
+	for (let name in localResults) {
+		if (localResults[name] !== prodResults[name]) {
+			console.log(
+				`|${name}|${Math.round(localResults[name])} kg CO2e|${Math.round(
+					prodResults[name]
+				)} kg CO2e|`
+			)
+		}
+	}
+}
+
+comparePersonas('FR', 'fr')
