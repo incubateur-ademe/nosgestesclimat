@@ -63,7 +63,6 @@ function testPersonas(rules, personas) {
 }
 
 function writeResults(localResults, prodResults) {
-	console.log(localResults)
 	console.log('| Nom | Total (PR) | Total (Prod) |')
 	console.log('|:-----|:------:|:------:|')
 	for (let name in localResults) {
