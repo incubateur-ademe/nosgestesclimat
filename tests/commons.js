@@ -76,13 +76,20 @@ function fmtGHActionErr(localResult, prodResult, diff, diffPercent, name) {
 	}${diffPercent}% |`
 }
 
+// TODO: could be improved by using a more generic way to compare results.
 function printResults(localResults, prodResults, markdown, withOptim = false) {
 	if (markdown) {
-		console.log(`#### ${withOptim ? 'With optimisation' : 'Base model'}`)
+		console.log(
+			`#### ${
+				withOptim ? 'Test model optimisation' : 'Test personas regression'
+			}`
+		)
 		console.log(
 			`| Persona | Total PR ${
-				withOptim ? 'with optim' : ''
-			} (kg CO2e) | Total Prod (kg CO2e) | Δ (%) |`
+				withOptim ? 'with optim.' : ''
+			} (kg CO2e) | Total ${
+				withOptim ? 'without optim.' : 'in prod.'
+			} (kg CO2e) | Δ (%) |`
 		)
 		console.log('|:-----|:------:|:------:|:----:|')
 	} else {
