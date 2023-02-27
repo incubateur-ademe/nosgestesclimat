@@ -17,6 +17,7 @@ jobs:
       check-translation-result: ${{ steps.check-translation.outputs.result }}
       check-personas-result: ${{ steps.check-personas.outputs.result }}
       test-personas-result: ${{ steps.test-personas.outputs.result }}
+      test-optim-result: ${{ steps.test-optim.outputs.result }}
       test-url: ${{ steps.set-test-url.outputs.fr }}
     steps:
       - uses: actions/checkout@v3
@@ -53,7 +54,7 @@ jobs:
       - id: test-personas
         run: |
           # Test the personas bilans against production
-          body="$(yarn test:personas:md 2> /dev/null| tail --lines=+3 | head --lines=-1)"
+          body="$(yarn test:personas --markdown 2> /dev/null| tail --lines=+3 | head --lines=-1)"
           body="${body//'%'/'%25'}"
           body="${body//$'\n'/'%0A'}"
           body="${body//$'\r'/'%0D'}"
@@ -61,7 +62,7 @@ jobs:
       - id: test-optim
         run: |
           # Test the personas bilans against production
-          body="$(yarn test:optim:md 2> /dev/null| tail --lines=+3 | head --lines=-1)"
+          body="$(yarn test:optim --markdown 2> /dev/null| tail --lines=+3 | head --lines=-1)"
           body="${body//'%'/'%25'}"
           body="${body//$'\n'/'%0A'}"
           body="${body//$'\r'/'%0D'}"
