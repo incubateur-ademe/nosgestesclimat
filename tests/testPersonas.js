@@ -46,7 +46,7 @@ const { country, language, markdown } = yargs(process.argv.slice(2))
 const kgCO2Str = c.dim('(kg CO2e)')
 
 function formatValueInKgCO2e(value) {
-	return c.yellow(Math.round(value).toLocaleString('fr')) + ' ' + kgCO2Str
+	return c.yellow(Math.round(value).toLocaleString('en-us')) + ' ' + kgCO2Str
 }
 
 function fmtCLIErr(localResult, prodResult, diff, diffPercent, name, color) {
@@ -54,15 +54,33 @@ function fmtCLIErr(localResult, prodResult, diff, diffPercent, name, color) {
 	const hd = color(diffPercent < 1 ? '[WARN]' : '[FAIL]')
 	return `${hd} ${name} [${color(sign + diff)} ${kgCO2Str}, ${color(
 		sign + diffPercent
-	)}%]:\n${hd}\t${formatValueInKgCO2e(localResult)} != ${formatValueInKgCO2e(
+	)}%]: ${formatValueInKgCO2e(localResult)} != ${formatValueInKgCO2e(
 		prodResult
 	)}`
 }
 
+function fmtGHActionErr(localResult, prodResult, diff, diffPercent, name) {
+	const color =
+		diffPercent <= 1 ? 'sucess' : diffPercent > 5 ? 'critical' : 'important'
+	const sign = diff > 0 ? '%2B' : '-'
+	return `|![](https://img.shields.io/badge/${name.replaceAll(
+		' ',
+		'%20'
+	)}-${sign}${Math.round(diff).toLocaleString(
+		'en-us'
+	)}%20kgCO2e-${color}?style=flat-square) | **${localResult.toLocaleString(
+		'en-us'
+	)}** | ${prodResult.toLocaleString('en-us')} | ${
+		diff > 0 ? '+' : '-'
+	}${diffPercent}% |`
+}
+
 function printResults(localResults, prodResults) {
 	if (markdown) {
-		console.log('| Persona | Total PR (kg CO2e) | Total Prod (kg CO2e) |')
-		console.log('|:-----|:------:|:------:|:------:|')
+		console.log(
+			'| Persona | Total PR (kg CO2e) | Total Prod (kg CO2e) | Δ (%) |'
+		)
+		console.log('|:-----|:------:|:------:|:----:|')
 	}
 	for (let name in localResults) {
 		if (localResults[name] !== prodResults[name]) {
@@ -70,14 +88,26 @@ function printResults(localResults, prodResults) {
 			const prodResult = Math.round(prodResults[name])
 			const diff = localResult - prodResult
 			const diffPercent = Math.round((diff / prodResult) * 100)
-			const color = diffPercent <= 1 ? c.orange : c.red
+			const color = diffPercent <= 1 ? 'orange' : 'red'
 
 			console.log(
 				markdown
-					? `|${name}|${Math.round(localResults[name])}|${Math.round(
-							prodResults[name]
-					  )}|`
-					: fmtCLIErr(localResult, prodResult, diff, diffPercent, name, color)
+					? fmtGHActionErr(
+							localResult,
+							prodResult,
+							diff,
+							diffPercent,
+							name,
+							color
+					  )
+					: fmtCLIErr(
+							localResult,
+							prodResult,
+							diff,
+							diffPercent,
+							name,
+							c[color]
+					  )
 			)
 		} else if (!markdown) {
 			console.log(
