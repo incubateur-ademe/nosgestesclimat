@@ -91,7 +91,7 @@ function printResults(localResults, prodResults, markdown, withOptim = false) {
 				withOptim ? 'PR without optim.' : 'in prod.'
 			} (kg CO2e) | Δ (%) |`
 		)
-		console.log('|:-----|:------:|:------:|:----:|')
+		console.log('|-----:|:------:|:------:|:----:|')
 	} else {
 		console.log(
 			`${
