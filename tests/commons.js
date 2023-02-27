@@ -88,7 +88,7 @@ function printResults(localResults, prodResults, markdown, withOptim = false) {
 			`| Persona | Total PR ${
 				withOptim ? 'with optim.' : ''
 			} (kg CO2e) | Total ${
-				withOptim ? 'without optim.' : 'in prod.'
+				withOptim ? 'PR without optim.' : 'in prod.'
 			} (kg CO2e) | Δ (%) |`
 		)
 		console.log('|:-----|:------:|:------:|:----:|')
