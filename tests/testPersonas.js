@@ -3,9 +3,7 @@ const path = require('path')
 const yargs = require('yargs')
 const i18nUtils = require('./../scripts/i18n/utils')
 
-const Engine = require('publicodes').default
-
-const { comparePersonas } = require('./commons.ts')
+const { testPersonas, printResults } = require('./commons')
 
 const { country, language, markdown } = yargs(process.argv.slice(2))
 	.usage('Compare local and prod personas results\n\nUsage: $0 [options]')
@@ -30,33 +28,6 @@ const { country, language, markdown } = yargs(process.argv.slice(2))
 
 	.help('h')
 	.alias('h', 'help').argv
-
-function testPersonas(rules, personas) {
-	const engine = new Engine(rules, { logger: disabledLogger })
-	const missingVariables = Object.keys(
-		engine.evaluate('bilan').missingVariables
-	)
-
-	const personasRules = Object.values(personas)
-
-	const results = {}
-
-	for (let persona of personasRules) {
-		const personaData = persona.data.situation ?? persona.data
-		const validPersonaRules = Object.keys(personaData).filter((rule) =>
-			missingVariables.includes(rule)
-		)
-
-		const validPersonaRulesObject = validPersonaRules.reduce(
-			(acc, cur) => ({ ...acc, [cur]: personaData[cur] }),
-			{}
-		)
-		engine.setSituation(validPersonaRulesObject)
-		results[persona.nom] = engine.evaluate('bilan').nodeValue
-	}
-
-	return results
-}
 
 const modelFile = `co2-model.${country}-lang.${language}.json`
 const localRules = fs
@@ -106,4 +77,15 @@ const prodPersonas = fetch(
 		process.exit(-1)
 	})
 
-comparePersonas(localRules, localPersonas, prodRules, prodPersonas)
+const allData = Promise.all([
+	localRules,
+	localPersonas,
+	prodRules,
+	prodPersonas,
+])
+
+allData.then((res) => {
+	const localResults = testPersonas(res[0], res[1])
+	const prodResults = testPersonas(res[2], res[3])
+	printResults(localResults, prodResults, markdown)
+})

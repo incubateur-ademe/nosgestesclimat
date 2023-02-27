@@ -4,16 +4,6 @@ const yargs = require('yargs')
 const i18nUtils = require('./../scripts/i18n/utils')
 const { disabledLogger } = require('publiopti')
 
-// type RawRules = Record<string, any>
-//
-// export type RuleName = string
-// export type Persona = {
-// 	nom: string
-// 	description: string
-// 	icônes: string
-// 	data: RawRules | { situation: RawRules }
-// }
-//
 function col(str, color) {
 	return color + str + '\x1b[0m'
 }
@@ -86,7 +76,7 @@ function fmtGHActionErr(localResult, prodResult, diff, diffPercent, name) {
 	}${diffPercent}% |`
 }
 
-function printResults(localResults, prodResults, withOptim = false) {
+function printResults(localResults, prodResults, markdown, withOptim = false) {
 	if (markdown) {
 		console.log(`#### ${withOptim ? 'With optimisation' : 'Base model'}`)
 		console.log(
@@ -168,21 +158,7 @@ function testPersonas(rules, personas) {
 	return results
 }
 
-function comparePersonas(localRules, localPersonas, prodRules, prodPersonas) {
-	const allData = Promise.all([
-		localRules,
-		localPersonas,
-		prodRules,
-		prodPersonas,
-	])
-
-	allData.then((res) => {
-		const localResults = testPersonas(res[0], res[1])
-		const prodResults = testPersonas(res[2], res[3])
-		printResults(localResults, prodResults)
-	})
-}
-
 module.exports = {
-	comparePersonas,
+	testPersonas,
+	printResults,
 }
