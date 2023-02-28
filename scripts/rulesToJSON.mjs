@@ -90,8 +90,7 @@ const regions =
 			cli.printWarn(`[WARN] - the region '${r}' is not supported, skipping it.`)
 			return false
 		}
-		console.log(r, '!==', defaultModelCode)
-		return r !== defaultModelCode
+		return true
 	}) ?? supportedRegionCodes
 
 /// ---------------------- Helper functions ----------------------
