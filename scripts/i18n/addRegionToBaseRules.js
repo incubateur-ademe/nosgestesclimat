@@ -15,6 +15,8 @@ const addRegionToBaseRules = (baseRules, newRegionalRules) => {
 	}
 	Object.entries(newRegionalRules).forEach(([rule, attrs]) => {
 		if (!Object.keys(baseRules).includes(rule)) {
+			// TODO: to discuss about the wanted behavior.
+			// Should we throw an error or just ignore the rule?
 			return baseRules
 		}
 		Object.entries(attrs).forEach(([attr, transVal]) => {
