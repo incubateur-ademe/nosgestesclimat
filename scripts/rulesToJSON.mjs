@@ -11,7 +11,7 @@ import { exit } from 'process'
 import Engine from 'publicodes'
 
 import cli from './i18n/cli.js'
-import utils, { publicDir } from './i18n/utils.js'
+import utils, { publicDir, t9nDir } from './i18n/utils.js'
 
 import { addRegionToBaseRules } from './i18n/addRegionToBaseRules.js'
 import { addTranslationToBaseRules } from './i18n/addTranslationToBaseRules.js'

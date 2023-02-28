@@ -301,4 +301,5 @@ module.exports = {
 	assoc,
 	customAssocPath,
 	publicDir,
+	t9nDir,
 }
