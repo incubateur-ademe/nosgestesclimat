@@ -1,0 +1,56 @@
+divers . livres:
+  titre: Livres
+  icônes: 📚
+  formule: nombre par an * empreinte / amortissement
+  unité: kgCO2e
+
+divers . livres . nombre par an:
+  titre: Nombre de livres achetés par an
+  formule: nombre par mois * mois par an
+  unité: livres
+
+divers . livres . nombre par mois:
+  titre: Nombre de livre achetés par mois
+  question: Combien de livres neufs ou journaux achetez-vous par mois (pour vous ou pour offrir) ?
+  description: |
+    Estimez ici le nombres de livres neufs, revues, journaux que vous achetez chaque mois, que ce soit pour vous ou bien 
+    pour offrir (on fait l'hypothèse ici que l'empreinte d'un livre offert est attribué à l'acheteur)
+  note: |
+    Pour la valeur par défaut, nous nous basons sur [les chiffres du SNE (Syndicat National de l'Edition)](https://www.sne.fr/economie/chiffres-cles/#:~:text=Le%20chiffre%20d'affaires%20des,hausse%20de%2015%2C3%25)
+    qui a estimé à 486,1 millions le nombre de livres vendus en 2021, soit environ 7 livres par Français et par an. 
+    Ce chiffre ne tient pas compte de la presse et est rapporté à l'individu en tenant compte de l'emsemble de la population.
+    Nous considérons qu'un français achète en moyenne 2 livres ou journaux par mois.
+  unité: livres
+  par défaut: 2
+
+divers . livres . empreinte:
+  titre: Empreinte d'un livre
+  formule: 0.682
+  unité: kgCO2e/livres
+  note: |
+    Chiffre tiré de [l'étude ADEME "Evaluation de l'impact environnemental de la digitalisation des services culturels"](https://librairie.ademe.fr/cadic/7502/impact-digitalisation-services-culturels-rapport_v2.pdf)
+    sortie en novembre 2022.
+    Selon l'ACV de cette étude, l'empreinte de la fabrication d'un livre **"amortie" sur 2 lectures** est de 0.341 kgCO2e/livre. 
+    Etant donné que l'empreinte totale de la fabrication d'un livre est totalement attribué à l'acheteur,
+    il convient donc de ne pas amortir ce facteur d'émission et de considérer une empreinte de 0.341 x 2 = 0.682 kgCO2e/livre.    
+    ![Tableau ACV livre tiré de l'étude "Evaluation de l'impact environnemental de la digitalisation des services culturels" P.30](https://user-images.githubusercontent.com/55186402/221860246-4c2c5062-df61-4c4d-bcaa-9c79e1d66d50.png)
+
+divers . livres . amortissement:
+  formule: 10
+  note: |
+    C'est une valeur arbitraire. 
+    [L'étude ADEME "Evaluation de l'impact environnemental de la digitalisation des services culturels"](https://librairie.ademe.fr/cadic/7502/impact-digitalisation-services-culturels-rapport_v2.pdf)
+    traite également de ce sujet, différemment, mais nous conservons un amortissement à l'année dans NGC:
+
+    > Pour le livre papier, celui-ci a une durée de vie théorique très grande et pourrait être réutilisé au moins
+    pendant une dizaine d’année. Mais en pratique, un livre acheté par un particulier aura sûrement un
+    nombre limité d’utilisation. Pour ramener les impacts du cycle de vie d’un livre neuf à l’UF, il faut diviser
+    par ce nombre d’utilisations. On peut s’attendre à ce que l’utilisateur, sauf exception, ne lise lui-même
+    qu’une ou deux fois le livre. L’utilisateur peut cependant facilement acheter ou vendre ce livre d’occasion,
+    ou le prêter, dans ce cas le nombre d’utilisation sera probablement bien plus élevé. La location de livre
+    en bibliothèque est également une situation commune, où les livres peuvent être réutilisés plusieurs
+    dizaines de fois. Par manque de donnée sur ce paramètre, nous avons utilisé dans notre analyse du livre
+    une estimation par défaut de 2 utilisations (le livre sera entièrement lu deux fois) sur sa durée de vie. En
+    analyse de sensibilité, nous avons considéré un cas correspondant à une unique utilisation, et un cas 
+    correspondant à 5 utilisations du livre.
+  unité: ans
