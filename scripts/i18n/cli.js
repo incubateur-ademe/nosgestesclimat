@@ -122,7 +122,8 @@ const getArgs = (description, opts) => {
 			alias: 'o',
 			type: 'string',
 			array: true,
-			description: 'The region code model',
+			choices: regions.supportedRegionCodes,
+			description: 'The region code model.',
 		})
 	}
 	if (opts.markdown) {
@@ -143,23 +144,10 @@ const getArgs = (description, opts) => {
 	}
 
 	const destLangs = (argv.target ?? utils.availableLanguages).filter((l) => {
-		if (!utils.availableLanguages.includes(l)) {
-			printWarn(`SKIP: the language '${l}' is not supported.`)
-			return false
-		}
 		return l !== srcLang
 	})
 
-	const destRegions =
-		argv.model?.filter((r) => {
-			if (!regions.supportedRegionCodes.includes(r)) {
-				cli.printWarn(
-					`[WARN] - the region '${r}' is not supported, skipping it.`
-				)
-				return false
-			}
-			return true
-		}) ?? regions.supportedRegionCodes
+	const destRegions = argv.model ?? regions.supportedRegionCodes
 
 	const srcFile = argv.file ?? opts.defaultSrcFile
 
