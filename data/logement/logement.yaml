@@ -231,6 +231,7 @@ logement . chauffage:
         PAC . présent: non
         électricité . présent: non
         gaz . présent: non
+        bouteille gaz . présent: non
         fioul . présent: non
         bois . présent: non
   icônes: 🌡️
@@ -252,6 +253,7 @@ logement . chauffage . empreinte totale:
   formule:
     somme:
       - gaz
+      - bouteille gaz
       - fioul
       - bois . empreinte
       - réseau de chaleur
@@ -278,6 +280,7 @@ logement . chauffage . choix utilisateur:
             - électricité . présent
             - PAC . présent
             - gaz . présent
+            - bouteille gaz . présent
             - fioul . présent
             - bois . présent
         alors: oui
@@ -363,6 +366,7 @@ logement . chauffage . intensité carbone fioul litre:
     - https://www.bilans-ges.ademe.fr - Fioul domestique France continental
 
 logement . chauffage . gaz:
+  titre: Réseau de gaz
   icônes: 🔥
   applicable si: présent
   formule: consommation * gaz . intensité carbone gaz utilisateur
@@ -447,3 +451,33 @@ logement . chauffage . intensité carbone GPL:
   référence:
     - https://www.bilans-ges.ademe.fr - GPL pour véhicule routier
   #Il n'y a pas de GPL de "maison" dans la Base Carbone. Pointer directement sur le FE gaz naturel ?
+
+logement . chauffage . bouteille gaz:
+  icônes: 🛢️🔥
+  titre: Boutielle de gaz
+  applicable si: présent
+  formule: 1000
+  unité: kgCO2e
+
+logement . chauffage . bouteille gaz . présent:
+  question: Utilisez-vous des bouteille de gaz ?
+  par défaut: non
+
+logement . chauffage . bouteille gaz . consommation:
+  question: Combinen de bouteilles de gaz ?
+  par défaut: 1
+  unité: kWh
+  description: |
+    Il n'existe pas de facteur d'émission associé directement aux bouteilles de gaz.
+
+logement . chauffage . bouteille gaz . butane:
+  titre: Empreinte butane
+  formule: 3.44
+  unité: kgCO2e/kg
+  note: Base carbone - Butane/inclus maritime
+
+logement . chauffage . bouteille gaz . propane:
+  titre: Empreinte propane
+  formule: 3.47
+  unité: kgCO2e/kg
+  note: Base carbone - Propane/inclus maritime
