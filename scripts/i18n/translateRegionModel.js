@@ -38,39 +38,43 @@ const translateRule = async ([ruleName, ruleVal], destLang) => {
 			destLang.toUpperCase()
 		)
 	}
+	const translateAttr = async (attr, val) => {
+		switch (attr) {
+			case 'suggestions': {
+				val = Object.fromEntries(
+					await Promise.all(
+						Object.entries(val).map(async ([key, val]) => {
+							const translatedKey = await translate(key)
+							return [translatedKey, val]
+						})
+					)
+				)
+				break
+			}
+			case 'mosaique': {
+				val = translateRule(val, destLang)
+				break
+			}
+			case 'description':
+			case 'note': {
+				val = translateMd(val)
+				break
+			}
+			default: {
+				val = translate(val)
+			}
+		}
+		return [attr, await val]
+	}
 	return [
 		ruleName,
 		Object.fromEntries(
 			await Promise.all(
 				Object.entries(ruleVal).map(async ([attr, val]) => {
 					if (utils.mechanismsToTranslate.includes(attr)) {
-						switch (attr) {
-							case 'suggestions': {
-								val = Object.fromEntries(
-									await Promise.all(
-										Object.entries(val).map(async ([key, val]) => {
-											const translatedKey = await translate(key)
-											return [translatedKey, val]
-										})
-									)
-								)
-								break
-							}
-							case 'mosaique': {
-								val = translateRule(val, destLang)
-								break
-							}
-							case 'description':
-							case 'note': {
-								val = translateMd(val)
-								break
-							}
-							default: {
-								val = translate(val)
-							}
-						}
+						return translateAttr(attr, val)
 					}
-					return [attr, await val]
+					return [attr, val]
 				})
 			)
 		),
@@ -81,7 +85,10 @@ const translateModel = async (srcRules, destLang) => {
 	return Object.fromEntries(
 		await Promise.all(
 			Object.entries(srcRules).map(async (rule) => {
-				if (rule !== 'param') {
+				// The [params] attribute contains all informations about the region,
+				// it is only stored in the [fr] translation (which is the default one),
+				// so we don't need to translate it.
+				if (rule !== 'params') {
 					return await translateRule(rule, destLang)
 				} else {
 					return rule
