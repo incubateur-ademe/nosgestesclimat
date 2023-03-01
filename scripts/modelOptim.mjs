@@ -15,6 +15,8 @@ import { constantFolding, disabledLogger, getRawNodes } from 'publiopti'
 // We also need to keep rules which are used in the UI (e.g. 'pétrole . pleins'
 // and 'pétrole . volume plein' are used to compute the total volume of fuel), and
 // rules that contain the 'icônes' key.
+// We also need to keep all notification rules, which are not used for compilation
+// but important for thee UI.
 const rulesToKeep = [
 	'actions',
 	'bilan',
@@ -37,10 +39,13 @@ export function compressRules(
 		destPath,
 		['**/translated-*.yaml'],
 		([ruleName, ruleNode]) => {
-			return rulesToKeep.includes(ruleName) || 'icônes' in ruleNode.rawNode
+			return (
+				rulesToKeep.includes(ruleName) ||
+				'icônes' in ruleNode.rawNode ||
+				ruleNode.rawNode.type === 'notification'
+			)
 		}
 	)
-
 	if (err) {
 		if (markdown) {
 			console.log(
