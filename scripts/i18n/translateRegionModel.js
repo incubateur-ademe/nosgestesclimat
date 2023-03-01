@@ -23,17 +23,16 @@ const model = destRegions[0]
 const srcFile = path.join(localizedRegionModelsDir, `${model}-${srcLang}.yaml`)
 const srcModel = utils.readYAML(srcFile)
 
-// TODO: there is something to do with async/await here
 const translateRule = async ([ruleName, ruleVal], destLang) => {
-	const translate = async (str) => {
-		return await deepl.fetchTranslation(
+	const translate = (str) => {
+		return deepl.fetchTranslation(
 			str,
 			srcLang.toUpperCase(),
 			destLang.toUpperCase()
 		)
 	}
-	const translateMd = async (str) => {
-		return await deepl.fetchTranslationMarkdown(
+	const translateMd = (str) => {
+		return deepl.fetchTranslationMarkdown(
 			str,
 			srcLang.toUpperCase(),
 			destLang.toUpperCase()
@@ -70,9 +69,8 @@ const translateRule = async ([ruleName, ruleVal], destLang) => {
 								val = translate(val)
 							}
 						}
-						val = await val
 					}
-					return [attr, val]
+					return [attr, await val]
 				})
 			)
 		),
