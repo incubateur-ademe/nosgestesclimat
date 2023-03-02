@@ -16,7 +16,7 @@ Mais ce n'est pas tout ! Il y a aussi des articles de texte entiers, comme [l'ac
 
 Du côté du site (le dépôt "nosgestesclimat-site"), il y a aussi la [FAQ](https://github.com/datagir/nosgestesclimat-site/blob/master/source/sites/publicodes/FAQ.yaml) par exemple. 
 
-Comment moifier ces textes ? Rendez-vous dans la section ["🏗️ En pratique" ci-dessous](https://github.com/datagir/nosgestesclimat/blob/master/CONTRIBUTING.md#%EF%B8%8F-en-pratique).
+Comment modifier ces textes ? Rendez-vous dans la section ["🏗️ En pratique" ci-dessous](https://github.com/datagir/nosgestesclimat/blob/master/CONTRIBUTING.md#%EF%B8%8F-en-pratique).
 
 </div>
 
@@ -41,12 +41,12 @@ Comment moifier ces textes ? Rendez-vous dans la section ["🏗️ En pratique" 
 
 ## 💾 Les modèles carbone
 
-Peu importe la qualité des contributions, nous accueillons tout : un brouillon de calcul en français peut suffire... tant que les modèles carbone proposés *reposent sur données bien sourcées*.
+Peu importe la qualité des contributions, nous accueillons tout : un brouillon de calcul en français peut suffire... tant que les modèles carbone proposés *reposent sur des données bien sourcées*.
 
 
 Par exemple, pour créer un modèle pour la trottinette électrique partagée, il faudrait idéalement réaliser une analyse de cycle de vie complète qui comprendrait :
 
-- le matériel lui-meme (batterie, trottinette en métal, composants en plastique) et sa durée de vie estimée
+- le matériel lui-même (batterie, trottinette en métal, composants en plastique) et sa durée de vie estimée
 - l'entretien, le recyclage, l'acheminement depuis la Chine
 - l'électricité et le geste de recharge, parfois par camion, parfois en utilisant les trottinettes elles-memes !
 - ...
@@ -60,7 +60,7 @@ A noter : tout modèle publié ici est publié sous la license MIT. Les modèles
 
 Le langage est décrit et documenté sur https://publi.codes. Il est développé par l'Etat dans le cadre du projet [mon-entreprise](https://github.com/betagouv/mon-entreprise).
 
-N'hésitez pas à poser des questions sur le langage ou la contribution en créant une nouvelle *issue*, nous serons ravi d'y répondre.
+N'hésitez pas à poser des questions sur le langage ou la contribution en créant une nouvelle *issue*, nous serons ravis d'y répondre.
 
 
 ## 🏗️ En pratique
@@ -85,7 +85,7 @@ Puis suivez ces étapes :
 
 - rendez-vous sur l'un des modèles classés par grande catégorie [ici](https://github.com/datagir/nosgestesclimat/tree/master/data). Sélectionnez-en une, par exemple _numérique.yaml_. Cliquez sur l'icône ✏ en haut à droite, vous êtes en mode édition !
 - cliquez n'importe où dans le contenu du fichier, puis tapez Ctrl-F (pour lancer une recherche), cherchez le texte à modifier (par exemple "Quel est l'age de votre smartphone"), modifiez directement le texte sur cette page (corriger "age" en "âge")
-- puis cliquez sur le bouton vert 🟩 `Propose file change`. Sur la page qui s'affiche intitulée "Comparing changes", cliquez sur le bouton vert `Create pull request`
+- puis cliquez sur le bouton vert 🟩 `Propose file change`. Sur la page qui s'affiche - intitulée "Comparing changes" - cliquez sur le bouton vert `Create pull request`
 - une fois la _pull request_ ouverte, un rapport sera automatiquement posté en commentaire ayant pour but de s'assurer qu'il n'y ai pas d'erreurs lors de l'interprétation du modèle ou qu'il ne manque pas de [traductions](https://github.com/datagir/nosgestesclimat/tree/master/docs/translation.md).
 - 🎉 Bravo, l'équipe verra votre contribution et la validera si elle est parfaite. Sinon, on en discutera ensemble 🙂.
 - Ce n'est pas tout ! Vous pouvez maintenant tester le site comme si vos changements avaient été validés 😎 : une fois votre pull request (PR) créée, allez sur https://nosgestesclimat.fr/, ajoutez à la fin de l'adresse dans votre navigateur `?PR=X` où X est le numéro de votre pull request (juste après le # dans le titre de votre PR).
