@@ -5,7 +5,6 @@
 const yargs = require('yargs')
 
 const utils = require('./utils')
-const regions = require('./regionCommons')
 
 const colors = {
 	reset: '\x1b[0m',
@@ -75,6 +74,7 @@ const printChecksResult = (
 
 // TODO:
 // - switch to typescript in order to specify the type of opts
+// - could be cleaner
 const getArgs = (description, opts) => {
 	let args = yargs.usage(`${description}\n\nUsage: node $0 [options]`)
 
@@ -125,7 +125,7 @@ const getArgs = (description, opts) => {
 			alias: 'o',
 			type: 'string',
 			array: true,
-			choices: regions.supportedRegionCodes,
+			choices: opts.model.supportedRegionCodes,
 			description: 'The region code model.',
 		})
 	}
@@ -157,7 +157,7 @@ const getArgs = (description, opts) => {
 		return l !== srcLang
 	})
 
-	const destRegions = argv.model ?? regions.supportedRegionCodes
+	const destRegions = argv.model ?? opts?.model?.supportedRegionCodes
 
 	const srcFile = argv.file ?? opts.defaultSrcFile
 
