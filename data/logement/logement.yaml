@@ -456,7 +456,7 @@ logement . chauffage . bouteille gaz:
   icônes: 🛢️🔥
   titre: Boutielle de gaz
   applicable si: présent
-  formule: 1000
+  formule: empreinte * consommation
   unité: kgCO2e
 
 logement . chauffage . bouteille gaz . présent:
@@ -464,11 +464,55 @@ logement . chauffage . bouteille gaz . présent:
   par défaut: non
 
 logement . chauffage . bouteille gaz . consommation:
-  question: Combinen de bouteilles de gaz ?
-  par défaut: 1
-  unité: kWh
+  question: Quelle est votre consommation annuelle en bouteilles de gaz (13 kg) ?
+  par défaut: parc français . chauffage . consommation moyenne gaz cuisson / energie par bouteille
+  unité: bouteilles
+  aide: estimation via le le poids
   description: |
-    Il n'existe pas de facteur d'émission associé directement aux bouteilles de gaz.
+    Pour simplifier la réponse à cette question, nous vous proposons de rentrer directement le nombre de bouteilles de gaz que vous consommez.
+    On considère ici une capacité de 13kg, modèle le plus répandu et généralement utilisé pour le gaz de cuisson.
+
+    Si vous souhaitez répondre en kilogrammes car la taille de la bouteille ne vous correspond pas, n'hésitez pas à utiliser l'aide à la conversion.
+  note: |
+    Il n'existe pas de facteur d'émission associé directement aux bouteilles de gaz mais il faut savoir 
+    qu'elles contiennent majoritairement du propane et butane, gaz pour lesquels, on dispose de facteurs d'émission.
+
+    Il existe différents modèles de bonbonnes commme le montre l'infraphie ci-dessous tiré du site [lepropane.com](https://lepropane.com/bouteilles/dimension).
+
+    ![Infographie modèles bouteilles de gaz tiré du site "lepropane.com"](https://lepropane.com/sites/lepropane.com/files/images/infographies/dimensions-bouteilles.png)
+
+    La bouteille la plus répandue est le modèle de 13kg, généralement utilisée pour le gaz de cuisson. On considère donc pour cette question une bouteille de 13kg.
+
+    Etant donné que les bouteilles elle-même sont consignées, on ne prend en compte ici que le gaz seul.
+
+logement . chauffage . bouteille gaz . estimation via le le poids:
+  question: Vous utilisez un format de bonbonne différent ? Entrez votre consommation en kg.
+  unité: kg/bouteille
+  formule: 13 * 12
+  note: Cette aide à l'estimation est designé pour recevoir une consommation mensuelle (cf InputEstimation.tsx côté site)
+  description: Cette aide permet de simplifier la conversion des kg de gaz consommés en bouteille de gaz au format 13kg.
+
+logement . chauffage . bouteille gaz . energie par bouteille:
+  titre: Energie bouteille de gaz (13 kg)
+  formule: 179
+  unité: kWh/bouteille
+  note: Chiffre tiré de [francegazliquides.fr](https://www.francegazliquides.fr/energie-butane-propane/industrie-et-distribution/bouteilles/).
+
+logement . chauffage . bouteille gaz . empreinte:
+  titre: Empreinte bouteille de gaz commune
+  formule: empreinte contenu * capacité
+  unité: kgCO2e/bouteille
+
+logement . chauffage . bouteille gaz . capacité:
+  titre: Capacité bouteille de gaz commune
+  formule: 13
+  unité: kg
+
+logement . chauffage . bouteille gaz . empreinte contenu:
+  titre: Empreinte gaz d'une bonbonne
+  formule: (butane + propane) / 2
+  unité: kgCO2e/kg
+  note: Moyenne entre butane et propane, dont les FE sont néanmoins très proches.
 
 logement . chauffage . bouteille gaz . butane:
   titre: Empreinte butane
