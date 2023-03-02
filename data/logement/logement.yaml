@@ -233,6 +233,7 @@ logement . chauffage:
         électricité . présent: non
         gaz . présent: non
         bouteille gaz . présent: non
+        citerne propane . présent: non
         fioul . présent: non
         bois . présent: non
   icônes: 🌡️
@@ -255,6 +256,7 @@ logement . chauffage . empreinte totale:
     somme:
       - gaz
       - bouteille gaz
+      - citerne propane
       - fioul
       - bois . empreinte
       - réseau de chaleur
@@ -282,6 +284,7 @@ logement . chauffage . choix utilisateur:
             - PAC . présent
             - gaz . présent
             - bouteille gaz . présent
+            - citerne propane . présent
             - fioul . présent
             - bois . présent
         alors: oui
@@ -511,18 +514,53 @@ logement . chauffage . bouteille gaz . capacité:
 
 logement . chauffage . bouteille gaz . empreinte contenu:
   titre: Empreinte gaz d'une bonbonne
-  formule: (butane + propane) / 2
+  formule: (empreinte butane + empreinte propane) / 2
   unité: kgCO2e/kg
   note: Moyenne entre butane et propane, dont les FE sont néanmoins très proches.
 
-logement . chauffage . bouteille gaz . butane:
+logement . chauffage . empreinte butane:
   titre: Empreinte butane
   formule: 3.44
   unité: kgCO2e/kg
   note: Base carbone - Butane/inclus maritime
 
-logement . chauffage . bouteille gaz . propane:
+logement . chauffage . empreinte propane:
   titre: Empreinte propane
   formule: 3.47
   unité: kgCO2e/kg
   note: Base carbone - Propane/inclus maritime
+
+logement . chauffage . citerne propane:
+  icônes: 🛢️🔥
+  titre: Gaz propane en citerne
+  applicable si: présent
+  formule: empreinte propane * consommation
+  unité: kgCO2e
+
+logement . chauffage . citerne propane . présent:
+  question: Votre logement est-il chauffé via une citerne de propane ?
+  par défaut: non
+
+logement . chauffage . citerne propane . consommation:
+  question: Quelle est la consommation annuelle de gaz propane en citerne de votre foyer ?
+  par défaut: parc français . chauffage . consommation gaz par m2 * surface / energie par kg
+  unité: kg
+  aide: estimation via le coût
+  description: |
+    Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
+  note: |
+    Certains logements ne peuvent être raccordés au réseau de gaz et disposent d'une citerne propane, à l'image d'une citerne fioul.
+
+logement . chauffage . citerne propane . estimation via le coût:
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  unité: €/kg
+  formule: 1.8
+  note: Cette aide à l'estimation est designé pour recevoir une consommation mensuelle (cf InputEstimation.tsx côté site)
+  description: |
+    Selon les informations aggrégées par le site [HelloWatt](https://www.hellowatt.fr/gaz-propane-citerne/comparatif-prix), 
+    le prix du propane en citerne oscille autour de 1800€ par tonne (selon le fournisseur).
+
+logement . chauffage . citerne propane . energie par kg:
+  formule: 13.835
+  unité: kWh/kg
+  note: Pouvoir calorifique du propane
