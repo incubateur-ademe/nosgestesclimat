@@ -15,10 +15,16 @@ const utils = require('./utils')
 const cli = require('./cli')
 const deepl = require('./deepl')
 
-const { srcLang, destLangs, srcFile } = cli.getArgs(
+const { srcLang, destLangs, srcFile, onlyUpdateLocks } = cli.getArgs(
 	`Calls the DeepL API to translate the rule questions, titles, notes,
 	summaries and suggestions.`,
-	{ source: true, target: true, file: true, defaultSrcFile: 'data/**/*.yaml' }
+	{
+		source: true,
+		target: true,
+		file: true,
+		onlyUpdateLocks: true,
+		defaultSrcFile: 'data/**/*.yaml',
+	}
 )
 
 const progressBars = new cliProgress.MultiBar(
@@ -38,7 +44,9 @@ const translateTo = async (
 	entryToTranslate,
 	translatedRules
 ) => {
-	let previoulsyReviewedTranslation = []
+	let previoulsyReviewedTranslations = []
+	let skippedValues = []
+	let skippedTranslations = []
 
 	const updateTranslatedRules = (rule, attr, transVal, refVal) => {
 		let key = [rule, attr]
@@ -59,14 +67,18 @@ const translateTo = async (
 			currentVal &&
 			translatedRules[rule][attr + utils.AUTO_KEY_EXT] &&
 			translatedRules[rule][attr] !==
-				translatedRules[rule][attr + utils.AUTO_KEY_EXT]
+				translatedRules[rule][attr + utils.AUTO_KEY_EXT] &&
+			!onlyUpdateLocks
 		) {
+			// The previous translated value has been manually edited, we notify the user.
 			translatedRules = R.assocPath(previousKey, currentVal, translatedRules)
-			previoulsyReviewedTranslation.push(`${rule} -> ${attr}`)
+			previoulsyReviewedTranslations.push(`${rule} -> ${attr}`)
 		}
 
-		translatedRules = R.assocPath(key, transVal, translatedRules)
-		translatedRules = R.assocPath(autoKey, transVal, translatedRules)
+		if (!onlyUpdateLocks) {
+			translatedRules = R.assocPath(key, transVal, translatedRules)
+			translatedRules = R.assocPath(autoKey, transVal, translatedRules)
+		}
 		translatedRules = R.assocPath(refKey, refVal, translatedRules)
 	}
 	const translate = (value) => {
@@ -85,25 +97,29 @@ const translateTo = async (
 	}
 
 	let bar = progressBars.create(entryToTranslate.length, 0)
-	let skippedValue = []
 
 	await Promise.all(
 		Object.values(entryToTranslate).map(async ({ rule, attr, refVal }) => {
 			try {
-				const translatedValue =
-					'description' === attr || 'note' === attr
-						? await translateMarkdown(refVal)
-						: await translate(refVal)
+				const translatedValue = onlyUpdateLocks
+					? undefined
+					: 'description' === attr || 'note' === attr
+					? await translateMarkdown(refVal)
+					: await translate(refVal)
+
 				bar.increment({
 					msg: `Translating ${rule}...`,
 					lang: destLang,
 				})
-				if (!translatedValue) {
-					skippedValue.push({
+				if (!translatedValue && !onlyUpdateLocks) {
+					skippedValues.push({
 						rule,
 						msg: 'an error occurred while translating',
 					})
 				} else {
+					if (onlyUpdateLocks) {
+						skippedTranslations.push(rule)
+					}
 					updateTranslatedRules(rule, attr, translatedValue, refVal)
 				}
 			} catch (err) {
@@ -111,19 +127,24 @@ const translateTo = async (
 					msg: `Translating ${rule}...`,
 					lang: destLang,
 				})
-				skippedValue.push({ rule, msg: err.message })
+				skippedValues.push({ rule, msg: err.message })
 			}
 		})
 	)
-	console.log('\n')
-	skippedValue.forEach(({ rule, msg }) => {
-		cli.printWarn(`[SKIPPED] - ${rule}:`)
-		console.log(msg)
+
+	skippedTranslations.forEach((rule) => {
+		cli.printInfo(
+			`[INFO] - '${rule}': only the reference value has been updated`
+		)
 	})
-	previoulsyReviewedTranslation.forEach((rule) => {
-		cli.printErr(`[PREVIOUSLY REVIEWED] : ${rule}`)
+	skippedValues.forEach(({ rule, msg }) => {
+		cli.printWarn(`[SKIPPED] - '${rule}': ${msg}`)
 	})
-	console.log('\n')
+	previoulsyReviewedTranslations.forEach((rule) => {
+		cli.printErr(
+			`[PREVIOUSLY REVIEWED] - '${rule}': previous translation has been previously corrected by hand`
+		)
+	})
 	utils.writeYAML(destPath, translatedRules)
 }
 

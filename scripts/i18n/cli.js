@@ -36,6 +36,7 @@ const colors = {
 const withStyle = (color, text) => `${color}${text}${colors.reset}`
 const printErr = (message) => console.error(withStyle(colors.fgRed, message))
 const printWarn = (message) => console.warn(withStyle(colors.fgYellow, message))
+const printInfo = (message) => console.log(withStyle(colors.fgCyan, message))
 
 const yellow = (str) => withStyle(colors.fgYellow, str)
 const red = (str) => withStyle(colors.fgRed, str)
@@ -72,6 +73,8 @@ const printChecksResult = (
 	}
 }
 
+// TODO:
+// - switch to typescript in order to specify the type of opts
 const getArgs = (description, opts) => {
 	let args = yargs.usage(`${description}\n\nUsage: node $0 [options]`)
 
@@ -133,6 +136,13 @@ const getArgs = (description, opts) => {
 			description: 'Prints the result in a Markdown table format.',
 		})
 	}
+	if (opts.onlyUpdateLocks) {
+		args = args.option('only-update-locks', {
+			alias: 'u',
+			type: 'boolean',
+			description: 'Only update the lock attributes, do not translate.',
+		})
+	}
 
 	const argv = args.help().alias('help', 'h').argv
 
@@ -162,6 +172,7 @@ const getArgs = (description, opts) => {
 		remove: argv.remove,
 		srcFile,
 		markdown: argv.markdown,
+		onlyUpdateLocks: argv.onlyUpdateLocks,
 	}
 }
 
@@ -185,6 +196,7 @@ module.exports = {
 	green,
 	printErr,
 	printWarn,
+	printInfo,
 	red,
 	withStyle,
 	yellow,
