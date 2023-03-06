@@ -6,36 +6,28 @@
 */
 
 const path = require('path')
-const cliProgress = require('cli-progress')
 const glob = require('glob')
 const R = require('ramda')
 const { exit } = require('process')
+const prompt = require('prompt-sync')()
 
 const utils = require('./utils')
 const cli = require('./cli')
 const deepl = require('./deepl')
 
-const { srcLang, destLangs, srcFile, onlyUpdateLocks } = cli.getArgs(
-	`Calls the DeepL API to translate the rule questions, titles, notes,
+const { srcLang, destLangs, srcFile, onlyUpdateLocks, interactiveMode } =
+	cli.getArgs(
+		`Calls the DeepL API to translate the rule questions, titles, notes,
 	summaries and suggestions.`,
-	{
-		source: true,
-		target: true,
-		file: true,
-		onlyUpdateLocks: true,
-		defaultSrcFile: 'data/**/*.yaml',
-	}
-)
-
-const progressBars = new cliProgress.MultiBar(
-	{
-		stopOnComplete: true,
-		clearOnComplete: true,
-		forceRedraw: true,
-		format: '{lang} | {value}/{total} | {bar} | {msg} ',
-	},
-	cliProgress.Presets.shades_grey
-)
+		{
+			source: true,
+			target: true,
+			file: true,
+			onlyUpdateLocks: true,
+			defaultSrcFile: 'data/**/*.yaml',
+			interactiveMode: true,
+		}
+	)
 
 const translateTo = async (
 	srcLang,
@@ -48,7 +40,13 @@ const translateTo = async (
 	let skippedValues = []
 	let skippedTranslations = []
 
-	const updateTranslatedRules = (rule, attr, transVal, refVal) => {
+	const updateTranslatedRules = (
+		rule,
+		attr,
+		transVal,
+		refVal,
+		onlyNeedToUpdateLocks
+	) => {
 		let key = [rule, attr]
 		let refKey = [rule, attr + utils.LOCK_KEY_EXT]
 		let autoKey = [rule, attr + utils.AUTO_KEY_EXT]
@@ -68,14 +66,14 @@ const translateTo = async (
 			translatedRules[rule][attr + utils.AUTO_KEY_EXT] &&
 			translatedRules[rule][attr] !==
 				translatedRules[rule][attr + utils.AUTO_KEY_EXT] &&
-			!onlyUpdateLocks
+			!onlyNeedToUpdateLocks
 		) {
 			// The previous translated value has been manually edited, we notify the user.
 			translatedRules = R.assocPath(previousKey, currentVal, translatedRules)
 			previoulsyReviewedTranslations.push(`${rule} -> ${attr}`)
 		}
 
-		if (!onlyUpdateLocks) {
+		if (!onlyNeedToUpdateLocks) {
 			translatedRules = R.assocPath(key, transVal, translatedRules)
 			translatedRules = R.assocPath(autoKey, transVal, translatedRules)
 		}
@@ -96,37 +94,49 @@ const translateTo = async (
 		)
 	}
 
-	let bar = progressBars.create(entryToTranslate.length, 0)
-
 	await Promise.all(
 		Object.values(entryToTranslate).map(async ({ rule, attr, refVal }) => {
+			let answer
+			if (interactiveMode) {
+				do {
+					answer = prompt(
+						`Action for rule ${cli.magenta(rule)}: [t]${cli.dim(
+							'ranslate'
+						)}, [u]${cli.dim('pdate .lock attribute')} , [s]${cli.dim('kip')}: `
+					)
+				} while (!['u', 's', 't'].includes(answer))
+			}
+			if (answer === 's') {
+				return skippedValues.push({ rule, msg: 'skipped' })
+			}
+
+			const onlyNeedToUpdateLocks = onlyUpdateLocks || answer === 'u'
+
 			try {
-				const translatedValue = onlyUpdateLocks
+				const translatedValue = onlyNeedToUpdateLocks
 					? undefined
 					: 'description' === attr || 'note' === attr
 					? await translateMarkdown(refVal)
 					: await translate(refVal)
 
-				bar.increment({
-					msg: `Translating ${rule}...`,
-					lang: destLang,
-				})
-				if (!translatedValue && !onlyUpdateLocks) {
+				if (!translatedValue && !onlyNeedToUpdateLocks) {
 					skippedValues.push({
 						rule,
 						msg: 'an error occurred while translating',
 					})
 				} else {
-					if (onlyUpdateLocks) {
+					if (onlyNeedToUpdateLocks) {
 						skippedTranslations.push(rule)
 					}
-					updateTranslatedRules(rule, attr, translatedValue, refVal)
+					updateTranslatedRules(
+						rule,
+						attr,
+						translatedValue,
+						refVal,
+						onlyNeedToUpdateLocks
+					)
 				}
 			} catch (err) {
-				bar.increment({
-					msg: `Translating ${rule}...`,
-					lang: destLang,
-				})
 				skippedValues.push({ rule, msg: err.message })
 			}
 		})
@@ -145,6 +155,7 @@ const translateTo = async (
 			`[PREVIOUSLY REVIEWED] - '${rule}': previous translation has been previously corrected by hand`
 		)
 	})
+	console.log(`Writing translated rules to: ${destPath}`)
 	utils.writeYAML(destPath, translatedRules)
 }
 

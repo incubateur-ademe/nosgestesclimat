@@ -40,6 +40,8 @@ const printInfo = (message) => console.log(withStyle(colors.fgCyan, message))
 const yellow = (str) => withStyle(colors.fgYellow, str)
 const red = (str) => withStyle(colors.fgRed, str)
 const green = (str) => withStyle(colors.fgGreen, str)
+const magenta = (str) => withStyle(colors.fgMagenta, str)
+const dim = (str) => withStyle(colors.dim, str)
 
 const printChecksResultTableHeader = (markdown) => {
 	if (markdown) {
@@ -143,6 +145,14 @@ const getArgs = (description, opts) => {
 			description: 'Only update the lock attributes, do not translate.',
 		})
 	}
+	if (opts.interactiveMode) {
+		args = args.option('interactive-mode', {
+			alias: 'i',
+			type: 'boolean',
+			description:
+				'Launch the interactive mode, to translate one rule at a time with the possibility to only update the lock attributes.',
+		})
+	}
 
 	const argv = args.help().alias('help', 'h').argv
 
@@ -173,6 +183,7 @@ const getArgs = (description, opts) => {
 		srcFile,
 		markdown: argv.markdown,
 		onlyUpdateLocks: argv.onlyUpdateLocks,
+		interactiveMode: argv.interactiveMode,
 	}
 }
 
@@ -191,9 +202,11 @@ const exitIfError = (error, msg = undefined, progressBar = undefined) => {
 
 module.exports = {
 	colors,
+	dim,
 	exitIfError,
 	getArgs,
 	green,
+	magenta,
 	printErr,
 	printWarn,
 	printInfo,
