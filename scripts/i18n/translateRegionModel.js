@@ -6,21 +6,21 @@ const cli = require('./cli')
 const deepl = require('./deepl')
 const utils = require('./utils')
 
-const localizedRegionModelsDir = path.resolve('./data/i18n/models/')
+const { regionModelsPath, supportedRegionCodes } = require('./regionCommons')
 
 const { srcLang, destLangs, destRegions } = cli.getArgs(
-	`Translates localized region models stored in ${localizedRegionModelsDir}.`,
+	`Translates localized region models stored in ${regionModelsPath}.`,
 	{
 		source: true,
 		target: true,
-		model: true,
+		model: { supportedRegionCodes },
 	}
 )
 
 // TODO: support multiple models
 const model = destRegions[0]
 
-const srcFile = path.join(localizedRegionModelsDir, `${model}-${srcLang}.yaml`)
+const srcFile = path.join(regionModelsPath, `${model}-${srcLang}.yaml`)
 const srcModel = utils.readYAML(srcFile)
 
 const translateRule = async ([ruleName, ruleVal], destLang) => {
@@ -99,10 +99,7 @@ const translateModel = async (srcRules, destLang) => {
 }
 
 destLangs.forEach(async (destLang) => {
-	const destFile = path.join(
-		localizedRegionModelsDir,
-		`${model}-${destLang}.yaml`
-	)
+	const destFile = path.join(regionModelsPath, `${model}-${destLang}.yaml`)
 	console.log(
 		'Translating',
 		path.basename(srcFile),

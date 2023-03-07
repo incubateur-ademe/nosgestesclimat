@@ -5,7 +5,6 @@
 const yargs = require('yargs')
 
 const utils = require('./utils')
-const regions = require('./regionCommons')
 
 const colors = {
 	reset: '\x1b[0m',
@@ -36,10 +35,13 @@ const colors = {
 const withStyle = (color, text) => `${color}${text}${colors.reset}`
 const printErr = (message) => console.error(withStyle(colors.fgRed, message))
 const printWarn = (message) => console.warn(withStyle(colors.fgYellow, message))
+const printInfo = (message) => console.log(withStyle(colors.fgCyan, message))
 
 const yellow = (str) => withStyle(colors.fgYellow, str)
 const red = (str) => withStyle(colors.fgRed, str)
 const green = (str) => withStyle(colors.fgGreen, str)
+const magenta = (str) => withStyle(colors.fgMagenta, str)
+const dim = (str) => withStyle(colors.dim, str)
 
 const printChecksResultTableHeader = (markdown) => {
 	if (markdown) {
@@ -72,6 +74,9 @@ const printChecksResult = (
 	}
 }
 
+// TODO:
+// - switch to typescript in order to specify the type of opts
+// - could be cleaner
 const getArgs = (description, opts) => {
 	let args = yargs.usage(`${description}\n\nUsage: node $0 [options]`)
 
@@ -122,7 +127,7 @@ const getArgs = (description, opts) => {
 			alias: 'o',
 			type: 'string',
 			array: true,
-			choices: regions.supportedRegionCodes,
+			choices: opts.model.supportedRegionCodes,
 			description: 'The region code model.',
 		})
 	}
@@ -131,6 +136,21 @@ const getArgs = (description, opts) => {
 			alias: 'm',
 			type: 'boolean',
 			description: 'Prints the result in a Markdown table format.',
+		})
+	}
+	if (opts.onlyUpdateLocks) {
+		args = args.option('only-update-locks', {
+			alias: 'u',
+			type: 'boolean',
+			description: 'Only update the lock attributes, do not translate.',
+		})
+	}
+	if (opts.interactiveMode) {
+		args = args.option('interactive-mode', {
+			alias: 'i',
+			type: 'boolean',
+			description:
+				'Launch the interactive mode, to translate one rule at a time with the possibility to only update the lock attributes.',
 		})
 	}
 
@@ -147,7 +167,7 @@ const getArgs = (description, opts) => {
 		return l !== srcLang
 	})
 
-	const destRegions = argv.model ?? regions.supportedRegionCodes
+	const destRegions = argv.model ?? opts?.model?.supportedRegionCodes
 
 	const srcFile = argv.file ?? opts.defaultSrcFile
 
@@ -162,6 +182,8 @@ const getArgs = (description, opts) => {
 		remove: argv.remove,
 		srcFile,
 		markdown: argv.markdown,
+		onlyUpdateLocks: argv.onlyUpdateLocks,
+		interactiveMode: argv.interactiveMode,
 	}
 }
 
@@ -178,16 +200,33 @@ const exitIfError = (error, msg = undefined, progressBar = undefined) => {
 	}
 }
 
+const styledRuleNameWithOptionalAttr = (ruleName, attr) =>
+	`${magenta(ruleName)}${
+		attr !== undefined ? ` ${dim('>')} ${yellow(attr)}` : ''
+	}`
+
+const styledPromptAction = (action) =>
+	`[${action[0]}]${dim(action.substring(1))}`
+
+const styledPromptActions = (actions) =>
+	actions.map((action) => styledPromptAction(action)).join(' ')
+
 module.exports = {
 	colors,
+	dim,
 	exitIfError,
 	getArgs,
 	green,
+	magenta,
 	printErr,
 	printWarn,
+	printInfo,
 	red,
 	withStyle,
 	yellow,
 	printChecksResult,
 	printChecksResultTableHeader,
+	styledRuleNameWithOptionalAttr,
+	styledPromptAction,
+	styledPromptActions,
 }
