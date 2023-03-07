@@ -305,6 +305,44 @@ logement . rénovation énergétique BBC . gain rénovation:
   formule: 70%
   note: Gain énergétique maximal atteint après une rénovation BBC, source à préciser.
 
+logement . raccordement réseau de chaleur:
+  titre: Investiguer un raccordement au réseau de chaleur
+  icônes: 👥🏭
+  effort: modéré
+  applicable si:
+    toutes ces conditions:
+      - appartement
+      - propriétaire
+      - chauffage collectif
+      - chauffage . gaz . présent
+  non applicable si: chauffage . réseau de chaleur . présent
+  formule: logement . chauffage - recalcul
+  note: On fait l'hypothèse que l'action est applicable seulement pour les logements chauffés via un réseau de gaz collectif.
+  description: |
+    A compléter avec FCU.
+
+
+logement . raccordement réseau de chaleur . recalcul:
+  titre: Recalcul émissions via le raccordement à un réseau de chaleur
+  note: on considère que la consommation de gaz sera identique suite à un raccordement au réseau de chaleur.
+  formule: chauffage . gaz . consommation * chauffage . intensité carbone réseau de chaleur
+
+logement . chauffage collectif:
+  avec:
+    collectif:
+    individuel:
+  question: Votre chauffage est-il collectif ou individuel ?
+  description: |
+    En logement individuel, pas la cible
+    Trop peu de consommation : pour des questions de rentabilité économique et densité thermique trop faible (réseau dégradé)
+  par défaut: "'collectif'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - collectif
+        - individuel
+
 logement . électricité verte:
   titre: Souscrire à un contrat d'électricité verte
   icônes: ☮️⚡
