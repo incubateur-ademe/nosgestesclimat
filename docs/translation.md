@@ -20,6 +20,7 @@
   * [Modification of the `./personas` files](#modification-of-the-personas-files)
   * [Improving an existing translation](#improving-an-existing-translation)
     * [Contribution guide for translation from GitHub](#contribution-guide-for-translation-from-github)
+  * [Translating region models](#translating-region-models)
 * [Available scripts](#available-scripts)
   * [`translate-rules.js`](#translate-rulesjs)
   * [`check-translation.js`](#check-translationjs)
@@ -27,6 +28,7 @@
   * [`translate-personas.js`](#translate-personasjs)
   * [`personasToJSON.js`](#personastojsonjs)
   * [`check-personas.js`](#check-personasjs)
+  * [`translateRegionModel.js`](#translateregionmodeljs)
 
 <!-- vim-markdown-toc -->
 
@@ -154,6 +156,12 @@ simply send your suggestion in a mail to: datagir@ademe.fr.
 Well done! We will look at your proposition before [updating the
 translations](#updating-the-translation) and integrating the changes to the
 project.
+
+### Translating region models
+
+To translate region models stored in `./data/i18n/models` from a language to an
+other, you can use the [`translateRegionModel.js`](#translateregionmodeljs)
+script.
 
 ## Available scripts
 
@@ -296,3 +304,19 @@ This script allows to get missing personas translations.
 >   ```
 >   yarn check:personas -h
 >   ```
+
+### `translateRegionModel.js`
+
+This script allows to translate region models stored in `./data/i18n/models`.
+
+You can specify following flag:
+
+- `--source` (`-s`) to choose the language translate from.
+- `--target` (`-t`) to choose the language(s) translate to.
+- `--model` (`-o`) to choose region code corresponding to the model to translate.
+
+> To run with `yarn`:
+>
+> ```
+> yarn translate:model [options]
+> ```

@@ -18,6 +18,8 @@
      - [Modification of the `./data` files](https://github.com/datagir/nosgestesclimat/wiki/Translation#modification-of-the-data-files)
      - [Modification of the `./personas` files](https://github.com/datagir/nosgestesclimat/wiki/Translation#modification-of-the-personas-files)
      - [Improving an existing translation](https://github.com/datagir/nosgestesclimat/wiki/Translation#improving-an-existing-translation)
+     - [Adding a new language](https://github.com/datagir/nosgestesclimat/wiki/Translation#adding-a-new-language)
+     - [Translating region models](https://github.com/datagir/nosgestesclimat/wiki/Translation#translating-region-models)
    - [Architecture](https://github.com/datagir/nosgestesclimat/wiki/Translation#architecture)
    - [Available scripts](https://github.com/datagir/nosgestesclimat/wiki/Translation#available-scripts)
 5. [**Other**](https://github.com/datagir/nosgestesclimat/wiki/Other)

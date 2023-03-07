@@ -11,16 +11,19 @@ import { exit } from 'process'
 import Engine from 'publicodes'
 
 import cli from './i18n/cli.js'
-import utils from './i18n/utils.js'
+import utils, { publicDir, t9nDir } from './i18n/utils.js'
 
 import { addRegionToBaseRules } from './i18n/addRegionToBaseRules.js'
 import { addTranslationToBaseRules } from './i18n/addTranslationToBaseRules.js'
 
 import { compressRules } from './modelOptim.mjs'
-
-const outputJSONPath = './public'
-
-const t9nDir = path.resolve('data/i18n/t9n')
+import {
+	supportedRegionPath,
+	supportedRegions,
+	defaultModelCode,
+	regionModelsPath,
+	supportedRegionCodes,
+} from './i18n/regionCommons.js'
 
 const { srcLang, srcFile, destLangs, destRegions, markdown } = cli.getArgs(
 	`Aggregates the model to an unique JSON file.`,
@@ -28,70 +31,12 @@ const { srcLang, srcFile, destLangs, destRegions, markdown } = cli.getArgs(
 	{
 		source: true,
 		target: true,
-		model: true,
+		model: { supportedRegionCodes },
 		file: true,
 		defaultSrcFile: 'data/**/*.yaml',
 		markdown: true,
 	}
 )
-
-/// ---------------------- Retrieving the regions models ----------------------
-
-const regionsModelsPath = path.resolve('data/i18n/models')
-const defaultModelCode = 'FR'
-const defaultRegionModelParam = {
-	[defaultModelCode]: {
-		nom: 'France métropolitaine',
-		gentilé: 'française',
-		code: defaultModelCode,
-	},
-}
-const supportedRegionPath = path.join(outputJSONPath, `supportedRegions.json`)
-
-//
-// Reads all regions models and create a json file containing params of each region.
-//
-// Only XX.yaml files are read in 'data/i18n/models' directory, their are the base models.
-// (XX-YY.yaml files are not read, they are the translation of the base models.)
-//
-// The default region and hardcoded one is FR.
-//
-const supportedRegions = fs
-	.readdirSync(regionsModelsPath)
-	.reduce((acc, filename) => {
-		if (!filename.match(/([A-Z]{2})-fr.yaml/)) return acc
-		try {
-			const regionPath = path.join(regionsModelsPath, filename)
-			const rules = utils.readYAML(regionPath)
-			const params = rules['params']
-			if (params === undefined) {
-				console.log(
-					` ❌ The file ${filename} doesn't contain a 'params' key, aborting...`
-				)
-				exit(-1)
-			}
-			return { ...acc, [rules.params.code]: params }
-		} catch (err) {
-			console.log(
-				' ❌ An error occured while reading the file:',
-				filename,
-				':\n\n',
-				err.message
-			)
-			exit(-1)
-		}
-	}, defaultRegionModelParam)
-
-const supportedRegionCodes = Object.keys(supportedRegions)
-
-const regions =
-	destRegions?.filter((r) => {
-		if (!supportedRegionCodes.includes(r)) {
-			cli.printWarn(`[WARN] - the region '${r}' is not supported, skipping it.`)
-			return false
-		}
-		return true
-	}) ?? supportedRegionCodes
 
 /// ---------------------- Helper functions ----------------------
 
@@ -155,7 +100,7 @@ function getLocalizedRules(translatedBaseRules, regionCode, destLang) {
 		return translatedBaseRules
 	}
 	const localizedAttrs = utils.readYAML(
-		path.join(regionsModelsPath, `${regionCode}-${destLang}.yaml`) ?? {}
+		path.join(regionModelsPath, `${regionCode}-${destLang}.yaml`) ?? {}
 	)
 	return addRegionToBaseRules(translatedBaseRules, localizedAttrs)
 }
@@ -186,7 +131,11 @@ glob(srcFile, { ignore: ['data/i18n/**'] }, (_, files) => {
 	}, {})
 
 	try {
-		new Engine(baseRules).evaluate('bilan')
+		new Engine(baseRules, {
+			// NOTE(@EmileRolley): warnings are ignored for now but should be examined in
+			//    https://github.com/datagir/nosgestesclimat/issues/1722
+			logger: { log: (_) => {}, warn: (_) => {}, err: (s) => console.error(s) },
+		}).evaluate('bilan')
 		console.log(
 			markdown
 				? `| Rules evaluation | :heavy_check_mark: | Ø |`
@@ -196,14 +145,14 @@ glob(srcFile, { ignore: ['data/i18n/**'] }, (_, files) => {
 		destLangs.push(srcLang)
 		destLangs.forEach((destLang) => {
 			const translatedBaseRules = getTranslatedRules(baseRules, destLang)
-			regions.forEach((regionCode) => {
+			destRegions.forEach((regionCode) => {
 				const localizedTranslatedBaseRules = getLocalizedRules(
 					translatedBaseRules,
 					regionCode,
 					destLang
 				)
 				const destPathWithoutExtension = path.join(
-					outputJSONPath,
+					publicDir,
 					`co2-model.${regionCode}-lang.${destLang}`
 				)
 				writeRules(
@@ -231,7 +180,7 @@ glob(srcFile, { ignore: ['data/i18n/**'] }, (_, files) => {
 					console.log('  ', lines[i])
 				}
 			}
-			console.log()
+			console.log(err)
 		}
 	}
 })
