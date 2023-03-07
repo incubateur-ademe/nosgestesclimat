@@ -20,8 +20,6 @@ const { srcLang, destLangs, destRegions } = cli.getArgs(
 // TODO: support multiple models
 const model = destRegions[0]
 
-console.log('regionModelsPath', regionModelsPath)
-
 const srcFile = path.join(regionModelsPath, `${model}-${srcLang}.yaml`)
 const srcModel = utils.readYAML(srcFile)
 
