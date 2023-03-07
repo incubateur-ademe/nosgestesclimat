@@ -99,19 +99,13 @@ const translateTo = async (
 			let answer
 			if (interactiveMode) {
 				do {
-					answer = prompt(
-						`${cli.styledRuleNameWithOptionalAttr(
-							rule,
-							attr
-						)}}:\n${cli.styledPromptActions([
-							'translate',
-							'update .lock attribute',
-							'skip',
-						])}: `
-					)
-				} while (!['u', 's', 't'].includes(answer))
+					answer = prompt(`${cli.styledRuleNameWithOptionalAttr(rule, attr)}: `)
+				} while (!['u', 's', 't', 'a'].includes(answer))
 			}
-			if (answer === 's') {
+			if (answer === 'a') {
+				console.log('Exiting...')
+				exit(0)
+			} else if (answer === 's') {
 				return skippedValues.push({ rule, msg: 'skipped' })
 			}
 
@@ -192,6 +186,16 @@ glob(`${srcFile}`, { ignore: ['data/i18n/**'] }, (_, files) => {
 					missingRules.length
 				)} new entries to ${cli.yellow(destLang)}...`
 			)
+			if (interactiveMode) {
+				console.log(
+					`For each rule, you can choose to:\n\n\t${cli.styledPromptActions([
+						'translate',
+						'update .lock attribute',
+						'skip',
+						'abort',
+					])}\n`
+				)
+			}
 
 			translateTo(srcLang, destLang, destPath, missingRules, destRules)
 		} else {
