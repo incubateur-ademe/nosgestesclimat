@@ -8,7 +8,7 @@ const path = require('path')
 const glob = require('glob')
 const R = require('ramda')
 const { exit } = require('process')
-const inquirer = require('inquirer')
+const prompt = require('prompt-sync')()
 
 const cli = require('./cli')
 const utils = require('./utils')
@@ -24,14 +24,9 @@ const { destLangs, srcFile, markdown } = cli.getArgs(
 	}
 )
 
-const questions = [
-	{
-		type: 'confirm',
-		name: 'expandMissingRules',
-		message: 'Do you want to log missing rules ?',
-		default: false,
-	},
-]
+const expandMissingRuleQuestion = `Do you want to log missing rules ? ${cli.styledPromptActions(
+	['yes', 'no']
+)}: `
 
 glob(`${srcFile}`, { ignore: ['data/i18n/**'] }, (_, files) => {
 	const rules = R.mergeAll(
@@ -63,11 +58,10 @@ glob(`${srcFile}`, { ignore: ['data/i18n/**'] }, (_, files) => {
 			destLang,
 			markdown
 		)
-		if (nbMissing > 0) {
-			inquirer.prompt(questions).then((answers) => {
-				answers.expandMissingRules &&
-					missingRuleNames.map((rule) => cli.printWarn(rule))
-			})
+		if (nbMissing > 0 && 'y' === prompt(expandMissingRuleQuestion)) {
+			missingRules.map(({ rule: ruleName, attr }) =>
+				console.log(cli.styledRuleNameWithOptionalAttr(ruleName, attr))
+			)
 		}
 	})
 })
