@@ -15,6 +15,8 @@ const utils = require('./utils')
 const cli = require('./cli')
 const deepl = require('./deepl')
 
+const gitDiff = require('git-diff')
+
 const { srcLang, destLangs, srcFile, onlyUpdateLocks, interactiveMode } =
 	cli.getArgs(
 		`Calls the DeepL API to translate the rule questions, titles, notes,
@@ -98,8 +100,22 @@ const translateTo = async (
 		Object.values(entryToTranslate).map(async ({ rule, attr, refVal }) => {
 			let answer
 			if (interactiveMode) {
+				const diff = gitDiff(
+					translatedRules[rule][attr + utils.LOCK_KEY_EXT],
+					refVal,
+					{
+						color: true,
+						forceFake: true,
+					}
+				)
+				console.log(
+					`\n${cli.styledRuleNameWithOptionalAttr(rule, attr)}:\n${diff}`
+				)
 				do {
-					answer = prompt(`${cli.styledRuleNameWithOptionalAttr(rule, attr)}: `)
+					if (answer === 'p') {
+						console.log(`${cli.dim('')}${translatedRules[rule][attr]}`)
+					}
+					answer = prompt(cli.dim(`(tuspa): `))
 				} while (!['u', 's', 't', 'a'].includes(answer))
 			}
 			if (answer === 'a') {
@@ -188,12 +204,17 @@ glob(`${srcFile}`, { ignore: ['data/i18n/**'] }, (_, files) => {
 			)
 			if (interactiveMode) {
 				console.log(
-					`For each rule, you can choose to:\n\n\t${cli.styledPromptActions([
-						'translate',
-						'update .lock attribute',
-						'skip',
-						'abort',
-					])}\n`
+					`For each rule, you can choose to:\n\n${cli.styledPromptActions(
+						[
+							'translate',
+							'update .lock attribute',
+							'skip',
+							'print current translation',
+							'abort',
+							// TODO: add a 'suggest translation' option?
+						],
+						'\n'
+					)}`
 				)
 			}
 
