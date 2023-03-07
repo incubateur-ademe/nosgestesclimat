@@ -100,9 +100,14 @@ const translateTo = async (
 			if (interactiveMode) {
 				do {
 					answer = prompt(
-						`Action for rule ${cli.magenta(rule)}: [t]${cli.dim(
-							'ranslate'
-						)}, [u]${cli.dim('pdate .lock attribute')} , [s]${cli.dim('kip')}: `
+						`${cli.styledRuleNameWithOptionalAttr(
+							rule,
+							attr
+						)}}:\n${cli.styledPromptActions([
+							'translate',
+							'update .lock attribute',
+							'skip',
+						])}: `
 					)
 				} while (!['u', 's', 't'].includes(answer))
 			}

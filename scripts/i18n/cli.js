@@ -200,6 +200,17 @@ const exitIfError = (error, msg = undefined, progressBar = undefined) => {
 	}
 }
 
+const styledRuleNameWithOptionalAttr = (ruleName, attr) =>
+	`${magenta(ruleName)}${
+		attr !== undefined ? ` ${dim('>')} ${yellow(attr)}` : ''
+	}`
+
+const styledPromptAction = (action) =>
+	`[${action[0]}]${dim(action.substring(1))}`
+
+const styledPromptActions = (actions) =>
+	actions.map((action) => styledPromptAction(action)).join(' ')
+
 module.exports = {
 	colors,
 	dim,
@@ -215,4 +226,7 @@ module.exports = {
 	yellow,
 	printChecksResult,
 	printChecksResultTableHeader,
+	styledRuleNameWithOptionalAttr,
+	styledPromptAction,
+	styledPromptActions,
 }
