@@ -9,6 +9,10 @@ const LOCK_KEY_EXT = '.lock'
 const AUTO_KEY_EXT = '.auto'
 const PREVIOUS_REVIEW_KEY_EXT = '.previous_review'
 
+const publicDir = path.resolve('public')
+
+const t9nDir = path.resolve('data/i18n/t9n')
+
 const availableLanguages = ['fr', 'en-us'] //, 'es', 'it'] For now, we don't want es and it to be compile (it could create compilation errors).
 const defaultLang = availableLanguages[0]
 
@@ -25,6 +29,7 @@ const writeYAML = (path, content, blockQuote = 'literal') => {
 					sortMapEntries: true,
 					aliasDuplicateObjects: false,
 					blockQuote,
+					lineWidth: 0,
 				}),
 				{ ...prettierConfig, parser: 'yaml' }
 			)
@@ -144,18 +149,18 @@ const getMissingPersonas = (refPersonas, destPersonas, force = false) => {
 	return missingTranslations
 }
 
-const getMissingRules = (srcRules, targetRules) => {
-	const keysToTranslate = [
-		'titre',
-		'description',
-		'question',
-		'résumé',
-		'note',
-		'suggestions',
-		'mosaique',
-		'abréviation',
-	]
+const mechanismsToTranslate = [
+	'titre',
+	'description',
+	'question',
+	'résumé',
+	'note',
+	'suggestions',
+	'mosaique',
+	'abréviation',
+]
 
+const getMissingRules = (srcRules, targetRules) => {
 	const areEqual = (s1, s2) => {
 		return (
 			JSON.stringify(s1, { sortMapEntries: true }) ===
@@ -180,7 +185,7 @@ const getMissingRules = (srcRules, targetRules) => {
 					// φ => ψ === ¬φ ∨ ψ
 					'mosaique' !== attr || val.suggestions
 				return (
-					keysToTranslate.includes(attr) &&
+					mechanismsToTranslate.includes(attr) &&
 					val !== '' &&
 					mosaiqueIncludeSuggestions
 				)
@@ -189,7 +194,7 @@ const getMissingRules = (srcRules, targetRules) => {
 			if (targetRule) {
 				acc.push(
 					filteredValEntries.reduce((acc, [attr, refVal]) => {
-						if (keysToTranslate.includes(attr)) {
+						if (mechanismsToTranslate.includes(attr)) {
 							let targetRef = targetRule[attr + LOCK_KEY_EXT]
 							let hasTheSameRefValue
 
@@ -295,4 +300,7 @@ module.exports = {
 	objPath,
 	assoc,
 	customAssocPath,
+	publicDir,
+	t9nDir,
+	mechanismsToTranslate,
 }

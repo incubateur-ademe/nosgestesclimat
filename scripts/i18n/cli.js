@@ -5,6 +5,7 @@
 const yargs = require('yargs')
 
 const utils = require('./utils')
+const regions = require('./regionCommons')
 
 const colors = {
 	reset: '\x1b[0m',
@@ -95,7 +96,9 @@ const getArgs = (description, opts) => {
 		args = args.option('file', {
 			alias: 'p',
 			type: 'string',
-			description: `The source file to translate from the 'locales/pages' directory. If not specified, all the files in 'locales/pages' will be translated.`,
+			description:
+				opts.file.description ??
+				`The source file to translate from the 'locales/pages' directory. If not specified, all the files in 'locales/pages' will be translated.`,
 		})
 	}
 	if (opts.remove) {
@@ -119,7 +122,8 @@ const getArgs = (description, opts) => {
 			alias: 'o',
 			type: 'string',
 			array: true,
-			description: 'The region code model',
+			choices: regions.supportedRegionCodes,
+			description: 'The region code model.',
 		})
 	}
 	if (opts.markdown) {
@@ -140,12 +144,10 @@ const getArgs = (description, opts) => {
 	}
 
 	const destLangs = (argv.target ?? utils.availableLanguages).filter((l) => {
-		if (!utils.availableLanguages.includes(l)) {
-			printWarn(`SKIP: the language '${l}' is not supported.`)
-			return false
-		}
 		return l !== srcLang
 	})
+
+	const destRegions = argv.model ?? regions.supportedRegionCodes
 
 	const srcFile = argv.file ?? opts.defaultSrcFile
 
@@ -155,7 +157,7 @@ const getArgs = (description, opts) => {
 			!argv.target && opts.target === 'all'
 				? utils.availableLanguages
 				: destLangs,
-		destRegions: argv.model,
+		destRegions,
 		force: argv.force,
 		remove: argv.remove,
 		srcFile,
