@@ -208,8 +208,8 @@ const styledRuleNameWithOptionalAttr = (ruleName, attr) =>
 const styledPromptAction = (action) =>
 	`[${action[0]}]${dim(action.substring(1))}`
 
-const styledPromptActions = (actions) =>
-	actions.map((action) => styledPromptAction(action)).join(' ')
+const styledPromptActions = (actions, sep = ' ') =>
+	actions.map((action) => styledPromptAction(action)).join(sep)
 
 module.exports = {
 	colors,
