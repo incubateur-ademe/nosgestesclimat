@@ -21,7 +21,8 @@ import {
 	supportedRegionPath,
 	supportedRegions,
 	defaultModelCode,
-	regionsModelsPath,
+	regionModelsPath,
+	supportedRegionCodes,
 } from './i18n/regionCommons.js'
 
 const { srcLang, srcFile, destLangs, destRegions, markdown } = cli.getArgs(
@@ -30,7 +31,7 @@ const { srcLang, srcFile, destLangs, destRegions, markdown } = cli.getArgs(
 	{
 		source: true,
 		target: true,
-		model: true,
+		model: { supportedRegionCodes },
 		file: true,
 		defaultSrcFile: 'data/**/*.yaml',
 		markdown: true,
@@ -99,7 +100,7 @@ function getLocalizedRules(translatedBaseRules, regionCode, destLang) {
 		return translatedBaseRules
 	}
 	const localizedAttrs = utils.readYAML(
-		path.join(regionsModelsPath, `${regionCode}-${destLang}.yaml`) ?? {}
+		path.join(regionModelsPath, `${regionCode}-${destLang}.yaml`) ?? {}
 	)
 	return addRegionToBaseRules(translatedBaseRules, localizedAttrs)
 }
@@ -179,7 +180,7 @@ glob(srcFile, { ignore: ['data/i18n/**'] }, (_, files) => {
 					console.log('  ', lines[i])
 				}
 			}
-			console.log()
+			console.log(err)
 		}
 	}
 })
