@@ -312,21 +312,25 @@ logement . raccordement réseau de chaleur:
   applicable si:
     toutes ces conditions:
       - appartement
-      - propriétaire
       - chauffage collectif
-      - chauffage . gaz . présent
+      - une de ces conditions:
+          - chauffage . gaz . présent
+          - chauffage . fioul . présent
   non applicable si: chauffage . réseau de chaleur . présent
   formule: logement . chauffage - recalcul
   note: On fait l'hypothèse que l'action est applicable seulement pour les logements chauffés via un réseau de gaz collectif.
   description: |
     A compléter avec FCU.
 
-    <iframe title="France chaleur urbaine - Éligibilité" src="https://france-chaleur-urbaine.beta.gouv.fr/form" width="550px" height="270px"></iframe>
+    <iframe title="France chaleur urbaine - Éligibilité" src="https://france-chaleur-urbaine.beta.gouv.fr/form" frameborder="1" style="position: relative; min-height: 350px; height: 100%; width: 100%;"></iframe>
 
 logement . raccordement réseau de chaleur . recalcul:
   titre: Recalcul émissions via le raccordement à un réseau de chaleur
-  note: on considère que la consommation de gaz sera identique suite à un raccordement au réseau de chaleur.
-  formule: chauffage . gaz . consommation * chauffage . intensité carbone réseau de chaleur
+  note: on considère que la consommation de gaz/fioul sera identique suite à un raccordement au réseau de chaleur.
+  formule:
+    somme:
+      - chauffage . intensité carbone réseau de chaleur * chauffage . gaz . consommation
+      - chauffage . intensité carbone réseau de chaleur * chauffage . fioul . consommation / fioul kWh au litre
 
 logement . chauffage collectif:
   avec:
