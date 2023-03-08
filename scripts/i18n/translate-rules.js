@@ -100,8 +100,10 @@ const translateTo = async (
 		Object.values(entryToTranslate).map(async ({ rule, attr, refVal }) => {
 			let answer
 			if (interactiveMode) {
+				const translatedRule = translatedRules[rule]
+				const isNewRule = translatedRule === undefined
 				const diff = gitDiff(
-					translatedRules[rule][attr + utils.LOCK_KEY_EXT],
+					isNewRule ? '' : translatedRule[attr + utils.LOCK_KEY_EXT],
 					refVal,
 					{
 						color: true,
@@ -109,7 +111,9 @@ const translateTo = async (
 					}
 				)
 				console.log(
-					`\n${cli.styledRuleNameWithOptionalAttr(rule, attr)}:\n${diff}`
+					`\n${cli.styledRuleNameWithOptionalAttr(rule, attr)}${
+						isNewRule ? ` ${cli.italic(cli.green('new'))}` : ''
+					}\n${diff}`
 				)
 				do {
 					if (answer === 'p') {
