@@ -283,6 +283,19 @@ const customAssocPath = (path, val, obj) => {
 	return assoc(idx, val, obj)
 }
 
+// Returns the list of rules that are translated in the target language but
+// no longer exist in the source language.
+const getNotUpToDateRuleTranslations = (srcRules, targetRules) => {
+	return Object.entries(targetRules)
+		.filter(([_, val]) => val !== null && val !== undefined)
+		.reduce((acc, [rule, _]) => {
+			if (srcRules[rule] === undefined) {
+				acc.push(rule)
+			}
+			return acc
+		}, [])
+}
+
 module.exports = {
 	availableLanguages,
 	defaultLang,
@@ -290,6 +303,7 @@ module.exports = {
 	getMissingPersonas,
 	getMissingRules,
 	getUiMissingTranslations,
+	getNotUpToDateRuleTranslations,
 	isI18nKey,
 	LOCK_KEY_EXT,
 	AUTO_KEY_EXT,

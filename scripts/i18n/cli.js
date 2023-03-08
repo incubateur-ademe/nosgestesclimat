@@ -3,6 +3,7 @@
 */
 
 const yargs = require('yargs')
+const prompt = require('prompt-sync')()
 
 const utils = require('./utils')
 
@@ -213,6 +214,10 @@ const styledPromptAction = (action) =>
 const styledPromptActions = (actions, sep = ' ') =>
 	actions.map((action) => styledPromptAction(action)).join(sep)
 
+const promptYesNo = (question) => {
+	return 'y' === prompt(`${question} (${styledPromptActions(['yes', 'no'])}) `)
+}
+
 module.exports = {
 	colors,
 	dim,
@@ -232,4 +237,5 @@ module.exports = {
 	styledRuleNameWithOptionalAttr,
 	styledPromptAction,
 	styledPromptActions,
+	promptYesNo,
 }
