@@ -5,8 +5,8 @@ const fs = require('fs')
 const { exit } = require('process')
 
 const { publicDir, readYAML } = require('./utils')
+const regionModelsPath = path.resolve('data/i18n/models')
 
-const regionsModelsPath = path.resolve('data/i18n/models')
 const defaultModelCode = 'FR'
 const defaultRegionModelParam = {
 	[defaultModelCode]: {
@@ -26,11 +26,11 @@ const supportedRegionPath = path.join(publicDir, `supportedRegions.json`)
 // The default region and hardcoded one is FR.
 //
 const supportedRegions = fs
-	.readdirSync(regionsModelsPath)
+	.readdirSync(regionModelsPath)
 	.reduce((acc, filename) => {
 		if (!filename.match(/([A-Z]{2})-fr.yaml/)) return acc
 		try {
-			const regionPath = path.join(regionsModelsPath, filename)
+			const regionPath = path.join(regionModelsPath, filename)
 			const rules = readYAML(regionPath)
 			const params = rules['params']
 			if (params === undefined) {
@@ -58,5 +58,5 @@ module.exports = {
 	supportedRegionCodes,
 	supportedRegions,
 	defaultModelCode,
-	regionsModelsPath,
+	regionModelsPath,
 }
