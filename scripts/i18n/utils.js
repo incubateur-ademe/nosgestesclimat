@@ -158,6 +158,8 @@ const mechanismsToTranslate = [
 	'suggestions',
 	'mosaique',
 	'abréviation',
+	'nom',
+	'gentilé',
 ]
 
 const getMissingRules = (srcRules, targetRules) => {
