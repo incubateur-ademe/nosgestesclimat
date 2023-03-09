@@ -28,7 +28,9 @@ const supportedRegionPath = path.join(publicDir, `supportedRegions.json`)
 const supportedRegions = fs
 	.readdirSync(regionModelsPath)
 	.reduce((acc, filename) => {
-		if (!filename.match(/([A-Z]{2})-fr.yaml/)) return acc
+		if (!filename.match(/([A-Z]{2})-fr.yaml/)) {
+			return acc
+		}
 		try {
 			const regionPath = path.join(regionModelsPath, filename)
 			const rules = readYAML(regionPath)
