@@ -101,7 +101,7 @@ function getLocalizedRules(translatedBaseRules, regionCode, destLang) {
 	}
 	try {
 		const localizedAttrs = utils.readYAML(
-			path.join(regionsModelsPath, `${regionCode}-${destLang}.yaml`)
+			path.join(regionModelsPath, `${regionCode}-${destLang}.yaml`)
 		)
 		return addRegionToBaseRules(translatedBaseRules, localizedAttrs)
 	} catch (err) {
