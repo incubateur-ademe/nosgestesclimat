@@ -20,13 +20,13 @@ const readYAML = (path) => {
 	return yaml.parse(fs.readFileSync(path, 'utf-8'))
 }
 
-const writeYAML = (path, content, blockQuote = 'literal') => {
+const writeYAML = (path, content, blockQuote = 'literal', sortMapEntries) => {
 	resolveConfig(process.cwd()).then((prettierConfig) =>
 		fs.writeFileSync(
 			path,
 			format(
 				yaml.stringify(content, {
-					sortMapEntries: true,
+					sortMapEntries,
 					aliasDuplicateObjects: false,
 					blockQuote,
 					lineWidth: 0,

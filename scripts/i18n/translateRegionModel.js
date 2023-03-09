@@ -115,5 +115,5 @@ destLangs.forEach(async (destLang) => {
 		}
 	}
 	const translatedModel = await translateModel(srcModel, destLang)
-	utils.writeYAML(destFile, translatedModel)
+	utils.writeYAML(destFile, translatedModel, { sortMapEntries: false })
 })
