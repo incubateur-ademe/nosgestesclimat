@@ -45,7 +45,20 @@ const supportedRegions = Object.fromEntries(
 					)
 					exit(-1)
 				}
-				return [...acc, [rules.params.code, params]]
+				const code = rules.params.code
+				try {
+					const regionPathEN = path.join(regionModelsPath, `${code}-en-us.yaml`)
+					const paramsEN = readYAML(regionPathEN)['params']
+					params['nomEN'] = paramsEN.nom
+					params['gentiléEN'] = paramsEN.gentilé
+				} catch (err) {
+					console.log(
+						`⚠️ No en-us for ${params.nom} [SKIPPED]`,
+						':\n\n',
+						err.message
+					)
+				}
+				return [...acc, [code, params]]
 			} catch (err) {
 				console.log(
 					' ❌ An error occured while reading the file:',
