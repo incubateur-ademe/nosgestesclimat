@@ -8,13 +8,16 @@ const { publicDir, readYAML } = require('./utils')
 const regionModelsPath = path.resolve('data/i18n/models')
 
 const defaultModelCode = 'FR'
-const defaultRegionModelParam = {
-	[defaultModelCode]: {
-		nom: 'France métropolitaine',
-		gentilé: 'française',
-		code: defaultModelCode,
-	},
-}
+const defaultRegionModelParam = [
+	[
+		defaultModelCode,
+		{
+			nom: 'France métropolitaine',
+			gentilé: 'française',
+			code: defaultModelCode,
+		},
+	],
+]
 const supportedRegionPath = path.join(publicDir, `supportedRegions.json`)
 
 //
@@ -25,33 +28,48 @@ const supportedRegionPath = path.join(publicDir, `supportedRegions.json`)
 //
 // The default region and hardcoded one is FR.
 //
-const supportedRegions = fs
-	.readdirSync(regionModelsPath)
-	.reduce((acc, filename) => {
-		if (!filename.match(/([A-Z]{2})-fr.yaml/)) {
-			return acc
-		}
-		try {
-			const regionPath = path.join(regionModelsPath, filename)
-			const rules = readYAML(regionPath)
-			const params = rules['params']
-			if (params === undefined) {
+const supportedRegions = Object.fromEntries(
+	fs
+		.readdirSync(regionModelsPath)
+		.reduce((acc, filename) => {
+			if (!filename.match(/([A-Z]{2})-fr.yaml/)) {
+				return acc
+			}
+			try {
+				const regionPath = path.join(regionModelsPath, filename)
+				const rules = readYAML(regionPath)
+				const params = rules['params']
+				if (params === undefined) {
+					console.log(
+						` ❌ The file ${filename} doesn't contain a 'params' key, aborting...`
+					)
+					exit(-1)
+				}
+				return [...acc, [rules.params.code, params]]
+			} catch (err) {
 				console.log(
-					` ❌ The file ${filename} doesn't contain a 'params' key, aborting...`
+					' ❌ An error occured while reading the file:',
+					filename,
+					':\n\n',
+					err.message
 				)
 				exit(-1)
 			}
-			return { ...acc, [rules.params.code]: params }
-		} catch (err) {
-			console.log(
-				' ❌ An error occured while reading the file:',
-				filename,
-				':\n\n',
-				err.message
-			)
-			exit(-1)
-		}
-	}, defaultRegionModelParam)
+		}, defaultRegionModelParam)
+		// sort function from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+		.sort((a, b) => {
+			const nameA = a[1].nom.toUpperCase() // ignore upper and lowercase
+			const nameB = b[1].nom.toUpperCase() // ignore upper and lowercase
+			if (nameA < nameB) {
+				return -1
+			}
+			if (nameA > nameB) {
+				return 1
+			}
+			// names must be equal
+			return 0
+		})
+)
 
 const supportedRegionCodes = Object.keys(supportedRegions)
 
