@@ -223,6 +223,7 @@ logement . électricité . intensité carbone:
     > L'intensité du chauffage résidentiel est ainsi définie à 80gCO2e/kWh en France par la RE2020, [source](https://www.batiactu.com/edito/facteur-energie-primaire-contenu-carbone-electricite-58485.php).
 
 logement . chauffage:
+  titre: Energie logement
   mosaique:
     type: selection
     clé: présent
@@ -231,6 +232,9 @@ logement . chauffage:
         PAC . présent: non
         électricité . présent: non
         gaz . présent: non
+        réseau de chaleur . présent: non
+        bouteille gaz . présent: non
+        citerne propane . présent: non
         fioul . présent: non
         bois . présent: non
   icônes: 🌡️
@@ -240,7 +244,8 @@ logement . chauffage:
 
     Certains logements utilisent uniquement de l'électricité, d'autres sont entièrement chauffés au gaz, et plus rarement au bois ou au fioul.
     Dans d'autres situations encore, un logement peut être chauffé principalement via des chauffages électriques ou une pompe à chaleur,
-    mais avec un appoint bois, par exemple.
+    mais avec un appoint bois, par exemple. Enfin, il est possible de prendre en compte également vos consommations de gaz pour votre van ou camping car. 
+
     Cochez tous les modes que vous utilisez.
   formule:
     variations:
@@ -252,6 +257,8 @@ logement . chauffage . empreinte totale:
   formule:
     somme:
       - gaz
+      - bouteille gaz
+      - citerne propane
       - fioul
       - bois . empreinte
       - réseau de chaleur
@@ -278,6 +285,9 @@ logement . chauffage . choix utilisateur:
             - électricité . présent
             - PAC . présent
             - gaz . présent
+            - réseau de chaleur . présent
+            - bouteille gaz . présent
+            - citerne propane . présent
             - fioul . présent
             - bois . présent
         alors: oui
@@ -286,15 +296,49 @@ logement . chauffage . choix utilisateur:
 logement . chauffage . réseau de chaleur:
   icônes: 🏭
   applicable si: présent
-  formule: 0
+  formule: consommation * intensité carbone réseau de chaleur
 
 logement . chauffage . réseau de chaleur . présent:
   question: Votre logement est-il chauffé via un réseau de chaleur ?
   par défaut: non
-  inactif: oui
+
+logement . chauffage . réseau de chaleur . estimation via le prix:
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  unité: €/kWh
+  formule: 0.085
+  description: |
+    Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois.
+
+    Ce chiffre est tiré de l'[Enquête des réseaux de chaleur et de froid](https://amorce.asso.fr/actualite/les-reseaux-de-chaleur-la-bonne-solution-de-chauffage-pour-le-pouvoir-d-achat-et-le-climat) 
+    basé sur les données 2021 qui donne un chiffre de 80€HT/MWh.
+
+    L'[Enquête sur le prix de vente de la chaleur et de froid de 2019](https://amorce.asso.fr/publications/enquete-sur-le-prix-de-vente-de-la-chaleur-et-de-froid-en-2019-rce36)
+    donnait un chiffre de 74,6€HT/MWh et 79,3€TTC/MWh, avec une médiane à 82,3€TTC/MWh.
+
+    Nous avons donc choisi dans une première approximation de nous baser sur la moyenne 2021 en conservant le ratio 2019 pour passer en TTC ce qui donne une valeur de 85€TTC/MWh
+    (ce n'est pas seulement un 5,5% ou 20% car l'application de ces taux varie selon la proportion d'énergie verte dans le mix du réseau de chaleur, 
+    une TVA à 5,5% étant appliquée aux réseaux contenant plus de 50 % d'énergie renouvelable et de récupération).
+
+    C'est une valeur moyenne dont l'écart-type est rélativement important.
+    Néanmoins, on peut lire dans l'enquête que "les prix de vente moyens des réseaux de chaleur affichent une très grande disparité, 89% de la chaleur livrée est vendue à un prix compris entre -30 et +30% de la moyenne nationale".
+
+logement . chauffage . réseau de chaleur . consommation:
+  icônes: 🔥
+  question: Quelle est votre consommation annuelle d'énergie via le réseau de chaleur raccordé à votre foyer ?
+  par défaut: parc français . chauffage . consommation réseau de chaleur par m2 * surface
+  aide: estimation via le prix
+  unité: kWh
+  description: |
+    Le contenu carbone du kWh de chaleur issu d'un réseau de chaleur dépend fortement du réseau auquel vous êtes raccordé. 
+
+    Pour le moment, nous nous basons sur un facteur d'émission moyen : nous avons fait le choix de ne pas vous demander votre adresse.
+
+    Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
+
+    > Il se peut que votre copropriété ne vous communique pas la consommation en kWh de votre logement, quand la chaudière est centralisée. Cela dit, elle doit vous fournir le montant en €, que vous pourrez saisir ci-dessous pour estimer vos kWh.
 
 logement . chauffage . intensité carbone réseau de chaleur:
-  formule: 0.114
+  formule: 0.125
   unité: kgCO2e/kWh
   note: FE issu de la moyenne de tous les réseaux de chaleur de la Base Carbone
 
@@ -335,11 +379,13 @@ logement . chauffage . fioul . présent:
 logement . chauffage . fioul . estimation via le prix:
   question: Pas de facture ? Entrez vos dépenses approximatives en fioul par mois
   unité: €/litre
-  formule: 0.8887
+  formule: 1.5199
   description: |
     Cette formule nous permet de passer des €/mois aux litres/an.
 
-    Source : Fioul domestique 2000 à 4999 litres, semestre 2 2021.
+    Source : Fioul domestique 2000 à 4999 litres, 2ème semestre 2022.
+    Donnée issue de l'excel [Prix HTT et TTC depuis janvier 2020.xlsx](https://github.com/datagir/nosgestesclimat/files/11029116/Prix.HTT.et.TTC.depuis.janvier.2020.xlsx)
+    téléchargeable sur la page [Prix des produits pétroliers](https://www.ecologie.gouv.fr/prix-des-produits-petroliers#scroll-nav__4) du Ministère de la Transition Ecologique.
   références:
     écologie.gouv.fr: https://www.ecologie.gouv.fr/prix-des-produits-petroliers
 
@@ -363,6 +409,7 @@ logement . chauffage . intensité carbone fioul litre:
     - https://www.bilans-ges.ademe.fr - Fioul domestique France continental
 
 logement . chauffage . gaz:
+  titre: Réseau de gaz
   icônes: 🔥
   applicable si: présent
   formule: consommation * gaz . intensité carbone gaz utilisateur
@@ -447,3 +494,127 @@ logement . chauffage . intensité carbone GPL:
   référence:
     - https://www.bilans-ges.ademe.fr - GPL pour véhicule routier
   #Il n'y a pas de GPL de "maison" dans la Base Carbone. Pointer directement sur le FE gaz naturel ?
+
+logement . chauffage . bouteille gaz:
+  icônes: 🛢️🔥
+  titre: Bouteille de gaz
+  applicable si: présent
+  formule: empreinte * consommation
+  unité: kgCO2e
+
+logement . chauffage . bouteille gaz . présent:
+  question: Utilisez-vous des bouteille de gaz ?
+  par défaut: non
+
+logement . chauffage . bouteille gaz . consommation:
+  question: Quelle est votre consommation annuelle en bouteilles de gaz (13 kg) ?
+  par défaut: parc français . chauffage . consommation moyenne gaz cuisson / energie par bouteille
+  unité: bouteilles
+  aide: estimation via le poids
+  description: |
+    Pour simplifier la réponse à cette question, nous vous proposons de rentrer directement le nombre de bouteilles de gaz que vous consommez.
+    On considère ici une capacité de 13kg, modèle le plus répandu et généralement utilisé pour le gaz de cuisson.
+
+    Si vous souhaitez répondre en kilogrammes car la taille de la bouteille ne vous correspond pas, n'hésitez pas à utiliser l'aide à la conversion.
+  note: |
+    Il n'existe pas de facteur d'émission associé directement aux bouteilles de gaz mais il faut savoir 
+    qu'elles contiennent majoritairement du propane et butane, gaz pour lesquels, on dispose de facteurs d'émission.
+
+    Il existe différents modèles de bonbonnes commme le montre l'infraphie ci-dessous tiré du site [lepropane.com](https://lepropane.com/bouteilles/dimension).
+
+    ![Infographie modèles bouteilles de gaz tiré du site "lepropane.com"](https://lepropane.com/sites/lepropane.com/files/images/infographies/dimensions-bouteilles.png)
+
+    La bouteille la plus répandue est le modèle de 13kg, généralement utilisée pour le gaz de cuisson. On considère donc pour cette question une bouteille de 13kg.
+
+    Étant donné que les bouteilles elles-mêmes sont consignées, nous prenons en compte uniquement les émissions liées au gaz seul.
+
+logement . chauffage . bouteille gaz . estimation via le poids:
+  question: Vous utilisez un format de bonbonne différent ? Entrez votre consommation annuelle en kg.
+  unité: kg/bouteille
+  formule: 13 * 12
+  note: |
+    Ce mécanisme d'aide à l'estimation est designée pour recevoir une consommation mensuelle en entrée (cf InputEstimation.tsx côté site).
+    Néanmoins, pour ce cas précis, nous souhaitons proposer une aide à l'estimation sur l'année et attendons une consommation par an 
+    et non par mois (période correspondant davantage aux factures de fournisseurs).
+    C'est pourquoi , la formule présente un facteur 12.
+  description: Cette aide permet de simplifier la conversion des kg de gaz consommés en bouteille de gaz au format 13kg.
+
+logement . chauffage . bouteille gaz . energie par bouteille:
+  titre: Energie bouteille de gaz (13 kg)
+  formule: 179
+  unité: kWh/bouteille
+  note: Chiffre tiré de [francegazliquides.fr](https://www.francegazliquides.fr/energie-butane-propane/industrie-et-distribution/bouteilles/).
+
+logement . chauffage . bouteille gaz . empreinte:
+  titre: Empreinte bouteille de gaz commune
+  formule: empreinte contenu * capacité
+  unité: kgCO2e/bouteille
+
+logement . chauffage . bouteille gaz . capacité:
+  titre: Capacité bouteille de gaz commune
+  formule: 13
+  unité: kg
+
+logement . chauffage . bouteille gaz . empreinte contenu:
+  titre: Empreinte gaz d'une bonbonne
+  formule: (empreinte butane + empreinte propane) / 2
+  unité: kgCO2e/kg
+  note: Moyenne entre butane et propane, dont les FE sont néanmoins très proches.
+
+logement . chauffage . empreinte butane:
+  titre: Empreinte butane
+  formule: 3.44
+  unité: kgCO2e/kg
+  note: Base carbone - Butane/inclus maritime
+
+logement . chauffage . empreinte propane:
+  titre: Empreinte propane
+  formule: 3.47
+  unité: kgCO2e/kg
+  note: Base carbone - Propane/inclus maritime
+
+logement . chauffage . citerne propane:
+  icônes: 🛢️🔥
+  titre: Gaz propane en citerne
+  applicable si: présent
+  formule: empreinte propane * consommation
+  unité: kgCO2e
+
+logement . chauffage . citerne propane . présent:
+  question: Votre logement est-il chauffé via une citerne de propane ?
+  par défaut: non
+
+logement . chauffage . citerne propane . consommation:
+  question: Quelle est la consommation annuelle de gaz propane en citerne de votre foyer ?
+  par défaut: parc français . chauffage . consommation gaz par m2 * surface / energie par kg
+  unité: kg
+  aide: estimation via le coût
+  description: |
+    Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
+  note: |
+    Certains logements ne peuvent être raccordés au réseau de gaz et disposent d'une citerne propane, à l'image d'une citerne fioul.
+
+logement . chauffage . citerne propane . estimation via le coût:
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  unité: €/kg
+  formule: 1.8
+  note: Cette aide à l'estimation est designé pour recevoir une consommation mensuelle (cf InputEstimation.tsx côté site)
+  description: |
+    Selon les informations aggrégées par le site [HelloWatt](https://www.hellowatt.fr/gaz-propane-citerne/comparatif-prix), 
+    le prix du propane en citerne oscille autour de 1800€ par tonne (selon le fournisseur).
+
+logement . chauffage . citerne propane . energie par kg:
+  formule: 46 MJ/kg * 1.087 / 3.6 MJ/kWh
+  unité: kWh/kg
+  note: |
+    Documentation de la base carbone:
+    Pouvoir calorifique du propane = 46 MJ/kg (PCI)
+    Rapport PCI/PCS = 1,087
+    1 kWh = 3,6 MJ
+
+    On raisonne en PCS (consommation).
+
+    Le calcul donne 13.88 kWh/kg (PCS)
+
+    ![](https://user-images.githubusercontent.com/55186402/224317812-b646f6d9-1b41-43f3-9823-0295a57dd6c1.png)
+    ![](https://user-images.githubusercontent.com/55186402/224318088-78940efa-2201-407f-9905-545b2f3e09d8.png)

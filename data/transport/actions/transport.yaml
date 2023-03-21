@@ -89,6 +89,25 @@ transport . éco-conduite . usage réduit:
   unité: kgCO2e
   note: réduction de 15% (cf info règle éco-conduite)
 
+transport . covoiturage:
+  titre: Privilégier le covoiturage
+  effort: modéré
+  applicable si: voiture . propriétaire
+  action:
+    dépasse:
+      - transport . boulot . covoiturage
+  icônes: 🚗👥
+  formule: voiture . km * voiture . empreinte . au kilomètre * réduction covoiturage
+  description: |
+    Cette action concerne l'ensemble de ses trajets en voiture.
+
+    Si le covoiturage longue distance est bien connu en France, celui des courtes distances est presque inexistant : aujourd’hui seuls 3 % des déplacements domicile-travail sont réalisés en covoiturage.
+
+    Dans tous les cas, pensez à adapter votre mode de transport à la distance et à privilégier les modes doux ou transports en commun (bus, métro, vélo, marche, etc.) le plus possible. Le calculateur [Mon Impact Transport](https://monimpacttransport.fr/) vous permet de visualiser et comparer l'impact des différents modes de déplacement.
+
+  références:
+    - https://theconversation.com/a-quelles-conditions-le-covoiturage-sera-t-il-un-mode-de-transport-durable-124122
+
 transport . boulot:
   icônes: 🏢
 transport . boulot . covoiturage:
@@ -97,7 +116,7 @@ transport . boulot . covoiturage:
   applicable si:
     toutes ces conditions:
       - voiture . propriétaire
-      - voiture . km > seuil d'activation
+      - voiture . km > seuil d'activation boulot
   icônes: 🚗👥
   formule: distance * voiture . empreinte . au kilomètre * réduction covoiturage
   description: |
@@ -179,19 +198,20 @@ transport . boulot . commun:
 
     >💡 Le saviez-vous ? L'État et beaucoup de régions ou villes subventionnent les vélos mécaniques, électriques, cargo, pliants, etc. [Calculez votre aide 🚲️ en 3 clics](https://mesaidesvelo.fr).
 
-  applicable si: voiture . km > seuil d'activation
+  applicable si: voiture . km > seuil d'activation boulot
   formule: boulot . distance * gain empreinte au km
 
-transport . boulot . seuil d'activation:
+transport . seuil d'activation boulot:
+  titre: Seuil d'activation actions liées aux trajets "Boulot"
   description: |
     Distance minimale pour déclencher cette action. 
 
-    > Si quelqu'un nous dit qu'il ne fait que 200km de voiture dans l'année, il y a peu de chances 
+    > Si quelqu'un nous dit qu'il ne fait que 500km de voiture dans l'année, il y a peu de chances 
     > qu'il aille en voiture au boulot.
 
-    Nous définitions la distance du seuil à 1km aller, pour 5 jours par semaine.
+    Nous définitions la distance du seuil à 2km (trajet aller), pour 5 jours par semaine.
 
-  formule: semaines par an * 5 * 2
+  formule: transport . boulot . distance
   unité: km
 
 transport . boulot . commun . gain empreinte au km:
@@ -223,9 +243,16 @@ transport . boulot . commun . type:
         - vélo
 
 transport . boulot . commun . type . bus:
+  titre: Bus
+
 transport . boulot . commun . type . métro ou tramway:
+  titre: Métro ou tramway
+
 transport . boulot . commun . type . TER:
+  titre: TER
+
 transport . boulot . commun . type . vélo:
+  titre: Vélo
 
 transport . bus . empreinte:
   formule: transport . bus . impact par km
@@ -256,7 +283,7 @@ transport . boulot . télétravail:
   applicable si:
     toutes ces conditions:
       - compatible
-      - voiture . km > seuil d'activation
+      - voiture . km > seuil d'activation boulot
       - jours travaillés en voiture > 0
   formule: empreinte jour voiture * jours gagnés * transport . boulot . semaines
 
@@ -288,7 +315,7 @@ transport . voiture 5km:
   titre: Se passer de voiture pour moins de 5 km
   icônes: 🚗🚲
   formule: transport . voiture . empreinte - transport . voiture 5km . recalcul
-  non applicable si: voiture . km < seuil d'activation
+  non applicable si: voiture . km < seuil d'activation 5km
   description: |
     En France, 4 trajets en voiture sur 10 font moins de 3 km et ce n’est pas moins de 177 millions de trajets de moins de 5km qui sont réalisés seuls en voiture chaque semaine (hors trajets domicile-travail). 
 
@@ -302,15 +329,24 @@ transport . voiture 5km:
   # 4 trajets en voiture sur 10 font moins de 3 km +  10% de la distance totale parcourue = Transflash, N°398, Juin 2015, Cerema
   # 177 millions de trajets de moins de 5km = consolidation depuis Enquête Nationale Transport et Déplacements (ENTD), MTES, 2008.
 
-transport . voiture 5km . seuil d'activation:
+transport . seuil d'activation 5km:
+  titre: Seuil d'activation actions liées aux courts trajets
   description: |
     Distance minimale pour déclencher cette action. 
 
     > Si quelqu'un nous dit qu'il ne fait que 200km de voiture dans l'année, il y a peu de chances 
     > qu'il s'agisse de trajets de 5km.
 
-  formule: semaines par an * distance moyenne . aller-retour
+  formule: semaines par an * distance moyenne aller-retour trajet court
   unité: km
+
+transport . distance moyenne aller-retour trajet court:
+  formule: distance moyenne trajet court * 2
+
+transport . distance moyenne trajet court:
+  formule: 2.5
+  unité: km/trajets
+  description: Nous estimons simplement à 2,5km la moyenne de distance des trajets inférieurs à 5km.
 
 transport . voiture 5km . recalcul:
   formule:
@@ -324,15 +360,14 @@ transport . voiture 5km . usage réduit:
   unité: kgCO2e
 
 transport . voiture 5km . distance totale:
-  formule: fréquence * distance moyenne . aller-retour * semaines par an
+  formule:
+    variations:
+      - si: distance totale renseignée > transport . voiture . km
+        alors: transport . voiture . km
+      - sinon: distance totale renseignée
 
-transport . voiture 5km . distance moyenne . aller-retour:
-  formule: distance moyenne * 2
-
-transport . voiture 5km . distance moyenne:
-  formule: 2.5
-  unité: km/trajets
-  description: Nous estimons simplement à 2,5km la moyenne de distance des trajets inférieurs à 5km.
+transport . voiture 5km . distance totale renseignée:
+  formule: fréquence * distance moyenne aller-retour trajet court * semaines par an
 
 transport . voiture 5km . fréquence:
   question: Combien de fois par semaine prenez-vous la voiture pour moins de 5km ?
@@ -340,7 +375,7 @@ transport . voiture 5km . fréquence:
     Je vais chercher mon pain à 2km en voiture, cela représente un trajet.
     Je vais au travail tous les jours du lundi au vendredi à 4km, c'est 5 trajets.
   par défaut: 14
-  unité: trajets
+  unité: trajets/semaine
   suggestions:
     jamais: 0
     seulement le weekend: 2
