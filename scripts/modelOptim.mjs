@@ -19,6 +19,7 @@ import { constantFolding, disabledLogger, getRawNodes } from 'publiopti'
 // but important for thee UI.
 const rulesToKeep = [
 	'actions',
+	'actions pétrole',
 	'bilan',
 	'logement . gaz',
 	'logement . gaz . biogaz',

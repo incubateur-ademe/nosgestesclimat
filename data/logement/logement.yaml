@@ -232,6 +232,7 @@ logement . chauffage:
         PAC . présent: non
         électricité . présent: non
         gaz . présent: non
+        réseau de chaleur . présent: non
         bouteille gaz . présent: non
         citerne propane . présent: non
         fioul . présent: non
@@ -284,6 +285,7 @@ logement . chauffage . choix utilisateur:
             - électricité . présent
             - PAC . présent
             - gaz . présent
+            - réseau de chaleur . présent
             - bouteille gaz . présent
             - citerne propane . présent
             - fioul . présent
@@ -294,15 +296,49 @@ logement . chauffage . choix utilisateur:
 logement . chauffage . réseau de chaleur:
   icônes: 🏭
   applicable si: présent
-  formule: 0
+  formule: consommation * intensité carbone réseau de chaleur
 
 logement . chauffage . réseau de chaleur . présent:
   question: Votre logement est-il chauffé via un réseau de chaleur ?
   par défaut: non
-  inactif: oui
+
+logement . chauffage . réseau de chaleur . estimation via le prix:
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  unité: €/kWh
+  formule: 0.085
+  description: |
+    Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois.
+
+    Ce chiffre est tiré de l'[Enquête des réseaux de chaleur et de froid](https://amorce.asso.fr/actualite/les-reseaux-de-chaleur-la-bonne-solution-de-chauffage-pour-le-pouvoir-d-achat-et-le-climat) 
+    basé sur les données 2021 qui donne un chiffre de 80€HT/MWh.
+
+    L'[Enquête sur le prix de vente de la chaleur et de froid de 2019](https://amorce.asso.fr/publications/enquete-sur-le-prix-de-vente-de-la-chaleur-et-de-froid-en-2019-rce36)
+    donnait un chiffre de 74,6€HT/MWh et 79,3€TTC/MWh, avec une médiane à 82,3€TTC/MWh.
+
+    Nous avons donc choisi dans une première approximation de nous baser sur la moyenne 2021 en conservant le ratio 2019 pour passer en TTC ce qui donne une valeur de 85€TTC/MWh
+    (ce n'est pas seulement un 5,5% ou 20% car l'application de ces taux varie selon la proportion d'énergie verte dans le mix du réseau de chaleur, 
+    une TVA à 5,5% étant appliquée aux réseaux contenant plus de 50 % d'énergie renouvelable et de récupération).
+
+    C'est une valeur moyenne dont l'écart-type est rélativement important.
+    Néanmoins, on peut lire dans l'enquête que "les prix de vente moyens des réseaux de chaleur affichent une très grande disparité, 89% de la chaleur livrée est vendue à un prix compris entre -30 et +30% de la moyenne nationale".
+
+logement . chauffage . réseau de chaleur . consommation:
+  icônes: 🔥
+  question: Quelle est votre consommation annuelle d'énergie via le réseau de chaleur raccordé à votre foyer ?
+  par défaut: parc français . chauffage . consommation réseau de chaleur par m2 * surface
+  aide: estimation via le prix
+  unité: kWh
+  description: |
+    Le contenu carbone du kWh de chaleur issu d'un réseau de chaleur dépend fortement du réseau auquel vous êtes raccordé. 
+
+    Pour le moment, nous nous basons sur un facteur d'émission moyen : nous avons fait le choix de ne pas vous demander votre adresse.
+
+    Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
+
+    > Il se peut que votre copropriété ne vous communique pas la consommation en kWh de votre logement, quand la chaudière est centralisée. Cela dit, elle doit vous fournir le montant en €, que vous pourrez saisir ci-dessous pour estimer vos kWh.
 
 logement . chauffage . intensité carbone réseau de chaleur:
-  formule: 0.114
+  formule: 0.125
   unité: kgCO2e/kWh
   note: FE issu de la moyenne de tous les réseaux de chaleur de la Base Carbone
 
