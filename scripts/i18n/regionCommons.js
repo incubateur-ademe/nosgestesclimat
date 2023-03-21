@@ -12,9 +12,13 @@ const defaultRegionModelParam = [
 	[
 		defaultModelCode,
 		{
+			code: defaultModelCode,
 			nom: 'France métropolitaine',
 			gentilé: 'française',
-			code: defaultModelCode,
+			nomFr: 'France métropolitaine',
+			gentiléFr: 'française',
+			nomEn: 'metropolitan France',
+			gentiléEn: 'french',
 		},
 	],
 ]
@@ -45,12 +49,14 @@ const supportedRegions = Object.fromEntries(
 					)
 					exit(-1)
 				}
+				params['nomFr'] = params['nom']
+				params['gentiléFr'] = params['gentilé']
 				const code = rules.params.code
 				try {
 					const regionPathEN = path.join(regionModelsPath, `${code}-en-us.yaml`)
 					const paramsEN = readYAML(regionPathEN)['params']
-					params['nomEN'] = paramsEN.nom
-					params['gentiléEN'] = paramsEN.gentilé
+					params['nomEn'] = paramsEN.nom
+					params['gentiléEn'] = paramsEN.gentilé
 				} catch (err) {
 					console.log(
 						`⚠️ No en-us for ${params.nom} [SKIPPED]`,
