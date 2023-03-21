@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://nosgestesclimat.fr/images/petit-logo@2x.png" alt="Nos Gestes Climat logo" width="70" height="70">
   <h2 align="center">
-    Wiki of the Nos Gestes Climat (NGC) <a href="https://nosgestesclimat.fr">website</a>
+    Wiki of the Nos Gestes Climat (NGC) model 
   </h2>
 
   <div align="center">

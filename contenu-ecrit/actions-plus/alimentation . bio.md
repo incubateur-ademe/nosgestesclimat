@@ -51,10 +51,10 @@ entre produits quand le magasin vent à la fois du conventionnel et du bio (comm
 
 Alliant conjointement le souhait de préserver sa santé et celui de réduire son impact sur l’environnement, la demande en produits issus de l’agriculture 
 biologique explose depuis maintenant plusieurs années (cf. chiffres clés). Ces produits sont dits biologiques car, à l’inverse des produits issus de 
-l’agriculture conventionnelle, aucun intrant  de synthèse n’est utilisé pour leur production (Toutefois certains intrants issus de substances « substances 
-naturelles ou substances dérivées de substances naturelles » sont autorisées).
+l’agriculture conventionnelle, aucun intrant de synthèse n’est utilisé pour leur production (toutefois certains intrants issus de « substances 
+naturelles ou substances dérivées de substances naturelles » sont autorisés).
 
-Même si ces produits sont, de manière générale, bien moins impactant pour l’environnement , d’un point de vue purement Gaz à Effet de Serre, l’agriculture 
+Même si ces produits sont, de manière générale, bien moins impactants pour l’environnement, d’un point de vue purement Gaz à Effet de Serre, l’agriculture 
 biologique est généralement considérée comme plus « contributrice » au changement climatique. En effet, à production et produits égaux, une culture bio tend
 à nécessiter des parcelles agricoles plus grandes, réduisant la taille des forêts et des zones naturelles, zones essentielles à la séquestration du carbone. 
 C’est pourquoi, à l’échelle globale et à quantités consommées égales, on tend à considérer que le bio a « plus d’impact » sur le climat que l’agriculture conventionnelle. 
@@ -65,9 +65,9 @@ En effet, avec la modernisation de l’agriculture pour répondre à l’accrois
 d’un côté et élevage de l’autre. Auparavant associées, pour coupler les cycles de l’azote et du carbone, les grandes cultures ont maintenant besoin d’azote
 de synthèse pour nourrir les plantes et les zones d’élevage sont confrontées aux quantités excessives d’azote organique contenu dans les effluents d’élevage
 (i.e. déjections). Ce mode de fonctionnement, qu’il s’agisse des cultures ou de l’élevage, menace les sols français  (érosion, tassement, pollutions 
-chimiques, etc.) et est très fortement importateur et utilisateur d’intrants (produits phytosanitaires, engrais azotés de synthèse, alimentation pour les animaux, etc.), ce qui accroît ses émissions de gaz à effet de serre. Qui plus est, cette intensification de l’usage des sols s’est couplée à la spécialisation et à la monoculture tournées vers l’exportation. La France fait ainsi parti des 5 premiers exportateurs mondiaux de produits agroalimentaires : elle exporte 59 millions de tonnes de produits agricoles (dont 33 rien que de céréales) [^6].
+chimiques, etc.) et est très fortement importateur et utilisateur d’intrants (produits phytosanitaires, engrais azotés de synthèse, alimentation pour les animaux, etc.), ce qui accroît ses émissions de gaz à effet de serre. Qui plus est, cette intensification de l’usage des sols s’est couplée à la spécialisation et à la monoculture tournées vers l’exportation. La France fait ainsi partie des 5 premiers exportateurs mondiaux de produits agroalimentaires : elle exporte 59 millions de tonnes de produits agricoles (dont 33 rien que de céréales) [^6].
 
-Transformer notre agriculture en une agriculture plus respectueuse du vivant, ne consiste donc pas en un simple changement technique dans la façon de
+Transformer notre agriculture en une agriculture plus respectueuse du vivant ne consiste donc pas en un simple changement technique dans la façon de
 produire (garder les mêmes cultures et les mêmes finalités d’exportation mais avec une agriculture biologique est de toute façon impossible et contre-productif). 
 Il faut en repenser la finalité (comme une autosuffisance plus grande) afin de pouvoir diversifier les cultures et les rotations au bénéfice de l’activité 
 biologique des sols. De plus, cette transformation vers une agriculture plus écologique (agroécologie, permaculture, etc.) permettra de réduire de nombreux 
@@ -78,14 +78,14 @@ des exploitations agricoles face aux conséquences du réchauffement climatique.
 Néanmoins, pour réussir à transformer notre agriculture, le consommateur doit aussi faire sa part. En effet, cette transformation doit s’accompagner d’une 
 transformation de notre régime alimentaire, afin que ce dernier soit moins carné et complété de plus de céréales et légumineuses. 
 
-A ce sujet n’hésitez pas à consulter les fiches dédiées à la [réduction de sa consommation de viande](https://nosgestesclimat.fr/actions/plus/alimentation/r%C3%A9duire-viande/par-deux)
+À ce sujet n’hésitez pas à consulter les fiches dédiées à la [réduction de sa consommation de viande](https://nosgestesclimat.fr/actions/plus/alimentation/r%C3%A9duire-viande/par-deux)
 et au végétarisme. 
 
 ## Passer à l'action
 
-- [Agrybalise](https://www.agribalyse.fr/) pour comprendre et connaitre les impacts environnementaux des produits alimentaires
+- [Agrybalise](https://www.agribalyse.fr/) pour comprendre et connaître les impacts environnementaux des produits alimentaires
 - [Agence Bio](https://www.agencebio.org/) : Agence Française pour le Développement et la Promotion de l'Agriculture Biologique
-- [Cartobio](https://cartobio.org/#/) pour savoir où se situe les parcelles en bio près de chez soi
+- [Cartobio](https://cartobio.org/#/) pour savoir où se situent les parcelles en bio près de chez soi
 
 ## Sources
 

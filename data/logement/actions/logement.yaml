@@ -63,7 +63,7 @@ logement . empreinte chauffage air utilisateur:
   formule:
     somme:
       - chauffage . électricité . présent * électricité * part chauffage électricité
-      - chauffage . gaz . présent * chauffage . gaz * part chauffage gaz
+      - (chauffage . gaz . présent * chauffage . gaz + chauffage . citerne propane . présent * chauffage . citerne propane) * part chauffage gaz
       - chauffage . bois . présent * chauffage . bois . empreinte * part chauffage bois
       - chauffage . fioul . présent * chauffage . fioul * part chauffage fioul
       - chauffage . réseau de chaleur . présent * chauffage . réseau de chaleur * part chauffage réseau de chaleur
@@ -129,11 +129,11 @@ logement . énergie de veille . puissance:
 
   unité: kW
 logement . énergie de veille . temps d'absence:
-  formule: 365 * journalier
+  formule: jours par an * journalier
   unité: h
 logement . énergie de veille . temps d'absence . journalier:
   formule: 12
-  unité: h
+  unité: h/jour
   description: On suppose qu'en moyenne, on n'est pas présent chez soi la moitié du temps, ou on dort. La nuit (8h) et en moyenne 4h en journée, pour prendre en compte les weekends qui compensent les journées de travail de 8h, et le fait que tout le monde dans le foyer n'est pas absent au même moment.
 
 logement . mutualiser:
@@ -304,6 +304,79 @@ logement . rénovation énergétique BBC:
 logement . rénovation énergétique BBC . gain rénovation:
   formule: 70%
   note: Gain énergétique maximal atteint après une rénovation BBC, source à préciser.
+
+logement . raccordement réseau de chaleur:
+  titre: Se raccorder à réseau de chaleur
+  icônes: 👥🏭
+  effort: modéré
+  applicable si:
+    toutes ces conditions:
+      - appartement
+      - chauffage collectif
+      - une de ces conditions:
+          - chauffage . gaz . présent
+          - chauffage . fioul . présent
+  non applicable si: chauffage . réseau de chaleur . présent
+  formule: (logement . chauffage - recalcul) / habitants
+  # TODO : Cette `note` est plus grand public que technique, à voir si ce texte n'a pas sa place ailleurs.
+  note: |
+    Un réseau de chaleur est un système de canalisations qui permettent d’acheminer vers un ensemble de bâtiments de la 
+    chaleur produite localement et majoritairement à partir d’énergies renouvelables et de récupération. 
+
+    C'est une alternative écologique et économique pour remplacer des chaudières au gaz ou fioul, 
+    aussi bien pour les bâtiments d'habitat collectif (copropriétés, habitat social) que pour les bâtiments tertiaires.
+
+    Néanmoins, être raccordé à un réseau de chaleur n'est pas aussi simple que de souscrire un contrat d'électricité.
+    En effet, la faisabilité du raccordement dépend de [plusieurs conditions techniques](https://france-chaleur-urbaine.beta.gouv.fr/ressources/faisabilite#contenu).
+
+    Tout d'abord, le raccordement se fait pour tout un bâtiment : il n'est pas possible de raccorder seulement votre appartement.
+    Ensuite, il est nécessaire de vérifier qu'il existe un réseau de chaleur à proximité du bâtiment, puis d'étudier
+    les infrastructures de chauffage au sein du bâtiment (un bâtiment équipé d'un système de chauffage collectif permettra un raccordement à moindre coût)
+
+    Côté impact climat, il faut savoir qu'en général, un réseau de chaleur est alimenté via des sources d'énergie renouvelables ou de récupération locales
+    (62% en moyenne à l'échelle nationale), c'est à dire, via l'incinération d'ordures ménagères, la combustion de biomasse, la géothermie... (comme le montre la figure ci-dessous)
+    ce qui permet de réduire considérablement l'impact CO2 du kWh d'énergie consommée devant le gaz ou le fioul. 
+
+    Cependant, le mix énergétique est très variable d’un réseau à l’autre, certains réseaux sont encore principalement alimentés via des énergies fossiles (charbon, fioul, gaz).
+    Il est donc important de vérifier le taux ENR du réseau le plus proche sur la [cartographie France Chaleur Urbaine](https://france-chaleur-urbaine.beta.gouv.fr/carte), et de se renseigner auprès du gestionnaire du réseau 
+    sur les évolutions à venir du mix énergétique car bcp de réseaux sont en cours de verdissement...].
+
+    ![](https://user-images.githubusercontent.com/55186402/223733624-d50b2271-6da6-4ec7-a324-cec41df10430.png)
+  description: |
+    Alimentés en moyenne à 62% par des énergies renouvelables et de récupération locales (chaleur issue de l'incinération des déchets, biomasse, géothermie...), 
+    les réseaux de chaleur (ou chauffage urbain) constituent un mode de chauffage faiblement carboné et à prix compétitifs. 
+    Attention toutefois, il existe une grande disparité selon les réseaux, aussi bien en matière d'impact carbone que de tarifs !
+
+    Le raccordement au chauffage urbain se fait à l'échelle d'un bâtiment entier. Il nécessite la présence d'un réseau de chaleur à proximité du bâtiment 
+    et est facilité lorsque le bâtiment est déjà équipé d'un chauffage collectif.
+
+    >💡 Pour aller plus loin et vérifier votre éligibilité, rendez-vous sur le site [France Chaleur Urbaine](https://france-chaleur-urbaine.beta.gouv.fr/).
+
+logement . raccordement réseau de chaleur . recalcul:
+  titre: Recalcul émissions via le raccordement à un réseau de chaleur
+  note: on considère que la consommation de gaz/fioul sera identique suite à un raccordement au réseau de chaleur.
+  formule:
+    somme:
+      - chauffage . intensité carbone réseau de chaleur * chauffage . gaz . consommation
+      - chauffage . intensité carbone réseau de chaleur * chauffage . fioul . consommation / fioul kWh au litre
+
+logement . chauffage collectif:
+  avec:
+    collectif:
+    individuel:
+  question: Votre chauffage est-il collectif ou individuel ?
+  par défaut: "'collectif'"
+  note: |
+    On fait l'hypothèse que l'action est applicable seulement pour les appartements chauffés via un réseau de gaz ou fioul collectif.  
+    En effet, côté particulier, il est préférable de travailler avec les copropriétaires d'un immeuble car le logement individuel n'est
+    pas une cible prioritaire pour ce type de solution, à la fois pour des questions de rentabilité économique mais également car la densité
+    thermique du réseau serait trop faible au vu de la consommation d'un logement individuel.
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - collectif
+        - individuel
 
 logement . électricité verte:
   titre: Souscrire à un contrat d'électricité verte
