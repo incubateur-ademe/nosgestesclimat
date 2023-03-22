@@ -4,24 +4,16 @@ const path = require('path')
 const fs = require('fs')
 const { exit } = require('process')
 
-const { publicDir, readYAML } = require('./utils')
+const { publicDir, customAssocPath, readYAML } = require('./utils')
 const regionModelsPath = path.resolve('data/i18n/models')
 
 const defaultModelCode = 'FR'
-const defaultRegionModelParam = [
-	[
-		defaultModelCode,
-		{
-			code: defaultModelCode,
-			nom: 'France métropolitaine',
-			gentilé: 'française',
-			nomFr: 'France métropolitaine',
-			gentiléFr: 'française',
-			nomEn: 'metropolitan France',
-			gentiléEn: 'french',
-		},
-	],
-]
+const defaultRegionModelParam = {
+	FR: {
+		fr: { nom: 'France métropolitaine', gentilé: 'française' },
+		en: { nom: 'metropolitan France', gentilé: 'french' },
+	},
+}
 const supportedRegionPath = path.join(publicDir, `supportedRegions.json`)
 
 //
@@ -32,63 +24,36 @@ const supportedRegionPath = path.join(publicDir, `supportedRegions.json`)
 //
 // The default region and hardcoded one is FR.
 //
-const supportedRegions = Object.fromEntries(
-	fs
-		.readdirSync(regionModelsPath)
-		.reduce((acc, filename) => {
-			if (!filename.match(/([A-Z]{2})-fr.yaml/)) {
-				return acc
-			}
-			try {
-				const regionPath = path.join(regionModelsPath, filename)
-				const rules = readYAML(regionPath)
-				const params = rules['params']
-				if (params === undefined) {
-					console.log(
-						` ❌ The file ${filename} doesn't contain a 'params' key, aborting...`
-					)
-					exit(-1)
-				}
-				params['nomFr'] = params['nom']
-				params['gentiléFr'] = params['gentilé']
-				const code = rules.params.code
-				try {
-					const regionPathEN = path.join(regionModelsPath, `${code}-en-us.yaml`)
-					const paramsEN = readYAML(regionPathEN)['params']
-					params['nomEn'] = paramsEN.nom
-					params['gentiléEn'] = paramsEN.gentilé
-				} catch (err) {
-					console.log(
-						`⚠️ No en-us for ${params.nom} [SKIPPED]`,
-						':\n\n',
-						err.message
-					)
-				}
-				return [...acc, [code, params]]
-			} catch (err) {
+const supportedRegions = fs
+	.readdirSync(regionModelsPath)
+	.reduce((acc, filename) => {
+		if (!filename.match(/[A-Z]{2}.*.yaml/)) {
+			return acc
+		}
+		try {
+			const langRegex = filename.match(/(?<=[A-Z]{2}-).*(?=.yaml)/) // match lang param in filename
+			const lang = langRegex[0] === 'en-us' ? 'en' : langRegex[0]
+			const regionPath = path.join(regionModelsPath, filename)
+			const rules = readYAML(regionPath)
+			const params = rules['params']
+			if (params === undefined) {
 				console.log(
-					' ❌ An error occured while reading the file:',
-					filename,
-					':\n\n',
-					err.message
+					` ❌ The file ${filename} doesn't contain a 'params' key, aborting...`
 				)
 				exit(-1)
 			}
-		}, defaultRegionModelParam)
-		// sort function from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
-		.sort((a, b) => {
-			const nameA = a[1].nom.toUpperCase() // ignore upper and lowercase
-			const nameB = b[1].nom.toUpperCase() // ignore upper and lowercase
-			if (nameA < nameB) {
-				return -1
-			}
-			if (nameA > nameB) {
-				return 1
-			}
-			// names must be equal
-			return 0
-		})
-)
+			const code = rules.params.code
+			return customAssocPath([code, lang], params, acc)
+		} catch (err) {
+			console.log(
+				' ❌ An error occured while reading the file:',
+				filename,
+				':\n\n',
+				err.message
+			)
+			exit(-1)
+		}
+	}, defaultRegionModelParam)
 
 const supportedRegionCodes = Object.keys(supportedRegions)
 
