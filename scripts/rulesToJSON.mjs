@@ -118,7 +118,9 @@ if (markdown) {
 
 writeSupportedRegions()
 
-const baseRules = getModelFromSource(srcFile, ['data/i18n/**'])
+const baseRules = getModelFromSource(srcFile, ['data/i18n/**'], {
+	verbose: !markdown,
+})
 
 try {
 	new Engine(baseRules, {
