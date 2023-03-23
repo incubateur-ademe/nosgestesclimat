@@ -24,6 +24,7 @@ import {
 	regionModelsPath,
 	supportedRegionCodes,
 } from './i18n/regionCommons.js'
+import { getModelFromSource } from './getModelFromSource.js'
 
 const { srcLang, srcFile, destLangs, destRegions, markdown } = cli.getArgs(
 	`Aggregates the model to an unique JSON file.`,
@@ -117,33 +118,21 @@ if (markdown) {
 
 writeSupportedRegions()
 
-glob(srcFile, { ignore: ['data/i18n/**'] }, (_, files) => {
-	const baseRules = files.reduce((acc, filename) => {
-		try {
-			const rules = utils.readYAML(path.resolve(filename))
-			return { ...acc, ...rules }
-		} catch (err) {
-			console.log(
-				' ❌ Une erreur est survenue lors de la lecture du fichier',
-				filename,
-				':\n\n',
-				err.message
-			)
-			exit(-1)
-		}
-	}, {})
+const baseRules = getModelFromSource(srcFile, ['data/i18n/**'])
 
-	try {
-		new Engine(baseRules, {
-			// NOTE(@EmileRolley): warnings are ignored for now but should be examined in
-			//    https://github.com/datagir/nosgestesclimat/issues/1722
-			logger: { log: (_) => {}, warn: (_) => {}, err: (s) => console.error(s) },
-		}).evaluate('bilan')
-		console.log(
-			markdown
-				? `| Rules evaluation | :heavy_check_mark: | Ø |`
-				: ' ✅ Les règles ont été évaluées sans erreur !'
-		)
+try {
+	new Engine(baseRules, {
+		// NOTE(@EmileRolley): warnings are ignored for now but should be examined in
+		//    https://github.com/datagir/nosgestesclimat/issues/1722
+		logger: { log: (_) => {}, warn: (_) => {}, err: (s) => console.error(s) },
+	})
+	console.log(
+		markdown
+			? `| Rules evaluation | :heavy_check_mark: | Ø |`
+			: ' ✅ Les règles ont été évaluées sans erreur !'
+	)
+
+	let correctlyCompiledAndOptimizedFiles = []
 
 		let correctlyCompiledAndOptimizedFiles = []
 
@@ -178,24 +167,45 @@ glob(srcFile, { ignore: ['data/i18n/**'] }, (_, files) => {
 					' '
 				)}</ul></details> | :heavy_check_mark: | Ø |`
 			)
-		}
-	} catch (err) {
-		if (markdown) {
-			console.log(
-				`| Rules evaluation | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
+			const destPathWithoutExtension = path.join(
+				publicDir,
+				`co2-model.${regionCode}-lang.${destLang}`
 			)
-			console.log(err)
-		} else {
-			console.log(
-				' ❌ Une erreur est survenue lors de la compilation des règles:\n'
+			writeRules(
+				localizedTranslatedBaseRules,
+				destPathWithoutExtension + '.json',
+				destLang,
+				regionCode
 			)
-			let lines = err.message.split('\n')
-			for (let i = 0; i < 9; ++i) {
-				if (lines[i]) {
-					console.log('  ', lines[i])
-				}
-			}
-			console.log(err)
-		}
+			compressRules(destPathWithoutExtension, destLang, markdown, regionCode)
+			correctlyCompiledAndOptimizedFiles.push(
+				'<li><b>' + `${regionCode}-${destLang}` + '</b></li>'
+			)
+		})
+	})
+	if (markdown) {
+		console.log(
+			`| Successfully compiled and optimized rules: <br><details><summary>Expand</summary> <ul>${correctlyCompiledAndOptimizedFiles.join(
+				' '
+			)}</ul></details> | :heavy_check_mark: | Ø |`
+		)
 	}
-})
+} catch (err) {
+	if (markdown) {
+		console.log(
+			`| Rules evaluation | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
+		)
+		console.log(err)
+	} else {
+		console.log(
+			' ❌ Une erreur est survenue lors de la compilation des règles:\n'
+		)
+		let lines = err.message.split('\n')
+		for (let i = 0; i < 9; ++i) {
+			if (lines[i]) {
+				console.log('  ', lines[i])
+			}
+		}
+		console.log(err)
+	}
+}
