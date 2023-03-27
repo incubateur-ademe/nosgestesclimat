@@ -113,7 +113,6 @@ transport . boulot:
 transport . boulot . covoiturage:
   titre: Aller au travail en covoiturage
   effort: modéré
-  non applicable si: télétravail compatible = 'pas de travail'
   applicable si:
     toutes ces conditions:
       - voiture . propriétaire
@@ -200,7 +199,6 @@ transport . boulot . commun:
     >💡 Le saviez-vous ? L'État et beaucoup de régions ou villes subventionnent les vélos mécaniques, électriques, cargo, pliants, etc. [Calculez votre aide 🚲️ en 3 clics](https://mesaidesvelo.fr).
 
   applicable si: voiture . km > seuil d'activation boulot
-  non applicable si: télétravail compatible = 'pas de travail'
   formule: boulot . distance * gain empreinte au km
 
 transport . seuil d'activation boulot:
@@ -284,7 +282,7 @@ transport . boulot . télétravail:
     Dans ce calcul, nous ne prenons en compte que les jours télétravaillés qui évitent un déplacement en voiture individuelle.
   applicable si:
     toutes ces conditions:
-      - télétravail compatible = 'télétravail possible'
+      - compatible
       - voiture . km > seuil d'activation boulot
       - jours travaillés en voiture > 0
   formule: empreinte jour voiture * jours gagnés * transport . boulot . semaines
@@ -309,24 +307,9 @@ transport . boulot . jours télétravaillés:
     5: 5
 # TODO introduire des contrôles (mise à jour de publicodes nécessaire) ici : pas de jours de télétravail supplémentaires à
 
-transport . boulot . télétravail compatible:
-  question: Si vous êtes en activité professionelle, votre travail est-il totalement ou en partie compatible avec le télétravail ?
-  description: à compléter
-  formule:
-    une possibilité:
-      choix obligatoire: oui
-      possibilités:
-        - pas de travail
-        - télétravail possible
-        - télétravail impossible
-  par défaut: "'télétravail possible'"
-
-transport . boulot . télétravail compatible . télétravail impossible:
-  titre: Non
-transport . boulot . télétravail compatible . télétravail possible:
-  titre: Oui
-transport . boulot . télétravail compatible . pas de travail:
-  titre: Je ne suis pas en activité professionelle
+transport . boulot . télétravail . compatible:
+  question: Votre travail est-il totalement ou en partie compatible avec le télétravail ?
+  par défaut: oui
 
 transport . voiture 5km:
   titre: Se passer de voiture pour moins de 5 km
