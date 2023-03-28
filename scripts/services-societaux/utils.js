@@ -47,6 +47,7 @@ const writeYAML = (
 						sortMapEntries: true,
 						aliasDuplicateObjects: false,
 						blockQuote,
+						lineWidth: 0,
 					}),
 				{ ...prettierConfig, parser: 'yaml' }
 			)

@@ -97,10 +97,15 @@ function getLocalizedRules(translatedBaseRules, regionCode, destLang) {
 	if (regionCode === defaultModelCode) {
 		return translatedBaseRules
 	}
-	const localizedAttrs = utils.readYAML(
-		path.join(regionModelsPath, `${regionCode}-${destLang}.yaml`) ?? {}
-	)
-	return addRegionToBaseRules(translatedBaseRules, localizedAttrs)
+	try {
+		const localizedAttrs = utils.readYAML(
+			path.join(regionModelsPath, `${regionCode}-${destLang}.yaml`)
+		)
+		return addRegionToBaseRules(translatedBaseRules, localizedAttrs)
+	} catch (err) {
+		cli.printWarn(`[SKIPPED] - ${regionCode}-${destLang} (${err.message})`)
+		return addRegionToBaseRules(translatedBaseRules, {})
+	}
 }
 
 /// ---------------------- Main ----------------------
@@ -142,7 +147,7 @@ glob(srcFile, { ignore: ['data/i18n/**'] }, (_, files) => {
 
 		let correctlyCompiledAndOptimizedFiles = []
 
-		destLangs.push(srcLang)
+		destLangs.unshift(srcLang)
 		destLangs.forEach((destLang) => {
 			const translatedBaseRules = getTranslatedRules(baseRules, destLang)
 			destRegions.forEach((regionCode) => {
