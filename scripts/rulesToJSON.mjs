@@ -46,7 +46,7 @@ function writeSupportedRegions() {
 		console.log(
 			markdown
 				? `| Supported regions | :heavy_check_mark: | Ø |`
-				: ` ✅ The rules have been correctly written in: ${supportedRegionPath}`
+				: ` ✅ The supported regions have been correctly written in: ${supportedRegionPath}`
 		)
 	} catch (err) {
 		if (markdown) {
@@ -67,11 +67,9 @@ function writeSupportedRegions() {
 function writeRules(rules, path, destLang, regionCode) {
 	try {
 		fs.writeFileSync(path, JSON.stringify(rules))
-		console.log(
-			markdown
-				? `| Rules compilation to JSON for the region ${regionCode} in _${destLang}_ | :heavy_check_mark: | Ø |`
-				: ` ✅ The rules have been correctly written in: ${path}`
-		)
+		if (!markdown) {
+			console.log(` ✅ The rules have been correctly written in: ${path}`)
+		}
 	} catch (err) {
 		if (markdown) {
 			console.log(
@@ -147,6 +145,8 @@ glob(srcFile, { ignore: ['data/i18n/**'] }, (_, files) => {
 				: ' ✅ Les règles ont été évaluées sans erreur !'
 		)
 
+		let correctlyCompiledAndOptimizedFiles = []
+
 		destLangs.unshift(srcLang)
 		destLangs.forEach((destLang) => {
 			const translatedBaseRules = getTranslatedRules(baseRules, destLang)
@@ -167,8 +167,18 @@ glob(srcFile, { ignore: ['data/i18n/**'] }, (_, files) => {
 					regionCode
 				)
 				compressRules(destPathWithoutExtension, destLang, markdown, regionCode)
+				correctlyCompiledAndOptimizedFiles.push(
+					'<li><b>' + `${regionCode}-${destLang}` + '</b></li>'
+				)
 			})
 		})
+		if (markdown) {
+			console.log(
+				`| Successfully compiled and optimized rules: <br><details><summary>Expand</summary> <ul>${correctlyCompiledAndOptimizedFiles.join(
+					' '
+				)}</ul></details> | :heavy_check_mark: | Ø |`
+			)
+		}
 	} catch (err) {
 		if (markdown) {
 			console.log(

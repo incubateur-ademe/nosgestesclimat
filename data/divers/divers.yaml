@@ -2,38 +2,150 @@ divers:
   titre: Divers
   abréviation: div.
   description: |
-    Nous avons rangé dans cette catégorie tous les objets de notre quotidien, du t-shirt à la machine à laver.
-
-    Le numérique est rangé dans une autre catégorie, étant donné son importance dans l'actualité française en 2021.
-
+    Nous avons rangé dans cette catégorie tous les objets de notre quotidien, du t-shirt à la machine à laver,
+    mais également le numérique (des usages aux devices).
   note: |
     Notre modèle n'est clairement pas exhaustif en ce qui concerne ce poste, une sous-estimation de l'empreinte est donc probable.
 
-    Tant d'objets du quotidiens (du tapis de bain, détecteur à incendie, lunettes de soleil...) n'y sont pas encore inclus.
+    Tant d'achats du quotidien (du tapis de bain, détecteur à incendie, lunettes de soleil...) n'y sont pas encore inclus.
   icônes: 📦
   couleur: '#0984e3'
   formule:
     somme:
       - textile
       - électroménager
+      - ameublement
       - numérique
+      - produits consommables
       - autres produits
 
 divers . autres produits:
+  titre: Produits manufacturés neufs
   abréviation: autres prod.
   icônes: 📦
-  formule: 0.055 * montant
+  description: |
+    Ce sous-poste est la seule question du test basée sur un ratio monétaire.
+
+    Malgré des limites importantes (on en parle juste après), cette question est présente pour plusieurs raisons:
+      - Elargir le scope de consommations couvert par NGC: on prend en compte ici les dépenses qui ne sont pas captées dans le reste du test
+      telles que les livres et journaux, la décoration, le matériel de cuisine, le linge de maison, les matériaux pour les loisirs créatifs 
+      ou sportifs, le bricolage. Ces achats étant souvent utilisés sur le long terme, on considère une durée de vie de 10 ans.
+      - Permettre de regrouper en une question nos achats de produits neufs et éviter de mettre l'accent sur "des petites postes" 
+      avec un nombre de questions qui deviendrait trop important: combien de vases ? combien de livres ? combien de tapis de bain ?
+      combien de couverts ? etc...
+      - Sensibiliser sur les achats de produits neufs. Dans NGC l'empreinte des produits d'occasion est attribuée à l'acheteur initial de l'objet.
+      Ainsi, l'empreinte d'un produit d'occasion est considérée comme nulle à l'heure actuelle (ce qui est bien précisé dans la question).
+
+    Cependant, **l'empreinte captée dans cette question est à prendre avec des pincettes**.
+
+    En effet, les ratios monétaires utilisés possèdent une incertitude, on peut le dire, de 100%. Ces facteurs d'émission
+    de la base carbone ne sont pas à jour avec le niveau d'inflation connu aujourd'hui et ceux moyennés pour cette question 
+    sont très hétérogène (on aggrège à la fois le facteur associé à l'édition (livres) mais également celui associé au plastique 
+    ou aux métaux).
+
+    Pour finir sur le sujet, et c'est sans doute le plus gros frein à l'utilisation de ratios monétaires, l'intensité carbone
+    d'un euro dépensé pour un achat n'est pas du tout représentative de l'empreinte réelle du produit. 
+    Par exemple, il n'est pas du tout évident qu'un livre qui coûte plus cher ait une plus grosse empreinte.
+    De même, un ensemble de draps en lin pourrait très bien avoir une empreinte 5 fois plus faible qu'un ensemble en coton 
+    (la culture du lin demande très peu de ressources), et pourtant ce dernier est susceptible de coûter jusqu'à 10 fois plus cher.
+  formule: ratio monétaire * montant / amortissement
   unité: kgCO2e
 
+divers . autres produits . amortissement:
+  titre: Amortissement produits manufacturés neufs
+  formule: 10
+  description: On
+  unité: an
+
+divers . autres produits . ratio monétaire:
+  titre: Ratio monétaire produits manufacturés TTC
+  formule: ratio monétaire HT * 0.8
+  note: On considère une TVA de 20% (taux majoritairement appliqué aux dépenses de cette question).
+
+divers . autres produits . ratio monétaire HT:
+  titre: Ratio monétaire produits manufacturés HT
+  formule: (plastiques et caoutchouc + papier et carton + bois et articles en bois + produits métalliques + édition) / 5
+  unité: kgCO2e/€
+  description: |
+    Dans une première approche, ce ratio est basé sur une moyenne de facteurs d'émission monétaires issus de la base carbone. 
+    Voir [documentation de la base carbone](https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Ratio-monetaires).
+
+divers . autres produits . ratio monétaire HT . plastiques et caoutchouc:
+  titre: Ratio monétaire plastiques et caoutchouc
+  formule: 0.800
+  unité: kgCO2e/€
+  note: Base Carbone - Service - Plastiques et caoutchouc
+
+divers . autres produits . ratio monétaire HT . papier et carton:
+  titre: Ratio monétaire papier et carton
+  formule: 0.900
+  unité: kgCO2e/€
+  note: Base Carbone - Service - Papier et carton (/€ HT)
+
+divers . autres produits . ratio monétaire HT . bois et articles en bois:
+  titre: Ratio monétaire bois
+  formule: 0.500
+  unité: kgCO2e/€
+  note: Base Carbone - Service - Bois et article en bois (/€ HT)
+
+divers . autres produits . ratio monétaire HT . produits métalliques:
+  titre: Ratio monétaire produits métalliques
+  formule: 0.600
+  unité: kgCO2e/€
+  note: Base Carbone - Service - Produits métalliques, sauf machines et équipements (/€ HT)
+
+divers . autres produits . ratio monétaire HT . édition:
+  titre: Ratio monétaire édition
+  formule: 0.280
+  unité: kgCO2e/€
+  note: Base Carbone - Service/Édition (livres, journaux, revues, etc.) (/€ HT)
+
 divers . autres produits . montant:
-  question: Combien dépensez-vous par an en produits manufacturés neufs (mobilier, livres, etc.) ?
+  titre: Montant dépensé par an pour l'achat de produits manufacturés neufs
+  question: Le test ne capte encore toutes vos consommations, combien estimez-vous dépenser par an en produits neufs (décoration, bricolage, jeux, loisirs créatifs, outils, etc...) ?
   unité: €/an
   description: |
-    Pour garder l'interface simple, nous proposons une estimation de l'empreinte de cette catégorie de produits basée sur leur coût.
+    Pour garder l'interface simple, nous proposons une estimation, via le coût, de l'empreinte des biens de consommations 
+    que vous possédez et que vous ne pensez pas avoir inclus dans les questions précédentes.
 
-    Il n'est cependant pas du tout évident qu'un livre qui coûte plus cher ait une plus grosse empreinte.
+    **Pour répondre à cette question, veillez à lisser vos achats des dernières années sur un an.**
 
-    De même, un tabouret en plastique pourrait très bien avoir 5 fois plus d'empreinte qu'un tabouret artisanal en bois massif (le bois capte du CO₂ pendant sa croissance), et pourtant ce dernier est susceptible de coûter 2 fois plus cher.
+    Il est important de recenser dans cette question l'ensemble de vos dépenses annuelles (pour des **biens personnels ou à offrir**).
 
-  note: Cette catégorie est assez vague, il faudrait au moins donner plus d'exemples.
-  par défaut: 2000 €/an
+    Elle concerne : **les livres et journaux, les jeux, la décoration, le matériel de cuisine, le linge de maison, 
+    les matériaux pour les loisirs créatifs ou bricolage, les affaires de sports (ski, surf...), etc...**
+  par défaut: 1000 €/an
+  note: |
+    Pour cette question, sujette à de nombreuses incertitudes que ce soit au niveau du concept de ratio monétaire lui-même, 
+    des facteurs d'émission par rapport aux objets à inclure dans cette question ou bien au niveau de l'estimation des dépenses annuelles, 
+    nous avons fait le choix de travailler sur la base d'une liste de dépenses que nous estimons hors de la couverture NGC **pour le moment**
+    (l'idée étant d'enrichir le modèle pour ne plus avoir à poser cette question).
+
+    A partir de retours utilisateurs, nous avons estimé pour chaque ligne de dépense le montant associé afin de déterminer la valeur par défaut
+    des dépenses annuelles pour l'achat de biens manufacturés neufs. L'idée est également de donner des clés de réponse pour les utiilsateurs souhaitant
+    aller plus loin sur la base des entrées du tableau.
+
+    Ces estimations donne un chiffre de dépenses de l'ordre de 1000€ par an.
+
+    | Catégorie de dépense           | Description (non exhaustif)                                                    | Estimation par mois | Estimation par an | Estimation pour 10 ans |
+    |--------------------------------|--------------------------------------------------------------------------------|---------------------|-------------------|------------------------|
+    | Matériel de cuisine            | Couverts, poêles, bocaux                                                       |                     | 50                |                        |
+    | Couette, oreillers             |                                                                                |                     |                   | 100                    |
+    | Linge de maison                | Draps, serviettes                                                              |                     |                   | 150                    |
+    | Loisirs créatifs et culturels  | Instruments de musique, machine à coudre, tissu, laine, papier, carton, perles |                     |                   | 500                    |
+    | Bricolage                      | Outils (tournevis, perceuse, scie), bois, métaux, visserie, plastique          |                     | 150               |                        |
+    | Affaires de sport spécifiques  | Matériel vélo, ski, surf                                                       |                     |                   | 500                    |
+    | Décoration                     | Vase, boites de rangement, tapisserie                                          |                     | 500               |                        |
+    | Livres                         | Livres, journaux, revues                                                       | 15                  |                   |                        |
+    | Jeux                           | Jeux de société, jouets                                                        | 15                  |                   |                        |
+
+divers . autres produits . notif ratio monétaire:
+  type: notification
+  formule: montant
+  description: |
+    Cette question permet d'estimer l'empreinte de vos achats neufs à partir de leur prix d'achat.
+
+    Cette comptabilisation de l'empreinte carbone **à partir de la seule information des dépenses** est très imparfaite : 
+    elle attribue une empreinte plus importante à un objet plus cher alors que ce même objet peut-être acheté moitié prix ailleurs (ou plus tard !).
+
+    Elle permet tout de même de fournir un ordre de grandeur de l'impact de vos achats (fréquence et niveau de dépenses).
