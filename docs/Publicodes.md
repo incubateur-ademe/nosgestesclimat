@@ -27,7 +27,7 @@ Publicodes greenhouse gas emission calculation models begin to be used in
 different projects, such as :
 [`futur.eco`](https://github.com/laem/futureco-data) and
 [`impactCO2`](https://github.com/datagir/impactCO2).
-To avoid the duplication of models and facilitates the reuse of rules, we
+To avoid the duplication of models and to facilitate the reuse of rules, we
 introduced a new meta-mechanism : `importer!`.
 
 ### Usage
@@ -42,9 +42,9 @@ importer!:
     ...
 ```
 
-Each yaml entry `importer!` will be replaced by all imported rules and their
-dependencies by the `getModelFromSource.js` script, when compiling yaml files
-to a standalone json file.
+When compiling yaml files to a standalone json file, each yaml entry
+`importer!` will be replaced by all imported rules and their dependencies by
+the `getModelFromSource.js` script.
 
 ### Publishing a new package
 
