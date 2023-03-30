@@ -31,12 +31,15 @@ function getEngine(packageName, opts) {
 }
 
 function getTraversedRules(engine, rule) {
-	return engine.evaluate(rule).flatMap((varName) => {
-		return [
-			[varName, engine.getRule(varName).rawNode],
-			...getTraversedRules(engine, engine.getRule(varName)),
-		]
-	})
+	const { traversedRules } = engine.evaluate(rule)
+	return (
+		traversedRules?.flatMap((varName) => {
+			return [
+				[varName, engine.getRule(varName).rawNode],
+				...getTraversedRules(engine, engine.getRule(varName)),
+			]
+		}) ?? []
+	)
 }
 
 function resolveImports(rules, opts) {
