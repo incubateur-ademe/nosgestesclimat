@@ -63,8 +63,10 @@ destLangs.forEach((destLang) => {
 	const destPath = `data/i18n/t9n/translated-rules-${destLang}.yaml`
 	const destRules = R.mergeAll(utils.readYAML(path.resolve(destPath)))
 	const missingRules = utils.getMissingRules(rules, destRules)
-	const missingRuleNames = missingRules.map(
-		(obj) => `${obj.rule} -> ${obj.attr}`
+	const missingRuleNames = missingRules.map((obj) =>
+		markdown
+			? `<li><b>${obj.rule}</b> > ${obj.attr}</li>`
+			: cli.styledRuleNameWithOptionalAttr(obj.rule, obj.attr)
 	)
 	const nbMissing = missingRules.length
 
