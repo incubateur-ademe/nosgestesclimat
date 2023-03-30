@@ -5,7 +5,6 @@
 */
 
 import fs from 'fs'
-import glob from 'glob'
 import path from 'path'
 import { exit } from 'process'
 import Engine from 'publicodes'
@@ -136,38 +135,14 @@ try {
 
 	let correctlyCompiledAndOptimizedFiles = []
 
-		let correctlyCompiledAndOptimizedFiles = []
-
-		destLangs.unshift(srcLang)
-		destLangs.forEach((destLang) => {
-			const translatedBaseRules = getTranslatedRules(baseRules, destLang)
-			destRegions.forEach((regionCode) => {
-				const localizedTranslatedBaseRules = getLocalizedRules(
-					translatedBaseRules,
-					regionCode,
-					destLang
-				)
-				const destPathWithoutExtension = path.join(
-					publicDir,
-					`co2-model.${regionCode}-lang.${destLang}`
-				)
-				writeRules(
-					localizedTranslatedBaseRules,
-					destPathWithoutExtension + '.json',
-					destLang,
-					regionCode
-				)
-				compressRules(destPathWithoutExtension, destLang, markdown, regionCode)
-				correctlyCompiledAndOptimizedFiles.push(
-					'<li><b>' + `${regionCode}-${destLang}` + '</b></li>'
-				)
-			})
-		})
-		if (markdown) {
-			console.log(
-				`| Successfully compiled and optimized rules: <br><details><summary>Expand</summary> <ul>${correctlyCompiledAndOptimizedFiles.join(
-					' '
-				)}</ul></details> | :heavy_check_mark: | Ø |`
+	destLangs.unshift(srcLang)
+	destLangs.forEach((destLang) => {
+		const translatedBaseRules = getTranslatedRules(baseRules, destLang)
+		destRegions.forEach((regionCode) => {
+			const localizedTranslatedBaseRules = getLocalizedRules(
+				translatedBaseRules,
+				regionCode,
+				destLang
 			)
 			const destPathWithoutExtension = path.join(
 				publicDir,
