@@ -40,8 +40,6 @@ function getTraversedRules(engine, rule) {
 	})
 }
 
-// TODO:
-// - better error managment
 function resolveImports(rules, opts) {
 	const resolvedRules = Object.entries(rules).reduce((acc, [name, value]) => {
 		if (name === importKeyword) {
