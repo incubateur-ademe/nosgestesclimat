@@ -4,6 +4,11 @@ const fs = require('fs')
 const Engine = require('publicodes').default
 
 const importKeyword = 'importer!'
+const fromKeyword = 'depuis'
+const rulesKeyword = 'les règles'
+
+const packageModelPath = (packageName) =>
+	`node_modules/${packageName}/${packageName}.model.json`
 
 // Stores engines initialized with the rules from package
 const enginesCache = {}
@@ -15,12 +20,7 @@ function getEngine(packageName, opts) {
 		}
 		try {
 			const engine = new Engine(
-				JSON.parse(
-					fs.readFileSync(
-						`node_modules/${packageName}/${packageName}.model.json`,
-						'utf-8'
-					)
-				)
+				JSON.parse(fs.readFileSync(packageModelPath(packageName), 'utf-8'))
 			)
 			enginesCache[packageName] = engine
 		} catch (e) {
@@ -31,8 +31,7 @@ function getEngine(packageName, opts) {
 }
 
 function getTraversedRules(engine, rule) {
-	const { traversedVariables } = engine.evaluate(rule)
-	return traversedVariables.flatMap((varName) => {
+	return engine.evaluate(rule).flatMap((varName) => {
 		return [
 			[varName, engine.getRule(varName).rawNode],
 			...getTraversedRules(engine, engine.getRule(varName)),
@@ -43,14 +42,14 @@ function getTraversedRules(engine, rule) {
 function resolveImports(rules, opts) {
 	const resolvedRules = Object.entries(rules).reduce((acc, [name, value]) => {
 		if (name === importKeyword) {
-			const engine = getEngine(value.depuis, opts)
-			const rulesToImport = value['les règles']
+			const engine = getEngine(value[fromKeyword], opts)
+			const rulesToImport = value[rulesKeyword]
 
 			rulesToImport.forEach((ruleToImport) => {
 				const rule = engine.getRule(ruleToImport, opts)
 				if (!rule) {
 					throw new Error(
-						`La règle '${ruleToImport}' n'existe pas dans ${value.depuis}`
+						`La règle '${ruleToImport}' n'existe pas dans ${value[fromKeyword]}`
 					)
 				}
 				const traversedRules = getTraversedRules(engine, rule, opts)
