@@ -1,4 +1,20 @@
-animaux domestiques:
+divers . animaux domestiques:
+  titre: Animaux domestiques
+  icônes: 😺🐶
+  question: Combien d'animaux vivent avec vous, au sein de votre foyer ?
+  description: Chien ou chat, c'est le moment de prendre en compte nos fidèles compagnons
+  mosaique:
+    type: nombre
+    clé: nombre
+    suggestions:
+      Pas d'animaux:
+        petit chien . nombre: 0
+        chien moyen . nombre: 0
+        chats . nombre: 0
+  formule:
+    somme:
+      - chiens
+      - chats
   note: |
     On parle ici d'animaux domestiques, dont l'augmentation de la population (environ 10 millions de chats en France en 2000 
     contre 15 millions actuellement (2020)) est liée aux être humains (à l'inverse des animaux sauvages, dont l'histoire semble 
@@ -6,6 +22,11 @@ animaux domestiques:
     Il est donc clair que nous ne pouvons ignorer l'empreinte de nos animaux de compagnie et 
     ces émissions sont, par définition, d'origine anthropique. 
     La vie domestique de nos bêtes entraine bien des émissions supplémentaires à attribuer à un individu humain (celui qui fait la simulation).
+
+    D'aprrès xxx et mais également nos calculs, il apparait que l'empreinte d'un animal provient majoritairement de son alimentation.
+    En effet, les services vétérinaires représentent seulement quelques kilos de CO₂ alors que l'alimentation est responsable de centaines de kilos pour certains animaux.
+
+    Pour rester transparents, nous avons néanmoins comptabilisé les émissions associées aux soins vétérinaires.
 
     Rapport annuel FACCO (Chambre Syndicale des Fabricants d'Aliments pour Chiens, Chats, Oiseaux et autres animaux familiers) 2022: https://www.facco.fr/wp-content/uploads/2022/05/rapport-annuel-facco-2022pdf.pdf
 
@@ -66,7 +87,7 @@ animaux domestiques:
     ![](https://user-images.githubusercontent.com/55186402/228851632-28ad3746-7fd2-4b80-8923-a76f75dc8012.png)
 
     Pour un chat, on retient la formule: (poids chat)^0.67 * 100 kcal pour un animal moyennement actif = chat de 4kg : 253kcal/jour
-    Pour un chient, (poids chien)^0.75 * 110 kcal pour un animal moyennement actif = chien de 5kg = 368, 10kg = 618, 15kg = 838, 20kg = 1040, 25kg = 1230, 30kg = 1410 kcal/jour.
+    Pour un chien, (poids chien)^0.75 * 110 kcal pour un animal moyennement actif = chien de 5kg = 368, 10kg = 618, 15kg = 838, 20kg = 1040, 25kg = 1230, 30kg = 1410 kcal/jour, 500kg = 2068.
     ![](https://user-images.githubusercontent.com/55186402/228860253-868c274b-6312-4c76-8045-8ef3b3bfa2a1.png)
 
     Chat (=4kg) : par jour : 253 / 461 * 100 = 55g de nourriture par jour -> 20kg par an -> 30 kgCO2e
@@ -81,7 +102,274 @@ animaux domestiques:
 
 
     Chat : en moyenne 4kg
-    Chien : Petits chien (<5kg, Chihuahua, Yorkshire, Epagneul
-    Chien moyen (~15kg, Beagle, Bouledogue, Caniche)
-    Gros chien (~30kg, Berger Australien)
-    Chien géant (>40kg)
+    Chien : Petits chien (<5kg, Chihuahua, Yorkshire, Epagneul) -> 5kg
+    Chien moyen (~15kg, Beagle, Bouledogue, Caniche) -> 15kg
+    Gros chien (~30kg, Berger Australien, Golden Retriever) -> 30kg
+    Chien géant (>40kg, Dogue Allemand, Bouvier Bernois)-> 50kg
+
+divers . animaux domestiques . chiens:
+  formule:
+    somme:
+      - petit chien
+      - chien moyen
+      - gros chien
+
+divers . animaux domestiques . petit chien:
+  icônes: 🦮
+  titre: Chien < 10kg
+  formule: nombre * empreinte
+
+divers . animaux domestiques . petit chien . nombre:
+  question: Combien de chiens possédez-vous dans votre foyer ?
+  par défaut: 0
+
+divers . animaux domestiques . petit chien . empreinte:
+  titre: Empreinte d'un petit chien
+  description: |
+    Chien d'environ 5kg
+  formule:
+    somme:
+      - alimentation
+      - soins vétérinaires par animal
+
+divers . animaux domestiques . petit chien . alimentation:
+  formule:
+    recalcul:
+      règle: chiens . alimentation
+      avec:
+        chiens . alimentation . besoins énergétiques journaliers . facteur poids . taille chien: "'petit chien'"
+
+divers . animaux domestiques . chien moyen:
+  icônes: 🦮
+  titre: Chien ~20kg
+  formule: nombre * empreinte
+
+divers . animaux domestiques . chien moyen . nombre:
+  question: Combien de chiens possédez-vous dans votre foyer ?
+  par défaut: 1
+
+divers . animaux domestiques . chien moyen . empreinte:
+  titre: Empreinte d'un chien de taille moyenne
+  description: |
+    Chien d'environ 20kg
+  formule:
+    somme:
+      - alimentation
+      - soins vétérinaires par animal
+
+divers . animaux domestiques . chien moyen . alimentation:
+  formule:
+    recalcul:
+      règle: chiens . alimentation
+      avec:
+        chiens . alimentation . besoins énergétiques journaliers . facteur poids . taille chien: "'chien moyen'"
+
+divers . animaux domestiques . gros chien:
+  icônes: 🦮
+  titre: Chien > 30kg
+  formule: nombre * empreinte
+
+divers . animaux domestiques . gros chien . nombre:
+  question: Combien de chiens possédez-vous dans votre foyer ?
+  par défaut: 0
+
+divers . animaux domestiques . gros chien . empreinte:
+  titre: Empreinte d'un gros chien
+  description: |
+    Chien d'environ 40kg
+  formule:
+    somme:
+      - alimentation
+      - soins vétérinaires par animal
+
+divers . animaux domestiques . gros chien . alimentation:
+  formule:
+    recalcul:
+      règle: chiens . alimentation
+      avec:
+        chiens . alimentation . besoins énergétiques journaliers . facteur poids . taille chien: "'gros chien'"
+
+divers . animaux domestiques . chiens . alimentation:
+  formule: besoin journalier nourriture * jours par an * empreinte nourriture
+  unité: kgCO2e
+
+divers . animaux domestiques . chiens . alimentation . empreinte nourriture:
+  titre: Empreinte nourriture pour chiens
+  formule: 5.5
+  unité: kgCO2e/kg
+  note: |
+    Pour ce facteur d'émission, nous avons utilisé le papier : [The global environmental paw print of pet food, 2020](https://reader.elsevier.com/reader/sd/pii/S0959378020307366?token=375964333F28DED330C9C2CACCD5553CAAE486B7BD641A4F39738E9EC323613DCDABF4A0263131197CB5B47E1D304B99&originRegion=eu-west-1&originCreation=20230330100228)
+
+    Quelques commentaires au niveau de la méthodo mise en place dans cet article :
+
+    A COMPLETER
+
+    Deux types de nourritures sont considérés : 
+    - Nourriture Chien "classique" (type croquettes): 4.25 kgCO2e/kg, composant la nourriture moyenne des chiens à hauteur de 2/3.
+    - Nourriture Chien "Premium" (plus proche des patées semble-t-il): 7 kgCO2e/kg, composant la nourriture moyenne des chiens à hauteur de 1/3.
+
+    On obtient une valeur moyenne de 5.5 kgCO2e/kg de nourriture pour chat.
+
+    A priori, seule la partie production est comptabilisée. Il faudrait entrer davantage dans les sources de calcul pour savoir le disctribution ou les emballages sont pris en compte.
+
+divers . animaux domestiques . chiens . alimentation . besoin journalier nourriture:
+  formule: besoins énergétiques journaliers / apport énergétique nourriture
+  unité: kg/jour
+
+divers . animaux domestiques . chiens . alimentation . besoins énergétiques journaliers:
+  formule: facteur poids * facteur énergie
+  unité: kcal
+  description: |
+    Chiffres et tableaux issus de [FEDIAF, Nutritional Guidelines](https://europeanpetfood.org/wp-content/uploads/2022/03/Updated-Nutritional-Guidelines.pdf)
+
+    On retient la formule: (poids chien)^0.75 * 110 kcal pour un animal moyennement actif.
+
+divers . animaux domestiques . chiens . alimentation . besoins énergétiques journaliers . facteur poids:
+  avec:
+    taille chien:
+  formule:
+    variations:
+      - si: taille chien = 'gros chien'
+        alors: 15.9
+      - si: taille chien = 'chien moyen'
+        alors: 9.46
+      - si: taille chien = 'petit chien'
+        alors: 3.34
+  note: |
+    Formule : (poids chien)^0.75, formule issue de [FEDIAF, Nutritional Guidelines](https://europeanpetfood.org/wp-content/uploads/2022/03/Updated-Nutritional-Guidelines.pdf)
+
+    Publicodes ne supporte pas la fonction puissance. On considère des chiens de 5, 20 et 40kg.
+divers . animaux domestiques . chiens . alimentation . besoins énergétiques journaliers . facteur énergie:
+  formule:
+    variations:
+      - si: activité = 'très actif'
+        alors: 125
+      - si: activité = 'actif'
+        alors: 110
+      - sinon: 95
+  note: |
+    On retient la formule: (poids chien)^0.75 * 125 kcal pour un chien très actif, (poids chien)^0.67 * 110 pour un chien actif, (poids chien)^0.67 * 95 kcal pour un chien moins actif.
+
+    ![](https://user-images.githubusercontent.com/55186402/229539516-3f548d73-1129-48f3-900a-f9fd30317d4c.png)
+
+divers . animaux domestiques . chiens . alimentation . besoins énergétiques journaliers . facteur énergie . activité:
+  titre: Niveau d'activité du chien
+  avec:
+    très actif:
+    actif:
+    peu actif:
+  par défaut: "'actif'"
+
+divers . animaux domestiques . chats:
+  icônes: 🐈‍⬛
+  titre: Chat
+  formule: nombre * empreinte
+
+divers . animaux domestiques . chats . nombre:
+  question: Combien de chiens possédez-vous dans votre foyer ?
+  par défaut: 1
+
+divers . animaux domestiques . chats . empreinte:
+  titre: Empreinte d'un chat de taille moyenne
+  description: |
+    On considère un chat de taille moyenne (4kg).
+  formule:
+    somme:
+      - alimentation
+      - soins vétérinaires par animal
+
+divers . animaux domestiques . chats . alimentation:
+  formule: besoin journalier nourriture * jours par an * empreinte nourriture
+  unité: kgCO2e
+
+divers . animaux domestiques . chats . alimentation . empreinte nourriture:
+  titre: Empreinte nourriture pour chats
+  formule: 2
+  unité: kgCO2e/kg
+  note: |
+    Pour ce facteur d'émission, nous avons utilisé le papier : [The global environmental paw print of pet food, 2020](https://reader.elsevier.com/reader/sd/pii/S0959378020307366?token=375964333F28DED330C9C2CACCD5553CAAE486B7BD641A4F39738E9EC323613DCDABF4A0263131197CB5B47E1D304B99&originRegion=eu-west-1&originCreation=20230330100228)
+
+    Quelques commentaires au niveau de la méthodo mise en place dans cet article :
+
+    A COMPLETER
+
+    Deux types de nourritures sont considérés : 
+    - Nourriture Chat "classique" (type croquettes): 1.5 kgCO2e/kg, composant la nourriture moyenne des chats à hauteur de 2/3.
+    - Nourriture Chat "Premium" (plus proche des patées semble-t-il): 3 kgCO2e/kg, composant la nourriture moyenne des chats à hauteur de 1/3.
+
+    On obtient une valeur moyenne de 2 kgCO2e/kg de nourriture pour chat.
+
+    A priori, seule la partie production est comptabilisée. Il faudrait entrer davantage dans les sources de calcul pour savoir le disctribution ou les emballages sont pris en compte.
+
+divers . animaux domestiques . chats . alimentation . besoin journalier nourriture:
+  formule: besoins énergétiques journaliers / apport énergétique nourriture
+  unité: kg/jour
+
+divers . animaux domestiques . chats . alimentation . besoins énergétiques journaliers:
+  formule: facteur poids * facteur énergie
+  unité: kcal
+  description: |
+    Chiffres et tableaux issus de [FEDIAF, Nutritional Guidelines](https://europeanpetfood.org/wp-content/uploads/2022/03/Updated-Nutritional-Guidelines.pdf)
+
+    Pour un chat, on retient la formule: (poids chat)^0.67 * 100 kcal pour un animal moyennement actif.
+
+    Ici, on considère un chat de 4kg, moyennement actif, ce qui donne les chiffres visibles dans les tableaux ci-dessous.
+
+    ![](https://user-images.githubusercontent.com/55186402/229522212-30dde3ac-0c96-42f4-925a-78f122185b64.png)
+
+    ![](https://user-images.githubusercontent.com/55186402/228851632-28ad3746-7fd2-4b80-8923-a76f75dc8012.png)
+
+divers . animaux domestiques . chats . alimentation . besoins énergétiques journaliers . facteur poids:
+  formule: 2.53
+  note: |
+    Formule : (poids chat)^0.67, formule issue de [FEDIAF, Nutritional Guidelines](https://europeanpetfood.org/wp-content/uploads/2022/03/Updated-Nutritional-Guidelines.pdf)
+
+    Publicodes ne supporte pas la fonction puissance. On considère un chat de 4kg.
+divers . animaux domestiques . chats . alimentation . besoins énergétiques journaliers . facteur énergie:
+  formule:
+    variations:
+      - si: activité = 'actif'
+        alors: 100
+      - sinon: 75
+  note: |
+    On retient la formule: (poids chat)^0.67 * 100 kcal pour un animal moyennement actif, (poids chat)^0.67 * 75 kcal pour un chat moins actif (chat d'intérieur).
+
+divers . animaux domestiques . chats . alimentation . besoins énergétiques journaliers . facteur énergie . activité:
+  titre: Niveau d'activité du chat
+  avec:
+    actif:
+    peu actif:
+  par défaut: "'actif'"
+
+divers . animaux domestiques . soins vétérinaires par animal:
+  titre: Empreinte asociées aux soins vétérinaires de l'animal
+  formule: soins vétérinaires France / 35700000
+  unité: kgCO2e
+  description: Ce chiffre, associé à l'empreinte correspondant aux soins vétérinaires de l'animal, est issu du prorata de l'empreinte macro-éconoimique associées aux soins vétérinaires par le nombre d'animaux domestiques (hors poissons).
+  note: |
+    L'idée est de partir de l'empreinte de l'empreinte macro-économique associée à la branche NAF M75 (Activités vétérinaires).
+    L'INSEE donne cette description:
+      - Services médicaux, chirurgicaux et dentaires fournis à des animaux de compagnie dans des cliniques vétérinaires ou ailleurs. Ces services ont pour but de soigner les animaux, d'améliorer et/ou de stabiliser leur état de santé.
+      - Services hospitaliers, services des laboratoires, services techniques, nourriture (y compris les régimes alimentaires spéciaux), etc.
+
+    Par ailleurs, d'après le [rapport annuel FACCO](https://www.facco.fr/wp-content/uploads/2022/05/rapport-annuel-facco-2022pdf.pdf), la France comptait en 2020
+    75 millions d'animaux domestiques.
+
+    En faisant l'hypothèse que les poissons ne bénéficient pas de soins vétérinaires, on atteint 49 millions d'animaux.
+    Nous avons également déduit les oiseaux de basse-cour qui semble-t-il n'ont pas besoin de soins cliniques, ce qui nous amène à **35,7 millions d'animaux**.
+
+    ![](https://user-images.githubusercontent.com/55186402/229517254-01e77c3d-acef-4053-9b8f-2931a6ce33a9.png)
+
+    On peut alors en déduire l'empreinte moyenne des services vétérinaire par animal.
+
+divers . animaux domestiques . soins vétérinaires France:
+  titre: Empreinte soins vétérinaires en France
+  formule: empreinte branche . M75 * 1000000 kgCO2e/ktCO2e
+  unité: kgCO2e
+
+divers . animaux domestiques . apport énergétique nourriture:
+  formule: 4610
+  note: |
+    > An average gross energy of cat and dog food of 461 kcal/100 g (Davies et al., 2017).
+    Issu de [The global environmental paw print of pet food, 2020](https://reader.elsevier.com/reader/sd/pii/S0959378020307366?token=375964333F28DED330C9C2CACCD5553CAAE486B7BD641A4F39738E9EC323613DCDABF4A0263131197CB5B47E1D304B99&originRegion=eu-west-1&originCreation=20230330100228)
+  unité: kcal/kg
