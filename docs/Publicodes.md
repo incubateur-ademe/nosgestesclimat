@@ -21,6 +21,40 @@ transport . avion . court courrier . vitesse moyenne:
 There is dedicated [_mécanismes_](https://publi.codes/docs/m%C3%A9canismes)
 such as `formule` or `note` supported by default by the publicode interpreter.
 
+## Packaging
+
+Publicodes greenhouse gas emission calculation models begin to be used in
+different projects, such as :
+[`futur.eco`](https://github.com/laem/futureco-data) and
+[`impactCO2`](https://github.com/datagir/impactCO2).
+To avoid the duplication of models and to facilitate the reuse of rules, we
+introduced a new meta-mechanism : `importer!`.
+
+### Usage
+
+To import rules from a _packaged_ publicodes model, you need to specify the following syntax :
+
+```yaml
+importer!:
+  depuis: <npm_package_name>
+  les règles:
+    - <rule_name_from_the_npm_package>
+    ...
+```
+
+When compiling yaml files to a standalone json file, each yaml entry
+`importer!` will be replaced by all imported rules and their dependencies by
+the `getModelFromSource.js` script.
+
+### Publishing a new package
+
+Currently, there is only the
+[`futureco-data`](https://www.npmjs.com/package/futureco-data) package
+published on NPM.
+
+To be used in the `importer!` meta-mechanism, the NPM package need to expose the
+model compiled into `<package_name>.model.json`.
+
 ## Custom mechanisms
 
 However, during the implementation of the NGC's website new _mécanismes_ were
