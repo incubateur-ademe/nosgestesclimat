@@ -39,6 +39,9 @@ importer!:
   depuis: <npm_package_name>
   les règles:
     - <rule_name_from_the_npm_package>
+    - <rule_name_from_the_npm_package>:
+      <attr_to_overwrite>: <value>
+      ...
     ...
 ```
 

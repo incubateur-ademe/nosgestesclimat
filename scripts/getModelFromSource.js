@@ -20,7 +20,14 @@ function getEngine(packageName, opts) {
 		}
 		try {
 			const engine = new Engine(
-				JSON.parse(fs.readFileSync(packageModelPath(packageName), 'utf-8'))
+				JSON.parse(fs.readFileSync(packageModelPath(packageName), 'utf-8')),
+				{
+					logger: {
+						log: (_) => {},
+						warn: (_) => {},
+						err: (s) => console.error(s),
+					},
+				}
 			)
 			enginesCache[packageName] = engine
 		} catch (e) {
@@ -31,9 +38,9 @@ function getEngine(packageName, opts) {
 }
 
 function getTraversedRules(engine, rule) {
-	const { traversedRules } = engine.evaluate(rule)
+	const { traversedVariables } = engine.evaluate(rule)
 	return (
-		traversedRules?.flatMap((varName) => {
+		traversedVariables?.flatMap((varName) => {
 			return [
 				[varName, engine.getRule(varName).rawNode],
 				...getTraversedRules(engine, engine.getRule(varName)),
@@ -49,14 +56,19 @@ function resolveImports(rules, opts) {
 			const rulesToImport = value[rulesKeyword]
 
 			rulesToImport.forEach((ruleToImport) => {
-				const rule = engine.getRule(ruleToImport, opts)
+				const [[ruleName, attrs]] =
+					typeof ruleToImport == 'object'
+						? Object.entries(ruleToImport)
+						: [[ruleToImport, {}]]
+				const rule = engine.getRule(ruleName, opts)
 				if (!rule) {
 					throw new Error(
-						`La règle '${ruleToImport}' n'existe pas dans ${value[fromKeyword]}`
+						`La règle '${ruleName}' n'existe pas dans ${value[fromKeyword]}`
 					)
 				}
 				const traversedRules = getTraversedRules(engine, rule, opts)
-				traversedRules.push([ruleToImport, rule.rawNode])
+				const updatedRawNode = { ...rule.rawNode, ...attrs }
+				traversedRules.push([ruleName, updatedRawNode])
 				acc.push(...traversedRules)
 			})
 		} else {
