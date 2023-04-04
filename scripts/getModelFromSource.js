@@ -55,7 +55,7 @@ function resolveImports(rules, opts) {
 			const engine = getEngine(value[fromKeyword], opts)
 			const rulesToImport = value[rulesKeyword]
 
-			rulesToImport.forEach((ruleToImport) => {
+			rulesToImport?.forEach((ruleToImport) => {
 				const [[ruleName, attrs]] =
 					typeof ruleToImport == 'object'
 						? Object.entries(ruleToImport)
