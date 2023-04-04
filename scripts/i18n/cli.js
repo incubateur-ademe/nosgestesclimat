@@ -49,7 +49,7 @@ const italic = (str) => withStyle(colors.italic, str)
 const printChecksResultTableHeader = (markdown) => {
 	if (markdown) {
 		console.log(`| Language | Nb. missing translations | Status |`)
-		console.log(`|:--------:|:------------------------:|:------:|`)
+		console.log(`|:--------:|:-------------------------|:------:|`)
 	}
 }
 
