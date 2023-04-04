@@ -72,7 +72,7 @@ function fmtGHActionErr(localResult, prodResult, diff, diffPercent, name) {
 	)}%20kgCO2e-${color}?style=flat-square) | **${localResult.toLocaleString(
 		'en-us'
 	)}** | ${prodResult.toLocaleString('en-us')} | ${
-		diff > 0 ? '+' : '-'
+		diff > 0 ? '+' : ''
 	}${diffPercent}% |`
 }
 
