@@ -5,7 +5,6 @@
 */
 
 import fs from 'fs'
-import glob from 'glob'
 import path from 'path'
 import { exit } from 'process'
 import Engine from 'publicodes'
@@ -24,6 +23,7 @@ import {
 	regionModelsPath,
 	supportedRegionCodes,
 } from './i18n/regionCommons.js'
+import { getModelFromSource } from './getModelFromSource.js'
 
 const { srcLang, srcFile, destLangs, destRegions, markdown } = cli.getArgs(
 	`Aggregates the model to an unique JSON file.`,
@@ -46,7 +46,7 @@ function writeSupportedRegions() {
 		console.log(
 			markdown
 				? `| Supported regions | :heavy_check_mark: | Ø |`
-				: ` ✅ The rules have been correctly written in: ${supportedRegionPath}`
+				: ` ✅ The supported regions have been correctly written in: ${supportedRegionPath}`
 		)
 	} catch (err) {
 		if (markdown) {
@@ -67,11 +67,9 @@ function writeSupportedRegions() {
 function writeRules(rules, path, destLang, regionCode) {
 	try {
 		fs.writeFileSync(path, JSON.stringify(rules))
-		console.log(
-			markdown
-				? `| Rules compilation to JSON for the region ${regionCode} in _${destLang}_ | :heavy_check_mark: | Ø |`
-				: ` ✅ The rules have been correctly written in: ${path}`
-		)
+		if (!markdown) {
+			console.log(` ✅ The rules have been correctly written in: ${path}`)
+		}
 	} catch (err) {
 		if (markdown) {
 			console.log(
@@ -99,10 +97,15 @@ function getLocalizedRules(translatedBaseRules, regionCode, destLang) {
 	if (regionCode === defaultModelCode) {
 		return translatedBaseRules
 	}
-	const localizedAttrs = utils.readYAML(
-		path.join(regionModelsPath, `${regionCode}-${destLang}.yaml`) ?? {}
-	)
-	return addRegionToBaseRules(translatedBaseRules, localizedAttrs)
+	try {
+		const localizedAttrs = utils.readYAML(
+			path.join(regionModelsPath, `${regionCode}-${destLang}.yaml`)
+		)
+		return addRegionToBaseRules(translatedBaseRules, localizedAttrs)
+	} catch (err) {
+		cli.printWarn(`[SKIPPED] - ${regionCode}-${destLang} (${err.message})`)
+		return addRegionToBaseRules(translatedBaseRules, {})
+	}
 }
 
 /// ---------------------- Main ----------------------
@@ -114,73 +117,72 @@ if (markdown) {
 
 writeSupportedRegions()
 
-glob(srcFile, { ignore: ['data/i18n/**'] }, (_, files) => {
-	const baseRules = files.reduce((acc, filename) => {
-		try {
-			const rules = utils.readYAML(path.resolve(filename))
-			return { ...acc, ...rules }
-		} catch (err) {
-			console.log(
-				' ❌ Une erreur est survenue lors de la lecture du fichier',
-				filename,
-				':\n\n',
-				err.message
-			)
-			exit(-1)
-		}
-	}, {})
-
-	try {
-		new Engine(baseRules, {
-			// NOTE(@EmileRolley): warnings are ignored for now but should be examined in
-			//    https://github.com/datagir/nosgestesclimat/issues/1722
-			logger: { log: (_) => {}, warn: (_) => {}, err: (s) => console.error(s) },
-		}).evaluate('bilan')
-		console.log(
-			markdown
-				? `| Rules evaluation | :heavy_check_mark: | Ø |`
-				: ' ✅ Les règles ont été évaluées sans erreur !'
-		)
-
-		destLangs.push(srcLang)
-		destLangs.forEach((destLang) => {
-			const translatedBaseRules = getTranslatedRules(baseRules, destLang)
-			destRegions.forEach((regionCode) => {
-				const localizedTranslatedBaseRules = getLocalizedRules(
-					translatedBaseRules,
-					regionCode,
-					destLang
-				)
-				const destPathWithoutExtension = path.join(
-					publicDir,
-					`co2-model.${regionCode}-lang.${destLang}`
-				)
-				writeRules(
-					localizedTranslatedBaseRules,
-					destPathWithoutExtension + '.json',
-					destLang,
-					regionCode
-				)
-				compressRules(destPathWithoutExtension, destLang, markdown, regionCode)
-			})
-		})
-	} catch (err) {
-		if (markdown) {
-			console.log(
-				`| Rules evaluation | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
-			)
-			console.log(err)
-		} else {
-			console.log(
-				' ❌ Une erreur est survenue lors de la compilation des règles:\n'
-			)
-			let lines = err.message.split('\n')
-			for (let i = 0; i < 9; ++i) {
-				if (lines[i]) {
-					console.log('  ', lines[i])
-				}
-			}
-			console.log(err)
-		}
-	}
+const baseRules = getModelFromSource(srcFile, ['data/i18n/**'], {
+	verbose: !markdown,
 })
+
+try {
+	new Engine(baseRules, {
+		// NOTE(@EmileRolley): warnings are ignored for now but should be examined in
+		//    https://github.com/datagir/nosgestesclimat/issues/1722
+		logger: { log: (_) => {}, warn: (_) => {}, err: (s) => console.error(s) },
+	})
+	console.log(
+		markdown
+			? `| Rules evaluation | :heavy_check_mark: | Ø |`
+			: ' ✅ Les règles ont été évaluées sans erreur !'
+	)
+
+	let correctlyCompiledAndOptimizedFiles = []
+
+	destLangs.unshift(srcLang)
+	destLangs.forEach((destLang) => {
+		const translatedBaseRules = getTranslatedRules(baseRules, destLang)
+		destRegions.forEach((regionCode) => {
+			const localizedTranslatedBaseRules = getLocalizedRules(
+				translatedBaseRules,
+				regionCode,
+				destLang
+			)
+			const destPathWithoutExtension = path.join(
+				publicDir,
+				`co2-model.${regionCode}-lang.${destLang}`
+			)
+			writeRules(
+				localizedTranslatedBaseRules,
+				destPathWithoutExtension + '.json',
+				destLang,
+				regionCode
+			)
+			compressRules(destPathWithoutExtension, destLang, markdown, regionCode)
+			correctlyCompiledAndOptimizedFiles.push(
+				'<li><b>' + `${regionCode}-${destLang}` + '</b></li>'
+			)
+		})
+	})
+	if (markdown) {
+		console.log(
+			`| Successfully compiled and optimized rules: <br><details><summary>Expand</summary> <ul>${correctlyCompiledAndOptimizedFiles.join(
+				' '
+			)}</ul></details> | :heavy_check_mark: | Ø |`
+		)
+	}
+} catch (err) {
+	if (markdown) {
+		console.log(
+			`| Rules evaluation | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
+		)
+		console.log(err)
+	} else {
+		console.log(
+			' ❌ Une erreur est survenue lors de la compilation des règles:\n'
+		)
+		let lines = err.message.split('\n')
+		for (let i = 0; i < 9; ++i) {
+			if (lines[i]) {
+				console.log('  ', lines[i])
+			}
+		}
+		console.log(err)
+	}
+}
