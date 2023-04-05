@@ -46,11 +46,24 @@ logement . chauffage . bois . type . granulés . consommation:
 logement . chauffage . bois . type . granulés . consommation . estimation via le coût:
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
   unité: €/kWh
-  formule: 0.12
+  formule: granulés . prix kWh
   description: |
     Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois.
-    Le détail du calcul est fourni [ici](https://docs.google.com/spreadsheets/d/1ID9iw2_wXP5CFy5r_Utg7_kRIEax5E-Ckt5JoPZAjjc/edit#gid=1291705473)
-    depuis la source reprise du [MTE](https://www.statistiques.developpement-durable.gouv.fr/catalogue?page=dataset&datasetId=631b03afb61e5c6479370169)
+    
+logement . chauffage . bois . type . granulés . prix kWh
+  formule: ((granulés vrac . prix 100 kWh + granulés sac . prix 100 kWh) / 2) / 100
+  unité: kWh
+
+logement . chauffage . bois . type . granulés vrac . prix 100 kWh:
+  formule: 13.2522
+  unité: kWh
+  note: |
+    Source : [Dido](https://www.statistiques.developpement-durable.gouv.fr/catalogue?page=datafile&datafileRid=0bf930dc-bfac-4e6f-a063-ec1774c6d029) en date du 2023-01
+
+logement . chauffage . bois . type . granulés sac . prix 100 kWh:
+  formule: 13.8456
+  note: |
+    Source : [Dido](https://www.statistiques.developpement-durable.gouv.fr/catalogue?page=datafile&datafileRid=0bf930dc-bfac-4e6f-a063-ec1774c6d029) en date du 2023-01
 
 logement . chauffage . bois . type . bûche . consommation:
   formule: saisie * intensité énergétique
@@ -81,14 +94,29 @@ logement . chauffage . bois . type . bûche . consommation . saisie:
 logement . chauffage . bois . type . bûche . consommation . estimation via le coût:
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
   unité: €/stère
-  formule: 71
+  formule: prix stère 2023
   description: |
     Cette formule nous permet de passer des €/mois au nb_stère/an
   note: |
-    Source : ci-dessous, fichier 3_presentation.pdf, page 34
+    Prix calculé sur la base de l'indice prix bois énergie publié par l'INSEE.
+    
+logement . chauffage . bois . type . bûche . prix stère 2017
+formule: 71
+unité: €/stère
+note: |
+  Source : ci-dessous, fichier 3_presentation.pdf, page 34
+références:
+  - https://www.ademe.fr/etude-chauffage-domestique-bois
 
-  références:
-    - https://www.ademe.fr/etude-chauffage-domestique-bois
+logement . chauffage . bois . type . bûche . prix stère 2023
+formule: prix stère 2017 * (indice prix bois/100)
+unité: €/stère
+
+logement . chauffage . bois . indice prix bois
+formule: 150.4
+note: |
+  Indice prix en date de février 2023 sur une base d'octobre 2017
+  [Source](https://www.insee.fr/fr/statistiques/serie/010534112#Graphique)
 
 logement . chauffage . bois . facteur d'émission:
 
@@ -101,4 +129,6 @@ logement . chauffage . bois . facteur d'émission . granulés:
   titre: empreinte bois granulés
   formule: 0.0113
   unité: kgCO2e/kWh
-  note: FE de la Base Carbone Granulés/Blancs français (issus de connexe de scierie)
+  note: |
+    FE de la Base Carbone Granulés/Blancs français (issus de connexe de scierie)
+    Connexe de scierie signifie que les granulés sont issus de chutes de bois et non de bois brut
