@@ -6,21 +6,21 @@ const cli = require('./cli')
 const deepl = require('./deepl')
 const utils = require('./utils')
 
-const localizedRegionModelsDir = path.resolve('./data/i18n/models/')
+const { regionModelsPath, supportedRegionCodes } = require('./regionCommons')
 
 const { srcLang, destLangs, destRegions } = cli.getArgs(
-	`Translates localized region models stored in ${localizedRegionModelsDir}.`,
+	`Translates localized region models stored in ${regionModelsPath}.`,
 	{
 		source: true,
 		target: true,
-		model: true,
+		model: { supportedRegionCodes },
 	}
 )
 
 // TODO: support multiple models
 const model = destRegions[0]
 
-const srcFile = path.join(localizedRegionModelsDir, `${model}-${srcLang}.yaml`)
+const srcFile = path.join(regionModelsPath, `${model}-${srcLang}.yaml`)
 const srcModel = utils.readYAML(srcFile)
 
 const translateRule = async ([ruleName, ruleVal], destLang) => {
@@ -85,24 +85,14 @@ const translateModel = async (srcRules, destLang) => {
 	return Object.fromEntries(
 		await Promise.all(
 			Object.entries(srcRules).map(async (rule) => {
-				// The [params] attribute contains all informations about the region,
-				// it is only stored in the [fr] translation (which is the default one),
-				// so we don't need to translate it.
-				if (rule !== 'params') {
-					return await translateRule(rule, destLang)
-				} else {
-					return rule
-				}
+				return await translateRule(rule, destLang)
 			})
 		)
 	)
 }
 
 destLangs.forEach(async (destLang) => {
-	const destFile = path.join(
-		localizedRegionModelsDir,
-		`${model}-${destLang}.yaml`
-	)
+	const destFile = path.join(regionModelsPath, `${model}-${destLang}.yaml`)
 	console.log(
 		'Translating',
 		path.basename(srcFile),
@@ -118,5 +108,5 @@ destLangs.forEach(async (destLang) => {
 		}
 	}
 	const translatedModel = await translateModel(srcModel, destLang)
-	utils.writeYAML(destFile, translatedModel)
+	utils.writeYAML(destFile, translatedModel, { sortMapEntries: false })
 })

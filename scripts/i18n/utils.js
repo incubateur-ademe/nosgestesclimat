@@ -20,13 +20,13 @@ const readYAML = (path) => {
 	return yaml.parse(fs.readFileSync(path, 'utf-8'))
 }
 
-const writeYAML = (path, content, blockQuote = 'literal') => {
+const writeYAML = (path, content, blockQuote = 'literal', sortMapEntries) => {
 	resolveConfig(process.cwd()).then((prettierConfig) =>
 		fs.writeFileSync(
 			path,
 			format(
 				yaml.stringify(content, {
-					sortMapEntries: true,
+					sortMapEntries,
 					aliasDuplicateObjects: false,
 					blockQuote,
 					lineWidth: 0,
@@ -158,6 +158,8 @@ const mechanismsToTranslate = [
 	'suggestions',
 	'mosaique',
 	'abréviation',
+	'nom',
+	'gentilé',
 ]
 
 const getMissingRules = (srcRules, targetRules) => {
@@ -283,6 +285,19 @@ const customAssocPath = (path, val, obj) => {
 	return assoc(idx, val, obj)
 }
 
+// Returns the list of rules that are translated in the target language but
+// no longer exist in the source language.
+const getNotUpToDateRuleTranslations = (srcRules, targetRules) => {
+	return Object.entries(targetRules)
+		.filter(([_, val]) => val !== null && val !== undefined)
+		.reduce((acc, [rule, _]) => {
+			if (srcRules[rule] === undefined) {
+				acc.push(rule)
+			}
+			return acc
+		}, [])
+}
+
 module.exports = {
 	availableLanguages,
 	defaultLang,
@@ -290,6 +305,7 @@ module.exports = {
 	getMissingPersonas,
 	getMissingRules,
 	getUiMissingTranslations,
+	getNotUpToDateRuleTranslations,
 	isI18nKey,
 	LOCK_KEY_EXT,
 	AUTO_KEY_EXT,

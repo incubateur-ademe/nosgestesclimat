@@ -19,6 +19,7 @@ import { constantFolding, disabledLogger, getRawNodes } from 'publiopti'
 // but important for thee UI.
 const rulesToKeep = [
 	'actions',
+	'actions pétrole',
 	'bilan',
 	'logement . gaz',
 	'logement . gaz . biogaz',
@@ -56,12 +57,8 @@ export function compressRules(
 			console.log(err)
 		}
 		exit(-1)
-	} else {
-		console.log(
-			markdown
-				? `| Rules compression for the region ${regionCode} in _${destLang}_ | :heavy_check_mark: | Ø |`
-				: ` ✅ The rules have been correctly compressed in: ${destPath}`
-		)
+	} else if (!markdown) {
+		console.log(` ✅ The rules have been correctly compressed in: ${destPath}`)
 	}
 }
 

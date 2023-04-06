@@ -4,15 +4,14 @@ const path = require('path')
 const fs = require('fs')
 const { exit } = require('process')
 
-const { publicDir, readYAML } = require('./utils')
+const { publicDir, customAssocPath, readYAML } = require('./utils')
+const regionModelsPath = path.resolve('data/i18n/models')
 
-const regionsModelsPath = path.resolve('data/i18n/models')
 const defaultModelCode = 'FR'
 const defaultRegionModelParam = {
-	[defaultModelCode]: {
-		nom: 'France métropolitaine',
-		gentilé: 'française',
-		code: defaultModelCode,
+	FR: {
+		fr: { nom: 'France métropolitaine', gentilé: 'française' },
+		en: { nom: 'metropolitan France', gentilé: 'french' },
 	},
 }
 const supportedRegionPath = path.join(publicDir, `supportedRegions.json`)
@@ -26,11 +25,15 @@ const supportedRegionPath = path.join(publicDir, `supportedRegions.json`)
 // The default region and hardcoded one is FR.
 //
 const supportedRegions = fs
-	.readdirSync(regionsModelsPath)
+	.readdirSync(regionModelsPath)
 	.reduce((acc, filename) => {
-		if (!filename.match(/([A-Z]{2})-fr.yaml/)) return acc
+		if (!filename.match(/[A-Z]{2}.*.yaml/)) {
+			return acc
+		}
 		try {
-			const regionPath = path.join(regionsModelsPath, filename)
+			const langRegex = filename.match(/(?<=[A-Z]{2}-).*(?=.yaml)/) // match lang param in filename
+			const lang = langRegex[0] === 'en-us' ? 'en' : langRegex[0]
+			const regionPath = path.join(regionModelsPath, filename)
 			const rules = readYAML(regionPath)
 			const params = rules['params']
 			if (params === undefined) {
@@ -39,7 +42,8 @@ const supportedRegions = fs
 				)
 				exit(-1)
 			}
-			return { ...acc, [rules.params.code]: params }
+			const code = rules.params.code
+			return customAssocPath([code, lang], params, acc)
 		} catch (err) {
 			console.log(
 				' ❌ An error occured while reading the file:',
@@ -58,5 +62,5 @@ module.exports = {
 	supportedRegionCodes,
 	supportedRegions,
 	defaultModelCode,
-	regionsModelsPath,
+	regionModelsPath,
 }
