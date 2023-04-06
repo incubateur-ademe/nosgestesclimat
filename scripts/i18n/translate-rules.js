@@ -16,6 +16,7 @@ const cli = require('./cli')
 const deepl = require('./deepl')
 
 const gitDiff = require('git-diff')
+const { getModelFromSource } = require('../getModelFromSource')
 
 const { srcLang, destLangs, srcFile, onlyUpdateLocks, interactiveMode } =
 	cli.getArgs(
@@ -178,53 +179,40 @@ const translateTo = async (
 	utils.writeYAML(destPath, translatedRules)
 }
 
-glob(`${srcFile}`, { ignore: ['data/i18n/**'] }, (_, files) => {
-	console.log(`Parsing rules of '${srcFile}'`)
-	const rules = R.mergeAll(
-		files.reduce((acc, filename) => {
-			try {
-				return acc.concat(utils.readYAML(filename))
-			} catch (err) {
-				cli.printErr('An error occured while reading the file ' + filename + '')
-				cli.printErr(err)
-				exit(-1)
-			}
-		}, [])
+const rules = getModelFromSource(srcFile, ['data/i18n/**'], { verbose: true })
+
+destLangs.forEach(async (destLang) => {
+	const destPath = path.resolve(
+		`data/i18n/t9n/translated-rules-${destLang}.yaml`
 	)
+	const destRules = R.mergeAll(utils.readYAML(destPath))
+	console.log(`Getting missing rule for ${destLang}...`)
+	let missingRules = utils.getMissingRules(rules, destRules)
 
-	destLangs.forEach(async (destLang) => {
-		const destPath = path.resolve(
-			`data/i18n/t9n/translated-rules-${destLang}.yaml`
+	if (0 < missingRules.length) {
+		console.log(
+			`Translating ${cli.green(
+				missingRules.length
+			)} new entries to ${cli.yellow(destLang)}...`
 		)
-		const destRules = R.mergeAll(utils.readYAML(destPath))
-		console.log(`Getting missing rule for ${destLang}...`)
-		let missingRules = utils.getMissingRules(rules, destRules)
-
-		if (0 < missingRules.length) {
+		if (interactiveMode) {
 			console.log(
-				`Translating ${cli.green(
-					missingRules.length
-				)} new entries to ${cli.yellow(destLang)}...`
+				`For each rule, you can choose to:\n\n${cli.styledPromptActions(
+					[
+						'translate',
+						'update .lock attribute',
+						'skip',
+						'print current translation',
+						'abort',
+						// TODO: add a 'suggest translation' option?
+					],
+					'\n'
+				)}`
 			)
-			if (interactiveMode) {
-				console.log(
-					`For each rule, you can choose to:\n\n${cli.styledPromptActions(
-						[
-							'translate',
-							'update .lock attribute',
-							'skip',
-							'print current translation',
-							'abort',
-							// TODO: add a 'suggest translation' option?
-						],
-						'\n'
-					)}`
-				)
-			}
-
-			translateTo(srcLang, destLang, destPath, missingRules, destRules)
-		} else {
-			console.log(`Found no new entry to translate...`)
 		}
-	})
+
+		translateTo(srcLang, destLang, destPath, missingRules, destRules)
+	} else {
+		console.log(`Found no new entry to translate...`)
+	}
 })
