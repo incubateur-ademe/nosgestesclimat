@@ -1,26 +1,7 @@
 divers . animaux domestiques:
   titre: Animaux domestiques
-  icônes: 😺🐶
-  question: Combien d'animaux vivent avec vous, au sein de votre foyer ?
+  formule: empreinte / logement . habitants
   description: |
-    Chien ou chat, c'est le moment de prendre en compte nos fidèles compagnons
-
-    > 🦴 L'impact votre animal est en grande partie liée à sa gamelle !
-  mosaique:
-    type: nombre
-    clé: nombre
-    suggestions:
-      Pas d'animaux:
-        petit chien . nombre: 0
-        chien moyen . nombre: 0
-        chats . nombre: 0
-  formule:
-    somme:
-      - chiens
-      - chats
-  note: |
-    Dvision par le nombre de personnes dans le foyer ?
-
     On parle ici d'animaux domestiques, dont l'augmentation de la population (environ 10 millions de chats en France en 2000 
     contre 15 millions actuellement (2020)) est liée aux êtres humains (à l'inverse des animaux sauvages, dont l'histoire semble 
     montrer un équilibre GES stable).
@@ -38,6 +19,8 @@ divers . animaux domestiques:
 
     Pour notre cas, nous avons dans un premier temps considéré l'alimentation et les services vétérinaires qui représentent seulement quelques kilos de CO₂ alors que l'alimentation est responsable de centaines de kilos pour certains animaux.
 
+    > Nous considérons qu'un animal appartient à un foyer. Au même titre qu'un objet partagé au sein du foyer, l'empreinte d'un animal est amortie également.
+  note: |
     A noter que, pour l'impact de la nourriture, nous avons utilisé le papier : [The global environmental paw print of pet food, 2020](https://reader.elsevier.com/reader/sd/pii/S0959378020307366?token=375964333F28DED330C9C2CACCD5553CAAE486B7BD641A4F39738E9EC323613DCDABF4A0263131197CB5B47E1D304B99&originRegion=eu-west-1&originCreation=20230330100228) qui présente une méthodologie intéressante.
     Sur ce volet, l'article "Environmental Impacts of a Pet Dog: An LCA Case Study" cite The European Pet Food Industry Federation (FEDIAF); C&D Foods; FACCO, Chambre Syndicale des Fabricants d’Aliments pour Chiens, Chats, Oiseaux et autres Animaux Familiers (the French Pet Food Association for Dogs, Cats, Birds and Other Domestic Pets); Mars PetCare Europe; Nestlé Purina PetCare Europe; saturn petcare gmbh, and Quantis. Product Environmental Footprint Screening Study—Prepared Pet Food or Cats and Dogs; The European Pet Food Industry Federation: Brussels, Belgium, 2015,
     malheureusement introuvable...
@@ -47,24 +30,46 @@ divers . animaux domestiques:
       - Le facteur d'émission sélectionné pour notre calcul résulte d'une étude présentant une approche méthoologique spécifique. 
         Il sera nécessaire de continuer à suivre les évolutions pour approfondir le cycle de vie de ce type de nourriture (prise en compte des emballages ?).
 
-divers . animaux domestiques . chiens:
+divers . animaux domestiques . empreinte:
+  titre: Empreinte annuelle des animaux du foyer
+  icônes: 😺🐶
+  question: Combien d'animaux vivent avec vous, au sein de votre foyer ?
+  description: |
+    Chien ou chat, c'est le moment de prendre en compte nos fidèles compagnons.
+
+    > 🦴 L'impact votre animal est en grande partie liée à sa gamelle !
+  mosaique:
+    type: nombre
+    clé: nombre
+    suggestions:
+      Pas d'animaux:
+        petit chien . nombre: 0
+        chien moyen . nombre: 0
+        gros chien . nombre: 0
+        chats . nombre: 0
+  formule:
+    somme:
+      - chiens
+      - chats
+
+divers . animaux domestiques . empreinte . chiens:
   formule:
     somme:
       - petit chien
       - chien moyen
       - gros chien
 
-divers . animaux domestiques . petit chien:
+divers . animaux domestiques . empreinte . petit chien:
   icônes: 🐶
   titre: Petit chien
   description: Moins de 10kg (Chihuahua, Yorkshire, Epagneul...)
   formule: nombre * empreinte
 
-divers . animaux domestiques . petit chien . nombre:
+divers . animaux domestiques . empreinte . petit chien . nombre:
   question: Combien de chiens possédez-vous dans votre foyer ?
   par défaut: 0
 
-divers . animaux domestiques . petit chien . empreinte:
+divers . animaux domestiques . empreinte . petit chien . empreinte:
   titre: Empreinte d'un petit chien
   description: |
     Chien d'environ 5kg
@@ -73,24 +78,24 @@ divers . animaux domestiques . petit chien . empreinte:
       - alimentation
       - soins vétérinaires par animal
 
-divers . animaux domestiques . petit chien . alimentation:
+divers . animaux domestiques . empreinte . petit chien . alimentation:
   formule:
     recalcul:
       règle: chiens . alimentation
       avec:
         chiens . alimentation . besoins énergétiques journaliers . facteur poids . taille chien: "'petit chien'"
 
-divers . animaux domestiques . chien moyen:
+divers . animaux domestiques . empreinte . chien moyen:
   icônes: 🐶
   titre: Chien de taille moyenne
   description: Entre 10 et 30kg (Beagle, Bouledogue, Caniche...)
   formule: nombre * empreinte
 
-divers . animaux domestiques . chien moyen . nombre:
+divers . animaux domestiques . empreinte . chien moyen . nombre:
   question: Combien de chiens possédez-vous dans votre foyer ?
   par défaut: 1
 
-divers . animaux domestiques . chien moyen . empreinte:
+divers . animaux domestiques . empreinte . chien moyen . empreinte:
   titre: Empreinte d'un chien de taille moyenne
   description: |
     Chien d'environ 20kg
@@ -99,24 +104,24 @@ divers . animaux domestiques . chien moyen . empreinte:
       - alimentation
       - soins vétérinaires par animal
 
-divers . animaux domestiques . chien moyen . alimentation:
+divers . animaux domestiques . empreinte . chien moyen . alimentation:
   formule:
     recalcul:
       règle: chiens . alimentation
       avec:
         chiens . alimentation . besoins énergétiques journaliers . facteur poids . taille chien: "'chien moyen'"
 
-divers . animaux domestiques . gros chien:
+divers . animaux domestiques . empreinte . gros chien:
   icônes: 🐶
   titre: Gros chien
   description: Plus de 30kg (Golden Retriever, Dogue Allemand...)
   formule: nombre * empreinte
 
-divers . animaux domestiques . gros chien . nombre:
+divers . animaux domestiques . empreinte . gros chien . nombre:
   question: Combien de chiens possédez-vous dans votre foyer ?
   par défaut: 0
 
-divers . animaux domestiques . gros chien . empreinte:
+divers . animaux domestiques . empreinte . gros chien . empreinte:
   titre: Empreinte d'un gros chien
   description: |
     Chien d'environ 40kg
@@ -125,18 +130,18 @@ divers . animaux domestiques . gros chien . empreinte:
       - alimentation
       - soins vétérinaires par animal
 
-divers . animaux domestiques . gros chien . alimentation:
+divers . animaux domestiques . empreinte . gros chien . alimentation:
   formule:
     recalcul:
       règle: chiens . alimentation
       avec:
         chiens . alimentation . besoins énergétiques journaliers . facteur poids . taille chien: "'gros chien'"
 
-divers . animaux domestiques . chiens . alimentation:
+divers . animaux domestiques . empreinte . chiens . alimentation:
   formule: besoin journalier nourriture * jours par an * empreinte nourriture
   unité: kgCO2e
 
-divers . animaux domestiques . chiens . alimentation . empreinte nourriture:
+divers . animaux domestiques . empreinte . chiens . alimentation . empreinte nourriture:
   titre: Empreinte nourriture pour chiens
   formule: 5.5
   unité: kgCO2e/kg
@@ -177,11 +182,11 @@ divers . animaux domestiques . chiens . alimentation . empreinte nourriture:
     diets or 6,541 kg of CO2eq per year if consuming wet diets. 
 
     Au vu des chiffres particulièrment élevés, et dans l'attente d'approfondir cette étude, nous avons préféré utiliser les chiffres de l'étude mentionnée plus haut qui semble adopter une méthodologie cohérente.
-divers . animaux domestiques . chiens . alimentation . besoin journalier nourriture:
+divers . animaux domestiques . empreinte . chiens . alimentation . besoin journalier nourriture:
   formule: besoins énergétiques journaliers / apport énergétique nourriture
   unité: kg/jour
 
-divers . animaux domestiques . chiens . alimentation . besoins énergétiques journaliers:
+divers . animaux domestiques . empreinte . chiens . alimentation . besoins énergétiques journaliers:
   formule: facteur poids * facteur énergie
   unité: kcal
   description: |
@@ -189,7 +194,7 @@ divers . animaux domestiques . chiens . alimentation . besoins énergétiques jo
 
     On retient la formule: (poids chien)^0.75 * 110 kcal pour un animal moyennement actif.
 
-divers . animaux domestiques . chiens . alimentation . besoins énergétiques journaliers . facteur poids:
+divers . animaux domestiques . empreinte . chiens . alimentation . besoins énergétiques journaliers . facteur poids:
   avec:
     taille chien:
   formule:
@@ -204,7 +209,7 @@ divers . animaux domestiques . chiens . alimentation . besoins énergétiques jo
     Formule : (poids chien)^0.75, formule issue de [FEDIAF, Nutritional Guidelines](https://europeanpetfood.org/wp-content/uploads/2022/03/Updated-Nutritional-Guidelines.pdf)
 
     Publicodes ne supporte pas la fonction puissance. On considère des chiens de 5, 20 et 40kg.
-divers . animaux domestiques . chiens . alimentation . besoins énergétiques journaliers . facteur énergie:
+divers . animaux domestiques . empreinte . chiens . alimentation . besoins énergétiques journaliers . facteur énergie:
   formule:
     variations:
       - si: activité = 'très actif'
@@ -217,7 +222,7 @@ divers . animaux domestiques . chiens . alimentation . besoins énergétiques jo
 
     ![](https://user-images.githubusercontent.com/55186402/229539516-3f548d73-1129-48f3-900a-f9fd30317d4c.png)
 
-divers . animaux domestiques . chiens . alimentation . besoins énergétiques journaliers . facteur énergie . activité:
+divers . animaux domestiques . empreinte . chiens . alimentation . besoins énergétiques journaliers . facteur énergie . activité:
   titre: Niveau d'activité du chien
   avec:
     très actif:
@@ -225,16 +230,16 @@ divers . animaux domestiques . chiens . alimentation . besoins énergétiques jo
     peu actif:
   par défaut: "'actif'"
 
-divers . animaux domestiques . chats:
+divers . animaux domestiques . empreinte . chats:
   icônes: 🐱
   titre: Chat
   formule: nombre * empreinte
 
-divers . animaux domestiques . chats . nombre:
+divers . animaux domestiques . empreinte . chats . nombre:
   question: Combien de chiens possédez-vous dans votre foyer ?
   par défaut: 0
 
-divers . animaux domestiques . chats . empreinte:
+divers . animaux domestiques . empreinte . chats . empreinte:
   titre: Empreinte d'un chat de taille moyenne
   description: |
     On considère un chat de taille moyenne (4kg).
@@ -244,11 +249,11 @@ divers . animaux domestiques . chats . empreinte:
       - soins vétérinaires par animal
       - litière
 
-divers . animaux domestiques . chats . alimentation:
+divers . animaux domestiques . empreinte . chats . alimentation:
   formule: besoin journalier nourriture * jours par an * empreinte nourriture
   unité: kgCO2e
 
-divers . animaux domestiques . chats . alimentation . empreinte nourriture:
+divers . animaux domestiques . empreinte . chats . alimentation . empreinte nourriture:
   titre: Empreinte nourriture pour chats
   formule: 2
   unité: kgCO2e/kg
@@ -290,11 +295,11 @@ divers . animaux domestiques . chats . alimentation . empreinte nourriture:
     diets or 6,541 kg of CO2eq per year if consuming wet diets. 
 
     Au vu des chiffres particulièrment élevés, et dans l'attente d'approfondir cette étude, nous avons préféré utiliser les chiffres de l'étude mentionnée plus haut qui semble adopter une méthodologie cohérente.
-divers . animaux domestiques . chats . alimentation . besoin journalier nourriture:
+divers . animaux domestiques . empreinte . chats . alimentation . besoin journalier nourriture:
   formule: besoins énergétiques journaliers / apport énergétique nourriture
   unité: kg/jour
 
-divers . animaux domestiques . chats . alimentation . besoins énergétiques journaliers:
+divers . animaux domestiques . empreinte . chats . alimentation . besoins énergétiques journaliers:
   formule: facteur poids * facteur énergie
   unité: kcal
   description: |
@@ -308,13 +313,13 @@ divers . animaux domestiques . chats . alimentation . besoins énergétiques jou
 
     ![](https://user-images.githubusercontent.com/55186402/228851632-28ad3746-7fd2-4b80-8923-a76f75dc8012.png)
 
-divers . animaux domestiques . chats . alimentation . besoins énergétiques journaliers . facteur poids:
+divers . animaux domestiques . empreinte . chats . alimentation . besoins énergétiques journaliers . facteur poids:
   formule: 2.53
   note: |
     Formule : (poids chat)^0.67, formule issue de [FEDIAF, Nutritional Guidelines](https://europeanpetfood.org/wp-content/uploads/2022/03/Updated-Nutritional-Guidelines.pdf)
 
     Publicodes ne supporte pas la fonction puissance. On considère un chat de 4kg.
-divers . animaux domestiques . chats . alimentation . besoins énergétiques journaliers . facteur énergie:
+divers . animaux domestiques . empreinte . chats . alimentation . besoins énergétiques journaliers . facteur énergie:
   formule:
     variations:
       - si: activité = 'actif'
@@ -323,14 +328,14 @@ divers . animaux domestiques . chats . alimentation . besoins énergétiques jou
   note: |
     On retient la formule: (poids chat)^0.67 * 100 kcal pour un animal moyennement actif, (poids chat)^0.67 * 75 kcal pour un chat moins actif (chat d'intérieur).
 
-divers . animaux domestiques . chats . alimentation . besoins énergétiques journaliers . facteur énergie . activité:
+divers . animaux domestiques . empreinte . chats . alimentation . besoins énergétiques journaliers . facteur énergie . activité:
   titre: Niveau d'activité du chat
   avec:
     actif:
     peu actif:
   par défaut: "'actif'"
 
-divers . animaux domestiques . soins vétérinaires par animal:
+divers . animaux domestiques . empreinte . soins vétérinaires par animal:
   titre: Empreinte asociées aux soins vétérinaires de l'animal
   formule: soins vétérinaires France / 35700000
   unité: kgCO2e
@@ -351,30 +356,30 @@ divers . animaux domestiques . soins vétérinaires par animal:
 
     On peut alors en déduire l'empreinte moyenne des services vétérinaire par animal.
 
-divers . animaux domestiques . soins vétérinaires France:
+divers . animaux domestiques . empreinte . soins vétérinaires France:
   titre: Empreinte soins vétérinaires en France
   formule: empreinte branche . M75 * 1000000 kgCO2e/ktCO2e
   unité: kgCO2e
 
-divers . animaux domestiques . chats . litière:
+divers . animaux domestiques . empreinte . chats . litière:
   titre: Empreinte de la litière pour un chat
   note: L'impact de la litière semble résider majoriatirement dans les déchets. Il faudrait investiguer davangtage cet impact dans la partie "déchets" du test.
   formule: quantité annuelle * empreinte
   unité: kgCO2e
 
-divers . animaux domestiques . chats . litière . quantité annuelle:
+divers . animaux domestiques . empreinte . chats . litière . quantité annuelle:
   titre: Quantité litière par an pour un chat
   formule: 33
   unité: kg
   note: https://www.planetoscope.com/Animaux/1211-.html
 
-divers . animaux domestiques . chats . litière . empreinte:
+divers . animaux domestiques . empreinte . chats . litière . empreinte:
   titre: Empreinte d'un kilogramme de litière pour chat
   formule: 0.0506
   unité: kgCO2e/kg
   note: Nous faisons l'hypothèse ici qu'une litière pour chat est composée majoriairement de granulat. On considère donc le FE Granulat, grave/ciment issu de la base Empreinte.
 
-divers . animaux domestiques . apport énergétique nourriture:
+divers . animaux domestiques . empreinte . apport énergétique nourriture:
   formule: 4610
   note: |
     > An average gross energy of cat and dog food of 461 kcal/100 g (Davies et al., 2017).
