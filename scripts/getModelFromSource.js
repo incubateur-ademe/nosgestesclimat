@@ -37,16 +37,21 @@ function getEngine(packageName, opts) {
 	return enginesCache[packageName]
 }
 
-function getTraversedRules(engine, rule) {
-	const { traversedVariables } = engine.evaluate(rule)
-	return (
-		traversedVariables?.flatMap((varName) => {
-			return [
-				[varName, engine.getRule(varName).rawNode],
-				...getTraversedRules(engine, engine.getRule(varName)),
-			]
-		}) ?? []
+function getDependencies(engine, rule, acc = []) {
+	const deps = Array.from(
+		engine.baseContext.referencesMaps.referencesIn.get(rule.dottedName)
+	).filter(
+		(ruleName) =>
+			!ruleName.endsWith('$SITUATION') &&
+			!acc.find(([accRuleName, _]) => accRuleName === ruleName)
 	)
+	if (deps.length === 0) {
+		return acc
+	}
+	return deps.flatMap((varName) => {
+		acc.push([varName, engine.getRule(varName).rawNode])
+		return [...getDependencies(engine, engine.getRule(varName), acc)]
+	})
 }
 
 function resolveImports(rules, opts) {
@@ -66,7 +71,7 @@ function resolveImports(rules, opts) {
 						`La règle '${ruleName}' n'existe pas dans ${value[fromKeyword]}`
 					)
 				}
-				const traversedRules = getTraversedRules(engine, rule, opts)
+				const traversedRules = getDependencies(engine, rule)
 				const updatedRawNode = { ...rule.rawNode, ...attrs }
 				traversedRules.push([ruleName, updatedRawNode])
 				acc.push(...traversedRules)
