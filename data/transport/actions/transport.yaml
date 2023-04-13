@@ -102,6 +102,7 @@ transport . prendre moins l'avion:
 
 transport . éco-conduite:
   titre: Adopter une éco-conduite
+  non applicable si: covoitureur
   effort: faible
   icônes: 🚗☮
   formule: transport . voiture . empreinte - transport . éco-conduite . recalcul
@@ -133,6 +134,24 @@ transport . éco-conduite . usage réduit:
   unité: kgCO2e
   note: réduction de 15% (cf info règle éco-conduite)
 
+transport . voiture . profil . locataire:
+  titre: locataire
+  applicable si:
+    toutes ces conditions:
+      - propriétaire = non
+      - km > 0
+      - voyageurs < 2
+  note: avec cette variable on définit (imparfaitement) le profil locataire de voiture
+    
+transport . voiture . profil . covoitureur:
+  titre: covoitureurs
+  applicable si:
+    toutes ces conditions:
+      - propriétaire = non
+      - km > 0
+      - voyageurs > 2
+  note: avec cette variable on définit (imparafaitement) le profil covoitureur
+
 transport . covoiturage:
   titre: Privilégier le covoiturage
   effort: modéré
@@ -155,11 +174,15 @@ transport . covoiturage:
 transport . voiture . trajets longs . covoiturage:
   titre: Covoiturer sur vos trajets long
   icônes: 🚗👥  
-  applicable si: voyageurs < 2
   applicable si:
-    toutes ces conditions:
-      - voiture . propriétaire
-      - voiture . voyageurs < 2
+    variations:
+      - si:
+        toutes ces conditions:
+          - voiture . propriétaire
+          - voiture . voyageurs < 2
+       - si:
+         une de ces conditions:
+          - locataire
   formule: empreinte . usage * trajets longs . part / (voyageurs + 1)
   descritption: |
     Covoiturer sur des longues distances est un moyen facile de réduire son empreinte sur le climat. Et puis c'est économique !
@@ -374,7 +397,10 @@ transport . voiture 5km:
   titre: Se passer de voiture pour moins de 5 km
   icônes: 🚗🚲
   formule: transport . voiture . empreinte - transport . voiture 5km . recalcul
-  non applicable si: voiture . km < seuil d'activation 5km
+  non applicable si: 
+    une de ces conditions: 
+      - voiture . km < seuil d'activation 5km
+      - propriétaire = non
   description: |
     En France, 4 trajets en voiture sur 10 font moins de 3 km et ce n’est pas moins de 177 millions de trajets de moins de 5km qui sont réalisés seuls en voiture chaque semaine (hors trajets domicile-travail). 
 
