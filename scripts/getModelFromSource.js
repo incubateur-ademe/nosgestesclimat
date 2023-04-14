@@ -41,9 +41,9 @@ function getDependencies(engine, rule, acc = []) {
 	const deps = Array.from(
 		engine.baseContext.referencesMaps.referencesIn.get(rule.dottedName)
 	).filter(
-		(ruleName) =>
-			!ruleName.endsWith('$SITUATION') &&
-			!acc.find(([accRuleName, _]) => accRuleName === ruleName)
+		(depRuleName) =>
+			!depRuleName.endsWith('$SITUATION') &&
+			!acc.find(([accRuleName, _]) => accRuleName === depRuleName)
 	)
 	if (deps.length === 0) {
 		return acc
@@ -54,40 +54,11 @@ function getDependencies(engine, rule, acc = []) {
 	})
 }
 
-// This function fixes a bug related overwritten previously redefined rules
-// Example:
-// importer!:
-//   depuis: 'futureco-data'
-//   les règles:
-//     - a:
-//         attr: modification
-//     - b:
-//         attr: modification
-// In this case, without this function, if a is in traversedRules of b, the traversed rule is not the updated one and previous a modified attr is overwitten
-// To be really concrete :
-// importer!:
-//   depuis: 'futureco-data'
-//   les règles:
-//     - transport . ferry . surface . garage . bas:
-//         question:
-//     - transport . ferry . surface . garage . haut:
-//         question:
-// When the case of transport . ferry . surface . garage . bas is resolved, question attr is updated to null.
-// Resolving case transport . ferry . surface . garage . haut will overwrite null with the "original" value of question of transport . ferry . surface . garage . bas.
-function checkMemoToIgnoreTraversedRules(traversedRules, memo) {
-	traversedRules.forEach((ruleToCheck, index) => {
-		if (memo.includes(ruleToCheck[0])) {
-			traversedRules.splice(index, 1)
-		}
-	})
-}
-
 function resolveImports(rules, opts) {
 	const resolvedRules = Object.entries(rules).reduce((acc, [name, value]) => {
 		if (name === importKeyword) {
 			const engine = getEngine(value[fromKeyword], opts)
 			const rulesToImport = value[rulesKeyword]
-			const modifiedRulesMemo = []
 
 			rulesToImport?.forEach((ruleToImport) => {
 				const [[ruleName, attrs]] =
@@ -100,14 +71,14 @@ function resolveImports(rules, opts) {
 						`La règle '${ruleName}' n'existe pas dans ${value[fromKeyword]}`
 					)
 				}
-				const traversedRules = getDependencies(engine, rule)
 				const updatedRawNode = { ...rule.rawNode, ...attrs }
-				traversedRules.push([ruleName, updatedRawNode])
-				checkMemoToIgnoreTraversedRules(traversedRules, modifiedRulesMemo)
-				acc.push(...traversedRules)
-				if (updatedRawNode !== rule.rawNode) {
-					modifiedRulesMemo.push(ruleName)
-				}
+				acc.push([ruleName, updatedRawNode])
+				const ruleDeps = getDependencies(engine, rule).filter(
+					([ruleDepName, _]) =>
+						// Avoid to overwrite the updatedRawNode
+						!acc.find(([accRuleName, _]) => accRuleName === ruleDepName)
+				)
+				acc.push(...ruleDeps)
 			})
 		} else {
 			acc.push([name, value])
