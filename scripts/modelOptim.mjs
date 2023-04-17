@@ -58,7 +58,7 @@ export function compressRules(
 		}
 		exit(-1)
 	} else if (!markdown) {
-		console.log(` ✅ The rules have been correctly compressed in: ${destPath}`)
+		console.log(` ✅ ${regionCode}-${destLang} optimized`)
 	}
 }
 

@@ -1,26 +1,23 @@
 /*
-	Aggregates the model to an unique JSON file for each targeted language.
+Aggregates the model to an unique JSON file for each targeted language.
 
-	Command: yarn compile:rules -- [options]
+Command: yarn compile:rules -- [options]
 */
 
 import fs from 'fs'
 import path from 'path'
 import { exit } from 'process'
 import Engine from 'publicodes'
+import { Piscina } from 'piscina'
 
 import cli from './i18n/cli.js'
-import utils, { publicDir, t9nDir } from './i18n/utils.js'
+import utils, { t9nDir } from './i18n/utils.js'
 
-import { addRegionToBaseRules } from './i18n/addRegionToBaseRules.js'
 import { addTranslationToBaseRules } from './i18n/addTranslationToBaseRules.js'
 
-import { compressRules } from './modelOptim.mjs'
 import {
 	supportedRegionPath,
 	supportedRegions,
-	defaultModelCode,
-	regionModelsPath,
 	supportedRegionCodes,
 } from './i18n/regionCommons.js'
 import { getModelFromSource } from './getModelFromSource.js'
@@ -64,25 +61,6 @@ function writeSupportedRegions() {
 	}
 }
 
-function writeRules(rules, path, destLang, regionCode) {
-	try {
-		fs.writeFileSync(path, JSON.stringify(rules))
-		if (!markdown) {
-			console.log(` ✅ The rules have been correctly written in: ${path}`)
-		}
-	} catch (err) {
-		if (markdown) {
-			console.log(
-				`| Rules compilation to JSON for the region ${regionCode} in _${destLang}_ | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
-			)
-		} else {
-			console.log(' ❌ An error occured while writting rules in:', path)
-			console.log(err.message)
-		}
-		exit(-1)
-	}
-}
-
 function getTranslatedRules(baseRules, destLang) {
 	if (destLang === srcLang) {
 		return baseRules
@@ -91,21 +69,6 @@ function getTranslatedRules(baseRules, destLang) {
 		utils.readYAML(path.join(t9nDir, `translated-rules-${destLang}.yaml`)) ?? {}
 
 	return addTranslationToBaseRules(baseRules, translatedAttrs)
-}
-
-function getLocalizedRules(translatedBaseRules, regionCode, destLang) {
-	if (regionCode === defaultModelCode) {
-		return translatedBaseRules
-	}
-	try {
-		const localizedAttrs = utils.readYAML(
-			path.join(regionModelsPath, `${regionCode}-${destLang}.yaml`)
-		)
-		return addRegionToBaseRules(translatedBaseRules, localizedAttrs)
-	} catch (err) {
-		cli.printWarn(`[SKIPPED] - ${regionCode}-${destLang} (${err.message})`)
-		return addRegionToBaseRules(translatedBaseRules, {})
-	}
 }
 
 /// ---------------------- Main ----------------------
@@ -133,33 +96,27 @@ try {
 			: ' ✅ Les règles ont été évaluées sans erreur !'
 	)
 
-	let correctlyCompiledAndOptimizedFiles = []
-
-	destLangs.unshift(srcLang)
-	destLangs.forEach((destLang) => {
-		const translatedBaseRules = getTranslatedRules(baseRules, destLang)
-		destRegions.forEach((regionCode) => {
-			const localizedTranslatedBaseRules = getLocalizedRules(
-				translatedBaseRules,
-				regionCode,
-				destLang
-			)
-			const destPathWithoutExtension = path.join(
-				publicDir,
-				`co2-model.${regionCode}-lang.${destLang}`
-			)
-			writeRules(
-				localizedTranslatedBaseRules,
-				destPathWithoutExtension + '.json',
-				destLang,
-				regionCode
-			)
-			compressRules(destPathWithoutExtension, destLang, markdown, regionCode)
-			correctlyCompiledAndOptimizedFiles.push(
-				'<li><b>' + `${regionCode}-${destLang}` + '</b></li>'
-			)
-		})
+	const piscina = new Piscina({
+		filename: new URL('./rulesToJSON.worker.mjs', import.meta.url).href,
 	})
+	destLangs.unshift(srcLang)
+	const correctlyCompiledAndOptimizedFiles = await Promise.all(
+		destLangs.flatMap((destLang) => {
+			const translatedBaseRules = getTranslatedRules(baseRules, destLang)
+			return destRegions.map((regionCode) => {
+				try {
+					return piscina.run({
+						regionCode,
+						destLang,
+						translatedBaseRules,
+						markdown,
+					})
+				} catch (err) {
+					console.log(`Error in worker ${regionCode}-${destLang}`, err)
+				}
+			})
+		})
+	)
 	if (markdown) {
 		console.log(
 			`| Successfully compiled and optimized rules: <br><details><summary>Expand</summary> <ul>${correctlyCompiledAndOptimizedFiles.join(
