@@ -3,9 +3,9 @@ const yaml = require('yaml')
 const fs = require('fs')
 const Engine = require('publicodes').default
 
-const importKeyword = 'importer!'
-const fromKeyword = 'depuis'
-const rulesKeyword = 'les règles'
+const IMPORT_KEYWORD = 'importer!'
+const FROM_KEYWORD = 'depuis'
+const RULES_KEYWORD = 'les règles'
 
 const packageModelPath = (packageName) =>
 	`node_modules/${packageName}/${packageName}.model.json`
@@ -48,27 +48,53 @@ function getDependencies(engine, rule, acc = []) {
 	if (deps.length === 0) {
 		return acc
 	}
+	acc.push(...deps.map((dep) => [dep, engine.getRule(dep).rawNode]))
 	return deps.flatMap((varName) => {
-		acc.push([varName, engine.getRule(varName).rawNode])
-		return [...getDependencies(engine, engine.getRule(varName), acc)]
+		return getDependencies(engine, engine.getRule(varName), acc)
 	})
+}
+
+/**
+ * Returns the rule name and its attributes.
+ *
+ * @param ruleToImport - An item of the `les règles` array (string | object).
+ * @returns The rule name and its attributes ([string, object][1]).
+ *
+ * For example, for the following `importer!` rule:
+ *
+ * ```
+ * importer!:
+ *	 depuis: 'package-name'
+ *	 les règles:
+ *			- ruleA
+ *			- ruleB:
+ *			  attr1: value1
+ * ```
+ *
+ * We have:
+ * - getRuleToImportInfos('ruleA') -> [['ruleA', {}]]
+ * - getRuleToImportInfos({'ruleB': {attr1: value1}) -> [['ruleA', {attr1: value1}]]
+ */
+
+function getRuleToImportInfos(ruleToImport) {
+	if (typeof ruleToImport == 'object') {
+		return Object.entries(ruleToImport)
+	}
+	return [[ruleToImport, {}]]
 }
 
 function resolveImports(rules, opts) {
 	const resolvedRules = Object.entries(rules).reduce((acc, [name, value]) => {
-		if (name === importKeyword) {
-			const engine = getEngine(value[fromKeyword], opts)
-			const rulesToImport = value[rulesKeyword]
+		if (name === IMPORT_KEYWORD) {
+			const engine = getEngine(value[FROM_KEYWORD], opts)
+			const rulesToImport = value[RULES_KEYWORD]
 
 			rulesToImport?.forEach((ruleToImport) => {
-				const [[ruleName, attrs]] =
-					typeof ruleToImport == 'object'
-						? Object.entries(ruleToImport)
-						: [[ruleToImport, {}]]
+				const [[ruleName, attrs]] = getRuleToImportInfos(ruleToImport)
 				const rule = engine.getRule(ruleName, opts)
 				if (!rule) {
 					throw new Error(
-						`La règle '${ruleName}' n'existe pas dans ${value[fromKeyword]}`
+						`La règle '${ruleName}' n'existe pas dans ${value[FROM_KEYWORD]}`
 					)
 				}
 				const updatedRawNode = { ...rule.rawNode, ...attrs }
