@@ -29,12 +29,7 @@ const rulesToKeep = [
 	'transport . voiture . thermique',
 ]
 
-export function compressRules(
-	jsonPathWithoutExtension,
-	destLang,
-	markdown,
-	regionCode
-) {
+export function compressRules(jsonPathWithoutExtension) {
 	const destPath = `${jsonPathWithoutExtension}-opti.json`
 	const err = constantFoldingFromJSONFile(
 		jsonPathWithoutExtension + '.json',
@@ -48,22 +43,7 @@ export function compressRules(
 			)
 		}
 	)
-	if (err) {
-		if (markdown) {
-			console.log(
-				`| Rules compression for the region ${regionCode} in _${destLang}_ | ❌ | <details><summary>See error:</summary><br />${err.message.replace(
-					/(?:\r\n|\r|\n)/g,
-					'<br/>'
-				)}</details> |`
-			)
-		} else {
-			console.log(' ❌ An error occured while compressing rules in:', destPath)
-			console.log(err)
-		}
-		exit(-1)
-	} else if (!markdown) {
-		console.log(` ✅ ${regionCode}-${destLang} optimized`)
-	}
+	return err
 }
 
 /**

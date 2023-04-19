@@ -16,7 +16,7 @@ const enginesCache = {}
 function getEngine(packageName, opts) {
 	if (!enginesCache[packageName]) {
 		if (opts?.verbose) {
-			console.debug('Loading package: ', packageName)
+			console.debug(` 📦 '${packageName}' loading`)
 		}
 		try {
 			const engine = new Engine(
