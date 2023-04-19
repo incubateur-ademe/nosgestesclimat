@@ -84,6 +84,10 @@ const baseRules = getModelFromSource(srcFile, ['data/i18n/**'], {
 	verbose: !markdown,
 })
 
+const piscina = new Piscina({
+	filename: new URL('./rulesToJSON.worker.mjs', import.meta.url).href,
+})
+
 try {
 	new Engine(baseRules, {
 		// NOTE(@EmileRolley): warnings are ignored for now but should be examined in
@@ -93,12 +97,30 @@ try {
 	console.log(
 		markdown
 			? `| Rules evaluation | :heavy_check_mark: | Ø |`
-			: ' ✅ Les règles ont été évaluées sans erreur !'
+			: ' ✅ Base rules have been correctly evaluated'
 	)
+} catch (err) {
+	if (markdown) {
+		console.log(
+			`| Rules evaluation | ❌ | <details><summary>See error:</summary><br /><br /><code>${err.message.replace(
+				/(?:\r\n|\r|\n)/g,
+				'<br/>'
+			)}</code></details> |`
+		)
+		console.log(err)
+	} else {
+		console.log(' ❌ An error occured while trying to evaluate the rules:\n')
+		let lines = err.message.split('\n')
+		for (let i = 0; i < 9; ++i) {
+			if (lines[i]) {
+				console.log('  ', lines[i])
+			}
+		}
+		console.log(err)
+	}
+}
 
-	const piscina = new Piscina({
-		filename: new URL('./rulesToJSON.worker.mjs', import.meta.url).href,
-	})
+try {
 	destLangs.unshift(srcLang)
 	const correctlyCompiledAndOptimizedFiles = await Promise.all(
 		destLangs.flatMap((destLang) => {
@@ -113,6 +135,7 @@ try {
 					})
 				} catch (err) {
 					console.log(`Error in worker ${regionCode}-${destLang}`, err)
+					piscina.threads.forEach((thread) => thread.terminate())
 				}
 			})
 		})
@@ -125,21 +148,5 @@ try {
 		)
 	}
 } catch (err) {
-	if (markdown) {
-		console.log(
-			`| Rules evaluation | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
-		)
-		console.log(err)
-	} else {
-		console.log(
-			' ❌ Une erreur est survenue lors de la compilation des règles:\n'
-		)
-		let lines = err.message.split('\n')
-		for (let i = 0; i < 9; ++i) {
-			if (lines[i]) {
-				console.log('  ', lines[i])
-			}
-		}
-		console.log(err)
-	}
+	piscina.threads.forEach((thread) => thread.terminate())
 }

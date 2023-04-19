@@ -22,7 +22,6 @@ function writeRules(rules, path, destLang, regionCode, markdown) {
 			console.log(' ❌ An error occured while writting rules in:', path)
 			console.log(err.message)
 		}
-		exit(-1)
 	}
 }
 
@@ -62,6 +61,21 @@ export default ({
 		regionCode,
 		markdown
 	)
-	compressRules(destPathWithoutExtension, destLang, markdown, regionCode)
+	const err = compressRules(destPathWithoutExtension)
+	if (err) {
+		if (markdown) {
+			console.log(
+				`| Rules compression for the region ${regionCode} in _${destLang}_ | ❌ | <details><summary>See error:</summary><br />${err.message.replace(
+					/(?:\r\n|\r|\n)/g,
+					'<br/>'
+				)}</details> |`
+			)
+		} else {
+			console.log(` ❌ ${regionCode}-${destLang} optimized: ${err.message}`)
+		}
+		return ''
+	} else if (!markdown) {
+		console.log(` ✅ ${regionCode}-${destLang} optimized`)
+	}
 	return `<li>${regionCode}-${destLang}</li>`
 }
