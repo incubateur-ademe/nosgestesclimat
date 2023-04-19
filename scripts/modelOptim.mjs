@@ -7,6 +7,7 @@ import Engine from 'publicodes'
 import path from 'path'
 import { readFileSync, writeFileSync } from 'fs'
 import { constantFolding, disabledLogger, getRawNodes } from 'publiopti'
+import { exit } from 'process'
 
 // Rule names which should be kept in the optimized model.
 //

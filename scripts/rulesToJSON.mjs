@@ -75,7 +75,7 @@ function getTranslatedRules(baseRules, destLang) {
 
 if (markdown) {
 	console.log('| Task | Status | Message |')
-	console.log('|:-----|:------:|:-------:|')
+	console.log('|:-----|:------:|:--------|')
 }
 
 writeSupportedRegions()
