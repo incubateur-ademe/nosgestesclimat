@@ -7,6 +7,7 @@ import Engine from 'publicodes'
 import path from 'path'
 import { readFileSync, writeFileSync } from 'fs'
 import { constantFolding, disabledLogger, getRawNodes } from 'publiopti'
+import { exit } from 'process'
 
 // Rule names which should be kept in the optimized model.
 //
@@ -50,7 +51,10 @@ export function compressRules(
 	if (err) {
 		if (markdown) {
 			console.log(
-				`| Rules compression for the region ${regionCode} in _${destLang}_ | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
+				`| Rules compression for the region ${regionCode} in _${destLang}_ | ❌ | <details><summary>See error:</summary><br />${err.message.replace(
+					/(?:\r\n|\r|\n)/g,
+					'<br/>'
+				)}</details> |`
 			)
 		} else {
 			console.log(' ❌ An error occured while compressing rules in:', destPath)
