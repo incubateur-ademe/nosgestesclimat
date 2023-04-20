@@ -47,13 +47,13 @@ const data = SDES_data.map(({ code_CPA, ...att }) => {
 					'Émissions contenues dans les biens et services adressés à la demande finale de la France'
 				],
 			unité: 'ktCO2e',
-			description: `${titre} \n\n> La description ci-dessous correspond à la part de chaque sous-classe de la branche (en % de chiffre d'affaire) \n${description}`,
+			description: `${titre}\n\n> La description ci-dessous correspond à la part de chaque sous-classe de la branche (en % de chiffre d'affaire)\n${description}`,
 		},
 		[ruleCPAparHab]: {
 			titre: `${titre_raccourci} par habitant`,
 			formule: `${code_CPA} * 1000000 kgCO2e/ktCO2e / population`,
 			unité: 'kgCO2e',
-			description: `${titre} par habitant \n\n> La description ci-dessous correspond à la part de chaque sous-classe de la branche (en % de chiffre d'affaire) \n${description}`,
+			description: `${titre} par habitant\n\n> La description ci-dessous correspond à la part de chaque sous-classe de la branche (en % de chiffre d'affaire)\n${description}`,
 		},
 	}
 	const répartition_SP =
@@ -100,6 +100,8 @@ const SPobject = {
 		icônes: '🏛',
 		formule: { somme: SP_sum },
 		unité: 'kgCO2e',
+		description: `Les services publics ne sont qu'une partie des [services sociétaux](https://nosgestesclimat.fr/documentation/services-soci%C3%A9taux) dont le calcul est basé sur
+[l'estimation de l'empreinte nationale française par le Ministère de l'Écologie](https://www.statistiques.developpement-durable.gouv.fr/lempreinte-carbone-de-la-france-de-1995-2021).`,
 	},
 }
 
@@ -111,6 +113,8 @@ const SMobject = {
 		icônes: '✉️',
 		formule: { somme: SM_sum },
 		unité: 'kgCO2e',
+		description: `Les services marchands ne sont qu'une partie des [services sociétaux](https://nosgestesclimat.fr/documentation/services-soci%C3%A9taux) dont le calcul est basé sur
+[l'estimation de l'empreinte nationale française par le Ministère de l'Écologie](https://www.statistiques.developpement-durable.gouv.fr/lempreinte-carbone-de-la-france-de-1995-2021).`,
 	},
 }
 

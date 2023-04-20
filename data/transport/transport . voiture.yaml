@@ -101,9 +101,9 @@ transport . voiture . km:
 transport . voiture . motorisation:
   question: Quel type de voiture utilisez-vous ?
   description: |
-    Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.
+    **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
 
-    > Note : vous êtes étonnés de voir cette question alors que vous avez répondu "non" à "Avez vous votre voiture individuelle" ? C'est normal : dès que vous faites des kilomètres en voiture, nous devons connaitre ses caractéristiques, même si elle n'est pas à vous, pour calculer votre empreinte.
+    > 🧐 Vous êtes étonnés de voir cette question alors que vous avez répondu "non" à "Avez vous votre voiture individuelle" ? C'est normal : dès que vous faites des kilomètres en voiture, nous devons connaitre ses caractéristiques, même si elle n'est pas à vous, pour calculer votre empreinte.
   par défaut: "'thermique'"
   formule:
     une possibilité:
@@ -125,10 +125,9 @@ transport . voiture . gabarit:
   applicable si: km > 0
   question: Quel est le gabarit de la voiture ?
   description: |
+    **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
+
     Plus une voiture est lourde et haute donc avec une forte prise au vent, plus elle consomme donc plus elle pollue !
-
-    Comme pour la motorisation, si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.
-
   par défaut: "'moyenne'"
   formule:
     une possibilité:
@@ -154,7 +153,7 @@ transport . voiture . gabarit . VUL:
 transport . voiture . thermique . consommation aux 100:
   question: Connaissez-vous la consommation moyenne de la voiture ?
   description: |
-    Comme pour la motorisation, si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.
+    **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
 
   par défaut: consommation estimée
   unité: l/centkm
@@ -249,7 +248,10 @@ transport . voiture . thermique . empreinte au litre:
   formule:
     variations:
       - si: carburant = 'gazole B7 ou B10'
-        alors: (3.1 + 3.04) / 2
+        alors:
+          moyenne:
+            - 3.1
+            - 3.04
       - si: carburant = 'essence E5 ou E10'
         alors: 2.7
       - si: carburant = 'essence E85'
@@ -328,12 +330,15 @@ transport . voiture . empreinte . construction:
 
     ![](https://user-images.githubusercontent.com/1177762/107264406-3afdd980-6a43-11eb-87ad-a09681240949.png)
 
-    Nous prenons uniquement en compte la "production et fin de vie" et les données de 2016 plutôt que le scénario prospectif 2030.
+    Nous prenons uniquement en compte la "production et fin de vie" ainsi que les données de 2016 plutôt que le scénario prospectif 2030.
 
     p. 57 et 58.
 
     ![](https://user-images.githubusercontent.com/1177762/107265071-1eae6c80-6a44-11eb-9b51-c2aee3bfcf3c.png)
     ![](https://user-images.githubusercontent.com/1177762/107265098-2706a780-6a44-11eb-8681-7901f00e057b.png)
+
+    Nous avons choisi de ne pas retrancher les "crédits de recyclage" correspondant à des émissions évitées via l'utilisation de matériaux recyclés issus du démantèlement d'une voiture, pour le production de nouveaux produits manufacturés.
+    Nous prenons l'hypothèse que l'empreinte réduite bénéficie à celui qui achète le produit issu du recyclage et non pas à celui qui achète un produit amené à être recyclé.
 
 transport . voiture . empreinte . construction . barème thermique:
   formule:
@@ -349,7 +354,7 @@ transport . voiture . empreinte . construction . barème thermique:
             - gabarit = 'SUV'
         alors: 7600
       - si: gabarit = 'VUL'
-        alors: 6700 * ratio . poids . VUL . thermique 
+        alors: 6700 * ratio . poids . VUL . thermique
   unité: kgCO2e
 
 transport . voiture . empreinte . construction . barème électrique:
@@ -383,10 +388,9 @@ transport . voiture . empreinte . construction . barème hybride:
             - gabarit = 'SUV'
         alors: 6900
       - si: gabarit = 'VUL'
-        alors: 9600 * ratio . poids . VUL . thermique 
+        alors: 9600 * ratio . poids . VUL . thermique
   unité: kgCO2e
   note: Ètonnamment, la berline a moins d'empreinte construction que la citadine... A voir si l'étude relève ce mystère.
-
 
 transport . voiture . ratio . poids . VUL . thermique:
   formule: 1.18
@@ -411,16 +415,18 @@ transport . voiture . gabarit . petite . poids:
   unité: kg
 
 transport . voiture . gabarit . petite . empreinte:
-  formule: 5600
+  formule: 6700
   unité: kgCO2e
 
 transport . voiture . gabarit . berline . poids:
   formule: 1500
   unité: kg
+  note: Règle utilisée pour le calcul de l'empreinte de la caravane et camping car.
 
 transport . voiture . gabarit . berline . empreinte:
-  formule: 6300
+  formule: 7600
   unité: kgCO2e
+  note: Règle utilisée pour le calcul de l'empreinte de la caravane et camping car.
 
 transport . voiture . âge:
   applicable si:
@@ -488,11 +494,17 @@ transport . voiture . durée de vie:
     En effet, bon nombre de voitures sont par exemple achetées neuves par des entreprises de location, et seront ensuite aquises par un particulier d'occasion.
 
 transport . voiture . facteur location:
-  formule: km / 16300
+  titre: Part d'utilisation annuelle d'une voiture de service
+  formule: km / km par an voiture partagée
+  note: On attribue à l'utilisateur l'impact de la construction au pro rata de son utilisation par rapport au km parcourus par la voiture sur une année.
+
+transport . voiture . km par an voiture partagée:
+  titre: Kilomètres parcourus annuellement par une voiture en auto-partage
+  formule: 15130 km/an
   note: |
-    On attribue à l'utilisateur l'impact de la construction au pro rata de son utilisation par rapport au km parcourus par la voiture sur une année.
-  références:
-    - https://www.ademe.fr/sites/default/files/assets/documents/enquete-autopartage-2019-rapport.pdf
+    Page 80 de l'[Enquête Nationale Autopartage 2022](https://librairie.ademe.fr/cadic/7353/enquete-autopartage-2022-rapport.pdf):
+
+    > "Les données communiquées par les opérateurs nous permettent de retenir l’hypothèse de 15130 kilomètres parcourus en moyenne par an par voiture en autopartage."
 
 transport . voiture . propriétaire:
   question: Avez-vous votre propre voiture individuelle ?

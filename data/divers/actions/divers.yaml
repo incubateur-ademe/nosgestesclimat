@@ -18,28 +18,15 @@ divers . aider les autres:
 
     Comment ? En diffusant ce simulateur, en discutant de ces sujets avec vos proches, en animant des ateliers en entreprise ou association, ou même en aidant de façon pratique quelqu'un à changer l'une de ses consommations polluantes.
 
-divers . meubles:
-
-divers . meubles . allongement:
-  titre: Allonger la vie de mes meubles
-  icônes: 💪🛋️
-  inactive: oui
-divers . meubles . seconde main:
-  titre: Acheter mes meubles d'occasion
-  icônes: 🤝🛋️
-  inactive: oui
-divers . textile . seconde main:
-  titre: Acheter mes vêtements d'occasion
-  icônes: 🤝👚
-  inactive: oui
-
 divers . avoir un stop pub:
   titre: Avoir un stop pub
   icônes: 📬
-  applicable si: alimentation . déchets . quantité jetée = 'base'
-  non applicable si: alimentation . déchets . gestes . stop pub . présent
+  non applicable si:
+    une de ces conditions:
+      - alimentation . déchets . quantité jetée = 'zéro déchet'
+      - alimentation . déchets . gestes . stop pub . présent
   effort: faible
-  formule: alimentation . déchets . gestes . bonus stop pub
+  formule: alimentation . déchets . bonus stop pub
   description: |
     C'est un autocollant à placer sur votre boîte aux lettres qui informe les distributeurs de pub que vous refusez de recevoir des catalogues, des promotions, menus de restaurant et publicités en tout genre.
 
@@ -92,6 +79,35 @@ divers . électroménager . appareils préservation allongée:
 divers . électroménager . seconde main:
   titre: Acheter d'occasion mon électroménager
   icônes: 🤝🔌
+  inactive: oui
+
+divers . ameublement . allongement:
+  titre: Allonger la vie de mes meubles
+  icônes: 💪🪑
+  non applicable si: préservation = 'maximum'
+  effort: modéré
+  formule: (divers . ameublement . meubles - divers . ameublement . meubles préservation allongée) / logement . habitants
+  description: |
+    Augmenter la durée de vie de ses meubles (en en prenant soin ou en les réparant) permet de limiter son impact
+    sur le climat. 
+
+    Renouveler de manière prématurée ses équipements, à l'inverse, c'est contribuer à produire plus d'équipements pour un même service rendu.
+
+    Si vous souhaitez absoluement vous séparer d'un objet prématurément, pensez aux ressourceries ou recycleries, par exemple, qui sont des lieux dédiés au réemploi ! 😉
+
+divers . ameublement . meubles préservation allongée:
+  recalcul:
+    règle: divers . ameublement . meubles
+    avec:
+      coefficient préservation: 4 / 3
+
+divers . ameublement . seconde main:
+  titre: Acheter mes meubles d'occasion
+  icônes: 🤝🛋️
+  inactive: oui
+divers . textile . seconde main:
+  titre: Acheter mes vêtements d'occasion
+  icônes: 🤝👚
   inactive: oui
 
 divers . déchets:

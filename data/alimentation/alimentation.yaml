@@ -44,7 +44,7 @@ alimentation . laitages:
 alimentation . déjeuner et dîner:
   icônes: 🍽️
   titre: Déjeuners et dîners
-  formule: par semaine * nombre de semaines
+  formule: par semaine * semaines par an
   unité: kgCO2e
 
 alimentation . déjeuner et dîner . par semaine:
@@ -157,7 +157,6 @@ alimentation . plats . végétalien . empreinte:
 alimentation . plats . végétalien . nombre:
   question: Nombre de plats végétaliens par semaine
   par défaut: 0
-  période: semaine
 
 alimentation . plats . végétarien:
   titre: Végétarien
@@ -198,7 +197,6 @@ alimentation . plats . végétarien . empreinte:
 alimentation . plats . végétarien . nombre:
   question: Nombre de plats végétariens par semaine
   par défaut: 5
-  période: semaine
 
 alimentation . plats . viande 1:
   titre: Viande 1
@@ -238,7 +236,6 @@ alimentation . plats . viande 1 . empreinte:
 alimentation . plats . viande 1 . nombre:
   question: Nombre de plats viande 1 par semaine
   par défaut: 5
-  période: semaine
 
 alimentation . plats . viande 2:
   titre: viande 2
@@ -277,7 +274,6 @@ alimentation . plats . viande 2 . empreinte:
 alimentation . plats . viande 2 . nombre:
   question: Nombre de plats viande 2 par semaine
   par défaut: 2
-  période: semaine
 
 alimentation . nombre de plats viande:
   formule: plats . viande 1 . nombre + plats . viande 2 . nombre
@@ -322,7 +318,6 @@ alimentation . plats . poisson 1 . empreinte:
 alimentation . plats . poisson 1 . nombre:
   question: Nombre de plats poisson 1 par semaine
   par défaut: 2
-  période: semaine
 
 alimentation . plats . poisson 2:
   titre: Poisson 2
@@ -363,7 +358,6 @@ alimentation . plats . poisson 2 . empreinte:
 alimentation . plats . poisson 2 . nombre:
   question: Nombre de plats poisson 2 par semaine
   par défaut: 0
-  période: semaine
 
 alimentation . nombre de plats poisson:
   formule: plats . poisson 1 . nombre + plats . poisson 2 . nombre
@@ -382,11 +376,12 @@ alimentation . planétaire:
 alimentation . petit déjeuner annuel:
   titre: Petit déjeuner
   icônes: 🥐
-  formule: petit déjeuner * 365
+  formule: petit déjeuner * jours par an
 
 alimentation . petit déjeuner . par semaine:
   titre: Empreinte hebdo petit déjeuner
   formule: alimentation . petit déjeuner * 7
+  unité: kgCO2e/semaine
 
 alimentation . petit déjeuner:
   formule:
@@ -400,6 +395,7 @@ alimentation . petit déjeuner:
       - si: type = 'végétalien'
         alors: végétalien
       - sinon: 0
+  unité: kgCO2e/jour
 
 alimentation . petit déjeuner . type:
   question: Quel petit déjeuner vous correspond le plus ?
@@ -563,12 +559,15 @@ alimentation . petit déjeuner . type . aucun:
     Vous ne mangez rien au petit déjeuner (mais vous pouvez boire un café, un thé ou un chocolat chaud pris en compte dans une autre question).
 
 alimentation . local:
-  icone: 🍅🇫🇷
+  icônes: 🍅🇫🇷
 
 alimentation . local . empreinte:
   titre: Bonus régime local
-  non applicable si: consommation = 'jamais'
-  formule: 0 - niveau * part locale annuelle
+  formule:
+    variations:
+      - si: consommation = 'jamais'
+        alors: 0
+      - sinon: (-1) * niveau * part locale annuelle
   unité: kgCO2e
 
 alimentation . local . consommation:
@@ -604,7 +603,6 @@ alimentation . local . consommation . oui toujours:
   titre: Oui toujours
 
 alimentation . local . niveau:
-  unité: ''
   formule:
     variations:
       - si: consommation = 'oui toujours'
@@ -613,11 +611,12 @@ alimentation . local . niveau:
         alors: 66.6%
       - si: consommation = 'parfois'
         alors: 33.3%
+      - sinon: 0%
   description: |
     On applique un coefficient de 0,333 et 0,666 dans le cas ou l'utilisateur indique qu'il consomme respectivement "parfois" ou "souvent" local.
 
 alimentation . local . part locale annuelle:
-  formule: part locale * nombre de semaines
+  formule: part locale * semaines par an
 
 alimentation . local . part locale:
   unité: kgCO2e
@@ -640,12 +639,15 @@ alimentation . local . part locale:
     🧮 Le calcul détaillé est [disponible ici](<https://github.com/datagir/nosgestesclimat/blob/master/data/alimentation/alimentation . local.ods>) sous forme de tableur.
 
 alimentation . de saison:
-  icone: 🍅🌞
+  icônes: 🍅🌞
 
 alimentation . de saison . empreinte:
   titre: Bonus régime de saison
-  non applicable si: consommation = 'jamais'
-  formule: facteur de saison * part de saison
+  formule:
+    variations:
+      - si: consommation = 'jamais'
+        alors: 0
+      - sinon: facteur de saison * part de saison
 
 alimentation . de saison . facteur de saison:
   formule: (-1) * niveau / ratio
@@ -690,6 +692,7 @@ alimentation . de saison . niveau:
         alors: 66.6%
       - si: consommation = 'parfois'
         alors: 33.3%
+      - sinon: 0%
   description: |
     On applique un coefficient de 0,333 et 0,666 dans le cas ou l'utilisateur indique qu'il consomme respectivement "parfois" ou "souvent" de saison.
 

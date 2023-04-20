@@ -8,16 +8,20 @@
 	"scripts": {
 		"compile:md": "node scripts/rulesToJSON.mjs --markdown && node scripts/personasToJSON.js --markdown && node scripts/documentationToJSON.js --markdown",
 		"compile": "node scripts/rulesToJSON.mjs && node scripts/personasToJSON.js && node scripts/documentationToJSON.js",
+		"compile:fr": "node scripts/rulesToJSON.mjs -o FR && node scripts/personasToJSON.js && node scripts/documentationToJSON.js",
 		"compile:personas": "node scripts/personasToJSON.js",
 		"compile:rules": "node scripts/rulesToJSON.mjs",
-		"compile-watch": "nodemon -e yaml --watch data/ scripts/rulesToJSON.mjs & nodemon -e yaml --watch personas/ scripts/personasToJSON.js & nodemon -e md --watch contenu-ecrit/ scripts/documentationToJSON.js ",
-		"test": "echo \"Error: no test specified\" && exit 1",
+		"compile:rules-watch": "nodemon -e \"yaml js mjs\" --watch data/ --watch scripts/ scripts/rulesToJSON.mjs",
+		"compile-watch": "nodemon -e \"yaml js mjs\" --watch data/ --watch scripts/ scripts/rulesToJSON.mjs & nodemon -e yaml --watch personas/ scripts/personasToJSON.js & nodemon -e md --watch contenu-ecrit/ scripts/documentationToJSON.js ",
+		"test:personas": "node tests/testPersonas.js",
+		"test:optim": "node tests/testOptim.js",
 		"translate": "node scripts/i18n/translate-rules.js && node scripts/i18n/translate-personas.js",
 		"check:personas": "node scripts/i18n/check-personas.js ",
 		"translate:personas": "node scripts/i18n/translate-personas.js",
 		"check:rules": "node scripts/i18n/check-translation.js",
 		"translate:rules": "node scripts/i18n/translate-rules.js",
-		"generate:servicesRules": "node scripts/services-societaux/analyze_naf_ca.js && node scripts/services-societaux/desagregate_naf_SDES.js && node scripts/services-societaux/generate_rules.js"
+		"generate:servicesRules": "node scripts/services-societaux/analyze_naf_ca.js && node scripts/services-societaux/desagregate_naf_SDES.js && node scripts/services-societaux/generate_rules.js",
+		"translate:model": "node scripts/i18n/translateRegionModel.js"
 	},
 	"repository": {
 		"type": "git",
@@ -32,18 +36,22 @@
 	"dependencies": {
 		"csv-parser": "^3.0.0",
 		"glob": "^8.0.3",
-		"inquirer": "^8.2.5",
 		"nodemon": "^2.0.20",
 		"prettier": "^2.7.1",
-		"publicodes": "^1.0.0-beta.47",
+		"publicodes": "1.0.0-beta.67",
+		"publiopti": "^0.1.25",
 		"yaml": "^2.1.1"
 	},
 	"devDependencies": {
+		"@types/glob": "^8.1.0",
 		"cli-progress": "^3.11.2",
 		"deepl-node": "^1.7.0",
 		"dotenv": "^16.0.3",
+		"futureco-data": "^0.0.1-beta.1",
+		"git-diff": "^2.0.6",
 		"isomorphic-fetch": "^3.0.0",
-		"publiopti": "^0.1.21",
+		"piscina": "^3.2.0",
+		"prompt-sync": "^4.2.0",
 		"ramda": "^0.28.0",
 		"yargs": "^17.6.0"
 	}

@@ -45,7 +45,9 @@ const writeYAML = (
 				messageGénérationAuto +
 					yaml.stringify(content, {
 						sortMapEntries: true,
+						aliasDuplicateObjects: false,
 						blockQuote,
+						lineWidth: 0,
 					}),
 				{ ...prettierConfig, parser: 'yaml' }
 			)
