@@ -7,6 +7,7 @@ import Engine from 'publicodes'
 import path from 'path'
 import { readFileSync, writeFileSync } from 'fs'
 import { constantFolding, disabledLogger, getRawNodes } from 'publiopti'
+import { exit } from 'process'
 
 // Rule names which should be kept in the optimized model.
 //
@@ -28,12 +29,7 @@ const rulesToKeep = [
 	'transport . voiture . thermique',
 ]
 
-export function compressRules(
-	jsonPathWithoutExtension,
-	destLang,
-	markdown,
-	regionCode
-) {
+export function compressRules(jsonPathWithoutExtension) {
 	const destPath = `${jsonPathWithoutExtension}-opti.json`
 	const err = constantFoldingFromJSONFile(
 		jsonPathWithoutExtension + '.json',
@@ -47,23 +43,7 @@ export function compressRules(
 			)
 		}
 	)
-	if (err) {
-		if (markdown) {
-			console.log(
-				`| Rules compression for the region ${regionCode} in _${destLang}_ | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
-			)
-		} else {
-			console.log(' ❌ An error occured while compressing rules in:', destPath)
-			console.log(err)
-		}
-		exit(-1)
-	} else {
-		console.log(
-			markdown
-				? `| Rules compression for the region ${regionCode} in _${destLang}_ | :heavy_check_mark: | Ø |`
-				: ` ✅ The rules have been correctly compressed in: ${destPath}`
-		)
-	}
+	return err
 }
 
 /**

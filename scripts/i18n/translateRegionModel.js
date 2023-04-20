@@ -85,14 +85,7 @@ const translateModel = async (srcRules, destLang) => {
 	return Object.fromEntries(
 		await Promise.all(
 			Object.entries(srcRules).map(async (rule) => {
-				// The [params] attribute contains all informations about the region,
-				// it is only stored in the [fr] translation (which is the default one),
-				// so we don't need to translate it.
-				if (rule !== 'params') {
-					return await translateRule(rule, destLang)
-				} else {
-					return rule
-				}
+				return await translateRule(rule, destLang)
 			})
 		)
 	)
@@ -115,5 +108,5 @@ destLangs.forEach(async (destLang) => {
 		}
 	}
 	const translatedModel = await translateModel(srcModel, destLang)
-	utils.writeYAML(destFile, translatedModel)
+	utils.writeYAML(destFile, translatedModel, { sortMapEntries: false })
 })

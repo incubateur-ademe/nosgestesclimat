@@ -17,7 +17,10 @@ divers . numérique . internet:
   formule: empreinte horaire * durée journalière * jours par an
   unité: kgCO2e
 divers . numérique . internet . consommation horaire:
-  formule: (0.12 + 0.24) / 2
+  formule:
+    moyenne:
+      - 0.12
+      - 0.24
   unité: kWh/h
   note: |
     Ce chiffre a été retenu dans le calculateur MicMac version 2.6. La source est un article de CarbonBrief utilisant des données AIE, et critiquant les calculs du Shift Project.
@@ -41,7 +44,7 @@ divers . numérique . internet . empreinte horaire:
 
 divers . numérique . internet . durée journalière:
   question: Combien d'heures passez-vous par jour sur internet hors bureau (envoi de mail, surf Web, streaming vidéo, etc.) ?
-  description: Comptez seulement une estimation à la louche de vos heures hors bureau, car ce que vous faites au boulot entre dans la comptabilité de votre entreprise ou organisation.
+  description: Comptez seulement une estimation à la louche de vos heures d'utilisation personnelle (soir, week-end) car ce que vous faites au boulot entre dans la comptabilité de votre entreprise ou organisation.
   unité: heures
   par défaut: 2 heures
   suggestions:
@@ -59,7 +62,7 @@ divers . numérique . préservation:
 
     A vous donc de juger vos efforts pour les faire durer le plus longtemps possible
 
-    > Répondre "Je rachète souvent neuf" est la réponse la plus impactante car elle signifie que vous remplacez vos appareils précocement avant même qu'ils soient hors d'usage.
+    > Répondre "Aucun, je rachète souvent neuf" est la réponse la plus impactante car elle signifie que vous remplacez vos appareils précocement avant même qu'ils soient hors d'usage.
 
   par défaut: "'moyen'"
   formule:
@@ -74,7 +77,7 @@ divers . numérique . préservation:
 divers . numérique . préservation . faible:
   titre: Peu d'effort
 divers . numérique . préservation . achat neuf:
-  titre: Je rachète souvent neuf
+  titre: Aucun, je rachète souvent neuf
 divers . numérique . préservation . moyen:
   titre: Effort moyen
 divers . numérique . préservation . maximum:
@@ -84,7 +87,7 @@ divers . numérique . coefficient préservation:
   note: |
     Nous définissons une grille de comportements de consommation, de l'acheteur neuf presque compulsif à celui qui fait un effort important pour garder ses appareils le plus longtemps possible.
 
-    L'acheteur répondant "j'achète beaucoup de neuf" garde ses appareils la moitié de leur durée de vie moyenne constatée, à l'inverse celui qui conserve repousse une durée de vie moyenne de 10 ans à 13 ans.
+    Nous considérons que la personne qui déclare acheter souvent neuf garde ses appareils la moitié de leur durée de vie moyenne constatée, à l'inverse celui qui conserve ses appareils repousse leur durée de vie moyenne.
 
     Cette grille pourra évoluer si de nouvelles sources, études viennent compléter tout cela.
   formule:
@@ -99,17 +102,22 @@ divers . numérique . coefficient préservation:
 
 divers . numérique . appareils:
   mosaique:
-    type: selection
-    clé: présent
-  question: 'Quels appareils numériques de moins de 10 ans possédez-vous ?'
+    type: nombre
+    clé: nombre
+  question: Quels appareils numériques de moins de 10 ans possédez-vous ?
   description: |
-    L'essentiel de l'empreinte du numérique réside dans les appareils que nous achetons. Renseignez ici vos appareils.
+    Certains appareils sont partagés dans le foyer (TV, ordinateur fixe...), d'autres personnels (téléphone ...): c'est pris en compte dans le calcul !
 
+    > ✨️ Par simplicité, ne renseignez que les appareils récents : une TV âgée de plus de 10 ans a déjà été bien amorti.
 
-    > ✨️ Par simplicité, ne renseignez que les appareils récents : un smartphone âgé de 10 ans a déjà été bien amorti.
-    > Si vous l'avez acheté d'occasion il y a 3 ans et qu'il avait déjà environ 2 ans, considérez qu'il a 5 ans !
+    > 📡 Nous améliorerons prochainement le modèle pour prendre en compte les appareils reconditionnés. 
+    > Pour le moment, nous vous conseillons de les ajouter ici même le bénéfice de cet achat par rapport au neuf ne sera pas visible dans le calcul.
+  note: |
+    Cette catégorie est un peu particulière au niveau de l'amortissement. En effet, à l'inverse de l'ameublement ou l'on considère que tout est partagé au sein du foyer,
+    ici, certains appareils sont partagés alors que d'autres sont considérés comme étant individuels.
 
-    > 📡 Nous ajouterons au fur et à mesure d'autres types d'appareils : box internet, box TV, 2ème TV, imprimante, etc..
+    Ainsi nous avons défini arbitraiement les appareils individuels (téléphone, tablette, appareil photo)
+    et collectifs (TV, ordinateur fixe, vidéoprojecteur, home cinéma, enceinte bluetooth, enceinte vocale, console de salon).
   formule:
     somme:
       - téléphone
@@ -126,15 +134,14 @@ divers . numérique . appareils:
       - console de salon
       - console portable
 
-divers . numérique . appareils . téléphone . présent:
+divers . numérique . appareils . téléphone . nombre:
+  titre: Nombre de téléphones
   question: Utilisez-vous un téléphone ?
-  par défaut: oui
-
+  par défaut: 1
 divers . numérique . appareils . téléphone:
   icônes: 📱
-  applicable si: présent
-  formule: impact / (durée * coefficient préservation)
-  description: >
+  formule: empreinte * nombre / (durée * coefficient préservation)
+  note: >
     Les téléphones, et particulièrement les smartphones récents, sont le symbole
     par excellence de la *high-tech*, qui est réputée consommer beaucoup de
     ressources.
@@ -145,84 +152,46 @@ divers . numérique . appareils . téléphone:
 
     Un téléphone haut de gamme (iPhone X) c'est < 100kgCO2e. En supposant qu'on achète ce smartphone dernier cri tous les 2 ans, on a < 50kgCO2e/an.
     Cela représente un demi-pourcent de l'empreinte moyenne d'un français (11 tonnes). Et 2.5% d'une empreinte durable de 2 tonnes / an.
-  note: Nous estimons que l'appareil va durer un an de plus que l'âge renseigné au moment de l'estimation.
 
-divers . numérique . appareils . téléphone . type:
-  icônes: 🤙📱
-  applicable si: présent
-  question: Quel téléphone avez-vous ?
-  formule:
-    une possibilité:
-      choix obligatoire: oui
-      possibilités:
-        - téléphone basique
-        - smartphone classique
-        - smartphone haut de gamme
-  description: |
-
-    Un smartphone haut de gamme, c'est par exemple un iPhone récent avec un grand écran (> iPhone X), ou un Samsung Galaxy S ou Note récent.
-
-    Si vous n'avez pas de téléphone mobile, il y a de grandes chances pour que vous ayez un fixe. Répondez à la question en fonction de la sophistication de votre téléphone fixe, notamment la taille de l'écran. Si vous n'avez ni fixe ni mobile, désolé...
-
-  par défaut: "'smartphone classique'"
+    Si vous n'avez pas de téléphone mobile, il y a de grandes chances pour que vous ayez un fixe.
 
 divers . numérique . appareils . téléphone . durée:
+  titre: Durée de vie d'un téléphone
   formule: 2.5
   unité: ans
   note: La durée de vie est issue de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
-
-divers . numérique . appareils . téléphone . impact:
+divers . numérique . appareils . téléphone . empreinte:
+  titre: Empreinte d'un téléphone
   icônes: 📱✨
-  applicable si: présent
   exposé: oui
   unité: kgCO₂e
   références:
     - https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=Smartphone
     - https://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/produits_informatiques__electr
     - https://www.apple.com/environment/pdf/products/iphone/iPhone_11_PER_sept2019.pdf
-  description: |
+  note: |
+    Dans la première version de Nos Gestes Climat nous segmentions les possibilités de cette question en trois catégorie, selon les disponibilités des données dans la base carbone et fabricants).
 
-    Nous segmentons les possibilités de cette question en trois catégories.
+    - Téléphone basique (aussi appelé "feature phone", qui sont aujourd'hui au croisement entre le fameux Nokia 3310 et le smartphone, dont l'écran reste petit et les composants bas de gamme)
+    - Smartphone classique (milieu de gamme, qui représente l'écrasante majorité des ventes. Tous les smartphones vendus en 2021 ou presque ont un écran supérieur à 5.5 pouces)
+    - Smartphone haut de gamme (La base bilan-GES n'inclut pas de catégories "téléphone haut de gamme" ou "écran > 6 pouces". De plus, l'empreinte d'un iPhone 11 estimée par Apple elle-même est de 72kg de CO₂, dont 79% donc ~57kg juste pour la production. 
+      A moins que le périmètre des études ne soit pas le même, mais un périmètre plus important pris par l'entreprise que par l'authorité environnementale est pour le moins étonnant, nous retenons la valeur du fabricant.
 
-    ## Téléphone basique
+    Néanmoins, les dernières données NegaOctet (voir base Empreinte), à l'image des constructeurs semblent donner une valeur plus élevées que les chiffres de la base Carbone.
 
-    Aussi appelé "feature phone", qui sont aujourd'hui au croisement entre le fameux Nokia 3310 et le smartphone, dont l'écran reste petit et les composants bas de gamme
+    Afin de simplifier le questionnaire, permettre de compter plusieurs téléphones (plusieurs achats sur les dernières années), 
+    et au vu que les smartphones sont les téléphones majoritairement utilisés, nous avons fait l'hypothèse (plus conservatrice) 
+    que l'empreinte de la construction d'un smartphone est plus proche de celle communiquée par Apple notamment 
+    (voir point ci-dessus pour l'obtention du chiffre de 57kg par unité)
+  formule: 57
 
-    > Son empreinte est donnée par la base bilan-GES.
-
-
-    ## Smartphone classique
-
-    Milieu de gamme, qui représente l'écrasante majorité des ventes. Tous les smartphones vendus en 2021 ou presque ont un écran supérieur à 5.5 pouces.
-
-    > Son empreinte est donnée par la base bilan-GES.
-
-    ## Smartphone haut de gamme
-
-    La base bilan-GES n'inclut pas de catégories "téléphone haut de gamme" ou "écran > 6 pouces". De plus, l'empreinte d'un iPhone 11 estimée par Apple elle-même est de 72kg de CO₂, dont 79% donc ~57kg juste pour la production.
-    A moins que le périmètre des études ne soit pas le même, mais un périmètre plus important pris par l'entreprise que par l'authorité environnementale est pour le moins étonnant, nous retenons la valeur du fabricant.
-
-  formule:
-    variations:
-      - si: type = 'téléphone basique'
-        alors: 16.5
-      - si: type = 'smartphone classique'
-        alors: 39.1
-      - si: type = 'smartphone haut de gamme'
-        alors: 57
-
-divers . numérique . appareils . téléphone . type . téléphone basique:
-  titre: Téléphone basique
-divers . numérique . appareils . téléphone . type . smartphone classique:
-  titre: Smartphone classique
-divers . numérique . appareils . téléphone . type . smartphone haut de gamme:
-  titre: Smartphone haut de gamme
-
-divers . numérique . appareils . appareil photo . présent:
+divers . numérique . appareils . appareil photo . nombre:
+  titre: Nombre d'appareils photos
   note: On range l'appareil photo dans la catégorie numérique vu la rareté des appareils argentiques aujourd'hui.
   question: Utilisez-vous un appareil photo ?
-  par défaut: non
+  par défaut: 0
 divers . numérique . appareils . appareil photo . durée:
+  titre: Durée de vie d'un appareil photo
   formule: 5
   unité: ans
   note: |
@@ -231,93 +200,91 @@ divers . numérique . appareils . appareil photo . durée:
 
     Aucune information sur la durée de vie n'est disponible que ce soit dans des études ADEME ou sur le web (ou la durée de vie d'un appareil photo s'approxime en millier de prises de vues).
     On considère donc une durée de vie de 5 ans.
-
 divers . numérique . appareils . appareil photo:
-  applicable si: présent
   icônes: 📷
-  formule: 30 / (durée * coefficient préservation)
+  formule: 30 * nombre / (durée * coefficient préservation)
   unité: kgCO2e
 
-divers . numérique . appareils . home cinéma . présent:
+divers . numérique . appareils . home cinéma . nombre:
+  titre: Nombre de home cinéma
   question: Utilisez-vous un home cinéma ?
-  par défaut: non
+  par défaut: 0
 divers . numérique . appareils . home cinéma . durée:
+  titre: Durée de vie d'un home cinéma
   formule: 8
   unité: ans
   note: La durée de vie est issue de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
-
 divers . numérique . appareils . home cinéma:
   icônes: 🔊🎬
-  applicable si: présent
-  formule: 133 / (durée * coefficient préservation)
+  formule: 133 * nombre / (durée * coefficient préservation * logement . habitants)
   unité: kgCO2e
 
-divers . numérique . appareils . ordinateur portable . présent:
+divers . numérique . appareils . ordinateur portable . nombre:
+  titre: Nombre d'ordinateurs portables
   question: Utilisez-vous un ordinateur portable ?
-  par défaut: oui
+  par défaut: 1
 divers . numérique . appareils . ordinateur portable . durée:
+  titre: Durée de vie d'un ordinateur portable
   formule: 3
   unité: ans
   note: La durée de vie est issue de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
-
 divers . numérique . appareils . ordinateur portable:
   icônes: 💻
-  applicable si: présent
-  formule: 156 / (durée * coefficient préservation)
+  formule: 156 * nombre / (durée * coefficient préservation)
   unité: kgCO2e
 
-divers . numérique . appareils . ordinateur fixe . présent:
+divers . numérique . appareils . ordinateur fixe . nombre:
+  titre: Nombre d'ordinateurs fixes
   question: Utilisez-vous un ordinateur fixe ?
-  par défaut: oui
+  par défaut: 1
 divers . numérique . appareils . ordinateur fixe . durée:
+  titre: Durée de vie d'un ordinateur fixe
   formule: 6
   unité: ans
   note: Les durées de vie (que ce soit de l'écran ou de la tour fixe) sont issues de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
-
 divers . numérique . appareils . ordinateur fixe:
   icônes: 🖥
-  applicable si: présent
-  formule: empreinte / (durée * coefficient préservation)
+  formule: empreinte * nombre / (durée * coefficient préservation * logement . habitants)
   unité: kgCO2e
   note: |
     Nous considérons qu'un ordinateur fixe c'est une tour et un écran détaché (même s'il existe des ordinateurs fixes où tout est "intégré" dans l'écran).
     Nous considérons le facteur d'émissions "Ordinateur - fixe - haute performance " de la Base Carbone
-
 divers . numérique . appareils . ordinateur fixe . empreinte:
+  titre: Empreinte d'un ordinateur fixe
   formule: 296 + écran
-
 divers . numérique . appareils . ordinateur fixe . écran:
+  titre: Empreinte d'un écran
   formule: 248
   note: Valeur pour un écran de 23,8 pouces.
   références:
     Ecran - 23,8 pouces: https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=écran
 
-divers . numérique . appareils . tablette . présent:
+divers . numérique . appareils . tablette . nombre:
+  titre: Nombre de tablettes
   question: Utilisez-vous une tablette ?
-  par défaut: non
+  par défaut: 0
 divers . numérique . appareils . tablette . durée:
+  titre: Durée de vie d'une tablette
   formule: 3
   unité: ans
   note: La durée de vie est issue de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
-
 divers . numérique . appareils . tablette:
   icônes: ⬛
-  applicable si: présent
-  formule: 63 / (durée * coefficient préservation)
+  formule: 63 * nombre / (durée * coefficient préservation)
   unité: kgCO2e
 
-divers . numérique . appareils . TV . présent:
+divers . numérique . appareils . TV . nombre:
+  titre: Nombre de TV
   question: Utilisez-vous une TV ?
-  par défaut: oui
+  par défaut: 1
 divers . numérique . appareils . TV . durée:
+  titre: Durée de vie d'une TV
   formule: 8
   unité: ans
   note: La durée de vie est issue de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
-
 divers . numérique . appareils . TV:
   icônes: 📺
-  applicable si: présent
-  formule: 371 / (durée * coefficient préservation)
+  formule: 371 * nombre / (durée * coefficient préservation * logement . habitants)
   unité: kgCO2e
   note: |
     Valeur pour 40-49 pouces de la base [bilan-GES](https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=télévision).
@@ -330,89 +297,89 @@ divers . numérique . appareils . TV:
       - la résolution (empreinte d'une 8k ?)
       - la technologie d'affichage (LED, plasma, etc.)
 
-divers . numérique . appareils . vidéoprojecteur . présent:
+divers . numérique . appareils . vidéoprojecteur . nombre:
+  titre: Nombre de vidéoprojecteurs
   question: Utilisez-vous un vidéoprojecteur ?
-  par défaut: non
+  par défaut: 0
 divers . numérique . appareils . vidéoprojecteur . durée:
+  titre: Durée de vie d'un vidéoprojecteur
   formule: 5
   unité: ans
   note: La durée de vie est issue de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
-
 divers . numérique . appareils . vidéoprojecteur:
   icônes: 📽️
-  applicable si: présent
-  formule: 94 / (durée * coefficient préservation)
+  formule: 94 * nombre / (durée * coefficient préservation * logement . habitants)
   unité: kgCO2e
 
-divers . numérique . appareils . enceinte bluetooth . présent:
+divers . numérique . appareils . enceinte bluetooth . nombre:
+  titre: Nombre d'enceinte bluetooth
   question: Utilisez-vous une enceinte bluetooth ?
-  par défaut: non
+  par défaut: 0
 divers . numérique . appareils . enceinte bluetooth . durée:
+  titre: Durée de vie d'une enceinte bluetooth
   formule: 5
   unité: ans
   note: La durée de vie est issue de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
-
 divers . numérique . appareils . enceinte bluetooth:
   icônes: 🎵
-  applicable si: présent
-  formule: 8.98 / (durée * coefficient préservation)
+  formule: 8.98 * nombre / (durée * coefficient préservation)
   unité: kgCO2e
 
-divers . numérique . appareils . enceinte vocale . présent:
+divers . numérique . appareils . enceinte vocale . nombre:
+  titre: Nombre d'enceinte vocale
   question: Utilisez-vous une enceinte vocale ?
-  par défaut: non
+  par défaut: 0
 divers . numérique . appareils . enceinte vocale . durée:
+  titre: Durée de vie d'une enceinte vocale
   formule: 5
   unité: ans
   note: La durée de vie est issue de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
-
 divers . numérique . appareils . enceinte vocale:
   icônes: 🔊
-  applicable si: présent
-  formule: 30.7 / (durée * coefficient préservation)
+  formule: 30.7 * nombre / (durée * coefficient préservation * logement . habitants)
   unité: kgCO2e
 
-divers . numérique . appareils . montre connectée . présent:
+divers . numérique . appareils . montre connectée . nombre:
+  titre: Nombre de montres connectées
   question: Utilisez-vous une montre connectée ?
-  par défaut: non
+  par défaut: 0
 divers . numérique . appareils . montre connectée . durée:
+  titre: Durée de vie d'une montre connectée
   formule: 4
   unité: ans
   note: |
     La durée de vie est issue de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
     Nous considérons la plus faible durée de vie des objets compatibles avec Internet (appareils IoT)
     On prend ici 4 ans, le plus bas de IoT qui va de 4-12 ans (https://librairie.ademe.fr/cadic/6700/impact-environnemental-numerique-rapport2.pdf)
-
 divers . numérique . appareils . montre connectée:
   icônes: ⌚️
-  applicable si: présent
-  formule: 9.72 / (durée * coefficient préservation)
+  formule: 9.72 * nombre / (durée * coefficient préservation)
   unité: kgCO2e
 
-divers . numérique . appareils . console de salon . présent:
+divers . numérique . appareils . console de salon . nombre:
+  titre: Nombre de consoles de salon
   question: Utilisez-vous une console de salon ?
-  par défaut: non
+  par défaut: 0
 divers . numérique . appareils . console de salon . durée:
+  titre: Durée de vie d'une console de salon
   formule: 6.5
   unité: ans
   note: La durée de vie est issue de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
-
 divers . numérique . appareils . console de salon:
   icônes: 🕹
-  applicable si: présent
-  formule: 73.7 / (durée * coefficient préservation)
+  formule: 73.7 * nombre / (durée * coefficient préservation * logement . habitants)
   unité: kgCO2e
 
-divers . numérique . appareils . console portable . présent:
+divers . numérique . appareils . console portable . nombre:
+  titre: Nombre de consoles portables
   question: Utilisez-vous un console portable ?
-  par défaut: non
+  par défaut: 0
 divers . numérique . appareils . console portable . durée:
+  titre: Durée de vie d'une console portable
   formule: 6.5
   unité: ans
   note: La durée de vie est issue de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
-
 divers . numérique . appareils . console portable:
   icônes: 🎮
-  applicable si: présent
-  formule: 30.8 / (durée * coefficient préservation)
+  formule: 30.8 * nombre / (durée * coefficient préservation)
   unité: kgCO2e

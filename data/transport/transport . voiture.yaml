@@ -101,9 +101,9 @@ transport . voiture . km:
 transport . voiture . motorisation:
   question: Quel type de voiture utilisez-vous ?
   description: |
-    Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.
+    **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
 
-    > Note : vous êtes étonnés de voir cette question alors que vous avez répondu "non" à "Avez vous votre voiture individuelle" ? C'est normal : dès que vous faites des kilomètres en voiture, nous devons connaitre ses caractéristiques, même si elle n'est pas à vous, pour calculer votre empreinte.
+    > 🧐 Vous êtes étonnés de voir cette question alors que vous avez répondu "non" à "Avez vous votre voiture individuelle" ? C'est normal : dès que vous faites des kilomètres en voiture, nous devons connaitre ses caractéristiques, même si elle n'est pas à vous, pour calculer votre empreinte.
   par défaut: "'thermique'"
   formule:
     une possibilité:
@@ -125,10 +125,9 @@ transport . voiture . gabarit:
   applicable si: km > 0
   question: Quel est le gabarit de la voiture ?
   description: |
+    **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
+
     Plus une voiture est lourde et haute donc avec une forte prise au vent, plus elle consomme donc plus elle pollue !
-
-    Comme pour la motorisation, si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.
-
   par défaut: "'moyenne'"
   formule:
     une possibilité:
@@ -136,22 +135,31 @@ transport . voiture . gabarit:
       possibilités:
         - petite
         - moyenne
+        - VUL
         - berline
         - SUV
 
 transport . voiture . gabarit . petite:
   titre: Petite
+  description: Citadine type Zoé, Fiat 500
 transport . voiture . gabarit . moyenne:
   titre: Moyenne
+  description: Modèle au dessus de la petite citadine, type Mégane, Golf
+transport . voiture . gabarit . VUL:
+  titre: Véhicule utilitaire
+  description: Camionette de type Kangoo ou Partner jusqu'au Trafic et Vito
 transport . voiture . gabarit . berline:
   titre: Berline
+  description: Une voiture longue, type 308, Tesla Model 3, Audi A3
 transport . voiture . gabarit . SUV:
   titre: SUV
+  description: |
+    "Sport utility vehicle", type 4x4 urbain
 
 transport . voiture . thermique . consommation aux 100:
   question: Connaissez-vous la consommation moyenne de la voiture ?
   description: |
-    Comme pour la motorisation, si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.
+    **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
 
   par défaut: consommation estimée
   unité: l/centkm
@@ -163,17 +171,19 @@ transport . voiture . consommation estimée:
 
     Cela dit, le gabarit "moyen" est calé sur la valeur moyenne **diesel** (carburant le plus commun, 2x essence) de 6,1l/100km en 2019 du bilan transport du ministère de l'environnement : [source](https://www.statistiques.developpement-durable.gouv.fr/bilan-annuel-des-transports-en-2019-0) figure G3-4 page 9.
 
+    L'[étude ADEME](https://librairie.ademe.fr/mobilite-et-transport/3273-elaboration-selon-les-principes-des-acv-des-bilans-energetiques-des-emissions-de-gaz-a-effet-de-serre-et-des-autres-impacts-environnementaux.html) utilisée pour l'extrapolation des données aux VUL donne une valeur de 5.3 l/100km pour les utilitaires. Cette valeur semble faible au vu du poids du véhicule. Pour être plus conservateur, on reste sur l'approche "moyenne".
   formule:
     variations:
       - si: gabarit = 'petite'
         alors: 5 l/centkm
       - si: gabarit = 'moyenne'
         alors: 6 l/centkm
+      - si: gabarit = 'VUL'
+        alors: 6 l/centkm
       - si: gabarit = 'berline'
         alors: 7 l/centkm
       - si: gabarit = 'SUV'
         alors: 8 l/centkm
-
 transport . voiture . thermique . consommation au kilomètre:
   formule: consommation aux 100 / 100
   unité: l/km
@@ -183,8 +193,7 @@ transport . voiture . thermique . empreinte au kilomètre:
   formule: consommation au kilomètre * empreinte au litre
   note: Cette méthode de calcul, plutôt qu'un barème gabarit -> empreinte au km, permet à l'utilisateur qui connait la consommation moyenne réelle de sa voiture de la saisir pour plus de précision.
 
-transport . voiture . électrique: oui # sans le 'oui', une question vide est posée
-
+transport . voiture . électrique:
 transport . voiture . électrique . empreinte au kilomètre:
   titre: empreinte au km électrique
   unité: kgCO2e/km
@@ -196,13 +205,10 @@ transport . voiture . électrique . empreinte au kilomètre:
         alors: 0.0198
       - sinon: 0.0273
   note: |
-    Nous faisons la correspondance suivante entre notre gabarit et les données de la base bilan-GES:
+    Nous faisons la correspondance suivante entre notre gabarit et les données de la base bilan-GES (au regard des poids des véhicules):
       - petite -> "entrée de gamme - véhicule léger"
       - moyenne -> "coeur de gamme - véhicule compact"
-      - berline et SUV -> "haut de gamme - berline"
-
-  références:
-    bilan-GES: https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=voiture
+      - berline, SUV et VUL -> "haut de gamme - berline"
 
 transport . voiture . empreinte . usage:
   formule: km * au kilomètre
@@ -244,7 +250,10 @@ transport . voiture . thermique . empreinte au litre:
   formule:
     variations:
       - si: carburant = 'gazole B7 ou B10'
-        alors: (3.1 + 3.04) / 2
+        alors:
+          moyenne:
+            - 3.1
+            - 3.04
       - si: carburant = 'essence E5 ou E10'
         alors: 2.7
       - si: carburant = 'essence E85'
@@ -314,13 +323,21 @@ transport . voiture . empreinte . construction:
     Mieux, mais loin d'être faible ! En 2020, il ne s'agit plus seulement de comparer des solutions techniques entre elles, il s'agit d'évaluer ses achats par rapport aux objectifs climat.
 
   note: |
-
     Nous utilisons l'étude [FNH-Carbone4](https://github.com/betagouv/ecolab-data/files/5945898/vehicule_electrique_rapport.pdf).
 
-    Pour l'instant, nous n'avons que deux gabarits, la citadine et la berline.
+    Pour l'instant, nous n'avons que deux gabarits, la citadine et la berline. Dès lors, en ce qui concerne les véhicules "moyen", VUL, SUV, 
+    nous avons fait le choix de faire une approximation de l'empreinte via le poids en considérant, d'un côté les citadines et véhicules moyens, de l'autre
+    les berlines, VUL et SUV.
 
-    p. 12.
+    |                              | Poids thermique (kg) | Poids électrique (kg) | Source               |
+    |------------------------------|----------------------|-----------------------|----------------------|
+    | Citadine                     | 1200                 | 1500                  | Etude Carbone 4      |
+    | Véhicule moyen (type Mégane) | 1250                 | 1600                  | Données constructeur |
+    | Berline                      | 1500                 | 2000                  | Etude Carbone 4      |
+    | VUL (type Kangoo)            | 1400                 | 1800                  | Données constructeur |
+    | SUV (type Audi Q3)           | 1500                 | 1800                  | Données constructeur |
 
+    p. 12 de l'étude de Carbone 4:
     ![](https://user-images.githubusercontent.com/1177762/107264406-3afdd980-6a43-11eb-87ad-a09681240949.png)
 
     Nous prenons uniquement en compte la "production et fin de vie" ainsi que les données de 2016 plutôt que le scénario prospectif 2030.
@@ -345,6 +362,7 @@ transport . voiture . empreinte . construction . barème thermique:
           une de ces conditions:
             - gabarit = 'berline'
             - gabarit = 'SUV'
+            - gabarit = 'VUL'
         alors: 7600
   unité: kgCO2e
 
@@ -360,6 +378,7 @@ transport . voiture . empreinte . construction . barème électrique:
           une de ces conditions:
             - gabarit = 'berline'
             - gabarit = 'SUV'
+            - gabarit = 'VUL'
         alors: 20200
   unité: kgCO2e
 
@@ -375,25 +394,20 @@ transport . voiture . empreinte . construction . barème hybride:
           une de ces conditions:
             - gabarit = 'berline'
             - gabarit = 'SUV'
+            - gabarit = 'VUL'
         alors: 6900
   unité: kgCO2e
   note: Ètonnamment, la berline a moins d'empreinte construction que la citadine... A voir si l'étude relève ce mystère.
 
-transport . voiture . gabarit . petite . poids:
-  formule: 1138
-  unité: kg
-
-transport . voiture . gabarit . petite . empreinte:
-  formule: 5600
-  unité: kgCO2e
-
 transport . voiture . gabarit . berline . poids:
   formule: 1500
   unité: kg
+  note: Règle utilisée pour le calcul de l'empreinte de la caravane et camping car.
 
 transport . voiture . gabarit . berline . empreinte:
-  formule: 6300
+  formule: 7600
   unité: kgCO2e
+  note: Règle utilisée pour le calcul de l'empreinte de la caravane et camping car.
 
 transport . voiture . âge:
   applicable si:
