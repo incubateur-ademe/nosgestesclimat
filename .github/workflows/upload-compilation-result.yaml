@@ -16,6 +16,8 @@ jobs:
       compilation-result: ${{ steps.compilation.outputs.result }}
       check-translation-result: ${{ steps.check-translation.outputs.result }}
       check-personas-result: ${{ steps.check-personas.outputs.result }}
+      test-personas-result: ${{ steps.test-personas.outputs.result }}
+      test-optim-result: ${{ steps.test-optim.outputs.result }}
       test-url: ${{ steps.set-test-url.outputs.fr }}
     steps:
       - uses: actions/checkout@v3
@@ -45,6 +47,22 @@ jobs:
         run: |
           # Checks the personas translation
           body="$(yarn check:personas --markdown 2> /dev/null | tail --lines=+3 | head --lines=-1)"
+          body="${body//'%'/'%25'}"
+          body="${body//$'\n'/'%0A'}"
+          body="${body//$'\r'/'%0D'}"
+          echo "::set-output name=result::${body}"
+      - id: test-personas
+        run: |
+          # Test the personas bilans against production
+          body="$(yarn test:personas --markdown 2> /dev/null| tail --lines=+3 | head --lines=-1)"
+          body="${body//'%'/'%25'}"
+          body="${body//$'\n'/'%0A'}"
+          body="${body//$'\r'/'%0D'}"
+          echo "::set-output name=result::${body}"
+      - id: test-optim
+        run: |
+          # Test the personas bilans against production
+          body="$(yarn test:optim --markdown 2> /dev/null| tail --lines=+3 | head --lines=-1)"
           body="${body//'%'/'%25'}"
           body="${body//$'\n'/'%0A'}"
           body="${body//$'\r'/'%0D'}"
@@ -84,6 +102,15 @@ jobs:
           ${{ needs.compile.outputs.check-personas-result }}
 
           > _You will find more information about the translation in the [dedicated file](https:/github.com/datagir/nosgestesclimat/blob/master/docs/translation.md)._
+
+          ---
+
+          ### :couple: Personas changes
+
+          ${{ needs.compile.outputs.test-personas-result }}
+
+          ${{ needs.compile.outputs.test-optim-result }}
+
           " > artifacts/result.md
       - name: Upload artifact
         uses: actions/upload-artifact@v1
