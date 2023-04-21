@@ -78,11 +78,20 @@ function getDependencies(engine, rule, acc = []) {
 
 function getRuleToImportInfos(ruleToImport) {
 	if (typeof ruleToImport == 'object') {
-		return Object.entries(ruleToImport)
+		const entries = Object.entries(ruleToImport)
+		return entries
 	}
 	return [[ruleToImport, {}]]
 }
 
+const removeRawNodeNom = (rawNode, ruleNameToCheck) => {
+	const { nom, ...rest } = rawNode
+	if (nom !== ruleNameToCheck)
+		throw Error(
+			`Imported rule's publicode raw node "nom" attribute is different from the resolveImport script ruleName. Please investigate`
+		)
+	return rest
+}
 function resolveImports(rules, opts) {
 	const resolvedRules = Object.entries(rules).reduce((acc, [name, value]) => {
 		if (name === IMPORT_KEYWORD) {
@@ -98,12 +107,16 @@ function resolveImports(rules, opts) {
 					)
 				}
 				const updatedRawNode = { ...rule.rawNode, ...attrs }
-				acc.push([ruleName, updatedRawNode])
-				const ruleDeps = getDependencies(engine, rule).filter(
-					([ruleDepName, _]) =>
-						// Avoid to overwrite the updatedRawNode
-						!acc.find(([accRuleName, _]) => accRuleName === ruleDepName)
-				)
+				// The name "nom" will already be there as the key, also called dottedName or ruleName
+				// Keeping it is a repetition and can lead to misleading translations (rule names should not be translated in the current state of translation, they're the ids)
+				acc.push([ruleName, removeRawNodeNom(updatedRawNode, ruleName)])
+				const ruleDeps = getDependencies(engine, rule)
+					.filter(
+						([ruleDepName, _]) =>
+							// Avoid to overwrite the updatedRawNode
+							!acc.find(([accRuleName, _]) => accRuleName === ruleDepName)
+					)
+					.map(([k, v]) => [k, removeRawNodeNom(v, k)])
 				acc.push(...ruleDeps)
 			})
 		} else {
