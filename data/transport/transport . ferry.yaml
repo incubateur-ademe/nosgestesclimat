@@ -1,10 +1,85 @@
 importer!:
-  depuis: "futureco-data"
+  depuis: 'futureco-data'
   les règles:
-    # - transport . ferry . empreinte du voyage:
-    #     titre: Empreinte d'un voyage en ferry
-    #     default: 200
+    - transport . ferry . empreinte par km volume
+    - transport . ferry . vitesse moyenne . métrique
+    # This syntax lets us blacklist questions : they won't be displayed in the conversation
+    - transport . ferry . durée du voyage:
+        question:
+    - transport . ferry . groupe:
+        question:
+    - transport . ferry . cabine:
+        question:
+    - transport . ferry . distance aller . orthodromique:
+        question:
+    - transport . ferry . cabine . nombre:
+        question:
+    - transport . ferry . consommation de services:
+        question:
+    - transport . ferry . voiture:
+        question:
+    - transport . ferry . surface . garage . bas:
+        question:
+    - transport . ferry . surface . garage . haut:
+        question:
+    - transport . ferry . surface . cabines:
+        question:
+    - transport . ferry . surface . sièges:
+        question:
+    - transport . ferry . surface . loisirs:
+        question:
+    - transport . ferry . surface . communs:
+        question:
+    - transport . ferry . vitesse:
+        question:
 
 transport . ferry:
-  titre: Ferry 
+  titre: Ferry
   icônes: ⛴
+  formule: heures * vitesse moyenne . métrique * empreinte par km volume
+  description: |
+    Le modèle ferry provient de [Futur.eco](https://futur.eco/ferry).
+    Ce modèle est explicité de manière simplifiée sur la page ["Empreinte par km et passager"](http://localhost:8080/documentation/transport/ferry/empreinte-par-km-volume), et basé sur une étude approfondie ([voir la note méthodo complète](https://hackmd.io/@laem/empreinte-ferry))
+
+    Afin de simplifier pour l'utilisateur l'évaluation de son empreinte, nous proposons une estimation via la durée des voyages (en heure). Nous fixons ainsi les autres paramètres du calcul comme tels:
+    - Voyage en cabine
+    - Une voiture à bord
+    - 2 personnes partagent la cabine, la voiture
+    - Modèle de ferry considéré (plan, vitesse moyenne) : [Méga Express Four](https://www.greenferries.org/ships/mega-express-four-9086590/)
+
+transport . ferry . présent:
+  question: Prenez-vous le ferry ?
+  description: |
+    Répondez oui si vous prenez le ferry par exemple pour vous rendre sur les îles ou continents voisins (Corse, Royaume-Uni, Maghreb...).
+
+    Si vous faites des croisières (de longs voyages où vous habitez sur le bateau), répondez également oui : dans un premier temps, nous comptabilisons de la même façon les heures de ferry et de croisière.
+
+    Si vous ne prenez pas le ferry tous les ans mais que vous comptez continuer à le prendre, répondez "oui" et estimez grossièrement le nombre d'heures ramené à l'année.
+
+    Par exemple pour une traversée de 9h (une nuit) tous les 3 ans, répondez `3`.
+  par défaut: oui
+
+transport . ferry . heures:
+  titre: Heures de ferry dans l'année
+  applicable si: présent
+  question: Combien d'heures par an voyagez-vous en ferry ou croisière ?
+  description: |
+    Pour l'instant, nous ne prenons pas en compte les options qui peuvent augmenter ou diminuer l'empreinte d'une traversée en ferry : 
+      - voiture embarquée à bord
+      - remplissage de la cabine ou réservation d'un siège
+      - utilisation des services à bord (restaurant, boutiques)
+      - et bien sûr la vitesse du bateau (plus un bateau est rapide, plus il consomme).
+
+    Le calcul est donc fait pour une traversée type.
+  par défaut: 8
+  unité: h
+  suggestions:
+    Cherbourg ⇄ 🇬🇧 Poole: 8
+    Marseille ⇄ 🏝️ Ajaccio: 22
+    Marseille ⇄ 🇩🇿 Alger: 50
+  note: |
+    Selon les chiffres du [SDES](https://www.statistiques.developpement-durable.gouv.fr/edition-numerique/chiffres-cles-transports-2022/17-transport-maritime-de-voyageurs),
+    environ 27 millions de voyageur embarqués et débarqués, y compris croisiéristes en France (incluant outre-mer) en 2019 (2020 exclu car année COVID non représentative).
+    Majoritairement sur la Manche / mer du Nord, que l'on peut approximer à des voyages "Cherbourg-Poole" (8h A/R).
+
+    ![](https://user-images.githubusercontent.com/55186402/231852993-681919a7-2697-4531-a6bc-517e4b869db2.png)
