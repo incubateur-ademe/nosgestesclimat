@@ -21,7 +21,7 @@ logement . impact:
       - transport . vacances . caravane . empreinte . construction amortie
       - transport . vacances . camping car . empreinte . construction amortie
 
-logement . habitants:
+logement . saisie habitants:
   question: Combien de personnes vivent chez vous ?
   description: |
     Il s'agit de savoir combien de personnes partagent votre logement et toutes les consommations qu'il entraîne (construction, chauffage, etc).
@@ -39,12 +39,22 @@ logement . habitants:
     en couple: 2
   unité: personnes
 
+logement . habitants:
+  formule:
+    le maximum de:
+      - 1
+      - saisie habitants
+
 logement . notif minimum habitants:
   type: notification
   sévérité: invalide
-  formule: habitants = 0
+  formule: saisie habitants < 1
   description: |
-    Le nombre d'habitants ne peut pas être nul. Vous êtes le premier habitant de votre logement.
+    Le nombre d'habitants ne peut pas être nul ni inférieur à 1. Vous êtes le premier habitant de votre logement.
+
+    En effet, l'empreinte du logement et d'autres postes comme l'électroménager étant divisées par le nombre d'habitant, il doit être supérieur à 1.
+
+    Nous ne prenons donc pas aujourd'hui en compte les logements vides que vous possédez, ou un logement que vous louez dans lequel ni vous ni personne ne vivez.
 
 logement . surface:
   titre: Surface
@@ -476,17 +486,18 @@ logement . gaz . intensité carbone gaz utilisateur:
   références:
     - https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Gaz
   unité: kgCO2e/kWh
-  note: |
-    Il s'agit de kgCO2e/kWh *PCI*.
 
 logement . gaz . facteur d'émission base carbone:
   titre: Intensité carbone gaz naturel
-  valeur: 0.227
+  valeur: 0.221
   unité: kgCO2e/kWh
   note: |
-    Il s'agit de kgCO2e/kWh *PCI*.
+    Il s'agit de kgCO2e/kWh *PCS*.
 
-    Gaz fossile : Gaz naturel - 2015 - mix moyen - consommation
+    On raisonne en PCS (Pouvoir Calorifique Supérieur) et non en PCI (Pouvoir Calorifique Inférieur), car le PCS est utilisé en tant que coefficient de conversion dans les factures pour convertir le volume de gaz utilisé en kWh : 
+    on fait l'hypothèse que la chaudière gaz récupère bien la chaleur latente de condensation.
+
+    Base Carbone Gaz naturel - 2022/mix moyen/consommation
 
 logement . chauffage . intensité carbone GPL:
   formule: 0.272
@@ -604,15 +615,16 @@ logement . chauffage . citerne propane . estimation via le coût:
     le prix du propane en citerne oscille autour de 1800€ par tonne (selon le fournisseur).
 
 logement . chauffage . citerne propane . energie par kg:
-  formule: 46 MJ/kg * 1.087 / 3.6 MJ/kWh
+  formule: 46 MJ/kg * 1.111 / 3.6 MJ/kWh
   unité: kWh/kg
   note: |
     Documentation de la base carbone:
     Pouvoir calorifique du propane = 46 MJ/kg (PCI)
-    Rapport PCI/PCS = 1,087
+    Rapport PCS/PCI = 1,111
     1 kWh = 3,6 MJ
 
-    On raisonne en PCS (consommation).
+    On raisonne en PCS (Pouvoir Calorifique Supérieur) et non en PCI (Pouvoir Calorifique Inférieur), car le PCS est utilisé en tant que coefficient de conversion dans les factures pour convertir le volume de gaz utilisé en kWh : 
+    on fait l'hypothèse que la chaudière gaz récupère bien la chaleur latente de condensation.
 
     Le calcul donne 13.88 kWh/kg (PCS)
 
