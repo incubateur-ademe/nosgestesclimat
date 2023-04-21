@@ -21,7 +21,7 @@ logement . impact:
       - transport . vacances . caravane . empreinte . construction amortie
       - transport . vacances . camping car . empreinte . construction amortie
 
-logement . habitants:
+logement . saisie habitants:
   question: Combien de personnes vivent chez vous ?
   description: |
     Il s'agit de savoir combien de personnes partagent votre logement et toutes les consommations qu'il entraîne (construction, chauffage, etc).
@@ -39,12 +39,22 @@ logement . habitants:
     en couple: 2
   unité: personnes
 
+logement . habitants:
+  formule:
+    le maximum de:
+      - 1
+      - saisie habitants
+
 logement . notif minimum habitants:
   type: notification
   sévérité: invalide
-  formule: habitants = 0
+  formule: saisie habitants < 1
   description: |
-    Le nombre d'habitants ne peut pas être nul. Vous êtes le premier habitant de votre logement.
+    Le nombre d'habitants ne peut pas être nul ni inférieur à 1. Vous êtes le premier habitant de votre logement.
+
+    En effet, l'empreinte du logement et d'autres postes comme l'électroménager étant divisées par le nombre d'habitant, il doit être supérieur à 1.
+
+    Nous ne prenons donc pas aujourd'hui en compte les logements vides que vous possédez, ou un logement que vous louez dans lequel ni vous ni personne ne vivez.
 
 logement . surface:
   titre: Surface
