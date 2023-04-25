@@ -17,7 +17,6 @@ transport . voiture . empreinte:
   résumé: Le premier poste moyen d'empreinte, l'incontournable **voiture individuelle**
   titre: voiture
   icônes: 🚘️
-
   non applicable si: km = 0
   formule:
     variations:
@@ -26,7 +25,7 @@ transport . voiture . empreinte:
       - sinon: (construction amortie + usage) / voyageurs
   unité: kgCO2e
 
-transport . voiture . voyageurs:
+transport . voiture . saisie voyageurs:
   question: Quel est le nombre moyen de voyageurs dans la voiture ?
   description: |
     Une voiture consomme à peu près autant qu'elle ait 1, 2 ou 5 voyageurs à bord. Voyager à plusieurs, c'est donc potentiellement diviser par 5 l'empreinte individuelle !
@@ -40,17 +39,25 @@ transport . voiture . voyageurs:
 
     Bien sûr, si vous vous faites conduire ou si vous prenez le taxi, le chauffeur ne compte pas, car il est au service de votre déplacement.
 
-  par défaut: 1.2 voyageurs
+  par défaut: 1.2
   unité: voyageurs
   suggestions:
     un seul: 1
     deux: 2
     cinq: 5
 
+transport . voiture . voyageurs:
+  titre: Nombre de voyageurs moyen dans la voiture
+  formule:
+    variations:
+      - si: notif minimum voyageurs
+        alors: 1
+      - sinon: saisie voyageurs
+
 transport . voiture . notif minimum voyageurs:
   type: notification
   sévérité: invalide
-  formule: voyageurs = 0
+  formule: saisie voyageurs < 1
   description: |
     Le nombre de voyageurs ne peut pas être nul. Au volant de votre voiture, vous en êtes le premier voyageur.
 
