@@ -35,21 +35,40 @@ function manageNotUpToDateRuleTranslations(
 			notUpToDateTranslationRules.length
 		)} not up-to-date rule translations:`
 	)
-	if (cli.promptYesNo(`Do you want to remove them?`)) {
-		notUpToDateTranslationRules.forEach((rule) => {
-			if (
-				cli.promptYesNo(
-					`Do you want to remove ${cli.styledRuleNameWithOptionalAttr(rule)}?`
-				)
-			) {
-				removed = true
+	if (cli.promptYesNo(`Do you want to log them?`)) {
+		notUpToDateTranslationRules.forEach((rule) =>
+			console.log(cli.styledRuleNameWithOptionalAttr(rule))
+		)
+	}
+	switch (cli.ask(`Do you want to remove them?`, ['all', 'one', 'none'])) {
+		case 'a': {
+			removed = true
+			notUpToDateTranslationRules.forEach((rule) => {
 				delete destRules[rule]
-			}
-		})
-		if (removed) {
-			console.log(`Writing updated rules translations to: ${destPath}`)
-			utils.writeYAML(destPath, destRules)
+			})
+			break
 		}
+		case 'o': {
+			notUpToDateTranslationRules.forEach((rule) => {
+				if (
+					cli.promptYesNo(
+						`Do you want to remove ${cli.styledRuleNameWithOptionalAttr(rule)}?`
+					)
+				) {
+					removed = true
+					delete destRules[rule]
+				}
+			})
+			break
+		}
+		default: {
+			console.log('got: default')
+			break
+		}
+	}
+	if (removed) {
+		console.log(`Writing updated rules translations to: ${destPath}`)
+		utils.writeYAML(destPath, destRules)
 	}
 }
 

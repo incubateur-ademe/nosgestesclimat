@@ -220,7 +220,12 @@ const promptYesNo = (question) => {
 	return 'y' === prompt(`${question} (${styledPromptActions(['yes', 'no'])}) `)
 }
 
+const ask = (question, actions) => {
+	return prompt(`${question} (${styledPromptActions(actions)}) `)
+}
+
 module.exports = {
+	ask,
 	colors,
 	dim,
 	italic,
