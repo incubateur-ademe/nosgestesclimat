@@ -1,6 +1,5 @@
 import fs from 'fs'
 import cli from './i18n/cli.js'
-import { exit } from 'process'
 import utils, { publicDir } from './i18n/utils.js'
 import path from 'path'
 import { addRegionToBaseRules } from './i18n/addRegionToBaseRules.js'
@@ -14,14 +13,7 @@ function writeRules(rules, path, destLang, regionCode, markdown) {
 			console.log(` ✅ ${regionCode}-${destLang} written`)
 		}
 	} catch (err) {
-		if (markdown) {
-			console.log(
-				`| Rules compilation to JSON for the region ${regionCode} in _${destLang}_ | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
-			)
-		} else {
-			console.log(' ❌ An error occured while writting rules in:', path)
-			console.log(err.message)
-		}
+		return err
 	}
 }
 
@@ -54,28 +46,23 @@ export default ({
 	const destPathWithoutExtension = path.resolve(
 		path.join(publicDir, `co2-model.${regionCode}-lang.${destLang}`)
 	)
-	writeRules(
+	const werr = writeRules(
 		localizedTranslatedBaseRules,
 		destPathWithoutExtension + '.json',
 		destLang,
 		regionCode,
 		markdown
 	)
-	const err = compressRules(destPathWithoutExtension)
-	if (err) {
-		if (markdown) {
-			console.log(
-				`| Rules compression for the region ${regionCode} in _${destLang}_ | ❌ | <details><summary>See error:</summary><br />${err.message.replace(
-					/(?:\r\n|\r|\n)/g,
-					'<br/>'
-				)}</details> |`
-			)
-		} else {
-			console.log(` ❌ ${regionCode}-${destLang} optimized: ${err.message}`)
+	if (werr) {
+		return {
+			err: ` ❌ Compilation ${regionCode}-${destLang}: ${werr}`,
 		}
-		return ''
-	} else if (!markdown) {
+	}
+	const oerr = compressRules(destPathWithoutExtension)
+	if (oerr) {
+		return { err: ` ❌ Optimization ${regionCode}-${destLang}: ${oerr}` }
+	} else if (!markdown && !oerr) {
 		console.log(` ✅ ${regionCode}-${destLang} optimized`)
 	}
-	return `<li>${regionCode}-${destLang}</li>`
+	return { ok: `<li>${regionCode}-${destLang}</li>` }
 }

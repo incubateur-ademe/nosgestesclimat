@@ -100,29 +100,20 @@ try {
 			: ' ✅ Base rules have been correctly evaluated'
 	)
 } catch (err) {
-	if (markdown) {
-		console.log(
-			`| Rules evaluation | ❌ | <details><summary>See error:</summary><br /><br /><code>${err.message.replace(
-				/(?:\r\n|\r|\n)/g,
-				'<br/>'
-			)}</code></details> |`
-		)
-		console.log(err)
-	} else {
-		console.log(' ❌ An error occured while trying to evaluate the rules:\n')
-		let lines = err.message.split('\n')
-		for (let i = 0; i < 9; ++i) {
-			if (lines[i]) {
-				console.log('  ', lines[i])
-			}
+	console.log(' ❌ An error occured while trying to evaluate the rules:\n')
+	let lines = err.message.split('\n')
+	for (let i = 0; i < 9; ++i) {
+		if (lines[i]) {
+			console.log('  ', lines[i])
 		}
-		console.log(err)
 	}
+	console.log(err)
+	exit(-1)
 }
 
 try {
 	destLangs.unshift(srcLang)
-	const correctlyCompiledAndOptimizedFiles = await Promise.all(
+	const resultOfCompilationAndOptim = await Promise.all(
 		destLangs.flatMap((destLang) => {
 			const translatedBaseRules = getTranslatedRules(baseRules, destLang)
 			return destRegions.map((regionCode) => {
@@ -142,10 +133,17 @@ try {
 	)
 	if (markdown) {
 		console.log(
-			`| Successfully compiled and optimized rules: <br><details><summary>Expand</summary> <ul>${correctlyCompiledAndOptimizedFiles.join(
-				' '
-			)}</ul></details> | :heavy_check_mark: | Ø |`
+			`| Successfully compiled and optimized rules: <br><details><summary>Expand</summary> <ul>${resultOfCompilationAndOptim
+				.map(({ ok }) => ok ?? '')
+				.join(' ')}</ul></details> | :heavy_check_mark: | Ø |`
 		)
+	}
+	const errors = resultOfCompilationAndOptim
+		.map(({ err }) => err)
+		.filter(Boolean)
+	if (errors.length > 0) {
+		errors.forEach((err) => console.error(err))
+		exit(-1)
 	}
 } catch (err) {
 	piscina.threads.forEach((thread) => thread.terminate())
