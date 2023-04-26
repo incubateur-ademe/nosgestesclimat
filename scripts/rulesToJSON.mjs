@@ -88,8 +88,6 @@ const piscina = new Piscina({
 	filename: new URL('./rulesToJSON.worker.mjs', import.meta.url).href,
 })
 
-const errors = []
-
 try {
 	new Engine(baseRules, {
 		// NOTE(@EmileRolley): warnings are ignored for now but should be examined in
@@ -102,25 +100,15 @@ try {
 			: ' ✅ Base rules have been correctly evaluated'
 	)
 } catch (err) {
-	if (markdown) {
-		console.log(
-			`| Rules evaluation | ❌ | <details><summary>See error:</summary><br /><br /><code>${err.message.replace(
-				/(?:\r\n|\r|\n)/g,
-				'<br/>'
-			)}</code></details> |`
-		)
-		console.log(err)
-		errors.push(`[ERR] Rules evaluation:\n${err.message}`)
-	} else {
-		console.log(' ❌ An error occured while trying to evaluate the rules:\n')
-		let lines = err.message.split('\n')
-		for (let i = 0; i < 9; ++i) {
-			if (lines[i]) {
-				console.log('  ', lines[i])
-			}
+	console.log(' ❌ An error occured while trying to evaluate the rules:\n')
+	let lines = err.message.split('\n')
+	for (let i = 0; i < 9; ++i) {
+		if (lines[i]) {
+			console.log('  ', lines[i])
 		}
-		console.log(err)
 	}
+	console.log(err)
+	exit(-1)
 }
 
 try {
@@ -130,16 +118,12 @@ try {
 			const translatedBaseRules = getTranslatedRules(baseRules, destLang)
 			return destRegions.map((regionCode) => {
 				try {
-					/* const { ok, err } = */ return piscina.run({
+					return piscina.run({
 						regionCode,
 						destLang,
 						translatedBaseRules,
 						markdown,
 					})
-					// if (err) {
-					// 	// errors.push(err)
-					// }
-					// return ok ?? ''
 				} catch (err) {
 					console.log(`Error in worker ${regionCode}-${destLang}`, err)
 					piscina.threads.forEach((thread) => thread.terminate())
@@ -150,18 +134,16 @@ try {
 	if (markdown) {
 		console.log(
 			`| Successfully compiled and optimized rules: <br><details><summary>Expand</summary> <ul>${resultOfCompilationAndOptim
-				.map(({ ok, err }) => {
-					if (err) {
-						errors.push(err)
-					}
-					return ok ?? ''
-				})
+				.map(({ ok }) => ok ?? '')
 				.join(' ')}</ul></details> | :heavy_check_mark: | Ø |`
 		)
-		if (errors.length > 0) {
-			errors.forEach((err) => console.error(err))
-			exit(-1)
-		}
+	}
+	const errors = resultOfCompilationAndOptim
+		.map(({ err }) => err)
+		.filter(Boolean)
+	if (errors.length > 0) {
+		errors.forEach((err) => console.error(err))
+		exit(-1)
 	}
 } catch (err) {
 	piscina.threads.forEach((thread) => thread.terminate())

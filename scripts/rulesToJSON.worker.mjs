@@ -1,6 +1,5 @@
 import fs from 'fs'
 import cli from './i18n/cli.js'
-import { exit } from 'process'
 import utils, { publicDir } from './i18n/utils.js'
 import path from 'path'
 import { addRegionToBaseRules } from './i18n/addRegionToBaseRules.js'
@@ -55,30 +54,14 @@ export default ({
 		markdown
 	)
 	if (werr) {
-		if (markdown) {
-			console.log(
-				`| Rules compilation to JSON for the region ${regionCode} in _${destLang}_ | ❌ | <details><summary>See error:</summary><br /><br /><code>${werr}</code></details> |`
-			)
-			return { err: `[ERR] Compilation ${regionCode}-${destLang}` }
-		} else {
-			console.log(' ❌ An error occured while writting rules in:', path)
-			console.log(werr.message)
+		return {
+			err: ` ❌ Compilation ${regionCode}-${destLang}: ${werr}`,
 		}
 	}
-	const cerr = compressRules(destPathWithoutExtension)
-	if (cerr) {
-		if (markdown) {
-			console.log(
-				`| Rules compression for the region ${regionCode} in _${destLang}_ | ❌ | <details><summary>See error:</summary><br />${cerr.message.replace(
-					/(?:\r\n|\r|\n)/g,
-					'<br/>'
-				)}</details> |`
-			)
-			return { err: `[ERR] Optimization ${regionCode}-${destLang}` }
-		} else {
-			console.log(` ❌ ${regionCode}-${destLang} optimized: ${cerr.message}`)
-		}
-	} else if (!markdown) {
+	const oerr = compressRules(destPathWithoutExtension)
+	if (oerr) {
+		return { err: ` ❌ Optimization ${regionCode}-${destLang}: ${oerr}` }
+	} else if (!markdown && !oerr) {
 		console.log(` ✅ ${regionCode}-${destLang} optimized`)
 	}
 	return { ok: `<li>${regionCode}-${destLang}</li>` }
