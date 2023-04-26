@@ -85,6 +85,7 @@ export function constantFoldingFromJSONFile(
 
 		log(`Writing in '${jsonDestPath}'...`)
 		writeFileSync(jsonDestPath, JSON.stringify(getRawNodes(foldedRules)))
+		throw new Error('test of an error in compilation')
 	} catch (error) {
 		return error
 	}
