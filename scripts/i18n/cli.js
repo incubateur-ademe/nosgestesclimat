@@ -216,11 +216,15 @@ const styledPromptAction = (action) =>
 const styledPromptActions = (actions, sep = ' ') =>
 	actions.map((action) => styledPromptAction(action)).join(sep)
 
-const promptYesNo = (question) => {
-	return 'y' === prompt(`${question} (${styledPromptActions(['yes', 'no'])}) `)
+const ask = (question, actions) => {
+	return prompt(`${question} (${styledPromptActions(actions)}) `)
+}
+const askYesNo = (question) => {
+	return 'y' === ask(question, ['yes', 'no'])
 }
 
 module.exports = {
+	ask,
 	colors,
 	dim,
 	italic,
@@ -239,5 +243,5 @@ module.exports = {
 	styledRuleNameWithOptionalAttr,
 	styledPromptAction,
 	styledPromptActions,
-	promptYesNo,
+	askYesNo,
 }

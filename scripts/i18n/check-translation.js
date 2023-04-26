@@ -35,21 +35,39 @@ function manageNotUpToDateRuleTranslations(
 			notUpToDateTranslationRules.length
 		)} not up-to-date rule translations:`
 	)
-	if (cli.promptYesNo(`Do you want to remove them?`)) {
-		notUpToDateTranslationRules.forEach((rule) => {
-			if (
-				cli.promptYesNo(
-					`Do you want to remove ${cli.styledRuleNameWithOptionalAttr(rule)}?`
-				)
-			) {
-				removed = true
+	if (cli.askYesNo(`Do you want to log them?`)) {
+		notUpToDateTranslationRules.forEach((rule) =>
+			console.log(cli.styledRuleNameWithOptionalAttr(rule))
+		)
+	}
+	switch (cli.ask(`Do you want to remove them?`, ['all', 'one', 'none'])) {
+		case 'a': {
+			removed = true
+			notUpToDateTranslationRules.forEach((rule) => {
 				delete destRules[rule]
-			}
-		})
-		if (removed) {
-			console.log(`Writing updated rules translations to: ${destPath}`)
-			utils.writeYAML(destPath, destRules)
+			})
+			break
 		}
+		case 'o': {
+			notUpToDateTranslationRules.forEach((rule) => {
+				if (
+					cli.askYesNo(
+						`Do you want to remove ${cli.styledRuleNameWithOptionalAttr(rule)}?`
+					)
+				) {
+					removed = true
+					delete destRules[rule]
+				}
+			})
+			break
+		}
+		default: {
+			break
+		}
+	}
+	if (removed) {
+		console.log(`Writing updated rules translations to: ${destPath}`)
+		utils.writeYAML(destPath, destRules)
 	}
 }
 
@@ -77,7 +95,7 @@ destLangs.forEach((destLang) => {
 		destLang,
 		markdown
 	)
-	if (nbMissing > 0 && cli.promptYesNo(`Do you want to log missing rules?`)) {
+	if (nbMissing > 0 && cli.askYesNo(`Do you want to log missing rules?`)) {
 		missingRules.map(({ rule: ruleName, attr }) =>
 			console.log(cli.styledRuleNameWithOptionalAttr(ruleName, attr))
 		)
