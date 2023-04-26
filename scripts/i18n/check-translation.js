@@ -35,7 +35,7 @@ function manageNotUpToDateRuleTranslations(
 			notUpToDateTranslationRules.length
 		)} not up-to-date rule translations:`
 	)
-	if (cli.promptYesNo(`Do you want to log them?`)) {
+	if (cli.askYesNo(`Do you want to log them?`)) {
 		notUpToDateTranslationRules.forEach((rule) =>
 			console.log(cli.styledRuleNameWithOptionalAttr(rule))
 		)
@@ -51,7 +51,7 @@ function manageNotUpToDateRuleTranslations(
 		case 'o': {
 			notUpToDateTranslationRules.forEach((rule) => {
 				if (
-					cli.promptYesNo(
+					cli.askYesNo(
 						`Do you want to remove ${cli.styledRuleNameWithOptionalAttr(rule)}?`
 					)
 				) {
@@ -62,7 +62,6 @@ function manageNotUpToDateRuleTranslations(
 			break
 		}
 		default: {
-			console.log('got: default')
 			break
 		}
 	}
@@ -96,7 +95,7 @@ destLangs.forEach((destLang) => {
 		destLang,
 		markdown
 	)
-	if (nbMissing > 0 && cli.promptYesNo(`Do you want to log missing rules?`)) {
+	if (nbMissing > 0 && cli.askYesNo(`Do you want to log missing rules?`)) {
 		missingRules.map(({ rule: ruleName, attr }) =>
 			console.log(cli.styledRuleNameWithOptionalAttr(ruleName, attr))
 		)
