@@ -14,14 +14,7 @@ function writeRules(rules, path, destLang, regionCode, markdown) {
 			console.log(` ✅ ${regionCode}-${destLang} written`)
 		}
 	} catch (err) {
-		if (markdown) {
-			console.log(
-				`| Rules compilation to JSON for the region ${regionCode} in _${destLang}_ | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
-			)
-		} else {
-			console.log(' ❌ An error occured while writting rules in:', path)
-			console.log(err.message)
-		}
+		return err
 	}
 }
 
@@ -54,28 +47,39 @@ export default ({
 	const destPathWithoutExtension = path.resolve(
 		path.join(publicDir, `co2-model.${regionCode}-lang.${destLang}`)
 	)
-	writeRules(
+	const werr = writeRules(
 		localizedTranslatedBaseRules,
 		destPathWithoutExtension + '.json',
 		destLang,
 		regionCode,
 		markdown
 	)
-	const err = compressRules(destPathWithoutExtension)
-	if (err) {
+	if (werr) {
 		if (markdown) {
 			console.log(
-				`| Rules compression for the region ${regionCode} in _${destLang}_ | ❌ | <details><summary>See error:</summary><br />${err.message.replace(
+				`| Rules compilation to JSON for the region ${regionCode} in _${destLang}_ | ❌ | <details><summary>See error:</summary><br /><br /><code>${werr}</code></details> |`
+			)
+			return { err: `[ERR] Compilation ${regionCode}-${destLang}` }
+		} else {
+			console.log(' ❌ An error occured while writting rules in:', path)
+			console.log(werr.message)
+		}
+	}
+	const cerr = compressRules(destPathWithoutExtension)
+	if (cerr) {
+		if (markdown) {
+			console.log(
+				`| Rules compression for the region ${regionCode} in _${destLang}_ | ❌ | <details><summary>See error:</summary><br />${cerr.message.replace(
 					/(?:\r\n|\r|\n)/g,
 					'<br/>'
 				)}</details> |`
 			)
+			return { err: `[ERR] Optimization ${regionCode}-${destLang}` }
 		} else {
-			console.log(` ❌ ${regionCode}-${destLang} optimized: ${err.message}`)
+			console.log(` ❌ ${regionCode}-${destLang} optimized: ${cerr.message}`)
 		}
-		return ''
 	} else if (!markdown) {
 		console.log(` ✅ ${regionCode}-${destLang} optimized`)
 	}
-	return `<li>${regionCode}-${destLang}</li>`
+	return { ok: `<li>${regionCode}-${destLang}</li>` }
 }

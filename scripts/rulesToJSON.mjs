@@ -88,6 +88,8 @@ const piscina = new Piscina({
 	filename: new URL('./rulesToJSON.worker.mjs', import.meta.url).href,
 })
 
+const errors = []
+
 try {
 	new Engine(baseRules, {
 		// NOTE(@EmileRolley): warnings are ignored for now but should be examined in
@@ -108,6 +110,7 @@ try {
 			)}</code></details> |`
 		)
 		console.log(err)
+		errors.push(`[ERR] Rules evaluation:\n${err.message}`)
 	} else {
 		console.log(' ❌ An error occured while trying to evaluate the rules:\n')
 		let lines = err.message.split('\n')
@@ -122,17 +125,21 @@ try {
 
 try {
 	destLangs.unshift(srcLang)
-	const correctlyCompiledAndOptimizedFiles = await Promise.all(
+	const resultOfCompilationAndOptim = await Promise.all(
 		destLangs.flatMap((destLang) => {
 			const translatedBaseRules = getTranslatedRules(baseRules, destLang)
 			return destRegions.map((regionCode) => {
 				try {
-					return piscina.run({
+					/* const { ok, err } = */ return piscina.run({
 						regionCode,
 						destLang,
 						translatedBaseRules,
 						markdown,
 					})
+					// if (err) {
+					// 	// errors.push(err)
+					// }
+					// return ok ?? ''
 				} catch (err) {
 					console.log(`Error in worker ${regionCode}-${destLang}`, err)
 					piscina.threads.forEach((thread) => thread.terminate())
@@ -142,10 +149,19 @@ try {
 	)
 	if (markdown) {
 		console.log(
-			`| Successfully compiled and optimized rules: <br><details><summary>Expand</summary> <ul>${correctlyCompiledAndOptimizedFiles.join(
-				' '
-			)}</ul></details> | :heavy_check_mark: | Ø |`
+			`| Successfully compiled and optimized rules: <br><details><summary>Expand</summary> <ul>${resultOfCompilationAndOptim
+				.map(({ ok, err }) => {
+					if (err) {
+						errors.push(err)
+					}
+					return ok ?? ''
+				})
+				.join(' ')}</ul></details> | :heavy_check_mark: | Ø |`
 		)
+		if (errors.length > 0) {
+			errors.forEach((err) => console.error(err))
+			exit(-1)
+		}
 	}
 } catch (err) {
 	piscina.threads.forEach((thread) => thread.terminate())
