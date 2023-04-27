@@ -22,8 +22,8 @@ an account on GitHub and find our repository : [datagir/nosgestesclimat](https:/
 `data/i18n/models`
 
 > **Note**  
-> You should know that those files contains calculation rules (in yaml format) which are linked to the french model
-> (available in the `data` directory)
+> Those files contains calculation rules (in yaml format) which are linked to the french model (available in the
+> `/data/` directory).
 
 ### Your model is not yet supported in NGC ?
 
@@ -32,8 +32,8 @@ Your file should be named with the country-code (uppercase), dash-separated with
 extension `.yaml`, for instance: for the United-Kingdom, in english the file is named `UK-en-us.yaml` (`UK` being the
 country code of the United Kingdom and `en-us` being the language code). You can then start writing your own rule.
 > **Warning**  
-> The section `params` containing the caracteristic of your region is mandatory. You should at least indicate the `nom`
-> (name) and `code` attributes. The `gentilé` (demonym) and `drapeau` (flag) attributes are optionnal. 
+> The `params` section contains the caracteristic of your region and is mandatory. You should at least indicate the 
+> `nom` (name) and `code` attributes. The `gentilé` (demonym) and `drapeau` (flag) attributes are optionnal. 
 
 Example :
   ```yaml
