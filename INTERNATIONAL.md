@@ -1,6 +1,6 @@
 # International
 
-> 🇬🇧 For now, this guide is only available in French.
+> 🇬🇧 This guide is also available in english [here](/INTERNATIONAL.en.md)
 
 L'internationalisation de Nos Gestes Climat est complexe : il n'est pas seulement question de simple traduction linguistique mais de la mise en place d'une solution permettant d'adapter la langue et le modèle de calcul en fonction du pays.
 
@@ -18,7 +18,7 @@ Il faut savoir que ces fichiers contiennent de règles de calcul (format yaml) c
 
 ### Votre modèle n'est pas encore supporté dans NGC ?
 
-Créez le votre : votre fichier doit être nommé avec le code de votre pays suivi de l'extension `.yaml`, par exemple pour le Belgique, `BE.yaml`. Commencez ensuite par écrire votre première règle : `params` contenant les caractéristiques de votre région (les attributes nom et code sont obligatoires) :
+Créez le votre : votre fichier doit être nommé avec le code de votre pays suivi de l'extension `.yaml`, par exemple pour le Belgique, `BE-fr.yaml`. Commencez ensuite par écrire votre première règle : `params` contenant les caractéristiques de votre région (les attributes nom et code sont obligatoires) :
 
 ```yaml
 params:
