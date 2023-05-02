@@ -1,0 +1,106 @@
+livraison colis:
+  icônes: 🚚
+  titre: Livraison d'un colis
+  note: |
+    Le champ de l’étude débute au moment de la validation de la commande par le e-commerçant, en faisant **l’hypothèse que l’article (produit) 
+    est déjà en stock**, jusqu’à la récupération de(s) article(s) constitutif(s) de la commande par le e-consommateur. 
+
+    Ce périmètre est présenté à la figure ci-dessous (segment 3). 
+
+    **Les étapes amont d’extraction de matières premières, d’approvisionnement, et de mise en forme de celles-ci ainsi que l’assemblage du produit fini ne sont pas inclues dans le champ de l’étude (segment 1 de la figure ci-dessous). Le premier segment de distribution 
+    entre l’usine de fabrication/assemblage du produit fini et l’entrepôt de stockage n’est également pas inclus** (segment 2 de la figure ci-dessous).
+
+    ![image](https://user-images.githubusercontent.com/55186402/234813967-7bda2331-9349-4f5b-b595-613a0fe75741.png)
+
+    Certaines études suggèrent que le commerce en ligne favorise l’allongement à l’international des chaînes de distribution et l’importation de biens (segment 2 sur la figure ci-dessus).
+    En fonction du mode de transport international, cet allongement peut dégrader la performance environnementale du produit. Ainsi, des sites majeurs du commerce en ligne, tels que Wish ou AliExpress 
+    fondent leur modèle économique sur l’importation par fret express aérien de produits, essentiellement depuis l’Asie. Cela constitue une source majeure d’émissions de gaz à effet de serre . 
+    L’impact carbone du fret aérien serait d’un ordre de grandeur 100 fois plus important que celui du transport maritime de marchandises .
+
+    Pour un produit donné, qu’il soit local ou importé, le présent projet n’a pas documenté les différences de performance environnementale liées aux étapes de production amont du bien acheté. 
+    Ce point nécessiterait néanmoins des investigations complémentaires. De ce fait, dans le présent projet, que le produit consommé provienne du commerce en ligne livré via un point de retrait ou à domicile ou bien du commerce physique,
+    qu’il soit local ou importé, la principale différence de la performance environnementale entre les deux modes de commerce repose sur les étapes finales d’entreposage et de distribution au consommateur ainsi que de déplacement du consommateur.
+
+    C’est un point essentiel à avoir en tête car l’optimisation logistique des derniers kilomètres de distribution et de livraison est souvent présentée comme un bénéfice environnemental du commerce en ligne. 
+    Néanmoins, ce bénéfice pourrait être nuancé dès lors qu’une différence de performance environnementale des produits proposés apparaîtrait ou que les produits achetés seraient davantage gaspillés ou non consommés. 
+    C’est pourquoi, afin d’avoir une vision plus large de la performance environnementale associée au commerce en ligne, il pourrait intéressant d’étudier l’influence de celui-ci sur les étapes amont. 
+    En effet, comme présenté dans les encadrés ci-dessous, pour certains produits, la majorité de la contribution à la empreinte carbone provient des étapes de production de celui-ci.
+  formule:
+    somme:
+      - commande en ligne
+      - emballage
+      - transport inter plateformes
+      - plateformes
+      - transport livraison
+      - lieu de retrait
+      - déplacement consommateur
+
+livraison colis . informations:
+livraison colis . informations . catégorie:
+  titre: Catégorie de produit
+  avec:
+    grande consommation:
+    habillement:
+    culturel:
+    équipements volumineux:
+    autre:
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - grande consommation
+        - habillement
+        - culturel
+        - équipements volumineux
+        - autre
+  par défaut: "'habillement'"
+
+livraison colis . informations . volume:
+  titre: Volume du colis
+  question: Quel est le volume du colis ?
+  unité: cm3
+  par défaut:
+    variations:
+      - si: catégorie = 'grande consommation'
+        alors: 45000
+      - si: catégorie = 'habillement'
+        alors: 10000
+      - si: catégorie = 'culturel'
+        alors: 750
+      - si: catégorie = 'équipements volumineux'
+        alors: 300000
+      - si: catégorie = 'autre'
+        alors: 90000
+
+livraison colis . informations . poids:
+  titre: Poids du colis
+  question: Quel est le poids du colis ?
+  unité: kg
+  par défaut:
+    variations:
+      - si: catégorie = 'grande consommation'
+        alors: 20
+      - si: catégorie = 'habillement'
+        alors: 1.5
+      - si: catégorie = 'culturel'
+        alors: 0.200
+      - si: catégorie = 'équipements volumineux'
+        alors: 70
+      - si: catégorie = 'autre'
+        alors: 18
+
+livraison colis . commande en ligne:
+  titre: Processus de commande en ligne
+  description: |
+    Comprends l'impact de le construction des devices selon le temps de recherche sur le site du e-commerçant, 
+    mais également l'impact des données échangées durant le processus de commande (mails essentiellement).
+  note: |
+    La catégorie du produit impacte le temps de recherche et donc l'empreint de l'utlisation du device pour effectuer la recherche. 
+    Néanmoins, les différences se jouent au centième de grammes de CO2...
+  formule: 5.4
+  unité: gCO2e
+
+livraison colis . transport inter plateformes: 0
+livraison colis . lieu de retrait: 0
+livraison colis . déplacement consommateur: 0
+# La catégorie de produit impacte : le volume, le poids, le temps passé sur le site de commande, la durée de stockage dans l'entrepôt et le PDV.

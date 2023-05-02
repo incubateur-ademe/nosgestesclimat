@@ -1,0 +1,74 @@
+livraison colis . plateformes:
+  formule:
+    somme:
+      - infrastructures
+      - électricité
+      - gaz
+
+livraison colis . plateformes . type:
+  titre: Type de plateforme
+  avec:
+    peu mécanisé:
+    moyennement mécanisé:
+    fortement mécanisé:
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - peu mécanisé
+        - moyennement mécanisé
+        - fortement mécanisé
+  par défaut: "'moyennement mécanisé'"
+
+livraison colis . plateformes . taille:
+  formule: 10000
+  unité: m2
+
+livraison colis . plateformes . durée de vie:
+  formule: 50
+  unité: an
+
+livraison colis . plateformes . nombre de colis par jour:
+  formule: 100000
+
+livraison colis . plateformes . infrastructures:
+  formule: part de plateforme par colis * empreinte entrepôt
+  unité: gCO2e
+
+livraison colis . plateformes . infrastructures . part de plateforme par colis:
+  formule: 1 / nombre de colis par m2
+
+livraison colis . plateformes . infrastructures . nombre de colis par m2:
+  formule: plateformes . nombre de colis par jour * plateformes . durée de vie * 365 / plateformes . taille
+  note: Erreur ? Si l'empreinte de la construction de l'entrepôt est par an, on ne devrait pas avoir à multiplier par la durée de vie c'est étrange...
+
+livraison colis . plateformes . infrastructures . empreinte entrepôt:
+  titre: Empreinte construction et démolition entrepôt
+  formule: 12515.52451
+  unité: gCO2e/m2/an
+
+livraison colis . plateformes . électricité: 0
+livraison colis . plateformes . gaz: 0
+# livraison colis . plateformes . température:
+#   question: La température est-elle ambiante ou dirigée ?
+#   note: Possibilité d'implémenter l'option "réfrigération" mais on simplifie ici en considérant la température ambiante
+#   avec:
+#     ambiante:
+#     dirigée:
+#   formule:
+#     une possibilité:
+#       choix obligatoire: oui
+#       possibilités:
+#         - ambiante
+#         - dirigée
+#   par défaut: "'ambiante'"
+
+# livraison colis . plateformes . réfrigérants:
+#   note: Possibilité d'implémenter l'option "réfrigération" mais on simplifie ici en considérant la température ambiante
+#   formule:
+#     variations:
+#       - si: température = 'ambiante'
+#         alors: 0
+#       - si: température = 'dirigée'
+#         alors: 0
+
