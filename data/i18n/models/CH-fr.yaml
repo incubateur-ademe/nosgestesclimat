@@ -10,12 +10,60 @@ commun . intensité électricité:
     [Electricity Map](https://app.electricitymaps.com/map) vue 5 ans, 2022
 
 transport . voiture . km:
-  par défaut: 13430 km/an
+  question: Quelle distance parcourez-vous à l'année en voiture ?
+  par défaut: 12200 km/an
+  description: |
+    Ne comptez que les kilomètres de déplacement personnel (courses, loisirs, famille etc.) et de déplacement domicile travail pour rejoindre votre lieu de travail habituel.
+
+    Par exemple, si vous êtes en mission professionnelle dans un autre canton ou un autre pays cela rentre dans la comptabilité de votre entreprise : ne le comptez pas ici.
+
   note: |
     Source pour les km annuels moyens : [Office fédéral de la statistique](https://www.bfs.admin.ch/bfs/fr/home/statistiques/mobilite-transports/transport-personnes/comportements-transports/distance-duree-jour-deplacements.html).
 
+transport . voiture . thermique . carburant:
+  question: Quel type de carburant votre voiture consomme-t-elle ?
+  description: |
+
+    > Attention, si le type de carburant fait varier de façon significative l'empreinte climat au litre, la consommation en litre par 100km elle aussi varie. Veillez à saisir une consommation au litre basée sur votre moyenne réelle.
+
+transport . voiture . thermique . carburant . gazole B7 ou B10:
+  titre: Diesel
+transport . voiture . thermique . carburant . essence E5 ou E10:
+  titre: Essence
+transport . voiture . thermique . carburant . essence E85:
+  titre: Essence E85
+
+transport . voiture . thermique . empreinte au litre:
+  description: |
+    Les empreintes sont disponibles de façon assez détaillée sur [la base carbone](https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=diesel), ici par exemple pour le "diesel". Idem pour "essence".
+    Pour les retrouver facilement, filtrez par unité "kgCO2e/litre" et par géographie "France continentale".
+
+    À noter que pour le gazole, le FE choisi est la moyenne entre le gazole B7 et le gazole B10.
+  formule:
+    variations:
+      - si: carburant = 'gazole B7 ou B10'
+        alors:
+          moyenne:
+            - 3.1
+            - 3.04
+      - si: carburant = 'essence E5 ou E10'
+        alors: 2.7
+      - si: carburant = 'essence E85'
+        alors: 1.11
+  unité: kgCO2e/l
+
+transport . deux roues thermique . usager:
+  question: Utilisez-vous un scooter ou une moto thermique ?
+
+transport . avion . usager:
+  question: Prenez-vous l'avion ?
+  description: |
+    Si vous ne prenez pas l'avion tous les ans mais que vous comptez continuer à le prendre, répondez ""oui"" et estimez grossièrement le nombre d'heures de vol ramené à l'année.
+    Ce n'est pas très rigoureux, mais l'avion a une telle empreinte sur le climat qu'il est important de prendre cela en compte.
+    Par exemple, si vous avez pris un long-courrier de 20h en 2019 et que vous comptez le reprendre en 2023, nous pouvons partir du principe que vous le prenez tous les 4 ans environ : renseignez simplement 5 heures à la question ""long-courrier"".
+
 transport . avion . court courrier . passager km moyen:
-  titre: Distance moyenne parcourue un Suisse sur des vols court-courrier
+  titre: Combien d'heures par an voyagez-vous en avion en vols court courrier ? (trajet de moins de 2h)
   formule: 0.024 * 9000
   description: |
     L'[Office fédéral de la statistique](https://www.bfs.admin.ch/bfs/fr/home/actualites/quoi-de-neuf.assetdetail.1840421.html) indique que les Suisses se déplacent à hauteur de 9000km par an en avion.
@@ -26,7 +74,7 @@ transport . avion . court courrier . passager km moyen:
       - Long-courrier: 90.2%
 
 transport . avion . moyen courrier . passager km moyen:
-  titre: Distance moyenne parcourue un Suisse sur des vols moyen-courrier
+  titre: Combien d'heures par an voyagez-vous en avion en vol moyen courrrier ? (trajet entre 2h et 6h)
   formule: 0.074 * 9000
   description: |
     L'[Office fédéral de la statistique](https://www.bfs.admin.ch/bfs/fr/home/actualites/quoi-de-neuf.assetdetail.1840421.html) indique que les Suisses se déplacent à hauteur de 9000km par an en avion.
@@ -37,7 +85,7 @@ transport . avion . moyen courrier . passager km moyen:
       - Long-courrier: 90.2%
 
 transport . avion . long courrier . passager km moyen:
-  titre: Distance moyenne parcourue un Suisse sur des vols long-courrier
+  titre: Combien d'heures par an voyagez-vous au-delà en vol long courrier ?  (plus de 6h)
   formule: 0.902 * 9000
   description: |
     L'[Office fédéral de la statistique](https://www.bfs.admin.ch/bfs/fr/home/actualites/quoi-de-neuf.assetdetail.1840421.html) indique que les Suisses se déplacent à hauteur de 9000km par an en avion.
@@ -49,31 +97,190 @@ transport . avion . long courrier . passager km moyen:
 transport . avion . court courrier . heures de vol:
   suggestions:
     🚫✈️: 0
-    Zurich ⇄ Genève: 1.7
-    Zurich ⇄ Venise: 2
-    Zurich ⇄ Paris: 3
+    Genève ⇄ Zurich: 0.75
+    Genève ⇄ Paris: 1.25
+    Genève ⇄ Bruxelles: 1.25
+    Genève ⇄ Amsterdam: 1.75
+    Genève ⇄ Londres: 1.75
 
 transport . avion . moyen courrier . heures de vol:
   suggestions:
     🚫✈️: 0
-    Zurich ⇄ Madrid: 5
-    Zurich ⇄ Helsinki: 6
-    Zurich ⇄ Le Caire: 8
-    Zurich ⇄ Dubaï: 12
+    Genève ⇄ Madrid: 2
+    Genève ⇄ Porto: 2.25
+    Genève ⇄ Lisbonne: 2.75
+    Genève ⇄ Istanbul: 3.25
+    Genève ⇄ Le Caire: 3
 
 transport . avion . long courrier . heures de vol:
   suggestions:
     🚫✈️: 0
-    Zurich ⇄ New York: 19
-    Zurich ⇄ Kinshasa: 22
-    Zurich ⇄ Tokyo: 26
-    Zurich ⇄ Lima: 36
-    Zurich ⇄ Sydney: 44
+    Genève ⇄ Dubai: 6.25
+    Genève ⇄ New York: 9
 
 transport . train . km:
   suggestions:
-    traversée d'une région: 300
-    Zurich ⇄ Genève: 450
-    Zurich ⇄ Paris: 1000
-    💳 grand voyageur: 10000
-    💳 grand voyageur plus ultra: 25000
+    Genève ⇄ Lausanne: 100
+    Genève ⇄ Berne: 260
+    Genève ⇄ Zurich: 440
+    Genève ⇄ Paris: 820
+
+transport . métro ou tram . heures par semaine:
+  question: Combien d'heures passez-vous par semaine en tram ?
+
+divers . électroménager . préservation:
+  question: Quel effort faites-vous pour garder vos appareils électroménagers le plus longtemps possible ?
+  description: |
+    Pour éviter de vous demander de renseigner l'âge précis de la dizaine d'appareils électroménagers que vous possédez, nous utilisons une grille d'âge moyen constaté pour chaque appareil.
+
+    Par exemple, un frigo dure en moyenne 10 ans, un four 12 ans et une bouilloire 6 ans.
+
+    > Il ne s'agit pas de l'âge de l'appareil quand il claque, mais de son âge quand son propriétaire décide de le remplacer par du neuf.
+
+    A vous de vous placer par rapport à la moyenne.
+
+logement . électricité . estimation via le coût:
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  unité: CHF/kWh
+
+logement . chauffage . réseau de chaleur . estimation via le prix:
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  unité: CHF/kWh
+
+logement . chauffage . gaz . estimation via le coût:
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  unité: CHF/kWh
+
+logement . chauffage . citerne propane . estimation via le coût:
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  unité: CHF/kg
+
+? logement . chauffage . bois . type . granulés . consommation . estimation via le coût
+: question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  unité: CHF/kWh
+
+? logement . chauffage . bois . type . bûche . consommation . estimation via le coût
+: question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  unité: CHF/stère
+
+logement . chauffage . fioul . estimation via le prix:
+  question: Pas de facture ? Entrez vos dépenses approximatives en fioul par mois
+  unité: CHF/litre
+
+divers . autres produits . ratio monétaire HT:
+  titre: Ratio monétaire produits manufacturés HT
+  formule: (plastiques et caoutchouc + papier et carton + bois et articles en bois + produits métalliques + édition) / 5
+  unité: kgCO2e/CHF
+  description: |
+    Dans une première approche, ce ratio est basé sur une moyenne de facteurs d'émission monétaires issus de la base carbone. 
+    Voir [documentation de la base carbone](https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Ratio-monetaires).
+
+divers . autres produits . ratio monétaire HT . plastiques et caoutchouc:
+  titre: Ratio monétaire plastiques et caoutchouc
+  formule: 0.800
+  unité: kgCO2e/CHF
+  note: Base Carbone - Service - Plastiques et caoutchouc
+
+divers . autres produits . ratio monétaire HT . papier et carton:
+  titre: Ratio monétaire papier et carton
+  formule: 0.900
+  unité: kgCO2e/CHF
+  note: Base Carbone - Service - Papier et carton (/CHF HT)
+
+divers . autres produits . ratio monétaire HT . bois et articles en bois:
+  titre: Ratio monétaire bois
+  formule: 0.500
+  unité: kgCO2e/CHF
+  note: Base Carbone - Service - Bois et article en bois (/CHF HT)
+
+divers . autres produits . ratio monétaire HT . produits métalliques:
+  titre: Ratio monétaire produits métalliques
+  formule: 0.600
+  unité: kgCO2e/CHF
+  note: Base Carbone - Service - Produits métalliques, sauf machines et équipements (/CHF HT)
+
+divers . autres produits . ratio monétaire HT . édition:
+  titre: Ratio monétaire édition
+  formule: 0.280
+  unité: kgCO2e/CHF
+  note: Base Carbone - Service/Édition (livres, journaux, revues, etc.) (/CHF HT)
+
+divers . autres produits . montant:
+  titre: Montant dépensé par an pour l'achat de produits manufacturés neufs
+  question: Le test ne capte encore toutes vos consommations, combien estimez-vous dépenser par an en produits neufs (décoration, bricolage, jeux, loisirs créatifs, outils, etc...) ?
+  unité: CHF/an
+  description: |
+    Pour garder l'interface simple, nous proposons une estimation, via le coût, de l'empreinte des biens de consommations 
+    que vous possédez et que vous ne pensez pas avoir inclus dans les questions précédentes.
+
+    **Pour répondre à cette question, veillez à lisser vos achats des dernières années sur un an.**
+
+    Il est important de recenser dans cette question l'ensemble de vos dépenses annuelles (pour des **biens personnels ou à offrir**).
+
+    Elle concerne : **les livres et journaux, les jeux, la décoration, le matériel de cuisine, le linge de maison, 
+    les matériaux pour les loisirs créatifs ou bricolage, les affaires de sports (ski, surf...), etc...**
+  par défaut: 1000 CHF/an
+
+alimentation . de saison . consommation:
+  question: Consommez-vous des produits de saison ?
+  description: |
+    Cette question nous permet de corriger l'empreinte de votre régime alimentaire en fonction de votre habitude sur le caractère de saison de vos achats.
+
+alimentation . local . consommation:
+  question: Consommez-vous des produits locaux ?
+  description: |
+    Cette question nous permet de corriger l'empreinte de votre régime alimentaire en fonction de votre habitude sur le caractère local de vos achats.
+    Nous considérons ""locaux"" les aliments qui sont issus de la région où vous vivez ou de régions proches. Si vous mangez ""suisse"" considérez votre alimentation comme locale.
+    Ce critère a un impact relativement faible car la part du transport dans l'empreinte carbone des produits que nous consommons est faible devant les émissions liées à la production, la transformation ou l'emballage, surtout quand votre régime est carné.
+    Mais c'est toujours ça de gagné, et les avantages d'une consommation locale ne s'arrêtent pas à l'empreinte climat.
+
+alimentation . déchets . quantité jetée:
+  question: Comment estimeriez-vous la quantité de déchets que vous jetez ?
+  description: |
+    Si vous ne savez pas, répondez 'Je jette régulièrement'. Répondez 'Zéro Déchet' uniquement si vous traquez le moindre déchet.
+    Pour en savoir plus sur les modes de vie zéro déchets, visitez le site ZeroWaste Switzerland.
+    Sachez qu'en cas d'engagement ""zéro déchet"", nous considérons tout de même des émissions de gaz à effet (mais largement réduites) car il est très difficile voire impossible de ne générer aucun déchet, certains étant invisibles et inévitables.
+    Je jette régulièrement - Vous considérez que vous jetez fréquemment des déchets et que vous avez encore des progrès à faire pour atteindre le niveau zéro déchet. Vous mettez toutefois en place des éco-gestes pour réduire votre impact ? Sélectionnez cette réponse et rendez-vous à la question suivante !
+    Je suis zéro-déchet - Un niveau d'engagement particulièrement fort ! La taille de votre poubelle est minimale, vous ne jetez presque jamais !
+
+alimentation . déchets . gestes:
+  applicable si: quantité jetée = 'réduction'
+  mosaique:
+    type: selection
+    clé: présent
+  question: Quels éco-gestes mettez-vous en place pour réduire vos déchets ?
+  description: Les différents gestes que vous mettez en place pour réduire l'empreinte de votre poubelle.
+
+logement . appartement:
+  titre: Appartement
+  question: Votre logement est-il un appartement ?
+  par défaut: non
+  description: |
+    Par opposition à une maison individuelle ou une villa.
+    Cette information influence notamment l'empreinte de construction, mais aussi les possibilités de travaux d'isolation par exemple.
+    Si vous vivez dans un habitat original, par exemple un camping car, pas de problème : choisissez ""appartement"" et saisissez les m² de ce qui constitue quand même votre logement.
+
+logement . âge:
+  question: Quel est l'âge de votre logement ?
+  par défaut: 45 ans
+  description: |
+
+logement . électricité . consommation:
+  icônes: ⚡
+  question: Quelle est la consommation annuelle d'électricité de votre foyer ?
+  description: |
+    Astuce : vous trouverez la consommation annuelle d'électricité sur vos factures ou sur votre compte en ligne sur le site des SIG.
+    Si vous vivez dans plusieurs logements (par exemple, si vous avez une residence secondaire), essayez de ""ramener"" ces consommations dans celles du logement principal afin d'avoir l'estimation la plus juste possible.
+
+logement . climatisation . présent:
+  question: Utilisez-vous un système de climatisation pour refroidir votre logement (climatiseur électrique, pompe à chaleur) ?
+  description: |
+    La climatisation utilise de l'électricité, qui est déjà incluse en kWh ou en CHF dans la question électricité. L'empreinte de l'électricité consommée par le climatiseur est donc déjà calculée.
+    Mais en plus de cela, un climatiseur rejette d'autres gaz à effet de serre : d'où la nécessité de poser cette question.
+    Vous avez une climatisation ? Sa consommation d'électricité sera simplement à inclure dans la facture d'électricité, comme tous les appareils électriques du logement. Sont prises en compte ici, les fuites de gaz frigorigènes.
+
+logement . chauffage . fioul . consommation:
+  question: Quelle est la consommation annuelle de fioul domestique de votre foyer ?
+  unité: litre
+  description: |
+    Astuce : Vous trouverez vos consommations annuelles d'énergie sur votre facture de fioul ou sur votre décompte de charges annuelles envoyé par votre régie.
