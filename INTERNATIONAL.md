@@ -20,11 +20,14 @@ Il faut savoir que ces fichiers contiennent de règles de calcul (format yaml) c
 
 Créez le votre : votre fichier doit être nommé avec le code de votre pays suivi de l'extension `.yaml`, par exemple pour le Belgique, `BE-fr.yaml`. Commencez ensuite par écrire votre première règle : `params` contenant les caractéristiques de votre région (les attributes nom et code sont obligatoires) :
 
+Exemple pour la Grande Bretagne:
+
 ```yaml
 params:
-  nom: Belgique
-  code: BE
-  gentilé: belge
+  code: UK
+  nom: Royaume-Uni
+  gentilé: anglaise
+  drapeau: GB
 ```
 
 Suivez ensuite les étapes du point suivant pour avancer sur votre modèle.
@@ -35,23 +38,25 @@ Vous pouvez vous rendre dans le fichier correspondant à votre région (selon so
 
 L'idée est ensuite de réecrire dans ce fichier les règles du modèle "de base", français, que vous souhaitez modifier en veillant à reporter _exactement_ les clés du modèle (= nom des règles).
 
-Par exemple, le mix électrique est défini dans la règle `intensité électricité` du fichier `divers.yaml`. Pour modifier sa valeur et son titre dans le modèle nouvellement créé, il faut réécrire cette règle avec les bons attributs qui viendront écraser ceux du modèle français lors de la compilation. Exemple pour la Belgique :
+Par exemple, le mix électrique est défini dans la règle `intensité électricité` du fichier `commun.yaml`. Pour modifier sa valeur et son titre dans le modèle nouvellement créé, il faut réécrire cette règle avec les bons attributs qui viendront écraser ceux du modèle français lors de la compilation.
+
+Exemple pour la Grande Bretagne:
 
 ```yaml
 intensité électricité:
-  titre: Intensité carbone du mix électrique belge
-  formule: 0.176
+  titre: Intensité carbone du mix électrique du Royaume-Uni
+  formule: 0.236
   note: |
     [Electricity Map](https://app.electricitymaps.com/map) vue 5 ans, 2022
 ```
 
 Sachez que le code du modèle peut contenir certaines subtilités (notamment pour la gestions des questions "Mosaïques"), n'hésitez pas à nous contacter si vous bloquez !
 
-Attention, pour que vos modifications soient prises en compte pour les anglophones, il est nécessaire de créer un fichier jumeau `XX-en-us.yaml` contenant les règles identiques à votre fichier `XX.yaml` mais traduites. Pour le moment, nous n'avons pas encore créer de script peremettant d'automatiser la gestion de l'anglais pour les modèle régionaux (voir https://github.com/datagir/nosgestesclimat/issues/1710).
+Attention, pour que vos modifications soient prises en compte pour les anglophones, il est nécessaire de créer un fichier jumeau `XX-en-us.yaml` contenant les règles identiques à votre fichier `XX-fr.yaml` mais traduites. Vous pouvez utilisez le script `scripts/i18n/translateRegionModel.js` pour traduire automatiquement votre fichier. Attention, le fichier traduit précédemment sera écraser. Si des améliorations de la traductions automatiques ont été faites auparavant, pensez à jeter à oeil aux diffs. (Documentation dans le [wiki](https://github.com/datagir/nosgestesclimat/wiki/Translation#translateregionmodeljs))
 
 ### Points d'attention
 
-- La traduction anglaise du fichier doit être faite à la main (cf paraphe précédent)
+- Pensez à traduire votre fichier (cf paraphe précédent)
 - Il est plus facile de contribuer en faisant "tourner" le simulateur sur votre machine afin de voir vos modifications du modèle en temps réel (Voir le [guide de contribution](https://github.com/datagir/nosgestesclimat/blob/master/CONTRIBUTING.md)).
 
 **Etape 4 :** Vous êtes satisfait de votre modification ? Faites une PR.
