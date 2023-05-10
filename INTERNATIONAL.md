@@ -39,10 +39,10 @@ Par exemple, le mix électrique est défini dans la règle `intensité électric
 
 ```yaml
 intensité électricité:
-  titre: Intensité climat du mix électrique belge
+  titre: Intensité carbone du mix électrique belge
   formule: 0.176
   note: |
-    [Electricity Map](https://app.electricitymaps.com/map) vision 5 ans, 2022
+    [Electricity Map](https://app.electricitymaps.com/map) vue 5 ans, 2022
 ```
 
 Sachez que le code du modèle peut contenir certaines subtilités (notamment pour la gestions des questions "Mosaïques"), n'hésitez pas à nous contacter si vous bloquez !
