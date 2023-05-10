@@ -59,8 +59,9 @@ You can then follow the steps below to improve your model.
    > will not be operational. You can copy-paste them in order to be sure they are exactly the same.
 
    For instance, the carbon intensity of the electricity mix is defined in the rule `intensité électricité` of the file
-   `data/divers/divers.yaml`. To edit that value and title in the newly created model, you should re-write this rule
-   with the new attributes.  
+   `data/divers/commun.yaml`. To edit that value and title in the newly created model, you should re-write this rule
+   with the new attributes.
+
    Example for the UK:
 
    ```yaml
@@ -75,10 +76,11 @@ You can then follow the steps below to improve your model.
 > The model's code may contain minor subtilities (in particular in order to generate 'Mosaics'), do not hesitate to ask
 > for help if you don't understand something.
 
+For your modifications to be taken into account, it is necessary to have both file `XX-fr.yaml` and `XX-en-us.yaml` (for french and english language) containing the rules identical to the twin file but translated. You can use the `scripts/i18n/translateRegionModel.js` script to automatically translate your file. Be carefull, the previously translated file will be overwritten. If translation improvements have been made before, take a look at the diffs. (Documentation in the [wiki](https://github.com/datagir/nosgestesclimat/wiki/Translation#translateregionmodeljs))
+
 ### Remarks
 
-- Translation in english of the files should be done manually (`-en-us.yaml`)
-
+- Think about translating your region model (see previous section)
 - You can (and should) contribute with running the simulator locally in order to see what modifications you brought in
   real time. (See the [contribution guide (FR)](https://github.com/datagir/nosgestesclimat/blob/master/CONTRIBUTING.md))
 

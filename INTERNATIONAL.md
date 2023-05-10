@@ -18,7 +18,7 @@ Il faut savoir que ces fichiers contiennent de règles de calcul (format yaml) c
 
 ### Votre modèle n'est pas encore supporté dans NGC ?
 
-Créez le votre : votre fichier doit être nommé avec le code de votre pays suivi de l'extension `.yaml`, par exemple pour le Belgique, `BE-fr.yaml`. Commencez ensuite par écrire votre première règle : `params` contenant les caractéristiques de votre région (les attributes nom et code sont obligatoires) :
+Créez le votre : votre fichier doit être nommé avec le code de votre pays suivi de l'extension `.yaml`, par exemple pour le Belgique, `UK-fr.yaml` (pour le modèle en français). Commencez ensuite par écrire votre première règle : `params` contenant les caractéristiques de votre région (les attributes nom et code sont obligatoires) :
 
 Exemple pour la Grande Bretagne:
 
@@ -34,11 +34,11 @@ Suivez ensuite les étapes du point suivant pour avancer sur votre modèle.
 
 ### Vous souhaitez proposer un changement pour un modèle déjà existant ?
 
-Vous pouvez vous rendre dans le fichier correspondant à votre région (selon son code).
+Vous pouvez vous rendre dans le fichier correspondant à votre région (selon son code et langue d'écriture du modèle).
 
-L'idée est ensuite de réecrire dans ce fichier les règles du modèle "de base", français, que vous souhaitez modifier en veillant à reporter _exactement_ les clés du modèle (= nom des règles).
+L'idée est ensuite de réecrire dans ce fichier les règles du modèle "de base", français, que vous souhaitez modifier en veillant à reporter **exactement** les clés du modèle (= nom des règles).
 
-Par exemple, le mix électrique est défini dans la règle `intensité électricité` du fichier `commun.yaml`. Pour modifier sa valeur et son titre dans le modèle nouvellement créé, il faut réécrire cette règle avec les bons attributs qui viendront écraser ceux du modèle français lors de la compilation.
+Par exemple, le mix électrique est défini dans la règle `intensité électricité` du fichier `data/divers/commun.yaml`. Pour modifier sa valeur et son titre dans le modèle nouvellement créé, il faut réécrire cette règle avec les bons attributs qui viendront écraser ceux du modèle français lors de la compilation.
 
 Exemple pour la Grande Bretagne:
 
@@ -50,7 +50,8 @@ intensité électricité:
     [Electricity Map](https://app.electricitymaps.com/map) vue 5 ans, 2022
 ```
 
-Sachez que le code du modèle peut contenir certaines subtilités (notamment pour la gestions des questions "Mosaïques"), n'hésitez pas à nous contacter si vous bloquez !
+> **Note**
+> Sachez que le code du modèle peut contenir certaines subtilités (notamment pour la gestions des questions "Mosaïques"), n'hésitez pas à nous contacter si vous bloquez !
 
 Attention, pour que vos modifications soient prises en compte pour les anglophones, il est nécessaire de créer un fichier jumeau `XX-en-us.yaml` contenant les règles identiques à votre fichier `XX-fr.yaml` mais traduites. Vous pouvez utilisez le script `scripts/i18n/translateRegionModel.js` pour traduire automatiquement votre fichier. Attention, le fichier traduit précédemment sera écraser. Si des améliorations de la traductions automatiques ont été faites auparavant, pensez à jeter à oeil aux diffs. (Documentation dans le [wiki](https://github.com/datagir/nosgestesclimat/wiki/Translation#translateregionmodeljs))
 
