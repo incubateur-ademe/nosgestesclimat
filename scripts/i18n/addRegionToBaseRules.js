@@ -1,15 +1,22 @@
 /*
 	Function used to combine region attributes (e.g. questions, titles, notes) with
 	the base rules.
-
-	NOTE: this function is used by the RulesProvider.js file of the website.
 */
 
 const utils = require('./utils')
 
+const mechanismsThatCanBeOverriden = [
+	// Using the [avec] mechanism allows to use custom rules without having to add them
+	// to the base rules.
+	'avec',
+]
+
 const addRegionToBaseRules = (baseRules, newRegionalRules) => {
 	const updateBaseRules = (key, val) => {
-		if (utils.objPath(key, baseRules)) {
+		if (
+			utils.objPath(key, baseRules) ||
+			mechanismsThatCanBeOverriden.includes(key[1])
+		) {
 			baseRules = utils.customAssocPath(key, val, baseRules)
 		}
 	}

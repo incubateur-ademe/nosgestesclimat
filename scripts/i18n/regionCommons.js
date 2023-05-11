@@ -7,6 +7,18 @@ const { exit } = require('process')
 const { publicDir, customAssocPath, readYAML } = require('./utils')
 const regionModelsPath = path.resolve('data/i18n/models')
 
+// TODO: use this type when we will be able to use typescript
+// export type RegionAuthor = {
+// 	nom: string,
+// 	url?: string,
+// }
+//
+// export type RegionParams = {
+// 	nom: string,
+// 	gentilé: string,
+// 	authors?: RegionAuthor[],
+// }
+
 const defaultModelCode = 'FR'
 const defaultRegionModelParam = {
 	FR: {

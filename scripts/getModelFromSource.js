@@ -3,9 +3,9 @@ const yaml = require('yaml')
 const fs = require('fs')
 const Engine = require('publicodes').default
 
-const importKeyword = 'importer!'
-const fromKeyword = 'depuis'
-const rulesKeyword = 'les règles'
+const IMPORT_KEYWORD = 'importer!'
+const FROM_KEYWORD = 'depuis'
+const RULES_KEYWORD = 'les règles'
 
 const packageModelPath = (packageName) =>
 	`node_modules/${packageName}/${packageName}.model.json`
@@ -16,7 +16,7 @@ const enginesCache = {}
 function getEngine(packageName, opts) {
 	if (!enginesCache[packageName]) {
 		if (opts?.verbose) {
-			console.debug('Loading package: ', packageName)
+			console.debug(` 📦 '${packageName}' loading`)
 		}
 		try {
 			const engine = new Engine(
@@ -37,39 +37,87 @@ function getEngine(packageName, opts) {
 	return enginesCache[packageName]
 }
 
-function getTraversedRules(engine, rule) {
-	const { traversedVariables } = engine.evaluate(rule)
-	return (
-		traversedVariables?.flatMap((varName) => {
-			return [
-				[varName, engine.getRule(varName).rawNode],
-				...getTraversedRules(engine, engine.getRule(varName)),
-			]
-		}) ?? []
+function getDependencies(engine, rule, acc = []) {
+	const deps = Array.from(
+		engine.baseContext.referencesMaps.referencesIn.get(rule.dottedName)
+	).filter(
+		(depRuleName) =>
+			!depRuleName.endsWith('$SITUATION') &&
+			!acc.find(([accRuleName, _]) => accRuleName === depRuleName)
 	)
+	if (deps.length === 0) {
+		return acc
+	}
+	acc.push(...deps.map((dep) => [dep, engine.getRule(dep).rawNode]))
+	return deps.flatMap((varName) => {
+		return getDependencies(engine, engine.getRule(varName), acc)
+	})
 }
 
+/**
+ * Returns the rule name and its attributes.
+ *
+ * @param ruleToImport - An item of the `les règles` array (string | object).
+ * @returns The rule name and its attributes ([string, object][1]).
+ *
+ * For example, for the following `importer!` rule:
+ *
+ * ```
+ * importer!:
+ *	 depuis: 'package-name'
+ *	 les règles:
+ *			- ruleA
+ *			- ruleB:
+ *			  attr1: value1
+ * ```
+ *
+ * We have:
+ * - getRuleToImportInfos('ruleA') -> [['ruleA', {}]]
+ * - getRuleToImportInfos({'ruleB': {attr1: value1}) -> [['ruleA', {attr1: value1}]]
+ */
+
+function getRuleToImportInfos(ruleToImport) {
+	if (typeof ruleToImport == 'object') {
+		const entries = Object.entries(ruleToImport)
+		return entries
+	}
+	return [[ruleToImport, {}]]
+}
+
+const removeRawNodeNom = (rawNode, ruleNameToCheck) => {
+	const { nom, ...rest } = rawNode
+	if (nom !== ruleNameToCheck)
+		throw Error(
+			`Imported rule's publicode raw node "nom" attribute is different from the resolveImport script ruleName. Please investigate`
+		)
+	return rest
+}
 function resolveImports(rules, opts) {
 	const resolvedRules = Object.entries(rules).reduce((acc, [name, value]) => {
-		if (name === importKeyword) {
-			const engine = getEngine(value[fromKeyword], opts)
-			const rulesToImport = value[rulesKeyword]
+		if (name === IMPORT_KEYWORD) {
+			const engine = getEngine(value[FROM_KEYWORD], opts)
+			const rulesToImport = value[RULES_KEYWORD]
 
 			rulesToImport?.forEach((ruleToImport) => {
-				const [[ruleName, attrs]] =
-					typeof ruleToImport == 'object'
-						? Object.entries(ruleToImport)
-						: [[ruleToImport, {}]]
+				const [[ruleName, attrs]] = getRuleToImportInfos(ruleToImport)
 				const rule = engine.getRule(ruleName, opts)
 				if (!rule) {
 					throw new Error(
-						`La règle '${ruleName}' n'existe pas dans ${value[fromKeyword]}`
+						`La règle '${ruleName}' n'existe pas dans ${value[FROM_KEYWORD]}`
 					)
 				}
-				const traversedRules = getTraversedRules(engine, rule, opts)
 				const updatedRawNode = { ...rule.rawNode, ...attrs }
-				traversedRules.push([ruleName, updatedRawNode])
-				acc.push(...traversedRules)
+				// The name "nom" will already be there as the key, also called dottedName or ruleName
+				// Keeping it is a repetition and can lead to misleading translations (rule names should not be translated in the current state of translation, they're the ids)
+				acc.push([ruleName, removeRawNodeNom(updatedRawNode, ruleName)])
+				const ruleDeps = getDependencies(engine, rule)
+					.filter(
+						([ruleDepName, _]) =>
+							// Avoid to overwrite the updatedRawNode
+							!acc.find(([accRuleName, _]) => accRuleName === ruleDepName)
+					)
+					.map(([k, v]) => [k, removeRawNodeNom(v, k)])
+				acc.push(...ruleDeps)
 			})
 		} else {
 			acc.push([name, value])
