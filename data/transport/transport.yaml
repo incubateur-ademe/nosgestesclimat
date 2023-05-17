@@ -20,12 +20,13 @@ transport . empreinte:
       - voiture . empreinte
       - avion
       - deux roues thermique
+      - petit véhicule à moteur
       - bus
       - train
       - métro ou tram
-      - vélo
       - vacances
       - ferry
+      - vélo
 
 transport . vacances:
   mosaique:
@@ -183,6 +184,76 @@ transport . bus . heures par semaine:
   unité: h/semaine
   par défaut: 3 h/semaine
 
+transport . petit véhicule à moteur:
+  icônes: 🛴
+  applicable si: usager
+  formule: empreinte * km + empreinte . construction amortie
+
+transport . petit véhicule à moteur . usager:
+  question: Utilisez-vous un Vélo à Assistance Electrique (VAE), ou un autre petit véhicule à moteur ?
+  description: |
+    Les petits véhicules à moteur sont en plein développement, tiré en grande partie par l'explosion des ventes de VAE, et de trottinettes électriques. Mais nous pouvons aussi trouver des monoroues, giropodes, hoverboards...
+  par défaut: non
+
+transport . petit véhicule à moteur . km:
+  question: Combien de km faites-vous à l'année avec votre Vélo à Assistance Électrique (VAE) ou autre petit véhicule à moteur ?
+  par défaut: 1000 km
+  description: |
+    Astuce : sur un VAE, le nombre total de kilomètres effectué est affiché sur le moniteur de bord.
+
+transport . petit véhicule à moteur . type:
+  question: Quel type de petit véhicule à moteur utilisez-vous ?
+  applicable si: usager
+  par défaut: "'VAE'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - VAE
+        - Autre véhicule
+  description: |
+    Les autres véhicules à moteur : trottinette électrique, giropode, monoroue, hoverboard...
+    Les vélos-cargo à assistance électrique sont à classer dans la catégorie VAE. La différence de motorisation et de poids, et donc d'empreinte, est trop minime pour mériter une catégorie à part.
+  note: |
+    La base de données carbone ne permet pas de distinguer toutes les catégories de petits véhicules à moteur. 
+    Cependant, l'empreinte de ce type de véhicule étant très liée à son poids, et ceux-ci étant similaires pour toute cette catégorie de véhicules, nous considérerons que l'empreinte de tous les EDPM hors VAE sont équivalents à celui de la trottinette électrique, dont l'empreinte est disponible ici : [source](https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=trottinette)
+
+transport . petit véhicule à moteur . type . VAE:
+  titre: VAE
+transport . petit véhicule à moteur . type . Autre véhicule:
+  titre: Autre petit véhicule à moteur
+
+transport . petit véhicule à moteur . empreinte:
+  formule:
+    variations:
+      - si: type = 'VAE'
+        alors: 0.00223 kgCO2e/km
+      - si: type = 'Autre véhicule'
+        alors: 0.002 kgCO2e/km
+
+transport . petit véhicule à moteur . empreinte . construction:
+  formule:
+    variations:
+      - si: type = 'VAE'
+        alors: 262 kgCO2e
+      - si: type = 'Autre véhicule'
+        alors: 91.9 kgCO2e
+
+transport . petit véhicule à moteur . empreinte . construction amortie:
+  titre: Construction amortie
+  formule: construction / durée de vie
+  unité: kgCO2e / an
+
+transport . petit véhicule à moteur . durée de vie:
+  formule:
+    variations:
+      - si: type = 'VAE'
+        alors: 12
+      - si: type = 'Autre véhicule'
+        alors: 4
+  note: |
+    Hypothèse issue du HBEFA (Manuel des facteurs d'émission pour le transport routier).
+
 transport . vélo:
   titre: Vélo
   applicable si: km
@@ -195,10 +266,6 @@ transport . vélo . empreinte:
   description: |
     Le vélo est un mode de transport super sobre : on utilise 15 kilos de matériel pour déplacer un corps de ~70 kilos.
 
-    En pleine explosion, le vélo à assistance électrique permet de se mettre au vélo régulier en augmentant très peu l'empreinte de ce moyen de transport.
-
-    Idem pour tous les véhicules de moins de 50 kilos.
-
     > Astuce : vos chaussures sont un véhicule de moins de 50kg.
 
   note: |
@@ -208,16 +275,14 @@ transport . vélo . empreinte:
 
     Nous avons tous les ingrédients ici pour le faire, mais c'est loin d'être aussi simple. Le surplus d'activité physique est aussi associé à des risques et donc des dépenses de santé bien moindres.
 transport . vélo . km:
-  titre: Kilomètres à vélo
-  question: Combien de kilomètres de vélo ou marche faites-vous par semaine ?
+  titre: Kilomètres sans assistance
+  question: Combien de kilomètres de vélo "musculaire" (sans assistance) ou marche faites-vous par semaine ?
   description: |
     🚴 🛴 👟
 
-    Renseignez ici les km à vélo classique, à vélo à assistance électrique, en trottinette et autre véhicule sobre.
+    Renseignez ici les km à vélo "musculaire", à pied, en skateboard et autre véhicule sans assistance.
 
-    > Un véhicule sobre est léger (moins de 30 kilos par exemple) et à vitesse réduite (moins de 25km/h, ce qui permet d'emprunter les pistes cyclables).
-
-    Mais ne vous inquiétez pas trop de la précision : l'empreinte de ces modes sobres est ici considérée comme nulle, votre réponse n'aura donc aucune conséquence 😄.
+    Ne vous inquiétez pas trop de la précision : l'empreinte de ces modes sobres est ici considérée comme nulle, votre réponse n'aura donc aucune conséquence 😄.
 
     > Note : 🛗 l'ascenseur est le transport en commun électrique le plus oublié ! Il n'a pas plus d'empreinte en ordre de grandeur que le vélo électrique.
   suggestions:
