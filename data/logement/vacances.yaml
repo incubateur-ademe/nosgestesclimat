@@ -33,7 +33,7 @@ logement . vacances:
     est inférieur à une nuit d'hôtel. Peut-être qu'une manière de prendre en compte l'empreinte d'un emplacement serait de prendre une partie seulement de l'empreinte d'une nuit en hôtel en excluant par exemple l'empreinte de la blanchisserie.
     - Pour l'empreinte d'une nuit au sein de se famille ou chez des amis, l'empreinte est aujourd'hui indirectement comptée dans l'empreinte des accueillants.
 
-    En ce qui concerne les hôtels, les auberges de jeunees, les "resorts" A COMPLETER
+    En ce qui concerne les hôtels, les auberges de jeunees, les "resorts", nous considérons un facteur d'émission commun pour le moment.
 
   formule:
     somme:
@@ -91,22 +91,23 @@ logement . vacances . hotel:
 
     ### La cohérence du résultat
 
-    A COMPLETER
+    Avec les valeurs par défaut représentatives des français, on trouve pour ce calcul une empreinte de 42,24 kgCO2e.
 
-    https://nosgestesclimat.fr/documentation/empreinte-branche/I55-par-hab
+    L'idée ici est de comparer ce résultat avec le résultat issu de l'approche "macro" du SDES pour [la branche économique "Hébergement"](https://nosgestesclimat.fr/documentation/empreinte-branche/I55-par-hab),
+    qui donne une empreinte de 73,62 kgCO2e par habitant.
 
-    soit 73,62 kgCO2e par habitant.
-
-    Ainsi, en considérant seulement la partie "Hotellerie" (67% du CA de la branche), on retrouve une valeur de 49 kgCO2e.
+    Ainsi, en considérant seulement la partie "Hotellerie" (67% du CA de la branche), on trouve une valeur de 49 kgCO2e. L'ordre de grandeur est similaire !
 
 logement . vacances . hotel . présent:
   question: Allez-vous à l'hôtel ?
-  par défaut: non
+  par défaut: oui
 
 logement . vacances . hotel . empreinte par nuit:
   formule: 7.7
-  unité: kgCO2e
+  unité: kgCO2e/nuits
   note: |
+    ## Notre source de données
+
     Après une revue de la littérature existante sur le sujet, il semble que l'[Hotel Carbon Measurement Initiative (HCMI)](https://sustainablehospitalityalliance.org/resource/hotel-carbon-measurement-initiative/)
     qui alimente le [Cornell Hotel Sustainability Benchmarking Index](https://greenview.sg/services/chsb-index/) présente les [données](https://ecommons.cornell.edu/handle/1813/109990) les plus pertinentes pour notre usage.
 
@@ -135,16 +136,48 @@ logement . vacances . hotel . empreinte par nuit:
       On doit pouvoir trouver mieux ! Mais au moins on est sur les mêmes ordres de grandeur, ce qui est plutôt rassurant. 
       On cherche à discuter davantage avec l'équipe Betterfly pour en savoir plus !
 
+      ## Notre hypothèse sur le facteur d'émission utilisé
+
+      D'après [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345), 
+      les français voyagent à 86% en France. On assume donc ici que **les nuitées se passent en France**.
+
+      Deuxième élément : les données "Monde" de la base HCMI sont distribuées très inéquitablement (60 % des données proviennent des USA, 15 % de la Chine, le reste est distribué la encore de manière inégale entre pays). Les statistiques sont donc peu représentatifs de la réalité à l'échelle internationale.
+      
+      De plus, étant donné qu'il s'agit d'une démarche volontaire certains types d’hôtels sont manquants. A titre d'exemple, et c'est une limite de notre choix, on ne dispose de données pour les hôtels 2 étoiles.
+
+      D'après les données HCMI, on trouve, pour la France, une moyenne de 7.7 kgCO2e/nuitée, avec:
+
+      "Limited service (1 étoile)" : 4.8 kgCO2e/nuitée
+      "3 étoiles" : 4.7 kgCO2e/nuitée
+      "4 étoiles" : 8.6 kgCO2e/nuitée
+      "3 étoiles" : 11.6 kgCO2e/nuitée
+
 logement . vacances . hotel . nombre de nuitées:
   question: Combien de nuits ?
   unité: nuits
-  par défaut: 5
+  par défaut: moyenne
   note: |
-    A COMPLETER
-    D'après [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345),
-    à 86% les français voyagent en France. Je pense que pour une V1, on peut donc assumer que les nuitées se passent en France et simplifier grandement le code et les questions, en expliquant dans une note la raison de ce choix à l'utilisateur.
-    En combinant plusieurs données de l'enquête (nombre de nuits passées loin de chez soi * motif personnel * mode d'hébergement => 27,9 * 81,1% * [15,7 + 2 + 3]%), on arrive à une moyenne de 4,7 nuitées / pers / an dans les hébergements hôtel, pension de famille, village de vacances ou gite, auberge de jeunesse.
+    En combiant plusieurs données de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345),
+    on peut retrouver une valeur moyenne en nuitées / pers / an dans les hébergements hôtel, pension de famille, village de vacances ou gite, auberge de jeunesse.
   suggestions:
     un week-end par an: 2
     une semaine de vacances: 7
     un week-end par mois: 24
+
+logement . vacances . hotel . nombre de nuitées . moyenne:
+  titre: Nombre de nuitées en moyenne par français
+  formule: nombre de nuits passées loin de chez soi * part mode d'hébergement hotel
+
+logement . vacances . hotel . nombre de nuitées . moyenne . nombre de nuits passées loin de chez soi:
+  formule: 26.5
+  note: |
+    Excel "Voyages et caractéristiques sociodémographiques des individus - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
+
+    On considère ici le nombre de nuits par personnes en voyage pour motif personnel.
+
+logement . vacances . hotel . nombre de nuitées . moyenne . part mode d'hébergement hotel:
+  formule: (0.157 + 0.02 + 0.03)
+  note: |
+    Excel "Caractéristiques des voyageurs personnels et professionnels - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
+
+    On considère ici les hébergements hôtel, pension de famille, village de vacances ou gite, auberge de jeunesse.
