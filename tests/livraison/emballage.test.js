@@ -1,7 +1,5 @@
 import Engine from 'publicodes'
-import { parse } from 'yaml'
 import { extractRule, yamlToJson } from './utils'
-const fs = require('fs');
 
 test("livraison colis . emballage : poids emballage * empreinte carton", () => {
 
