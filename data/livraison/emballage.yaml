@@ -1,50 +1,50 @@
-livraison colis . emballage:
-  titre: Emballage du colis
-  note: Hypothèse d'un emballage carton uniquement
-  formule: poids emballage * empreinte carton
+  livraison colis . emballage:
+    titre: Emballage du colis
+    note: Hypothèse d'un emballage carton uniquement
+    formule: poids emballage * empreinte carton
 
-livraison colis . empreinte carton:
-  formule: 1.29
-  unité: gCO2e/g
-  note: Etrange, dans la base carbone, on a "Caisses en carton ondulé" 1.17 kgCO2e/kg.
+  livraison colis . empreinte carton:
+    formule: 1.29
+    unité: gCO2e/g
+    note: Etrange, dans la base carbone, on a "Caisses en carton ondulé" 1.17 kgCO2e/kg.
 
-livraison colis . emballage . poids emballage:
-  formule: surface * densité
-  par défaut: 274
-  unité: g
+  livraison colis . emballage . poids emballage:
+    formule: surface * densité
+    par défaut: 274
+    unité: g
 
-livraison colis . emballage . poids emballage . densité:
-  titre: Densité du carton
-  formule: 0.084
-  unité: g/cm2
+  livraison colis . emballage . poids emballage . densité:
+    titre: Densité du carton
+    formule: 0.084
+    unité: g/cm2
 
-livraison colis . emballage . poids emballage . surface:
-  titre: Surface d'emballage
-  formule: surface sphère + ajustement
-  note: Formule non justifiée dans le calculateur, visiblement, on estime la surface de carton via la surface de la sphère associée au volume du colis + un facteur correctif.
+  livraison colis . emballage . poids emballage . surface:
+    titre: Surface d'emballage
+    formule: surface sphère + ajustement
+    note: Formule non justifiée dans le calculateur, visiblement, on estime la surface de carton via la surface de la sphère associée au volume du colis + un facteur correctif.
 
-livraison colis . emballage . poids emballage . surface . surface sphère:
-  formule: 4 * pi * rayon sphère
-  unité: cm2
-  note: Pour la surface d'une sphère, la formule est S = 4πR^2 ou R est le rayon de la sphère. On a donc besoin d'estimer ce rayon.
+  livraison colis . emballage . poids emballage . surface . surface sphère:
+    formule: 4 * pi * rayon sphère
+    unité: cm2
+    note: Pour la surface d'une sphère, la formule est S = 4πR^2 ou R est le rayon de la sphère. On a donc besoin d'estimer ce rayon.
 
-livraison colis . emballage . poids emballage . surface . surface sphère . pi:
-  titre: PI
-  formule: 3.14159265
+  livraison colis . emballage . poids emballage . surface . surface sphère . pi:
+    titre: PI
+    formule: 3.14159265
 
-livraison colis . emballage . poids emballage . surface . surface sphère . rayon sphère cube:
-  formule: 3 * informations . volume / (4 * pi)
-  unité: cm3
-  note: |
-    L'objectif ici est de détérminer le rayon de la sphère associée au colis via son volume. La formule est la suivante : V = 4/3πR^3. 
-    Publicodes est limitant ici pour récupérer le rayon donné par R^3 = 3V / 4π
+  livraison colis . emballage . poids emballage . surface . surface sphère . rayon sphère cube:
+    formule: 3 * informations . volume / (4 * pi)
+    unité: cm3
+    note: |
+      L'objectif ici est de détérminer le rayon de la sphère associée au colis via son volume. La formule est la suivante : V = 4/3πR^3. 
+      Publicodes est limitant ici pour récupérer le rayon donné par R^3 = 3V / 4π
 
-livraison colis . emballage . poids emballage . surface . surface sphère . rayon sphère:
-  formule: rayon sphère cube / (rayon sphère * rayon sphère)
-  résoudre la référence circulaire: oui
-  note: |
-    On utilise la référence ciculaire de Publicodes pour résoudre R = R^3 / (R * R)
+  livraison colis . emballage . poids emballage . surface . surface sphère . rayon sphère:
+    formule: rayon sphère cube / (rayon sphère * rayon sphère)
+    résoudre la référence circulaire: oui
+    note: |
+      On utilise la référence circulaire de Publicodes pour résoudre R = R^3 / (R * R)
 
-livraison colis . emballage . poids emballage . surface . ajustement:
-  formule: surface sphère * 0.45
-  note: Je ne vois pas d'où vient ce chiffre
+  livraison colis . emballage . poids emballage . surface . ajustement:
+    formule: surface sphère * 0.45
+    note: Je ne vois pas d'où vient ce chiffre
