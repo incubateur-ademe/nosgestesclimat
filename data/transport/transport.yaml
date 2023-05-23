@@ -19,7 +19,7 @@ transport . empreinte:
     somme:
       - voiture . empreinte
       - avion
-      - deux roues thermique
+      - deux roues
       - bus
       - train
       - métro ou tram
@@ -227,45 +227,50 @@ transport . vélo . km:
   par défaut: 5 km
   note: Le chiffre par défaut est une grossière estimation sans source, mais peu importe vu l'impact final nul.
 
-transport . deux roues thermique:
+transport . deux roues:
   icônes: 🛵
   applicable si: usager
   formule: empreinte * km
 
-transport . deux roues thermique . usager:
+transport . deux roues . usager:
   question: Utilisez-vous un scooter ou une moto ?
   description: |
-    Les scooters et motos sont aujourd'hui très majoritairement des engins qui fonctionnent au pétrole. Les équivalents électriques ont fait leur apparition, mais timidement.
+    Les scooters et motos sont aujourd'hui très majoritairement des engins qui fonctionnent au pétrole. Les scooters électriques ayant fait une réelle percée, ils sont ajoutés au modèle.
   par défaut: non
 
-transport . deux roues thermique . km:
+transport . deux roues . km:
   question: Combien de km faites-vous à l'année avec votre scooter ou moto ?
-  par défaut: 1000 km
+  par défaut: 3000 km
 
-transport . deux roues thermique . type:
-  question: Quel type de deux roues thermique utilisez-vous ?
-  applicable si: usager
-  par défaut: "'scooter'"
+transport . deux roues . type:
+  question: Quel type de deux-roues utilisez-vous ?
+  par défaut: "'scooter thermique'"
   formule:
-    une possibilité:
-      choix obligatoire: oui
-      possibilités:
-        - scooter
-        - moto inf 250
-        - moto sup 250
+      une possibilité:
+        choix obligatoire: oui
+        possibilités:
+          - scooter thermique
+          - scooter électrique
+          - moto inf 250
+          - moto sup 250
 
-transport . deux roues thermique . type . scooter:
-  titre: Scooter
-transport . deux roues thermique . type . moto inf 250:
-  titre: Moto moins de 250 cm3
-transport . deux roues thermique . type . moto sup 250:
-  titre: Moto plus de 250 cm3
+transport . deux roues . type . scooter thermique:
+  titre: Scooter thermique (diesel/essence)
+transport . deux roues . type . scooter électrique:
+  titre: Scooter électrique
+transport . deux roues . type . moto inf 250:
+  titre: Moto de moins de 250 cm3
+transport . deux roues . type . moto sup 250:
+  titre: Moto de plus de 250 cm3
 
-transport . deux roues thermique . empreinte:
+transport . deux roues . empreinte:
+  unité: kgCO2e/km
   formule:
     variations:
-      - si: type = 'scooter'
+      - si: type = 'scooter thermique'
         alors: 0.0763 kgCO2e/km
+      - si: type = 'scooter électrique'
+        alors: 0.025 kgCO2e/km
       - si: type = 'moto inf 250'
         alors: 0.0763 kgCO2e/km
       - si: type = 'moto sup 250'
@@ -274,23 +279,13 @@ transport . deux roues thermique . empreinte:
   note: |
     Cyclomoteur - Mixte - 2018 ; 76,3 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
 
+    Scooter électrique : 25 gCO2e/km/personne ; calculs Anne de Bortoli pour sa thèse Ponts et Chaussées (2020)
+
     Moto =< 250 cm3 - Mixte - 2018 ; 76,3 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
 
     Moto > 250 cm3 - Mixte - 2018 ; 191 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
-
 
     Les chiffres ci-dessus incluent la fabrication du véhicule, contrairement aux données précédentes (2021).
 
   références:
     documentation bilan-GES: https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?routier2.htm
-
-transport . deux roues thermique . conso:
-  formule:
-    variations:
-      - si: type = 'scooter'
-        alors: 2.3 / 100 l/km
-      - si: type = 'moto inf 250'
-        alors: 2.2 / 100 l/km
-      - si: type = 'moto sup 250'
-        alors: 6 / 100 l/km
-  note: Données issues de HBEFA selon la documentation de la base carbone (https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?routier2.htm)
