@@ -5,7 +5,7 @@ test("livraison colis . emballage : poids emballage * empreinte carton", () => {
 
     // Given
     const jsonRules = yamlToJson('data/livraison/emballage.yaml');
-    const testedRule = pick(jsonRules,'livraison colis . emballage')
+    const testedRule = pick(jsonRules, 'livraison colis . emballage')
     const inputs = {
         'poids emballage': 80,
         'empreinte carton': 2,
