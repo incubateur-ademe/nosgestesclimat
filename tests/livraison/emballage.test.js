@@ -1,11 +1,11 @@
 import Engine from 'publicodes'
-import { extractRule, yamlToJson } from './utils'
+import { pick, yamlToJson } from './utils'
 
 test("livraison colis . emballage : poids emballage * empreinte carton", () => {
 
     // Given
     const jsonRules = yamlToJson('data/livraison/emballage.yaml');
-    const testedRule = extractRule('livraison colis . emballage', jsonRules)
+    const testedRule = pick(jsonRules,'livraison colis . emballage')
     const inputs = {
         'poids emballage': 80,
         'empreinte carton': 2,

@@ -14,11 +14,7 @@ function yamlToJson(filePath) {
   return parse(fs.readFileSync(filePath, 'utf8'));
 }
 
-function extractRule(ruleName, rules) {
-  return pick(rules, ruleName);
-}
-
 export {
-    extractRule,
-    yamlToJson
+  pick,
+  yamlToJson,
 }
