@@ -1,0 +1,150 @@
+logement . vacances:
+  titre: Nuitées week-end ou vacances
+  mosaique:
+    type: selection
+    clé: présent
+  question: Comment êtes-vous logé pour vos week-ends, vos vacances ?
+  icônes: 🏖
+  description: |
+    Expliquer ce qu'on attend de l'utilisateur
+  note: |
+    ### Qu'entend-on par "nuitées hors logement" dans Nos Gestes Climat?
+
+    - L'hôtel (loisirs)
+    - Les auberges de jeunesse
+    - Les centres de vacances et complexes hoteliers
+    - Les campings (incluant bungallow et emplacement pour tente, camping car, caravane ou van).
+    - Les airbnb
+    - Les nuits dans sa maison secondaire
+    - La famille & amis
+
+    Sont donc exclues les nuits en hôtel pour **raisons professionnelles**.
+
+    ### Vers une première version
+
+    Dans un premier temps, l'idée est de restreindre le périmètre de la V1 au secteur de l'hotellerie.
+
+    En effet :
+
+    - Nous choisissons d'exclure les airbnb qui se rapprochent davantage d'une méthode de comptabilité liée à la maison secondaire. 
+    On pourrait effectivement demander si un propriétaire loue sa maison secondaire : c'est à ce moment là que nous aurons à la fois 
+    la méthode de calcul mais également de l'attribution des résultats entre loueurs et propriétaire.
+    - Il est difficile de trouver des données fiables sur l'empreinte des nuitées en camping : on pourrait imaginer que l'impact 
+    est inférieur à une nuit d'hôtel. Peut-être qu'une manière de prendre en compte l'empreinte d'un emplacement serait de prendre une partie seulement de l'empreinte d'une nuit en hôtel en excluant par exemple l'empreinte de la blanchisserie.
+    - Pour l'empreinte d'une nuit au sein de se famille ou chez des amis, l'empreinte est aujourd'hui indirectement comptée dans l'empreinte des accueillants.
+
+    En ce qui concerne les hôtels, les auberges de jeunees, les "resorts" A COMPLETER
+
+  formule:
+    somme:
+      - maison secondaire
+      - hotel
+
+logement . vacances . maison secondaire:
+  titre: Maison secondaire
+  icônes: 🏠
+  applicable si: présent
+  formule: 0
+  note: |
+    Pour le moment, nous n'avons pas implémenté le modèle de la maison secondaire mais les discussions sont en cours sur notre dépôt Github :
+      - https://github.com/datagir/nosgestesclimat/issues/1309
+      - https://github.com/datagir/nosgestesclimat/pull/1455
+
+logement . vacances . maison secondaire . présent:
+  question: Possédez-vous une maison secondaire ?
+  par défaut: non
+  inactif: oui
+
+logement . vacances . hotel:
+  titre: Hôtel
+  icônes: 🏨
+  applicable si: présent
+  formule: nombre de nuitées * empreinte par nuit
+  note: |
+    ### Les paramètres du calcul
+
+    Le calcul de l'empreinte liée aux séjours en hôtels peut être assez complexe au vu de la diversités des paramètres de l'équation, avec entre autres : 
+
+    - **Le nombre de nuits passées à l'hotêl à l'année:**
+
+        Il peut-être difficile d'estimer le nombre de nuitées à l'hôtel pendant l'année, mais également de faire la différence 
+        entre les différents types d'hébergement.
+
+    - **Le nombre de personnes dans la chambre:**
+
+        Comment estimer le nombre de personnes présent dans la chambre ? Ce chiffre peut-être différent selon les nuits, 
+        le plus simple pour une première approximation est d'amortir l'empreinte des nuits d'hôtel par le nombre de personnes 
+        qui composent le foyer.
+
+    - **La localisation:**
+
+        Que ce soit entre pays ou même entre villes, des différences d'impact peuvent apparaître, notamment car 
+        l'un des paramètres important de l'empreinte des hôtels est le mix électrique.
+
+    - **Standing:**
+
+        Le standing de l'hotêl est également un facteur important. Un hotêl bas de gamme et un hotêl haut de gamme n'auront pas la même empreinte.
+
+    Pour calculer l'empreinte annuelle de sa "consommation" de prestations hotelières, et dans un objectif de simplifier la répônse à cette question,
+    nous avons fait le choix de demander à l'utilisateur seulement le nombre de nuitées par an qu'il passe à l'hôtel même si effectivement l'empreinte 
+    peut être plus ou moins importante selon les hypothèses de départ.
+
+    ### La cohérence du résultat
+
+    A COMPLETER
+
+    https://nosgestesclimat.fr/documentation/empreinte-branche/I55-par-hab
+
+    soit 73,62 kgCO2e par habitant.
+
+    Ainsi, en considérant seulement la partie "Hotellerie" (67% du CA de la branche), on retrouve une valeur de 49 kgCO2e.
+
+logement . vacances . hotel . présent:
+  question: Allez-vous à l'hôtel ?
+  par défaut: non
+
+logement . vacances . hotel . empreinte par nuit:
+  formule: 7.7
+  unité: kgCO2e
+  note: |
+    Après une revue de la littérature existante sur le sujet, il semble que l'[Hotel Carbon Measurement Initiative (HCMI)](https://sustainablehospitalityalliance.org/resource/hotel-carbon-measurement-initiative/)
+    qui alimente le [Cornell Hotel Sustainability Benchmarking Index](https://greenview.sg/services/chsb-index/) présente les [données](https://ecommons.cornell.edu/handle/1813/109990) les plus pertinentes pour notre usage.
+
+    Cet index met à disposition des informations carbone, eau et énergie fournies par les hôtels participant à l'initiative.
+
+    D'après les hypothèses de HCMI, le périmètre du FE inclus le scope 1 et 2 ainsi qu'une partie du scope 3 des hôtels
+    (blanchisserie et émissions des réfrigérant). Ce périmètre semble adéquat pour NGC et n'induit pas de double comptage.
+
+    > HCMI includes all energy used ‘on site’ (including fuels such as natural gas, oil and other fuels, purchased electricity, and mobile fuels from vehicles and other equipment) and emissions from refrigerants. It also includes, if applicable, carbon emissions from outsourced operations (e.g. laundry).
+
+    A noter que c'est également la méthode HCMI qui alimente la base de données des FE britanniques [Greenhouse gas reporting: conversion factors 2022](https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022).
+
+    Néanmoins, d'autres pistes semblent être intéressante à explorer davantage:
+      - Un [article](https://www.sciencedirect.com/science/article/pii/S2666784320300048) sur la projection de l'empreinte des logements pour la coupe du monde 2030, avec notamment ce tableau :
+
+      ![](https://storage.gra.cloud.ovh.net/v1/AUTH_0f20d409cb2a4c9786c769e2edec0e06/imagespadincubateurnet/uploads/upload_7788cea39cd7bb8c5ccf89ff23cf6a74.png)
+
+      On pourrait investiguer davantage les sources pour éventuellement approcher l'empreinte des autres modes de logement (location de maison type airbnb, camping etc...). On remarque ici que l'empreinte de l'hotel est nettement supérieure que le camping par exemple
+
+      - Une expérimentation portée par l'ADEME visant à développer l’affichage environnemental en France et à l’international pour 
+      le secteur de l’hôtelleri et appuyée par [Betterfly Tourism](https://www.betterfly-tourism.com/affichage-environnemental-hotels/)
+      sur la partie méthodologique semble être intéressante mais peu aboutie. 
+      Depuis 2017, les hôteliers sont invités à mettre en place l'affichage environnemental, qui comprend un calcul de l'empreinte carbone 
+      par nuitée. IL est difficile de trouver des chiffres plus récents que [ceux-ci de 2018 qui ont suivi une première expérimentation](https://www.ekopo.fr/Thematique/entreprises-1285/Breves/Hotellerie-1er-bilan-affichage-environnemental-355036.htm),
+      avec 42 hôtels et une moyenne de 10,5 kg éqCO2 / nuitée. 
+      On doit pouvoir trouver mieux ! Mais au moins on est sur les mêmes ordres de grandeur, ce qui est plutôt rassurant. 
+      On cherche à discuter davantage avec l'équipe Betterfly pour en savoir plus !
+
+logement . vacances . hotel . nombre de nuitées:
+  question: Combien de nuits ?
+  unité: nuits
+  par défaut: 5
+  note: |
+    A COMPLETER
+    D'après [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345),
+    à 86% les français voyagent en France. Je pense que pour une V1, on peut donc assumer que les nuitées se passent en France et simplifier grandement le code et les questions, en expliquant dans une note la raison de ce choix à l'utilisateur.
+    En combinant plusieurs données de l'enquête (nombre de nuits passées loin de chez soi * motif personnel * mode d'hébergement => 27,9 * 81,1% * [15,7 + 2 + 3]%), on arrive à une moyenne de 4,7 nuitées / pers / an dans les hébergements hôtel, pension de famille, village de vacances ou gite, auberge de jeunesse.
+  suggestions:
+    un week-end par an: 2
+    une semaine de vacances: 7
+    un week-end par mois: 24
