@@ -23,6 +23,26 @@ testEmballage(
   'constante, en gCO2e/g',
   {},
   1.29
+  )
+
+testEmballage(
+  'livraison colis . emballage . poids emballage',
+  'surface * densité, cas 1',
+  { 'surface': 80, 'densité': 2 },
+  160
+)
+
+testEmballage(
+  'livraison colis . emballage . poids emballage',
+  'surface * densité, cas 2',
+  { 'surface': 2.5, 'densité': 4 },
+  10
+)
+testEmballage(
+  'livraison colis . emballage . poids emballage',
+  'surface * densité, par défaut',
+  { 'surface': null, 'densité': null },
+  274
 )
 
 testEmballage(
