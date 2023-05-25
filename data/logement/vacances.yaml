@@ -8,17 +8,16 @@ logement . vacances:
   description: |
     Renseignez ici les différents types de logement que vous occupez pour vos voyages (motif personnel). 
 
-    > Pour le moment, nous proposons uniquement les nuits en hôtel, on espère vous proposez rapidement les autres modes d'hébergement !
+    > Pour le moment, nous proposons uniquement les nuits en hôtel et auberge de jeunesse, on espère vous proposez très prochainement les autres modes d'hébergement !
   note: |
     ### Qu'entend-on par "nuitées hors logement" dans Nos Gestes Climat?
 
-    - L'hôtel (loisirs)
-    - Les auberges de jeunesse
-    - Les centres de vacances et complexes hoteliers, bungalow
-    - Les campings (incluant emplacement pour tente, camping car, caravane ou van).
-    - Les airbnb
-    - Les nuits dans sa maison secondaire
-    - La famille & amis
+      - Hôtel ou chambre privée
+      - Emplacement en camping
+      - Auberge de jeunesse
+      - Locations de vacances (type Airbnb)
+      - Famille ou amis
+      - Maison secondaire
 
     Sont donc exclues les nuits en hôtel pour **raisons professionnelles**.
 
@@ -38,46 +37,21 @@ logement . vacances:
     En ce qui concerne les hôtels, les auberges de jeunesse, les "resorts", nous considérons un facteur d'émission commun pour le moment.
 
     Dans cette première version, l'empreinte de l'hôtel sera divisée par le nombre d'habitants du logement.
-
+    On doit introduire ici, dans la formule, le nombre d'habitants du logement car une nuit une auberge de jeunesse est généralement caractérisée par un lit dans un dortoir.
   formule:
     somme:
       - hotel
       - camping
+      - auberge de jeunesse * logement . habitants
+      - airbnb
+      - famille ou amis
       - maison secondaire
-
-logement . vacances . maison secondaire:
-  titre: Maison secondaire
-  icônes: 🏠
-  applicable si: présent
-  formule: 0
-  note: |
-    Pour le moment, nous n'avons pas implémenté le modèle de la maison secondaire mais les discussions sont en cours sur notre dépôt Github :
-      - https://github.com/datagir/nosgestesclimat/issues/1309
-      - https://github.com/datagir/nosgestesclimat/pull/1455
-
-logement . vacances . maison secondaire . présent:
-  question: Possédez-vous une maison secondaire ?
-  par défaut: non
-  inactif: oui
-
-logement . vacances . camping:
-  titre: Emplacement en camping
-  icônes: ⛺️
-  applicable si: présent
-  formule: 0
-  note: |
-    Pour le moment, nous n'avons pas implémenté le modèle de l'emplacement de camping mais ce sera fait prochainement !
-
-logement . vacances . camping . présent:
-  question: Possédez-vous une maison secondaire ?
-  par défaut: non
-  inactif: oui
 
 logement . vacances . hotel:
   titre: Hôtel
   icônes: 🏨
   applicable si: présent
-  formule: nombre de nuitées * empreinte par nuit
+  formule: nombre de nuitées * empreinte hotel par nuit
   note: |
     ### Les paramètres du calcul
 
@@ -114,13 +88,13 @@ logement . vacances . hotel:
     L'idée ici est de comparer ce résultat avec le résultat issu de l'approche "macro" du SDES pour [la branche économique "Hébergement"](https://nosgestesclimat.fr/documentation/empreinte-branche/I55-par-hab),
     qui donne une empreinte de 73,62 kgCO2e par habitant.
 
-    Ainsi, en considérant seulement la partie "Hotellerie" (67% du CA de la branche), on trouve une valeur de 49 kgCO2e. L'ordre de grandeur est similaire !
+    Ainsi, en considérant seulement la partie "Hotellerie" (67% du CA de la branche), on trouve une valeur de 49 kgCO2e. L'ordre de grandeur est similaire ! En revanche, cette estimation prend en compte les déplacvements professionels.
 
 logement . vacances . hotel . présent:
   question: Allez-vous à l'hôtel ?
   par défaut: oui
 
-logement . vacances . hotel . empreinte par nuit:
+logement . vacances . empreinte hotel par nuit:
   formule: 7.7
   unité: kgCO2e/nuits
   note: |
@@ -168,13 +142,15 @@ logement . vacances . hotel . empreinte par nuit:
       "Limited service (1 étoile)" : 4.8 kgCO2e/nuitée
       "3 étoiles" : 4.7 kgCO2e/nuitée
       "4 étoiles" : 8.6 kgCO2e/nuitée
-      "3 étoiles" : 11.6 kgCO2e/nuitée
+      "3 étoiles" : 11.6 kgCO2e/nuitée``
+
+      > Point publicodes : Cette règle étant utilisée dans d'autres espaces nom que `logement . vacances . hotel` c'est important ici de ne pas l'inclure dans cet espace non qui rendrait l'empreinte de la nuitée non applicable si la règle hotel est elle aussi non applicable.
 
 logement . vacances . hotel . nombre de nuitées:
   question: Combien de nuits passez-vous à l'hôtel sur l'année ?
   unité: nuits
   description: |
-    💡 Déclarez ici les nuits passées dans un hôtel, une auberge de jeunesse, un village de vacances et bungalow.
+    💡 Déclarez ici les nuits passées dans un hôtel, un village de vacances et bungalow.
   par défaut: moyenne
   note: |
     En combiant plusieurs données de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345),
@@ -196,8 +172,120 @@ logement . vacances . hotel . nombre de nuitées . moyenne . nombre de nuits pas
     On considère ici le nombre de nuits par personnes en voyage pour motif personnel.
 
 logement . vacances . hotel . nombre de nuitées . moyenne . part mode d'hébergement hotel:
-  formule: (0.157 + 0.02 + 0.03)
+  formule: 0.157 + 0.02
   note: |
     Excel "Caractéristiques des voyageurs personnels et professionnels - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
 
-    On considère ici les hébergements hôtel, pension de famille, village de vacances ou gîte, auberge de jeunesse.
+    On considère ici les hébergements hôtel, pension de famille, village de vacances ou gîte.
+
+logement . vacances . camping:
+  titre: Emplacement en camping
+  icônes: ⛺️
+  applicable si: présent
+  formule: 0
+  note: |
+    Pour le moment, nous n'avons pas implémenté le modèle de l'emplacement de camping mais ce sera fait prochainement !
+
+logement . vacances . camping . présent:
+  question: Possédez-vous une maison secondaire ?
+  par défaut: non
+  inactif: oui
+
+logement . vacances . auberge de jeunesse:
+  titre: Auberge de jeunesse
+  icônes: 🛏️
+  applicable si: présent
+  formule: empreinte par nuit * nombre de nuitées
+
+logement . vacances . auberge de jeunesse . présent:
+  question: Possédez-vous une maison secondaire ?
+  par défaut: oui
+
+logement . vacances . auberge de jeunesse . empreinte par nuit:
+  formule: empreinte hotel par nuit / nombre de personnes dans le dortoir
+  unité: kgCO2e/nuits
+  note: |
+    Pour une première approximation d'une nuit en auberge de jeunesse, l'idée est ici de diviser l'impact 
+    d'une nuitée classique en hôtel par le nombre de personnes dans un dortoir moyen.
+
+logement . vacances . auberge de jeunesse . nombre de personnes dans le dortoir:
+  formule: 6
+  note: On considère ici qu'un dortoir "classique" comprend 6 personnes.
+
+logement . vacances . auberge de jeunesse . nombre de nuitées:
+  question: Combien de nuits passez-vous en auberge de jeunesse sur l'année ?
+  unité: nuits
+  description: |
+    💡 Déclarez ici les nuits passées en auberge de jeunesse (dortoir).
+  par défaut: moyenne
+  note: |
+    En combiant plusieurs données de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345),
+    on peut retrouver une valeur moyenne en nuitées / pers / an dans les hébergements hôtel, pension de famille, village de vacances ou gîte, auberge de jeunesse.
+  suggestions:
+    un week-end par an: 2
+    une semaine de vacances: 7
+    un week-end par mois: 24
+
+logement . vacances . auberge de jeunesse . nombre de nuitées . moyenne:
+  titre: Nombre de nuitées en moyenne par français
+  formule: nombre de nuits passées loin de chez soi * part mode d'hébergement auberge de jeunesse
+
+logement . vacances . auberge de jeunesse . nombre de nuitées . moyenne . nombre de nuits passées loin de chez soi:
+  formule: 26.5
+  note: |
+    Excel "Voyages et caractéristiques sociodémographiques des individus - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
+
+    On considère ici le nombre de nuits par personnes en voyage pour motif personnel.
+
+logement . vacances . auberge de jeunesse . nombre de nuitées . moyenne . part mode d'hébergement auberge de jeunesse:
+  formule: 0.03
+  note: |
+    Excel "Caractéristiques des voyageurs personnels et professionnels - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
+
+    On considère ici les hébergements auberge de jeunesse.
+
+logement . vacances . airbnb:
+  titre: Location type Airbnb
+  icônes: 🏠
+  applicable si: présent
+  formule: 0
+  note: |
+    Pour le moment, nous n'avons pas implémenté le modèle du airbnb qui se rapprche de la maison secondaire en dont 
+    l'élaboration du modèle est en cours de réflexion !
+
+logement . vacances . airbnb . présent:
+  question: Possédez-vous une maison secondaire ?
+  par défaut: non
+  inactif: oui
+
+logement . vacances . famille ou amis:
+  titre: Famille ou amis
+  icônes: 👫
+  applicable si: présent
+  formule: 0
+  note: Nous considérons que l'empreinte de la nuit est aujourd'hui indirectement comptée dans l'empreinte des accueillants.
+
+logement . vacances . famille ou amis . présent:
+  question: Possédez-vous une maison secondaire ?
+  par défaut: non
+
+logement . vacances . notif famille ou amis:
+  type: notification
+  formule: famille ou amis . présent
+  description: |
+    Vous avez renseignez "Famille ou amis" : l'empreinte associée à ces nuits sera nulle, c'est compté dans l'empreinte des acceuillants !
+
+logement . vacances . maison secondaire:
+  titre: Maison secondaire
+  icônes: 🏡
+  applicable si: présent
+  formule: 0
+  note: |
+    Pour le moment, nous n'avons pas implémenté le modèle de la maison secondaire mais les discussions sont en cours sur notre dépôt Github :
+      - https://github.com/datagir/nosgestesclimat/issues/1309
+      - https://github.com/datagir/nosgestesclimat/pull/1455
+
+logement . vacances . maison secondaire . présent:
+  question: Possédez-vous une maison secondaire ?
+  par défaut: non
+  inactif: oui
