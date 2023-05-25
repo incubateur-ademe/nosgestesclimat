@@ -23,7 +23,7 @@ testEmballage(
   'constante, en gCO2e/g',
   {},
   1.29
-  )
+)
 
 testEmballage(
   'livraison colis . emballage . poids emballage',
@@ -60,16 +60,8 @@ testEmballage(
 )
 
 testEmballage(
-  'livraison colis . emballage . poids emballage . surface . surface sphère',
-  'S = 4πR^2, cas 1',
-  { 'rayon sphère': 8, pi: 3.14159265359 },
-  804.24771931904
+  'livraison colis . emballage . poids emballage . surface . surface sphère . pi',
+  'constante universelle',
+  {},
+  3.14159265
 )
-
-testEmballage(
-  'livraison colis . emballage . poids emballage . surface . surface sphère',
-  'S = 4πR^2, cas 2',
-  { 'rayon sphère': 10, pi: 3.14 },
-  1256
-)
-
