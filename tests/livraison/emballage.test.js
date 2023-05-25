@@ -27,9 +27,16 @@ testEmballage(
 
 testEmballage(
     'livraison colis . emballage . poids emballage . surface',
-    'Surface d\'emballage',
+    'Surface d\'emballage, addition de la surface de la sphère et d\'un ajustement, cas 1',
     { 'surface sphère': 12, 'ajustement': 2 },
     14
+)
+
+testEmballage(
+    'livraison colis . emballage . poids emballage . surface',
+    'Surface d\'emballage, addition de la surface de la sphère et d\'un ajustement, cas 2',
+    { 'surface sphère': 3, 'ajustement': 9 },
+    12
 )
 
 /* Exemple de test sans factorisation
