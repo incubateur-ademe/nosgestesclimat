@@ -37,5 +37,4 @@ export {
   pick,
   yamlToJson,
   testOf,
-  testEmballage
 }
