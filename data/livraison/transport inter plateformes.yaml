@@ -1,33 +1,36 @@
-livraison colis . transport livraison:
+livraison colis . transport inter plateformes:
+  formule: plateformes . nombre * empreinte trajet
+
+livraison colis . transport inter plateformes . empreinte trajet:
   formule:
     somme:
       - route
       - fabrication véhicule
       - usage véhicule
 
-livraison colis . transport livraison . distance:
-  question: Quelle est la distance parcourue entre le dernier site et le point final de livraison ?
-  par défaut: 70
+livraison colis . transport inter plateformes . empreinte trajet . distance:
+  question: Quelle est la distance parcourue entre les plateformes, entrepôts de stockage ?
+  par défaut: 1200
   unité: véhicules-kilomètres
 
-livraison colis . transport livraison . distance . coefficient de correction distance:
+livraison colis . transport inter plateformes . empreinte trajet . distance . coefficient de correction distance:
   titre: Coefficient de correction des distances en transport dédié
   formule: 1.05
 
-livraison colis . transport livraison . distance . distance corrigée:
+livraison colis . transport inter plateformes . empreinte trajet . distance . distance corrigée:
   formule: distance * coefficient de correction distance
 
-livraison colis . transport livraison . distance . distance à vide:
+livraison colis . transport inter plateformes . empreinte trajet . distance . distance à vide:
   formule: distance corrigée * ratio distance à vide / (1 - ratio distance à vide)
 
-livraison colis . transport livraison . distance . ratio distance à vide:
+livraison colis . transport inter plateformes . empreinte trajet . distance . ratio distance à vide:
   formule: 0.2
 
-livraison colis . transport livraison . distance . distance totale:
+livraison colis . transport inter plateformes . empreinte trajet . distance . distance totale:
   formule: distance corrigée + distance à vide
   unité: km
 
-livraison colis . transport livraison . véhicule:
+livraison colis . transport inter plateformes . empreinte trajet . véhicule:
   question: Quelle est la catégorie du véhicule ?
   avec:
     VUL moyen:
@@ -38,9 +41,9 @@ livraison colis . transport livraison . véhicule:
       possibilités:
         - VUL moyen
         - PL moyen
-  par défaut: "'VUL moyen'"
+  par défaut: "'PL moyen'"
 
-livraison colis . transport livraison . véhicule . chargement moyen:
+livraison colis . transport inter plateformes . empreinte trajet . véhicule . chargement moyen:
   formule:
     variations:
       - si: véhicule = 'VUL moyen'
@@ -52,28 +55,28 @@ livraison colis . transport livraison . véhicule . chargement moyen:
     Quand taux de charge = 15%
     est ce vraiment en tonnes ? pb d'homogénéité ...
 
-livraison colis . transport livraison . véhicule . vitesse moyenne:
-  formule: 30
+livraison colis . transport inter plateformes . empreinte trajet . véhicule . vitesse moyenne:
+  formule: 60
   unité: km/h
 
-livraison colis . transport livraison . route:
+livraison colis . transport inter plateformes . empreinte trajet . route:
   formule: empreinte * tonnes km
   unité: gCO2e
 
-livraison colis . transport livraison . route . empreinte:
+livraison colis . transport inter plateformes . empreinte trajet . route . empreinte:
   formule: 5.6
   unité: gCO2e / tonnes.km
   note: Source ECEL
 
-livraison colis . transport livraison . route . tonnes km:
+livraison colis . transport inter plateformes . empreinte trajet . route . tonnes km:
   formule: distance * livraison colis . informations . poids / 1000
   unité: tonnes.km
 
-livraison colis . transport livraison . fabrication véhicule:
+livraison colis . transport inter plateformes . empreinte trajet . fabrication véhicule:
   formule: empreinte * tonnes km
   unité: gCO2e
 
-livraison colis . transport livraison . fabrication véhicule . empreinte:
+livraison colis . transport inter plateformes . empreinte trajet . fabrication véhicule . empreinte:
   formule:
     variations:
       - si: véhicule = 'VUL moyen'
@@ -83,16 +86,16 @@ livraison colis . transport livraison . fabrication véhicule . empreinte:
   unité: gCO2e / tonnes.km
   note: Source ECEL (VUL par défaut)
 
-livraison colis . transport livraison . fabrication véhicule . tonnes km:
+livraison colis . transport inter plateformes . empreinte trajet . fabrication véhicule . tonnes km:
   formule: distance * véhicule . chargement moyen * livraison colis . informations . poids / 1000
   unité: tonnes.km
   note: Je comprends pas pourquoi le chargement moyen apparaît ici
 
-livraison colis . transport livraison . usage véhicule:
+livraison colis . transport inter plateformes . empreinte trajet . usage véhicule:
   formule: (livraison colis . informations . poids / 1000) * empreinte * distance . distance totale / véhicule . chargement moyen
   unité: gCO2e
 
-livraison colis . transport livraison . usage véhicule . empreinte:
+livraison colis . transport inter plateformes . empreinte trajet . usage véhicule . empreinte:
   formule:
     recalcul:
       règle: empreinte véhicule par km HBEFA
