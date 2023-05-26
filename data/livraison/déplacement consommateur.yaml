@@ -1,0 +1,188 @@
+livraison colis . déplacement consommateur:
+  formule:
+    variations:
+      - si: mode de déplacement = "voiture"
+        alors: voiture
+      - si: mode de déplacement = "moto"
+        alors: moto
+      - si: mode de déplacement = "commun"
+        alors: commun
+      - si: mode de déplacement = "marche"
+        alors: marche
+      - si: mode de déplacement = "vélo"
+        alors: vélo
+      - si: mode de déplacement = "petit véhicule électrique"
+        alors: petit véhicule électrique
+      - sinon: moyen
+
+livraison colis . déplacement consommateur . moyen:
+  formule:
+    somme:
+      - voiture * voiture . part déplacement
+      - moto * moto . part déplacement
+      - commun * commun . part déplacement
+      - marche * marche . part déplacement
+      - vélo * vélo . part déplacement
+      - petit véhicule électrique * petit véhicule électrique . part déplacement
+
+livraison colis . déplacement consommateur . mode de déplacement:
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - voiture
+        - moto
+        - commun
+        - marche
+        - vélo
+        - petit véhicule électrique
+  par défaut: "'moyenne'"
+
+livraison colis . déplacement consommateur . distance réelle:
+  titre: Distance réelle allouée au colis
+  formule: distance * allocation du trajet au colis
+
+livraison colis . déplacement consommateur . distance:
+  question: Quelle est la distance moyenne parcourue pour aller chercher son colis ?
+  par défaut: 7
+  unité: km
+
+livraison colis . déplacement consommateur . allocation du trajet au colis:
+  par défaut: 0.70
+
+livraison colis . déplacement consommateur . voiture:
+  formule: usage + autres impacts
+livraison colis . déplacement consommateur . voiture . part déplacement:
+  formule: 1 - moto . part déplacement - commun . part déplacement - marche . part déplacement - vélo . part déplacement - petit véhicule électrique . part déplacement
+livraison colis . déplacement consommateur . voiture . usage:
+  formule: distance réelle * empreinte
+livraison colis . déplacement consommateur . voiture . usage . empreinte:
+  formule: 150.97
+  unité: gCO2e/km
+livraison colis . déplacement consommateur . voiture . autres impacts:
+  titre: Impacts fabrication, entretien, infrastructures
+  formule: distance réelle * empreinte
+livraison colis . déplacement consommateur . voiture . autres impacts . empreinte:
+  formule: 90.5
+  unité: gCO2e/km
+
+livraison colis . déplacement consommateur . moto:
+  formule: usage + autres impacts
+livraison colis . déplacement consommateur . moto . part déplacement:
+  formule:
+    variations:
+      - si: distance < 2
+        alors: 0.012
+      - si: distance < 5
+        alors: 0.0219
+      - si: distance < 15
+        alors: 0.0161
+      - si: distance < 30
+        alors: 0.0104
+      - sinon: 0.005
+livraison colis . déplacement consommateur . moto . usage:
+  formule: distance réelle * empreinte
+livraison colis . déplacement consommateur . moto . usage . empreinte:
+  formule: 93.834
+  unité: gCO2e/km
+livraison colis . déplacement consommateur . moto . autres impacts:
+  titre: Impacts fabrication, entretien, infrastructures
+  formule: distance réelle * empreinte
+livraison colis . déplacement consommateur . moto . autres impacts . empreinte:
+  formule: 14.3
+  unité: gCO2e/km
+
+livraison colis . déplacement consommateur . commun:
+  formule: usage + autres impacts
+livraison colis . déplacement consommateur . commun . part déplacement:
+  formule:
+    variations:
+      - si: distance < 2
+        alors: 0.0908
+      - si: distance < 5
+        alors: 0.1813
+      - si: distance < 15
+        alors: 0.1384
+      - si: distance < 30
+        alors: 0.1005
+      - sinon: 0.1647
+livraison colis . déplacement consommateur . commun . usage:
+  formule: distance réelle * empreinte
+livraison colis . déplacement consommateur . commun . usage . empreinte:
+  formule: 499.019 / nombre de voyageurs
+  unité: gCO2e/km
+livraison colis . déplacement consommateur . commun . nombre de voyageurs:
+  formule: 12
+livraison colis . déplacement consommateur . commun . autres impacts:
+  titre: Impacts fabrication, entretien, infrastructures
+  formule: distance réelle * empreinte
+livraison colis . déplacement consommateur . commun . autres impacts . empreinte:
+  formule: 14.7
+  unité: gCO2e/km
+
+livraison colis . déplacement consommateur . marche:
+  formule: autres impacts
+livraison colis . déplacement consommateur . marche . part déplacement:
+  formule:
+    variations:
+      - si: distance < 2
+        alors: 0.5113 / 2
+      - si: distance < 5
+        alors: 0.0916 / 2
+      - si: distance < 15
+        alors: 0.0222 / 2
+      - si: distance < 30
+        alors: 0.0347 / 2
+      - sinon: 0.048 / 2
+  note: Chiffres étranges pour la marche .. Je vois mal qqun faire 30 km à pied pour un colis.
+livraison colis . déplacement consommateur . marche . autres impacts:
+  titre: Impacts fabrication, entretien, infrastructures
+  formule: distance réelle * empreinte
+livraison colis . déplacement consommateur . marche . autres impacts . empreinte:
+  formule: 12
+  unité: gCO2e/km
+
+livraison colis . déplacement consommateur . vélo:
+  titre: Vélo musculaire
+  formule: autres impacts
+livraison colis . déplacement consommateur . vélo . part déplacement:
+  formule:
+    variations:
+      - si: distance < 2
+        alors: 0.5113 / 2
+      - si: distance < 5
+        alors: 0.0916 / 2
+      - si: distance < 15
+        alors: 0.0222 / 2
+      - si: distance < 30
+        alors: 0.0347 / 2
+      - sinon: 0.048 / 2
+  note: Considéré comme la marche d'ou la division par 2
+livraison colis . déplacement consommateur . vélo . autres impacts:
+  titre: Impacts fabrication, entretien, infrastructures
+  formule: distance réelle * empreinte
+livraison colis . déplacement consommateur . vélo . autres impacts . empreinte:
+  formule: 12
+  unité: gCO2e/km
+
+livraison colis . déplacement consommateur . petit véhicule électrique:
+  titre: VAE ou trotinette
+  formule: autres impacts
+livraison colis . déplacement consommateur . petit véhicule électrique . part déplacement:
+  formule:
+    variations:
+      - si: distance < 2
+        alors: 0.0478
+      - si: distance < 5
+        alors: 0.0316
+      - si: distance < 15
+        alors: 0.0099
+      - si: distance < 30
+        alors: 0.0035
+      - sinon: 0.001
+livraison colis . déplacement consommateur . petit véhicule électrique . autres impacts:
+  titre: Impacts fabrication, entretien, infrastructures
+  formule: distance réelle * empreinte
+livraison colis . déplacement consommateur . petit véhicule électrique . autres impacts . empreinte:
+  formule: 18.4
+  unité: gCO2e/km

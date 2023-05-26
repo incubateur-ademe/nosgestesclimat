@@ -26,6 +26,25 @@ livraison colis:
     C’est pourquoi, afin d’avoir une vision plus large de la performance environnementale associée au commerce en ligne, il pourrait intéressant d’étudier l’influence de celui-ci sur les étapes amont. 
     En effet, comme présenté dans les encadrés ci-dessous, pour certains produits, la majorité de la contribution à la empreinte carbone provient des étapes de production de celui-ci.
   formule:
+    variations:
+      - si: scénario = 'domicile'
+        alors: scénario . domicile
+      - si: scénario = 'point de retrait'
+        alors: scénario . point de retrait
+
+livraison colis . scénario:
+  titre: Scénario de livraison
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - domicile
+        - point de retrait
+  par défaut: "'point de retrait'"
+
+livraison colis . scénario . domicile:
+  titre: Livraison à domicile
+  formule:
     somme:
       - commande en ligne
       - emballage
@@ -33,7 +52,18 @@ livraison colis:
       - transport inter plateformes
       - plateformes
       - transport livraison
-      - lieu de retrait
+
+livraison colis . scénario . point de retrait:
+  titre: Livraison en point de retrait
+  formule:
+    somme:
+      - commande en ligne
+      - emballage
+      - entrepot stockage
+      - transport inter plateformes
+      - plateformes
+      - transport livraison
+      - point de retrait
       - déplacement consommateur
 
 livraison colis . informations:
@@ -55,6 +85,8 @@ livraison colis . informations . catégorie:
         - équipements volumineux
         - autre
   par défaut: "'habillement'"
+  note: |
+    La catégorie de produit impacte : le volume, le poids, le temps passé sur le site de commande, la durée de stockage dans l'entrepôt et le PDV.
 
 livraison colis . informations . volume:
   titre: Volume du colis
@@ -100,7 +132,3 @@ livraison colis . commande en ligne:
     Néanmoins, les différences se jouent au centième de grammes de CO2...
   formule: 5.4
   unité: gCO2e
-
-livraison colis . lieu de retrait: 0
-livraison colis . déplacement consommateur: 0
-# La catégorie de produit impacte : le volume, le poids, le temps passé sur le site de commande, la durée de stockage dans l'entrepôt et le PDV.
