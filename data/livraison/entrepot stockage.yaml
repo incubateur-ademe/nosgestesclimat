@@ -1,0 +1,74 @@
+livraison colis . entrepot stockage:
+  formule: nombre * empreinte entrepot
+
+livraison colis . entrepot stockage . nombre:
+  titre: Nombre d'entrepôts de stockage dans le processus de livraison
+  formule: 1
+
+livraison colis . empreinte entrepot:
+  formule:
+    somme:
+      - infrastructures
+      - électricité
+      - gaz
+
+livraison colis . empreinte entrepot . taille:
+  formule: 10000
+  unité: m2
+
+livraison colis . empreinte entrepot . nombre de jours de stockage:
+  formule: 20
+  unité: jour
+
+livraison colis . empreinte entrepot . durée de vie:
+  formule: 50
+  unité: an
+
+livraison colis . empreinte entrepot . volume de stockage par m2:
+  formule: 2
+  unité: m3
+  note: Pas de source
+
+livraison colis . empreinte entrepot . nombre de colis par m2:
+  formule: volume de stockage par m2 * 1000000 cm3 / (informations . volume * 4)
+  unité: colis/ m2
+  note: |
+    Facteur 1000000 pour la conversion cm3 m3
+    D'où vient le facteur 4 ?
+
+livraison colis . empreinte entrepot . infrastructures:
+  formule: part entrepot par colis * empreinte entrepot
+  unité: gCO2e
+
+livraison colis . empreinte entrepot . infrastructures . part entrepot par colis:
+  formule: 1 / nombre de colis par m2
+
+livraison colis . empreinte entrepot . infrastructures . nombre de colis par m2:
+  formule: empreinte entrepot . durée de vie * 365 * empreinte entrepot . nombre de colis par m2 / empreinte entrepot . nombre de jours de stockage
+  note: Erreur ? Si l'empreinte de la construction de l'entrepôt est par an, on ne devrait pas avoir à multiplier par la durée de vie c'est étrange...
+
+livraison colis . empreinte entrepot . infrastructures . empreinte entrepot:
+  titre: Empreinte construction et démolition entrepôt
+  formule: 12515.52451
+  unité: gCO2e/m2/an
+
+livraison colis . empreinte entrepot . électricité:
+  formule: (consommation entrepot par jour / empreinte entrepot . nombre de colis par m2) * nombre de jours de stockage * empreinte production mix électrique
+  unité: gCO2e
+
+livraison colis . empreinte entrepot . électricité . consommation entrepot par jour:
+  formule: 0.12
+  unité: kWh/m2/jour
+  note: |
+    Hypothèse: entrepôt moyennement mécanisé, pas de réfrigération.
+    Pas de source.
+
+livraison colis . empreinte entrepot . gaz:
+  formule: (consommation entrepot par jour / empreinte entrepot . nombre de colis par m2) * nombre de jours de stockage * empreinte production mix gaz
+  unité: gCO2e
+
+livraison colis . empreinte entrepot . gaz . consommation entrepot par jour:
+  formule: 82.8 / 365
+  unité: MJ/m2/jour
+  note: |
+    Pas de source.

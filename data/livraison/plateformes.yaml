@@ -1,55 +1,88 @@
 livraison colis . plateformes:
+  formule: nombre * empreinte plateforme
+
+livraison colis . plateformes . nombre:
+  titre: Nombre plateformes dans le processus de livraison
+  formule: 2
+
+livraison colis . empreinte plateforme:
   formule:
     somme:
       - infrastructures
       - électricité
       - gaz
 
-livraison colis . plateformes . type:
-  titre: Type de plateforme
-  avec:
-    peu mécanisé:
-    moyennement mécanisé:
-    fortement mécanisé:
-  formule:
-    une possibilité:
-      choix obligatoire: oui
-      possibilités:
-        - peu mécanisé
-        - moyennement mécanisé
-        - fortement mécanisé
-  par défaut: "'moyennement mécanisé'"
-
-livraison colis . plateformes . taille:
+livraison colis . empreinte plateforme . taille:
   formule: 10000
   unité: m2
 
-livraison colis . plateformes . durée de vie:
+livraison colis . empreinte plateforme . nombre de jours de stockage:
+  formule: 1
+  unité: jour
+
+livraison colis . empreinte plateforme . durée de vie:
   formule: 50
   unité: an
 
-livraison colis . plateformes . nombre de colis par jour:
+livraison colis . empreinte plateforme . nombre de colis par jour:
   formule: 100000
 
-livraison colis . plateformes . infrastructures:
-  formule: part de plateforme par colis * empreinte entrepôt
+livraison colis . empreinte plateforme . nombre de colis par an:
+  formule: nombre de colis par jour * 365
+
+livraison colis . empreinte plateforme . infrastructures:
+  formule: part de plateforme par colis * empreinte entrepot
   unité: gCO2e
 
-livraison colis . plateformes . infrastructures . part de plateforme par colis:
+livraison colis . empreinte plateforme . infrastructures . part de plateforme par colis:
   formule: 1 / nombre de colis par m2
 
-livraison colis . plateformes . infrastructures . nombre de colis par m2:
-  formule: plateformes . nombre de colis par jour * plateformes . durée de vie * 365 / plateformes . taille
+livraison colis . empreinte plateforme . infrastructures . nombre de colis par m2:
+  formule: empreinte plateforme . nombre de colis par an * empreinte plateforme . durée de vie / empreinte plateforme . taille
   note: Erreur ? Si l'empreinte de la construction de l'entrepôt est par an, on ne devrait pas avoir à multiplier par la durée de vie c'est étrange...
 
-livraison colis . plateformes . infrastructures . empreinte entrepôt:
+livraison colis . empreinte plateforme . infrastructures . empreinte entrepot:
   titre: Empreinte construction et démolition entrepôt
   formule: 12515.52451
   unité: gCO2e/m2/an
 
-livraison colis . plateformes . électricité: 0
-livraison colis . plateformes . gaz: 0
-# livraison colis . plateformes . température:
+livraison colis . empreinte plateforme . électricité:
+  formule: ((consommation plateforme par jour * taille) / nombre de colis par jour) * nombre de jours de stockage * empreinte production mix électrique
+  unité: gCO2e
+
+livraison colis . empreinte plateforme . électricité . consommation plateforme par jour:
+  formule: 0.12
+  unité: kWh/m2/jour
+  note: |
+    Hypothèse: entrepôt moyennement mécanisé, pas de réfrigération.
+    Pas de source.
+
+livraison colis . empreinte plateforme . gaz:
+  formule: ((consommation plateforme par jour * taille) / nombre de colis par jour) * nombre de jours de stockage * empreinte production mix gaz
+  unité: gCO2e
+
+livraison colis . empreinte plateforme . gaz . consommation plateforme par jour:
+  formule: 82.8 / 365
+  unité: MJ/m2/jour
+  note: |
+    Pas de source.
+
+# livraison colis . empreinte plateforme . type:
+#   titre: Type de plateforme
+#   avec:
+#     peu mécanisé:
+#     moyennement mécanisé:
+#     fortement mécanisé:
+#   formule:
+#     une possibilité:
+#       choix obligatoire: oui
+#       possibilités:
+#         - peu mécanisé
+#         - moyennement mécanisé
+#         - fortement mécanisé
+#   par défaut: "'moyennement mécanisé'"
+#
+# livraison colis . empreinte plateforme . température:
 #   question: La température est-elle ambiante ou dirigée ?
 #   note: Possibilité d'implémenter l'option "réfrigération" mais on simplifie ici en considérant la température ambiante
 #   avec:
@@ -63,7 +96,7 @@ livraison colis . plateformes . gaz: 0
 #         - dirigée
 #   par défaut: "'ambiante'"
 
-# livraison colis . plateformes . réfrigérants:
+# livraison colis . empreinte plateforme . réfrigérants:
 #   note: Possibilité d'implémenter l'option "réfrigération" mais on simplifie ici en considérant la température ambiante
 #   formule:
 #     variations:
