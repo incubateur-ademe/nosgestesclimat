@@ -266,15 +266,23 @@ transport . boulot . commun . empreinte:
   formule:
     variations:
       - si: type = 'bus'
-        alors: bus . empreinte
+        alors: bus . impact par km
       - si: type = 'TER'
-        alors: TER . empreinte
+        alors: train . TER
       - si: type = 'métro ou tramway'
-        alors: métro ou tramway . empreinte
+        alors: métro ou tram . impact par km
       - si: type = 'vélo'
         alors: 0
+  unité: kgCO2e/km
+  note: |
+    On considère qu'un déplacement domicile travail effectué en voiture peut-être remplacé par un train régional et non par un TGV.
 
 transport . boulot . commun . type:
+  avec:
+    bus:
+    métro ou tramway:
+    TER:
+    vélo:
   question: Si vous deviez ne plus prendre votre voiture pour vous rendre au travail quel autre moyen de transport pourriez-vous utiliser ?
   par défaut: "'métro ou tramway'"
   formule:
@@ -285,34 +293,6 @@ transport . boulot . commun . type:
         - métro ou tramway
         - TER
         - vélo
-
-transport . boulot . commun . type . bus:
-  titre: Bus
-
-transport . boulot . commun . type . métro ou tramway:
-  titre: Métro ou tramway
-
-transport . boulot . commun . type . TER:
-  titre: TER
-
-transport . boulot . commun . type . vélo:
-  titre: Vélo
-
-transport . bus . empreinte:
-  formule: transport . bus . impact par km
-  unité: kgCO2e/km
-
-transport . TER:
-transport . TER . empreinte:
-  formule: transport . train . TER
-  unité: kgCO2e/km
-  description: |
-    On considère qu'un déplacement domicile travail effectué en voiture peut-être remplacé par un train régional et non par un TGV.
-
-transport . métro ou tramway:
-transport . métro ou tramway . empreinte:
-  formule: transport . métro ou tram . impact par km
-  unité: kgCO2e/km
 
 transport . boulot . télétravail:
   titre: Faire du télétravail
@@ -359,7 +339,10 @@ transport . voiture 5km:
   titre: Se passer de voiture pour moins de 5 km
   icônes: 🚗🚲
   formule: transport . voiture . empreinte - transport . voiture 5km . recalcul
+  applicable si: voiture . propriétaire
   non applicable si: voiture . km < seuil d'activation 5km
+  note: |
+    On fait l'hypothèse qu'une personne qui n'est pas propriétaire de voiture se passe *déjà* d'une voiture pour de courts trajets.
   description: |
     En France, 4 trajets en voiture sur 10 font moins de 3 km et ce n’est pas moins de 177 millions de trajets de moins de 5km qui sont réalisés seuls en voiture chaque semaine (hors trajets domicile-travail). 
 
