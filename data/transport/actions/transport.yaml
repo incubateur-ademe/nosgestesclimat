@@ -185,6 +185,7 @@ transport . réduction covoiturage:
 
 transport . boulot . distance:
   formule: semaines * hebdomadaire
+  unité: km
 
 transport . boulot . semaines:
   formule: 47
@@ -230,7 +231,7 @@ transport . boulot . commun:
       - transport . boulot . télétravail
   titre: Aller au travail autrement qu'en voiture
   effort: conséquent
-  icônes: 🚌🚃
+  icônes: 🚌🚲
   description: |
     Quand c'est possible, prendre les transports en commun ou des véhicules légers (marche à pied, vélo, trottinette personnelle, ...) pour aller au travail réduit notre empreinte climat, mais améliore aussi notre qualité de vie.
 
@@ -243,7 +244,20 @@ transport . boulot . commun:
     >💡 Le saviez-vous ? L'État et beaucoup de régions ou villes subventionnent les vélos mécaniques, électriques, cargo, pliants, etc. [Calculez votre aide 🚲️ en 3 clics](https://mesaidesvelo.fr).
 
   applicable si: voiture . km > seuil d'activation boulot
-  formule: boulot . distance * gain empreinte au km
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - type = 'bus'
+            - type = 'TER'
+            - type = 'métro ou tramway'
+        alors: boulot . distance * gain empreinte au km
+      - si: type = 'vélo classique'
+        alors: recalcul vélo
+      - si: type = 'vélo électrique'
+        alors: recalcul vae
+      - si: type = 'trotinette électrique'
+        alors: recalcul autres véhicules à moteur
 
 transport . seuil d'activation boulot:
   titre: Seuil d'activation actions liées aux trajets "Boulot"
@@ -271,8 +285,6 @@ transport . boulot . commun . empreinte:
         alors: train . TER
       - si: type = 'métro ou tramway'
         alors: métro ou tram . impact par km
-      - si: type = 'vélo'
-        alors: 0
   unité: kgCO2e/km
   note: |
     On considère qu'un déplacement domicile travail effectué en voiture peut-être remplacé par un train régional et non par un TGV.
@@ -282,7 +294,9 @@ transport . boulot . commun . type:
     bus:
     métro ou tramway:
     TER:
-    vélo:
+    vélo classique:
+    vélo électrique:
+    trotinette électrique:
   question: Si vous deviez ne plus prendre votre voiture pour vous rendre au travail quel autre moyen de transport pourriez-vous utiliser ?
   par défaut: "'métro ou tramway'"
   formule:
@@ -292,7 +306,32 @@ transport . boulot . commun . type:
         - bus
         - métro ou tramway
         - TER
-        - vélo
+        - vélo classique
+        - vélo électrique
+        - trotinette électrique
+
+transport . boulot . recalcul vélo:
+  formule:
+    recalcul:
+      règle: transport . mobilité douce . vélo
+      avec:
+        transport . mobilité douce . vélo . présent: oui
+
+transport . boulot . recalcul vae:
+  formule:
+    recalcul:
+      règle: transport . mobilité douce . vae
+      avec:
+        transport . mobilité douce . vae . présent: oui
+        transport . mobilité douce . vae . km: transport . boulot . distance
+
+transport . boulot . recalcul autres véhicules à moteur:
+  formule:
+    recalcul:
+      règle: transport . mobilité douce . autres véhicules à moteur
+      avec:
+        transport . mobilité douce . autres véhicules à moteur . présent: oui
+        transport . mobilité douce . autres véhicules à moteur . km: transport . boulot . distance
 
 transport . boulot . télétravail:
   titre: Faire du télétravail
