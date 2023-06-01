@@ -36,8 +36,10 @@ logement . vacances:
 
     En ce qui concerne les hôtels et les chambres privées / chambres d'hôtes, nous considérons un facteur d'émission commun pour le moment.
 
-    Dans cette première version, l'empreinte de l'hôtel sera divisée par le nombre d'habitants du logement.
-    On doit introduire ici, dans la formule, le nombre d'habitants du logement car une nuit une auberge de jeunesse est généralement caractérisée par un lit dans un dortoir.
+    Dans cette première version, l'empreinte de l'hôtel sera divisée par le nombre d'habitants du logement. C'est une hypothèse forte car on peut facilement imaginer que le famille / foyer ne voyage pas toujours au complet !
+    De même, on fait l'hypothèse qu'une famille composée de plus de 4 personnes prendra 2 chambres. 
+
+    On doit introduire ici, dans la formule, le nombre d'habitants du logement car une nuit une auberge de jeunesse est généralement caractérisée par un lit seul dans un dortoir.
   formule:
     somme:
       - hotel
@@ -51,7 +53,13 @@ logement . vacances . hotel:
   titre: Hôtel ou chambre d'hôtes
   icônes: 🏨
   applicable si: présent
-  formule: nombre de nuitées * empreinte hotel par nuit
+  formule:
+    variations:
+      - si: logement . habitants > 8
+        alors: 3 * nombre de nuitées * empreinte hotel par nuit
+      - si: logement . habitants > 4
+        alors: 2 * nombre de nuitées * empreinte hotel par nuit
+      - sinon: nombre de nuitées * empreinte hotel par nuit
   note: |
     ### Les paramètres du calcul
 
@@ -89,6 +97,12 @@ logement . vacances . hotel:
     qui donne une empreinte de 73,62 kgCO2e par habitant.
 
     Ainsi, en considérant seulement la partie "Hotellerie" (67% du CA de la branche), on trouve une valeur de 49 kgCO2e. L'ordre de grandeur est similaire ! En revanche, cette estimation prend en compte les déplacvements professionels.
+
+    - **Le nombre de personnes partageant la chambre :**
+
+    Nous considérons dans ce modèle que l'empreinte de l'hôtel est divisée par le nombre d'habitants du logement. 
+    C'est une hypothèse forte car on peut facilement imaginer que le famille / foyer ne voyage pas toujours au complet !
+    Par ailleurs, on fait également l'hypotèse qu'une famille de plus de 4 personnes prendra 2 chambres, plus de 8, 3 chambres, ce qui explique les facteurs 2 et 3 dans les formules.
 
 logement . vacances . hotel . présent:
   question: Allez-vous à l'hôtel ?
