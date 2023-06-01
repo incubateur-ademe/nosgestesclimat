@@ -196,10 +196,13 @@ const getMissingRules = (srcRules, targetRules) => {
 			if (targetRule) {
 				acc.push(
 					filteredValEntries.reduce((acc, [attr, refVal]) => {
+						if (refVal === null) {
+							// The attribute value can be `null` for imported models (importer! mechanism), it should not be translated.
+							return acc
+						}
 						if (mechanismsToTranslate.includes(attr)) {
 							let targetRef = targetRule[attr + LOCK_KEY_EXT]
 							let hasTheSameRefValue
-
 							switch (attr) {
 								case 'suggestions': {
 									refVal = Object.keys(refVal)
