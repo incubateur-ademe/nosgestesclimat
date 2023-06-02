@@ -43,7 +43,7 @@ logement . vacances:
       - hotel
       - camping
       - auberge de jeunesse * logement . habitants
-      - airbnb
+      - locations
       - famille ou amis
       - maison secondaire
 
@@ -269,19 +269,60 @@ logement . vacances . auberge de jeunesse . nombre de nuitées . moyenne . part 
 
     On considère ici les hébergements auberge de jeunesse.
 
-logement . vacances . airbnb:
+logement . vacances . locations:
   titre: Location type Airbnb
   icônes: 🏠
   applicable si: présent
-  formule: 0
-  note: |
-    Pour le moment, nous n'avons pas implémenté le modèle du airbnb qui se rapprche de la maison secondaire en dont 
-    l'élaboration du modèle est en cours de réflexion !
+  formule: empreinte par nuit * nombre de nuitées
 
-logement . vacances . airbnb . présent:
-  question: Allez-vous en location saisonnière / airbnb ?
-  par défaut: non
-  inactif: oui
+logement . vacances . locations . présent:
+  question: Allez-vous en vacances en location meublée ?
+  par défaut: oui
+  description: |
+    💡 Déclarez ici les nuits passées en locations meublées de type Airbnb ou Abritel.
+
+logement . vacances . locations . empreinte par nuit:
+  formule: 5.8
+  unité: kgCO2e/nuits
+  note: |
+    ## Notre source de données
+    
+      Ces données sont issues du [Bilan des émissions de gaz à effet de serre du secteur du tourisme en France](https://librairie.ademe.fr/changement-climatique-et-energie/4688-bilan-des-emissions-de-gaz-a-effet-de-serre-du-secteur-du-tourisme-en-france.html)
+      Elles représentent une approche dite "macro", à l'inverse de l'approche de Nos GEStes Climat, qui est plutôt "micro". Néanmoins, c'est la seule approche actuellement pour calculer l'empreinte de ce type de logement touristique.
+      Le chiffre, 5,8 kg éqCO2, est tout à fait cohérent avec le reste des données disponibles sur les autres types de logement touristiques. 
+      Nous nous en contenterons donc pour le moment !
+
+logement . vacances . locations . nombre de nuitées:
+  question: Combien de nuits passez-vous en locations meublées sur l'année ?
+  unité: nuits
+  description: |
+    💡 Déclarez ici les nuits passées en location meublée (Airbnb, Abritel...).
+  par défaut: moyenne
+  note: |
+    En combinant plusieurs données de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345),
+    on peut retrouver une valeur moyenne en nuitées / pers / an dans les hébergements hôtel, pension de famille, village de vacances ou gîte, auberge de jeunesse.
+  suggestions:
+    un week-end par an: 2
+    une semaine de vacances: 7
+    un week-end par mois: 24
+
+logement . vacances . locations . nombre de nuitées . moyenne:
+  titre: Nombre de nuitées en moyenne par français
+  formule: nombre de nuits passées loin de chez soi * part mode d'hébergement locations
+
+logement . vacances . locations . nombre de nuitées . moyenne . nombre de nuits passées loin de chez soi:
+  formule: 26.5
+  note: |
+    Excel "Voyages et caractéristiques sociodémographiques des individus - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
+
+    On considère ici le nombre de nuits par personnes en voyage pour motif personnel.
+
+logement . vacances . locations . nombre de nuitées . moyenne . part mode d'hébergement locations:
+  formule: 0.091
+  note: |
+    Excel "Caractéristiques des voyageurs personnels et professionnels - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
+
+    On considère ici les hébergements "location".
 
 logement . vacances . famille ou amis:
   titre: Famille ou amis
