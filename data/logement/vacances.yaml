@@ -109,55 +109,29 @@ logement . vacances . hotel . présent:
   par défaut: oui
 
 logement . vacances . empreinte hotel par nuit:
-  formule: 7.7
+  formule: 6.93
   unité: kgCO2e/nuits
   note: |
-    ## Notre source de données
-
-    Après une revue de la littérature existante sur le sujet, il semble que l'[Hotel Carbon Measurement Initiative (HCMI)](https://sustainablehospitalityalliance.org/resource/hotel-carbon-measurement-initiative/)
-    qui alimente le [Cornell Hotel Sustainability Benchmarking Index](https://greenview.sg/services/chsb-index/) présente les [données](https://ecommons.cornell.edu/handle/1813/109990) les plus pertinentes pour notre usage.
-
-    Cet index met à disposition des informations carbone, eau et énergie fournies par les hôtels participant à l'initiative.
-
-    D'après les hypothèses de HCMI, le périmètre du FE inclus le scope 1 et 2 ainsi qu'une partie du scope 3 des hôtels
-    (blanchisserie et émissions des réfrigérant). Ce périmètre semble adéquat pour NGC et n'induit pas de double comptage.
-
-    > HCMI includes all energy used ‘on site’ (including fuels such as natural gas, oil and other fuels, purchased electricity, and mobile fuels from vehicles and other equipment) and emissions from refrigerants. It also includes, if applicable, carbon emissions from outsourced operations (e.g. laundry).
-
-    À noter que c'est également la méthode HCMI qui alimente la base de données des FE britanniques [Greenhouse gas reporting: conversion factors 2022](https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022).
-
-    Néanmoins, d'autres pistes semblent être intéressantes à explorer davantage :
-      - Un [article](https://www.sciencedirect.com/science/article/pii/S2666784320300048) sur la projection de l'empreinte des logements pour la coupe du monde 2030, avec notamment ce tableau :
-
-      ![](https://storage.gra.cloud.ovh.net/v1/AUTH_0f20d409cb2a4c9786c769e2edec0e06/imagespadincubateurnet/uploads/upload_7788cea39cd7bb8c5ccf89ff23cf6a74.png)
-
-      On pourrait investiguer davantage les sources pour éventuellement approcher l'empreinte des autres modes de logements (location de maison type airbnb, camping etc...). On remarque ici que l'empreinte de l'hôtel est nettement supérieure à celle du camping par exemple.
-
-      - Une expérimentation portée par l'ADEME visant à développer l’affichage environnemental en France et à l’international pour 
-      le secteur de l’hôtellerie est appuyée par [Betterfly Tourism](https://www.betterfly-tourism.com/affichage-environnemental-hotels/)
-      sur la partie méthodologique semble être intéressante mais peu aboutie. 
-      Depuis 2017, les hôteliers sont invités à mettre en place l'affichage environnemental, qui comprend un calcul de l'empreinte carbone 
-      par nuitée. IL est difficile de trouver des chiffres plus récents que [ceux-ci de 2018 qui ont suivi une première expérimentation](https://www.ekopo.fr/Thematique/entreprises-1285/Breves/Hotellerie-1er-bilan-affichage-environnemental-355036.htm),
-      avec 42 hôtels et une moyenne de 10,5 kg éqCO2 / nuitée. 
-      On doit pouvoir trouver mieux ! Mais au moins on est sur les mêmes ordres de grandeur, ce qui est plutôt rassurant. 
-      On cherche à discuter davantage avec l'équipe Betterfly pour en savoir plus !
-
-      ## Notre hypothèse sur le facteur d'émission utilisé
+    ## Notre hypothèse sur le facteur d'émission utilisé
 
       D'après [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345), 
       les français voyagent à 86% en France. On assume donc ici que **les nuitées se passent en France**.
 
-      Deuxième élément : les données "Monde" de la base HCMI sont distribuées très inéquitablement (60 % des données proviennent des USA, 15 % de la Chine, le reste est distribué la encore de manière inégale entre pays). Les statistiques sont donc peu représentatives de la réalité à l'échelle internationale.
-      
-      De plus, étant donné qu'il s'agit d'une démarche volontaire, certains types d’hôtels sont manquants. À titre d'exemple, et c'est une limite de notre choix, on ne dispose de données pour les hôtels 2 étoiles.
+    ## Notre source de données
 
-      D'après les données HCMI, on trouve, pour la France, une moyenne de 7.7 kgCO2e/nuitée, avec:
+      Le rapport final de pré-déploiement de l'affichage environnemental des hôtels, [publication ADEME de mars 2020](https://librairie.ademe.fr/consommer-autrement/4096-projet-de-pre-deploiement-de-l-affichage-environnemental-des-hotels.html), donne une moyenne de 9,91 kg éqCO2 / nuitée. 
+      En retranchant la partie petit-déjeuner (comptant pour 30% de l'empreinte), car sinon nous aurions une double comptabilité de ces derniers, on se retrouve avec une empreinte par nuitée de 9,91 * (1 - 30%) = 6,93 kg éqCO2.
 
-      "Limited service (1 étoile)" : 4.8 kgCO2e/nuitée
-      "3 étoiles" : 4.7 kgCO2e/nuitée
-      "4 étoiles" : 8.6 kgCO2e/nuitée
-      "5 étoiles" : 11.6 kgCO2e/nuitée``
+      Le rapport permet également de scinder les empreintes selon la classe de l'hôtel. Pour démarrer, nous avons assumé de partir sur la moyenne des empreintes toutes classes confondues, mais cela pourra être implémenté par la suite. Cela donnerait :
 
+      - Hôtels sans classement : 4,73 kg éqCO2 / nuitée
+      - Hôtels 2* : 8,53 kg éqCO2 / nuitée
+      - Hôtels 3* : 8,47 kg éqCO2 / nuitée
+      - Hôtels 4* : 11,43 kg éqCO2 / nuitée
+      - Hôtels 5* : 17,11 kg éqCO2 / nuitée
+
+      Depuis plusieurs années, [Betterfly Tourism](https://www.betterfly-tourism.com/affichage-environnemental-hotels/) implémente en partenariat avec l'ADEME l'affichage environnemental auprès des hôtels. Il sera donc possible de réévaluer l'empreinte avec des données plus récentes issues de leur base de données consolidée.
+    
       > Point publicodes : Cette règle étant utilisée dans d'autres espaces nom que `logement . vacances . hotel` c'est important ici de ne pas l'inclure dans cet espace non qui rendrait l'empreinte de la nuitée non applicable si la règle hotel est elle aussi non applicable.
 
 logement . vacances . hotel . nombre de nuitées:
@@ -167,7 +141,7 @@ logement . vacances . hotel . nombre de nuitées:
     💡 Déclarez ici les nuits passées dans un hôtel, une chambre privée ou chambre d'hôtes.
   par défaut: moyenne
   note: |
-    En combiant plusieurs données de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345),
+    En combinant plusieurs données de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345),
     on peut retrouver une valeur moyenne en nuitées / pers / an dans les hébergements hôtel, pension de famille, village de vacances ou gîte, auberge de jeunesse.
   suggestions:
     un week-end par an: 2
