@@ -45,6 +45,7 @@ logement . vacances:
       - auberge de jeunesse * logement . habitants
       - locations
       - famille ou amis
+      - échange
       - maison secondaire
 
 logement . vacances . hotel:
@@ -323,6 +324,58 @@ logement . vacances . locations . nombre de nuitées . moyenne . part mode d'hé
     Excel "Caractéristiques des voyageurs personnels et professionnels - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
 
     On considère ici les hébergements "location".
+
+logement . vacances . échange:
+  titre: Échange de maison
+  icônes: 🏘
+  applicable si: présent
+  formule: empreinte par nuit * nombre de nuitées
+
+logement . vacances . échange . présent:
+  question: Pratiquez-vous l'échange de maison ?
+  par défaut: oui
+  description: |
+    💡 Déclarez ici les nuits passées en échange de maison (HomeExchange, SwitchHome...).
+
+logement . vacances . échange . empreinte par nuit:
+  formule: 3.52
+  unité: kgCO2e/nuits
+  note: |
+    ## Notre source de données
+    
+      Ces données sont issues de l'[étude d'impact réalisée par l'entreprise HomeExchange avec l'ADEME et rendue publique en 2023](https://www.homeexchange.fr/p/homeexchange-etude-impact-carbone?ref=homeexchange.fr)
+
+logement . vacances . échange . nombre de nuitées:
+  question: Combien de nuits passez-vous en échange de maison sur l'année ?
+  unité: nuits
+  description: |
+    💡 Déclarez ici les nuits passées en échange de maison (HomeExchange, SwitchHome...)
+  par défaut: moyenne
+  note: |
+    En combinant plusieurs données de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345),
+    on peut retrouver une valeur moyenne en nuitées / pers / an dans les hébergements hôtel, pension de famille, village de vacances ou gîte, auberge de jeunesse.
+  suggestions:
+    un week-end par an: 2
+    une semaine de vacances: 7
+    un week-end par mois: 24
+
+logement . vacances . échange . nombre de nuitées . moyenne:
+  titre: Nombre de nuitées en moyenne par français
+  formule: nombre de nuits passées loin de chez soi * part mode d'hébergement échange
+
+logement . vacances . échange . nombre de nuitées . moyenne . nombre de nuits passées loin de chez soi:
+  formule: 26.5
+  note: |
+    Excel "Voyages et caractéristiques sociodémographiques des individus - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
+
+    On considère ici le nombre de nuits par personnes en voyage pour motif personnel.
+
+logement . vacances . échange . nombre de nuitées . moyenne . part mode d'hébergement échange:
+  formule: 0.008
+  note: |
+    Excel "Caractéristiques des voyageurs personnels et professionnels - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
+
+    La catégorie "échange de maison" n'existant pas, il est difficile de donner une moyenne pour cette pratique. Une part des voyageurs répondraient qu'ils logent "chez des amis", d'autres utiliseraient la catégorie "autre". Nous n'utiliserons donc pour le moment que cette dernière.
 
 logement . vacances . famille ou amis:
   titre: Famille ou amis
