@@ -33,6 +33,8 @@ livraison colis:
         alors: scénario . point de retrait
       - si: scénario = 'click and collect'
         alors: scénario . click and collect
+      - si: scénario = 'magasin traditionnel'
+        alors: scénario . magasin traditionnel
 
 livraison colis . scénario:
   titre: Scénario de livraison
@@ -43,7 +45,8 @@ livraison colis . scénario:
         - domicile
         - point de retrait
         - click and collect
-  par défaut: "'domicile'"
+        - magasin traditionnel
+  par défaut: "'magasin traditionnel'"
   description: |
     La livraison à domicile semble être le mode de livraison plébiscité par la grande majorité des e-acheteurs (données issues de [cette étude FEVAD 2022](https://www.fevad.com/wp-content/uploads/2022/06/FEVAD_CHIFFRES-CLES_2022_compressed.pdf)!
 
@@ -86,8 +89,36 @@ livraison colis . scénario . click and collect:
       - magasin
       - déplacement consommateur
 
-livraison colis . informations:
+livraison colis . scénario . magasin traditionnel:
+  titre: Achat en magasin traditionnel
+  formule:
+    somme:
+      - entrepot stockage
+      - transport inter plateformes
+      - plateformes
+      - magasin
+      - déplacement consommateur
 
+livraison colis . scénario . magasin traditionnel . plateformes:
+  formule:
+    recalcul:
+      règle: livraison colis . plateformes
+      avec:
+        livraison colis . plateformes . nombre: 1
+
+livraison colis . scénario . magasin traditionnel . déplacement consommateur:
+  formule:
+    recalcul:
+      règle: livraison colis . déplacement consommateur
+      avec:
+        livraison colis . déplacement consommateur . mode de déplacement: "'voiture'"
+        livraison colis . déplacement consommateur . distance: 25
+  note: |
+    Légère différence au niveau du déplacement consommateur dont la formule de l'empreinte au km de la voiture 
+    est différente dans le scénario de l'excel. On pourra passer plus de temps sur l'empreinte de la voiture 
+    (et notamment reprendre les FE d'ICO2) si on considère que c'est un paramètre important (et à priori ça l'est !).
+
+livraison colis . informations:
 livraison colis . informations . catégorie:
   titre: Catégorie de produit
   avec:
