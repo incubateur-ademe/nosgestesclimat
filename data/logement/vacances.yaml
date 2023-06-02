@@ -8,14 +8,14 @@ logement . vacances:
   description: |
     Renseignez ici les différents types de logement que vous occupez pour vos voyages (motif personnel).
 
-    > Pour le moment, nous ne proposons pas la maison secondaire et les locations type Airbnb, on espère vous proposer très prochainement les autres modes d'hébergement !
+    > Pour le moment, nous ne proposons pas la maison secondaire et les locations meublées, on espère vous proposer très prochainement les autres modes d'hébergement !
   note: |
     ### Qu'entend-on par "nuitées hors logement" dans Nos Gestes Climat?
 
       - Hôtel ou chambre d'hôtes
       - Emplacement en camping
       - Auberge de jeunesse
-      - Locations de vacances (type Airbnb)
+      - Locations meublées
       - Famille ou amis
       - Maison secondaire
 
@@ -27,7 +27,7 @@ logement . vacances:
 
     En effet :
 
-    - Nous choisissons d'exclure les airbnb qui se rapprochent davantage d'une méthode de comptabilité liée à la maison secondaire. 
+    - Nous choisissons d'exclure les locations meublées qui se rapprochent davantage d'une méthode de comptabilité liée à la maison secondaire. 
     On pourrait effectivement demander si un propriétaire loue sa maison secondaire : c'est à ce moment-là que nous aurons à la fois 
     la méthode de calcul mais également de l'attribution des résultats entre loueurs et propriétaire.
     - Il est difficile de trouver des données fiables sur l'empreinte des nuitées en camping : on pourrait imaginer que l'impact 
@@ -170,18 +170,53 @@ logement . vacances . camping:
   titre: Emplacement en camping
   icônes: ⛺️
   applicable si: présent
-  formule: 0
-  note: |
-    A priori, l'empreinte du camping réside dans la consommation électrique pendant le séjour et les infrastructures du camping.
-    On considère l'impact du camping nul étant donné que les infrastructures sont partagées par un très grand nombre de personnes.
-    C'est une hypothèse forte mais les recherches sur l'impact des nuitées en camping ne donnent rien.
+  formule: empreinte par nuit * nombre de nuitées
 
 logement . vacances . camping . présent:
   question: Allez-vous en camping ?
-  par défaut: non
-  inactif: oui
+  par défaut: oui
+
+logement . vacances . camping . empreinte par nuit:
+  formule: 1.4
+  unité: kgCO2e/nuits
   note: |
-    En attendant davantage de données, nous avons désactivé cette option.
+    ## Notre source de données
+    
+      Ces données sont issues de la proposition de référentiel ADEME pour l'hôtellerie de plein air, étude effectuée sur 13 campings de l'Hérault conjointement entre Betterfly Tourism et l'ADEME.
+      Les données sont fournies par Betterfly Tourism et datent de juin 2021. La moyenne de l'empreinte par nuitée sur les 13 campings étudiés est de 1,4 kg éqCO2.
+      Le référentiel ADEME est présent dans la base Impacts depuis mai 2023.
+
+logement . vacances . camping . nombre de nuitées:
+  question: Combien de nuits passez-vous en camping sur l'année ?
+  unité: nuits
+  description: |
+    💡 Déclarez ici les nuits passées en camping (tente, hamac, bungalow...).
+  par défaut: moyenne
+  note: |
+    En combinant plusieurs données de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345),
+    on peut retrouver une valeur moyenne en nuitées / pers / an dans les hébergements hôtel, pension de famille, village de vacances ou gîte, auberge de jeunesse.
+  suggestions:
+    un week-end par an: 2
+    une semaine de vacances: 7
+    un week-end par mois: 24
+
+logement . vacances . camping . nombre de nuitées . moyenne:
+  titre: Nombre de nuitées en moyenne par français
+  formule: nombre de nuits passées loin de chez soi * part mode d'hébergement camping
+
+logement . vacances . camping . nombre de nuitées . moyenne . nombre de nuits passées loin de chez soi:
+  formule: 26.5
+  note: |
+    Excel "Voyages et caractéristiques sociodémographiques des individus - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
+
+    On considère ici le nombre de nuits par personnes en voyage pour motif personnel.
+
+logement . vacances . camping . nombre de nuitées . moyenne . part mode d'hébergement camping:
+  formule: 0.066
+  note: |
+    Excel "Caractéristiques des voyageurs personnels et professionnels - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
+
+    On considère ici les hébergements camping.
 
 logement . vacances . auberge de jeunesse:
   titre: Auberge de jeunesse
@@ -211,7 +246,7 @@ logement . vacances . auberge de jeunesse . nombre de nuitées:
     💡 Déclarez ici les nuits passées en auberge de jeunesse (dortoir).
   par défaut: moyenne
   note: |
-    En combiant plusieurs données de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345),
+    En combinant plusieurs données de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345),
     on peut retrouver une valeur moyenne en nuitées / pers / an dans les hébergements hôtel, pension de famille, village de vacances ou gîte, auberge de jeunesse.
   suggestions:
     un week-end par an: 2
