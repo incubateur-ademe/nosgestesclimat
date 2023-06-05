@@ -6,9 +6,9 @@ logement . vacances:
   question: Comment êtes-vous hébergé pour vos week-ends, vos vacances ?
   icônes: 🏖
   description: |
-    Renseignez ici les différents types de logement que vous occupez pour vos voyages (motif personnel).
+    Renseignez ici les différents types de logement que vous occupez pour vos voyages (**motif personnel**).
 
-    > Pour le moment, nous ne proposons pas la maison secondaire et les locations meublées, on espère vous proposer très prochainement les autres modes d'hébergement !
+    > 💡 Si vous ne partez jamais en week-end ou en vacances, vous pouvez cliquer sur "aucun" juste en dessous de cette question, puis "Suivant".
   note: |
     ### Qu'entend-on par "nuitées hors logement" dans Nos Gestes Climat?
 
@@ -24,14 +24,9 @@ logement . vacances:
 
     ### Vers une première version
 
-    Dans un premier temps, l'idée est de restreindre le périmètre de la V1 au secteur de l'hotellerie.
+    Dans un premier temps, l'idée est de restreindre le périmètre de la V1 au secteur du tourisme (maison secondaire exclue).
 
-    En effet :
-
-    - Nous choisissons d'exclure les locations meublées qui se rapprochent davantage d'une méthode de comptabilité liée à la maison secondaire. 
-    On pourrait effectivement demander si un propriétaire loue sa maison secondaire : c'est à ce moment-là que nous aurons à la fois 
-    la méthode de calcul mais également de l'attribution des résultats entre loueurs et propriétaire.
-    - Pour l'empreinte d'une nuit au sein de sa famille ou chez des amis, l'empreinte est aujourd'hui indirectement comptée dans l'empreinte des accueillants.
+    Pour l'empreinte d'une nuit au sein de sa famille ou chez des amis, l'empreinte est aujourd'hui indirectement comptée dans l'empreinte des accueillants.
 
     En ce qui concerne les hôtels et les chambres privées / chambres d'hôtes, nous considérons un facteur d'émission commun pour le moment.
 
@@ -48,6 +43,14 @@ logement . vacances:
       - famille ou amis
       - échange
       - maison secondaire
+
+logement . vacances . nombre de nuits hors logement:
+  formule: 26.5
+  description: Variable utilisée pour le calcul de la moyenne pour chaque hébergement.
+  note: |
+    Excel "Voyages et caractéristiques sociodémographiques des individus - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
+
+    On considère ici le nombre de nuits par personnes en voyage pour motif personnel.
 
 logement . vacances . hotel:
   titre: Hôtel ou chambre d'hôtes
@@ -135,7 +138,7 @@ logement . vacances . empreinte hotel par nuit:
       De son côté, le [Hotel Carbon Measurement Initiative (HCMI)](https://sustainablehospitalityalliance.org/resource/hotel-carbon-measurement-initiative/) qui alimente le [Cornell Hotel Sustainability Benchmarking Index](https://greenview.sg/services/chsb-index/) présente des [données](https://ecommons.cornell.edu/handle/1813/109990) pertinentes pour notre usage.
       Cela pourra être un bon point de départ pour le jour où nous souhaiterons différencier les nuitées d'hôtel selon le pays fréquenté.
       À noter que le HCMI donne une moyenne pour la France de 7,7 kg éqCO2 / nuitée, ce qui est très proche de la donnée que nous avons choisie, elle calculée à partir du référentiel ADEME.
-    
+
       > Point publicodes : Cette règle étant utilisée dans d'autres espaces nom que `logement . vacances . hotel` c'est important ici de ne pas l'inclure dans cet espace non qui rendrait l'empreinte de la nuitée non applicable si la règle hotel est elle aussi non applicable.
 
 logement . vacances . hotel . nombre de nuitées:
@@ -154,14 +157,7 @@ logement . vacances . hotel . nombre de nuitées:
 
 logement . vacances . hotel . nombre de nuitées . moyenne:
   titre: Nombre de nuitées en moyenne par français
-  formule: nombre de nuits passées loin de chez soi * part mode d'hébergement hotel
-
-logement . vacances . hotel . nombre de nuitées . moyenne . nombre de nuits passées loin de chez soi:
-  formule: 26.5
-  note: |
-    Excel "Voyages et caractéristiques sociodémographiques des individus - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
-
-    On considère ici le nombre de nuits par personnes en voyage pour motif personnel.
+  formule: nombre de nuits hors logement * part mode d'hébergement hotel
 
 logement . vacances . hotel . nombre de nuitées . moyenne . part mode d'hébergement hotel:
   formule: 0.157 + 0.02
@@ -184,11 +180,9 @@ logement . vacances . camping . empreinte par nuit:
   formule: 1.4
   unité: kgCO2e/nuits
   note: |
-    ## Notre source de données
-    
-      Ces données sont issues de la proposition de référentiel ADEME pour l'hôtellerie de plein air, étude effectuée sur 13 campings de l'Hérault conjointement entre Betterfly Tourism et l'ADEME.
-      Les données sont fournies par Betterfly Tourism et datent de juin 2021. La moyenne de l'empreinte par nuitée sur les 13 campings étudiés est de 1,4 kg éqCO2.
-      Le référentiel ADEME est présent dans la base Impacts depuis mai 2023.
+    Ces données sont issues de la proposition de référentiel ADEME pour l'hôtellerie de plein air, étude effectuée sur 13 campings de l'Hérault conjointement entre Betterfly Tourism et l'ADEME.
+    Les données sont fournies par Betterfly Tourism et datent de juin 2021. La moyenne de l'empreinte par nuitée sur les 13 campings étudiés est de 1,4 kg éqCO2.
+    Le référentiel ADEME est présent dans la base Impacts depuis mai 2023.
 
 logement . vacances . camping . nombre de nuitées:
   question: Combien de nuits passez-vous en camping sur l'année ?
@@ -206,14 +200,7 @@ logement . vacances . camping . nombre de nuitées:
 
 logement . vacances . camping . nombre de nuitées . moyenne:
   titre: Nombre de nuitées en moyenne par français
-  formule: nombre de nuits passées loin de chez soi * part mode d'hébergement camping
-
-logement . vacances . camping . nombre de nuitées . moyenne . nombre de nuits passées loin de chez soi:
-  formule: 26.5
-  note: |
-    Excel "Voyages et caractéristiques sociodémographiques des individus - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
-
-    On considère ici le nombre de nuits par personnes en voyage pour motif personnel.
+  formule: nombre de nuits hors logement * part mode d'hébergement camping
 
 logement . vacances . camping . nombre de nuitées . moyenne . part mode d'hébergement camping:
   formule: 0.066
@@ -259,14 +246,7 @@ logement . vacances . auberge de jeunesse . nombre de nuitées:
 
 logement . vacances . auberge de jeunesse . nombre de nuitées . moyenne:
   titre: Nombre de nuitées en moyenne par français
-  formule: nombre de nuits passées loin de chez soi * part mode d'hébergement auberge de jeunesse
-
-logement . vacances . auberge de jeunesse . nombre de nuitées . moyenne . nombre de nuits passées loin de chez soi:
-  formule: 26.5
-  note: |
-    Excel "Voyages et caractéristiques sociodémographiques des individus - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
-
-    On considère ici le nombre de nuits par personnes en voyage pour motif personnel.
+  formule: nombre de nuits hors logement * part mode d'hébergement auberge de jeunesse
 
 logement . vacances . auberge de jeunesse . nombre de nuitées . moyenne . part mode d'hébergement auberge de jeunesse:
   formule: 0.03
@@ -277,7 +257,7 @@ logement . vacances . auberge de jeunesse . nombre de nuitées . moyenne . part 
 
 logement . vacances . locations:
   titre: Locations meublées
-  icônes: 🏠
+  icônes: 🛏️🏠
   applicable si: présent
   formule: empreinte par nuit * nombre de nuitées
 
@@ -291,13 +271,11 @@ logement . vacances . locations . empreinte par nuit:
   formule: 5.8
   unité: kgCO2e/nuits
   note: |
-    ## Notre source de données
-    
-      Ces données sont issues du [Bilan des émissions de gaz à effet de serre du secteur du tourisme en France](https://librairie.ademe.fr/changement-climatique-et-energie/4688-bilan-des-emissions-de-gaz-a-effet-de-serre-du-secteur-du-tourisme-en-france.html)
-      Elles représentent une approche dite "top-down", que voici. On considère d'abord que les surfaces fournies par Airbnb en France sont représentatives de la location saisonnière dans le Pays. On applique à ces surfaces les facteurs d'émission de la base Carbone correspondant aux résidences secondaires en France. Enfin, on applique un taux d'occupation des locations saisonnières de 25%. 
-      L'approche de Nos GEStes Climat, habituellement, est plutôt "bottom-up" : nous partons de l'usage, appliquons les facteurs d'émission et obtenons une empreinte.
-      Néanmoins, l'approche bottom-up est ici très complexe à implémenter : elle supposeraiit de poser une quantité importante de questions à l'utilisateur (surface, mode de chauffage des locations saisonnières louées...).
-      Le chiffre obtenu par l'approche top-down, 5,8 kg éqCO2, est tout à fait cohérent avec le reste des données disponibles sur les autres types de logement touristiques, et nous paraît un bon début pour approximer cette donnée complexe.
+    Ces données sont issues du [Bilan des émissions de gaz à effet de serre du secteur du tourisme en France](https://librairie.ademe.fr/changement-climatique-et-energie/4688-bilan-des-emissions-de-gaz-a-effet-de-serre-du-secteur-du-tourisme-en-france.html)
+    Elles représentent une approche dite "top-down", que voici. On considère d'abord que les surfaces fournies par Airbnb en France sont représentatives de la location saisonnière dans le Pays. On applique à ces surfaces les facteurs d'émission de la base Carbone correspondant aux résidences secondaires en France. Enfin, on applique un taux d'occupation des locations saisonnières de 25%. 
+    L'approche de Nos GEStes Climat, habituellement, est plutôt "bottom-up" : nous partons de l'usage, appliquons les facteurs d'émission et obtenons une empreinte.
+    Néanmoins, l'approche bottom-up est ici très complexe à implémenter : elle supposerait de poser une quantité importante de questions à l'utilisateur (surface, mode de chauffage des locations saisonnières louées...).
+    Le chiffre obtenu par l'approche top-down, 5,8 kg éqCO2, est tout à fait cohérent avec le reste des données disponibles sur les autres types de logement touristiques, et nous paraît un bon début pour approximer cette donnée complexe.
 
 logement . vacances . locations . nombre de nuitées:
   question: Combien de nuits passez-vous en locations meublées sur l'année ?
@@ -315,14 +293,7 @@ logement . vacances . locations . nombre de nuitées:
 
 logement . vacances . locations . nombre de nuitées . moyenne:
   titre: Nombre de nuitées en moyenne par français
-  formule: nombre de nuits passées loin de chez soi * part mode d'hébergement locations
-
-logement . vacances . locations . nombre de nuitées . moyenne . nombre de nuits passées loin de chez soi:
-  formule: 26.5
-  note: |
-    Excel "Voyages et caractéristiques sociodémographiques des individus - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
-
-    On considère ici le nombre de nuits par personnes en voyage pour motif personnel.
+  formule: nombre de nuits hors logement * part mode d'hébergement locations
 
 logement . vacances . locations . nombre de nuitées . moyenne . part mode d'hébergement locations:
   formule: 0.091
@@ -333,7 +304,7 @@ logement . vacances . locations . nombre de nuitées . moyenne . part mode d'hé
 
 logement . vacances . échange:
   titre: Échange de maison
-  icônes: 🏘
+  icônes: 🔄🏘
   applicable si: présent
   formule: empreinte par nuit * nombre de nuitées
 
@@ -347,9 +318,7 @@ logement . vacances . échange . empreinte par nuit:
   formule: 3.52
   unité: kgCO2e/nuits
   note: |
-    ## Notre source de données
-    
-      Ces données sont issues de l'[étude d'impact réalisée par l'entreprise HomeExchange avec l'ADEME et rendue publique en 2023](https://www.homeexchange.fr/p/homeexchange-etude-impact-carbone?ref=homeexchange.fr)
+    Ces données sont issues de l'[étude d'impact réalisée par l'entreprise HomeExchange avec l'ADEME et rendue publique en 2023](https://www.homeexchange.fr/p/homeexchange-etude-impact-carbone?ref=homeexchange.fr)
 
 logement . vacances . échange . nombre de nuitées:
   question: Combien de nuits passez-vous en échange de maison sur l'année ?
@@ -367,14 +336,7 @@ logement . vacances . échange . nombre de nuitées:
 
 logement . vacances . échange . nombre de nuitées . moyenne:
   titre: Nombre de nuitées en moyenne par français
-  formule: nombre de nuits passées loin de chez soi * part mode d'hébergement échange
-
-logement . vacances . échange . nombre de nuitées . moyenne . nombre de nuits passées loin de chez soi:
-  formule: 26.5
-  note: |
-    Excel "Voyages et caractéristiques sociodémographiques des individus - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
-
-    On considère ici le nombre de nuits par personnes en voyage pour motif personnel.
+  formule: nombre de nuits hors logement * part mode d'hébergement échange
 
 logement . vacances . échange . nombre de nuitées . moyenne . part mode d'hébergement échange:
   formule: 0.008
@@ -394,7 +356,7 @@ logement . vacances . famille ou amis . présent:
   question: Allez-vous chez des amis ou de la famille ?
   par défaut: non
 
-logement . vacances . famille ou amis . notif famille ou amis:
+logement . vacances . famille ou amis . notif:
   type: notification
   formule: famille ou amis . présent
   description: |
