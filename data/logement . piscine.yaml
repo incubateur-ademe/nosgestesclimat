@@ -1,31 +1,22 @@
-piscine:
-  titre: Piscine de jardin
-  description: Il y a 2,5 millions de piscines individuelles en France !
-  références:
-    Fédération des Professionnels de la Piscine: https://www.propiscines.fr/piscine-secteur/marche-piscine
-  icônes: 🏠🏊
+importer!:
+  depuis: 'futureco-data'
+  les règles:
+    - piscine . empreinte
 
-piscine . empreinte:
-  exposé: oui
-  catégorie: logement
-  icônes: 🏠🏊
-  titre: Une piscine privée
-  unité: kgCO₂e
-  formule:
-    somme:
-      - construction . empreinte empirique
+logement . piscine:
+  applicable si: présente
+  formule: piscine . empreinte
+u
+logement . piscine . présente:
+  applicable si:
+    toutes ces conditions:
+      - logement . appartement = 'non'
+      - logement . surface > 100
+  question: Votre logement dispose-t-il d'une piscine privée ?
+  par défaut: non
+  note: |
+    Nous mettons un filtre pour exclure les petites maisons. Nous faisons la corrélation surface inférieure à 100 (la moyenne pour l'habitat individuel étant [112](https://www.insee.fr/fr/statistiques/fichier/2586024/LOGFRA17k2_F6.2.pdf)) et petit terrain, donc absence de piscine. 
 
-piscine . construction:
+    C'est très critiquable. Je pense qu'il faudrait plutôt poser des questions sur le terrain. D'autres indices nous permettend d'exclure la question piscine. 
 
-piscine . construction . empreinte empirique:
-  formule:
-    somme:
-      - équipement nautique
-
-piscine . construction . équipement nautique:
-  description: |
-    On considère le skimmer, la lampe, la prise d'aspiration , le coffre "technique" entérré , le tuyau de 10m pour la brosse balai.
-
-    On simplifie tout cela en 20kg de PVC PEHD, soit 45kgCO2e
-  formule: 45
-  unité: kgCO2e
+    L'intérêt de cette exclusion est de ne pas embêter les utilisateurs avec des questions peu probables.
