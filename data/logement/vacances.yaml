@@ -35,14 +35,50 @@ logement . vacances:
 
     On doit introduire ici, dans la formule, le nombre d'habitants du logement car une nuit une auberge de jeunesse est généralement caractérisée par un lit seul dans un dortoir.
   formule:
+    variations:
+      - si: choix utilisateur
+        alors: empreinte totale
+      - sinon: empreinte par défaut
+
+logement . vacances . empreinte totale:
+  formule:
     somme:
-      - hotel
-      - camping
-      - auberge de jeunesse * logement . habitants
-      - locations
-      - famille ou amis
-      - échange
+      - empreinte hotel
+      - empreinte camping
+      - empreinte auberge de jeunesse * logement . habitants
+      - empreinte locations
+      - empreinte échange
+      - empreinte famille ou amis
       - maison secondaire
+    unité: kgCO2e
+
+logement . vacances . empreinte par défaut:
+  description: Un calcul statistique des nuitées pour les séjours hors logement pour un français moyen sur la base des données du modèle NGC.
+  formule:
+    somme:
+      - hotel . nombre de nuitées . moyenne * empreinte hotel par nuit
+      - camping . nombre de nuitées . moyenne * camping . empreinte par nuit
+      - auberge de jeunesse . nombre de nuitées . moyenne * auberge de jeunesse . empreinte par nuit * logement . habitants
+      - locations . nombre de nuitées . moyenne * locations . empreinte par nuit
+      - échange . nombre de nuitées . moyenne * échange . empreinte par nuit
+      # - maison secondaire non disponible
+  unité: kgCO2e
+
+logement . vacances . choix utilisateur:
+  description: l'utilisateur a-t-il fait un choix de chauffage ?
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - hotel . présent
+            - camping . présent
+            - auberge de jeunesse . présent
+            - locations . présent
+            - famille ou amis . présent
+            - échange . présent
+            # - maison secondaire . présent
+        alors: oui
+      - sinon: non
 
 logement . vacances . nombre de nuits hors logement:
   formule: 26.5
@@ -52,17 +88,16 @@ logement . vacances . nombre de nuits hors logement:
 
     On considère ici le nombre de nuits par personnes en voyage pour motif personnel.
 
-logement . vacances . hotel:
-  titre: Hôtel ou chambre d'hôtes
-  icônes: 🏨
-  applicable si: présent
+logement . vacances . empreinte hotel:
+  titre: Empreinte hôtel ou chambre d'hôtes
+  applicable si: hotel . présent
   formule:
     variations:
       - si: logement . habitants > 8
-        alors: 3 * nombre de nuitées * empreinte hotel par nuit
+        alors: 3 * hotel . nombre de nuitées * empreinte hotel par nuit
       - si: logement . habitants > 4
-        alors: 2 * nombre de nuitées * empreinte hotel par nuit
-      - sinon: nombre de nuitées * empreinte hotel par nuit
+        alors: 2 * hotel . nombre de nuitées * empreinte hotel par nuit
+      - sinon: hotel . nombre de nuitées * empreinte hotel par nuit
   note: |
     ### Les paramètres du calcul
 
@@ -107,9 +142,13 @@ logement . vacances . hotel:
     C'est une hypothèse forte car on peut facilement imaginer que le famille / foyer ne voyage pas toujours au complet !
     Par ailleurs, on fait également l'hypotèse qu'une famille de plus de 4 personnes prendra 2 chambres, plus de 8, 3 chambres, ce qui explique les facteurs 2 et 3 dans les formules.
 
+logement . vacances . hotel:
+  titre: Hôtel ou chambre d'hôtes
+  icônes: 🏨
+
 logement . vacances . hotel . présent:
   question: Allez-vous à l'hôtel ?
-  par défaut: oui
+  par défaut: non
 
 logement . vacances . empreinte hotel par nuit:
   formule: 6.93
@@ -166,15 +205,18 @@ logement . vacances . hotel . nombre de nuitées . moyenne . part mode d'héberg
 
     On considère ici les hébergements hôtel, pension de famille, village de vacances ou gîte.
 
+logement . vacances . empreinte camping:
+  titre: Empreinte emplacement en camping
+  applicable si: camping . présent
+  formule: camping . empreinte par nuit * camping . nombre de nuitées
+
 logement . vacances . camping:
   titre: Emplacement en camping
   icônes: ⛺️
-  applicable si: présent
-  formule: empreinte par nuit * nombre de nuitées
 
 logement . vacances . camping . présent:
   question: Allez-vous en camping ?
-  par défaut: oui
+  par défaut: non
 
 logement . vacances . camping . empreinte par nuit:
   formule: 1.4
@@ -209,15 +251,18 @@ logement . vacances . camping . nombre de nuitées . moyenne . part mode d'hébe
 
     On considère ici les hébergements camping.
 
+logement . vacances . empreinte auberge de jeunesse:
+  titre: Empreinte auberge de jeunesse
+  applicable si: auberge de jeunesse . présent
+  formule: auberge de jeunesse . empreinte par nuit * auberge de jeunesse . nombre de nuitées
+
 logement . vacances . auberge de jeunesse:
   titre: Auberge de jeunesse
   icônes: 🛏️
-  applicable si: présent
-  formule: empreinte par nuit * nombre de nuitées
 
 logement . vacances . auberge de jeunesse . présent:
   question: Allez-vous en auberge de jeunesse ?
-  par défaut: oui
+  par défaut: non
 
 logement . vacances . auberge de jeunesse . empreinte par nuit:
   formule: empreinte hotel par nuit / nombre de personnes dans le dortoir
@@ -255,15 +300,18 @@ logement . vacances . auberge de jeunesse . nombre de nuitées . moyenne . part 
 
     On considère ici les hébergements auberge de jeunesse.
 
+logement . vacances . empreinte locations:
+  titre: Empreinte locations meublées
+  applicable si: locations . présent
+  formule: locations . empreinte par nuit * locations . nombre de nuitées
+
 logement . vacances . locations:
   titre: Locations meublées
   icônes: 🛏️🏠
-  applicable si: présent
-  formule: empreinte par nuit * nombre de nuitées
 
 logement . vacances . locations . présent:
   question: Allez-vous en vacances en location meublée (type Airbnb) ?
-  par défaut: oui
+  par défaut: non
   description: |
     💡 Déclarez ici les nuits passées en locations meublées de type Airbnb ou Abritel.
 
@@ -302,15 +350,18 @@ logement . vacances . locations . nombre de nuitées . moyenne . part mode d'hé
 
     On considère ici les hébergements "location".
 
+logement . vacances . empreinte échange:
+  titre: Empreinte échange de maison
+  applicable si: échange . présent
+  formule: échange . empreinte par nuit * échange . nombre de nuitées
+
 logement . vacances . échange:
-  titre: Échange de maison
+  titre: Empreinte Échange de maison
   icônes: 🔄🏘
-  applicable si: présent
-  formule: empreinte par nuit * nombre de nuitées
 
 logement . vacances . échange . présent:
   question: Pratiquez-vous l'échange de maison ?
-  par défaut: oui
+  par défaut: non
   description: |
     💡 Déclarez ici les nuits passées en échange de maison (HomeExchange, SwitchHome...).
 
@@ -345,12 +396,15 @@ logement . vacances . échange . nombre de nuitées . moyenne . part mode d'héb
 
     La catégorie "échange de maison" n'existant pas, il est difficile de donner une moyenne pour cette pratique. Une part des voyageurs répondraient qu'ils logent "chez des amis", d'autres utiliseraient la catégorie "autre". Nous n'utiliserons donc pour le moment que cette dernière.
 
+logement . vacances . empreinte famille ou amis:
+  titre: Empreinte famille ou amis
+  applicable si: famille ou amis . présent
+  formule: 0
+  note: Nous considérons que l'empreinte de la nuit est aujourd'hui indirectement comptée dans l'empreinte des accueillants.
+
 logement . vacances . famille ou amis:
   titre: Famille ou amis
   icônes: 👫
-  applicable si: présent
-  formule: 0
-  note: Nous considérons que l'empreinte de la nuit est aujourd'hui indirectement comptée dans l'empreinte des accueillants.
 
 logement . vacances . famille ou amis . présent:
   question: Allez-vous chez des amis ou de la famille ?
