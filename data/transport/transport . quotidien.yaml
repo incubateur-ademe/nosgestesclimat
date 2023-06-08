@@ -1,0 +1,150 @@
+transport . quotidien:
+  titre: Empreinte des trajets quotidiens
+  mosaique:
+    type: selection
+    clé: présent
+  question: |
+    Pour vos trajets réguliers, vous vous déplacez en:
+  icônes: 🚗🚲
+  description: |
+    A compléter
+  note: |
+    A compléter
+  formule:
+    somme:
+      - voiture
+      - deux roues
+      - mobilité douce
+      - bus
+      - train
+      - métro ou tram
+
+transport . quotidien . mobilité douce:
+  icônes: 🚶‍♀️🚲
+  non applicable si: présent
+  formule: transport . mobilité douce
+  unité: kgCO2e
+
+transport . quotidien . mobilité douce . présent:
+  question: Vous déplacez-vous en mobilité douce ?
+  par défaut: oui
+
+transport . quotidien . voiture:
+  icônes: 🚘️
+  applicable si: présent
+  formule: recalcul empreinte
+  unité: kgCO2e
+
+transport . quotidien . voiture . présent:
+  question: Prenez-vous la voiture ?
+  par défaut: oui
+
+transport . quotidien . voiture . recalcul empreinte:
+  formule:
+    recalcul:
+      règle: voiture . empreinte
+      avec:
+        transport . voiture . km: transport . quotidien . voiture . km par an
+
+transport . quotidien . voiture . km par an:
+  formule: km par semaine * semaines par an
+
+transport . quotidien . voiture . km par semaine:
+  titre: Km en voiture
+  question: Quelle distance parcourez-vous à l'année en voiture ?
+  description: |
+    Ne comptez que les kilomètres de déplacement personnel (courses, loisirs, famille etc.) et de déplacement domicile travail pour rejoindre votre lieu de travail habituel.
+
+    Par exemple, si vous êtes en mission professionnelle dans un autre département ou un autre pays cela rentre dans la comptabilité de votre entreprise : ne le comptez pas ici.
+
+  par défaut: 12200 / semaines par an
+  unité: km
+  note: |
+    Source pour les km annuels moyens : [datalab ministère écologie 2019](https://www.statistiques.developpement-durable.gouv.fr/bilan-annuel-des-transports-en-2019-0), page 3 G1.
+  suggestions:
+    10km / jour: 3600
+    30km / jour: 12000
+
+transport . quotidien . métro ou tram:
+  titre: Métro ou tramway
+  icônes: 🚊
+  applicable si: présent
+  formule: heures par semaine * métro ou tram . impact par heure * semaines par an
+
+transport . quotidien . métro ou tram . présent:
+  question: Prenez-vous le métro ou tram ?
+  par défaut: oui
+
+transport . quotidien . métro ou tram . heures par semaine:
+  question: Combien d'heures passez-vous par semaine en métro ou en tram ?
+  suggestions:
+    zéro: 0
+    1h / jour: 7
+    2h / jour: 14
+  unité: h/semaine
+  par défaut: 3 h/semaine
+
+transport . quotidien . train:
+  titre: Train
+  icônes: 🚋
+  applicable si: présent
+  formule: km * train . impact par km
+
+transport . quotidien . train . présent:
+  question: Prenez-vous le train ?
+  par défaut: oui
+
+transport . quotidien . train . km:
+  question: Combien de kilomètres parcourez-vous en train par an ?
+  description: Les suggestions sont basées sur la distance à vol d'oiseau doublée pour considérer un aller-retour.
+  suggestions:
+    traversée d'une région: 300
+    Paris ⇄ Lyon: 800
+    Brest ⇄ Nice: 2400
+    💳 grand voyageur: 10000
+    💳 grand voyageur plus ultra: 25000
+  unité: km/an
+  par défaut: 1000 km/an
+
+transport . quotidien . bus:
+  titre: Bus
+  icônes: 🚌
+  applicable si: présent
+  formule: heures par semaine * bus . impact par heure * semaines par an
+
+transport . quotidien . bus . présent:
+  question: Prenez-vous le bus ?
+  par défaut: oui
+
+transport . quotidien . bus . heures par semaine:
+  question: Combien d'heures passez-vous par semaine en bus ?
+  suggestions:
+    zéro: 0
+    1h / jour: 7
+    2h / jour: 14
+  unité: h/semaine
+  par défaut: 3 h/semaine
+
+transport . quotidien . deux roues:
+  icônes: 🛵
+  applicable si: présent
+  formule: deux roues . empreinte * km
+
+transport . quotidien . deux roues . présent:
+  question: Utilisez-vous un scooter ou une moto ?
+  description: |
+    Les scooters et motos sont aujourd'hui très majoritairement des engins qui fonctionnent au pétrole. Les scooters électriques ayant fait une réelle percée, ils sont ajoutés au modèle.
+  par défaut: non
+
+transport . quotidien . deux roues . km:
+  question: Combien de km faites-vous à l'année avec votre scooter ou moto ?
+  par défaut: 3000
+  unité: km
+  note: |
+    Source pour les km annuels moyens : [datalab ministère écologie 2019](https://www.statistiques.developpement-durable.gouv.fr/bilan-annuel-des-transports-en-2019-0), figure G1-1.
+  suggestions:
+    zéro: 0 km/an
+    vacances: 2000 km/an
+    10km / jour: 3600 km/an
+    1000km / mois: 12000 km/an
+    20 000km / an: 20000 km/an
