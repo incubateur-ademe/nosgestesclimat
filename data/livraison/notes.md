@@ -17,12 +17,6 @@
 
 ### Entrepot
 
-```
-livraison colis . empreinte entrepot . nombre de colis par m2:
-  formule: volume de stockage par m2 / (informations . volume * 4)
-  note: D'où vient le facteur 4 ?
-```
-
 ### Point de retrait
 
 ```
