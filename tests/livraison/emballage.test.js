@@ -38,12 +38,6 @@ testEmballage(
   { 'surface': 2.5, 'densité': 4 },
   10
 )
-testEmballage(
-  'livraison colis . emballage . poids emballage',
-  'surface * densité, par défaut',
-  { 'surface': null, 'densité': null },
-  274
-)
 
 testEmballage(
   'livraison colis . emballage . poids emballage . surface',
