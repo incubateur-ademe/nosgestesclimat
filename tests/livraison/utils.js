@@ -1,6 +1,7 @@
 const fs = require('fs')
 import { parse } from 'yaml'
 import Engine from 'publicodes'
+import { getModelFromSource } from '../../scripts/getModelFromSource'
 
 // Select properties inside an object.
 // See https://dev.to/nas5w/how-to-select-or-omit-properties-from-an-object-in-javascript-3ina
@@ -18,21 +19,16 @@ function yamlToJson(filePath) {
 const testOf = (yaml, publiProp, descr, inputs, output) => {
 	test(`${publiProp} ${descr}`, () => {
 		// Given
-		const jsonRules = yamlToJson(yaml)
+		const jsonRules = getModelFromSource(yaml)
 		const testedRule = pick(jsonRules, publiProp)
 
 		// When
-		const rule = { ...inputs, ...testedRule }
-		const engine = new Engine(rule)
+		const rules = { ...jsonRules, ...inputs }
+		const engine = new Engine(rules)
 		const evaluated = engine.evaluate(publiProp)
 
 		// Then
-		if (Array.isArray(output)) {
-			expect(evaluated.nodeValue).toBeGreaterThanOrEqual(output[0]) &&
-				expect(evaluated.nodeValue).toBeLessThanOrEqual(output[1])
-		} else {
-			expect(evaluated.nodeValue).toEqual(output)
-		}
+		expect(evaluated.nodeValue).toEqual(output)
 	})
 }
 
