@@ -107,3 +107,57 @@ testColis(
   },
   90000
 )
+
+testColis(
+  'livraison colis . informations . volume',
+  "Volume du colis : pour tout autre produit, le volume considéré est de 90000 cm3",
+  {   
+    "catégorie": "'autre'",
+  },
+  90000
+)
+
+testColis(
+  'livraison colis . informations . poids',
+  "Poids du colis : grande consommation, 20kg",
+  {   
+    "catégorie": "'grande consommation'",
+  },
+  20
+)
+
+testColis(
+  'livraison colis . informations . poids',
+  "Poids du colis : habillement, 1.5kg",
+  {   
+    "catégorie": "'habillement'",
+  },
+  1.5
+)
+
+testColis(
+  'livraison colis . informations . poids',
+  "Poids du colis : culturel, 200g",
+  {   
+    "catégorie": "'culturel'",
+  },
+  0.2
+)
+
+testColis(
+  'livraison colis . informations . poids',
+  "Poids du colis : équipements volumineux, 70kg",
+  {   
+    "catégorie": "'équipements volumineux'",
+  },
+  70
+)
+
+testColis(
+  'livraison colis . informations . poids',
+  "Poids du colis : pour tout autre produit, le poids considéré est de 18kg",
+  {   
+    "catégorie": "'autre'",
+  },
+  18
+)
