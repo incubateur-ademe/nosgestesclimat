@@ -28,6 +28,7 @@ const rulesToKeep = [
 	'pétrole . volume plein',
 	'transport . voiture . thermique',
 	'transport . ferry . surface',
+	'logement . piscine',
 ]
 
 export function compressRules(jsonPathWithoutExtension) {
