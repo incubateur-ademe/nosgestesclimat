@@ -1,0 +1,38 @@
+#importer!:
+#  depuis: 'futureco-data'
+#  les règles:
+#    - piscine . empreinte
+# TODO non fonctionnel à cause de https://github.com/datagir/publiopti/pull/8
+
+logement . piscine:
+
+logement . piscine . présente:
+  non applicable si:
+    une de ces conditions:
+      - logement . appartement
+      - logement . surface < 100
+  question: Votre logement dispose-t-il d'une piscine privée ?
+  par défaut: non
+  note: |
+    Nous mettons un filtre pour exclure les petites maisons. Nous faisons la corrélation surface inférieure à 100 (la moyenne pour l'habitat individuel étant [112](https://www.insee.fr/fr/statistiques/fichier/2586024/LOGFRA17k2_F6.2.pdf)) et petit terrain, donc absence de piscine. 
+
+    C'est très critiquable. Je pense qu'il faudrait plutôt poser des questions sur le terrain. D'autres indices nous permettend d'exclure la question piscine. 
+
+    L'intérêt de cette exclusion est de ne pas embêter les utilisateurs avec des questions peu probables.
+
+logement . piscine . empreinte:
+  applicable si: présent
+  valeur: 284
+  unité: kgCO2e
+  description: |
+    L'installation de piscines privées dans les jardins français s'est accélérée ces dernières années. On en compte aujourd'hui plus de [3 millions](https://bonpote.com/impact-ecologique-dune-piscine-individuelle/). C'est donc un équipement loin d'être anecdotique, qui pèse dans l'empreinte climat de la France. 
+
+    Ce sont les travaux de construction, d'entretien, d'achat du matériel divers nécessaire (sureté, gestion de l'eau, produits chimiques sanitaires), et de chauffage qui sont les plus impactants pour le climat. 
+
+    Notez que l'aspect consommation d'eau n'est pas traité ici par principe, mais il est évidemment primordial de s'en soucier.
+  note: |
+    Cette valeur est une constante tirée du modèle [futureco piscine](https://futur.eco/simulateur/piscine/empreinte) avec ses valeurs par défaut. C'est le seul modèle ouvert d'empreinte carbone d'une piscine individuelle publié à ce jour.
+
+    C'est une première version. Il s'agira ensuite d'intégrer directement le calcul dans nosgestesclimat, pas seulement la constante, puis de choisir éventuellement quelles questions poser à l'utilisateur.
+
+    Autre point métier : la piscine peut utiliser l'électricité ou le gaz de la facture du logement pour être chauffée. C'est un double comptage. Pour cette première version constante, on peut accepter ce double comptage, mais il faudra concilier les deux calculs par la suite.
