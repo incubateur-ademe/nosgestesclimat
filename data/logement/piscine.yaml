@@ -1,8 +1,9 @@
-#importer!:
-#  depuis: 'futureco-data'
-#  les règles:
-#    - piscine . empreinte
-# TODO non fonctionnel à cause de https://github.com/datagir/publiopti/pull/8
+importer!:
+  depuis: 'futureco-data'
+  les règles:
+    - piscine . empreinte eau froide
+    - piscine . traitement chimique
+    - piscine . construction
 
 logement . piscine:
 
@@ -22,7 +23,11 @@ logement . piscine . présente:
 
 logement . piscine . empreinte:
   applicable si: présente
-  valeur: 284
+  formule:
+    somme:
+      - piscine . empreinte eau froide
+      - piscine . traitement chimique
+      - piscine . construction
   unité: kgCO2e
   description: |
     L'installation de piscines privées dans les jardins français s'est accélérée ces dernières années. On en compte aujourd'hui plus de [3 millions](https://bonpote.com/impact-ecologique-dune-piscine-individuelle/). C'est donc un équipement loin d'être anecdotique, qui pèse dans l'empreinte climat de la France. 
