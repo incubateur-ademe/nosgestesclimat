@@ -140,25 +140,19 @@ function printResults(localResults, prodResults, markdown, withOptim = false) {
 
 function testPersonas(rules, personas) {
 	const engine = new Engine(rules, { logger: disabledLogger })
-	const missingVariables = Object.keys(
-		engine.evaluate('bilan').missingVariables
-	)
-
+	const modelRules = Object.keys(engine.getParsedRules())
 	const personasRules = Object.values(personas)
-
 	const results = {}
 
 	for (let persona of personasRules) {
 		const personaData = persona.data.situation ?? persona.data
-		const validPersonaRules = Object.keys(personaData).filter((rule) =>
-			missingVariables.includes(rule)
+		const validPersonaRules = Object.fromEntries(
+			Object.entries(personaData).filter(([ruleName, _]) =>
+				modelRules.includes(ruleName)
+			)
 		)
 
-		const validPersonaRulesObject = validPersonaRules.reduce(
-			(acc, cur) => ({ ...acc, [cur]: personaData[cur] }),
-			{}
-		)
-		engine.setSituation(validPersonaRulesObject)
+		engine.setSituation(validPersonaRules)
 		results[persona.nom] = engine.evaluate('bilan').nodeValue
 	}
 

@@ -39,7 +39,8 @@ jobs:
       - id: check-translation
         run: |
           # Checks the rules translation
-          body="$(yarn check:rules --markdown 2> /dev/null | tail --lines=+3 | head --lines=-1)"
+          yarn check:rules --markdown > check-rules.res
+          body="$(cat check-rules.res | tail --lines=+3 | head --lines=-1)"
           body="${body//'%'/'%25'}"
           body="${body//$'\n'/'%0A'}"
           body="${body//$'\r'/'%0D'}"
@@ -47,7 +48,8 @@ jobs:
       - id: check-personas
         run: |
           # Checks the personas translation
-          body="$(yarn check:personas --markdown 2> /dev/null | tail --lines=+3 | head --lines=-1)"
+          yarn check:personas --markdown > check-personas.res
+          body="$(cat check-personas.res | tail --lines=+3 | head --lines=-1)"
           body="${body//'%'/'%25'}"
           body="${body//$'\n'/'%0A'}"
           body="${body//$'\r'/'%0D'}"
@@ -55,7 +57,8 @@ jobs:
       - id: test-personas
         run: |
           # Test the personas bilans against production
-          body="$(yarn test:personas --markdown 2> /dev/null| tail --lines=+3 | head --lines=-1)"
+          yarn test:personas --markdown > test-personas.res
+          body="$(cat test-personas.res | tail --lines=+3 | head --lines=-1)"
           body="${body//'%'/'%25'}"
           body="${body//$'\n'/'%0A'}"
           body="${body//$'\r'/'%0D'}"
@@ -63,7 +66,8 @@ jobs:
       - id: test-optim
         run: |
           # Test the personas bilans against production
-          body="$(yarn test:optim --markdown 2> /dev/null| tail --lines=+3 | head --lines=-1)"
+          yarn test:optim --markdown > test-optim.res
+          body="$(cat test-optim.res | tail --lines=+3 | head --lines=-1)"
           body="${body//'%'/'%25'}"
           body="${body//$'\n'/'%0A'}"
           body="${body//$'\r'/'%0D'}"
