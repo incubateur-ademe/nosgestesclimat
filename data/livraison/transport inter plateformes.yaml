@@ -6,36 +6,54 @@ livraison colis . transport inter plateformes . nombre:
   note: Pour le moment, nous ne faisons pas de différences entre les trajets
   par défaut: plateformes . nombre
 
+livraison colis . transport inter plateformes . option longue distance:
+  question: Le colis vient-il de loin (hors UE) ?
+  par défaut: non
+
 livraison colis . transport inter plateformes . empreinte trajet:
+  formule:
+    variations:
+      - si: option longue distance
+        alors: empreinte trajet longue distance
+      - sinon: routier
+
+livraison colis . transport inter plateformes . empreinte trajet longue distance:
+  formule:
+    moyenne:
+      - aérien
+      - ferroviaire
+      - maritime
+
+livraison colis . transport inter plateformes . routier:
   formule:
     somme:
       - route
       - fabrication véhicule
       - usage véhicule
 
-livraison colis . transport inter plateformes . empreinte trajet . distance:
+livraison colis . transport inter plateformes . routier . distance:
   question: Quelle est la distance parcourue entre les plateformes, entrepôts de stockage ?
   par défaut: 1200
   unité: véhicules-kilomètres
 
-livraison colis . transport inter plateformes . empreinte trajet . distance . coefficient de correction distance:
+livraison colis . transport inter plateformes . routier . distance . coefficient de correction distance:
   titre: Coefficient de correction des distances en transport dédié
   formule: 1.05
 
-livraison colis . transport inter plateformes . empreinte trajet . distance . distance corrigée:
+livraison colis . transport inter plateformes . routier . distance . distance corrigée:
   formule: distance * coefficient de correction distance
 
-livraison colis . transport inter plateformes . empreinte trajet . distance . distance à vide:
+livraison colis . transport inter plateformes . routier . distance . distance à vide:
   formule: distance corrigée * ratio distance à vide / (1 - ratio distance à vide)
 
-livraison colis . transport inter plateformes . empreinte trajet . distance . ratio distance à vide:
+livraison colis . transport inter plateformes . routier . distance . ratio distance à vide:
   formule: 0.2
 
-livraison colis . transport inter plateformes . empreinte trajet . distance . distance totale:
+livraison colis . transport inter plateformes . routier . distance . distance totale:
   formule: distance corrigée + distance à vide
   unité: km
 
-livraison colis . transport inter plateformes . empreinte trajet . véhicule:
+livraison colis . transport inter plateformes . routier . véhicule:
   question: Quelle est la catégorie du véhicule ?
   avec:
     VUL moyen:
@@ -48,7 +66,7 @@ livraison colis . transport inter plateformes . empreinte trajet . véhicule:
         - PL moyen
   par défaut: "'PL moyen'"
 
-livraison colis . transport inter plateformes . empreinte trajet . véhicule . chargement moyen:
+livraison colis . transport inter plateformes . routier . véhicule . chargement moyen:
   formule:
     variations:
       - si: véhicule = 'VUL moyen'
@@ -59,28 +77,28 @@ livraison colis . transport inter plateformes . empreinte trajet . véhicule . c
   note: |
     Quand taux de charge = 15%
 
-livraison colis . transport inter plateformes . empreinte trajet . véhicule . vitesse moyenne:
+livraison colis . transport inter plateformes . routier . véhicule . vitesse moyenne:
   formule: 60
   unité: km/h
 
-livraison colis . transport inter plateformes . empreinte trajet . route:
+livraison colis . transport inter plateformes . routier . route:
   formule: empreinte * tonnes km
   unité: gCO2e
 
-livraison colis . transport inter plateformes . empreinte trajet . route . empreinte:
+livraison colis . transport inter plateformes . routier . route . empreinte:
   formule: 5.6
   unité: gCO2e / tonnes.km
   note: Source ECEL
 
-livraison colis . transport inter plateformes . empreinte trajet . route . tonnes km:
+livraison colis . transport inter plateformes . routier . route . tonnes km:
   formule: distance * livraison colis . informations . poids / 1000
   unité: tonnes.km
 
-livraison colis . transport inter plateformes . empreinte trajet . fabrication véhicule:
+livraison colis . transport inter plateformes . routier . fabrication véhicule:
   formule: empreinte * tonnes km
   unité: gCO2e
 
-livraison colis . transport inter plateformes . empreinte trajet . fabrication véhicule . empreinte:
+livraison colis . transport inter plateformes . routier . fabrication véhicule . empreinte:
   formule:
     variations:
       - si: véhicule = 'VUL moyen'
@@ -89,16 +107,16 @@ livraison colis . transport inter plateformes . empreinte trajet . fabrication v
         alors: 2.8
   unité: gCO2e / tonnes.km
 
-livraison colis . transport inter plateformes . empreinte trajet . fabrication véhicule . tonnes km:
+livraison colis . transport inter plateformes . routier . fabrication véhicule . tonnes km:
   formule: distance * véhicule . chargement moyen * livraison colis . informations . poids / 1000
   unité: tonnes.km
   note: Je comprends pas pourquoi le chargement moyen apparaît ici
 
-livraison colis . transport inter plateformes . empreinte trajet . usage véhicule:
+livraison colis . transport inter plateformes . routier . usage véhicule:
   formule: (livraison colis . informations . poids / 1000) * empreinte * distance . distance totale / véhicule . chargement moyen
   unité: gCO2e
 
-livraison colis . transport inter plateformes . empreinte trajet . usage véhicule . empreinte:
+livraison colis . transport inter plateformes . routier . usage véhicule . empreinte:
   formule:
     recalcul:
       règle: empreinte véhicule par km HBEFA
@@ -106,3 +124,63 @@ livraison colis . transport inter plateformes . empreinte trajet . usage véhicu
         empreinte véhicule par km HBEFA . vitesse moyenne véhicule: véhicule . vitesse moyenne
         empreinte véhicule par km HBEFA . type de véhicule: véhicule
   unité: gCO2e / tonnes.km
+
+livraison colis . transport inter plateformes . aérien:
+  formule: tonnes km * empreinte
+  unité: gCO2e
+
+livraison colis . transport inter plateformes . aérien . distance:
+  question: Quelle est la distance parcourue entre les plateformes, entrepôts de stockage ?
+  par défaut: 9000
+  unité: km
+
+livraison colis . transport inter plateformes . aérien . empreinte:
+  formule:
+    variations:
+      - si: distance < 1000
+        alors: 1600
+      - si: distance < 5000
+        alors: 1300
+      - sinon: 1200
+  unité: gCO2e / tonnes.km
+  note: traînées de condensation non prises en compte
+
+livraison colis . transport inter plateformes . aérien . tonnes km:
+  formule: distance * livraison colis . informations . poids / 1000
+  unité: tonnes.km
+
+livraison colis . transport inter plateformes . ferroviaire:
+  formule: tonnes km * empreinte
+  unité: gCO2e
+
+livraison colis . transport inter plateformes . ferroviaire . distance:
+  question: Quelle est la distance parcourue entre les plateformes, entrepôts de stockage ?
+  par défaut: 11000
+  unité: km
+
+livraison colis . transport inter plateformes . ferroviaire . empreinte:
+  formule: 30
+  unité: gCO2e / tonnes.km
+  note: On considère le FE "Europe"
+
+livraison colis . transport inter plateformes . ferroviaire . tonnes km:
+  formule: distance * livraison colis . informations . poids / 1000
+  unité: tonnes.km
+
+livraison colis . transport inter plateformes . maritime:
+  formule: tonnes km * empreinte
+  unité: gCO2e
+
+livraison colis . transport inter plateformes . maritime . distance:
+  question: Quelle est la distance parcourue entre les plateformes, entrepôts de stockage ?
+  par défaut: 20000
+  unité: km
+
+livraison colis . transport inter plateformes . maritime . empreinte:
+  formule: 48
+  unité: gCO2e / tonnes.km
+  note: On considère le FE "Europe"
+
+livraison colis . transport inter plateformes . maritime . tonnes km:
+  formule: distance * livraison colis . informations . poids / 1000
+  unité: tonnes.km
