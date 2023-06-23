@@ -12,10 +12,10 @@ testColis(
 		'livraison colis . emballage': 2,
 		'livraison colis . entrepot stockage': 3,
 		'livraison colis . transport inter plateformes': 4,
-		'livraison colis . plateformes': 5,
+		'livraison colis . plateforme': 5,
 		'livraison colis . transport livraison': 6,
 	},
-	21
+	30
 )
 
 testColis(
@@ -26,12 +26,12 @@ testColis(
 		'livraison colis . emballage': 2,
 		'livraison colis . entrepot stockage': 3,
 		'livraison colis . transport inter plateformes': 4,
-		'livraison colis . plateformes': 5,
+		'livraison colis . plateforme': 5,
 		'livraison colis . transport livraison': 6,
 		'livraison colis . point de retrait': 7,
 		'livraison colis . déplacement consommateur': 8,
 	},
-	36
+	45
 )
 
 testColis(
@@ -42,12 +42,12 @@ testColis(
 		'livraison colis . emballage': 2,
 		'livraison colis . entrepot stockage': 3,
 		'livraison colis . transport inter plateformes': 4,
-		'livraison colis . plateformes': 5,
+		'livraison colis . plateforme': 5,
 		'livraison colis . transport livraison': 6,
 		'livraison colis . magasin': 7,
 		'livraison colis . déplacement consommateur': 8,
 	},
-	36
+	45
 )
 
 testColis(
@@ -56,7 +56,7 @@ testColis(
 	{
 		'livraison colis . entrepot stockage': 1,
 		'livraison colis . transport inter plateformes': 2,
-		'livraison colis . plateformes': 3,
+		'livraison colis . plateforme': 3,
 		'livraison colis . magasin': 4,
 		'livraison colis . déplacement consommateur': 5,
 	},
@@ -105,16 +105,7 @@ testColis(
 	{
 		'livraison colis . informations . catégorie': "'autre'",
 	},
-	90000
-)
-
-testColis(
-	'livraison colis . informations . volume',
-	'Volume du colis : pour tout autre produit, le volume considéré est de 90000 cm3',
-	{
-		'livraison colis . informations . catégorie': "'autre'",
-	},
-	90000
+	88937
 )
 
 testColis(
@@ -155,9 +146,9 @@ testColis(
 
 testColis(
 	'livraison colis . informations . poids',
-	'Poids du colis : pour tout autre produit, le poids considéré est de 18kg',
+	'Poids du colis : pour tout autre produit, le poids considéré est de 18.425kg',
 	{
 		'livraison colis . informations . catégorie': "'autre'",
 	},
-	18
+	18.425
 )
