@@ -20,7 +20,7 @@ const { destLangs, srcFile, markdown } = cli.getArgs(
 		target: true,
 		file: true,
 		markdown: true,
-		defaultSrcFile: 'data/**/*.yaml',
+		defaultSrcFile: 'data/**/*.publicodes',
 	}
 )
 

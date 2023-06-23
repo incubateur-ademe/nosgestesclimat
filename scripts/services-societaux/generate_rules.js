@@ -125,24 +125,24 @@ const messageGénérationAuto = `# Ce fichier a été généré automatiquement 
 # est 'scripts/services-societaux/input/répartition_services_sociétaux.yaml'. Pour en savoir plus, n'hésitez pas à parcourir notre guide !\n\n`
 
 utils.writeYAML(
-	'data/empreinte SDES/empreinte par branche.yaml',
+	'data/empreinte SDES/empreinte par branche.publicodes',
 	dataObject,
 	messageGénérationAuto
 )
 utils.writeYAML(
-	'data/services sociétaux/services publics.yaml',
+	'data/services sociétaux/services publics.publicodes',
 	SPobject,
 	messageGénérationAuto
 )
 utils.writeYAML(
-	'data/services sociétaux/services marchands.yaml',
+	'data/services sociétaux/services marchands.publicodes',
 	SMobject,
 	messageGénérationAuto
 )
 
 console.log(
 	'\x1b[32m',
-	'- Les règles `empreinte SDES/empreinte par branche.yaml`, `services sociétaux/services publics.yaml`, `services sociétaux/services marchands.yaml` ont été écrites avec succès.',
+	'- Les règles `empreinte SDES/empreinte par branche.publicodes`, `services sociétaux/services publics.publicodes`, `services sociétaux/services marchands.publicodes` ont été écrites avec succès.',
 	'\x1b[0m'
 )
 

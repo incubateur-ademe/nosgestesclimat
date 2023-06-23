@@ -5,7 +5,7 @@ The model of NGC
 is build with [publicodes](https://publi.codes/), an interpreter on top of an
 extended [YAML](https://yaml.org/) syntax used to models complex computations.
 
-For example this is an extract from the file [`./data/transport/transport . avion.yaml`](https://github.com/datagir/nosgestesclimat/blob/master/data/transport/transport%20.%20avion.yaml):
+For example this is an extract from the file [`./data/transport/transport . avion.publicodes`](https://github.com/datagir/nosgestesclimat/blob/master/data/transport/transport%20.%20avion.publicodes):
 
 ```yaml
 transport . avion . court courrier:
