@@ -1,7 +1,11 @@
 livraison colis . déplacement consommateur:
   formule:
     variations:
-      - si: mode de déplacement = "voiture"
+      - si:
+          une de ces conditions:
+            - mode de déplacement = "voiture thermique"
+            - mode de déplacement = "voiture hybride"
+            - mode de déplacement = "voiture électrique"
         alors: voiture
       - si: mode de déplacement = "moto"
         alors: moto
@@ -26,11 +30,17 @@ livraison colis . déplacement consommateur . moyen:
       - petit véhicule électrique * petit véhicule électrique . part déplacement
 
 livraison colis . déplacement consommateur . mode de déplacement:
+  avec:
+    voiture thermique:
+    voiture hybride:
+    voiture électrique:
   formule:
     une possibilité:
       choix obligatoire: oui
       possibilités:
-        - voiture
+        - voiture thermique
+        - voiture hybride
+        - voiture électrique
         - moto
         - commun
         - marche
@@ -56,9 +66,24 @@ livraison colis . déplacement consommateur . voiture . part déplacement:
   formule: 1 - moto . part déplacement - commun . part déplacement - marche . part déplacement - vélo . part déplacement - petit véhicule électrique . part déplacement
 livraison colis . déplacement consommateur . voiture . usage:
   formule: distance réelle * empreinte
+
 livraison colis . déplacement consommateur . voiture . usage . empreinte:
-  formule: 150.97
+  formule:
+    variations:
+      - si: mode de déplacement = "voiture thermique"
+        alors: 216
+      - si: mode de déplacement = "voiture hybride"
+        alors: 232
+      - si: mode de déplacement = "voiture électrique"
+        alors: 103
+      - sinon: 144
   unité: gCO2e/km
+  note: |
+    Base carbone: 
+      - Voiture/Motorisation moyenne/2018 : 0.216 gCO2e/km
+      - Voiture particulière/Coeur de gamme - Véhicule compact/Hybride, mild, essence : 232 gCO2e/km
+      - Voiture particulière/Coeur de gamme - Véhicule compact/Electrique : 103 gCO2e/km
+      - Voiture moyenne/Mixte/2018 : 144 gCO2e/km
 # livraison colis . déplacement consommateur . voiture . autres impacts:
 #   titre: Impacts fabrication, entretien, infrastructures
 #   formule: distance réelle * empreinte
@@ -83,8 +108,14 @@ livraison colis . déplacement consommateur . moto . part déplacement:
 livraison colis . déplacement consommateur . moto . usage:
   formule: distance réelle * empreinte
 livraison colis . déplacement consommateur . moto . usage . empreinte:
-  formule: 93.834
+  formule:
+    moyenne:
+      - 191
+      - 76.3
   unité: gCO2e/km
+  note: |
+    Base carbone: 
+    Moyenne entre Moto > 250 cm3/Mixte/2018 : 191 gCO2e/km et Cyclomoteur/Mixte/2018 : 76.3 gCO2e/km.
 # livraison colis . déplacement consommateur . moto . autres impacts:
 #   titre: Impacts fabrication, entretien, infrastructures
 #   formule: distance réelle * empreinte
@@ -109,10 +140,10 @@ livraison colis . déplacement consommateur . commun . part déplacement:
 livraison colis . déplacement consommateur . commun . usage:
   formule: distance réelle * empreinte
 livraison colis . déplacement consommateur . commun . usage . empreinte:
-  formule: 499.019 / nombre de voyageurs
+  formule: 113
   unité: gCO2e/km
-livraison colis . déplacement consommateur . commun . nombre de voyageurs:
-  formule: 12
+  note: |
+    Base carbone: Autobus/Gazole: 113 gCO2e/km
 # livraison colis . déplacement consommateur . commun . autres impacts:
 #   titre: Impacts fabrication, entretien, infrastructures
 #   formule: distance réelle * empreinte
@@ -167,7 +198,7 @@ livraison colis . déplacement consommateur . vélo . part déplacement:
 
 livraison colis . déplacement consommateur . petit véhicule électrique:
   titre: VAE ou trotinette
-  formule: 0
+  formule: usage
 livraison colis . déplacement consommateur . petit véhicule électrique . part déplacement:
   formule:
     variations:
@@ -180,6 +211,14 @@ livraison colis . déplacement consommateur . petit véhicule électrique . part
       - si: distance < 30
         alors: 0.0035
       - sinon: 0.001
+livraison colis . déplacement consommateur . petit véhicule électrique . usage:
+  formule: distance réelle * empreinte
+livraison colis . déplacement consommateur . petit véhicule électrique . usage . empreinte:
+  formule: 10.9
+  unité: gCO2e/km
+  note: |
+    Base carbone: Vélo/à assistance électrique: 10.9 gCO2e/km
+
 # livraison colis . déplacement consommateur . petit véhicule électrique . autres impacts:
 #   titre: Impacts fabrication, entretien, infrastructures
 #   formule: distance réelle * empreinte
