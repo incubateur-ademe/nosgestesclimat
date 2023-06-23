@@ -14,17 +14,17 @@
 - [Principe général](#principe-général)
 - [Données de départ](#données-de-départ)
 - [Reproduire le calcul](#reproduire-le-calcul)
-	- [1) Préparer les données financières en vue de la décomposition des données du SDES](#1-préparer-les-données-financières-en-vue-de-la-décomposition-des-données-du-sdes)
-		- [Cas des valeurs "secrètes"](#cas-des-valeurs-secrètes)
-	- [2) Décomposer les données du SDES](#2-décomposer-les-données-du-sdes)
-	- [3) Etudier la composition de chacune des branches économiques et justifier les choix de répartition](#3-etudier-la-composition-de-chacune-des-branches-économiques-et-justifier-les-choix-de-répartition)
-	- [4) Générer les règles des services sociétaux](#4-générer-les-règles-des-services-sociétaux)
+  - [1) Préparer les données financières en vue de la décomposition des données du SDES](#1-préparer-les-données-financières-en-vue-de-la-décomposition-des-données-du-sdes)
+    - [Cas des valeurs "secrètes"](#cas-des-valeurs-secrètes)
+  - [2) Décomposer les données du SDES](#2-décomposer-les-données-du-sdes)
+  - [3) Etudier la composition de chacune des branches économiques et justifier les choix de répartition](#3-etudier-la-composition-de-chacune-des-branches-économiques-et-justifier-les-choix-de-répartition)
+  - [4) Générer les règles des services sociétaux](#4-générer-les-règles-des-services-sociétaux)
 - [Limites du calcul](#limites-du-calcul)
 - [Scripts disponibles](#scripts-disponibles)
-	- [`analyze_CA_NAF.js`](#analyze_ca_nafjs)
-	- [`desagregate_naf_SDES.js`](#desagregate_naf_sdesjs)
-	- [`genereate_rules.js`](#genereate_rulesjs)
-	- [`utils.js`](#utilsjs)
+  - [`analyze_CA_NAF.js`](#analyze_ca_nafjs)
+  - [`desagregate_naf_SDES.js`](#desagregate_naf_sdesjs)
+  - [`genereate_rules.js`](#genereate_rulesjs)
+  - [`utils.js`](#utilsjs)
 
 </details>
 
@@ -275,11 +275,11 @@ Un autre fichier a été utilisé, nommé `titres_raccourcis.yaml` qui permet de
 
 3 fichiers de règles sont alors créés :
 
-- `empreinte par branche.yaml`
-- `services publics.yaml`
-- `services marchands.yaml`
+- `empreinte par branche.publicodes`
+- `services publics.publicodes`
+- `services marchands.publicodes`
 
-Le premier est à la base des règles appelées dans les 2 derniers mais aussi dans `empreinte nationale.yaml` permettant alors d'exposer dans [la documentation](https://nosgestesclimat.fr/documentation/empreinte-SDES) les chiffres du SDES qui mène à l'ordre de grandeur des 10 tonnes bien connu.
+Le premier est à la base des règles appelées dans les 2 derniers mais aussi dans `empreinte nationale.publicodes` permettant alors d'exposer dans [la documentation](https://nosgestesclimat.fr/documentation/empreinte-SDES) les chiffres du SDES qui mène à l'ordre de grandeur des 10 tonnes bien connu.
 
 > **Note**
 > La commande `yarn generate:servicesRules` depuis `nosgestesclimat-site` permet de générer le fichier de règles et donc d'effectuer toutes les étapes précédentes en quelques secondes.

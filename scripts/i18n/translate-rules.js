@@ -27,7 +27,7 @@ const { srcLang, destLangs, srcFile, onlyUpdateLocks, interactiveMode } =
 			target: true,
 			file: true,
 			onlyUpdateLocks: true,
-			defaultSrcFile: 'data/**/*.yaml',
+			defaultSrcFile: 'data/**/*.publicodes',
 			interactiveMode: true,
 		}
 	)
