@@ -1,0 +1,50 @@
+importer!:
+  depuis: 'futureco-data'
+  les règles:
+    - piscine . empreinte eau froide
+    - piscine . traitement chimique
+    - piscine . construction
+
+logement . piscine:
+  icônes: 🏊‍♀️
+  applicable si: présent
+  formule:
+    somme:
+      - piscine . empreinte eau froide
+      - piscine . traitement chimique
+      - piscine . construction
+  unité: kgCO2e
+  description: |
+    L'installation de piscines privées dans les jardins français s'est accélérée ces dernières années. On en compte aujourd'hui plus de [3 millions](https://bonpote.com/impact-ecologique-dune-piscine-individuelle/).
+    C'est donc un équipement loin d'être anecdotique, qui pèse dans l'empreinte climat de la France. 
+
+    Ce sont les travaux de construction, d'entretien, d'achat du matériel divers nécessaire (sureté, gestion de l'eau, produits chimiques sanitaires), et de chauffage qui sont les plus impactants pour le climat. 
+
+    Ce modèle piscine provient de [Futur.eco](https://futur.eco/simulateur/piscine/empreinte), tiré du [modèle publicodes](https://github.com/laem/futureco-data/blob/master/data/piscine.yaml) avec ses valeurs par défaut. 
+
+    C'est le seul modèle ouvert d'empreinte carbone d'une piscine individuelle publié à ce jour.
+
+    Dans cette première version, nous ne prenons pas en compte l'utilisation de la pompe de filtrage ou le chauffage dont l'empreinte est implicitement calculée dans les consommations énergétiques du logement.
+
+    Notez que l'aspect consommation d'eau n'est pas traité ici par principe (on calcule du des émissions carbone), mais il est évidemment primordial de s'en soucier.
+
+logement . piscine . présent:
+  non applicable si: logement . appartement
+  question: Votre logement dispose-t-il d'une piscine privée ?
+  par défaut: oui
+  note: |
+    Aujourd'hui, nous posons la question à toutes les personnes qui possèdent une maison.
+    Afin de limiter l'apparition de cette question pour les utilisateurs qui ne possèdent pas de terrain, ou qui ne sont absoluement pas concernés par la piscine, 
+    on pourrait filtrer l'affichage de la question selon la surface de la maison par exemple.
+
+piscine . surface: logement . piscine . surface
+
+logement . piscine . surface:
+  applicable si: piscine . présent
+  question: Quelle est la taille de votre piscine ?
+  par défaut: 32
+  unité: m2
+  suggestions:
+    3 x 5 mètres: 15
+    5 x 5 mètres: 20
+    5 x 8 mètres: 40
