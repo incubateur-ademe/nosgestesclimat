@@ -95,7 +95,12 @@ destLangs.forEach((destLang) => {
 		destLang,
 		markdown
 	)
-	if (nbMissing > 0 && cli.askYesNo(`Do you want to log missing rules?`)) {
+
+	if (
+		!markdown &&
+		nbMissing > 0 &&
+		cli.askYesNo(`Do you want to log missing rules?`)
+	) {
 		missingRules.map(({ rule: ruleName, attr }) =>
 			console.log(cli.styledRuleNameWithOptionalAttr(ruleName, attr))
 		)
