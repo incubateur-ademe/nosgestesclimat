@@ -1,7 +1,7 @@
 import { testOf } from './utils'
 
 const testEmballage = (publiProp, descr, inputs, output) => {
-	testOf('data/livraison/*.yaml', publiProp, descr, inputs, output)
+	testOf('data/livraison/*.publicodes', publiProp, descr, inputs, output)
 }
 
 testEmballage(
