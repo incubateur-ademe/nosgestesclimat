@@ -73,7 +73,7 @@ export function constantFoldingFromJSONFile(
 			log('Parsing rules from the JSON file:', model)
 			rules = JSON.parse(readFileSync(model, 'utf8'))
 		} else {
-			const modelPath = path.join(path.resolve(model), '**/*.yaml')
+			const modelPath = path.join(path.resolve(model), '**/*.publicodes')
 			log(`Parsing rules from ${modelPath}...`)
 			rules = readRawRules(modelPath, ignore ?? [])
 		}

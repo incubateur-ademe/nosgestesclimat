@@ -30,7 +30,7 @@ const { srcLang, srcFile, destLangs, destRegions, markdown } = cli.getArgs(
 		target: true,
 		model: { supportedRegionCodes },
 		file: true,
-		defaultSrcFile: 'data/**/*.yaml',
+		defaultSrcFile: 'data/**/*.publicodes',
 		markdown: true,
 	}
 )
@@ -71,6 +71,16 @@ function getTranslatedRules(baseRules, destLang) {
 	return addTranslationToBaseRules(baseRules, translatedAttrs)
 }
 
+function logPublicodesError(err) {
+	let lines = err.message.split('\n')
+	for (let i = 0; i < 9; ++i) {
+		if (lines[i]) {
+			console.error('  ', lines[i])
+		}
+	}
+	console.error('')
+}
+
 /// ---------------------- Main ----------------------
 
 if (markdown) {
@@ -92,22 +102,11 @@ try {
 	new Engine(baseRules, {
 		// NOTE(@EmileRolley): warnings are ignored for now but should be examined in
 		//    https://github.com/datagir/nosgestesclimat/issues/1722
-		logger: { log: (_) => {}, warn: (_) => {}, err: (s) => console.error(s) },
+		logger: { log: (_) => {}, warn: (_) => {}, err: (_) => {} },
 	})
-	console.log(
-		markdown
-			? `| Rules evaluation | :heavy_check_mark: | Ø |`
-			: ' ✅ Base rules have been correctly evaluated'
-	)
 } catch (err) {
-	console.log(' ❌ An error occured while trying to evaluate the rules:\n')
-	let lines = err.message.split('\n')
-	for (let i = 0; i < 9; ++i) {
-		if (lines[i]) {
-			console.log('  ', lines[i])
-		}
-	}
-	console.log(err)
+	console.error(` ❌ An error occured while trying to parse the base rules:\n`)
+	logPublicodesError(err)
 	exit(-1)
 }
 

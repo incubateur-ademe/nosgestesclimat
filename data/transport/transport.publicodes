@@ -19,11 +19,11 @@ transport . empreinte:
     somme:
       - voiture . empreinte
       - avion
-      - deux roues thermique
+      - deux roues
+      - mobilité douce
       - bus
       - train
       - métro ou tram
-      - vélo
       - vacances
       - ferry
 
@@ -38,25 +38,13 @@ transport . vacances:
 
     > À noter que leur empreinte est séparée en deux : la partie usage est ajoutée au transport tandis que la partie construction est intégrée au logement.
 
-    💡 Si vous ne possédez ni camping car, ni caravane, ou bien si vous les louez, vous pouvez cliquer sur "Suivant" sans rien cocher. La location n'est pas encore disponible dans notre modèle**.
+    💡 Si vous ne possédez ni camping car, ni caravane, ou bien si vous les louez, vous pouvez cliquer sur "aucun" juste en dessous de cette question, puis "Suivant". La location n'est pas encore disponible dans notre modèle**.
 
   formule:
     somme:
       - caravane . empreinte . usage réel
       - camping car . empreinte . usage réel
       - van
-      - maison secondaire
-
-transport . vacances . maison secondaire:
-  titre: Maison secondaire
-  icônes: 🏠
-  applicable si: propriétaire
-  formule: 0
-
-transport . vacances . maison secondaire . propriétaire:
-  question: Possédez-vous une maison secondaire ?
-  par défaut: non
-  inactif: oui
 
 transport . vacances . van:
   titre: Van
@@ -183,89 +171,59 @@ transport . bus . heures par semaine:
   unité: h/semaine
   par défaut: 3 h/semaine
 
-transport . vélo:
-  titre: Vélo
-  applicable si: km
-  icônes: 🚲
-  formule: empreinte * km
-
-transport . vélo . empreinte:
-  formule: 0
-  unité: kgCO2e/km
-  description: |
-    Le vélo est un mode de transport super sobre : on utilise 15 kilos de matériel pour déplacer un corps de ~70 kilos.
-
-    En pleine explosion, le vélo à assistance électrique permet de se mettre au vélo régulier en augmentant très peu l'empreinte de ce moyen de transport.
-
-    Idem pour tous les véhicules de moins de 50 kilos.
-
-    > Astuce : vos chaussures sont un véhicule de moins de 50kg.
-
-  note: |
-    Nous considérons que le vélo a une empreinte nulle.
-
-    Il est toujours possible de lui attribuer une empreinte de construction facilement amortie, et l'empreinte du surplus de calories, qui dépend du régime alimentaire.
-
-    Nous avons tous les ingrédients ici pour le faire, mais c'est loin d'être aussi simple. Le surplus d'activité physique est aussi associé à des risques et donc des dépenses de santé bien moindres.
-transport . vélo . km:
-  titre: Kilomètres à vélo
-  question: Combien de kilomètres de vélo ou marche faites-vous par semaine ?
-  description: |
-    🚴 🛴 👟
-
-    Renseignez ici les km à vélo classique, à vélo à assistance électrique, en trottinette et autre véhicule sobre.
-
-    > Un véhicule sobre est léger (moins de 30 kilos par exemple) et à vitesse réduite (moins de 25km/h, ce qui permet d'emprunter les pistes cyclables).
-
-    Mais ne vous inquiétez pas trop de la précision : l'empreinte de ces modes sobres est ici considérée comme nulle, votre réponse n'aura donc aucune conséquence 😄.
-
-    > Note : 🛗 l'ascenseur est le transport en commun électrique le plus oublié ! Il n'a pas plus d'empreinte en ordre de grandeur que le vélo électrique.
-  suggestions:
-    zéro ou presque: 0 km
-    5km par jour: 35 km
-    10km par jour: 70 km
-  par défaut: 5 km
-  note: Le chiffre par défaut est une grossière estimation sans source, mais peu importe vu l'impact final nul.
-
-transport . deux roues thermique:
+transport . deux roues:
   icônes: 🛵
   applicable si: usager
   formule: empreinte * km
 
-transport . deux roues thermique . usager:
+transport . deux roues . usager:
   question: Utilisez-vous un scooter ou une moto ?
   description: |
-    Les scooters et motos sont aujourd'hui très majoritairement des engins qui fonctionnent au pétrole. Les équivalents électriques ont fait leur apparition, mais timidement.
+    Les scooters et motos sont aujourd'hui très majoritairement des engins qui fonctionnent au pétrole. Les scooters électriques ayant fait une réelle percée, ils sont ajoutés au modèle.
   par défaut: non
 
-transport . deux roues thermique . km:
+transport . deux roues . km:
   question: Combien de km faites-vous à l'année avec votre scooter ou moto ?
-  par défaut: 1000 km
+  par défaut: 3000
+  unité: km
+  note: |
+    Source pour les km annuels moyens : [datalab ministère écologie 2019](https://www.statistiques.developpement-durable.gouv.fr/bilan-annuel-des-transports-en-2019-0), figure G1-1.
+  suggestions:
+    zéro: 0 km/an
+    vacances: 2000 km/an
+    10km / jour: 3600 km/an
+    1000km / mois: 12000 km/an
+    20 000km / an: 20000 km/an
 
-transport . deux roues thermique . type:
-  question: Quel type de deux roues thermique utilisez-vous ?
-  applicable si: usager
-  par défaut: "'scooter'"
+transport . deux roues . type:
+  question: Quel type de deux-roues utilisez-vous ?
+  par défaut: "'scooter thermique'"
   formule:
     une possibilité:
       choix obligatoire: oui
       possibilités:
-        - scooter
+        - scooter thermique
+        - scooter électrique
         - moto inf 250
         - moto sup 250
 
-transport . deux roues thermique . type . scooter:
-  titre: Scooter
-transport . deux roues thermique . type . moto inf 250:
-  titre: Moto moins de 250 cm3
-transport . deux roues thermique . type . moto sup 250:
-  titre: Moto plus de 250 cm3
+transport . deux roues . type . scooter thermique:
+  titre: Scooter thermique (diesel/essence)
+transport . deux roues . type . scooter électrique:
+  titre: Scooter électrique
+transport . deux roues . type . moto inf 250:
+  titre: Moto de moins de 250 cm3
+transport . deux roues . type . moto sup 250:
+  titre: Moto de plus de 250 cm3
 
-transport . deux roues thermique . empreinte:
+transport . deux roues . empreinte:
+  unité: kgCO2e/km
   formule:
     variations:
-      - si: type = 'scooter'
+      - si: type = 'scooter thermique'
         alors: 0.0763 kgCO2e/km
+      - si: type = 'scooter électrique'
+        alors: 0.030 kgCO2e/km
       - si: type = 'moto inf 250'
         alors: 0.0763 kgCO2e/km
       - si: type = 'moto sup 250'
@@ -274,23 +232,24 @@ transport . deux roues thermique . empreinte:
   note: |
     Cyclomoteur - Mixte - 2018 ; 76,3 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
 
+    Scooter électrique : 30 gCO2e/km/personne ; étude "Assessing the Environmental Performance of New Mobility" de l'International Transport Forum. [Excel disponible ici](https://www.itf-oecd.org/good-to-go-environmental-performance-new-mobility)
+
     Moto =< 250 cm3 - Mixte - 2018 ; 76,3 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
 
     Moto > 250 cm3 - Mixte - 2018 ; 191 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
 
-
     Les chiffres ci-dessus incluent la fabrication du véhicule, contrairement aux données précédentes (2021).
 
-  références:
-    documentation bilan-GES: https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?routier2.htm
-
-transport . deux roues thermique . conso:
+transport . deux roues . conso:
   formule:
     variations:
-      - si: type = 'scooter'
+      - si: type = 'scooter électrique'
+        alors: 0
+      - si: type = 'scooter thermique'
         alors: 2.3 / 100 l/km
       - si: type = 'moto inf 250'
         alors: 2.2 / 100 l/km
       - si: type = 'moto sup 250'
         alors: 6 / 100 l/km
+  description: Donnée utile pour le calcul de la métrique pétrole.
   note: Données issues de HBEFA selon la documentation de la base carbone (https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?routier2.htm)
