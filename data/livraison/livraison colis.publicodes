@@ -36,6 +36,30 @@ livraison colis:
       - si: scénario = 'magasin traditionnel'
         alors: scénario . magasin traditionnel
 
+livraison colis par avion:
+  formule:
+    somme:
+      - entrepot stockage chine
+      - transport inter plateformes chine
+      - livraison colis
+
+livraison colis par avion . entrepot stockage chine:
+  formule: 
+    recalcul:
+      règle: livraison colis . entrepot stockage
+      avec:
+        livraison colis . empreinte production mix électrique: livraison colis . empreinte production mix électrique chine
+  note: |
+    L'idée ici est d'approcher l'impact de l'entrpôt en Chine via le mix électrique. Attention, c'est un mix de consommation.
+    Il faudrait également faire ce travail pour la consommation de gaz.
+
+livraison colis par avion . transport inter plateformes chine:
+  formule: 
+    recalcul:
+      règle: livraison colis . transport inter plateformes
+      avec:
+        livraison colis . transport inter plateformes . option transport aérien: oui
+
 livraison colis . scénario:
   titre: Scénario de livraison
   formule:
