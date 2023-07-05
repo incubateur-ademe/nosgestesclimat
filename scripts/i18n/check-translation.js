@@ -110,11 +110,23 @@ destLangs.forEach((destLang) => {
 		rules,
 		destRules
 	)
-	if (!markdown && notUpToDateRuleTranslations.length > 0) {
-		manageNotUpToDateRuleTranslations(
-			notUpToDateRuleTranslations,
-			destPath,
-			destRules
-		)
+	const nbNotUpToDate = notUpToDateRuleTranslations.length
+
+	if (nbNotUpToDate > 0) {
+		if (markdown) {
+			cli.printChecksResult(
+				nbNotUpToDate,
+				notUpToDateRuleTranslations.map((rule) => `<li><b>${rule}</b></li>`),
+				'rules (not up-to-date)',
+				destLang,
+				markdown
+			)
+		} else {
+			manageNotUpToDateRuleTranslations(
+				notUpToDateRuleTranslations,
+				destPath,
+				destRules
+			)
+		}
 	}
 })
