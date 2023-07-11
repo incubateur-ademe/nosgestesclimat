@@ -73,7 +73,7 @@ Si vous avez un compte Github, [créez simplement une issue](https://github.com/
 
 S'il s'agit de corriger un texte, n'hésitez pas à nous proposer une suggestion, ça accélérera le traitement.
 
-Sinon, écrivez-nous sur [notre formulaire de retour](https://nosgestesclimat.fr/contribuer).
+Sinon, écrivez-nous sur [notre formulaire de retour](https://nosgestesclimat.fr/contact).
 
 ### Si vous voulez participer à l'amélioration du modèle [⌛ 20 minutes]
 
