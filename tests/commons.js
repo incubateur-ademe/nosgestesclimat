@@ -145,7 +145,7 @@ function testPersonas(rules, personas) {
 	const results = {}
 
 	for (let persona of personasRules) {
-		const personaData = persona.data.situation ?? persona.data
+		const personaData = persona.situation
 		const validPersonaRules = Object.fromEntries(
 			Object.entries(personaData).filter(([ruleName, _]) =>
 				modelRules.includes(ruleName)
