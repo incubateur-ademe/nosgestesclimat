@@ -10,10 +10,10 @@ Quels critères pouvons-nous utiliser pour objectiver l’intéret d’un nouvea
     3. Plus de 5% de la population
     4. Plus de 20% de la population
 - **Poids carbone** : note sur 4 (en ordre de grandeur)
-    1. Moins de 50 kg
-    2. Plus de 50 kg
-    3. Plus de 500 kg
-    4. Plus de 1 tonne
+    1. Quelques kilos
+    2. Quelques dizaines de kilos
+    3. Quelques centaines de kilos
+    4. Quelques tonnes
 - **Disponibilité de la donnée** : note de 0 (0 : on n’a rien trouvé) à 2
     1. Données dispos en partie / sources non ADEME
     2. Données toutes disponibles et sources au top
