@@ -1,0 +1,62 @@
+divers . tabac:
+  icônes: 🚬
+  description: |
+    Le tabac est responsable d'un impact sur le climat important mais pas que ! Selon l'[OMS](https://www.who.int/fr/news/item/31-05-2022-who-raises-alarm-on-tobacco-industry-environmental-impact):
+    
+    > "Chaque année, l’industrie du tabac est responsable de plus de 8 millions de décès, de la destruction de 600 millions d’arbres, 200 000 hectares de terres, de la perte de 22 milliards de tonnes d’eau et de l’émission de 84 millions de tonnes de CO2." 
+  formule: nombre de cigarettes * empreinte cigarette / 1000 gCO2e/kgCO2e
+
+divers . empreinte cigarette:
+  formule: 14
+  unité: gCO2e/cigarette
+  description: |
+    Ce chiffre est tiré de l'article [Cigarette Smoking: An Assessment of Tobacco’s Global Environmental Footprint Across Its Entire Supply Chain](https://pubs.acs.org/doi/full/10.1021/acs.est.8b01533).
+    Le périmètre de l'étude prend en compte l'ensemble du cycle de vie la phase d'agriculture jusqu'aux émissions de fummées. L'impact se situe majoriatirement dans la phase de culture, séchage et fabrication.
+divers . tabac . nombre de cigarettes:
+  formule:
+    variations:
+      - si: consommation = 'jamais'
+        alors: 0
+      - si: consommation = 'occasionelle'
+        alors: 20 cigarettes/semaine  * semaines par an
+      - si: consommation = 'régulière'
+        alors: 10 cigarettes/jour * jours par an
+      - si: consommation = 'importante'
+        alors: 20 cigarettes/jour * jours par an
+      - si: consommation = 'moyenne'
+        alors: 520
+  unité: cigarette
+  note: |
+    D'après l'étude INSEE sur les [dépenses des ménages en 2017](https://www.insee.fr/fr/statistiques/4648319?sommaire=4648339), un ménage dépense en moyenne 402€ par an pour l'achat de tabac.
+    Le prix d'un paquet de cigarettes en 2017 était de [7,05 euros en moyenne](https://www.toutsurmesfinances.com/argent/a/prix-du-tabac-2017-2018-en-france-historique-et-augmentation).
+    Pour un ménage de 2,2 personnes (moyenne française), et à raison de 20 cigarettes par paquet, un français moyen consomme donc environ 520 cigarettes par an.
+
+    Autre source de données: d'après [Santé Publique France](https://www.santepubliquefrance.fr/determinants-de-sante/tabac/donnees/#tabs), 
+    un fumeur consomme en moyenne 12,7 cigarettes par jour, soit 4636 cigarettes par jour, ce qui est équivalent à 65 kgCO2e par an.
+
+    Avec les hypothèses présentée en début de paragraphe, on attribue une moyenne de 7 kgCO2e environ à chacun des français.
+divers . tabac . consommation:
+  question: Etes-vous fumeur ?
+  description: |
+    L'impact du tabac n'est pas seulement carbone : il est à l'origine de déforestation, utilisation important d'eau, de terres agricoles !
+
+    > Pour le moment, nous ne considérons que les cigarettes classiques.
+    > La cigarette électronique n'est pas encore prise en compte dans nos calculs faute de données !
+  par défaut: "'moyenne'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - jamais
+        - occasionelle
+        - régulière
+        - importante
+
+divers . tabac . consommation . jamais:
+  titre: Je ne fume jamais
+divers . tabac . consommation . occasionelle:
+  titre: Je fume un paquet / semaine
+divers . tabac . consommation . régulière:
+  titre: Je fume un demi-paquet / jour
+divers . tabac . consommation . importante:
+  titre: Je fume un paquet / jour
