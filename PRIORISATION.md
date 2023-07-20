@@ -5,15 +5,15 @@
 Quels critères pouvons-nous utiliser pour objectiver l’intéret d’un nouveau sujet :
 
 - **Quantité de la population concernée** : note sur 4
-    1. Inf 1% population
-    2. Sup à 1% de la population
-    3. Sup à 5% de la population
-    4. Sup à 20% de la population
+    1. Moins de 1% population
+    2. Plus de 1% de la population
+    3. Plus de 5% de la population
+    4. Plus de 20% de la population
 - **Poids carbone** : note sur 4 (en ordre de grandeur)
-    1. Inf 50 kg
-    2. Sup 50 kg
-    3. Sup 500 kg
-    4. Sup 1 tonne
+    1. Quelques kilos
+    2. Quelques dizaines de kilos
+    3. Quelques centaines de kilos
+    4. Quelques tonnes
 - **Disponibilité de la donnée** : note de 0 (0 : on n’a rien trouvé) à 2
     1. Données dispos en partie / sources non ADEME
     2. Données toutes disponibles et sources au top
