@@ -55,23 +55,67 @@ divers . loisirs . culture . concerts et spectacles . moyenne française:
     Lorem ipsum
 
 divers . loisirs . culture . concerts et spectacles . fréquence pondérée: 
-  formule: 
-    variations:
-      - si: fréquence = 'hebdomadaire'
-        alors: 8
-      - si: fréquence = 'mensuelle'
-        alors: 2
-      - si: fréquence = 'semestrielle'
-        alors: 0.33
-      - si: fréquence = 'annuelle'
-        alors: 0.167
+  formule: fréquence / 6
+  note: |
+    On estime qu'en moyenne un individu assiste à 6 spectacles par an. L'empreinte qu'on lui attribue subit une règle de 3 par rapport à cette moyenne de fréquentation, qui correspond à l'empreinte moyenne du secteur divisée par la population.
 
 divers . loisirs . culture . concerts et spectacles . fréquence:
   question: À quelle fréquence vous rendez-vous à des concerts / spectacles ou au cinéma chaque année ?
-  par défaut: 2
+  par défaut: 6
   unité: spectacles/an
+  par défaut: 6 spectacles/an
   suggestions:
     hebdomadaire: 50 spectacles/an
     mensuelle: 12 spectacles/an
     semestrielle: 2 spectacles/an
     annuelle: 1 spectacles/an
+
+divers . loisirs . culture . musées et monuments:
+  titre: Musées et monuments
+  applicable si: présent
+  icônes: 🏛
+  formule: moyenne pondérée
+  unité: kgCO2e
+  note: |
+    Lorem ipsum
+
+divers . loisirs . culture . musées et monuments . présent:
+  question: Vous arrive-t-il de visiter des musées, monuments et parcs nationaux ?
+  par défaut: non
+
+divers . loisirs . culture . musées et monuments . moyenne pondérée: 
+  formule: moyenne française * fréquence pondérée
+
+divers . loisirs . culture . musées et monuments . moyenne française:
+  formule: empreinte branche . R91 par hab
+  unité: kgCO2e/an
+  note: |
+    Lorem ipsum
+
+divers . loisirs . culture . musées et monuments . fréquence pondérée: 
+  formule: 
+    variations:
+      - si: fréquence = 'rarement'
+        alors: 0.5
+      - si: fréquence = 'régulièrement'
+        alors: 1
+      - si: fréquence = 'fréquemment'
+        alors: 2
+
+divers . loisirs . culture . musées et monuments . fréquence:
+  question: À quelle fréquence visitez-vous des musées, monuments et parcs nationaux chaque année ?
+  par défaut: "'régulièrement'"
+  unité: visites/an
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - rarement
+        - régulièrement
+        - fréquemment
+
+divers . loisirs . culture . musées et monuments . fréquence . rarement:
+  titre: J'y vais une fois par an
+divers . loisirs . culture . musées et monuments . fréquence . rarement:
+  titre: J'y vais deux fois par an
+divers . loisirs . culture . musées et monuments . fréquence . rarement:
+  titre: J'y vais plus de trois fois par an
