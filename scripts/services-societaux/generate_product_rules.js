@@ -12,22 +12,18 @@ const products_sum = Object.keys(répartition_autres_produits)
 const subProducts_sum = Object.fromEntries(products_sum.map((key) => [key, []]))
 
 const rulesToAdd = {}
-
+const findRuleToModify = /^(empreinte branche . )[A-Z]\d{2}( par hab)$/
 const data = Object.entries(empreinte_par_branche).map(
 	([ruleName, ruleNode]) => {
-		if (
-			!ruleName.includes('par hab') ||
-			ruleName.includes('services publics') ||
-			ruleName.includes('services marchands')
-		) {
+		if (!ruleName.match(findRuleToModify)) {
 			return [ruleName, ruleNode]
 		}
 		const code_CPA = ruleName.split(' . ')[1].slice(0, 3)
 		products_sum.map((subProduct) => {
 			const répartition = répartition_autres_produits[subProduct][code_CPA]
 			if (répartition) {
-				const ruleName = `empreinte branche . ${code_CPA} par hab . ${subProduct}`
-				rulesToAdd[ruleName] = {
+				const newRuleName = `empreinte branche . ${code_CPA} par hab . ${subProduct}`
+				rulesToAdd[newRuleName] = {
 					titre: `${répartition.ratio} ${ruleNode.titre}`,
 					description: répartition.justification,
 					formule: `${code_CPA} par hab * ratio ${subProduct}`,
@@ -37,7 +33,7 @@ const data = Object.entries(empreinte_par_branche).map(
 					...ruleNode['avec'],
 					[`ratio ${subProduct}`]: répartition.ratio,
 				}
-				subProducts_sum[subProduct].push(ruleName)
+				subProducts_sum[subProduct].push(newRuleName)
 			}
 		})
 		return [ruleName, ruleNode]
@@ -47,10 +43,8 @@ const data = Object.entries(empreinte_par_branche).map(
 const dataObject = Object.assign(Object.fromEntries(data), rulesToAdd)
 
 const produits_object = {
-	'divers . autres produits': {
-		titre: 'Produits manufacturés neufs',
-		abréviation: 'autres prod.',
-		icônes: '📦',
+	'divers . autres produits macro': {
+		titre: 'Empreinte des "Produits neufs" via approche SDES',
 		formule: { somme: products_sum },
 		unité: 'kgCO2e',
 		description: `A compléter.`,
@@ -58,7 +52,7 @@ const produits_object = {
 }
 
 products_sum.map((product) => {
-	produits_object[`divers . ${product}`] = {
+	produits_object[`divers . autres produits macro . ${product}`] = {
 		formule: { somme: subProducts_sum[product] },
 		unité: 'kgCO2e',
 	}
@@ -77,7 +71,7 @@ utils.writeYAML(
 )
 
 utils.writeYAML(
-	'data/divers/autres produits.publicodes',
+	'data/divers/divers . autres produits macro.publicodes',
 	produits_object,
 	messageGénérationAuto
 )
