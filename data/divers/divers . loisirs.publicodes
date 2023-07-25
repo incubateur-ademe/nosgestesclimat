@@ -9,8 +9,8 @@ divers . loisirs:
   formule:
     somme:
       - culture
-      - sports
-      - bien-être
+      # - sports
+      # - bien-être
 
 divers . loisirs . culture:
   résumé: |
@@ -27,9 +27,9 @@ divers . loisirs . culture:
       - concerts et spectacles
       - musées et monuments
       - édition
-      - télévision et radio
-      - pratique de la musique
-      - jeux de hasard et d'argent
+      # - télévision et radio
+      # - pratique de la musique
+      # - jeux de hasard et d'argent
 
 divers . loisirs . culture . concerts et spectacles:
   titre: Concerts et spectacles
@@ -42,7 +42,7 @@ divers . loisirs . culture . concerts et spectacles:
 
 divers . loisirs . culture . concerts et spectacles . présent:
   question: Vous arrive-t-il d'assister à des concerts ou spectacles ?
-  par défaut: non
+  par défaut: oui
 
 divers . loisirs . culture . concerts et spectacles . moyenne pondérée:
   formule: moyenne française * fréquence pondérée
@@ -63,12 +63,11 @@ divers . loisirs . culture . concerts et spectacles . fréquence:
   question: À quelle fréquence vous rendez-vous à des concerts / spectacles ou au cinéma chaque année ?
   par défaut: 6
   unité: spectacles/an
-  par défaut: 6 spectacles/an
   suggestions:
-    hebdomadaire: 50 spectacles/an
-    mensuelle: 12 spectacles/an
-    semestrielle: 2 spectacles/an
-    annuelle: 1 spectacles/an
+    hebdomadaire: 50
+    mensuelle: 12
+    semestrielle: 2
+    annuelle: 1
 
 divers . loisirs . culture . musées et monuments:
   titre: Musées et monuments
@@ -81,7 +80,7 @@ divers . loisirs . culture . musées et monuments:
 
 divers . loisirs . culture . musées et monuments . présent:
   question: Vous arrive-t-il de visiter des musées, monuments et parcs nationaux ?
-  par défaut: non
+  par défaut: oui
 
 divers . loisirs . culture . musées et monuments . moyenne pondérée: 
   formule: moyenne française * fréquence pondérée
@@ -120,3 +119,55 @@ divers . loisirs . culture . musées et monuments . fréquence . occasionnel:
   titre: J'y vais une à deux fois par an
 divers . loisirs . culture . musées et monuments . fréquence . amateur:
   titre: J'y vais plus de trois fois par an
+
+divers . loisirs . culture . édition:
+  titre: Édition (livres, presse et logiciels)
+  applicable si: présent
+  icônes: 📚
+  formule: moyenne pondérée
+  unité: kgCO2e
+  note: |
+    Lorem ipsum
+
+divers . loisirs . culture . édition . présent:
+  question: Achetez-vous parfois des livres, revues, journaux, ou logiciels ?
+  par défaut: oui
+
+divers . loisirs . culture . édition . moyenne pondérée: 
+  formule: moyenne française * fréquence pondérée
+
+divers . loisirs . culture . édition . moyenne française:
+  formule: empreinte branche . J58 par hab + empreinte branche . G47 par hab * 0.04 * (0.25 + 0.12)
+  unité: kgCO2e/an
+  note: |
+    Nous prenons ici en compte la branche édition (J58) ainsi que la part d'édition de livres et de journaux de la branche "Commerce de détail, à l'exclusion des automobiles et des motocycles par habitant".
+
+divers . loisirs . culture . édition . fréquence pondérée: 
+  formule: 
+    variations:
+      - si: fréquence = 'faible'
+        alors: 0.5
+      - si: fréquence = 'normale'
+        alors: 1
+      - si: fréquence = 'élevée'
+        alors: 2
+
+divers . loisirs . culture . édition . fréquence:
+  question: Diriez-vous de votre consommation de journaux, revues, livres et logicielles qu'elle est ?
+  par défaut: "'normale'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - faible
+        - normale
+        - élevée
+  note: |
+    Lorem ipsum
+
+divers . loisirs . culture . édition . fréquence . faible:
+  titre: J'en consomme peu
+divers . loisirs . culture . édition . fréquence . normale:
+  titre: J'en consomme régulièrement
+divers . loisirs . culture . édition . fréquence . élevée:
+  titre: J'en consomme beaucoup
