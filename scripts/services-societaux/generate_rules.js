@@ -120,7 +120,7 @@ const SMobject = {
 
 // console.log(yaml.stringify(dataObject))
 
-const messageGénérationAuto = `# Ce fichier a été généré automatiquement via le script 'scripts/generateNAF_YAML.js' dans le dépôt nosgestesclimat. 
+const messageGénérationAuto = `# Ce fichier a été généré automatiquement via le script 'scripts/generate_rules.js' dans le dépôt nosgestesclimat. 
 # Le fichier permettant de modifier les données importantes de répartition et justification des services sociétaux
 # est 'scripts/services-societaux/input/répartition_services_sociétaux.yaml'. Pour en savoir plus, n'hésitez pas à parcourir notre guide !\n\n`
 
