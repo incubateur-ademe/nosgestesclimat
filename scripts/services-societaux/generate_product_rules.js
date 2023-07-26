@@ -47,7 +47,8 @@ const produits_object = {
 		titre: 'Empreinte des "Produits neufs" via approche SDES',
 		formule: { somme: products_sum },
 		unité: 'kgCO2e',
-		description: `A compléter.`,
+		description:
+			'Cette règle correspond à l\'empreinte carbone des achats de produits neufs, non captée "ailleurs" dans le test, pour un français moyen.',
 	},
 }
 
