@@ -54,12 +54,16 @@ divers . autres produits:
   unité: kgCO2e
 
 divers . autres produits . niveau de dépenses:
-  question: Quel niveau de dépenses ?
-  avec:
-    faible:
-    moyen:
-    important:
-    très important:
+  titre: Niveau de dépenses pour des produits manufacturés neufs
+  question: Le test ne capte encore toutes vos consommations, comment estimeriez-vous votre niveau de dépenses en produits neufs (décoration, bricolage, jeux, loisirs créatifs, outils, etc...) ?
+  description: |
+    Pour garder l'interface simple, nous proposons une estimation, via vos dépenses, de l'empreinte des biens de consommations
+    que vous possédez et que vous ne pensez pas avoir inclus dans les questions précédentes.
+
+    Elle concerne : **les jeux, la décoration, le matériel de cuisine, le linge de maison, les matériaux pour les loisirs créatifs ou bricolage, les plantes etc...**
+
+    > 💡 Les ordres de grandeurs en € proposés ici sont basées sur les statistiques INSEE des dépenses des ménages.
+  note: Les ordres de grandeur associés à chacune des possibilités sont issus du travail décrit dans la description de la règle `autres produits . facteur correctif`. On fait l'hypothèse ici que le niveau de dépense et niveau de revenus sont fortement corellés.
   formule:
     une possibilité:
       choix obligatoire: oui
@@ -67,58 +71,47 @@ divers . autres produits . niveau de dépenses:
         - faible
         - moyen
         - important
-        - très important
   par défaut: "'moyen'"
+
+divers . autres produits . niveau de dépenses . faible:
+  titre: Faible (50€ / mois)
+
+divers . autres produits . niveau de dépenses . moyen:
+  titre: Moyen (80€ / mois)
+
+divers . autres produits . niveau de dépenses . important:
+  titre: Important (120€ / mois)
 
 divers . autres produits . facteur correctif:
   formule:
     variations:
       - si: niveau de dépenses = 'faible'
-        alors: 50%
+        alors: 65%
       - si: niveau de dépenses = 'moyen'
         alors: 100%
       - si: niveau de dépenses = 'important'
         alors: 150%
-      - si: niveau de dépenses = 'très important'
-        alors: 200%
-# divers . autres produits . montant:
-#   titre: Montant dépensé par an pour l'achat de produits manufacturés neufs
-#   question: Le test ne capte encore toutes vos consommations, combien estimez-vous dépenser par an en produits neufs (décoration, bricolage, jeux, loisirs créatifs, outils, etc...) ?
-#   unité: €/an
-#   description: |
-#     Pour garder l'interface simple, nous proposons une estimation, via le coût, de l'empreinte des biens de consommations
-#     que vous possédez et que vous ne pensez pas avoir inclus dans les questions précédentes.
+  description:
+  note: |
+    Pour cette question, sujette à de nombreuses incertitudes que ce soit au niveau de la méthode de calcul "Top Down" utilisée ici, mais aussi au niveau de la compostion des catégories
+    d'émissions consitituves de cette question, nous avons fait le choix de travailler sur la base de l'étude INSEE sur les [dépenses des ménages en 2017](https://www.insee.fr/fr/statistiques/4648319?sommaire=4648339)
+    afin d'établir une échelle de dépenses qui permettra de moduler l'empreinte associée à cette question via des ordres de grandeurs.
 
-#     **Pour répondre à cette question, veillez à lisser vos achats des dernières années sur un an.**
+    D'après ces données (voir tableau d'agrégation ci-dessous), le niveau de dépenses par français de l'ordre de 1000€ par an, **niveau de dépense qui varie selon la décile de revenus de la population**.
 
-#     Il est important de recenser dans cette question l'ensemble de vos dépenses annuelles (pour des **biens personnels ou à offrir**).
+    Afin de faciliter la réponse à la question, nous proposons 4 niveaux de dépenses correspondant aux déciles D3, D6 et D9 (arrondis).
 
-#     Elle concerne : **les livres et journaux, les jeux, la décoration, le matériel de cuisine, le linge de maison,
-#     les matériaux pour les loisirs créatifs ou bricolage, les affaires de sports (ski, surf...), etc...**
-#   par défaut: 1000 €/an
-#   note: |
-#     Pour cette question, sujette à de nombreuses incertitudes que ce soit au niveau du concept de ratio monétaire lui-même,
-#     des facteurs d'émission par rapport aux objets à inclure dans cette question ou bien au niveau de l'estimation des dépenses annuelles,
-#     nous avons fait le choix de travailler sur la base d'une liste de dépenses que nous estimons hors de la couverture NGC **pour le moment**
-#     (l'idée étant d'enrichir le modèle pour ne plus avoir à poser cette question).
-
-#     A partir de retours utilisateurs, nous avons estimé pour chaque ligne de dépense le montant associé afin de déterminer la valeur par défaut
-#     des dépenses annuelles pour l'achat de biens manufacturés neufs. L'idée est également de donner des clés de réponse pour les utiilsateurs souhaitant
-#     aller plus loin sur la base des entrées du tableau.
-
-#     Ces estimations donne un chiffre de dépenses de l'ordre de 1000€ par an.
-
-#     | Catégorie de dépense           | Description (non exhaustif)                                                    | Estimation par mois | Estimation par an | Estimation pour 10 ans |
-#     |--------------------------------|--------------------------------------------------------------------------------|---------------------|-------------------|------------------------|
-#     | Matériel de cuisine            | Couverts, poêles, bocaux                                                       |                     | 50                |                        |
-#     | Couette, oreillers             |                                                                                |                     |                   | 100                    |
-#     | Linge de maison                | Draps, serviettes                                                              |                     |                   | 150                    |
-#     | Loisirs créatifs et culturels  | Instruments de musique, machine à coudre, tissu, laine, papier, carton, perles |                     |                   | 500                    |
-#     | Bricolage                      | Outils (tournevis, perceuse, scie), bois, métaux, visserie, plastique          |                     | 150               |                        |
-#     | Affaires de sport spécifiques  | Matériel vélo, ski, surf                                                       |                     |                   | 500                    |
-#     | Décoration                     | Vase, boites de rangement, tapisserie                                          |                     | 500               |                        |
-#     | Livres                         | Livres, journaux, revues                                                       | 15                  |                   |                        |
-#     | Jeux                           | Jeux de société, jouets                                                        | 15                  |                   |                        |
+    | Catégorie                             | Dépense moyenne par ménage | Dépense moyenne par français | D1  | D2  | D3  | D4  | D5  | D6   | D7   | D8   | D9   | D10  |
+    |---------------------------------------|----------------------------|------------------------------|-----|-----|-----|-----|-----|------|------|------|------|------|
+    | Jeux, bijoux, loisirs                 | 319                        | 145,0                        | 55% | 44% | 65% | 50% | 79% | 94%  | 92%  | 194% | 169% | 158% |
+    | Horticulture                          | 146                        | 66,4                         | 51% | 42% | 56% | 64% | 86% | 109% | 105% | 121% | 182% | 182% |
+    | Maroquinerie et autres accessoires    | 71                         | 32,3                         | 38% | 55% | 58% | 62% | 56% | 77%  | 114% | 156% | 193% | 196% |
+    | Tapis et autres revêtements           | 14                         | 6,4                          | 7%  | 21% | 93% | 71% | 64% | 71%  | 157% | 207% | 121% | 164% |
+    | Vaisselle, ustensiles de cuisine      | 80                         | 36,4                         | 43% | 55% | 63% | 96% | 71% | 85%  | 120% | 173% | 133% | 160% |
+    | Outillage (maison et le jardin)       | 209                        | 95,0                         | 22% | 54% | 67% | 61% | 69% | 79%  | 153% | 135% | 114% | 243% |
+    | Services de réparation                | 1 121                      | 509,5                        | 49% | 59% | 70% | 69% | 75% | 94%  | 108% | 131% | 146% | 198% |
+    | Produits pour travaux courants        | 176                        | 80,0                         | 36% | 29% | 48% | 44% | 88% | 181% | 169% | 139% | 91%  | 172% |
+    | **Total**                             | **2 136**                  | **970,9**                    | **45%** | **52%** | **66%** | **64%** | **76%** | **100%** | **116%** | **144%** | **145%** | **191%** |
 
 # divers . autres produits . notif ratio monétaire:
 #   type: notification
