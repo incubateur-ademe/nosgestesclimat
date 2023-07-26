@@ -64,9 +64,10 @@ function fmtGHActionErr(localResult, prodResult, diff, diffPercent, name) {
 	const color =
 		diffPercent <= 1 ? 'sucess' : diffPercent > 5 ? 'critical' : 'important'
 	const sign = diff > 0 ? '%2B' : '-'
-	return `|![](https://img.shields.io/badge/${name
-		.replaceAll(' ', '%20')
-		.replaceAll('-', '%2d')}-${sign}${Math.round(diff).toLocaleString(
+	return `|![](https://img.shields.io/badge/${name.replaceAll(
+		' ',
+		'%20'
+	)}-${sign}${Math.round(diff).toLocaleString(
 		'en-us'
 	)}%20kgCO2e-${color}?style=flat-square) | **${localResult.toLocaleString(
 		'en-us'
@@ -101,7 +102,6 @@ function printResults(localResults, prodResults, markdown, withOptim = false) {
 		)
 	}
 	for (let name in localResults) {
-		console.log(name.replaceAll('-', '%2d'))
 		if (localResults[name] !== prodResults[name]) {
 			const localResult = Math.round(localResults[name])
 			const prodResult = Math.round(prodResults[name])
