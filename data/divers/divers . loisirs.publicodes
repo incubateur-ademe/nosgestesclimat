@@ -21,6 +21,13 @@ divers . loisirs . culture:
   description: |
     Lorem ipsum
   formule:
+    variations:
+      - si: choix utilisateur
+        alors: empreinte totale
+      - sinon: empreinte par défaut
+
+divers . loisirs . culture . empreinte totale:
+  formule:
     somme:
       - concerts et spectacles
       - musées et monuments
@@ -28,6 +35,34 @@ divers . loisirs . culture:
       # - télévision et radio
       - pratique de la musique
       # - jeux de hasard et d'argent
+  unité: kgCO2e
+
+divers . loisirs . culture . empreinte par défaut:
+  description: Un calcul statistique des pratiques culturelles pour un français moyen.
+  formule:
+    somme:
+      - concerts et spectacles . moyenne macro française
+      - musées et monuments . moyenne macro française
+      - édition . moyenne macro française 
+      # - télévision et radio . moyenne macro française
+      - pratique de la musique . moyenne macro française
+      # - jeux de hasard et d'argent . moyenne macro française
+  unité: kgCO2e
+
+divers . loisirs . culture . choix utilisateur:
+  description: L'utilisateur a-t-il fait un choix de pratiques culturelles ?
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - concerts et spectacles . présent
+            - musées et monuments . présent
+            - édition . présent
+            # - télévision et radio . présent
+            - pratique de la musique . présent
+            # - jeux de hasard et d'argent . présent
+        alors: oui
+      - sinon: non
 
 divers . loisirs . culture . concerts et spectacles:
   titre: Concerts et spectacles
