@@ -1,9 +1,7 @@
-const fs = require('fs/promises')
-const path = require('path')
-const yargs = require('yargs')
-const i18nUtils = require('./../scripts/i18n/utils')
-
-const { testPersonas, printResults } = require('./commons')
+import { readFile } from 'fs/promises'
+import yargs from 'yargs'
+import { defaultLang, availableLanguages } from './../scripts/i18n/utils.js'
+import { testPersonas, printResults } from './commons.mjs'
 
 const { country, language, markdown } = yargs(process.argv.slice(2))
 	.usage('Compare local and prod personas results\n\nUsage: $0 [options]')
@@ -17,8 +15,8 @@ const { country, language, markdown } = yargs(process.argv.slice(2))
 		alias: 'l',
 		describe: 'Target language code',
 		type: 'string',
-		default: i18nUtils.defaultLang,
-		choices: i18nUtils.availableLanguages,
+		default: defaultLang,
+		choices: availableLanguages,
 	})
 	.option('markdown', {
 		alias: 'm',
@@ -29,10 +27,12 @@ const { country, language, markdown } = yargs(process.argv.slice(2))
 	.help('h')
 	.alias('h', 'help').argv
 
-const baseRules = fs
-	.readFile(`./public/co2-model.${country}-lang.${language}.json`, {
+const baseRules = readFile(
+	`./public/co2-model.${country}-lang.${language}.json`,
+	{
 		encoding: 'utf8',
-	})
+	}
+)
 	.then((res) => JSON.parse(res))
 	.catch((e) => {
 		console.log(
@@ -42,10 +42,12 @@ const baseRules = fs
 		process.exit(-1)
 	})
 
-const optimRules = fs
-	.readFile(`./public/co2-model.${country}-lang.${language}-opti.json`, {
+const optimRules = readFile(
+	`./public/co2-model.${country}-lang.${language}-opti.json`,
+	{
 		encoding: 'utf8',
-	})
+	}
+)
 	.then((res) => JSON.parse(res))
 	.catch((e) => {
 		console.log(
@@ -55,10 +57,9 @@ const optimRules = fs
 		process.exit(-1)
 	})
 
-const personas = fs
-	.readFile(`./public/personas-${language}.json`, {
-		encoding: 'utf8',
-	})
+const personas = readFile(`./public/personas-${language}.json`, {
+	encoding: 'utf8',
+})
 	.then((res) => JSON.parse(res))
 	.catch((e) => {
 		console.log(

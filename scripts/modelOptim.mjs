@@ -1,14 +1,13 @@
 // Description: contains wrappers around the constant folding optimization pass from
-// 				[publiopti] to be used in the build scripts: rulesToJSON.
+// 				[@incubateur-ademe/publicodes-tools] to be used in the build scripts: rulesToJSON.
 //
-// [publiopti]: https:github.com/datagir/publiopti
+// [@incubateur-ademe/publicodes-tools]: https:github.com/incubateur-ademe/publicodes-tools
 
 import Engine from 'publicodes'
 import path from 'path'
 import { readFileSync, writeFileSync } from 'fs'
 import { disabledLogger, getRawNodes } from '@incubateur-ademe/publicodes-tools'
 import { constantFolding } from '@incubateur-ademe/publicodes-tools/optims'
-import { exit } from 'process'
 
 // Rule names which should be kept in the optimized model.
 //
