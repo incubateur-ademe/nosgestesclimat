@@ -20,7 +20,7 @@ import {
 	supportedRegions,
 	supportedRegionCodes,
 } from './i18n/regionCommons.js'
-import { getModelFromSource } from 'publicodes-tools/compilation'
+import { getModelFromSource } from '@incubateur-ademe/publicodes-tools/compilation'
 
 const { srcLang, srcFile, destLangs, destRegions, markdown } = cli.getArgs(
 	`Aggregates the model to an unique JSON file.`,
