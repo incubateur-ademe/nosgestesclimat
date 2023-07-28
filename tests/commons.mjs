@@ -1,8 +1,5 @@
-const fs = require('fs/promises')
-const path = require('path')
-const yargs = require('yargs')
-const i18nUtils = require('./../scripts/i18n/utils')
-const { disabledLogger } = require('publiopti')
+import { disabledLogger } from '@incubateur-ademe/publicodes-tools'
+import Engine from 'publicodes'
 
 function col(str, color) {
 	return color + str + '\x1b[0m'
@@ -17,32 +14,6 @@ const c = {
 	yellow: (str) => col(str, '\x1b[93m'),
 	dim: (str) => col(str, '\x1b[2m'),
 }
-
-const Engine = require('publicodes').default
-
-const { country, language, markdown } = yargs(process.argv.slice(2))
-	.usage('Compare local and prod personas results\n\nUsage: $0 [options]')
-	.option('country', {
-		alias: 'c',
-		describe: 'Target country code',
-		type: 'string',
-		default: 'FR',
-	})
-	.option('language', {
-		alias: 'l',
-		describe: 'Target language code',
-		type: 'string',
-		default: i18nUtils.defaultLang,
-		choices: i18nUtils.availableLanguages,
-	})
-	.option('markdown', {
-		alias: 'm',
-		type: 'boolean',
-		description: 'Prints the result in a Markdown table format.',
-	})
-
-	.help('h')
-	.alias('h', 'help').argv
 
 const kgCO2Str = c.dim('(kg CO2e)')
 
@@ -77,7 +48,12 @@ function fmtGHActionErr(localResult, prodResult, diff, diffPercent, name) {
 }
 
 // TODO: could be improved by using a more generic way to compare results.
-function printResults(localResults, prodResults, markdown, withOptim = false) {
+export function printResults(
+	localResults,
+	prodResults,
+	markdown,
+	withOptim = false
+) {
 	if (markdown) {
 		console.log(
 			`#### ${
@@ -138,7 +114,7 @@ function printResults(localResults, prodResults, markdown, withOptim = false) {
 	}
 }
 
-function testPersonas(rules, personas) {
+export function testPersonas(rules, personas) {
 	const engine = new Engine(rules, { logger: disabledLogger })
 	const modelRules = Object.keys(engine.getParsedRules())
 	const personasRules = Object.values(personas)
@@ -157,9 +133,4 @@ function testPersonas(rules, personas) {
 	}
 
 	return results
-}
-
-module.exports = {
-	testPersonas,
-	printResults,
 }
