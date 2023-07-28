@@ -32,22 +32,9 @@ introduced a new meta-mechanism : `importer!`.
 
 ### Usage
 
-To import rules from a _packaged_ publicodes model, you need to specify the following syntax :
-
-```yaml
-importer!:
-  depuis: <npm_package_name>
-  les règles:
-    - <rule_name_from_the_npm_package>
-    - <rule_name_from_the_npm_package>:
-      <attr_to_overwrite>: <value>
-      ...
-    ...
-```
-
-When compiling yaml files to a standalone json file, each yaml entry
-`importer!` will be replaced by all imported rules and their dependencies by
-the `getModelFromSource.js` script.
+The import resolution is done via the `@incubateur-ademe/publicodes-tools` lib,
+for more information see the [dedicated doc
+page](https://incubateur-ademe.github.io/publicodes-tools/modules/compilation.html#md:import-rules-from-a-npm-package).
 
 ### Publishing a new package
 

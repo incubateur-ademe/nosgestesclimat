@@ -4,16 +4,26 @@
 	Command: yarn check:rules -- [options]
 */
 
-const path = require('path')
-const glob = require('glob')
-const R = require('ramda')
-const { exit } = require('process')
+import { resolve } from 'path'
+import { mergeAll } from 'ramda'
+import {
+	getArgs,
+	yellow,
+	askYesNo,
+	styledRuleNameWithOptionalAttr,
+	ask,
+	printChecksResultTableHeader,
+	printChecksResult,
+} from './cli.js'
+import {
+	writeYAML,
+	readYAML,
+	getMissingRules,
+	getNotUpToDateRuleTranslations,
+} from './utils.js'
+import { getModelFromSource } from '@incubateur-ademe/publicodes-tools/compilation'
 
-const cli = require('./cli')
-const utils = require('./utils')
-const { getModelFromSource } = require('../getModelFromSource')
-
-const { destLangs, srcFile, markdown } = cli.getArgs(
+const { destLangs, srcFile, markdown } = getArgs(
 	`Checks all rules have been translated.`,
 	{
 		source: true,
@@ -31,16 +41,16 @@ function manageNotUpToDateRuleTranslations(
 ) {
 	let removed = false
 	console.log(
-		`⚠️ There are ${cli.yellow(
+		`⚠️ There are ${yellow(
 			notUpToDateTranslationRules.length
 		)} not up-to-date rule translations:`
 	)
-	if (cli.askYesNo(`Do you want to log them?`)) {
+	if (askYesNo(`Do you want to log them?`)) {
 		notUpToDateTranslationRules.forEach((rule) =>
-			console.log(cli.styledRuleNameWithOptionalAttr(rule))
+			console.log(styledRuleNameWithOptionalAttr(rule))
 		)
 	}
-	switch (cli.ask(`Do you want to remove them?`, ['all', 'one', 'none'])) {
+	switch (ask(`Do you want to remove them?`, ['all', 'one', 'none'])) {
 		case 'a': {
 			removed = true
 			notUpToDateTranslationRules.forEach((rule) => {
@@ -51,8 +61,8 @@ function manageNotUpToDateRuleTranslations(
 		case 'o': {
 			notUpToDateTranslationRules.forEach((rule) => {
 				if (
-					cli.askYesNo(
-						`Do you want to remove ${cli.styledRuleNameWithOptionalAttr(rule)}?`
+					askYesNo(
+						`Do you want to remove ${styledRuleNameWithOptionalAttr(rule)}?`
 					)
 				) {
 					removed = true
@@ -67,7 +77,7 @@ function manageNotUpToDateRuleTranslations(
 	}
 	if (removed) {
 		console.log(`Writing updated rules translations to: ${destPath}`)
-		utils.writeYAML(destPath, destRules)
+		writeYAML(destPath, destRules)
 	}
 }
 
@@ -75,38 +85,32 @@ const rules = getModelFromSource(srcFile, ['data/i18n/**'], {
 	verbose: !markdown,
 })
 
-cli.printChecksResultTableHeader(markdown)
+printChecksResultTableHeader(markdown)
 
 destLangs.forEach((destLang) => {
 	const destPath = `data/i18n/t9n/translated-rules-${destLang}.yaml`
-	const destRules = R.mergeAll(utils.readYAML(path.resolve(destPath)))
-	const missingRules = utils.getMissingRules(rules, destRules)
+	const destRules = mergeAll(readYAML(resolve(destPath)))
+	const missingRules = getMissingRules(rules, destRules)
 	const missingRuleNames = missingRules.map((obj) =>
 		markdown
 			? `<li><b>${obj.rule}</b> > ${obj.attr}</li>`
-			: cli.styledRuleNameWithOptionalAttr(obj.rule, obj.attr)
+			: styledRuleNameWithOptionalAttr(obj.rule, obj.attr)
 	)
 	const nbMissing = missingRules.length
 
-	cli.printChecksResult(
-		nbMissing,
-		missingRuleNames,
-		'rules',
-		destLang,
-		markdown
-	)
+	printChecksResult(nbMissing, missingRuleNames, 'rules', destLang, markdown)
 
 	if (
 		!markdown &&
 		nbMissing > 0 &&
-		cli.askYesNo(`Do you want to log missing rules?`)
+		askYesNo(`Do you want to log missing rules?`)
 	) {
 		missingRules.map(({ rule: ruleName, attr }) =>
-			console.log(cli.styledRuleNameWithOptionalAttr(ruleName, attr))
+			console.log(styledRuleNameWithOptionalAttr(ruleName, attr))
 		)
 	}
 
-	const notUpToDateRuleTranslations = utils.getNotUpToDateRuleTranslations(
+	const notUpToDateRuleTranslations = getNotUpToDateRuleTranslations(
 		rules,
 		destRules
 	)
@@ -114,7 +118,7 @@ destLangs.forEach((destLang) => {
 
 	if (nbNotUpToDate > 0) {
 		if (markdown) {
-			cli.printChecksResult(
+			printChecksResult(
 				nbNotUpToDate,
 				notUpToDateRuleTranslations.map((rule) => `<li><b>${rule}</b></li>`),
 				'rules (not up-to-date)',
