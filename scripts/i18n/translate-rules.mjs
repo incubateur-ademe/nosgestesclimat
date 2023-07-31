@@ -5,21 +5,39 @@
 	Command: yarn translate -- [options]
 */
 
-const path = require('path')
-const glob = require('glob')
-const R = require('ramda')
-const { exit } = require('process')
-const prompt = require('prompt-sync')()
+import { resolve } from 'path'
+import { mergeAll, assocPath } from 'ramda'
+import { exit } from 'process'
 
-const utils = require('./utils')
-const cli = require('./cli')
-const deepl = require('./deepl')
+import {
+	LOCK_KEY_EXT,
+	AUTO_KEY_EXT,
+	PREVIOUS_REVIEW_KEY_EXT,
+	writeYAML,
+	readYAML,
+	getMissingRules,
+} from './utils.js'
 
-const gitDiff = require('git-diff')
-const { getModelFromSource } = require('../getModelFromSource')
+import {
+	getArgs,
+	italic,
+	green,
+	dim,
+	printInfo,
+	printWarn,
+	printErr,
+	yellow,
+	styledRuleNameWithOptionalAttr,
+	styledPromptActions,
+	ask,
+} from './cli.js'
+
+import { fetchTranslation, fetchTranslationMarkdown } from './deepl.js'
+import gitDiff from 'git-diff'
+import { getModelFromSource } from '@incubateur-ademe/publicodes-tools/compilation'
 
 const { srcLang, destLangs, srcFile, onlyUpdateLocks, interactiveMode } =
-	cli.getArgs(
+	getArgs(
 		`Calls the DeepL API to translate the rule questions, titles, notes,
 	summaries and suggestions.`,
 		{
@@ -51,46 +69,46 @@ const translateTo = async (
 		onlyNeedToUpdateLocks
 	) => {
 		let key = [rule, attr]
-		let refKey = [rule, attr + utils.LOCK_KEY_EXT]
-		let autoKey = [rule, attr + utils.AUTO_KEY_EXT]
-		let previousKey = [rule, attr + utils.PREVIOUS_REVIEW_KEY_EXT]
+		let refKey = [rule, attr + LOCK_KEY_EXT]
+		let autoKey = [rule, attr + AUTO_KEY_EXT]
+		let previousKey = [rule, attr + PREVIOUS_REVIEW_KEY_EXT]
 		let currentVal = translatedRules[rule] && translatedRules[rule][attr]
 
 		if ('mosaique' === attr) {
 			key = [rule, attr, 'suggestions']
-			refKey = [rule, attr, 'suggestions' + utils.LOCK_KEY_EXT]
-			previousKey = [rule, attr, 'suggestions' + utils.PREVIOUS_REVIEW_KEY_EXT]
-			autoKey = [rule, attr, 'suggestions' + utils.AUTO_KEY_EXT]
+			refKey = [rule, attr, 'suggestions' + LOCK_KEY_EXT]
+			previousKey = [rule, attr, 'suggestions' + PREVIOUS_REVIEW_KEY_EXT]
+			autoKey = [rule, attr, 'suggestions' + AUTO_KEY_EXT]
 			currentVal =
 				translatedRules[rule] && translatedRules[rule][attr]['suggestions']
 		}
 		if (
 			currentVal &&
-			translatedRules[rule][attr + utils.AUTO_KEY_EXT] &&
+			translatedRules[rule][attr + AUTO_KEY_EXT] &&
 			translatedRules[rule][attr] !==
-				translatedRules[rule][attr + utils.AUTO_KEY_EXT] &&
+				translatedRules[rule][attr + AUTO_KEY_EXT] &&
 			!onlyNeedToUpdateLocks
 		) {
 			// The previous translated value has been manually edited, we notify the user.
-			translatedRules = R.assocPath(previousKey, currentVal, translatedRules)
+			translatedRules = assocPath(previousKey, currentVal, translatedRules)
 			previoulsyReviewedTranslations.push(`${rule} -> ${attr}`)
 		}
 
 		if (!onlyNeedToUpdateLocks) {
-			translatedRules = R.assocPath(key, transVal, translatedRules)
-			translatedRules = R.assocPath(autoKey, transVal, translatedRules)
+			translatedRules = assocPath(key, transVal, translatedRules)
+			translatedRules = assocPath(autoKey, transVal, translatedRules)
 		}
-		translatedRules = R.assocPath(refKey, refVal, translatedRules)
+		translatedRules = assocPath(refKey, refVal, translatedRules)
 	}
 	const translate = (value) => {
-		return deepl.fetchTranslation(
+		return fetchTranslation(
 			value,
 			srcLang.toUpperCase(),
 			destLang.toUpperCase()
 		)
 	}
 	const translateMarkdown = (value) => {
-		return deepl.fetchTranslationMarkdown(
+		return fetchTranslationMarkdown(
 			value,
 			srcLang.toUpperCase(),
 			destLang.toUpperCase()
@@ -104,7 +122,7 @@ const translateTo = async (
 				const translatedRule = translatedRules[rule]
 				const isNewRule = translatedRule === undefined
 				const diff = gitDiff(
-					isNewRule ? '' : translatedRule[attr + utils.LOCK_KEY_EXT],
+					isNewRule ? '' : translatedRule[attr + LOCK_KEY_EXT],
 					refVal,
 					{
 						color: true,
@@ -112,15 +130,15 @@ const translateTo = async (
 					}
 				)
 				console.log(
-					`\n${cli.styledRuleNameWithOptionalAttr(rule, attr)}${
-						isNewRule ? ` ${cli.italic(cli.green('new'))}` : ''
+					`\n${styledRuleNameWithOptionalAttr(rule, attr)}${
+						isNewRule ? ` ${italic(green('new'))}` : ''
 					}\n${diff}`
 				)
 				do {
 					if (answer === 'p') {
-						console.log(`${cli.dim('')}${translatedRules[rule][attr]}`)
+						console.log(`${dim('')}${translatedRules[rule][attr]}`)
 					}
-					answer = prompt(cli.dim(`(tuspa): `))
+					answer = ask(dim(`(tuspa): `), ['u', 's', 't', 'a'])
 				} while (!['u', 's', 't', 'a'].includes(answer))
 			}
 			if (answer === 'a') {
@@ -163,41 +181,37 @@ const translateTo = async (
 	)
 
 	skippedTranslations.forEach((rule) => {
-		cli.printInfo(
-			`[INFO] - '${rule}': only the reference value has been updated`
-		)
+		printInfo(`[INFO] - '${rule}': only the reference value has been updated`)
 	})
 	skippedValues.forEach(({ rule, msg }) => {
-		cli.printWarn(`[SKIPPED] - '${rule}': ${msg}`)
+		printWarn(`[SKIPPED] - '${rule}': ${msg}`)
 	})
 	previoulsyReviewedTranslations.forEach((rule) => {
-		cli.printErr(
+		printErr(
 			`[PREVIOUSLY REVIEWED] - '${rule}': previous translation has been previously corrected by hand`
 		)
 	})
 	console.log(`Writing translated rules to: ${destPath}`)
-	utils.writeYAML(destPath, translatedRules)
+	writeYAML(destPath, translatedRules)
 }
 
 const rules = getModelFromSource(srcFile, ['data/i18n/**'], { verbose: true })
 
 destLangs.forEach(async (destLang) => {
-	const destPath = path.resolve(
-		`data/i18n/t9n/translated-rules-${destLang}.yaml`
-	)
-	const destRules = R.mergeAll(utils.readYAML(destPath))
+	const destPath = resolve(`data/i18n/t9n/translated-rules-${destLang}.yaml`)
+	const destRules = mergeAll(readYAML(destPath))
 	console.log(`Getting missing rule for ${destLang}...`)
-	let missingRules = utils.getMissingRules(rules, destRules)
+	let missingRules = getMissingRules(rules, destRules)
 
 	if (0 < missingRules.length) {
 		console.log(
-			`Translating ${cli.green(
-				missingRules.length
-			)} new entries to ${cli.yellow(destLang)}...`
+			`Translating ${green(missingRules.length)} new entries to ${yellow(
+				destLang
+			)}...`
 		)
 		if (interactiveMode) {
 			console.log(
-				`For each rule, you can choose to:\n\n${cli.styledPromptActions(
+				`For each rule, you can choose to:\n\n${styledPromptActions(
 					[
 						'translate',
 						'update .lock attribute',
