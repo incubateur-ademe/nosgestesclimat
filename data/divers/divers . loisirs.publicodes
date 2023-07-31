@@ -1,7 +1,7 @@
 divers . loisirs:
   titre: Loisirs
   description: |
-    Cette catégorie concerne toutes les pratiques culturelles, sportives, de détente et de bien-être.
+    Cette catégorie concerne toutes les pratiques culturelles, sportives, de détente et de bien-être. Dans une première version des "Loisirs", nous avons tout d'abord considéré les pratiques culturelles.
   note: |
     La diversité des loisirs est très grande. Nous tentons ici une première approche dite "macro", à savoir que nous partons de l'empreinte totale du secteur en France, et nous ramenons cela à un individu.
   icônes: 🎭
@@ -13,6 +13,7 @@ divers . loisirs:
       # - bien-être
 
 divers . loisirs . culture:
+  icônes: 🎭
   mosaique:
     type: selection
     clé: présent
@@ -32,10 +33,11 @@ divers . loisirs . culture . empreinte totale:
       - empreinte concerts et spectacles
       - empreinte musées et monuments
       - empreinte édition
-      # - télévision et radio
       - empreinte pratique de la musique
-      # - jeux de hasard et d'argent
   unité: kgCO2e
+  note: |
+    Pour le moment, nous prenons en compte les concerts et spectacles, musées, l'édition (presse, livres), la pratique de la musique.
+    Les achats d'abonnements TV ou les jeux d'argents sont exclus pour le moment.
 
 divers . loisirs . culture . empreinte par défaut:
   description: Un calcul statistique des pratiques culturelles pour un français moyen.
@@ -44,9 +46,7 @@ divers . loisirs . culture . empreinte par défaut:
       - concerts et spectacles . moyenne macro française
       - musées et monuments . moyenne macro française
       - édition . moyenne macro française
-      # - télévision et radio . moyenne macro française
       - pratique de la musique . moyenne macro française
-      # - jeux de hasard et d'argent . moyenne macro française
   unité: kgCO2e
 
 divers . loisirs . culture . choix utilisateur:
@@ -58,14 +58,13 @@ divers . loisirs . culture . choix utilisateur:
             - concerts et spectacles . présent
             - musées et monuments . présent
             - édition . présent
-            # - télévision et radio . présent
             - pratique de la musique . présent
-            # - jeux de hasard et d'argent . présent
         alors: oui
       - sinon: non
 
 divers . loisirs . culture . empreinte concerts et spectacles:
   titre: Empreinte concerts et spectacles
+  icônes: 🎟
   applicable si: concerts et spectacles . présent
   formule: concerts et spectacles . moyenne macro pondérée
   unité: kgCO2e
@@ -115,6 +114,7 @@ divers . loisirs . culture . concerts et spectacles . fréquence:
 
 divers . loisirs . culture . empreinte musées et monuments:
   titre: Empreinte musées et monuments
+  icônes: 🖼️
   applicable si: musées et monuments . présent
   formule: musées et monuments . moyenne macro pondérée
   unité: kgCO2e
@@ -167,6 +167,7 @@ divers . loisirs . culture . musées et monuments . fréquence . amateur:
 
 divers . loisirs . culture . empreinte édition:
   titre: Empreinte édition (livres, presse et logiciels)
+  icônes: 📚
   applicable si: édition . présent
   formule: édition . moyenne macro pondérée
   unité: kgCO2e
@@ -223,6 +224,45 @@ divers . loisirs . culture . édition . fréquence . élevée:
   titre: Beaucoup (de 10 à 30€ par mois)
 divers . loisirs . culture . édition . fréquence . très élevée:
   titre: Énormément (plus de 30€ par mois)
+
+divers . loisirs . culture . empreinte pratique de la musique:
+  titre: Empreinte de la pratique de la musique
+  applicable si: pratique de la musique . présent
+  formule: pratique de la musique . moyenne macro pondérée
+  unité: kgCO2e
+  note: Nous comptons ici la pratique de la musique, au travers de la possession d'un ou plusieurs instruments de musique.
+
+divers . loisirs . culture . pratique de la musique:
+  titre: Pratique de la musique
+  icônes: 🎺
+
+divers . loisirs . culture . pratique de la musique . présent:
+  question: Possédez-vous un instrument de musique ?
+  par défaut: non
+
+divers . loisirs . culture . pratique de la musique . moyenne macro pondérée:
+  formule: moyenne macro française / proportion de pratiquants
+
+divers . loisirs . culture . pratique de la musique . moyenne macro française:
+  formule: empreinte branche . C32 par hab * 0.02
+  unité: kgCO2e/an
+  note: |
+    Actuellement, nous prenons ici en compte les branches :
+
+    - Fabrication d'instruments de musique (C32.2, correspondant à 2% de C32)
+     
+    Il pourrait être intéressant de réussir à intégrer :
+
+    - Commerce de détail d'instruments de musique et de partitions musicales (G47.00.58 mais nous n'avons pas ce niveau de détail : il appartient à la sous-catégorie Commerce de détail de meubles, appareils d'éclairage et autres articles de ménage en magasin spécialisé, correspondant à 0.34 * 0.10 * G47)
+    - Enseignement musical (P85.52.12 : entièrement compté dans les services publics actuellement)
+    - Services de réparation et entretien d'instruments de musique (S95.29.13 : actuellement compté dans la question "dépenses courantes / produits neufs")
+
+divers . loisirs . culture . pratique de la musique . proportion de pratiquants:
+  formule: 0.37
+  note: |
+    D'après [cette étude](https://www.ifop.com/wp-content/uploads/2018/03/3933-1-study_file.pdf), 6% des français pratiquent un instrument de musique régulièrement. 31% a appris mais ne pratique plus du tout ou quasiment plus du tout.
+    Cette [autre étude (malheureusement un peu datée)](https://www.ifop.com/wp-content/uploads/2018/03/3933-1-study_file.pdf) nous porte à croire que pourvu que l'individu ait appris la musique, il possède chez lui un instrument de musique (même proportion d'apprenants et de possédants).
+    Nous pouvons donc estimer que 37% des français possèdent un instrument de musique chez eux.
 
 # divers . loisirs . culture . télévision et radio:
 #   titre: Télévision et radio
@@ -281,45 +321,6 @@ divers . loisirs . culture . édition . fréquence . très élevée:
 #   titre: J'en consomme beaucoup (de 10 à 30€ par mois)
 # divers . loisirs . culture . télévision et radio . fréquence . très élevée:
 #   titre: J'en consomme énormément (plus de 30€ par mois)
-
-divers . loisirs . culture . empreinte pratique de la musique:
-  titre: Empreinte de la pratique de la musique
-  applicable si: pratique de la musique . présent
-  formule: pratique de la musique . moyenne macro pondérée
-  unité: kgCO2e
-  note: Nous comptons ici la pratique de la musique, au travers de la possession d'un ou plusieurs instruments de musique.
-
-divers . loisirs . culture . pratique de la musique:
-  titre: Pratique de la musique
-  icônes: 🎺
-
-divers . loisirs . culture . pratique de la musique . présent:
-  question: Possédez-vous un instrument de musique ?
-  par défaut: non
-
-divers . loisirs . culture . pratique de la musique . moyenne macro pondérée:
-  formule: moyenne macro française / proportion de pratiquants
-
-divers . loisirs . culture . pratique de la musique . moyenne macro française:
-  formule: empreinte branche . C32 par hab * 0.02
-  unité: kgCO2e/an
-  note: |
-    Actuellement, nous prenons ici en compte les branches :
-
-    - Fabrication d'instruments de musique (C32.2, correspondant à 2% de C32)
-     
-    Il pourrait être intéressant de réussir à intégrer :
-
-    - Commerce de détail d'instruments de musique et de partitions musicales (G47.00.58 mais nous n'avons pas ce niveau de détail : il appartient à la sous-catégorie Commerce de détail de meubles, appareils d'éclairage et autres articles de ménage en magasin spécialisé, correspondant à 0.34 * 0.10 * G47)
-    - Enseignement musical (P85.52.12 : entièrement compté dans les services publics actuellement)
-    - Services de réparation et entretien d'instruments de musique (S95.29.13 : actuellement compté dans la question "dépenses courantes / produits neufs")
-
-divers . loisirs . culture . pratique de la musique . proportion de pratiquants:
-  formule: 0.37
-  note: |
-    D'après [cette étude](https://www.ifop.com/wp-content/uploads/2018/03/3933-1-study_file.pdf), 6% des français pratiquent un instrument de musique régulièrement. 31% a appris mais ne pratique plus du tout ou quasiment plus du tout.
-    Cette [autre étude (malheureusement un peu datée)](https://www.ifop.com/wp-content/uploads/2018/03/3933-1-study_file.pdf) nous porte à croire que pourvu que l'individu ait appris la musique, il possède chez lui un instrument de musique (même proportion d'apprenants et de possédants).
-    Nous pouvons donc estimer que 37% des français possèdent un instrument de musique chez eux.
 
 # divers . loisirs . culture . jeux de hasard et d'argent:
 #   titre: Jeux de hasard et d'argent
