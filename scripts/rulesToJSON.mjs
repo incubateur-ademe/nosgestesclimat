@@ -89,9 +89,18 @@ if (markdown) {
 
 writeSupportedRegions()
 
-const baseRules = getModelFromSource(srcFile, ['data/i18n/**'], {
-	verbose: !markdown,
-})
+let baseRules
+
+try {
+	baseRules = getModelFromSource(srcFile, {
+		ignore: ['data/i18n/**'],
+		verbose: !markdown,
+	})
+} catch (err) {
+	console.error(` ❌ An error occured while trying to parse the base rules:\n`)
+	console.error(err.message)
+	exit(-1)
+}
 
 const piscina = new Piscina({
 	filename: new URL('./rulesToJSON.worker.mjs', import.meta.url).href,
