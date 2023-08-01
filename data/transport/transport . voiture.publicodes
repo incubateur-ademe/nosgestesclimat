@@ -22,7 +22,7 @@ transport . voiture . empreinte:
     variations:
       - si: voiture . aide km
         alors: construction amortie / ratio voyageurs + usage
-      - sinon: (construction amortie + usage) / voyageurs
+      - sinon: (usage + construction amortie) / voyageurs
   unité: kgCO2e
 
 transport . voiture . saisie voyageurs:
@@ -42,7 +42,7 @@ transport . voiture . saisie voyageurs:
   par défaut: 1.2
   unité: voyageur
   suggestions:
-    un seul: 1
+    je suis seul: 1
     deux: 2
     cinq: 5
 
@@ -53,6 +53,7 @@ transport . voiture . voyageurs:
       - si: notif minimum voyageurs
         alors: 1
       - sinon: saisie voyageurs
+  unité: voyageur
 
 transport . voiture . notif minimum voyageurs:
   type: notification
@@ -221,7 +222,6 @@ transport . voiture . électrique . empreinte au kilomètre:
 
 transport . voiture . empreinte . usage:
   formule: km * au kilomètre
-  unité: kgCO2e
 
 transport . voiture . empreinte . par km personne:
   formule: au kilomètre / voyageurs
@@ -234,6 +234,7 @@ transport . voiture . empreinte . au kilomètre:
       - si: motorisation = 'hybride'
         alors: thermique . empreinte au kilomètre * 0.85
       - sinon: électrique . empreinte au kilomètre
+  unité: kgCO2e/km
   note: |
     Pour la voiture hybride, nous n'avons pour l'instant pas utilisé les valeurs de la base bilan-GES, car elles sont compliquées à interprêter :
       - la catégorie "hybride rechargeable" a une empreinte étonnamment faible (du niveau de l'électrique), mais surtout 0 émissions à la combustion. Ce serait donc un véhicule essence qui n'utilise pas d'essence à l'usage ? [Un sujet récent] sur le forum de bilan-GES n'explique pas l'incohérence.
