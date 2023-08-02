@@ -2,10 +2,21 @@ importer!:
   depuis:
     nom: futureco-data
     url: https://github.com/laem/futureco-data
+  dans: logement
   les règles:
     - piscine . empreinte eau froide
     - piscine . traitement chimique
     - piscine . construction
+    - piscine . surface:
+        applicable si: piscine . présent
+        question: Quelle est la taille de votre piscine ?
+        description: |
+          💡 Pensez à prendre en compte **les consommations d'énergie de la piscine dans celles de votre logement**. Votre facture devrait d'ailleurs être fortement impactée si votre piscine est chauffée !
+        unité: m2
+        suggestions:
+          3 x 5 mètres: 15
+          5 x 5 mètres: 20
+          5 x 8 mètres: 40
 
 logement . piscine:
   icônes: 🏊‍♀️
@@ -41,6 +52,7 @@ logement . piscine:
       - L'éventuel abri de piscine, les acccessoires type jeux ne sont pas pris en compte pour le moment
 
     Il est important de noter que ce modèle de calcul est amélioré en continu. (Voir https://github.com/laem/futureco-data/issues/97)
+
 logement . piscine . présent:
   non applicable si: logement . appartement
   question: Votre logement dispose-t-il d'une piscine privée (enterrée/creusée) ?
@@ -51,23 +63,3 @@ logement . piscine . présent:
     Aujourd'hui, nous posons la question à toutes les personnes qui possèdent une maison.
     Afin de limiter l'apparition de cette question pour les utilisateurs qui ne possèdent pas de terrain, ou qui ne sont absoluement pas concernés par la piscine, 
     on pourrait filtrer l'affichage de la question selon la surface de la maison par exemple.
-
-piscine . surface:
-  formule:
-    variations:
-      - si: logement . piscine . présent
-        alors: logement . piscine . surface
-      - sinon: 32
-  ## on garde la valeur par défaut du modèle initial
-
-logement . piscine . surface:
-  applicable si: piscine . présent
-  question: Quelle est la taille de votre piscine ?
-  description: |
-    💡 Pensez à prendre en compte **les consommations d'énergie de la piscine dans celles de votre logement**. Votre facture devrait d'ailleurs être fortement impactée si votre piscine est chauffée !
-  par défaut: 32
-  unité: m2
-  suggestions:
-    3 x 5 mètres: 15
-    5 x 5 mètres: 20
-    5 x 8 mètres: 40
