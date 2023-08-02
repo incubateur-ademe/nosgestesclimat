@@ -39,7 +39,7 @@ livraison colis . transport inter plateformes . routier:
 livraison colis . transport inter plateformes . routier . distance:
   question: Quelle est la distance parcourue entre les plateformes, entrepôts de stockage ?
   par défaut: 400
-  unité: véhicules-kilomètres
+  unité: km
 
 livraison colis . transport inter plateformes . routier . distance . coefficient de correction distance:
   titre: Coefficient de correction des distances en transport dédié
@@ -78,13 +78,12 @@ livraison colis . transport inter plateformes . routier . véhicule . chargement
         alors: 0.2
       - si: véhicule = 'PL moyen'
         alors: 3.5
-  unité: tonnes
+  unité: t
   note: |
     Quand taux de charge = 15%
 
 livraison colis . transport inter plateformes . routier . véhicule . vitesse moyenne:
   formule: 60
-  unité: km/h
 
 livraison colis . transport inter plateformes . routier . route:
   formule: empreinte * tonnes km
@@ -92,12 +91,12 @@ livraison colis . transport inter plateformes . routier . route:
 
 livraison colis . transport inter plateformes . routier . route . empreinte:
   formule: 5.6
-  unité: gCO2e / tonnes.km
+  unité: gCO2e / t.km
   note: Source ECEL
 
 livraison colis . transport inter plateformes . routier . route . tonnes km:
   formule: distance * livraison colis . informations . poids / 1000
-  unité: tonnes.km
+  unité: t.km
 
 livraison colis . transport inter plateformes . routier . fabrication véhicule:
   formule: empreinte * tonnes km
@@ -110,11 +109,11 @@ livraison colis . transport inter plateformes . routier . fabrication véhicule 
         alors: 8.4
       - si: véhicule = 'PL moyen'
         alors: 2.8
-  unité: gCO2e / tonnes.km
+  unité: gCO2e / t.km
 
 livraison colis . transport inter plateformes . routier . fabrication véhicule . tonnes km:
   formule: distance * véhicule . chargement moyen * livraison colis . informations . poids / 1000
-  unité: tonnes.km
+  unité: t.km
   note: Je comprends pas pourquoi le chargement moyen apparaît ici
 
 livraison colis . transport inter plateformes . routier . usage véhicule:
@@ -128,7 +127,7 @@ livraison colis . transport inter plateformes . routier . usage véhicule . empr
       avec:
         empreinte véhicule par km HBEFA . vitesse moyenne véhicule: véhicule . vitesse moyenne
         empreinte véhicule par km HBEFA . type de véhicule: véhicule
-  unité: gCO2e / tonnes.km
+  unité: gCO2e / t.km
 
 livraison colis . transport inter plateformes . aérien:
   formule: tonnes km * empreinte
@@ -147,7 +146,7 @@ livraison colis . transport inter plateformes . aérien . empreinte:
       - si: distance < 5000
         alors: 1300
       - sinon: 1200
-  unité: gCO2e / tonnes.km
+  unité: gCO2e / t.km
   note: |
     Les traînées de condensation ne sont pas prises en compte.
     Données issues de ECEL basé sur :
@@ -155,7 +154,7 @@ livraison colis . transport inter plateformes . aérien . empreinte:
 
 livraison colis . transport inter plateformes . aérien . tonnes km:
   formule: distance * livraison colis . informations . poids / 1000
-  unité: tonnes.km
+  unité: t.km
 
 livraison colis . transport inter plateformes . ferroviaire:
   formule: tonnes km * empreinte
@@ -168,12 +167,12 @@ livraison colis . transport inter plateformes . ferroviaire . distance:
 
 livraison colis . transport inter plateformes . ferroviaire . empreinte:
   formule: 30
-  unité: gCO2e / tonnes.km
+  unité: gCO2e / t.km
   note: On considère le FE "Europe"
 
 livraison colis . transport inter plateformes . ferroviaire . tonnes km:
   formule: distance * livraison colis . informations . poids / 1000
-  unité: tonnes.km
+  unité: t.km
 
 livraison colis . transport inter plateformes . maritime:
   formule: tonnes km * empreinte
@@ -186,9 +185,9 @@ livraison colis . transport inter plateformes . maritime . distance:
 
 livraison colis . transport inter plateformes . maritime . empreinte:
   formule: 48
-  unité: gCO2e / tonnes.km
+  unité: gCO2e / t.km
   note: On considère le FE "Europe"
 
 livraison colis . transport inter plateformes . maritime . tonnes km:
   formule: distance * livraison colis . informations . poids / 1000
-  unité: tonnes.km
+  unité: t.km
