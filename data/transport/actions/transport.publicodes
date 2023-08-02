@@ -185,7 +185,7 @@ transport . réduction covoiturage:
 
 transport . boulot . distance:
   formule: semaines * hebdomadaire
-  unité: km
+  unité: km.voyageur
 
 transport . boulot . semaines:
   formule: 47
@@ -193,13 +193,13 @@ transport . boulot . semaines:
   description: 47 semaines, plutôt que 52 pour prendre en compte les 5 semaines de congés.
 
 transport . boulot . distance . hebdomadaire:
-  formule: km aller * 2 * jours travaillés en voiture
-  unité: km/semaine
+  formule: km par jour * jours travaillés en voiture
+  unité: km.voyageur/semaine
 
 transport . boulot . jours travaillés en voiture:
   question: Combien de jours par semaine prenez-vous votre voiture pour aller au travail ?
-  par défaut: 4 jours
-  unité: jour
+  par défaut: 4
+  unité: jour/semaine
   suggestions:
     0: 0
     1: 1
@@ -208,9 +208,15 @@ transport . boulot . jours travaillés en voiture:
     4: 4
     5: 5
 
+transport . boulot . distance . km par jour:
+  titre: Distance aller-retour trajet domicile travail
+  formule: 2 trajet/jour * km aller
+  unité: km.voyageur/jour
+
 transport . boulot . distance . km aller:
+  titre: Distance aller trajet domicile travail
   question: A quelle distance de chez vous se situe votre travail ?
-  unité: km
+  unité: km.voyageur/trajet
   description: |
     Nous parlons ici de la distance *aller*, avec le mode de transport que vous privilégiez.
 
@@ -220,7 +226,7 @@ transport . boulot . distance . km aller:
 
     Source : études INSEE 2004 et 2013, chiffres stables.
   note: Mettre un lien vers l'étude et mettre à jour avec les statistiques de l'enquête déplacement 2020 si disponible.
-  par défaut: 10 km
+  par défaut: 10
 
 transport . empreinte au km covoiturage: 0.2 kgCO2e/km
 
@@ -270,7 +276,7 @@ transport . seuil d'activation boulot:
     Nous définitions la distance du seuil à 2km (trajet aller), pour 5 jours par semaine.
 
   formule: transport . boulot . distance
-  unité: km
+  unité: km.voyageur
 
 transport . boulot . commun . gain empreinte au km:
   formule: voiture . empreinte . au kilomètre - empreinte
@@ -355,13 +361,13 @@ transport . boulot . jours gagnés:
   plafond: jours travaillés en voiture
 
 transport . boulot . empreinte jour voiture:
-  formule: (distance . km aller * 2) * voiture . empreinte . au kilomètre
+  formule: distance . km par jour * voiture . empreinte . au kilomètre
   unité: kgCO2e/jour
 
 transport . boulot . jours télétravaillés:
   question: Combien de jours de télétravail par semaine pourriez-vous faire ?
-  par défaut: 1 jours
-  unité: jour
+  par défaut: 1
+  unité: jour/semaine
   suggestions:
     1: 1
     2: 2
@@ -403,15 +409,17 @@ transport . seuil d'activation 5km:
     > Si quelqu'un nous dit qu'il ne fait que 200km de voiture dans l'année, il y a peu de chances 
     > qu'il s'agisse de trajets de 5km.
 
-  formule: semaines par an * distance moyenne aller-retour trajet court
-  unité: km
+    On définit cette valeur comme étant équivalente à 2 trajets de 5 km A/R par semaine.
+  formule: semaines par an * 2 trajet/semaine * distance moyenne aller-retour trajet court
+  unité: km.voyageur
 
 transport . distance moyenne aller-retour trajet court:
-  formule: distance moyenne trajet court * 2
+  formule: distance moyenne trajet court
+  unité: km.voyageur/trajet
 
 transport . distance moyenne trajet court:
   formule: 2.5
-  unité: km/trajets
+  unité: km.voyageur/trajet
   description: Nous estimons simplement à 2,5km la moyenne de distance des trajets inférieurs à 5km.
 
 transport . voiture 5km . recalcul:
@@ -441,7 +449,7 @@ transport . voiture 5km . fréquence:
     Je vais chercher mon pain à 2km en voiture, cela représente un trajet.
     Je vais au travail tous les jours du lundi au vendredi à 4km, c'est 5 trajets.
   par défaut: 14
-  unité: trajets/semaine
+  unité: trajet/semaine
   suggestions:
     jamais: 0
     seulement le weekend: 2
