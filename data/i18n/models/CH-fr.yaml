@@ -23,6 +23,10 @@ transport . voiture . limitation autoroute:
 
     Nous proposons ici une évalution de cette mesure basée sur votre situation précise.
 
+transport . voiture . limitation autoroute . réduction:
+  titre: Gain de consommation 120 -> 100
+  formule: 25%
+
 transport . voiture . km:
   question: Quelle distance parcourez-vous à l'année en voiture ?
   par défaut: 7000 km/an
@@ -208,7 +212,6 @@ transport . voiture . électrique . empreinte au kilomètre:
       - sinon: 0.028
   note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
 
-
 transport . voiture . empreinte . construction . barème thermique:
   formule:
     variations:
@@ -230,7 +233,6 @@ transport . voiture . empreinte . construction . barème thermique:
             - gabarit = 'SUV'
         alors: 8837
   note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
-
 
 transport . voiture . empreinte . construction . barème électrique:
   formule:
@@ -254,7 +256,6 @@ transport . voiture . empreinte . construction . barème électrique:
         alors: 15755
   note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
 
-
 transport . voiture . empreinte . construction . barème hybride:
   formule:
     variations:
@@ -277,11 +278,9 @@ transport . voiture . empreinte . construction . barème hybride:
         alors: 10525
   note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
 
-
 transport . voiture . durée de vie:
   formule: 17
   note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
-
 
 transport . ferry . heures:
   suggestions:
@@ -368,6 +367,15 @@ divers . autres produits . montant:
     les matériaux pour les loisirs créatifs ou bricolage, les affaires de sports (ski, surf...), etc...**
   par défaut: 2000 CHF/an
 
+divers . autres produits . niveau de dépenses . faible:
+  titre: Moins de 50CHF / mois
+
+divers . autres produits . niveau de dépenses . moyen:
+  titre: Environ 80CHF / mois
+
+divers . autres produits . niveau de dépenses . important:
+  titre: Plus 120CHF / mois
+
 # ALIMENTATION
 alimentation . petit déjeuner . type:
   description: |
@@ -379,25 +387,25 @@ alimentation . petit déjeuner . type:
     Lait et céréales - Un bol de lait ou un yaourt avec des céréales. L'origine (animale ou végétale) du lait que vous buvez vous sera demandé dans la suite !
 
     Salé (type britannique) - Un petit petit dej' salé : toasts, oeufs, charcuterie. Nous avons alléger le traditionnel déjeuner anglais ou irlandais qui comprend également baked beans, saucisses, tomates, champignons, pommes de terre.
+       
     Fruits - Un petit petit dej' composé de fruits.
 
     Pas de petit-dej' - Vous ne mangez rien au petit déjeuner (mais vous pouvez boire un café, un thé ou un chocolat chaud pris en compte dans une autre question).
 
 alimentation . de saison . consommation:
-  question: Consommez-vous des produits de saison ?
   description: |
     Cette question nous permet de corriger l'empreinte de votre régime alimentaire en fonction de votre habitude sur le caractère de saison de vos achats.
 
 alimentation . local . consommation:
-  question: Consommez-vous des produits locaux ?
   description: |
     Cette question nous permet de corriger l'empreinte de votre régime alimentaire en fonction de votre habitude sur le caractère local de vos achats.
-    Nous considérons ""locaux"" les aliments qui sont issus de la région où vous vivez ou de régions proches. Si vous mangez ""suisse"" considérez votre alimentation comme locale.
+    Nous considérons "locaux" les aliments qui sont issus de la région où vous vivez ou de régions proches. Si vous mangez "suisse" considérez votre alimentation comme locale.
     Ce critère a un impact relativement faible car la part du transport dans l'empreinte carbone des produits que nous consommons est faible devant les émissions liées à la production, la transformation ou l'emballage, surtout quand votre régime est carné.
     Mais c'est toujours ça de gagné, et les avantages d'une consommation locale ne s'arrêtent pas à l'empreinte climat.
 
+    ⚠️ Attention, si vous faites vos courses en voiture à plusieurs km de chez vous chaque semaine, il est possible que l'empreinte du dernier km dépasse les gains d'une alimentation locale !
+
 alimentation . déchets . quantité jetée:
-  question: Comment estimeriez-vous la quantité de déchets que vous jetez ?
   description: |
     Répondez 'Zéro Déchet' uniquement si vous traquez le moindre déchet. Pour en savoir plus sur les modes de vie zéro déchets, visitez le site Zero Waste Genève
 
@@ -414,23 +422,19 @@ alimentation . déchets . gestes:
 
 #LOGEMENT
 logement . électricité . estimation via le coût:
-  question: Pas de facture ? Entrez vos dépenses approximatives par mois
   unité: CHF/kWh
   formule: 0.280
 
 logement . chauffage . réseau de chaleur . estimation via le prix:
-  question: Pas de facture ? Entrez vos dépenses approximatives par mois
   unité: CHF/kWh
 
 logement . chauffage . intensité carbone réseau de chaleur:
   formule: 0.067
 
 logement . chauffage . gaz . estimation via le coût:
-  question: Pas de facture ? Entrez vos dépenses approximatives par mois
   unité: CHF/kWh
 
 logement . chauffage . citerne propane . estimation via le coût:
-  question: Pas de facture ? Entrez vos dépenses approximatives par mois
   unité: CHF/kg
 
 logement . chauffage . bois . type . granulés . consommation . estimation via le coût:
@@ -463,7 +467,7 @@ logement . appartement:
   description: |
     Par opposition à une maison individuelle ou une villa.
     Cette information influence notamment l'empreinte de construction, mais aussi les possibilités de travaux d'isolation par exemple.
-    Si vous vivez dans un habitat original, par exemple un camping car, pas de problème : choisissez ""appartement"" et saisissez les m² de ce qui constitue quand même votre logement.
+    Si vous vivez dans un habitat original, par exemple un camping car, pas de problème : choisissez "appartement" et saisissez les m² de ce qui constitue quand même votre logement.
 
 logement . âge:
   question: Quel est l'âge de votre logement ?
@@ -524,3 +528,17 @@ logement . chauffage . fioul . consommation:
   unité: litre
   description: |
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur votre facture de fioul ou sur votre décompte de charges annuelles envoyé par votre régie.
+
+# pour supprimer la variation biogaz
+logement . gaz . intensité carbone gaz utilisateur:
+  formule: gaz . facteur d'émission base carbone
+
+# pour supprimer le gaz propane
+logement . chauffage . empreinte totale:
+  formule:
+    somme:
+      - gaz
+      - bouteille gaz
+      - fioul
+      - bois . empreinte
+      - réseau de chaleur
