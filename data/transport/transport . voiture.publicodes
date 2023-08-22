@@ -416,27 +416,19 @@ transport . voiture . gabarit . berline . empreinte:
   unité: kgCO2e
   note: Règle utilisée pour le calcul de l'empreinte de la caravane et camping car.
 
-transport . voiture . âge:
-  applicable si:
+transport . voiture . véhicule récent:
+  question: Votre véhicule a t-il moins de 20 ans (produit après 2004) ?
+  par défaut: oui
+  applicable si: 
     toutes ces conditions:
       - km > 0
       - propriétaire # Nous ne devrions pas avoir à poser ces conditions. Publicodes devrait déterminer lui-même qu'elles sont à poser après la question des km et la question propriétaire, mais la nouvelle version de publicodes a perdu ce côté magique.
-  question: Quel est l'âge de votre voiture ?
   description: |
     Pour calculer l'empreinte de la construction de la voiture, qu'il ne faut pas négliger, nous utilisons l'âge de la voiture.
 
-    Répondez bien avec *l'âge de la voiture*, pas le nombre d'année qu'elle a passé en votre possession : il y a en effet de grandes chances que vous l'ayez achetée d'occasion.
-
-    Si vous êtes deux à utiliser deux voitures, vous pouvez simplement vous en attribuer une, ou entrer une moyenne de leurs caractéristiques.
+    Si vous êtes deux à utiliser deux voitures, vous pouvez simplement vous en attribuer une.
 
     Si vous possédez plusieurs voitures utilisées uniquement par vous même, ~~vendez au moins la deuxième~~ ce cas n'est pas encore prévu.
-  unité: années
-  par défaut: 9 années
-  suggestions:
-    6 mois: 0.5
-    1 an et demi: 1.5
-    5 ans: 5
-    10 ans: 10
 
 transport . voiture . empreinte . construction amortie:
   formule:
@@ -459,7 +451,7 @@ transport . voiture . amortissement:
     Nous avons donc fait le choix de revenir pour la voiture à un amortissement linéaire sur la durée de vie de la voiture, à savoir 19 ans d'après cette [source](https://www.largus.fr/actualite-automobile/le-top-15-des-voitures-envoyees-a-la-casse-10348407.html).
   formule:
     variations:
-      - si: âge < 19
+      - si: véhicule récent
         alors: 1 / 19
       - sinon: 0%
 
