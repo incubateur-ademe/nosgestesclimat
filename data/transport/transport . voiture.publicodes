@@ -437,15 +437,16 @@ transport . voiture . âge:
     1 an et demi: 1.5
     5 ans: 5
     10 ans: 10
+
 transport . voiture . empreinte . construction amortie:
   formule:
     variations:
       - si: propriétaire
-        alors: construction * amortissement particulier
-      - sinon: (construction / durée de vie) * facteur location
+        alors: construction * amortissement
+      - sinon: construction * amortissement * facteur location
   unité: kgCO2e
 
-transport . voiture . amortissement particulier:
+transport . voiture . amortissement:
   description: |
     Quand on achète une voiture, on fait émettre une quantité donnée de GES. Disons par exemple, 10 tonnes, pour une durée de vie de la voiture de 10 ans. Ces gaz sont émis l'année de l'achat, ou plus ou moins (certains composants auront déjà été produits).
 
@@ -464,14 +465,8 @@ transport . voiture . amortissement particulier:
     Quand on aura mis à jour le code avec la dernière version de publi.codes, on pourra utiliser le [mécanisme `grille`](https://publi.codes/mécanismes#grille) qui fait exactement ça.
   formule:
     variations:
-      - si: âge < 1
-        alors: 40%
-      - si: âge < 2
-        alors: 20%
-      - si: âge < 3
-        alors: 10%
-      - si: âge < 10
-        alors: 5%
+      - si: âge < 19
+        alors: 1 / 19
       - sinon: 0%
 
 transport . voiture . durée de vie:
