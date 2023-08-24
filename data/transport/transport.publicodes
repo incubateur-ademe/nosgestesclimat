@@ -174,7 +174,7 @@ transport . bus . heures par semaine:
 transport . deux roues:
   icônes: 🛵
   applicable si: usager
-  formule: ( empreinte + entretien ) * km
+  formule: ( empreinte + entretien pondéré ) * km
 
 transport . deux roues . usager:
   question: Utilisez-vous un scooter ou une moto ?
@@ -239,6 +239,15 @@ transport . deux roues . empreinte:
     Moto > 250 cm3 - Mixte - 2018 ; 191 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
 
     Les chiffres ci-dessus incluent la fabrication du véhicule, contrairement aux données précédentes (2021).
+
+transport . deux roues . entretien pondéré: 
+  formule:
+    variations:
+      - si: type = 'scooter électrique'
+        alors: entretien * 0.75
+      - sinon: entretien
+  unité: kgCO2e / km
+  note: Nous choisissons de pondérer l'entretien des scooters électriques par le même facteur qui réduit celui des véhicules électriques par rapport aux véhicules thermiques. 
 
 transport . deux roues . entretien:
   formule: empreinte branche . G45 * 1000000 * 0.02 * 0.07 / ( 0.69 + 0.07 ) / nombre deux roues circulation / 3000
