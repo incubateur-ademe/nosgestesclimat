@@ -218,8 +218,22 @@ transport . voiture . électrique . empreinte au kilomètre:
       - berline, SUV et VUL -> "haut de gamme - berline"
 
 transport . voiture . empreinte . usage:
-  formule: km * ( au kilomètre + entretien )
+  formule: km * ( au kilomètre + entretien pondéré )
   unité: kgCO2e
+
+transport . voiture . empreinte . entretien pondéré: 
+  formule:
+    variations:
+      - si: motorisation = 'thermique'
+        alors: entretien
+      - si: motorisation = 'hybride'
+        alors: entretien * 0.90
+      - sinon: entretien * 0.70
+  note: |
+    Plusieurs sources s'accordent pour dire que l'entretien d'un véhicule électrique est inférieur à celui d'un véhicule thermique de 25%.
+
+    Pour ce qui est d'un véhicule hybride, son entretien se situe entre celui d'un véhicule électrique et celui d'un véhicule thermique. Cela dépend de l'utilisation du moteur électrique ou thermique. 
+    Nous choisissons de partir sur une hypothèse conservatrice de -10% de coût d'entretien par rapport aux véhicules thermiques.
 
 transport . voiture . empreinte . entretien:
   formule: empreinte branche . G45 * 1000000 * 0.07 / nombre véhicules circulation / 12200
