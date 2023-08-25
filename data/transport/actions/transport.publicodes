@@ -104,7 +104,7 @@ transport . éco-conduite:
   titre: Adopter une éco-conduite
   effort: faible
   icônes: 🚗☮
-  formule: transport . voiture . empreinte - transport . éco-conduite . recalcul
+  formule: transport . voiture . empreinte calculée - transport . éco-conduite . recalcul
   description: |
     L’éco-conduite est une action simple et efficace qui se tient à la portée de tous.  
 
@@ -122,14 +122,14 @@ transport . éco-conduite . recalcul:
   note: Un recalcul est nécessaire ici, car l'utilisateur peut avoir utilisé l'outil d'aide à la saisie qui proratise alors la variable km au nombre de voyageurs. Sinon ce n'est pas le cas.
   formule:
     recalcul:
-      règle: transport . voiture . empreinte
+      règle: transport . voiture . empreinte calculée
       avec:
-        transport . voiture . empreinte . usage: transport . éco-conduite . usage réduit
+        transport . voiture . empreinte calculée . usage: transport . éco-conduite . usage réduit
       # Impossible to change directly the rule we want to replace
       # Can't do this : transport . voiture . empreinte . usage: transport . voiture . empreinte . usage * 0.85
 
 transport . éco-conduite . usage réduit:
-  formule: (transport . voiture . km * transport . voiture . empreinte . au kilomètre) * 0.85
+  formule: (transport . voiture . km * transport . voiture . empreinte calculée . au kilomètre) * 0.85
   unité: kgCO2e
   note: réduction de 15% (cf info règle éco-conduite)
 
@@ -141,7 +141,7 @@ transport . covoiturage:
     dépasse:
       - transport . boulot . covoiturage
   icônes: 🚗👥
-  formule: voiture . km * voiture . empreinte . au kilomètre * réduction covoiturage
+  formule: voiture . km * voiture . empreinte calculée . au kilomètre * réduction covoiturage
   description: |
     Cette action concerne l'ensemble de ses trajets en voiture.
 
@@ -162,7 +162,7 @@ transport . boulot . covoiturage:
       - voiture . propriétaire
       - voiture . km > seuil d'activation boulot
   icônes: 🚗👥
-  formule: distance * voiture . empreinte . au kilomètre * réduction covoiturage
+  formule: distance * voiture . empreinte calculée . au kilomètre * réduction covoiturage
   description: |
     Si le covoiturage longue distance est bien connu en France, celui des courtes distances est presque inexistant : aujourd’hui seuls 3 % des déplacements domicile-travail sont réalisés en covoiturage.
 
@@ -273,7 +273,7 @@ transport . seuil d'activation boulot:
   unité: km
 
 transport . boulot . commun . gain empreinte au km:
-  formule: voiture . empreinte . au kilomètre - empreinte
+  formule: voiture . empreinte calculée . au kilomètre - empreinte
 
 transport . boulot . commun . empreinte:
   titre: Empreinte transport en commun choisi
@@ -355,7 +355,7 @@ transport . boulot . jours gagnés:
   plafond: jours travaillés en voiture
 
 transport . boulot . empreinte jour voiture:
-  formule: (distance . km aller * 2) * voiture . empreinte . au kilomètre
+  formule: (distance . km aller * 2) * voiture . empreinte calculée . au kilomètre
   unité: kgCO2e/jours
 
 transport . boulot . jours télétravaillés:
@@ -377,7 +377,7 @@ transport . boulot . télétravail . compatible:
 transport . voiture 5km:
   titre: Se passer de voiture pour moins de 5 km
   icônes: 🚗🚲
-  formule: transport . voiture . empreinte - transport . voiture 5km . recalcul
+  formule: transport . voiture . empreinte calculée - transport . voiture 5km . recalcul
   applicable si: voiture . propriétaire
   non applicable si: voiture . km < seuil d'activation 5km
   note: |
@@ -417,12 +417,12 @@ transport . distance moyenne trajet court:
 transport . voiture 5km . recalcul:
   formule:
     recalcul:
-      règle: transport . voiture . empreinte
+      règle: transport . voiture . empreinte calculée
       avec:
-        transport . voiture . empreinte . usage: transport . voiture 5km . usage réduit
+        transport . voiture . empreinte calculée . usage: transport . voiture 5km . usage réduit
 
 transport . voiture 5km . usage réduit:
-  formule: (transport . voiture . km - distance totale) * transport . voiture . empreinte . au kilomètre
+  formule: (transport . voiture . km - distance totale) * transport . voiture . empreinte calculée . au kilomètre
   unité: kgCO2e
 
 transport . voiture 5km . distance totale:
@@ -454,7 +454,7 @@ transport . super ethanol:
   titre: Passer du sans-plomb au super éthanol
   icônes: ⛽️🚗
   applicable si: transport . voiture . thermique . carburant = 'essence E5 et E10'
-  formule: transport . voiture . empreinte - transport . super ethanol . recalcul avec surconsommation
+  formule: transport . voiture . empreinte calculée - transport . super ethanol . recalcul avec surconsommation
   description: |
     Le Superéthanol E85 est le carburant essence sans plomb pouvant contenir entre 65% et 85% de bioéthanol, le complément étant de l’essence Sans Plomb 95. 
     Il est produit à partir de cultures de canne à sucre, de céréales (blé, maïs) et de betterave sucrière. 
@@ -467,7 +467,7 @@ transport . super ethanol:
 transport . super ethanol . recalcul:
   formule:
     recalcul:
-      règle: transport . voiture . empreinte
+      règle: transport . voiture . empreinte calculée
       avec:
         transport . voiture . thermique . carburant: "'essence E85'"
 
@@ -510,7 +510,7 @@ transport . voiture électrique:
   icônes: 🔌🚗
   applicable si: voiture . propriétaire
   non applicable si: transport . voiture . motorisation = 'électrique'
-  formule: transport . voiture . empreinte - transport . voiture électrique . recalcul
+  formule: transport . voiture . empreinte calculée - transport . voiture électrique . recalcul
   description: |
     La voiture électrique n'est pas la solution miracle mais pour certains usages elle peut s'avérer (très) utile pour réduire notre empreinte.
 
@@ -526,7 +526,7 @@ transport . voiture électrique:
 transport . voiture électrique . recalcul:
   formule:
     recalcul:
-      règle: transport . voiture . empreinte
+      règle: transport . voiture . empreinte calculée
       avec:
         transport . voiture . motorisation: "'électrique'"
         transport . voiture . âge: transport . âge nouvelle voiture électrique

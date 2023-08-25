@@ -13,11 +13,27 @@ transport . voiture:
 
     Notons finalement qu'il est important de prendre en compte à la fois l'usage (les km parcourus) et la construction de ce véhicule de plus d'une tonne de matériaux divers.
 
-transport . voiture . empreinte:
+transport . voiture . empreinte: 
   résumé: Le premier poste moyen d'empreinte, l'incontournable **voiture individuelle**
   titre: voiture
   icônes: 🚘️
   non applicable si: km = 0
+  formule:
+    variations:
+      - si: utilisateur régulier = non
+        alors: empreinte utilisateur irrégulier
+      - sinon: empreinte calculée
+  unité: kgCO2e
+
+transport . voiture . empreinte utilisateur irrégulier:
+  formule:
+    variations:
+      - si: voiture . aide km
+        alors: (6700 / durée de vie * facteur location) / ratio voyageurs + (6 / 100 * 2.7 * km)
+      - sinon: ((6700 / durée de vie * facteur location) + (6 / 100 * 2.7 * km)) / voyageurs
+  unité: kgCO2e
+
+transport . voiture . empreinte calculée:
   formule:
     variations:
       - si: voiture . aide km
@@ -106,11 +122,9 @@ transport . voiture . km:
     20 000km / an: 20000 km/an
 
 transport . voiture . motorisation:
+  non applicable si: utilisateur régulier = non
   question: Quel type de voiture utilisez-vous ?
-  description: |
-    **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
-
-    > 🧐 Vous êtes étonnés de voir cette question alors que vous avez répondu "non" à "Avez vous votre voiture individuelle" ? C'est normal : dès que vous faites des kilomètres en voiture, nous devons connaitre ses caractéristiques, même si elle n'est pas à vous, pour calculer votre empreinte.
+  description: 💡 **Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
   par défaut: "'thermique'"
   formule:
     une possibilité:
@@ -130,6 +144,7 @@ transport . voiture . thermique: oui # sans le 'oui', une question vide est pos�
 
 transport . voiture . gabarit:
   applicable si: km > 0
+  non applicable si: utilisateur régulier = non
   question: Quel est le gabarit de la voiture ?
   description: |
     **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
@@ -217,14 +232,14 @@ transport . voiture . électrique . empreinte au kilomètre:
       - moyenne -> "coeur de gamme - véhicule compact"
       - berline, SUV et VUL -> "haut de gamme - berline"
 
-transport . voiture . empreinte . usage:
+transport . voiture . empreinte calculée . usage:
   formule: km * au kilomètre
   unité: kgCO2e
 
-transport . voiture . empreinte . par km personne:
+transport . voiture . empreinte calculée . par km personne:
   formule: au kilomètre / voyageurs
 
-transport . voiture . empreinte . au kilomètre:
+transport . voiture . empreinte calculée . au kilomètre:
   formule:
     variations:
       - si: motorisation = 'thermique'
@@ -309,7 +324,7 @@ transport . voiture . notif carburant:
 
     Nous avons fait le choix d'ajouter cette option dans le test mais il faut savoir que ce résultat **n'est pas représentatif des conséquences environnementales probables liées à l'utilisation de biocarburants.**
 
-transport . voiture . empreinte . construction:
+transport . voiture . empreinte calculée . construction:
   formule:
     variations:
       - si: motorisation = 'thermique'
@@ -357,7 +372,7 @@ transport . voiture . empreinte . construction:
     Nous avons choisi de ne pas retrancher les "crédits de recyclage" correspondant à des émissions évitées via l'utilisation de matériaux recyclés issus du démantèlement d'une voiture, pour le production de nouveaux produits manufacturés.
     Nous prenons l'hypothèse que l'empreinte réduite bénéficie à celui qui achète le produit issu du recyclage et non pas à celui qui achète un produit amené à être recyclé.
 
-transport . voiture . empreinte . construction . barème thermique:
+transport . voiture . empreinte calculée . construction . barème thermique:
   formule:
     variations:
       - si:
@@ -373,7 +388,7 @@ transport . voiture . empreinte . construction . barème thermique:
         alors: 7600
   unité: kgCO2e
 
-transport . voiture . empreinte . construction . barème électrique:
+transport . voiture . empreinte calculée . construction . barème électrique:
   formule:
     variations:
       - si:
@@ -389,7 +404,7 @@ transport . voiture . empreinte . construction . barème électrique:
         alors: 20200
   unité: kgCO2e
 
-transport . voiture . empreinte . construction . barème hybride:
+transport . voiture . empreinte calculée . construction . barème hybride:
   formule:
     variations:
       - si:
@@ -437,7 +452,7 @@ transport . voiture . âge:
     1 an et demi: 1.5
     5 ans: 5
     10 ans: 10
-transport . voiture . empreinte . construction amortie:
+transport . voiture . empreinte calculée . construction amortie:
   formule:
     variations:
       - si: propriétaire
@@ -502,11 +517,23 @@ transport . voiture . propriétaire:
     Si votre entreprise vous met à disposition une voiture dont vous êtes le principal utilisateur, vous pouvez considérer que c'est votre voiture individuelle.
   par défaut: oui
 
-transport . voiture . notif proprio:
-  type: notification
-  formule:
+# transport . voiture . notif proprio:
+#   type: notification
+#   formule:
+#     toutes ces conditions:
+#       - propriétaire = non
+#       - km > 0
+#   description: |
+#     Vous n'êtes pas propriétaire d'une voiture, mais vous faites quand même des km : nous devons donc vous demander les caractéristiques des voitures que vous empruntez en tant que passager ou conducteur (voiture de location, voiture d'amis).
+
+transport . voiture . utilisateur régulier:
+  applicable si: 
     toutes ces conditions:
       - propriétaire = non
       - km > 0
+  question: Vous n'êtes pas propriétaire d'une voiture, mais vous faites quand même des kilomètres. Utilisez-vous majoritairement le même véhicule ?
   description: |
-    Vous n'êtes pas propriétaire d'une voiture, mais vous faites quand même des km : nous devons donc vous demander les caractéristiques des voitures que vous empruntez en tant que passager ou conducteur (voiture de location, voiture d'amis).
+    Répondez oui si vous utilisez dans la plupart des cas le même véhicule, que ce soit en tant que passager ou que conducteur. 
+    
+    Cela peut-être le cas s'il s'agit d'un véhicule appartenant à quelqu'un de votre famille, ou à des amis proches. Ou si vous louez systématiquement le même type de véhicule, comme dans le cas d'un abonnement à un service d'autopartage.
+  par défaut: oui
