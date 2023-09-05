@@ -9,7 +9,7 @@ divers . loisirs:
   formule:
     somme:
       - culture
-      # - sports
+      - sports
       # - bien-être
 
 divers . loisirs . culture:
@@ -365,3 +365,53 @@ divers . loisirs . culture . pratique de la musique . proportion de pratiquants:
 #   formule: 0.472
 #   note: |
 #     D'après [cette étude de 2020](https://www.vie-publique.fr/en-bref/274997-jeux-dargent-et-de-hasard-les-francais-jouent-moins-mais-misent-plus), à peu près la moitié des français jouent à des jeux de hasard et d'argent.
+
+divers . loisirs . sports:
+  icônes: 🏅
+  applicable si: pratiquant
+  formule: 
+    somme:
+      - empreinte répartie
+      - empreinte club
+      - empreinte fitness
+
+divers . loisirs . sports . pratiquant:
+  question: Pratiquez-vous un ou plusieurs sports ?
+  titre: Pratiques sportives
+  description: |
+    Nous entendons par "pratique sportive" le fait d'avoir une activité physique, en club ou non, licenciée ou non. Elle peut être récréative tout autant qu'utilitaire (comme se déplacer à vélo ou à pied, par exemple).
+  par défaut: oui
+
+divers . loisirs . sports . empreinte répartie:
+  formule: empreinte branche . R93 par hab / proportion pratiquants * 0.63 * ( 0.27 + 0.21 )
+  note: Nous prenons ici la part concernant la Gestion d'installations sportives (27%) et Autres activités liées au sport (21%) au sein de Activités liées au sport (63%), que l'on multiplie par la proportion de pratiquants déclarés en France.
+
+divers . loisirs . sports . proportion pratiquants:
+  formule: 0.75
+  note: D'après [Les chiffres clef du sport 2020](https://www.calameo.com/books/0047558805b1d72793ccf?language=fr&page=1), en 2018, 75% des individus de plus de 15 ans déclarent avoir eu au moins une activité sportive, utilitaire ou récréative, dans l'année.
+
+divers . loisirs . sports . empreinte club:
+  applicable si: adhérent club
+  formule: empreinte branche . R93 par hab / proportion pratiquants / proportion pratiquants adhérents * 0.63 * 0.41
+  note: Nous prenons ici la part concernant les Activités de clubs de sports (41%), répartis sur la proportion de sportifs étant adhérent d'un club de sport.
+
+divers . loisirs . sports . proportion pratiquants adhérents:
+  formule: 1 / 3
+  note: D'après [Les chiffres clef du sport 2020](https://www.calameo.com/books/0047558805b1d72793ccf?language=fr&page=1), en 2018, le tiers des pratiquants de sport était adhérent d'un club.
+
+divers . loisirs . sports . adhérent club:
+  question: Êtes-vous adhérent⋅e d'une (ou plusieurs) association(s) sportive(s) ?
+  par défaut: non
+
+divers . loisirs . sports . empreinte fitness:
+  applicable si: abonné fitness
+  formule: empreinte branche . R93 par hab / proportion abonnés fitness * 0.63 * 0.11
+  note: Nous prenons ici la part concernant les Activités de centres de culture physique (11%), répartis sur la proportion de sportifs étant abonné à ce type de centres.
+
+divers . loisirs . sports . abonné fitness:
+  question: Êtes-vous abonné⋅e à une salle de fitness ?
+  par défaut: non
+
+divers . loisirs . sports . proportion abonnés fitness:
+  formule: 5960000 / population
+  note: D'après le cabinet [Deloitte](https://www2.deloitte.com/fr/fr/pages/presse/2019/le-fitness-en-france-edition-2019.html), en 2018, la France compte 5,96 millions d'abonnés à des clubs de fitness.
