@@ -366,34 +366,41 @@ divers . loisirs . culture . pratique de la musique . proportion de pratiquants:
 #   note: |
 #     D'après [cette étude de 2020](https://www.vie-publique.fr/en-bref/274997-jeux-dargent-et-de-hasard-les-francais-jouent-moins-mais-misent-plus), à peu près la moitié des français jouent à des jeux de hasard et d'argent.
 
+# divers . loisirs . sports:
+#   formule: ( sports pratiqués * pratique pondérée ) + empreinte répartie
+
+# divers . loisirs . sports . empreinte:
+#   formule:
+#     variations:
+#       - si: 
+#           une de ces conditions:
+#             - individuel extérieur . présent
+#             - collectif ou raquette . présent
+#             - aquatique . présent
+#             - martial ou combat . présent
+#             - athlétisme . présent
+#             - autres sports . présent
+#             - équitation . présent
+#             - golf . présent
+#             - nautique . présent
+#         alors: empreinte club
+#       - si: sports pratiqués . salle de sport . présent
+#         alors: empreinte fitness
+#       - sinon: 0
+
 divers . loisirs . sports:
-  formule: ( empreinte * pratique pondérée ) + empreinte répartie
-
-divers . loisirs . sports . empreinte:
-  formule:
-    variations:
-      - si: 
-          une de ces conditions:
-            - sports pratiqués . individuel extérieur . présent
-            - sports pratiqués . collectif ou raquette . présent
-            - sports pratiqués . aquatique . présent
-            - sports pratiqués . martial ou combat . présent
-            - sports pratiqués . athlétisme . présent
-            - sports pratiqués . autres sports . présent
-            - sports pratiqués . équitation . présent
-            - sports pratiqués . golf . présent
-            - sports pratiqués . nautique . présent
-        alors: empreinte club
-      - si: sports pratiqués . salle de sport . présent
-        alors: empreinte fitness
-      - sinon: 0
-
-divers . loisirs . sports . sports pratiqués: 
   mosaique:
     type: selection
     clé: présent
-  question: Quels sont les sports que vous pratiquez
+  question: Quels sont les sports que vous pratiquez ?
   titre: Pratiques sportives
+  formule:
+    variations:
+      - si: choix utilisateur
+        alors: empreinte totale
+      - sinon: 0
+
+divers . loisirs . sports . empreinte totale:
   formule:
     somme:
       - individuel extérieur
@@ -408,28 +415,104 @@ divers . loisirs . sports . sports pratiqués:
       - hiver montagne
       - autres sports
 
-divers . loisirs . sports . sports pratiqués . individuel extérieur:
+divers . loisirs . sports . choix utilisateur:
+  description: l'utilisateur a-t-il fait un choix de sport ?
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - individuel extérieur . présent
+            - collectif ou raquette . présent
+            - aquatique . présent
+            - martial ou combat . présent
+            - athlétisme . présent
+            - salle de sport . présent
+            - équitation . présent
+            - golf . présent
+            - nautique . présent
+            - hiver montagne . présent
+            - autres sports . présent
+        alors: oui
+      - sinon: non
+
+divers . loisirs . sports . individuel extérieur:
   titre: Sports individuels en extérieur (course, vélo, sports urbains)
-divers . loisirs . sports . sports pratiqués . collectif ou raquette:
+  formule: empreinte club
+  applicable si: présent
+divers . loisirs . sports . individuel extérieur . présent:
+  question: Pratiquez-vous un sport individuel en extérieur ?
+  par défaut: non
+
+divers . loisirs . sports . collectif ou raquette:
   titre: Sports collectifs ou de raquette
-divers . loisirs . sports . sports pratiqués . aquatique:
+  formule: empreinte club
+  applicable si: présent
+divers . loisirs . sports . collectif ou raquette . présent:
+  question: Pratiquez-vous un sport individuel en extérieur ?
+  par défaut: non
+
+divers . loisirs . sports . aquatique:
   titre: Sports pratiqués en piscine
-divers . loisirs . sports . sports pratiqués . martial ou combat:
+  formule: empreinte club
+  applicable si: présent
+divers . loisirs . sports . aquatique . présent:
+  question: Pratiquez-vous un sport individuel en extérieur ?
+  par défaut: non
+
+divers . loisirs . sports . martial ou combat:
   titre: Arts martiaux ou de combat
-divers . loisirs . sports . sports pratiqués . athlétisme:
+  formule: empreinte club
+divers . loisirs . sports . martial ou combat . présent:
+  question: Pratiquez-vous un sport individuel en extérieur ?
+  par défaut: non
+
+divers . loisirs . sports . athlétisme:
   titre: Athlétisme
-divers . loisirs . sports . sports pratiqués . salle de sport:
+  formule: empreinte club
+divers . loisirs . sports . athlétisme . présent:
+  question: Pratiquez-vous un sport individuel en extérieur ?
+  par défaut: non
+
+divers . loisirs . sports . salle de sport:
   titre: Salle de sport ou de musculation
-divers . loisirs . sports . sports pratiqués . équitation:
+  formule: empreinte fitness
+divers . loisirs . sports . salle de sport . présent:
+  question: Pratiquez-vous un sport individuel en extérieur ?
+  par défaut: non
+
+divers . loisirs . sports . équitation:
   titre: Équitation
-divers . loisirs . sports . sports pratiqués . golf:
+  formule: empreinte club
+divers . loisirs . sports . équitation . présent:
+  question: Pratiquez-vous un sport individuel en extérieur ?
+  par défaut: non
+
+divers . loisirs . sports . golf:
   titre: Golf
-divers . loisirs . sports . sports pratiqués . nautique:
+  formule: empreinte club
+divers . loisirs . sports . golf . présent:
+  question: Pratiquez-vous un sport individuel en extérieur ?
+  par défaut: non
+
+divers . loisirs . sports . nautique:
   titre: Sports nautiques
-divers . loisirs . sports . sports pratiqués . hiver montagne:
+  formule: empreinte club
+divers . loisirs . sports . nautique . présent:
+  question: Pratiquez-vous un sport individuel en extérieur ?
+  par défaut: non
+
+divers . loisirs . sports . hiver montagne:
   titre: Sports d'hiver ou de montagne
-divers . loisirs . sports . sports pratiqués . autres sports:
+divers . loisirs . sports . hiver montagne . présent:
+  question: Pratiquez-vous un sport individuel en extérieur ?
+  par défaut: non
+
+divers . loisirs . sports . autres sports:
   titre: Autres sports (sports enchaînés, combinés, tir, escalade...)
+  formule: empreinte club
+divers . loisirs . sports . autres sports . présent:
+  question: Pratiquez-vous un sport individuel en extérieur ?
+  par défaut: non
 
 divers . loisirs . sports . pratique pondérée: 
   formule:
