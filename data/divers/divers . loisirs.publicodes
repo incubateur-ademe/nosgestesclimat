@@ -367,20 +367,121 @@ divers . loisirs . culture . pratique de la musique . proportion de pratiquants:
 #     D'après [cette étude de 2020](https://www.vie-publique.fr/en-bref/274997-jeux-dargent-et-de-hasard-les-francais-jouent-moins-mais-misent-plus), à peu près la moitié des français jouent à des jeux de hasard et d'argent.
 
 divers . loisirs . sports:
-  icônes: 🏅
-  applicable si: pratiquant
-  formule: 
-    somme:
-      - empreinte répartie
-      - empreinte club
-      - empreinte fitness
+  formule: ( empreinte * pratique pondérée ) + empreinte répartie
 
-divers . loisirs . sports . pratiquant:
-  question: Pratiquez-vous un ou plusieurs sports ?
+divers . loisirs . sports . empreinte:
+  formule:
+    variations:
+      - si: 
+          une de ces conditions:
+            - sports pratiqués . individuel extérieur . présent
+            - sports pratiqués . collectif ou raquette . présent
+            - sports pratiqués . aquatique . présent
+            - sports pratiqués . martial ou combat . présent
+            - sports pratiqués . athlétisme . présent
+            - sports pratiqués . autres sports . présent
+            - sports pratiqués . équitation . présent
+            - sports pratiqués . golf . présent
+            - sports pratiqués . nautique . présent
+        alors: empreinte club
+      - si: sports pratiqués . salle de sport . présent
+        alors: empreinte fitness
+      - sinon: 0
+
+divers . loisirs . sports . sports pratiqués: 
+  mosaique:
+    type: selection
+    clé: présent
+  question: Quels sont les sports que vous pratiquez
   titre: Pratiques sportives
+  formule:
+    somme:
+      - individuel extérieur
+      - collectif ou raquette
+      - aquatique
+      - martial ou combat
+      - athlétisme
+      - salle de sport
+      - équitation
+      - golf
+      - nautique
+      - hiver montagne
+      - autres sports
+
+divers . loisirs . sports . sports pratiqués . individuel extérieur:
+  titre: Sports individuels en extérieur (course, vélo, sports urbains)
+divers . loisirs . sports . sports pratiqués . collectif ou raquette:
+  titre: Sports collectifs ou de raquette
+divers . loisirs . sports . sports pratiqués . aquatique:
+  titre: Sports pratiqués en piscine
+divers . loisirs . sports . sports pratiqués . martial ou combat:
+  titre: Arts martiaux ou de combat
+divers . loisirs . sports . sports pratiqués . athlétisme:
+  titre: Athlétisme
+divers . loisirs . sports . sports pratiqués . salle de sport:
+  titre: Salle de sport ou de musculation
+divers . loisirs . sports . sports pratiqués . équitation:
+  titre: Équitation
+divers . loisirs . sports . sports pratiqués . golf:
+  titre: Golf
+divers . loisirs . sports . sports pratiqués . nautique:
+  titre: Sports nautiques
+divers . loisirs . sports . sports pratiqués . hiver montagne:
+  titre: Sports d'hiver ou de montagne
+divers . loisirs . sports . sports pratiqués . autres sports:
+  titre: Autres sports (sports enchaînés, combinés, tir, escalade...)
+
+divers . loisirs . sports . pratique pondérée: 
+  formule:
+    variations:
+      - si: pratique = 'jamais'
+        alors: 0
+      - si: pratique = 'parfois'
+        alors: 0.5
+      - si: pratique = 'régulièrement'
+        alors: 1
+      - si: pratique = 'de manière intensive'
+        alors: 2
+
+divers . loisirs . sports . pratique:
+  icônes: 🏅
+  question: Quelle est votre pratique sportive ?
   description: |
     Nous entendons par "pratique sportive" le fait d'avoir une activité physique, en club ou non, licenciée ou non. Elle peut être récréative tout autant qu'utilitaire (comme se déplacer à vélo ou à pied, par exemple).
-  par défaut: oui
+  par défaut: "'régulièrement'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - jamais
+        - parfois
+        - régulièrement
+        - intensif
+
+divers . loisirs . sports . pratique . jamais:
+  titre: Jamais
+divers . loisirs . sports . pratique . parfois:
+  titre: Une fois par mois
+divers . loisirs . sports . pratique . régulièrement:
+  titre: Une fois par semaine
+divers . loisirs . sports . pratique . intensif:
+  titre: Plusieurs fois par semaine
+
+divers . loisirs . sports . empreinte club:
+  formule: empreinte branche . R93 par hab / proportion pratiquants / proportion pratiquants adhérents * 0.63 * 0.41
+  note: Nous prenons ici la part concernant les Activités de clubs de sports (41%), répartis sur la proportion de sportifs étant adhérent d'un club de sport.
+
+divers . loisirs . sports . proportion pratiquants adhérents:
+  formule: 1 / 3
+  note: D'après [Les chiffres clef du sport 2020](https://www.calameo.com/books/0047558805b1d72793ccf?language=fr&page=1), en 2018, le tiers des pratiquants de sport était adhérent d'un club.
+
+divers . loisirs . sports . empreinte fitness:
+  formule: empreinte branche . R93 par hab / proportion abonnés fitness * 0.63 * 0.11
+  note: Nous prenons ici la part concernant les Activités de centres de culture physique (11%), répartis sur la proportion de sportifs étant abonné à ce type de centres.
+
+divers . loisirs . sports . proportion abonnés fitness:
+  formule: 5960000 / population
+  note: D'après le cabinet [Deloitte](https://www2.deloitte.com/fr/fr/pages/presse/2019/le-fitness-en-france-edition-2019.html), en 2018, la France compte 5,96 millions d'abonnés à des clubs de fitness.
 
 divers . loisirs . sports . empreinte répartie:
   formule: empreinte branche . R93 par hab / proportion pratiquants * 0.63 * ( 0.27 + 0.21 )
@@ -389,29 +490,3 @@ divers . loisirs . sports . empreinte répartie:
 divers . loisirs . sports . proportion pratiquants:
   formule: 0.75
   note: D'après [Les chiffres clef du sport 2020](https://www.calameo.com/books/0047558805b1d72793ccf?language=fr&page=1), en 2018, 75% des individus de plus de 15 ans déclarent avoir eu au moins une activité sportive, utilitaire ou récréative, dans l'année.
-
-divers . loisirs . sports . empreinte club:
-  applicable si: adhérent club
-  formule: empreinte branche . R93 par hab / proportion pratiquants / proportion pratiquants adhérents * 0.63 * 0.41
-  note: Nous prenons ici la part concernant les Activités de clubs de sports (41%), répartis sur la proportion de sportifs étant adhérent d'un club de sport.
-
-divers . loisirs . sports . proportion pratiquants adhérents:
-  formule: 1 / 3
-  note: D'après [Les chiffres clef du sport 2020](https://www.calameo.com/books/0047558805b1d72793ccf?language=fr&page=1), en 2018, le tiers des pratiquants de sport était adhérent d'un club.
-
-divers . loisirs . sports . adhérent club:
-  question: Êtes-vous adhérent⋅e d'une (ou plusieurs) association(s) sportive(s) ?
-  par défaut: non
-
-divers . loisirs . sports . empreinte fitness:
-  applicable si: abonné fitness
-  formule: empreinte branche . R93 par hab / proportion abonnés fitness * 0.63 * 0.11
-  note: Nous prenons ici la part concernant les Activités de centres de culture physique (11%), répartis sur la proportion de sportifs étant abonné à ce type de centres.
-
-divers . loisirs . sports . abonné fitness:
-  question: Êtes-vous abonné⋅e à une salle de fitness ?
-  par défaut: non
-
-divers . loisirs . sports . proportion abonnés fitness:
-  formule: 5960000 / population
-  note: D'après le cabinet [Deloitte](https://www2.deloitte.com/fr/fr/pages/presse/2019/le-fitness-en-france-edition-2019.html), en 2018, la France compte 5,96 millions d'abonnés à des clubs de fitness.
