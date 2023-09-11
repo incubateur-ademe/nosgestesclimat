@@ -408,18 +408,70 @@ divers . loisirs . sports:
   question: Quels sont les sports que vous pratiquez régulièrement ?
   titre: Pratiques sportives
   formule:
-    somme:
-      - individuel extérieur
-      - balle ou ballon
-      - aquatique
-      - martial ou combat
-      - athlétisme
-      - salle de sport
-      - équitation
-      - golf
-      - nautique
-      - hiver montagne
-      - autres sports
+    variations:
+      - si: choix utilisateur
+        alors: empreinte totale
+      - sinon: empreinte par défaut
+
+# divers . loisirs . sports . empreinte totale:
+#   formule:
+#     somme:
+#       - individuel extérieur
+#       - balle ou ballon
+#       - aquatique
+#       - martial ou combat
+#       - athlétisme
+#       - salle de sport
+#       - équitation
+#       - golf
+#       - nautique
+#       - hiver montagne
+#       - autres sports
+
+divers . loisirs . sports . empreinte totale:
+  formule:
+    variations:
+      - si: individuel extérieur . présent
+        alors: empreinte répartie
+      - si: 
+          une de ces conditions: 
+            - balle ou ballon . présent
+            - aquatique . présent
+            - martial ou combat . présent
+            - athlétisme . présent
+            - équitation . présent
+            - golf . présent
+            - nautique . présent
+            - hiver montagne . présent
+            - autres sports . présent
+        alors: empreinte club + empreinte répartie
+      - si: salle de sport . présent
+        alors: empreinte fitness + empreinte répartie
+      - sinon: 0
+
+divers . loisirs . sports . empreinte par défaut:
+  formule: empreinte branche . R93 par hab * 0.63
+  note: Nous prenons ici la répartition sur la population française de l'empreinte totale des activités liées au sport (63% de R93).
+
+divers . loisirs . sports . choix utilisateur:
+  description: l'utilisateur a-t-il fait un choix de sport ?
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - balle ou ballon . présent
+            - aquatique . présent
+            - martial ou combat . présent
+            - athlétisme . présent
+            - équitation . présent
+            - golf . présent
+            - nautique . présent
+            - hiver montagne . présent
+            - autres sports . présent
+            - individuel extérieur . présent
+            - salle de sport . présent
+        alors: oui
+      - sinon: non
 
 divers . loisirs . sports . individuel extérieur:
   titre: Sports individuels en extérieur (course, vélo, sports urbains)
