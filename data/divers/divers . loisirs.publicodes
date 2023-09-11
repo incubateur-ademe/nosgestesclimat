@@ -410,44 +410,11 @@ divers . loisirs . sports:
   formule:
     variations:
       - si: choix utilisateur
-        alors: empreinte totale
+        alors: empreinte sportif
       - sinon: empreinte par défaut
 
-# divers . loisirs . sports . empreinte totale:
-#   formule:
-#     somme:
-#       - individuel extérieur
-#       - balle ou ballon
-#       - aquatique
-#       - martial ou combat
-#       - athlétisme
-#       - salle de sport
-#       - équitation
-#       - golf
-#       - nautique
-#       - hiver montagne
-#       - autres sports
-
-divers . loisirs . sports . empreinte totale:
-  formule:
-    variations:
-      - si: individuel extérieur . présent
-        alors: empreinte répartie
-      - si: 
-          une de ces conditions: 
-            - balle ou ballon . présent
-            - aquatique . présent
-            - martial ou combat . présent
-            - athlétisme . présent
-            - équitation . présent
-            - golf . présent
-            - nautique . présent
-            - hiver montagne . présent
-            - autres sports . présent
-        alors: empreinte club + empreinte répartie
-      - si: salle de sport . présent
-        alors: empreinte fitness + empreinte répartie
-      - sinon: 0
+divers . loisirs . sports . empreinte sportif:
+  formule: empreinte répartie + empreinte club + empreinte fitness
 
 divers . loisirs . sports . empreinte par défaut:
   formule: empreinte branche . R93 par hab * 0.63
@@ -573,7 +540,23 @@ divers . loisirs . sports . autres sports . présent:
   par défaut: non
 
 divers . loisirs . sports . empreinte club:
-  formule: empreinte branche . R93 par hab / proportion pratiquants / proportion pratiquants adhérents * 0.63 * 0.41
+  formule: 
+    variations:
+      - si: 
+          une de ces conditions:
+            - balle ou ballon . présent
+            - aquatique . présent
+            - martial ou combat . présent
+            - athlétisme . présent
+            - équitation . présent
+            - golf . présent
+            - nautique . présent
+            - hiver montagne . présent
+            - autres sports . présent
+            - individuel extérieur . présent
+            - salle de sport . présent
+        alors: empreinte branche . R93 par hab / proportion pratiquants / proportion pratiquants adhérents * 0.63 * 0.41
+      - sinon: 0
   note: Nous prenons ici la part concernant les Activités de clubs de sports (41%), répartis sur la proportion de sportifs étant adhérent d'un club de sport.
 
 divers . loisirs . sports . proportion pratiquants adhérents:
@@ -581,7 +564,11 @@ divers . loisirs . sports . proportion pratiquants adhérents:
   note: D'après [Les chiffres clef du sport 2020](https://www.calameo.com/books/0047558805b1d72793ccf?language=fr&page=1), en 2018, le tiers des pratiquants de sport était adhérent d'un club.
 
 divers . loisirs . sports . empreinte fitness:
-  formule: empreinte branche . R93 par hab / proportion abonnés fitness * 0.63 * 0.11
+  formule: 
+    variations:
+      - si: salle de sport . présent
+        alors: empreinte branche . R93 par hab / proportion abonnés fitness * 0.63 * 0.11
+      - sinon: 0
   note: Nous prenons ici la part concernant les Activités de centres de culture physique (11%), répartis sur la proportion de sportifs étant abonné à ce type de centres.
 
 divers . loisirs . sports . proportion abonnés fitness:
