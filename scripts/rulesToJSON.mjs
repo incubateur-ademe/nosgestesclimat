@@ -112,9 +112,13 @@ try {
 		//    https://github.com/datagir/nosgestesclimat/issues/1722
 		logger: { log: (_) => {}, warn: (_) => {}, err: (_) => {} },
 	})
-	console.log(
-		`✅ ${Object.keys(baseRules).length} base rules have been correctly parsed`
-	)
+	if (!markdown) {
+		console.log(
+			`✅ ${
+				Object.keys(baseRules).length
+			} base rules have been correctly parsed`
+		)
+	}
 } catch (err) {
 	console.error(`❌ An error occured while trying to parse the base rules:\n`)
 	logPublicodesError(err)
