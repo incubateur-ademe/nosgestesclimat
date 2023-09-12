@@ -393,7 +393,7 @@ divers . loisirs . sports:
       - sinon: empreinte par défaut
 
 divers . loisirs . sports . empreinte sportif:
-  formule: empreinte répartie + empreinte club + empreinte fitness
+  formule: empreinte répartie + empreinte club + empreinte fitness + empreinte montagne
 
 divers . loisirs . sports . empreinte par défaut:
   formule: empreinte branche . R93 par hab * 0.63
@@ -530,7 +530,6 @@ divers . loisirs . sports . notif sports carbonés:
   formule:
     une de ces conditions:
       - sports énergivores . présent = oui
-      - hiver montagne . présent = oui
       - nautique . présent = oui
       # - golf . présent = oui // a priori l'empreinte environnementale du golf est surtout liée à sa consommation d'eau. Il faudrait néanmoins trouver l'empreinte liée à l'utilisation des sols.
   description: |
@@ -580,3 +579,21 @@ divers . loisirs . sports . empreinte répartie:
 divers . loisirs . sports . proportion pratiquants:
   formule: 0.75
   note: D'après [Les chiffres clef du sport 2020](https://www.calameo.com/books/0047558805b1d72793ccf?language=fr&page=1), en 2018, 75% des individus de plus de 15 ans déclarent avoir eu au moins une activité sportive, utilitaire ou récréative, dans l'année.
+
+divers . loisirs . sports . empreinte montagne:
+  formule:
+    variations:
+      - si: hiver montagne . présent
+        alors: empreinte jour montagne * nombre moyen jours montagne
+      - sinon: 0
+  note: Nous prenons la moyenne de temps passé aux sports d'hiver pour toute personne cochant la case.
+
+divers . loisirs . sports . empreinte jour montagne:
+  formule: 9.3
+  unité: kgCO2e / jour
+  note: Nous nous basons sur [cette étude](https://www.mairie-tignes.fr/cms_viewFile.php?idtf=71518&path=guide-sectoriel-montagne.pdf) commandée par Tignes, La Clusaz et le Grand Bornand, et ne prenons en compte que l'entretien du domaine (dameuses au gazole) et les infrastructures (remontées mécaniques).
+
+divers . loisirs . sports . nombre moyen jours montagne:
+  formule: 5.38
+  unité: jours
+  note: Basé sur [les chiffres d'Union Sports et Cycles](https://www.unionsportcycle.com/montagne/les-chiffres-cles-du-marche-du-ski-en-france), 53,8 millions de journées ski sont vendues chaque année à 10 millions de skieurs.
