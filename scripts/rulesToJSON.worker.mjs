@@ -8,9 +8,9 @@ import { compressRules } from './modelOptim.mjs'
 
 function writeRules(rules, path, destLang, regionCode, markdown) {
 	try {
-		fs.writeFileSync(path, JSON.stringify(rules))
+		fs.writeFileSync(path, JSON.stringify(rules, null, 2))
 		if (!markdown) {
-			console.log(` ✅ ${regionCode}-${destLang} written`)
+			console.log(`✅ ${regionCode}-${destLang} written`)
 		}
 	} catch (err) {
 		return err
@@ -55,14 +55,14 @@ export default ({
 	)
 	if (werr) {
 		return {
-			err: ` ❌ Compilation ${regionCode}-${destLang}: ${werr}`,
+			err: `❌ Compilation ${regionCode}-${destLang}: ${werr}`,
 		}
 	}
 	const oerr = compressRules(destPathWithoutExtension)
 	if (oerr) {
-		return { err: ` ❌ Optimization ${regionCode}-${destLang}: ${oerr}` }
+		return { err: `❌ Optimization ${regionCode}-${destLang}: ${oerr}` }
 	} else if (!markdown && !oerr) {
-		console.log(` ✅ ${regionCode}-${destLang} optimized`)
+		console.log(`✅ ${regionCode}-${destLang} optimized`)
 	}
 	return { ok: `<li>${regionCode}-${destLang}</li>` }
 }
