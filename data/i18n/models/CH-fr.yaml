@@ -1,3 +1,7 @@
+# LAST UPDATES DONE between 15 August and 13 September 2023
+# Master code merged is from 3 August 2023
+# -----------------------------------------
+
 params:
   code: CH
   nom: Suisse
@@ -9,6 +13,19 @@ intensité électricité:
   formule: 0.091
   note: |
     OCEN - SCDD pour l'électricité GE, moyenne 2017-2021 (5 ans)
+
+logement . chauffage . empreinte par défaut:
+  formule: 5176
+  note: empreinte par personne calculée avec S2000W (2021)*2.1 personnes/logement
+
+logement . chauffage . gaz . estimation via le coût:
+  unité: CHF/kWh
+  formule: 0.143
+  note: OFS prix moyens de l'énergie su-f-05.02.91, moyenne 2022 - https://www.bfs.admin.ch/bfs/fr/home/statistiques/prix/indice-prix-consommation/resultats-detailles.assetdetail.25245904.html
+
+logement . gaz . facteur d'émission base carbone:
+  valeur: 0.230
+  note: KBOB
 
 # TRANSPORT
 transport . voiture . limitation autoroute:
@@ -78,7 +95,10 @@ transport . deux roues thermique . km:
 transport . avion . usager:
   question: Prenez-vous l'avion ?
   description: |
-    Nous faisons ici le choix de vous proposer de compter l'impact de vos déplacements en avion sur plusieurs années. L'empreinte sur le climat est telle qu'il est important de prendre cela en compte. Ainsi, que vous preniez l'avion tous les ans ou non, répondez "oui" et vous aurez l'option par la suite de saisir vos temps de vol des 3 dernières années.
+    Nous faisons ici le choix de vous proposer de compter l'impact de vos déplacements en avion sur plusieurs années. 
+    L'empreinte sur le climat est telle qu'il est important de prendre cela en compte. 
+    Ainsi, que vous preniez l'avion tous les ans ou non, répondez "oui" et vous aurez l'option par la suite de saisir vos temps de vol 
+    des 3 dernières années.
 
 transport . avion . court courrier . passager km moyen:
   titre: Combien d'heures par an voyagez-vous en avion en vols court courrier ? (trajet de moins de 2h)
@@ -194,10 +214,13 @@ transport . deux roues thermique . empreinte:
     variations:
       - si: type = 'scooter'
         alors: 0.124 kgCO2e/km
+        note: Mobitool moyenne scooter (hors infrastructure, avec construction)
       - si: type = 'moto inf 250'
         alors: 0.146 kgCO2e/km
+        note: Mobitool motocyclette 11-35kW (hors infrastructure, avec construction)
       - si: type = 'moto sup 250'
         alors: 0.194 kgCO2e/km
+        note: Mobitool motocyclette >35kW (hors infrastructure, avec construction)
       - si: type = 'scooter électrique'
         alors: 0.030 kgCO2e/km
   note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
@@ -219,20 +242,20 @@ transport . voiture . empreinte . construction . barème thermique:
           une de ces conditions:
             - gabarit = 'petite'
             - gabarit = 'moyenne'
-        alors: 5850
+        alors: 7758
       - si:
           une de ces conditions:
             - gabarit = 'VUL'
-        alors: 7794
+        alors: 10340
       - si:
           une de ces conditions:
             - gabarit = 'berline'
-        alors: 6752
+        alors: 8958
       - si:
           une de ces conditions:
             - gabarit = 'SUV'
-        alors: 8837
-  note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
+        alors: 11722
+  note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool ((fabrication + maintenance + fin de vie) * km * nb de passagers) - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
 
 transport . voiture . empreinte . construction . barème électrique:
   formule:
@@ -241,20 +264,20 @@ transport . voiture . empreinte . construction . barème électrique:
           une de ces conditions:
             - gabarit = 'petite'
             - gabarit = 'moyenne'
-        alors: 8919
+        alors: 11013
       - si:
           une de ces conditions:
             - gabarit = 'VUL'
-        alors: 13265
+        alors: 16093
       - si:
           une de ces conditions:
             - gabarit = 'berline'
-        alors: 10774
+        alors: 13291
       - si:
           une de ces conditions:
             - gabarit = 'SUV'
-        alors: 15755
-  note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
+        alors: 18895
+  note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool ((fabrication + maintenance + fin de vie) * km * nb de passagers) - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
 
 transport . voiture . empreinte . construction . barème hybride:
   formule:
@@ -263,20 +286,20 @@ transport . voiture . empreinte . construction . barème hybride:
           une de ces conditions:
             - gabarit = 'petite'
             - gabarit = 'moyenne'
-        alors: 6877
+        alors: 8880
       - si:
           une de ces conditions:
             - gabarit = 'VUL'
-        alors: 9248
+        alors: 11957
       - si:
           une de ces conditions:
             - gabarit = 'berline'
-        alors: 7970
+        alors: 10298
       - si:
           une de ces conditions:
             - gabarit = 'SUV'
-        alors: 10525
-  note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
+        alors: 13616
+  note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool ((fabrication + maintenance + fin de vie) * km * nb de passagers) - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
 
 transport . voiture . durée de vie:
   formule: 17
@@ -288,6 +311,38 @@ transport . ferry . heures:
     Toulon ⇄ Ajaccio: 16
     Gênes ⇄ Bastia: 13
     Gênes ⇄ Olbia: 24
+
+transport . mobilité douce . vélo . construction:
+  formule: 76
+  note: Mobitool Conventionnel ((fabrication + maintenance + fin de vie) * km
+
+transport . mobilité douce . vélo . durée de vie:
+  formule: 15
+  note: Mobitool Conventionnel
+
+transport . mobilité douce . vae . empreinte:
+  formule: 0.001
+  note: Mobitool moyenne e-bike 25 km/h, 45 km/h et vélo cargo (approvisionnement en énergie)
+
+transport . mobilité douce . vae . construction:
+  formule: 198
+  note: Mobitool moyenne e-bike 25 km/h, 45 km/h et vélo cargo ((fabrication + maintenance + fin de vie) * km
+
+transport . mobilité douce . vae . durée de vie:
+  formule: 10
+  note: Mobitool moyenne e-bike 25 km/h, 45 km/h et vélo cargo
+
+transport . mobilité douce . autres véhicules à moteur . empreinte:
+  formule: 0.003
+  note: Mobitool Trottinette électrique
+
+transport . mobilité douce . autres véhicules à moteur . construction:
+  formule: 71
+  note: Mobitool Trottinette électrique  ((fabrication + maintenance + fin de vie) * km
+
+transport . mobilité douce . autres véhicules à moteur . durée de vie:
+  formule: 2
+  note: Mobitool Trottinette électrique
 
 # DIVERS
 divers . animaux domestiques . empreinte . chats . nombre:
@@ -349,7 +404,7 @@ divers . autres produits . ratio monétaire HT . édition:
   titre: Ratio monétaire édition
   formule: 0.280
   unité: kgCO2e/CHF
-  note: Base Carbone - Service/Édition (livres, journaux, revues, etc.) (/CHF HT)
+  note: SIG coût moyen profil simple (moyenne 10% vitale vert, 100% vitale vert) - https://media.sig-ge.ch/documents/tarifs_reglements/electricite/tarifs/tarifs_electricite_tous_clients.pdf
 
 divers . autres produits . montant:
   titre: Montant dépensé par an pour l'achat de produits manufacturés neufs
@@ -366,15 +421,37 @@ divers . autres produits . montant:
     Elle concerne : **les livres et journaux, les jeux, la décoration, le matériel de cuisine, le linge de maison, 
     les matériaux pour les loisirs créatifs ou bricolage, les affaires de sports (ski, surf...), etc...**
   par défaut: 2000 CHF/an
+  note: chiffre arbitraire pour refléter un pouvoir d'achat moyen important des genevois
+
+divers . autres produits . niveau de dépenses:
+  description: |
+    Pour garder l'interface simple, nous proposons une estimation, via vos dépenses, de l'empreinte des biens de consommations que vous possédez et que vous ne pensez pas avoir inclus dans les questions précédentes.
+    Elle concerne : les jeux, la décoration, le matériel de cuisine, le linge de maison, les matériaux pour les loisirs créatifs ou bricolage, les plantes etc...
 
 divers . autres produits . niveau de dépenses . faible:
-  titre: Moins de 50CHF / mois
+  titre: Moins de 100CHF / mois
 
 divers . autres produits . niveau de dépenses . moyen:
-  titre: Environ 80CHF / mois
+  titre: Environ 150CHF / mois
 
 divers . autres produits . niveau de dépenses . important:
-  titre: Plus 120CHF / mois
+  titre: Plus 250CHF / mois
+
+divers . loisirs . culture . édition . fréquence . faible:
+  titre: Peu (moins de 20CHF par mois)
+
+divers . loisirs . culture . édition . fréquence . normale:
+  titre: Régulièrement (autour de 20CHF par mois)
+
+divers . loisirs . culture . édition . fréquence . élevée:
+  titre: Beaucoup (de 20 à 60CHF par mois)
+
+divers . loisirs . culture . édition . fréquence . très élevée:
+  titre: Énormément (plus de 60CHF par mois)
+
+divers . numérique . internet . empreinte horaire:
+  #formule: consommation horaire * intensité électricité
+  formule: 0.02
 
 # ALIMENTATION
 alimentation . petit déjeuner . type:
@@ -431,9 +508,6 @@ logement . chauffage . réseau de chaleur . estimation via le prix:
 logement . chauffage . intensité carbone réseau de chaleur:
   formule: 0.067
 
-logement . chauffage . gaz . estimation via le coût:
-  unité: CHF/kWh
-
 logement . chauffage . citerne propane . estimation via le coût:
   unité: CHF/kg
 
@@ -448,15 +522,18 @@ logement . chauffage . bois . type . bûche . consommation . estimation via le c
 logement . chauffage . bois . type . bûche . prix stère 2023:
   formule: 180
   unité: CHF/stère
+  note: Union suisse des paysans, bois de cheminée 2023, vente directe, moyenne essences	https://www.sbv-usp.ch/fr/prix/vente-directe/bois-de-cheminee
 
 logement . chauffage . bois . type . granulés vrac . prix 100 kWh:
   formule: 11
+  note: OFS prix moyens de l'énergie su-f-05.02.91, moyenne 2022 (4.8 kWh/kg)	https://www.bfs.admin.ch/bfs/fr/home/statistiques/prix/indice-prix-consommation/resultats-detailles.assetdetail.25245904.html
 
 logement . chauffage . bois . type . granulés sac . prix 100 kWh:
   formule: 11
+  note: OFS prix moyens de l'énergie su-f-05.02.91, moyenne 2022 (4.8 kWh/kg)	https://www.bfs.admin.ch/bfs/fr/home/statistiques/prix/indice-prix-consommation/resultats-detailles.assetdetail.25245904.html
 
 logement . chauffage . fioul . estimation via le prix:
-  question: Pas de facture ? Entrez vos dépenses approximatives en fioul par mois
+  question: Pas de facture ? Entrez vos dépenses approximatives en mazout par mois
   unité: CHF/litre
   formule: 1.397
 
@@ -469,10 +546,26 @@ logement . appartement:
     Cette information influence notamment l'empreinte de construction, mais aussi les possibilités de travaux d'isolation par exemple.
     Si vous vivez dans un habitat original, par exemple un camping car, pas de problème : choisissez "appartement" et saisissez les m² de ce qui constitue quand même votre logement.
 
+logement . construction . par surface:
+  formule:
+    variations:
+      - si: éco-construit
+        alors: 144 kgCO2e/m2
+      - si: appartement
+        alors: 696 kgCO2e/m2
+      - sinon: 696 kgCO2e/m2
+  note: rapport haute école fribourg 2021 (amortissement 60 ans)
+
+logement . construction . durée d'amortissement:
+  formule: 60 ans
+  note: |
+    hypothèse norme SIA
+
 logement . âge:
   question: Quel est l'âge de votre logement ?
   par défaut: 45 ans
   description: |
+    Dans le canton de Genève, plus de la moitié des bâtiments à usage d'habitation et des maisons individuelles ont été construits avant 1980.
 
 logement . saisie habitants:
   par défaut: 2.1
@@ -500,6 +593,9 @@ logement . surface:
 
 logement . électricité . consommation:
   icônes: ⚡
+  par défaut: 3000
+  note: |
+    Consommation d'électricité 2021 (OCSTAT) ménages privés rapporté par personne*2.1 personnes par ménage
   question: Quelle est la consommation annuelle d'électricité de votre foyer ?
   description: |
     Astuce : vous trouverez la consommation annuelle d'électricité sur vos factures ou sur votre compte en ligne sur le site des SIG.
@@ -520,14 +616,29 @@ logement . climatisation . nombre:
   par défaut:
     variations:
       - si: appartement
-        alors: 0
-      - sinon: 0
+        alors: 1
+      - sinon: 1
+
+logement . chauffage . fioul:
+  titre: Mazout
+
+logement . chauffage:
+  description: |
+    > Cette question couvre l'ensemble des sources d'énergie qui vous permet d'alimenter vos chauffages, votre chauffe-eau, vos plaques de cuissons etc...
+
+    Certains logements utilisent uniquement de l'électricité, d'autres sont entièrement chauffés au gaz, et plus rarement au bois ou au mazout.
+    Dans d'autres situations encore, un logement peut être chauffé principalement via des chauffages électriques ou une pompe à chaleur,
+    mais avec un appoint bois, par exemple. Enfin, il est possible de prendre en compte également vos consommations de gaz pour votre van ou camping car. 
+
+    Si vous vivez dans plusieurs logements (par exemple, si vous avez une résidence secondaire), essayez de "ramener" ces consommations dans celles du logement principal afin d'avoir l'estimation la plus juste possible.
+
+    Cochez tous les modes que vous utilisez.
 
 logement . chauffage . fioul . consommation:
-  question: Quelle est la consommation annuelle de fioul domestique de votre foyer ?
+  question: Quelle est la consommation annuelle de mazout de votre foyer ?
   unité: litre
   description: |
-    Astuce : Vous trouverez vos consommations annuelles d'énergie sur votre facture de fioul ou sur votre décompte de charges annuelles envoyé par votre régie.
+    Astuce : Vous trouverez vos consommations annuelles d'énergie sur votre facture de mazout ou sur votre décompte de charges annuelles envoyé par votre régie.
 
 # pour supprimer la variation biogaz
 logement . gaz . intensité carbone gaz utilisateur:
@@ -542,3 +653,29 @@ logement . chauffage . empreinte totale:
       - fioul
       - bois . empreinte
       - réseau de chaleur
+
+services sociétaux . voter:
+  icônes: 🗳️🏛️
+  description: |
+    Chaque année ....
+
+# Services sociétaux
+services sociétaux . question rhétorique:
+  question: Nous attribuons l'empreinte des services publics (éducation, santé...) à chaque résident genevois de façon égale.
+  description: |
+
+    Cette catégorie ne dépend pas de vos réponses. L'empreinte associée est calculée via une approche macro à partir notamment du bilan carbone territorial du canton de Genève.
+    En savoir plus.
+
+services publics:
+  formule: 1583
+  note: calcul basé sur les bilans carbone territoriaux VdG et Canton (cf. fichier services sociétaux)
+
+#services marchands:
+#  formule:
+
+# PROFILS
+personas . marie:
+  nom: Marie
+  description: |
+    Marie consomme tout simplement comme la moyenne genevoise.
