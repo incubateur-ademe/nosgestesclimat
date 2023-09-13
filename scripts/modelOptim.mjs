@@ -72,7 +72,7 @@ export function constantFoldingFromJSONFile(
 		const foldedRules = getRawNodes(constantFolding(engine, toKeep))
 
 		log(`Writing in '${jsonDestPath}'...`)
-		writeFileSync(jsonDestPath, JSON.stringify(foldedRules))
+		writeFileSync(jsonDestPath, JSON.stringify(foldedRules, null, 2))
 		return { nbRules: Object.keys(foldedRules).length }
 	} catch (error) {
 		return { err }
