@@ -29,7 +29,7 @@ const { srcLang, srcFile, destLangs, destRegions, markdown } = cli.getArgs(
 		target: true,
 		model: { supportedRegionCodes },
 		file: true,
-		defaultSrcFile: 'data/**/*.publicodes',
+		defaultSrcFile: 'data',
 		markdown: true,
 	}
 )
