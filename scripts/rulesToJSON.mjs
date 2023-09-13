@@ -114,9 +114,9 @@ try {
 	})
 	if (!markdown) {
 		console.log(
-			`✅ ${
+			`✅ ${cli.yellow(
 				Object.keys(baseRules).length
-			} base rules have been correctly parsed`
+			)} base rules have been correctly parsed`
 		)
 	}
 } catch (err) {

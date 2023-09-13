@@ -6,11 +6,26 @@ import { addRegionToBaseRules } from './i18n/addRegionToBaseRules.js'
 import { defaultModelCode, regionModelsPath } from './i18n/regionCommons.js'
 import { compressRules } from './modelOptim.mjs'
 
+function getStyledReportString(name, verb, nbRules, duration) {
+	return `✅ ${cli.green(name)} ${verb} (${cli.yellow(
+		nbRules
+	)} rules) in ${cli.magenta(duration)} ms`
+}
+
 function writeRules(rules, path, destLang, regionCode, markdown) {
 	try {
+		const start = Date.now()
 		fs.writeFileSync(path, JSON.stringify(rules, null, 2))
+		const timeElapsed = Date.now() - start
 		if (!markdown) {
-			console.log(`✅ ${regionCode}-${destLang} written`)
+			console.log(
+				getStyledReportString(
+					`${regionCode}-${destLang}`,
+					'written',
+					Object.keys(rules).length,
+					timeElapsed
+				)
+			)
 		}
 	} catch (err) {
 		return err
@@ -58,11 +73,21 @@ export default ({
 			err: `❌ Compilation ${regionCode}-${destLang}: ${werr}`,
 		}
 	}
-	const oerr = compressRules(destPathWithoutExtension)
-	if (oerr) {
-		return { err: `❌ Optimization ${regionCode}-${destLang}: ${oerr}` }
-	} else if (!markdown && !oerr) {
-		console.log(`✅ ${regionCode}-${destLang} optimized`)
+	const start = Date.now()
+	const { err, nbRules } = compressRules(destPathWithoutExtension)
+	const optimDuration = Date.now() - start
+	if (err) {
+		return { err: `❌ Optimization ${regionCode}-${destLang}: ${err}` }
+	} else if (!markdown && !err) {
+		console.log(
+			getStyledReportString(
+				`${regionCode}-${destLang}`,
+				'optimized',
+				nbRules,
+				optimDuration
+			)
+		)
 	}
+
 	return { ok: `<li>${regionCode}-${destLang}</li>` }
 }
