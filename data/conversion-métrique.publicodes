@@ -61,17 +61,17 @@ pétrole . litres gazole:
       - bus
 
 pétrole . litres gazole . voiture:
-  non applicable si: transport . voiture . motorisation = 'électrique'
-  applicable si: transport . voiture . thermique . carburant = 'gazole B7 ou B10'
+  non applicable si: transport . ordinaire . voiture . motorisation = 'électrique'
+  applicable si: transport . ordinaire . voiture . thermique . carburant = 'gazole B7 ou B10'
   formule:
     variations:
-      - si: transport . voiture . aide km
-        alors: transport . voiture . km * transport . voiture . thermique . consommation au kilomètre
-      - sinon: (transport . voiture . km / transport . voiture . voyageurs) * transport . voiture . thermique . consommation au kilomètre
+      - si: transport . ordinaire . voiture . aide km
+        alors: transport . ordinaire . voiture . km * transport . ordinaire . voiture . thermique . consommation au kilomètre
+      - sinon: (transport . ordinaire . voiture . km / transport . ordinaire . voiture . voyageurs) * transport . ordinaire . voiture . thermique . consommation au kilomètre
   unité: l
 
 pétrole . litres gazole . bus:
-  formule: part thermique * consommation . par tête * transport . bus . heures par semaine * semaines par an * transport . bus . vitesse
+  formule: part thermique * consommation . par tête * transport . ordinaire . bus . heures par semaine * semaines par an * transport . ordinaire . bus . vitesse
   unité: l
 
 pétrole . litres gazole . bus . consommation . par tête:
@@ -106,33 +106,33 @@ pétrole . litres essence:
       - deux roues
 
 pétrole . litres essence . voiture:
-  non applicable si: transport . voiture . motorisation = 'électrique'
+  non applicable si: transport . ordinaire . voiture . motorisation = 'électrique'
   applicable si:
     une de ces conditions:
-      - transport . voiture . thermique . carburant = 'essence E5 ou E10'
-      - transport . voiture . thermique . carburant = 'essence E85'
+      - transport . ordinaire . voiture . thermique . carburant = 'essence E5 ou E10'
+      - transport . ordinaire . voiture . thermique . carburant = 'essence E85'
   formule:
     variations:
-      - si: transport . voiture . aide km
-        alors: transport . voiture . km * transport . voiture . thermique . consommation au kilomètre
-      - sinon: (transport . voiture . km / transport . voiture . voyageurs) * transport . voiture . thermique . consommation au kilomètre
+      - si: transport . ordinaire . voiture . aide km
+        alors: transport . ordinaire . voiture . km * transport . ordinaire . voiture . thermique . consommation au kilomètre
+      - sinon: (transport . ordinaire . voiture . km / transport . ordinaire . voiture . voyageurs) * transport . ordinaire . voiture . thermique . consommation au kilomètre
   unité: l
 
 pétrole . litres essence . deux roues:
-  applicable si: transport . deux roues . usager
-  formule: transport . deux roues . km * transport . deux roues . conso
+  applicable si: transport . ordinaire . deux roues . présent
+  formule: transport . ordinaire . deux roues . km * transport . ordinaire . deux roues . conso
 
 pétrole . litres kérosène:
-  applicable si: transport . avion . usager
+  applicable si: transport . exceptionnel . avion . présent
   formule: km * conso passager
   unité: l
 
 pétrole . litres kérosène . km:
   formule:
     somme:
-      - transport . avion . court courrier . heures de vol * transport . avion . court courrier . vitesse moyenne
-      - transport . avion . moyen courrier . heures de vol * transport . avion . moyen courrier . vitesse moyenne
-      - transport . avion . long courrier . heures de vol * transport . avion . long courrier . vitesse moyenne
+      - transport . exceptionnel . avion . court courrier . heures de vol * transport . exceptionnel . avion . court courrier . vitesse moyenne
+      - transport . exceptionnel . avion . moyen courrier . heures de vol * transport . exceptionnel . avion . moyen courrier . vitesse moyenne
+      - transport . exceptionnel . avion . long courrier . heures de vol * transport . exceptionnel . avion . long courrier . vitesse moyenne
 
 pétrole . litres kérosène . conso passager:
   formule: 0.035
