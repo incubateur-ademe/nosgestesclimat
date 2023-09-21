@@ -1,4 +1,4 @@
-transport . ordinaire . voiture:
+transport . voiture:
   icônes: 🚘️
   description: |
     ![](https://images.unsplash.com/photo-1572312284222-ecf6d70f1907?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=80)
@@ -13,7 +13,6 @@ transport . ordinaire . voiture:
     Notons finalement qu'il est important de prendre en compte à la fois l'usage (les km parcourus) et la construction de ce véhicule de plus d'une tonne de matériaux divers.
   résumé: Le premier poste moyen d'empreinte, l'incontournable **voiture individuelle**
   titre: voiture
-  applicable si: présent
   formule:
     variations:
       - si: voiture . aide km
@@ -21,11 +20,7 @@ transport . ordinaire . voiture:
       - sinon: (construction amortie + usage) / voyageurs
   unité: kgCO2e
 
-transport . ordinaire . voiture . présent:
-  question: Avez-vous pris la voiture au cours de l'année passée ?
-  par défaut: oui
-
-transport . ordinaire . voiture . saisie voyageurs:
+transport . voiture . saisie voyageurs:
   question: Quel est le nombre moyen de voyageurs dans la voiture ?
   description: |
     Une voiture consomme à peu près autant qu'elle ait 1, 2 ou 5 voyageurs à bord. Voyager à plusieurs, c'est donc potentiellement diviser par 5 l'empreinte individuelle !
@@ -46,7 +41,7 @@ transport . ordinaire . voiture . saisie voyageurs:
     deux: 2
     cinq: 5
 
-transport . ordinaire . voiture . voyageurs:
+transport . voiture . voyageurs:
   titre: Nombre de voyageurs moyen dans la voiture
   formule:
     variations:
@@ -54,19 +49,19 @@ transport . ordinaire . voiture . voyageurs:
         alors: 1
       - sinon: saisie voyageurs
 
-transport . ordinaire . voiture . notif minimum voyageurs:
+transport . voiture . notif minimum voyageurs:
   type: notification
   sévérité: invalide
   formule: saisie voyageurs < 1
   description: |
     Le nombre de voyageurs ne peut pas être nul. Au volant de votre voiture, vous en êtes le premier voyageur.
 
-transport . ordinaire . voiture . aide km:
+transport . voiture . aide km:
   description: L'utilisateur a-t-il été assisté pour remplir son nombre de kilomètres en voiture, ce nombre étant alors déjà proratisé par le nombre de voyageurs pour chaque trajet ?
   note: Cette variable est mise à jour depuis nosgestesclimat-site dans le composant `KmHelp.tsx`.
   par défaut: non
 
-transport . ordinaire . voiture . ratio voyageurs:
+transport . voiture . ratio voyageurs:
   description: Si l'utilisateur a été assisté pour remplir son nombre de kilomètres, quel est le rapport entre la somme brute des kilomètres, et la somme des kilomètres divisés par le nombre de voyageurs du trajet ?
   note: |
     L'enjeu de cette variable concerne l'attribution des émissions de la construction de la voiture.
@@ -86,7 +81,7 @@ transport . ordinaire . voiture . ratio voyageurs:
 
   par défaut: 1 #calcul coté site (fichier KmHelp.tsx)
 
-transport . ordinaire . voiture . km:
+transport . voiture . km:
   titre: Km en voiture
   question: Quelle distance parcourez-vous à l'année en voiture ?
   description: |
@@ -104,7 +99,7 @@ transport . ordinaire . voiture . km:
     1000km / mois: 12000 km/an
     20 000km / an: 20000 km/an
 
-transport . ordinaire . voiture . motorisation:
+transport . voiture . motorisation:
   question: Quel type de voiture utilisez-vous ?
   description: |
     **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
@@ -118,16 +113,16 @@ transport . ordinaire . voiture . motorisation:
         - thermique
         - hybride
         - électrique
-transport . ordinaire . voiture . motorisation . thermique:
+transport . voiture . motorisation . thermique:
   titre: Thermique (diesel/essence)
-transport . ordinaire . voiture . motorisation . électrique:
+transport . voiture . motorisation . électrique:
   titre: Électrique
-transport . ordinaire . voiture . motorisation . hybride:
+transport . voiture . motorisation . hybride:
   titre: Hybride
 
-transport . ordinaire . voiture . thermique: oui # sans le 'oui', une question vide est posée
+transport . voiture . thermique: oui # sans le 'oui', une question vide est posée
 
-transport . ordinaire . voiture . gabarit:
+transport . voiture . gabarit:
   applicable si: km > 0
   question: Quel est le gabarit de la voiture ?
   description: |
@@ -145,24 +140,24 @@ transport . ordinaire . voiture . gabarit:
         - berline
         - SUV
 
-transport . ordinaire . voiture . gabarit . petite:
+transport . voiture . gabarit . petite:
   titre: Petite
   description: Citadine type Zoé, Fiat 500
-transport . ordinaire . voiture . gabarit . moyenne:
+transport . voiture . gabarit . moyenne:
   titre: Moyenne
   description: Modèle au dessus de la petite citadine, type Mégane, Golf
-transport . ordinaire . voiture . gabarit . VUL:
+transport . voiture . gabarit . VUL:
   titre: Véhicule utilitaire
   description: Camionette de type Kangoo ou Partner jusqu'au Trafic et Vito
-transport . ordinaire . voiture . gabarit . berline:
+transport . voiture . gabarit . berline:
   titre: Berline
   description: Une voiture longue, type 308, Tesla Model 3, Audi A3
-transport . ordinaire . voiture . gabarit . SUV:
+transport . voiture . gabarit . SUV:
   titre: SUV
   description: |
     "Sport utility vehicle", type 4x4 urbain
 
-transport . ordinaire . voiture . thermique . consommation aux 100:
+transport . voiture . thermique . consommation aux 100:
   question: Connaissez-vous la consommation moyenne de la voiture ?
   description: |
     **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
@@ -171,7 +166,7 @@ transport . ordinaire . voiture . thermique . consommation aux 100:
   unité: l/centkm
   note: Les suggestions de réponse sont à la louche, à préciser et sourcer.
 
-transport . ordinaire . voiture . consommation estimée:
+transport . voiture . consommation estimée:
   note: |
     Le tableau de correspondance n'est qu'indicatif, il est loin d'être rigoureusement réglé sur les statistiques des voitures en circulation en France : l'essentiel est que l'utilisateur saisisse sa consommation *réelle*.
 
@@ -190,19 +185,19 @@ transport . ordinaire . voiture . consommation estimée:
         alors: 7 l/centkm
       - si: gabarit = 'SUV'
         alors: 8 l/centkm
-transport . ordinaire . voiture . thermique . consommation au kilomètre:
+transport . voiture . thermique . consommation au kilomètre:
   formule: consommation aux 100 / 100
   unité: l/km
 
-transport . ordinaire . voiture . thermique . empreinte au kilomètre:
+transport . voiture . thermique . empreinte au kilomètre:
   titre: empreinte au km thermique
   formule: consommation au kilomètre * empreinte au litre
   note: Cette méthode de calcul, plutôt qu'un barème gabarit -> empreinte au km, permet à l'utilisateur qui connait la consommation moyenne réelle de sa voiture de la saisir pour plus de précision.
 
-transport . ordinaire . voiture . électrique:
+transport . voiture . électrique:
   titre: Voiture électrique
 
-transport . ordinaire . voiture . électrique . empreinte au kilomètre:
+transport . voiture . électrique . empreinte au kilomètre:
   titre: empreinte au km électrique
   unité: kgCO2e/km
   formule:
@@ -218,14 +213,14 @@ transport . ordinaire . voiture . électrique . empreinte au kilomètre:
       - moyenne -> "coeur de gamme - véhicule compact"
       - berline, SUV et VUL -> "haut de gamme - berline"
 
-transport . ordinaire . voiture . usage:
+transport . voiture . usage:
   formule: km * au kilomètre
   unité: kgCO2e
 
-transport . ordinaire . voiture . par km personne:
+transport . voiture . par km personne:
   formule: au kilomètre / voyageurs
 
-transport . ordinaire . voiture . au kilomètre:
+transport . voiture . au kilomètre:
   formule:
     variations:
       - si: motorisation = 'thermique'
@@ -249,7 +244,7 @@ transport . ordinaire . voiture . au kilomètre:
 
     > Hybride : enlever 15% aux consommations ci-dessus (source ADEME: http://www2.ademe.fr/servlet/KBaseShow?catid=13655)
 
-transport . ordinaire . voiture . thermique . empreinte au litre:
+transport . voiture . thermique . empreinte au litre:
   description: |
     Les empreintes sont disponibles de façon assez détaillée sur [la base carbone](https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=diesel), ici par exemple pour le "diesel". Idem pour "essence".
     Pour les retrouver facilement, filtrez par unité "kgCO2e/litre" et par géographie "France continentale".
@@ -268,7 +263,7 @@ transport . ordinaire . voiture . thermique . empreinte au litre:
         alors: 1.11
   unité: kgCO2e/l
 
-transport . ordinaire . voiture . thermique . carburant:
+transport . voiture . thermique . carburant:
   question: Quel type de carburant votre voiture consomme-t-elle ?
   description: |
     Pour comprendre les différents types de carburants, [cet article pédagogique](https://www.francetvinfo.fr/economie/automobile/essence/les-carburants-changent-de-nom-a-la-pompe-voici-comment-vous-y-retrouver_2967013.html) est très utile.
@@ -294,14 +289,14 @@ transport . ordinaire . voiture . thermique . carburant:
     En effet, au vu des problématiques liées au changement d'affectation des sols et autres impacts environnementaux liés à la culture du maïs par exemple, les **biocarburants** ne sont pas pris en compte
     (le facteur d'émission de la base carbone étant particulièrement incertain). Voir nos discussions [ici](https://github.com/datagir/nosgestesclimat/pull/1324).
 
-transport . ordinaire . voiture . thermique . carburant . gazole B7 ou B10:
+transport . voiture . thermique . carburant . gazole B7 ou B10:
   titre: Gazole (B7 ou B10)
-transport . ordinaire . voiture . thermique . carburant . essence E5 ou E10:
+transport . voiture . thermique . carburant . essence E5 ou E10:
   titre: Essence (E5 ou E10)
-transport . ordinaire . voiture . thermique . carburant . essence E85:
+transport . voiture . thermique . carburant . essence E85:
   titre: Essence E85 (biocarburants)
 
-transport . ordinaire . voiture . notif carburant:
+transport . voiture . notif carburant:
   type: notification
   formule: thermique . carburant = 'essence E85'
   description: |
@@ -310,7 +305,7 @@ transport . ordinaire . voiture . notif carburant:
 
     Nous avons fait le choix d'ajouter cette option dans le test, mais il faut savoir que ce résultat **n'est pas représentatif des conséquences environnementales probables liées à l'utilisation de biocarburants.**
 
-transport . ordinaire . voiture . construction:
+transport . voiture . construction:
   formule:
     variations:
       - si: motorisation = 'thermique'
@@ -358,7 +353,7 @@ transport . ordinaire . voiture . construction:
     Nous avons choisi de ne pas retrancher les "crédits de recyclage" correspondant à des émissions évitées via l'utilisation de matériaux recyclés issus du démantèlement d'une voiture, pour le production de nouveaux produits manufacturés.
     Nous prenons l'hypothèse que l'empreinte réduite bénéficie à celui qui achète le produit issu du recyclage et non pas à celui qui achète un produit amené à être recyclé.
 
-transport . ordinaire . voiture . construction . barème thermique:
+transport . voiture . construction . barème thermique:
   formule:
     variations:
       - si:
@@ -374,7 +369,7 @@ transport . ordinaire . voiture . construction . barème thermique:
         alors: 7600
   unité: kgCO2e
 
-transport . ordinaire . voiture . construction . barème électrique:
+transport . voiture . construction . barème électrique:
   formule:
     variations:
       - si:
@@ -390,7 +385,7 @@ transport . ordinaire . voiture . construction . barème électrique:
         alors: 20200
   unité: kgCO2e
 
-transport . ordinaire . voiture . construction . barème hybride:
+transport . voiture . construction . barème hybride:
   formule:
     variations:
       - si:
@@ -407,17 +402,17 @@ transport . ordinaire . voiture . construction . barème hybride:
   unité: kgCO2e
   note: Ètonnamment, la berline a moins d'empreinte construction que la citadine... A voir si l'étude relève ce mystère.
 
-transport . ordinaire . voiture . gabarit . berline . poids:
+transport . voiture . gabarit . berline . poids:
   formule: 1500
   unité: kg
   note: Règle utilisée pour le calcul de l'empreinte de la caravane et camping, car.
 
-transport . ordinaire . voiture . gabarit . berline . empreinte:
+transport . voiture . gabarit . berline . empreinte:
   formule: 7600
   unité: kgCO2e
   note: Règle utilisée pour le calcul de l'empreinte de la caravane et camping car.
 
-transport . ordinaire . voiture . âge:
+transport . voiture . âge:
   applicable si:
     toutes ces conditions:
       - km > 0
@@ -438,7 +433,7 @@ transport . ordinaire . voiture . âge:
     1 an et demi: 1.5
     5 ans: 5
     10 ans: 10
-transport . ordinaire . voiture . construction amortie:
+transport . voiture . construction amortie:
   formule:
     variations:
       - si: propriétaire
@@ -446,7 +441,7 @@ transport . ordinaire . voiture . construction amortie:
       - sinon: (construction / durée de vie) * facteur location
   unité: kgCO2e
 
-transport . ordinaire . voiture . amortissement particulier:
+transport . voiture . amortissement particulier:
   description: |
     Quand on achète une voiture, on fait émettre une quantité donnée de GES. Disons, par exemple, 10 tonnes, pour une durée de vie de la voiture de 10 ans. Ces gaz sont émis l'année de l'achat, ou plus ou moins (certains composants auront déjà été produits).
 
@@ -475,19 +470,19 @@ transport . ordinaire . voiture . amortissement particulier:
         alors: 5%
       - sinon: 0%
 
-transport . ordinaire . voiture . durée de vie:
+transport . voiture . durée de vie:
   formule: 19
   description: |
     Nous considérons qu'une voiture de particulier, comme une voiture de location, est utilisée en moyenne 19 ans avant d'être mise à la casse [source](https://www.largus.fr/actualite-automobile/le-top-15-des-voitures-envoyees-a-la-casse-10348407.html).
 
     En effet, bon nombre de voitures sont par exemple achetées neuves par des entreprises de location, et seront ensuite acquises par un particulier d'occasion.
 
-transport . ordinaire . voiture . facteur location:
+transport . voiture . facteur location:
   titre: Part d'utilisation annuelle d'une voiture de service
   formule: km / km par an voiture partagée
   note: On attribue à l'utilisateur l'impact de la construction au pro rata de son utilisation par rapport au km parcourus par la voiture sur une année.
 
-transport . ordinaire . voiture . km par an voiture partagée:
+transport . voiture . km par an voiture partagée:
   titre: Kilomètres parcourus annuellement par une voiture en auto-partage
   formule: 15130 km/an
   note: |
@@ -495,7 +490,7 @@ transport . ordinaire . voiture . km par an voiture partagée:
 
     > "Les données communiquées par les opérateurs nous permettent de retenir l’hypothèse de 15130 kilomètres parcourus en moyenne par an par voiture en autopartage."
 
-transport . ordinaire . voiture . propriétaire:
+transport . voiture . propriétaire:
   question: Avez-vous votre propre voiture individuelle ?
   description: |
     Par opposition à l'utilisation exclusive de voitures de location partagées par d'autres personnes le reste du temps, ou l'utilisation de la voiture d'un ami, de la famille.
@@ -503,7 +498,7 @@ transport . ordinaire . voiture . propriétaire:
     Si votre entreprise vous met à disposition une voiture dont vous êtes le principal utilisateur, vous pouvez considérer que c'est votre voiture individuelle.
   par défaut: oui
 
-transport . ordinaire . voiture . notif proprio:
+transport . voiture . notif proprio:
   type: notification
   formule:
     toutes ces conditions:

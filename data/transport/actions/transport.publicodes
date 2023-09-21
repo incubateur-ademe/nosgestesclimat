@@ -104,7 +104,7 @@ transport . éco-conduite:
   titre: Adopter une éco-conduite
   effort: faible
   icônes: 🚗☮
-  formule: transport . ordinaire . voiture - transport . éco-conduite . recalcul
+  formule: transport . voiture - transport . éco-conduite . recalcul
   description: |
     L’éco-conduite est une action simple et efficace qui se tient à la portée de tous.  
 
@@ -122,14 +122,14 @@ transport . éco-conduite . recalcul:
   note: Un recalcul est nécessaire ici, car l'utilisateur peut avoir utilisé l'outil d'aide à la saisie qui proratise alors la variable km au nombre de voyageurs. Sinon ce n'est pas le cas.
   formule:
     recalcul:
-      règle: transport . ordinaire . voiture
+      règle: transport . voiture
       avec:
-        transport . ordinaire . voiture . usage: transport . éco-conduite . usage réduit
+        transport . voiture . usage: transport . éco-conduite . usage réduit
       # Impossible to change directly the rule we want to replace
-      # Can't do this : transport . ordinaire . voiture . empreinte . usage: transport . ordinaire . voiture . empreinte . usage * 0.85
+      # Can't do this : transport . voiture . empreinte . usage: transport . voiture . empreinte . usage * 0.85
 
 transport . éco-conduite . usage réduit:
-  formule: (transport . ordinaire . voiture . km * transport . ordinaire . voiture . au kilomètre) * 0.85
+  formule: (transport . voiture . km * transport . voiture . au kilomètre) * 0.85
   unité: kgCO2e
   note: réduction de 15% (cf info règle éco-conduite)
 
@@ -374,10 +374,10 @@ transport . empreinte au km covoiturage: 0.2 kgCO2e/km
 #   question: Votre travail est-il totalement ou en partie compatible avec le télétravail ?
 #   par défaut: oui
 
-transport . ordinaire . voiture 5km:
+transport . voiture 5km:
   titre: Se passer de voiture pour moins de 5 km
   icônes: 🚗🚲
-  formule: transport . ordinaire . voiture - transport . ordinaire . voiture 5km . recalcul
+  formule: transport . voiture - transport . voiture 5km . recalcul
   applicable si: voiture . propriétaire
   non applicable si: voiture . km < seuil d'activation 5km
   note: |
@@ -414,28 +414,28 @@ transport . distance moyenne trajet court:
   unité: km/trajets
   description: Nous estimons simplement à 2,5km la moyenne de distance des trajets inférieurs à 5km.
 
-transport . ordinaire . voiture 5km . recalcul:
+transport . voiture 5km . recalcul:
   formule:
     recalcul:
-      règle: transport . ordinaire . voiture
+      règle: transport . voiture
       avec:
-        transport . ordinaire . voiture . usage: transport . ordinaire . voiture 5km . usage réduit
+        transport . voiture . usage: transport . voiture 5km . usage réduit
 
-transport . ordinaire . voiture 5km . usage réduit:
-  formule: (transport . ordinaire . voiture . km - distance totale) * transport . ordinaire . voiture . au kilomètre
+transport . voiture 5km . usage réduit:
+  formule: (transport . voiture . km - distance totale) * transport . voiture . au kilomètre
   unité: kgCO2e
 
-transport . ordinaire . voiture 5km . distance totale:
+transport . voiture 5km . distance totale:
   formule:
     variations:
-      - si: distance totale renseignée > transport . ordinaire . voiture . km
-        alors: transport . ordinaire . voiture . km
+      - si: distance totale renseignée > transport . voiture . km
+        alors: transport . voiture . km
       - sinon: distance totale renseignée
 
-transport . ordinaire . voiture 5km . distance totale renseignée:
+transport . voiture 5km . distance totale renseignée:
   formule: fréquence * distance moyenne aller-retour trajet court * semaines par an
 
-transport . ordinaire . voiture 5km . fréquence:
+transport . voiture 5km . fréquence:
   question: Combien de fois par semaine prenez-vous la voiture pour moins de 5km ?
   description: |
     Je vais chercher mon pain à 2km en voiture, cela représente un trajet.
@@ -453,8 +453,8 @@ transport . super ethanol:
   inactive: oui
   titre: Passer du sans-plomb au super éthanol
   icônes: ⛽️🚗
-  applicable si: transport . ordinaire . voiture . thermique . carburant = 'essence E5 et E10'
-  formule: transport . ordinaire . voiture - transport . super ethanol . recalcul avec surconsommation
+  applicable si: transport . voiture . thermique . carburant = 'essence E5 et E10'
+  formule: transport . voiture - transport . super ethanol . recalcul avec surconsommation
   description: |
     Le Superéthanol E85 est le carburant essence sans plomb pouvant contenir entre 65% et 85% de bioéthanol, le complément étant de l’essence Sans Plomb 95. 
     Il est produit à partir de cultures de canne à sucre, de céréales (blé, maïs) et de betterave sucrière. 
@@ -467,9 +467,9 @@ transport . super ethanol:
 transport . super ethanol . recalcul:
   formule:
     recalcul:
-      règle: transport . ordinaire . voiture
+      règle: transport . voiture
       avec:
-        transport . ordinaire . voiture . thermique . carburant: "'essence E85'"
+        transport . voiture . thermique . carburant: "'essence E85'"
 
 transport . super ethanol . taux surconsommation:
   formule: 125%
@@ -505,12 +505,12 @@ transport . scooter électrique . recalcul:
       avec:
         transport . ordinaire . deux roues . type: "'scooter électrique'"
 
-transport . ordinaire . voiture électrique:
+transport . voiture électrique:
   titre: Acheter une voiture électrique
   icônes: 🔌🚗
   applicable si: voiture . propriétaire
-  non applicable si: transport . ordinaire . voiture . motorisation = 'électrique'
-  formule: transport . ordinaire . voiture - transport . ordinaire . voiture électrique . recalcul
+  non applicable si: transport . voiture . motorisation = 'électrique'
+  formule: transport . voiture - transport . voiture électrique . recalcul
   description: |
     La voiture électrique n'est pas la solution miracle mais pour certains usages elle peut s'avérer (très) utile pour réduire notre empreinte.
 
@@ -523,13 +523,13 @@ transport . ordinaire . voiture électrique:
   note: |
     Envisager de ne proposer cette action que si elle > 0 voire > à plusieurs centaines de kgCO2eq
 
-transport . ordinaire . voiture électrique . recalcul:
+transport . voiture électrique . recalcul:
   formule:
     recalcul:
-      règle: transport . ordinaire . voiture
+      règle: transport . voiture
       avec:
-        transport . ordinaire . voiture . motorisation: "'électrique'"
-        transport . ordinaire . voiture . âge: transport . âge nouvelle voiture électrique
+        transport . voiture . motorisation: "'électrique'"
+        transport . voiture . âge: transport . âge nouvelle voiture électrique
 
 transport . âge nouvelle voiture électrique:
   formule:
