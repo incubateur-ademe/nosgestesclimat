@@ -115,13 +115,16 @@ transport . ordinaire . train:
   applicable si: présent
   description: |
     ![](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/TER_Vesoul.jpg/640px-TER_Vesoul.jpg)
+  formule: transport . train
+
+transport . train:
   formule: km * impact par km
 
 transport . ordinaire . train . présent:
   question: Avez-vous pris le train au cours de l'année passée ?
   par défaut: oui
 
-transport . ordinaire . train . impact par km:
+transport . train . impact par km:
   formule:
     moyenne:
       - TER
@@ -132,19 +135,19 @@ transport . ordinaire . train . impact par km:
     On pourrait ajouter un curseur pour évaluer la pondération de la moyenne et être plus précis. Aujourd'hui on est à 50/50.
     On prend donc le facteur d'émission moyen entre TER et TGV.
 
-transport . ordinaire . train . TER:
+transport . train . TER:
   formule: 0.0296
   unité: kgCO2e/km
   note: |
     TER - 2019 - Traction moyenne ; 29.6 gCO2e/km/personne ; Base Carbone consultée le 04/04/2022 (Données SNCF)
 
-transport . ordinaire . train . TGV:
+transport . train . TGV:
   formule: 0.00236
   unité: kgCO2e/km
   note: |
     TGV - 2019 ; 2.36 gCO2e/km/personne ; Base Carbone consultée le 04/04/2022 (Données SNCF)
 
-transport . ordinaire . train . km:
+transport . train . km:
   question: Combien de kilomètres avez-vous parcouru en train au cours de l'année passée ?
   description: Les suggestions sont basées sur la distance à vol d'oiseau doublée pour considérer un aller-retour.
   suggestions:
@@ -162,32 +165,35 @@ transport . ordinaire . métro ou tram:
   icônes: 🚊
   description: |
     ![](https://images.unsplash.com/photo-1581262208435-41726149a759?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60)
+  formule: transport . métro ou tram
+
+transport . métro ou tram:
   formule: heures par semaine * impact par heure * semaines par an
 
 transport . ordinaire . métro ou tram . présent:
   question: Avez-vous pris le métro ou le tramway au cours de l'année passée ?
   par défaut: oui
 
-transport . ordinaire . métro ou tram . impact par heure:
+transport . métro ou tram . impact par heure:
   formule: impact par km * vitesse
   unité: kgCO2e/h
   note: Nous avons confondu tram et métro, alors que le modèle MicMac v2.6 ne parle que de métro.
   description: |
     Sur la base de 6,63 gCO2e/(passager.km) et de 25 km/h de vitesse moyenne.
 
-transport . ordinaire . métro ou tram . impact par km:
+transport . métro ou tram . impact par km:
   formule: 0.00329
   unité: kgCO2e/km
   note: Métro, tramway, trolleybus - 2018 - Agglomération > à 250 000 habitants ; 3.29 gCO2e/km/personne ; Base Carbone consultée le 04/04/2022
 
-transport . ordinaire . métro ou tram . vitesse:
+transport . métro ou tram . vitesse:
   formule: 25
   unité: km/h
   note: Hypothèse de 25 km/h de vitesse moyenne, transports.blog.lemonde.fr, consulté le 05/09/2014
   références:
     - http://transports.blog.lemonde.fr/2013/03/11/les-petits-secrets-de-la-ratp-reveles-au-public/
 
-transport . ordinaire . métro ou tram . heures par semaine:
+transport . métro ou tram . heures par semaine:
   question: Combien d'heures passez-vous par semaine en métro ou en tram ?
   suggestions:
     zéro: 0
@@ -202,19 +208,22 @@ transport . ordinaire . bus:
   icônes: 🚌
   description: |
     ![](https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Alliance_Auch_ligne_6_Allées_Baylac.JPG/640px-Alliance_Auch_ligne_6_Allées_Baylac.JPG)
+  formule: transport . bus
+
+transport . bus:
   formule: heures par semaine * impact par heure * semaines par an
 
 transport . ordinaire . bus . présent:
   question: Avez-vous pris le bus au cours de l'année passée ?
   par défaut: oui
 
-transport . ordinaire . bus . impact par heure:
+transport . bus . impact par heure:
   formule: impact par km * vitesse
   unité: kgCO2e/h
   description: |
     Sur la base de 166 gCO2e/(passager.km) et de 12 km/h de vitesse moyenne
 
-transport . ordinaire . bus . impact par km:
+transport . bus . impact par km:
   formule: 0.113
   unité: kgCO2e/km
   note: |
@@ -222,14 +231,14 @@ transport . ordinaire . bus . impact par km:
     La flotte étant majoritairement Diesel en France (https://www.statistiques.developpement-durable.gouv.fr/69-000-autocars-en-circulation-au-1er-janvier-2020), on fait le choix de prendre ce FE (plus fiable que la référence "Autobus moyen" selon la base carbone)
     La prise compte des autres motorisations de cette catégorie de la base carbone fera diminuer ce FE (en pondérant selon les caractéristiques de la flotte française). (Ex: Autobus - électrique = 21.7 gCO2e/km/personne)
 
-transport . ordinaire . bus . vitesse:
+transport . bus . vitesse:
   formule: 12
   unité: km/h
   note: Hypothèse de 12 km/h de vitesse moyenne, Mairie de Paris, consulté le 05/09/2014
   références:
     - http://www.paris.fr/pratique/deplacements-voirie/transports-en-commun/promouvoir-les-transports-collectifs/rub_385_stand_10755_port_1208
 
-transport . ordinaire . bus . heures par semaine:
+transport . bus . heures par semaine:
   question: Combien d'heures passez-vous dans un bus par semaine ?
   suggestions:
     zéro: 0
@@ -241,6 +250,9 @@ transport . ordinaire . bus . heures par semaine:
 transport . ordinaire . deux roues:
   icônes: 🛵
   applicable si: présent
+  formule: transport . deux roues
+
+transport . deux roues:
   formule: empreinte * km
 
 transport . ordinaire . deux roues . présent:
@@ -249,7 +261,7 @@ transport . ordinaire . deux roues . présent:
     Les scooters et motos sont aujourd'hui très majoritairement des engins qui fonctionnent au pétrole. Les scooters électriques ayant fait une réelle percée, ils sont ajoutés au modèle.
   par défaut: non
 
-transport . ordinaire . deux roues . km:
+transport . deux roues . km:
   question: Combien de km faites-vous à l'année avec votre scooter ou moto ?
   par défaut: 3000
   unité: km
@@ -262,7 +274,7 @@ transport . ordinaire . deux roues . km:
     1000km / mois: 12000 km/an
     20 000km / an: 20000 km/an
 
-transport . ordinaire . deux roues . type:
+transport . deux roues . type:
   question: Quel type de deux-roues utilisez-vous ?
   par défaut: "'scooter thermique'"
   formule:
@@ -274,16 +286,16 @@ transport . ordinaire . deux roues . type:
         - moto inf 250
         - moto sup 250
 
-transport . ordinaire . deux roues . type . scooter thermique:
+transport . deux roues . type . scooter thermique:
   titre: Scooter thermique (diesel/essence)
-transport . ordinaire . deux roues . type . scooter électrique:
+transport . deux roues . type . scooter électrique:
   titre: Scooter électrique
-transport . ordinaire . deux roues . type . moto inf 250:
+transport . deux roues . type . moto inf 250:
   titre: Moto de moins de 250 cm3
-transport . ordinaire . deux roues . type . moto sup 250:
+transport . deux roues . type . moto sup 250:
   titre: Moto de plus de 250 cm3
 
-transport . ordinaire . deux roues . empreinte:
+transport . deux roues . empreinte:
   unité: kgCO2e/km
   formule:
     variations:
@@ -307,7 +319,7 @@ transport . ordinaire . deux roues . empreinte:
 
     Les chiffres ci-dessus incluent la fabrication du véhicule, contrairement aux données précédentes (2021).
 
-transport . ordinaire . deux roues . conso:
+transport . deux roues . conso:
   formule:
     variations:
       - si: type = 'scooter électrique'
@@ -352,7 +364,7 @@ transport . ordinaire . vélo:
   titre: Vélo (classique 🦵)
   applicable si: présent
   icônes: 🚲
-  formule: construction amortie
+  formule: transport . vélo
   unité: kgCO2e
   note: |
     Nous considérons que **l'usage** du vélo musculaire a une empreinte nulle.
@@ -365,11 +377,14 @@ transport . ordinaire . vélo . présent:
   question: Possédez-vous un vélo "musculaire" (sans assistance) ?
   par défaut: non
 
-transport . ordinaire . vélo . construction amortie:
+transport . vélo: 
+  formule: construction amortie
+
+transport . vélo . construction amortie:
   formule: construction / durée de vie
   unité: kgCO2e/an
 
-transport . ordinaire . vélo . construction:
+transport . vélo . construction:
   formule: 116
   unité: kgCO2e
   note: |
@@ -380,7 +395,7 @@ transport . ordinaire . vélo . construction:
 
     Pour le plus populaire, l'empreinte affichée est de 116 kgCO2e.
 
-transport . ordinaire . vélo . durée de vie:
+transport . vélo . durée de vie:
   formule: 12
   unité: an
   note: |
@@ -392,21 +407,24 @@ transport . ordinaire . vae:
   titre: Vélo à Assistance Électrique (VAE)
   icônes: 🚲
   applicable si: présent
-  formule: empreinte * km + construction amortie
+  formule: transport . vae
   unité: kgCO2e
   note: |
     Les vélos-cargo à assistance électrique sont à classer dans la catégorie VAE. La différence de motorisation et de poids, et donc d'empreinte, est trop minime pour mériter une catégorie à part.
+
+transport . vae:
+  formule: empreinte * km + construction amortie
 
 transport . ordinaire . vae . présent:
   question: Possédez vous un vélo à Assistance Électrique (VAE) ?
   par défaut: non
 
-transport . ordinaire . vae . empreinte:
+transport . vae . empreinte:
   formule: 0.00223
   unité: kgCO2e/km
   note: FE issu de la base empreinte (Vélo/à assistance électrique)
 
-transport . ordinaire . vae . km:
+transport . vae . km:
   question: Combien de kilomètres faites-vous à l'année avec votre Vélo à Assistance Électrique (VAE) ?
   par défaut: 1000
   unité: km/an
@@ -418,17 +436,17 @@ transport . ordinaire . vae . km:
   description: |
     Astuce : sur un VAE, le nombre total de kilomètres effectué est affiché sur le moniteur de bord.
 
-transport . ordinaire . vae . construction amortie:
+transport . vae . construction amortie:
   titre: Construction amortie
   formule: construction / durée de vie
   unité: kgCO2e/an
 
-transport . ordinaire . vae . construction:
+transport . vae . construction:
   formule: 262
   unité: kgCO2e
   note: FE issu de la base empreinte (Vélo/à assistance électrique)
 
-transport . ordinaire . vae . durée de vie:
+transport . vae . durée de vie:
   formule: 12
   unité: an
   note: |
@@ -440,7 +458,7 @@ transport . ordinaire . autres véhicules à moteur:
   description: Trottinette électrique, gyropode, monocycle électrique, hoverboard...
   icônes: 🛴
   applicable si: présent
-  formule: empreinte * km + construction amortie
+  formule: transport . autres véhicules à moteur
   unité: kgCO2e
   note: |
     Les petits véhicules à moteur sont en plein développement, tiré en grande partie par l'explosion des ventes de VAE, et de trottinettes électriques. Mais nous pouvons aussi trouver des monocycles électriques, gyropodes, hoverboards...
@@ -453,12 +471,15 @@ transport . ordinaire . autres véhicules à moteur . présent:
   question: Possédez vous une trottinette électrique, gyropode, monocycle électrique, hoverboard...?
   par défaut: non
 
-transport . ordinaire . autres véhicules à moteur . empreinte:
+transport . autres véhicules à moteur:
+  formule: empreinte * km + construction amortie
+
+transport . autres véhicules à moteur . empreinte:
   formule: 0.002
   unité: kgCO2e/km
   note: FE issu de la base empreinte (Trotinette)
 
-transport . ordinaire . autres véhicules à moteur . km:
+transport . autres véhicules à moteur . km:
   question: Combien de kilomètres faites-vous à l'année avec votre trottinette électrique, gyropode, monocycle électrique, hoverboard...?
   par défaut: 1000
   unité: km/an
@@ -468,17 +489,17 @@ transport . ordinaire . autres véhicules à moteur . km:
     10km / jour: 3600 km/an
     100km / semaine: 5000 km/an
 
-transport . ordinaire . autres véhicules à moteur . construction amortie:
+transport . autres véhicules à moteur . construction amortie:
   titre: Construction amortie
   formule: construction / durée de vie
   unité: kgCO2e / an
 
-transport . ordinaire . autres véhicules à moteur . construction:
+transport . autres véhicules à moteur . construction:
   formule: 91.9
   unité: kgCO2e
   note: FE issu de la base empreinte (Trotinette)
 
-transport . ordinaire . autres véhicules à moteur . durée de vie:
+transport . autres véhicules à moteur . durée de vie:
   formule: 4
   unité: an
   note: |
