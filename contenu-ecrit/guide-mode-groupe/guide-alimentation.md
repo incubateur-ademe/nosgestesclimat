@@ -1,6 +1,6 @@
 # **Comment réduire l’empreinte carbone du poste alimentation ?**
 
-## Tout d'abord un peu de contexte - De quoi parlons nous ?
+## Tout d'abord un peu de contexte - De quoi parlons-nous ?
 
 En France le secteur de l’agriculture est le deuxième secteur le plus contributif aux émissions de gaz à effet de serre. Ce secteur émet chaque année 85 Mt de CO2eq ce qui se représente 19 % des émissions françaises[^1].
 
@@ -9,7 +9,7 @@ En France le secteur de l’agriculture est le deuxième secteur le plus contrib
 Si l'on devait catégoriser ces émissions par type de gaz à effet de serre, on obtiendrait la décomposition suivante[^2] :
 
 - environ 45 % de méthane (CH4) dû aux élevages (fermentations entériques c’est-à-dire la digestion des ruminants et stockage des effluents),
-- 40 % de protoxyde d’azote (N20) liées à la fertilisation des cultures et aux engrais azotés
+- 40 % de protoxyde d’azote (N20) lié à la fertilisation des cultures et aux engrais azotés
 - 15 % de CO2 qui provient de la consommation d’énergie (fioul, gaz, carburant, électricité) nécessaire au fonctionnement d'une exploitation (engins agricoles, serres chauffées, bâtiment, etc.).
 
 ![Infographie : décomposition des GES liés à l'agriculture](https://ecolab-data.netlify.app/images/Agriculture_GES_2020.PNG)
@@ -33,7 +33,7 @@ La consommation de viande et plus particulièrement l’élevage joue donc un r�
 ![Infographie : en France 80% des surfaces agricoles sont dédiées à l'alimentation animale](https://ecolab-data.netlify.app/images/Chiffres-cles_reduire_produits_laitiers_v2.png)
 
 > **Et devenir végétalien, c’est encore mieux non ?**
-> Oui en effet devenir végétalien, c’est réduire de manière encore plus significative l’empreinte carbone de son alimentation. Cela va plus loin encore qu'être végétarien : il s'agit de ne plus consommer de produits issus d’animaux (œufs, laits, fromages, etc.). Même si les produits issus des animaux ont très souvent des empreintes carbone inférieures à la viande elle-même (à quelques exceptions près), ils ont à l’inverse une empreinte carbone bien plus forte que les produits végétaux (fruits, légumes, légumineuses, etc.)
+> Oui, en effet devenir végétalien c’est réduire de manière encore plus significative l’empreinte carbone de son alimentation. Cela va plus loin encore qu'être végétarien : il s'agit de ne plus consommer de produits issus d’animaux (œufs, laits, fromages, etc.). Même si les produits issus des animaux ont très souvent des empreintes carbone inférieures à la viande elle-même (à quelques exceptions près), ils ont à l’inverse une empreinte carbone bien plus forte que les produits végétaux (fruits, légumes, légumineuses, etc.)
 > Cependant devenir végétalien nécessite de maitriser quelques notions de base en nutrition afin de garantir que son régime alimentaire ne comporte aucune carence.
 
 **☀️🍅 2. Manger des produits de saison**
@@ -51,11 +51,11 @@ Et oui trouver des tomates en plein hiver n'est pas sans conséquence supplémen
 
 - **Coller une mention « Stop Pub » sur sa boite aux lettres**
 
-Action a priori anodine mais en moyenne chaque année c'est tout de même 14 kg de prospectus publicitaires par habitant qui sont déposés dans nos boites aux lettres[^4].
+Action a priori anodine, mais en moyenne chaque année c'est tout de même 14 kg de prospectus publicitaires par habitant qui sont déposés dans nos boites aux lettres[^4].
 
 - **Acheter en vrac et réutiliser vos emballages**
 
-Les emballages (plastique notamment) sont extrêmement durs à recycler et à réutiliser. De plus, il est aussi courant qu’une part significative de ces déchets plastiques soient exportés et vendus à d’autres pays. Ainsi en 2016, pas moins de 50 % des déchets plastiques triés européens ont été exportés vers la Chine. Cet exportation (vers des pays aux normes environnementales moins contraignantes) et une des raisons qui font que chaque année, entre [8 et 12 millions de tonnes de plastique](https://www.greenpeace.fr/pollution-oceans-limpact-plastiques/) finissent dans les océans. On estime ainsi qu’un “[7e continent de plastique](https://assets.theoceancleanup.com/app/uploads/2019/04/Lebreton2018_SciRep.pdf)” flottant au large de l’Océan Pacifique contiendrait environ 80 000 tonnes de déchets plastique et s’étendrait sur une surface d’environ 1.6 millions de km2 (soit plus de 3 fois la surface de la France métropolitaine
+Les emballages (plastique notamment) sont extrêmement durs à recycler et à réutiliser. De plus, il est aussi courant qu’une part significative de ces déchets plastiques soit exportée et vendue à d’autres pays. Ainsi en 2016, pas moins de 50 % des déchets plastiques triés européens ont été exportés vers la Chine. Cette exportation (vers des pays aux normes environnementales moins contraignantes) et une des raisons qui font que chaque année entre [8 et 12 millions de tonnes de plastique](https://www.greenpeace.fr/pollution-oceans-limpact-plastiques/) finissent dans les océans. On estime ainsi qu’un “[7e continent de plastique](https://assets.theoceancleanup.com/app/uploads/2019/04/Lebreton2018_SciRep.pdf)” flottant au large de l’Océan Pacifique contiendrait environ 80 000 tonnes de déchets plastiques et s’étendrait sur une surface d’environ 1,6 million de km2 (soit plus de 3 fois la surface de la France métropolitaine).
 
 ![Infographie : 85% des emballages jetés par les ménages sont des emballages alimentaires](https://ecolab-data.netlify.app/images/Chiffres-cles_vrac_v2.png)
 
@@ -73,7 +73,7 @@ Le gaspillage alimentaire représente environ 10 % de notre poubelle grise[^5].
 > [La méthanisation](https://www.fnade.org/fr/produire-matieres-energie/valorisation-organique) est un processus de décomposition de la matière organique contenue dans les déchets biodégradables en milieu **anaérobie** (c’est-à-dire en absence d’oxygène)
 > [Le compostage](https://www.fnade.org/fr/produire-matieres-energie/valorisation-organique) est un procédé de traitement **aérobie** (en présence d’oxygène) des déchets fermentescibles par les micro-organismes, dans des conditions contrôlées. Il produit du gaz carbonique, de la chaleur et un résidu organique stable (faible potentiel de biodégradabilité), riche en composés humiques : **le compost**.
 
-- **Tendre vers un mode de vie zéro déchets**
+- **Tendre vers un mode de vie zéro déchet**
 
 Même si le secteur des déchets représente seulement 4 % des émissions de gaz à effet de serre en France[^1], réduire le volume de sa poubelle est bénéfique à bien d’autres égards (réduction pollution plastique, besoin en matière première diminué, etc.). **Un leitmotiv : le meilleur déchet est celui qu’on ne produit pas !**
 
@@ -81,13 +81,13 @@ Même si le secteur des déchets représente seulement 4 % des émissions de gaz
 
 > **Trier ces déchets, ça sert vraiment à quelque chose ?**
 > Oh oui ! Mais pas seulement pour des questions d'impact carbone
-> Même si un tri de qualité permet de limiter les besoins en « sur-tri » (i.e. tri fait à nouveau à posteriori de la collecte) et donc réduire la consommation énergétique des filières de traitement, **l’avantage du tri se situe sur les économies de matière qu’il permet**. Plus particulièrement, cela permet d’éviter de perdre de la matière et donc de ne pas avoir à en recréer. Grâce au recyclage, on conserve donc pour un nouvel usage, une partie de l’énergie et de la matière contenue dans le déchet. A titre d’exemple, ce n’est pas moins de 95% d’énergie économisée par la confection d’une tonne d’aluminium à partir d’aluminium recyclé .
+> Même si un tri de qualité permet de limiter les besoins en « sur-tri » (i.e. tri fait à nouveau a posteriori de la collecte) et donc réduire la consommation énergétique des filières de traitement, **l’avantage du tri se situe sur les économies de matière qu’il permet**. Plus particulièrement, cela permet d’éviter de perdre de la matière et donc de ne pas avoir à en recréer. Grâce au recyclage on conserve donc, pour un nouvel usage, une partie de l’énergie et de la matière contenue dans le déchet. À titre d’exemple, ce n’est pas moins de 95% d’énergie économisée par la confection d’une tonne d’aluminium à partir d’aluminium recyclé .
 > Même si certains taux de réutilisation de la matière recyclée sont très faibles (pour le plastique notamment, où le taux de réincorporation est seulement de 6% contre 49% pour la ferraille, 56 % pour le calcin (verre) et 67 % pour les papiers et cartons[^6]), le tri de ses déchets est un geste important pour la préservation des ressources et dans une mesure plus relative, pour le climat.
 > ![Infographie : seulement 40% des déchets ménagers sont recyclés](https://ecolab-data.netlify.app/images/Chiffres-cles_trier-ses-dechets_v2.png)
 
 **🌭 4. Réduire sa consommation de produits transformés/surgelés**
 
-Les produits transformés sont, d’un point de vue nutritif, très souvent en deçà de leurs équivalents frais. Ils sont plus riche en graisses, sucres et protéines animales et consomment davantage de ressources naturelles.
+Les produits transformés sont, d’un point de vue nutritif, très souvent en deçà de leurs équivalents frais. Ils sont plus riches en graisses, sucres et protéines animales et consomment davantage de ressources naturelles.
 
 ![Infographie : entre les années 50 et 2000 notre régime alimentaire c'est +30.7% de sucre et + 50% de matières grasses](https://ecolab-data.netlify.app/images/Chiffres-cles_Se-passer-produits-transformes.png)
 
