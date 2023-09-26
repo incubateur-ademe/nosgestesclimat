@@ -22,7 +22,7 @@ transport . voiture . empreinte:
     variations:
       - si: voiture . aide km
         alors: construction amortie / ratio voyageurs + usage
-      - sinon: (construction amortie + usage) / voyageurs
+      - sinon: (usage + construction amortie) / voyageurs
   unité: kgCO2e
 
 transport . voiture . saisie voyageurs:
@@ -40,9 +40,8 @@ transport . voiture . saisie voyageurs:
     Bien sûr, si vous vous faites conduire ou si vous prenez le taxi, le chauffeur ne compte pas, car il est au service de votre déplacement.
 
   par défaut: 1.2
-  unité: voyageurs
   suggestions:
-    un seul: 1
+    je suis seul: 1
     deux: 2
     cinq: 5
 
@@ -94,15 +93,16 @@ transport . voiture . km:
 
     Par exemple, si vous êtes en mission professionnelle dans un autre département ou un autre pays, cela rentre dans la comptabilité de votre entreprise : ne le comptez pas ici.
 
-  par défaut: 12200 km/an
+  par défaut: 12200
+  unité: km
   note: |
     Source pour les km annuels moyens : [datalab ministère écologie 2019](https://www.statistiques.developpement-durable.gouv.fr/bilan-annuel-des-transports-en-2019-0), page 3 G1.
   suggestions:
-    zéro: 0 km/an
-    vacances: 2000 km/an
-    10km / jour: 3600 km/an
-    1000km / mois: 12000 km/an
-    20 000km / an: 20000 km/an
+    zéro: 0
+    vacances: 2000
+    10km / jour: 3600
+    1000km / mois: 12000
+    20 000km / an: 20000
 
 transport . voiture . motorisation:
   question: Quel type de voiture utilisez-vous ?
@@ -191,13 +191,14 @@ transport . voiture . consommation estimée:
       - si: gabarit = 'SUV'
         alors: 8 l/centkm
 transport . voiture . thermique . consommation au kilomètre:
-  formule: consommation aux 100 / 100
+  formule: consommation aux 100 / 100 km/centkm
   unité: l/km
 
 transport . voiture . thermique . empreinte au kilomètre:
   titre: empreinte au km thermique
   formule: consommation au kilomètre * empreinte au litre
   note: Cette méthode de calcul, plutôt qu'un barème gabarit -> empreinte au km, permet à l'utilisateur qui connait la consommation moyenne réelle de sa voiture de la saisir pour plus de précision.
+  unité: kgCO2e/km
 
 transport . voiture . électrique:
   titre: Voiture électrique
@@ -220,10 +221,10 @@ transport . voiture . électrique . empreinte au kilomètre:
 
 transport . voiture . empreinte . usage:
   formule: km * au kilomètre
-  unité: kgCO2e
 
 transport . voiture . empreinte . par km personne:
   formule: au kilomètre / voyageurs
+  unité: kgCO2e/km
 
 transport . voiture . empreinte . au kilomètre:
   formule:
@@ -233,6 +234,7 @@ transport . voiture . empreinte . au kilomètre:
       - si: motorisation = 'hybride'
         alors: thermique . empreinte au kilomètre * 0.85
       - sinon: électrique . empreinte au kilomètre
+  unité: kgCO2e/km
   note: |
     Pour la voiture hybride, nous n'avons pour l'instant pas utilisé les valeurs de la base bilan-GES, car elles sont compliquées à interpréter :
       - la catégorie "hybride rechargeable" a une empreinte étonnamment faible (du niveau de l'électrique), mais surtout 0 émission à la combustion. Ce serait donc un véhicule essence qui n'utilise pas d'essence à l'usage ? [Un sujet récent] sur le forum de bilan-GES n'explique pas l'incohérence.
@@ -260,8 +262,8 @@ transport . voiture . thermique . empreinte au litre:
       - si: carburant = 'gazole B7 ou B10'
         alors:
           moyenne:
-            - 3.1
-            - 3.04
+            - 3.1 kgCO2e/l
+            - 3.04 kgCO2e/l
       - si: carburant = 'essence E5 ou E10'
         alors: 2.7
       - si: carburant = 'essence E85'
@@ -431,8 +433,8 @@ transport . voiture . âge:
     Si vous êtes deux à utiliser deux voitures, vous pouvez simplement vous en attribuer une, ou entrer une moyenne de leurs caractéristiques.
 
     Si vous possédez plusieurs voitures utilisées uniquement par vous-même, ~~vendez au moins la deuxième~~ ce cas n'est pas encore prévu.
-  unité: années
-  par défaut: 9 années
+  unité: an
+  par défaut: 9
   suggestions:
     6 mois: 0.5
     1 an et demi: 1.5
@@ -489,7 +491,8 @@ transport . voiture . facteur location:
 
 transport . voiture . km par an voiture partagée:
   titre: Kilomètres parcourus annuellement par une voiture en auto-partage
-  formule: 15130 km/an
+  formule: 15130
+  unité: km
   note: |
     Page 80 de l'[Enquête Nationale Autopartage 2022](https://librairie.ademe.fr/cadic/7353/enquete-autopartage-2022-rapport.pdf):
 
