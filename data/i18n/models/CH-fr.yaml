@@ -30,35 +30,23 @@ logement . gaz . facteur d'émission base carbone:
 # TRANSPORT
 transport . voiture . limitation autoroute:
   titre: Passer de 120 à 100km/h
-  icônes: 🚗🛣️
-  inactive: oui
-  formule: réduction * empreinte autoroute
-  description: |
-    La convention citoyenne pour le climat a proposé en 2020 une réduction de la limitation de vitesse sur les autoroutes de 130km/h à 110km/h. 
-    La proposition est détaillée [ici](https://propositions.conventioncitoyennepourleclimat.fr/objectif/reduire-les-emissions-des-gaz-a-effet-de-serre-sur-les-autoroutes-et-les-voies-rapides/#elementor-tab-title-1681). 
-
-    Suite à l'invasion de l'Ukraine par la Russie, l'Agence Internationale de l'Énergie en a fait [sa 1ère recommandation](https://www.iea.org/reports/a-10-point-plan-to-cut-oil-use) pour réduire nos achats de pétrole russe.
-
-    Nous proposons ici une évalution de cette mesure basée sur votre situation précise.
 
 transport . voiture . limitation autoroute . réduction:
   titre: Gain de consommation 120 -> 100
   formule: 25%
+  note: On considère que passer de 120 à 100km/h sur l'autoroute est équivalent au passage de 130 à 110 km/h en terme de réduction de consommation.
 
 transport . voiture . km:
-  question: Quelle distance parcourez-vous à l'année en voiture ?
   par défaut: 7000 km/an
   description: |
     Ne comptez que les kilomètres de déplacement personnel (courses, loisirs, famille etc.) et de déplacement domicile travail pour rejoindre votre lieu de travail habituel.
 
     Par exemple, si vous êtes en mission professionnelle dans un autre canton ou un autre pays cela rentre dans la comptabilité de votre entreprise : ne le comptez pas ici.
-
   note: |
     Source pour les km annuels moyens : [Office fédéral de la statistique](https://www.bfs.admin.ch/bfs/fr/home/statistiques/mobilite-transports/transport-personnes/comportements-transports/distance-duree-jour-deplacements.html).
 
 transport . voiture . thermique . carburant:
   description: |
-
     > Attention, si le type de carburant fait varier de façon significative l'empreinte climat au litre, la consommation en litre par 100km elle aussi varie. Veillez à saisir une consommation au litre basée sur votre moyenne réelle.
 
 transport . voiture . thermique . carburant . gazole B7 ou B10:
@@ -68,30 +56,9 @@ transport . voiture . thermique . carburant . essence E5 ou E10:
 transport . voiture . thermique . carburant . essence E85:
   titre: Essence E85
 
-transport . voiture . thermique . empreinte au litre:
-  description: |
-    Les empreintes sont disponibles de façon assez détaillée sur [la base carbone](https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=diesel), ici par exemple pour le "diesel". Idem pour "essence".
-    Pour les retrouver facilement, filtrez par unité "kgCO2e/litre" et par géographie "France continentale".
-
-    À noter que pour le gazole, le FE choisi est la moyenne entre le gazole B7 et le gazole B10.
-  formule:
-    variations:
-      - si: carburant = 'gazole B7 ou B10'
-        alors:
-          moyenne:
-            - 3.1
-            - 3.04
-      - si: carburant = 'essence E5 ou E10'
-        alors: 2.7
-      - si: carburant = 'essence E85'
-        alors: 1.11
-  unité: kgCO2e/l
-
-transport . deux roues thermique . usager:
-  question: Utilisez-vous un scooter ou une moto thermique ?
-
-transport . deux roues thermique . km:
-  par défaut: 400 km
+transport . deux roues . km:
+  par défaut: 400
+  note: Source manquante ?
 
 transport . avion . usager:
   description: |
@@ -102,8 +69,11 @@ transport . avion . usager:
 
     > 💡 Si vous avez pris l'avion ppour faire Zurich-New-York en 2022 (environ 19h A/R), vos émissions associées (près de 2 tonnes) seront échelonnées sur les 3 dernières années.
 
+transport . avion . court courrier . durée moyennne:
+  titre: Durée moyenne passée par un Suisse dans les vols court-courrier
+
 transport . avion . court courrier . passager km moyen:
-  titre: Combien d'heures par an voyagez-vous en avion en vols court courrier ? (trajet de moins de 2h)
+  titre: Distance moyenne parcourue un Suisse sur des vols court-courrier
   formule: 0.024 * 9000
   description: |
     L'[Office fédéral de la statistique](https://www.bfs.admin.ch/bfs/fr/home/actualites/quoi-de-neuf.assetdetail.1840421.html) indique que les Suisses se déplacent à hauteur de 9000km par an en avion.
@@ -113,8 +83,11 @@ transport . avion . court courrier . passager km moyen:
       - Moyen-courrier: 7.4%
       - Long-courrier: 90.2%
 
+transport . avion . moyen courrier . durée moyennne:
+  titre: Durée moyenne passée par un Suisse dans les vols moyen-courrier
+
 transport . avion . moyen courrier . passager km moyen:
-  titre: Combien d'heures par an voyagez-vous en avion en vol moyen courrrier ? (trajet entre 2h et 6h)
+  titre: Distance moyenne parcourue un Suisse sur des vols moyen-courrier
   formule: 0.074 * 9000
   description: |
     L'[Office fédéral de la statistique](https://www.bfs.admin.ch/bfs/fr/home/actualites/quoi-de-neuf.assetdetail.1840421.html) indique que les Suisses se déplacent à hauteur de 9000km par an en avion.
@@ -124,8 +97,11 @@ transport . avion . moyen courrier . passager km moyen:
       - Moyen-courrier: 7.4%
       - Long-courrier: 90.2%
 
+transport . avion . long courrier . durée moyennne:
+  titre: Durée moyenne passée par un Suisse dans les vols long-courrier
+
 transport . avion . long courrier . passager km moyen:
-  titre: Combien d'heures par an voyagez-vous au-delà en vol long courrier ?  (plus de 6h)
+  titre: Distance moyenne parcourue un Suisse sur des vols long-courrier
   formule: 0.902 * 9000
   description: |
     L'[Office fédéral de la statistique](https://www.bfs.admin.ch/bfs/fr/home/actualites/quoi-de-neuf.assetdetail.1840421.html) indique que les Suisses se déplacent à hauteur de 9000km par an en avion.
@@ -134,6 +110,7 @@ transport . avion . long courrier . passager km moyen:
       - Court-courrier: 2.4%
       - Moyen-courrier: 7.4%
       - Long-courrier: 90.2%
+
 transport . avion . court courrier . heures de vol:
   suggestions:
     🚫✈️: 0
@@ -172,28 +149,19 @@ transport . métro ou tram . heures par semaine:
 # transport factors for GE
 transport . avion . court courrier . empreinte par km:
   formule: 0.305
-  note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
-  description: |
-    Nous utilisons le facteur d'émission de la base carbone `Avion passagers - Court courrier, 2018 - AVEC trainées`.
+  description: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
 
 transport . avion . moyen courrier . empreinte par km:
   formule: 0.257
-  note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
-  description: |
-    Nous utilisons le facteur d'émission de la base carbone `Avion passagers - Moyen courrier, 2018 - AVEC trainées`.
+  description: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
 
 transport . avion . long courrier . empreinte par km:
   formule: 0.235
-  note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
-  description: |
-    Nous utilisons le facteur d'émission de la base carone `Avion passagers - Long courrier, 2018 - AVEC trainées`.
+  description: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
 
-transport . train . TER:
+transport . train . impact par km:
   formule: 0.002
   note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - Mobitool mix électrique CFF (hors infrastructure routière)
-
-transport . train . TGV:
-  formule: 0.002
 
 transport . métro ou tram . impact par km:
   formule: 0.021
@@ -211,21 +179,23 @@ transport . bus . vitesse:
   formule: 18
   note: TPG (Rapport de gestion 2022 - estimation basée sur la vitesse commerciale bus)
 
-transport . deux roues thermique . empreinte:
+transport . deux roues . empreinte:
   formule:
     variations:
-      - si: type = 'scooter'
-        alors: 0.124 kgCO2e/km
-        note: Mobitool moyenne scooter (hors infrastructure, avec construction)
-      - si: type = 'moto inf 250'
-        alors: 0.146 kgCO2e/km
-        note: Mobitool motocyclette 11-35kW (hors infrastructure, avec construction)
-      - si: type = 'moto sup 250'
-        alors: 0.194 kgCO2e/km
-        note: Mobitool motocyclette >35kW (hors infrastructure, avec construction)
+      - si: type = 'scooter thermique'
+        alors: 0.124
       - si: type = 'scooter électrique'
-        alors: 0.030 kgCO2e/km
-  note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
+        alors: 0.030
+      - si: type = 'moto inf 250'
+        alors: 0.146
+      - si: type = 'moto sup 250'
+        alors: 0.194
+  note: |
+    Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
+
+    - Mobitool moyenne scooter (hors infrastructure, avec construction)
+    - SMobitool motocyclette 11-35kW (hors infrastructure, avec construction)
+    - Mobitool motocyclette >35kW (hors infrastructure, avec construction)
 
 transport . voiture . électrique . empreinte au kilomètre:
   formule:
@@ -245,17 +215,11 @@ transport . voiture . empreinte . construction . barème thermique:
             - gabarit = 'petite'
             - gabarit = 'moyenne'
         alors: 7758
-      - si:
-          une de ces conditions:
-            - gabarit = 'VUL'
+      - si: gabarit = 'VUL'
         alors: 10340
-      - si:
-          une de ces conditions:
-            - gabarit = 'berline'
+      - si: gabarit = 'berline'
         alors: 8958
-      - si:
-          une de ces conditions:
-            - gabarit = 'SUV'
+      - si: gabarit = 'SUV'
         alors: 11722
   note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool ((fabrication + maintenance + fin de vie) * km * nb de passagers) - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
 
@@ -267,17 +231,11 @@ transport . voiture . empreinte . construction . barème électrique:
             - gabarit = 'petite'
             - gabarit = 'moyenne'
         alors: 11013
-      - si:
-          une de ces conditions:
-            - gabarit = 'VUL'
+      - si: gabarit = 'VUL'
         alors: 16093
-      - si:
-          une de ces conditions:
-            - gabarit = 'berline'
+      - si: gabarit = 'berline'
         alors: 13291
-      - si:
-          une de ces conditions:
-            - gabarit = 'SUV'
+      - si: gabarit = 'SUV'
         alors: 18895
   note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool ((fabrication + maintenance + fin de vie) * km * nb de passagers) - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
 
@@ -289,17 +247,11 @@ transport . voiture . empreinte . construction . barème hybride:
             - gabarit = 'petite'
             - gabarit = 'moyenne'
         alors: 8880
-      - si:
-          une de ces conditions:
-            - gabarit = 'VUL'
+      - si: gabarit = 'VUL'
         alors: 11957
-      - si:
-          une de ces conditions:
-            - gabarit = 'berline'
+      - si: gabarit = 'berline'
         alors: 10298
-      - si:
-          une de ces conditions:
-            - gabarit = 'SUV'
+      - si: gabarit = 'SUV'
         alors: 13616
   note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool ((fabrication + maintenance + fin de vie) * km * nb de passagers) - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
 
@@ -348,11 +300,9 @@ transport . mobilité douce . autres véhicules à moteur . durée de vie:
 
 # DIVERS
 divers . animaux domestiques . empreinte . chats . nombre:
-  question: Combien de chiens possédez-vous dans votre foyer ?
   par défaut: 0
 
 divers . électroménager . préservation:
-  question: Quel effort faites-vous pour garder vos appareils électroménagers le plus longtemps possible ?
   description: |
     Pour éviter de vous demander de renseigner l'âge précis de la dizaine d'appareils électroménagers que vous possédez, nous utilisons une grille d'âge moyen constaté pour chaque appareil.
 
@@ -370,65 +320,12 @@ divers . numérique . préservation:
 
     Répondre "Aucun, je rachète souvent neuf" est la réponse la plus impactante car elle signifie que vous remplacez vos appareils précocement avant même qu'ils soient hors d'usage.
 
-divers . autres produits . ratio monétaire HT:
-  titre: Ratio monétaire produits manufacturés HT
-  formule: (plastiques et caoutchouc + papier et carton + bois et articles en bois + produits métalliques + édition) / 5
-  unité: kgCO2e/CHF
-  description: |
-    Dans une première approche, ce ratio est basé sur une moyenne de facteurs d'émission monétaires issus de la base carbone. 
-    Voir [documentation de la base carbone](https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Ratio-monetaires).
-
-divers . autres produits . ratio monétaire HT . plastiques et caoutchouc:
-  titre: Ratio monétaire plastiques et caoutchouc
-  formule: 0.800
-  unité: kgCO2e/CHF
-  note: Base Carbone - Service - Plastiques et caoutchouc
-
-divers . autres produits . ratio monétaire HT . papier et carton:
-  titre: Ratio monétaire papier et carton
-  formule: 0.900
-  unité: kgCO2e/CHF
-  note: Base Carbone - Service - Papier et carton (/CHF HT)
-
-divers . autres produits . ratio monétaire HT . bois et articles en bois:
-  titre: Ratio monétaire bois
-  formule: 0.500
-  unité: kgCO2e/CHF
-  note: Base Carbone - Service - Bois et article en bois (/CHF HT)
-
-divers . autres produits . ratio monétaire HT . produits métalliques:
-  titre: Ratio monétaire produits métalliques
-  formule: 0.600
-  unité: kgCO2e/CHF
-  note: Base Carbone - Service - Produits métalliques, sauf machines et équipements (/CHF HT)
-
-divers . autres produits . ratio monétaire HT . édition:
-  titre: Ratio monétaire édition
-  formule: 0.280
-  unité: kgCO2e/CHF
-  note: SIG coût moyen profil simple (moyenne 10% vitale vert, 100% vitale vert) - https://media.sig-ge.ch/documents/tarifs_reglements/electricite/tarifs/tarifs_electricite_tous_clients.pdf
-
-divers . autres produits . montant:
-  titre: Montant dépensé par an pour l'achat de produits manufacturés neufs
-  question: Le test ne capte encore toutes vos consommations, combien estimez-vous dépenser par an en produits neufs (décoration, bricolage, jeux, loisirs créatifs, outils, etc...) ?
-  unité: CHF/an
-  description: |
-    Pour garder l'interface simple, nous proposons une estimation, via le coût, de l'empreinte des biens de consommations 
-    que vous possédez et que vous ne pensez pas avoir inclus dans les questions précédentes.
-
-    **Pour répondre à cette question, veillez à lisser vos achats des dernières années sur un an.**
-
-    Il est important de recenser dans cette question l'ensemble de vos dépenses annuelles (pour des **biens personnels ou à offrir**).
-
-    Elle concerne : **les livres et journaux, les jeux, la décoration, le matériel de cuisine, le linge de maison, 
-    les matériaux pour les loisirs créatifs ou bricolage, les affaires de sports (ski, surf...), etc...**
-  par défaut: 2000 CHF/an
-  note: chiffre arbitraire pour refléter un pouvoir d'achat moyen important des genevois
-
 divers . autres produits . niveau de dépenses:
   description: |
-    Pour garder l'interface simple, nous proposons une estimation, via vos dépenses, de l'empreinte des biens de consommations que vous possédez et que vous ne pensez pas avoir inclus dans les questions précédentes.
-    Elle concerne : les jeux, la décoration, le matériel de cuisine, le linge de maison, les matériaux pour les loisirs créatifs ou bricolage, les plantes etc...
+    Pour garder l'interface simple, nous proposons une estimation, via vos dépenses, de l'empreinte des biens de consommations
+    que vous possédez et que vous ne pensez pas avoir inclus dans les questions précédentes.
+
+    Elle concerne : **les jeux, la décoration, le matériel de cuisine, le linge de maison, les matériaux pour les loisirs créatifs ou bricolage, les plantes etc...**
 
 divers . autres produits . niveau de dépenses . faible:
   titre: Moins de 100CHF / mois
@@ -459,6 +356,11 @@ divers . numérique . internet . empreinte horaire:
 alimentation . petit déjeuner . type . continental:
   description: |
     Nous avons fait choix de considérer un petit déjeuner standard proche du petit-déjeuner appelé "continental". Il comprend pain, beurre, confiture, viennoiserie et un fruit.
+    Il existe une variété infinie de petit déjeuners. Nous en avons sélectionné quelques uns pour que vous obteniez une réponse facilement.
+
+    Même si vous ne retrouvez pas exactement votre petit déjeuner, choisissez celui qui s'en rapproche !
+
+    > À noter que votre consommation de jus de fruit / café / thé / chocolat chaud est comptabilisée dans la question dédiée aux boissons chaudes.
 
 alimentation . de saison . consommation:
   description: |
@@ -475,26 +377,18 @@ alimentation . local . consommation:
 
 alimentation . déchets . quantité jetée:
   description: |
-    Répondez 'Zéro Déchet' uniquement si vous traquez le moindre déchet. Pour en savoir plus sur les modes de vie zéro déchets, visitez le site Zero Waste Genève
+    Répondez 'Zéro Déchet' uniquement si vous traquez le moindre déchet. Pour en savoir plus sur les modes de vie zéro déchets, visitez le site Zero Waste Genève.
 
     Sachez qu'en cas d'engagement "zéro déchet", nous considérons tout de même des émissions de gaz à effet (mais largement réduites) car il est très difficile voire impossible de ne générer aucun déchet, certains étant invisibles et inévitables.
     Vous avez renseigné un mode de vie zéro déchet. Il faut savoir que ce niveau d'engagement correspond à une personne qui est investie à 100% dans la démarche de réduction de ses déchets. Consommer en vrac n'est pas suffisant pour être zéro-déchet.
 
 alimentation . déchets . gestes:
-  applicable si: quantité jetée = 'réduction'
-  mosaique:
-    type: selection
-    clé: présent
-  question: Quels éco-gestes mettez-vous en place pour réduire vos déchets ?
   description: Les différents gestes que vous mettez en place pour réduire l'empreinte de votre poubelle.
 
 #LOGEMENT
 logement . électricité . estimation via le coût:
   unité: CHF/kWh
   formule: 0.280
-
-logement . chauffage . réseau de chaleur . estimation via le prix:
-  unité: CHF/kWh
 
 logement . chauffage . intensité carbone réseau de chaleur:
   formule: 0.067
@@ -503,11 +397,9 @@ logement . chauffage . citerne propane . estimation via le coût:
   unité: CHF/kg
 
 logement . chauffage . bois . type . granulés . consommation . estimation via le coût:
-  question: Pas de facture ? Entrez vos dépenses approximatives par mois
   unité: CHF/kWh
 
 logement . chauffage . bois . type . bûche . consommation . estimation via le coût:
-  question: Pas de facture ? Entrez vos dépenses approximatives par mois
   unité: CHF/stère
 
 logement . chauffage . bois . type . bûche . prix stère 2023:
@@ -529,13 +421,14 @@ logement . chauffage . fioul . estimation via le prix:
   formule: 1.397
 
 logement . appartement:
-  titre: Appartement
-  question: Votre logement est-il un appartement ?
   par défaut: oui
   description: |
     Par opposition à une maison individuelle ou une villa.
+
     Cette information influence notamment l'empreinte de construction, mais aussi les possibilités de travaux d'isolation par exemple.
-    Si vous vivez dans un habitat original, par exemple un camping car, pas de problème : choisissez "appartement" et saisissez les m² de ce qui constitue quand même votre logement.
+
+    > Si vous vivez dans un habitat original, par exemple un camping car, pas de problème : choisissez "appartement" et saisissez les m² de ce qui constitue quand même votre logement.
+  note: Source manquante ?
 
 logement . construction . par surface:
   formule:
@@ -545,36 +438,26 @@ logement . construction . par surface:
       - si: appartement
         alors: 696 kgCO2e/m2
       - sinon: 696 kgCO2e/m2
-  note: rapport haute école fribourg 2021 (amortissement 60 ans)
+  note: Rapport haute école fribourg 2021 (amortissement 60 ans)
 
 logement . construction . durée d'amortissement:
   formule: 60 ans
-  note: |
-    hypothèse norme SIA
+  note: Hypothèse norme SIA
 
 logement . âge:
   question: Quel est l'âge de votre logement ?
   par défaut: 45 ans
-  description: |
-    Dans le canton de Genève, plus de la moitié des bâtiments à usage d'habitation et des maisons individuelles ont été construits avant 1980.
+  note: Dans le canton de Genève, plus de la moitié des bâtiments à usage d'habitation et des maisons individuelles ont été construits avant 1980.
 
 logement . saisie habitants:
   par défaut: 2.1
+  note: Source manquante ?
 
 logement . surface:
   titre: Surface
   question: Quelle est la surface de votre logement ?
-  par défaut:
-    variations:
-      - si: appartement
-        alors: 80
-      - sinon: 80
-  note: |
-    Valeur par défaut obtenue dans [ce jeu de données du Ceren et SDES](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel).
-
-    > Les logements ont une surface moyenne d’environ 91 m2.
-
-    > Si vous vivez dans un logement original, par exemple un camping car / un camion / une péniche, renseignez simplement les m² de ce logement.
+  par défaut: 80
+  note: source manquante ?
   suggestions:
     studio: 25
     3 pièces: 70
@@ -586,29 +469,20 @@ logement . électricité . consommation:
   icônes: ⚡
   par défaut: 3000
   note: |
-    Consommation d'électricité 2021 (OCSTAT) ménages privés rapporté par personne*2.1 personnes par ménage
-  question: Quelle est la consommation annuelle d'électricité de votre foyer ?
+    Consommation d'électricité 2021 (OCSTAT) ménages privés rapporté par personne * 2.1 personnes par ménage
   description: |
     Astuce : vous trouverez la consommation annuelle d'électricité sur vos factures ou sur votre compte en ligne sur le site des SIG.
-    Si vous vivez dans plusieurs logements (par exemple, si vous avez une residence secondaire), essayez de ""ramener"" ces consommations dans celles du logement principal afin d'avoir l'estimation la plus juste possible.
+
+    Si vous vivez dans plusieurs logements (par exemple, si vous avez une résidence secondaire), essayez de "ramener" ces consommations dans celles du logement principal afin d'avoir l'estimation la plus juste possible.
 
 logement . climatisation . présent:
   question: Utilisez-vous un système de climatisation pour refroidir votre logement (climatiseur électrique, pompe à chaleur) ?
   description: |
-    La climatisation utilise de l'électricité, qui est déjà incluse en kWh ou en CHF dans la question électricité. L'empreinte de l'électricité consommée par le climatiseur est donc déjà calculée.
-    Mais en plus de cela, un climatiseur rejette d'autres gaz à effet de serre : d'où la nécessité de poser cette question.
     Vous avez une climatisation ? Sa consommation d'électricité sera simplement à inclure dans la facture d'électricité, comme tous les appareils électriques du logement. Sont prises en compte ici, les fuites de gaz frigorigènes.
-
-  par défaut: non # valeur par défaut à oui pour l'intégrer dans l'empreinte moyenne
+  par défaut: non
 
 logement . climatisation . nombre:
-  applicable si: présent
-  question: Combien de climatiseurs électriques possédez-vous ?
-  par défaut:
-    variations:
-      - si: appartement
-        alors: 1
-      - sinon: 1
+  par défaut: 1
 
 logement . chauffage . fioul:
   titre: Mazout
@@ -627,7 +501,6 @@ logement . chauffage:
 
 logement . chauffage . fioul . consommation:
   question: Quelle est la consommation annuelle de mazout de votre foyer ?
-  unité: litre
   description: |
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur votre facture de mazout ou sur votre décompte de charges annuelles envoyé par votre régie.
 
@@ -635,15 +508,19 @@ logement . chauffage . fioul . consommation:
 logement . gaz . intensité carbone gaz utilisateur:
   formule: gaz . facteur d'émission base carbone
 
-# pour supprimer le gaz propane
-logement . chauffage . empreinte totale:
-  formule:
-    somme:
-      - gaz
-      - bouteille gaz
-      - fioul
-      - bois . empreinte
-      - réseau de chaleur
+# pour supprimer le gaz propane -> @Clément: Pour le moment, le fonctionnement actuel des mosaïques ne permet pas de supprimer l'option.. Nous esperons que ce sera possibl bientôt !
+# logement . chauffage . empreinte totale:
+#   formule:
+#     somme:
+#       - gaz
+#       - bouteille gaz
+#       - fioul
+#       - bois . empreinte
+#       - réseau de chaleur
+
+# pour supprimer l'aide à la saisie réseau de chaleur
+logement . chauffage . réseau de chaleur . consommation:
+  aide:
 
 services sociétaux . voter:
   icônes: 🗳️🏛️
@@ -652,17 +529,20 @@ services sociétaux . voter:
 
     Selon les thèmes abordés, les votations peuvent être une occasion d'aborder le sujet du climat. C'est un moyen d'agir indirectement sur l'empreinte carbone des services publics, et sur les autres postes pour lesquels les efforts individuels ne sont pas suffisants.
 
-    Mais ce n’est pas tout ! Vous pouvez participer à des forums citoyens ou assemblées citoyennes ! Si vous êtes étudiant-e, des processus existent peut-être (assemblée, pétitions, votes ?) pour orienter votre université vers la durabilité ? Si vous êtes employé-e, pouvez-vous influer sur les choix de votre entreprise ? Si vous êtes retraité-e, pouvez-vous donner de votre temps au sein de coopératives ou d'associations ? 
-
-    effort: faible
+    Mais ce n’est pas tout ! Vous pouvez participer à des forums citoyens ou assemblées citoyennes ! Si vous êtes étudiant-e, des processus existent peut-être (assemblée, pétitions, votes ?) pour orienter votre université vers la durabilité ? Si vous êtes employé-e, pouvez-vous influer sur les choix de votre entreprise ? Si vous êtes retraité-e, pouvez-vous donner de votre temps au sein de coopératives ou d'associations ?
 
 # Services sociétaux
 services sociétaux . question rhétorique:
   question: Nous attribuons l'empreinte des services publics (éducation, santé...) à chaque résident genevois de façon égale.
   description: |
-
     Cette catégorie ne dépend pas de vos réponses. L'empreinte associée est calculée via une approche macro à partir notamment du bilan carbone territorial du canton de Genève.
     Pour en savoir plus sur cette valeur, n'hésitez pas à consulter les explications détaillées dans notre FAQ.
+
+## On considère que les services sociétaux ne concernent que les services publics calculés selon les bilans carbone territoriaux VdG et Canton (cf. fichier services sociétaux)
+services sociétaux:
+  formule: services publics
+  description: |
+    Ce poste inclus l'empreinte des services publics suisses.
 
 services publics:
   formule: 1583
@@ -1186,9 +1066,3 @@ alimentation . déchets . composter:
     Nos biodéchets, c’est à dire les déchets putrescibles issus de notre alimentation (épluchures, restes de repas, etc.), représentent une grande partie du poids de notre poubelle contribuant ainsi à majorer l’empreinte carbone associée à la gestion de nos déchets. Ces déchets sont très souvent peu ou mal valorisés malgré le bénéfice environnemental qu’ils peuvent apporter : un compost, substance organique riche et bénéfique pour les sols. Composter nos biodéchets (de manière individuelle ou collective) permet donc de réduire la taille de nos poubelles et de favoriser la création de ce compost pouvant à terme être utilisé comme alternative aux engrais chimiques.
 
     Retrouvez toutes les astuces pour [faire un compost] (https://www.ge.ch/teaser/p-tite-poubelle-verte)
-
-# PROFILS
-#personas . marie:
-#  nom: Marie
-#  description: |
-#    Marie consomme tout simplement comme la moyenne genevoise.
