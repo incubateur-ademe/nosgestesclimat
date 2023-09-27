@@ -108,10 +108,16 @@ const piscina = new Piscina({
 
 try {
 	new Engine(baseRules, {
-		// NOTE(@EmileRolley): warnings are ignored for now but should be examined in
-		//    https://github.com/datagir/nosgestesclimat/issues/1722
-		logger: { log: (_) => {}, warn: (_) => {}, err: (_) => {} },
-	})
+		logger: {
+			log: (_) => {},
+			warn: (message) => {
+				if (!markdown) {
+					console.warn(message)
+				}
+			},
+			err: (_) => {},
+		},
+	}).evaluate('bilan')
 } catch (err) {
 	console.error(` ❌ An error occured while trying to parse the base rules:\n`)
 	logPublicodesError(err)
