@@ -10,6 +10,7 @@ logement:
   couleur: '#04a4ac'
   icônes: 🏠
   formule: impact / habitants
+  unité: kgCO2e
 
 logement . impact:
   formule:
@@ -39,7 +40,6 @@ logement . saisie habitants:
   suggestions:
     j'habite seul: 1
     deux personnes: 2
-  unité: personnes
 
 logement . habitants:
   formule:
@@ -55,7 +55,7 @@ logement . notif minimum habitants:
   description: |
     Le nombre d'habitants ne peut pas être nul ni inférieur à 1. Vous êtes le premier habitant de votre logement.
 
-    En effet, l'empreinte du logement et d'autres postes comme l'électroménager étant divisées par le nombre d'habitant, il doit être supérieur à 1.
+    En effet, l'empreinte du logement et d'autres postes comme l'électroménager étant divisées par le nombre d'habitants, il doit être supérieur à 1.
 
     Nous ne prenons donc pas aujourd'hui en compte les logements vides que vous possédez, ou un logement que vous louez dans lequel ni vous ni personne ne vivez.
 
@@ -72,7 +72,7 @@ logement . surface:
 
     > Les logements ont une surface moyenne d’environ 91 m2.
 
-    > Si vous vivez dans un logement original, par exemple un camping car / un camion / une péniche, renseignez simplement les m² de ce logement.
+    > Si vous vivez dans un logement original, par exemple un camping-car / un camion / une péniche, renseignez simplement les m² de ce logement.
   suggestions:
     studio: 25
     3 pièces: 70
@@ -102,10 +102,10 @@ logement . appartement:
 
     Cette information influence notamment l'empreinte de construction, mais aussi les possibilités de travaux d'isolation par exemple.
 
-    > Si vous vivez dans un habitat original, par exemple un camping car / un camion / une péniche, pas de problème : choisissez "appartement" et saisissez les m² de ce qui constitue quand même votre logement.
+    > Si vous vivez dans un habitat original, par exemple un camping-car / un camion / une péniche, pas de problème : choisissez "appartement" et saisissez les m² de ce qui constitue quand même votre logement.
   note: |
-    > En 2018, l’habitat individuel représente 56 % des logements : il est majoritaire parmi les résidences principales comme parmi les résidences secondaires et logements occasionnels. Après avoir progressé entre 1999 et 2008, sa part recule légèrement car le nombre de logements collectifs augmente plus vite que celui des logements individuels du fait des évolutions récentes de la construction neuve.
-    Notons qu'il s'agit d'une proportion de logement, or on peut s'attendre (à vérifier) à ce que les maisons contiennent davantage de gens en moyenne que les appartements, ce qui renforce le choix de la valeur par défaut.
+    > En 2018, l’habitat individuel représente 56 % des logements : il est majoritaire parmi les résidences principales comme parmi les résidences secondaires et logements occasionnels. Après avoir progressé entre 1999 et 2008 sa part recule légèrement, car le nombre de logements collectifs augmente plus vite que celui des logements individuels du fait des évolutions récentes de la construction neuve.
+    Notons qu'il s'agit d'une proportion de logements ; or on peut s'attendre (à vérifier) à ce que les maisons contiennent davantage de gens en moyenne que les appartements, ce qui renforce le choix de la valeur par défaut.
   références:
     INSEE: https://www.insee.fr/fr/statistiques/3676693?sommaire=3696937
 
@@ -124,23 +124,24 @@ logement . construction . par surface:
   formule:
     variations:
       - si: éco-construit
-        alors: 144 kgCO2e/m2
+        alors: 144
       - si: appartement
-        alors: 525 kgCO2e/m2
-      - sinon: 425 kgCO2e/m2
+        alors: 525
+      - sinon: 425
+  unité: kgCO2e/m2
   note: |
     Notons que pour le logement éco-construit, le CO₂ biogénique stocké n'est pas comptabilisé, seul le CO₂ fossile émis l'est.
 
     Pour le logement éco-construit, nous retenons le facteur d'émission de la base carbone, mais il semble confirmé en ordre de grandeur dans l'étude Carbone 4.
 
     > Gains observés sur le CO₂ fossile du poste gros-œuvre (fondations et structure), en comparaison au béton. Le stockage de carbone dans le produit  bois  n’est  pas  pris  en  compte.  Gains  liés  à  la  substitution  matériau  :  MI  bois  CLT  :  118  kgCO2e/m2  SHON,  soit  473  kgCO2e/m3  de produit bois. MI bois ossature : 83 kgCO2e/m2 SHON, soit 2495 kgCO2e/m3 de produit bois. LC bois CLT : 231 kgCO2e/m2 SHON, soit 699 kgCO2e/m3 de produit bois. LC bois ossature : 139 kgCO2e/m2 SHON, soit 3172 kgCO2e/m3 de produit bois.
-  rérénces:
+  références:
     éco-construit: https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=Maison+éco-construite+«+bois
     appartement et maison: https://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Batiments
     Carbone 4: http://www.carbone4.com/wp-content/uploads/2015/05/Note-de-communication-filière-bois-vf.pdf
 
 logement . construction . durée d'amortissement:
-  formule: 50 ans
+  formule: 50
   note: |
     Ces valeurs tiennent compte de l’entretien et de l’éventuel remplacement des produits et équipements durant la vie du bâtiment fixée à 50 ans.
   références:
@@ -148,7 +149,8 @@ logement . construction . durée d'amortissement:
 
 logement . âge:
   question: Quel est l'âge de votre logement ?
-  par défaut: 45 ans
+  par défaut: 45
+  unité: an
   description: |
     En France, 24% du parc de logements date d'avant 1949 et 24% entre 1949 et 1974.
 
@@ -156,18 +158,18 @@ logement . âge:
   références:
     INSEE: 24% du parc de logements date d'avant 1949 et 24% entre 1949 et 1974 par exemple (https://www.insee.fr/fr/statistiques/fichier/2586377/LOGFRA17.pdf).
   suggestions:
-    neuf: 0 ans
-    récent: 10 ans
-    années 70: 45 ans
-    après-guerre: 70 ans
-    un siècle: 100 ans
+    neuf: 0
+    récent: 10
+    années 70: 45
+    après-guerre: 70
+    un siècle: 100
 
 logement . notif amortissement:
   type: notification
   formule: âge > construction . durée d'amortissement
   description: |
     Si votre logement a moins de **50 ans**, nous vous attribuons un cinquantième de l'empreinte de sa construction. **Sinon, zéro : le logement est amorti.**
-    Les questions sur les caractéristiques de votre logement ne vous seront pas posées car l'empreinte annuelle de sa contruction est considérée comme nulle.
+    Les questions sur les caractéristiques de votre logement ne vous seront pas posées ; car l'empreinte annuelle de sa contruction est considérée comme nulle.
 
 logement . construction:
   icônes: 🧱
@@ -179,12 +181,11 @@ logement . construction:
   note: |
     Un logement va en moyenne durer au moins 50 ans. C'est une valeur conservative.
 
-    Nous considérons ici que l'empreinte de la construction d'un logement est attributée chaque année au 50ième aux habitants des 50 premières années.
+    Nous considérons ici que l'empreinte de la construction d'un logement est attribuée chaque année au 50ième aux habitants des 50 premières années.
 
     Par la suite, l'empreinte de construction du logement est mise à zéro.
 
     Amélioration possible : nous manquons de données, mais il devrait être possible d'attribuer une empreinte annuelle d'entretien du logement (ravalement, isolation, travaux intérieurs, etc.).
-
   unité: kgCO2e
 
 logement . électricité:
@@ -251,13 +252,13 @@ logement . chauffage:
         fioul . présent: non
         bois . présent: non
   icônes: 🌡️
-  question: Quel type d'énergie utilisez-vous pour le chauffage de votre logement, eau chaude, cuisson ?
+  question: Quel type d'énergie utilisez-vous pour le chauffage de votre logement, eau chaude, cuisson, etc. ?
   description: |
-    > Cette question couvre l'ensemble des sources d'énergie qui vous permet d'alimenter vos chauffages, votre chauffe-eau, vos plaques de cuissons etc...
+    > Cette question couvre l'ensemble des sources d'énergie qui vous permet d'alimenter vos chauffages, votre chauffe-eau, vos plaques de cuisson, etc.
 
     Certains logements utilisent uniquement de l'électricité, d'autres sont entièrement chauffés au gaz, et plus rarement au bois ou au fioul.
     Dans d'autres situations encore, un logement peut être chauffé principalement via des chauffages électriques ou une pompe à chaleur,
-    mais avec un appoint bois, par exemple. Enfin, il est possible de prendre en compte également vos consommations de gaz pour votre van ou camping car. 
+    mais avec un appoint bois, par exemple. Enfin, il est possible de prendre en compte également vos consommations de gaz pour votre van ou camping-car. 
 
     Si vous vivez dans plusieurs logements (par exemple, si vous avez une résidence secondaire), essayez de "ramener" ces consommations dans celles du logement principal afin d'avoir l'estimation la plus juste possible.
 
@@ -331,10 +332,10 @@ logement . chauffage . réseau de chaleur . estimation via le prix:
     donnait un chiffre de 74,6€HT/MWh et 79,3€TTC/MWh, avec une médiane à 82,3€TTC/MWh.
 
     Nous avons donc choisi dans une première approximation de nous baser sur la moyenne 2021 en conservant le ratio 2019 pour passer en TTC ce qui donne une valeur de 85€TTC/MWh
-    (ce n'est pas seulement un 5,5% ou 20% car l'application de ces taux varie selon la proportion d'énergie verte dans le mix du réseau de chaleur, 
+    (ce n'est pas seulement un 5,5% ou 20%, car l'application de ces taux varie selon la proportion d'énergie verte dans le mix du réseau de chaleur, 
     une TVA à 5,5% étant appliquée aux réseaux contenant plus de 50 % d'énergie renouvelable et de récupération).
 
-    C'est une valeur moyenne dont l'écart-type est rélativement important.
+    C'est une valeur moyenne dont l'écart-type est relativement important.
     Néanmoins, on peut lire dans l'enquête que "les prix de vente moyens des réseaux de chaleur affichent une très grande disparité, 89% de la chaleur livrée est vendue à un prix compris entre -30 et +30% de la moyenne nationale".
 
 logement . chauffage . réseau de chaleur . consommation:
@@ -393,20 +394,20 @@ logement . chauffage . fioul . présent:
 
 logement . chauffage . fioul . estimation via le prix:
   question: Pas de facture ? Entrez vos dépenses approximatives en fioul par mois
-  unité: €/litre
+  unité: €/l
   formule: 1.5199
   description: |
     Cette formule nous permet de passer des €/mois aux litres/an.
 
     Source : Fioul domestique 2000 à 4999 litres, 2ème semestre 2022.
     Donnée issue de l'excel [Prix HTT et TTC depuis janvier 2020.xlsx](https://github.com/datagir/nosgestesclimat/files/11029116/Prix.HTT.et.TTC.depuis.janvier.2020.xlsx)
-    téléchargeable sur la page [Prix des produits pétroliers](https://www.ecologie.gouv.fr/prix-des-produits-petroliers#scroll-nav__4) du Ministère de la Transition Ecologique.
+    téléchargeable sur la page [Prix des produits pétroliers](https://www.ecologie.gouv.fr/prix-des-produits-petroliers#scroll-nav__4) du ministère de la Transition Écologique.
   références:
     écologie.gouv.fr: https://www.ecologie.gouv.fr/prix-des-produits-petroliers
 
 logement . chauffage . fioul . consommation:
   question: Quelle est la consommation annuelle de fioul domestique de votre foyer ?
-  unité: litre
+  unité: l
   description: |
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur votre facture de fioul ou sur votre compte en ligne sur le site de votre fournisseur.
 
@@ -419,7 +420,7 @@ logement . chauffage . intensité carbone fioul:
 
 logement . chauffage . intensité carbone fioul litre:
   formule: 3.25
-  unité: kgCO2e/litre
+  unité: kgCO2e/l
   références:
     - https://www.bilans-ges.ademe.fr - Fioul domestique France continental
 
@@ -463,9 +464,9 @@ logement . chauffage . gaz . biogaz:
   question: Avez-vous souscrit à un contrat gaz incluant du biogaz (ou biométhane) ?
   par défaut: non
   description: |
-    Le biogaz ou biométhane, est un gaz fabriqué à partir de déchets organiques (déchets ménagers, fumier, déchets de pelouse, cultures etc.), contrairement au gaz fossile aussi appelé de façon trompeuse "naturel", qui lui est extrait comme le pétrole depuis le sous-sol norvégien, russe etc.
+    Le biogaz ou biométhane, est un gaz fabriqué à partir de déchets organiques (déchets ménagers, fumier, déchets de pelouse, cultures, etc.), contrairement au gaz fossile aussi appelé de façon trompeuse "naturel", qui lui est extrait comme le pétrole depuis le sous-sol norvégien, russe, etc.
 
-    Depuis quelques années, il est possible de souscire à un contrat qui garantit l'injection sur le réseau de gaz français de la même quantité de biométhane que sa propre consommation. Le gaz que vous consommez dans votre logement sera de toute façon un mélange principalement composé de la molécule méthane (CH₄), mais pour chaque kWh de gaz consommé, il aura été injecté "en votre nom" 1 kWh de biométhane.
+    Depuis quelques années, il est possible de souscrire à un contrat qui garantit l'injection sur le réseau de gaz français de la même quantité de biométhane que sa propre consommation. Le gaz que vous consommez dans votre logement sera de toute façon un mélange principalement composé de la molécule de méthane (CH₄), mais pour chaque kWh de gaz consommé, il aura été injecté "en votre nom" 1 kWh de biométhane.
 
     > Contrairement au gaz, l'électricité *ne se stocke pas*, c'est pourquoi nous ne proposons pas d'option "électricité verte" dans le simulateur.
 
@@ -522,19 +523,19 @@ logement . chauffage . bouteille gaz . présent:
 
 logement . chauffage . bouteille gaz . consommation:
   question: Quelle est votre consommation annuelle en bouteilles de gaz (13 kg) ?
-  par défaut: parc français . chauffage . consommation moyenne gaz cuisson / energie par bouteille
-  unité: bouteilles
+  par défaut: parc français . chauffage . consommation moyenne gaz cuisson / énergie par bouteille
+  unité: bouteille
   aide: estimation via le poids
   description: |
     Pour simplifier la réponse à cette question, nous vous proposons de rentrer directement le nombre de bouteilles de gaz que vous consommez.
     On considère ici une capacité de 13kg, modèle le plus répandu et généralement utilisé pour le gaz de cuisson.
 
-    Si vous souhaitez répondre en kilogrammes car la taille de la bouteille ne vous correspond pas, n'hésitez pas à utiliser l'aide à la conversion.
+    Si vous souhaitez répondre en kilogrammes, car la taille de la bouteille ne vous correspond pas, n'hésitez pas à utiliser l'aide à la conversion.
   note: |
     Il n'existe pas de facteur d'émission associé directement aux bouteilles de gaz mais il faut savoir 
     qu'elles contiennent majoritairement du propane et butane, gaz pour lesquels, on dispose de facteurs d'émission.
 
-    Il existe différents modèles de bonbonnes commme le montre l'infraphie ci-dessous tiré du site [lepropane.com](https://lepropane.com/bouteilles/dimension).
+    Il existe différents modèles de bonbonnes comme le montre l'infographie ci-dessous tirée du site [lepropane.com](https://lepropane.com/bouteilles/dimension).
 
     ![Infographie modèles bouteilles de gaz tiré du site "lepropane.com"](https://lepropane.com/sites/lepropane.com/files/images/infographies/dimensions-bouteilles.png)
 
@@ -547,13 +548,13 @@ logement . chauffage . bouteille gaz . estimation via le poids:
   unité: kg/bouteille
   formule: 13 * 12
   note: |
-    Ce mécanisme d'aide à l'estimation est designée pour recevoir une consommation mensuelle en entrée (cf InputEstimation.tsx côté site).
+    Ce mécanisme d'aide à l'estimation est conçu pour recevoir une consommation mensuelle en entrée (cf InputEstimation.tsx côté site).
     Néanmoins, pour ce cas précis, nous souhaitons proposer une aide à l'estimation sur l'année et attendons une consommation par an 
     et non par mois (période correspondant davantage aux factures de fournisseurs).
     C'est pourquoi , la formule présente un facteur 12.
   description: Cette aide permet de simplifier la conversion des kg de gaz consommés en bouteille de gaz au format 13kg.
 
-logement . chauffage . bouteille gaz . energie par bouteille:
+logement . chauffage . bouteille gaz . énergie par bouteille:
   titre: Energie bouteille de gaz (13 kg)
   formule: 179
   unité: kWh/bouteille
@@ -567,7 +568,7 @@ logement . chauffage . bouteille gaz . empreinte:
 logement . chauffage . bouteille gaz . capacité:
   titre: Capacité bouteille de gaz commune
   formule: 13
-  unité: kg
+  unité: kg/bouteille
 
 logement . chauffage . bouteille gaz . empreinte contenu:
   titre: Empreinte gaz d'une bonbonne
@@ -600,7 +601,7 @@ logement . chauffage . citerne propane . présent:
 
 logement . chauffage . citerne propane . consommation:
   question: Quelle est la consommation annuelle de gaz propane en citerne de votre foyer ?
-  par défaut: parc français . chauffage . consommation gaz par m2 * surface / energie par kg
+  par défaut: parc français . chauffage . consommation gaz par m2 * surface / énergie par kg
   unité: kg
   aide: estimation via le coût
   description: |
@@ -612,12 +613,12 @@ logement . chauffage . citerne propane . estimation via le coût:
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
   unité: €/kg
   formule: 1.8
-  note: Cette aide à l'estimation est designé pour recevoir une consommation mensuelle (cf InputEstimation.tsx côté site)
+  note: Cette aide à l'estimation est désignée pour recevoir une consommation mensuelle (cf InputEstimation.tsx côté site)
   description: |
-    Selon les informations aggrégées par le site [HelloWatt](https://www.hellowatt.fr/gaz-propane-citerne/comparatif-prix), 
+    Selon les informations agrégées par le site [HelloWatt](https://www.hellowatt.fr/gaz-propane-citerne/comparatif-prix), 
     le prix du propane en citerne oscille autour de 1800€ par tonne (selon le fournisseur).
 
-logement . chauffage . citerne propane . energie par kg:
+logement . chauffage . citerne propane . énergie par kg:
   formule: 46 MJ/kg * 1.111 / 3.6 MJ/kWh
   unité: kWh/kg
   note: |
