@@ -225,8 +225,13 @@ transport . voiture . électrique . empreinte au kilomètre:
       - berline, SUV et VUL -> "haut de gamme - berline"
 
 transport . voiture . empreinte . usage:
-  formule: km * (au kilomètre + entretien pondéré)
+  formule: km * (au kilomètre + base au kilomètre)
   unité: kgCO2e
+
+transport . voiture . empreinte . base au kilomètre:
+  titre: Entretien et climatisation au kilomètre
+  formule: entretien pondéré + climatisation
+  unité: kgCO2e/km
 
 transport . voiture . empreinte . entretien pondéré:
   formule:
@@ -250,9 +255,28 @@ transport . voiture . empreinte . entretien:
     Dans le poste G45, nous prenons la part Entretien et réparation de véhicules automobiles (7%).
     Nous le divisons par le nombre de véhicules en circulation, puis par 12200 km (la moyenne de km effectués par véhicule) pour obtenir une empreinte en kgCO2e / km.
 
+transport . voiture . empreinte . climatisation:
+  formule: (émissions gaz fluorés transport / nombre véhicules circulation) / transport . voiture . km annuels moyen
+  unité: kgCO2e/km
+  note: |
+    L'idée ici est de prendre en compte une part des émissions liées aux gaz fluorés issus des climatisations des véhicules 
+    en France via le total des émissions dues à ces gaz sur le secteur du transport (voitures et VUL diesel, essence, GNV, GPL, électrique).
+
+transport . voiture . empreinte . climatisation . émissions gaz fluorés transport:
+  titre: Emissions nationales dûes aux climatisations des voitures et VUL
+  formule: 1374000000
+  unité: kgCO2e
+  note: |
+    Ce chiffre provient de l'étude [SECTEN](https://www.citepa.org/fr/secten/) (le rapport de référence sur les émissions de gaz à effet de serre et de polluants atmosphériques en France).
+
+    D'après l'excel [Données par substance de gaz à effet de serre (GES) édition 2023, onglet "GF-UE_total"](https://www.citepa.org/wp-content/uploads/publications/secten/2023/Citepa_gaz_a_effet_de_serre_v2.zip), 
+    les émissions de gaz fluorés pour le secteur du transport (provenant des équipements de réfrigération et d'air conditionné, utilisant des halocarbures ou du SF6), sont de 1374 ktCO₂e.
+
 transport . voiture . empreinte . nombre véhicules circulation:
-  formule: 38700000
-  note: Donnée au 1° janvier 2022 [fournie par le service de Statistiques de l'État](https://www.statistiques.developpement-durable.gouv.fr/387-millions-de-voitures-en-circulation-en-france-au-1er-janvier-2022)
+  formule: 38700000 + 5977000
+  note: |
+    Ce chiffre concerne les véhicules particuliers (voitures et VUL).
+    Il est issu des statistiques [INSEE](https://www.insee.fr/fr/statistiques/2045167#tableau-figure1_radio1).
 
 transport . voiture . empreinte . par km personne:
   formule: au kilomètre / voyageurs
