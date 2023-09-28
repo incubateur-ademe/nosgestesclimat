@@ -442,63 +442,51 @@ transport . voiture . gabarit . berline . empreinte:
   unité: kgCO2e
   note: Règle utilisée pour le calcul de l'empreinte de la caravane et camping car.
 
-transport . voiture . âge:
-  question: Quel est l'âge de votre voiture ?
+transport . voiture . véhicule récent:
+  applicable si:
+    toutes ces conditions:
+      - km > 0
+      - utilisateur régulier
+  question: Votre véhicule a t-il moins de 10 ans ?
+  par défaut: oui
   description: |
     Pour calculer l'empreinte de la construction de la voiture, qu'il ne faut pas négliger, nous utilisons l'âge de la voiture.
 
-    Répondez bien avec *l'âge de la voiture*, pas le nombre d'années qu'elle a passé en votre possession : il y a en effet de grandes chances que vous l'ayez achetée d'occasion.
+    Répondez bien en considérant *l'âge de la voiture*, pas le nombre d'années qu'elle a passé en votre possession : il y a en effet de grandes chances que vous l'ayez achetée d'occasion.
 
-    Si vous êtes deux à utiliser deux voitures, vous pouvez simplement vous en attribuer une, ou entrer une moyenne de leurs caractéristiques.
-
-    Si vous possédez plusieurs voitures utilisées uniquement par vous-même, ~~vendez au moins la deuxième~~ ce cas n'est pas encore prévu.
-  unité: an
-  par défaut: 9
-  suggestions:
-    6 mois: 0.5
-    1 an et demi: 1.5
-    5 ans: 5
-    10 ans: 10
+    > Si vous êtes deux à utiliser deux voitures, vous pouvez simplement vous en attribuer une.
+    > Si vous possédez plusieurs voitures utilisées uniquement par vous même, ~~vendez au moins la deuxième~~ ce cas n'est pas encore prévu.
 
 transport . voiture . empreinte calculée . construction amortie:
-  formule: construction * amortissement particulier
+  formule: construction * amortissement
   unité: kgCO2e
 
-transport . voiture . amortissement particulier:
+transport . voiture . amortissement:
   description: |
-    Quand on achète une voiture, on fait émettre une quantité donnée de GES. Disons, par exemple, 10 tonnes, pour une durée de vie de la voiture de 10 ans. Ces gaz sont émis l'année de l'achat, ou plus ou moins (certains composants auront déjà été produits).
+    Les discussions ont été animées sur l'amortissement de la voiture. Précédemment, dans le but de décourager l'achat neuf, un amortissement non linéaire avait été imaginé, fortement dégressif dans le temps, sur 10 ans.
+    Cet amortissement non linéaire avait le mérite de décourager l'achat, et de bien faire comprendre à l'utilisateur qu'une grande partie de l'empreinte du véhicule est liée à sa production, donc à l'achat neuf.
 
-    Il serait donc logique du point de vue de l'empreinte sur le climat, d'attribuer les émissions de la construction à la 1re année : l'effet de serre réchauffant commence dès l'achat !
+    Mais cet amortissement non linéaire n'était pas évident à comprendre pour les utilisateurs, et manquait son objectif pédagogique. 
+    Par ailleurs, il occasionnait un double-discours dans Nos Gestes Climat, car dans les actions proposées aux propriétaires de voitures, nous proposons l'achat d'un véhicule électrique, or celui-ci est fortement pénalisant s'il est acheté neuf dans l'empreinte carbone individuelle.
 
-    Sauf que beaucoup de voitures sont achetées par des entreprises avant d'être vendues d'occasion aux particuliers, ou entre particuliers. Il semble donc légitime de distribuer l'attribution dans le temps, donc au fur et à mesure des propriétaires. De la même façon, il faut aussi penser aux utilisateurs qui découvriraient cet outil seulement l'année suivant l'achat d'une voiture : il est légitime de leur réserver une partie des émissions émises.
+    Enfin, il était, dans le simulateur Nos Gestes Climat, une exception : tous les autres biens amortis le sont de manière linéaire (l'empreinte de construction est divisée par la durée de vie du  bien).
 
-    Deuxièmement, en attribuant toute l'empreinte à l'achat, on enverrait un signal fort qui désavantagerait le choix d'une voiture électrique par rapport à une thermique, alors qu'en France les émissions de cette dernière rattrapent la première dès les premières années d'usage.
-
-    D'où le choix d'amortir l'achat sur les 10 premières années (la durée de vie moyenne d'une voiture), avec un taux dégressif, en s'assurant bien que la somme de la part de chaque année donne 100%.
-
-    En bref, nous faisons un compromis entre un modèle cohérent du point de vue du climat et un modèle plus pratique dans le contexte d'un simulateur pédagogique pas forcément utilisé chaque année.
-
-    Pour voir la réflexion ayant mené à cette méthode, voir [cette discussion](https://github.com/betagouv/ecolab-data/issues/225#issuecomment-689472950).
-  note: |
-    Quand on aura mis à jour le code avec la dernière version de publi.codes, on pourra utiliser le [mécanisme `grille`](https://publi.codes/mécanismes#grille) qui fait exactement ça.
+    Nous avons donc fait le choix de revenir pour la voiture à un amortissement linéaire sur la durée de vie de la voiture, à savoir 19 ans d'après cette [source](https://www.largus.fr/actualite-automobile/le-top-15-des-voitures-envoyees-a-la-casse-10348407.html).
   formule:
     variations:
-      - si: âge < 1
-        alors: 40%
-      - si: âge < 2
-        alors: 20%
-      - si: âge < 3
-        alors: 10%
-      - si: âge < 10
-        alors: 5%
-      - sinon: 0%
+      - si: véhicule récent
+        alors: 1 / voiture . durée de vie
+      - sinon: 0
 
 transport . voiture . durée de vie:
-  formule: 19
+  formule: 10
   description: |
-    Nous considérons qu'une voiture de particulier, comme une voiture de location, est utilisée en moyenne 19 ans avant d'être mise à la casse [source](https://www.largus.fr/actualite-automobile/le-top-15-des-voitures-envoyees-a-la-casse-10348407.html).
+    Nous considérons qu'une voiture de particulier, comme une voiture de location, est utilisée en moyenne 10 ans avant d'être mise à la casse.
 
-    En effet, bon nombre de voitures sont par exemple achetées neuves par des entreprises de location, et seront ensuite acquises par un particulier d'occasion.
+    Cette hypothèse est tirée de la [base Empreinte](https://prod-basecarbonesolo.ademe-dri.fr/documentation/UPLOAD_DOC_FR/) et plus précisément,
+    de l'étude menée conjointement par l'ADEME et E4T ([Bilan transversal de l'impact de l'électrification par segment](https://librairie.ademe.fr/mobilite-et-transport/1267-bilan-transversal-de-l-impact-de-l-electrification-par-segment.html)).
+
+    ![](https://github.com/incubateur-ademe/nosgestesclimat/assets/55186402/0b35e469-e42e-438f-8b34-9c127d606747)
 
 transport . voiture . facteur location:
   titre: Part d'utilisation annuelle d'une voiture de service
