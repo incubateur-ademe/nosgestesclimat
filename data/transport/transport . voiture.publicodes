@@ -93,7 +93,7 @@ transport . voiture . km:
 
     Par exemple, si vous êtes en mission professionnelle dans un autre département ou un autre pays, cela rentre dans la comptabilité de votre entreprise : ne le comptez pas ici.
 
-  par défaut: 12200
+  par défaut: km annuels moyen
   unité: km
   note: |
     Source pour les km annuels moyens : [datalab ministère écologie 2019](https://www.statistiques.developpement-durable.gouv.fr/bilan-annuel-des-transports-en-2019-0), page 3 G1.
@@ -103,6 +103,11 @@ transport . voiture . km:
     10km / jour: 3600
     1000km / mois: 12000
     20 000km / an: 20000
+
+transport . voiture . km annuels moyen:
+  formule: 12200
+  unité: km
+  note: Chiffre issu de [datalab ministère écologie 2019](https://www.statistiques.developpement-durable.gouv.fr/bilan-annuel-des-transports-en-2019-0), page 3 G1.
 
 transport . voiture . motorisation:
   question: Quel type de voiture utilisez-vous ?
@@ -220,7 +225,7 @@ transport . voiture . électrique . empreinte au kilomètre:
       - berline, SUV et VUL -> "haut de gamme - berline"
 
 transport . voiture . empreinte . usage:
-  formule: km * ( au kilomètre + entretien pondéré )
+  formule: km * (au kilomètre + entretien pondéré)
   unité: kgCO2e
 
 transport . voiture . empreinte . entretien pondéré:
@@ -231,7 +236,7 @@ transport . voiture . empreinte . entretien pondéré:
       - si: motorisation = 'hybride'
         alors: entretien * 0.90
       - sinon: entretien * 0.75
-  unité: kgCO2e / km
+  unité: kgCO2e/km
   note: |
     Plusieurs sources s'accordent pour dire que l'entretien d'un véhicule électrique est inférieur à celui d'un véhicule thermique de 25%. Comme [celle-ci](https://izi-by-edf.fr/blog/voiture-hybride-entretien/).
 
@@ -239,15 +244,14 @@ transport . voiture . empreinte . entretien pondéré:
     Nous choisissons de partir sur une hypothèse conservatrice de -10% de coût d'entretien par rapport aux véhicules thermiques.
 
 transport . voiture . empreinte . entretien:
-  formule: empreinte branche . G45 * 1000000 * 0.07 / nombre véhicules circulation / 12200
-  unité: kgCO2e / km
+  formule: ((empreinte branche . G45 * 1000000 kgCO2e/ktCO2e * 0.07) / nombre véhicules circulation) / transport . voiture . km annuels moyen
+  unité: kgCO2e/km
   note: |
     Dans le poste G45, nous prenons la part Entretien et réparation de véhicules automobiles (7%).
     Nous le divisons par le nombre de véhicules en circulation, puis par 12200 km (la moyenne de km effectués par véhicule) pour obtenir une empreinte en kgCO2e / km.
 
 transport . voiture . empreinte . nombre véhicules circulation:
   formule: 38700000
-  unité: voitures
   note: Donnée au 1° janvier 2022 [fournie par le service de Statistiques de l'État](https://www.statistiques.developpement-durable.gouv.fr/387-millions-de-voitures-en-circulation-en-france-au-1er-janvier-2022)
 
 transport . voiture . empreinte . par km personne:
