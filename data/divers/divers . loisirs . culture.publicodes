@@ -1,17 +1,3 @@
-divers . loisirs:
-  titre: Loisirs
-  description: |
-    Cette catégorie concerne toutes les pratiques culturelles, sportives, de détente et de bien-être. Dans une première version des "Loisirs", nous avons tout d'abord considéré les pratiques culturelles.
-  note: |
-    La diversité des loisirs est très grande. Nous tentons ici une première approche dite "macro", à savoir que nous partons de l'empreinte totale du secteur en France, et nous ramenons cela à un individu.
-  icônes: 🎭
-  couleur: '#0984e3'
-  formule:
-    somme:
-      - culture
-      # - sports
-      # - bien-être
-
 divers . loisirs . culture:
   icônes: 🎭
   mosaique:
@@ -80,17 +66,18 @@ divers . loisirs . culture . concerts et spectacles . présent:
 
 divers . loisirs . culture . concerts et spectacles . moyenne macro pondérée:
   formule: moyenne macro française * fréquence pondérée
-  unité: kgCO2e/an
+  unité: kgCO2e
 
 divers . loisirs . culture . concerts et spectacles . moyenne macro française:
   formule: empreinte branche . R90 par hab + empreinte branche . J59 par hab * 0.9
-  unité: kgCO2e/an
+  unité: kgCO2e
   note: |
     Nous tirons la moyenne française des calculs effectués par le SDES (Service des Données et Études Statistiques). Elle correspond à la somme des domaines correspondant aux codes NAF R90 ("Activités créatives, artistiques et de spectacles") et J59.1 ("Activités cinématographiques, vidéo et de télévision").
+    ([Voir le détail de cette branche](https://nosgestesclimat.fr/documentation/empreinte-branche/J59-par-hab))
     Cette empreinte est légèrement surévaluée, car les activités cinématographies, vidéo et de télévision englobent un pan plus large de l'économie que le seul cinéma. À ce jour, nous n'avons pas la possibilité de distinguer la partie de ce secteur correspondant au cinéma, et celle correspondant à la télévision.
 
 divers . loisirs . culture . concerts et spectacles . fréquence pondérée:
-  formule: fréquence / 3
+  formule: fréquence / 3 spectacles/an
   note: |
     En 2022, les cinémas français ont enregistré [152 millions d'entrées](https://www.cnc.fr/professionnels/actualites/a-152-millions-dentrees-en-2022-fort-rebond-de-la-frequentation-dans-un-contexte-encore-atypique_1861985). 
     Côté théâtre, [7,4 millions de billets ont été vendus en 2022](https://www.artcena.fr/sites/default/files/medias/ASTP-Etude%20Les%20Franc%CC%A7ais%20et%20le%20The%CC%81a%CC%82tre%202023-diffusion%20juin%202023.pdf). 
@@ -129,24 +116,35 @@ divers . loisirs . culture . musées et monuments . présent:
   par défaut: non
 
 divers . loisirs . culture . musées et monuments . moyenne macro pondérée:
-  formule: moyenne macro française * fréquence pondérée / proportion de visiteurs
+  formule: moyenne macro française * fréquence approximée / proportion de visiteurs
 
 divers . loisirs . culture . musées et monuments . moyenne macro française:
   formule: empreinte branche . R91 par hab
-  unité: kgCO2e/an
+  unité: kgCO2e
   note: |
     Nous tirons la moyenne française des calculs effectués par le SDES (Service des Données et Études Statistiques). 
     Elle correspond au code NAF R91 ("Bibliothèques, archives, musées et autres activités culturelles").
 
     > Cette division comprend les activités des bibliothèques et des archives, la gestion des musées de toute nature, des jardins botaniques et zoologiques, la gestion des sites historiques et les activités des réserves naturelles. Elle comprend également la préservation et l'exposition des objets, sites et curiosités naturelles présentant un intérêt historique, culturel et éducatif (sites du patrimoine mondial, etc.).
-divers . loisirs . culture . musées et monuments . fréquence pondérée:
+divers . loisirs . culture . musées et monuments . fréquence approximée:
   formule:
     variations:
       - si: fréquence = 'occasionnel'
         alors: 1
       - si: fréquence = 'amateur'
-        alors: 3
-  note: Ces facteurs de pondération ont été fixé arbitrairement.
+        alors: 2
+  note: |
+    Ces facteurs ont été fixés arbitrairement, via l'étude ["La visite des musées, expositions et monuments en 2019"](https://www.culture.gouv.fr/Media/Thematiques/Etudes-et-statistiques/Files/Publications/Culture-etudes/20212/Note-de-synthese-CREDOC), publiée par le ministère de la culture.
+
+    D'après cette étude, nous avons pour les visites des musées et du patrimoine :
+
+    - 30% de la population qui est "amateur" : plus de 3 visites annuelles
+    - 37% de la population qui est visiteur "occasionnel" : 1 à 2 visites par an
+    - Le reste non-visiteur
+
+    Ces chiffres concernent les personnes de plus de 18 ans. On a donc un léger biais ici.
+
+    On pourrait également raisonner par [visite](https://www.culture.gouv.fr/Thematiques/Etudes-et-statistiques/Publications/Collections-de-synthese/Patrimostat/Patrimostat-edition-2021) ?
 
 divers . loisirs . culture . musées et monuments . fréquence:
   question: À quelle fréquence visitez-vous des musées, monuments et parcs nationaux chaque année ?
@@ -157,22 +155,12 @@ divers . loisirs . culture . musées et monuments . fréquence:
       possibilités:
         - occasionnel
         - amateur
-  note: |
-    D'après l'étude ["La visite des musées, expositions et monuments en 2019"](https://www.culture.gouv.fr/Media/Thematiques/Etudes-et-statistiques/Files/Publications/Culture-etudes/20212/Note-de-synthese-CREDOC),
-    publiée par le ministère de la Culture, nous avons pour les visites des musées et du patrimoine :
-
-    - 30% de la population qui est "amateur" : plus de 3 visites annuelles
-    - 37% de la population qui est visiteur "occasionnel" : 1 à 2 visites par an
-    - Le reste non-visiteur
-
-    Ces chiffres concernent les personnes de plus de 18 ans. On a donc un léger biais ici.
-
-    On pourrait également raisonner par [visite](https://www.culture.gouv.fr/Thematiques/Etudes-et-statistiques/Publications/Collections-de-synthese/Patrimostat/Patrimostat-edition-2021) ?
+  note: Cette question permet de pondérer l'empreinte des visites en musées selon la table décrite dans la règle `musées et monuments . fréquence approximée`.
 
 divers . loisirs . culture . musées et monuments . fréquence . occasionnel:
   titre: Une à deux fois par an
 divers . loisirs . culture . musées et monuments . fréquence . amateur:
-  titre: Plus de trois fois par an
+  titre: Trois fois ou plus par an
 
 divers . loisirs . culture . musées et monuments . proportion de visiteurs:
   formule: 0.69
@@ -203,8 +191,10 @@ divers . loisirs . culture . édition . moyenne macro pondérée:
 
 divers . loisirs . culture . édition . moyenne macro française:
   formule: empreinte branche . J58 par hab + empreinte branche . G47 par hab * 0.04 * (0.25 + 0.12)
-  unité: kgCO2e/an
-  note: Nous prenons ici en compte la branche édition (J58) ainsi que la part d'édition de livres et de journaux de la branche "Commerce de détail, à l'exclusion des automobiles et des motocycles par habitant".
+  unité: kgCO2e
+  note: |
+    Nous prenons ici en compte la branche édition (J58) ainsi que la part d'édition de livres et de journaux de la branche G47 "Commerce de détail, à l'exclusion des automobiles et des motocycles par habitant".
+    ([Voir le détail de cette branche](https://nosgestesclimat.fr/documentation/empreinte-branche/G47-par-hab))
 
 divers . loisirs . culture . édition . fréquence pondérée:
   formule:
@@ -234,13 +224,13 @@ divers . loisirs . culture . édition . fréquence:
     La taille du foyer étant en moyenne de 2,2 personnes, nous pouvons estimer qu'un adulte dépense en moyenne un peu moins de 10€ par mois pour la presse, les livres et les logiciels.
 
 divers . loisirs . culture . édition . fréquence . faible:
-  titre: Peu (moins de 10€ par mois)
+  titre: Moins de 5€ par mois
 divers . loisirs . culture . édition . fréquence . normale:
-  titre: Régulièrement (autour de 10€ par mois)
+  titre: De 5 à 15€ par mois
 divers . loisirs . culture . édition . fréquence . élevée:
-  titre: Beaucoup (de 10 à 30€ par mois)
+  titre: De 15 à 30€ par mois
 divers . loisirs . culture . édition . fréquence . très élevée:
-  titre: Énormément (plus de 30€ par mois)
+  titre: Plus de 30€ par mois
 
 divers . loisirs . culture . empreinte pratique de la musique:
   titre: Empreinte de la pratique de la musique
@@ -262,7 +252,7 @@ divers . loisirs . culture . pratique de la musique . moyenne macro pondérée:
 
 divers . loisirs . culture . pratique de la musique . moyenne macro française:
   formule: empreinte branche . C32 par hab * 0.02
-  unité: kgCO2e/an
+  unité: kgCO2e
   note: |
     Actuellement, nous prenons ici en compte les branches :
 
@@ -299,7 +289,7 @@ divers . loisirs . culture . pratique de la musique . proportion de pratiquants:
 
 # divers . loisirs . culture . télévision et radio . moyenne macro française:
 #   formule: empreinte branche . J59 par hab + empreinte branche . J60 par hab
-#   unité: kgCO2e/an
+#   unité: kgCO2e
 #   note: |
 #     Nous prenons ici en compte la branche "Production de films cinématographiques, de vidéo et de programmes de télévision ; enregistrement sonore et édition musicale" (J59) ainsi que la branche Programmation et diffusion (J60)
 
@@ -357,7 +347,7 @@ divers . loisirs . culture . pratique de la musique . proportion de pratiquants:
 
 # divers . loisirs . culture . jeux de hasard et d'argent . moyenne macro française:
 #   formule: empreinte branche . R92 par hab
-#   unité: kgCO2e/an
+#   unité: kgCO2e
 #   note: |
 #     Ici, nous prenons en compte toute la branche correspondant aux jeux de hasard et d'argent.
 
