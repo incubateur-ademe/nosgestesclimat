@@ -4,9 +4,12 @@ transport . voiture:
   résumé: Le premier poste moyen d'empreinte, l'incontournable **voiture individuelle**
   formule:
     variations:
+      - si: km = 0
+        alors: 0
       - si: utilisateur régulier
         alors: empreinte calculée
-      - sinon: empreinte utilisateur irrégulier
+      - si: utilisateur régulier
+        alors: empreinte utilisateur irrégulier
   unité: kgCO2e
   description: |
     ![](https://images.unsplash.com/photo-1572312284222-ecf6d70f1907?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=80)
@@ -39,7 +42,6 @@ transport . voiture . km:
     20 000km / an: 20000
 
 transport . voiture . utilisateur régulier:
-  applicable si: km > 0
   question: Utilisez-vous majoritairement la même voiture pour vous déplacer ?
   description: |
     Par opposition à l'utilisation exclusive de voitures de location partagées par d'autres personnes le reste du temps, ou l'utilisation ponctuelle de la voiture d'un ami, de la famille.
@@ -61,7 +63,6 @@ transport . voiture . notif utilsateur irrégulier:
     Vous roulez avec différentes voitures: nous avons sélectionné pour vous des caractrééristiques moyennes d'un véhicule.
 
 transport . voiture . empreinte utilisateur irrégulier:
-  applicable si: km > 0
   formule: (((construction / durée de vie) * facteur location) + usage) / voyageurs
   unité: kgCO2e
 
