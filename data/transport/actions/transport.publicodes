@@ -102,9 +102,10 @@ transport . prendre moins l'avion:
 
 transport . éco-conduite:
   titre: Adopter une éco-conduite
+  applicable si: voiture . utilisateur régulier
   effort: faible
   icônes: 🚗☮
-  formule: transport . voiture . empreinte - transport . éco-conduite . recalcul
+  formule: transport . voiture . empreinte calculée - transport . éco-conduite . recalcul
   description: |
     L’éco-conduite est une action simple et efficace qui se tient à la portée de tous.  
 
@@ -122,26 +123,26 @@ transport . éco-conduite . recalcul:
   note: Un recalcul est nécessaire ici, car l'utilisateur peut avoir utilisé l'outil d'aide à la saisie qui proratise alors la variable km au nombre de voyageurs. Sinon ce n'est pas le cas.
   formule:
     recalcul:
-      règle: transport . voiture . empreinte
+      règle: transport . voiture . empreinte calculée
       avec:
-        transport . voiture . empreinte . usage: transport . éco-conduite . usage réduit
+        transport . voiture . usage: transport . éco-conduite . usage réduit
       # Impossible to change directly the rule we want to replace
       # Can't do this : transport . voiture . empreinte . usage: transport . voiture . empreinte . usage * 0.85
 
 transport . éco-conduite . usage réduit:
-  formule: (transport . voiture . km * transport . voiture . empreinte . empreinte au kilomètre) * 0.85
+  formule: (transport . voiture . km * transport . voiture . empreinte au kilomètre) * 0.85
   unité: kgCO2e
   note: réduction de 15% (cf info règle éco-conduite)
 
 transport . covoiturage:
   titre: Privilégier le covoiturage
   effort: modéré
-  applicable si: voiture . propriétaire
+  applicable si: voiture . utilisateur régulier
   action:
     dépasse:
       - transport . boulot . covoiturage
   icônes: 🚗👥
-  formule: voiture . km * voiture . empreinte . empreinte au kilomètre * réduction covoiturage
+  formule: voiture . km * voiture . empreinte au kilomètre * réduction covoiturage
   description: |
     Cette action concerne l'ensemble de ses trajets en voiture.
 
@@ -159,10 +160,10 @@ transport . boulot . covoiturage:
   effort: modéré
   applicable si:
     toutes ces conditions:
-      - voiture . propriétaire
+      - voiture . utilisateur régulier
       - voiture . km > seuil d'activation boulot
   icônes: 🚗👥
-  formule: distance * voiture . empreinte . empreinte au kilomètre * réduction covoiturage
+  formule: distance * voiture . empreinte au kilomètre * réduction covoiturage
   description: |
     Si le covoiturage longue distance est bien connu en France, celui des courtes distances est presque inexistant : aujourd’hui seuls 3 % des déplacements domicile-travail sont réalisés en covoiturage.
 
@@ -279,7 +280,7 @@ transport . seuil d'activation boulot:
   unité: km
 
 transport . boulot . commun . gain empreinte au km:
-  formule: voiture . empreinte . empreinte au kilomètre - empreinte
+  formule: voiture . empreinte au kilomètre - empreinte
 
 transport . boulot . commun . empreinte:
   titre: Empreinte transport en commun choisi
@@ -361,7 +362,7 @@ transport . boulot . jours gagnés:
   plafond: jours travaillés en voiture
 
 transport . boulot . empreinte jour voiture:
-  formule: distance . km par jour * voiture . empreinte . empreinte au kilomètre
+  formule: distance . km par jour * voiture . empreinte au kilomètre
   unité: kgCO2e/jour
 
 transport . boulot . jours télétravaillés:
@@ -383,8 +384,8 @@ transport . boulot . télétravail . compatible:
 transport . voiture 5km:
   titre: Se passer de voiture pour moins de 5 km
   icônes: 🚗🚲
-  formule: transport . voiture . empreinte - transport . voiture 5km . recalcul
-  applicable si: voiture . propriétaire
+  formule: transport . voiture . empreinte calculée - transport . voiture 5km . recalcul
+  applicable si: voiture . utilisateur régulier
   non applicable si: voiture . km < seuil d'activation 5km
   note: |
     On fait l'hypothèse qu'une personne qui n'est pas propriétaire de voiture se passe *déjà* d'une voiture pour de courts trajets.
@@ -425,12 +426,12 @@ transport . distance moyenne trajet court:
 transport . voiture 5km . recalcul:
   formule:
     recalcul:
-      règle: transport . voiture . empreinte
+      règle: transport . voiture . empreinte calculée
       avec:
-        transport . voiture . empreinte . usage: transport . voiture 5km . usage réduit
+        transport . voiture . usage: transport . voiture 5km . usage réduit
 
 transport . voiture 5km . usage réduit:
-  formule: (transport . voiture . km - distance totale) * transport . voiture . empreinte . empreinte au kilomètre
+  formule: (transport . voiture . km - distance totale) * transport . voiture . empreinte au kilomètre
   unité: kgCO2e
 
 transport . voiture 5km . distance totale:
@@ -462,7 +463,7 @@ transport . super ethanol:
   titre: Passer du sans-plomb au super éthanol
   icônes: ⛽️🚗
   applicable si: transport . voiture . thermique . carburant = 'essence E5 et E10'
-  formule: transport . voiture . empreinte - transport . super ethanol . recalcul avec surconsommation
+  formule: transport . voiture . empreinte calculée - transport . super ethanol . recalcul avec surconsommation
   description: |
     Le Superéthanol E85 est le carburant essence sans plomb pouvant contenir entre 65% et 85% de bioéthanol, le complément étant de l’essence Sans Plomb 95. 
     Il est produit à partir de cultures de canne à sucre, de céréales (blé, maïs) et de betterave sucrière. 
@@ -475,7 +476,7 @@ transport . super ethanol:
 transport . super ethanol . recalcul:
   formule:
     recalcul:
-      règle: transport . voiture . empreinte
+      règle: transport . voiture . empreinte calculée
       avec:
         transport . voiture . thermique . carburant: "'essence E85'"
 
@@ -514,11 +515,11 @@ transport . scooter électrique . recalcul:
         transport . deux roues . type: "'scooter électrique'"
 
 transport . voiture électrique:
-  titre: Acheter une voiture électrique
+  titre: Rouler en voiture électrique
   icônes: 🔌🚗
-  applicable si: voiture . propriétaire
+  applicable si: voiture . utilisateur régulier
   non applicable si: transport . voiture . motorisation = 'électrique'
-  formule: transport . voiture . empreinte - transport . voiture électrique . recalcul
+  formule: transport . voiture . empreinte calculée - transport . voiture électrique . recalcul
   description: |
     La voiture électrique n'est pas la solution miracle mais pour certains usages elle peut s'avérer (très) utile pour réduire notre empreinte.
 
@@ -534,25 +535,24 @@ transport . voiture électrique:
 transport . voiture électrique . recalcul:
   formule:
     recalcul:
-      règle: transport . voiture . empreinte
+      règle: transport . voiture . empreinte calculée
       avec:
         transport . voiture . motorisation: "'électrique'"
-        transport . voiture . âge: transport . âge nouvelle voiture électrique
+        # transport . voiture . âge: transport . âge nouvelle voiture électrique
+# transport . âge nouvelle voiture électrique:
+#   formule:
+#     variations:
+#       - si: occasion
+#         alors: 5
+#       - sinon: 1
+#   note: on considère que l'âge d'une voiture d'occasion est 5 ans.
 
-transport . âge nouvelle voiture électrique:
-  formule:
-    variations:
-      - si: occasion
-        alors: 5
-      - sinon: 1
-  note: on considère que l'âge d'une voiture d'occasion est 5 ans.
+# transport . âge nouvelle voiture électrique . occasion:
+#   question: Envisagez-vous d'acheter une voiture électrique d'occasion plutôt que neuve ?
+#   description: |
+#     Une voiture électrique d'occasion coûte moins cher, évidemment. Elle vous permet ausi d'obtenir une [aide à l'achat](https://www.service-public.fr/particuliers/vosdroits/F34014).
 
-transport . âge nouvelle voiture électrique . occasion:
-  question: Envisagez-vous d'acheter une voiture électrique d'occasion plutôt que neuve ?
-  description: |
-    Une voiture électrique d'occasion coûte moins cher, évidemment. Elle vous permet ausi d'obtenir une [aide à l'achat](https://www.service-public.fr/particuliers/vosdroits/F34014).
+#     L'autonomie de la batterie peut avoir baissé légèrement, mais rappelez-vous que l'immense majorité de nos trajets [font moins de 50km](https://twitter.com/GlmMrt/status/1481986507179274248) !
 
-    L'autonomie de la batterie peut avoir baissé légèrement, mais rappelez-vous que l'immense majorité de nos trajets [font moins de 50km](https://twitter.com/GlmMrt/status/1481986507179274248) !
-
-  par défaut: oui
-# L'action disparait quand l'impact climat devient positif
+#   par défaut: oui
+# # L'action disparait quand l'impact climat devient positif
