@@ -53,7 +53,11 @@ const localPersonas = readFile(`./public/personas-${language}.json`, {
 		process.exit(-1)
 	})
 
-const prodRules = fetch('https://data.nosgestesclimat.fr/' + modelFile)
+// Data url for preprod branch
+const defaultURLToCompareWith =
+	'https://deploy-preview-2085--ecolab-data.netlify.app/'
+
+const prodRules = fetch(defaultURLToCompareWith + modelFile)
 	.then((res) => res.json())
 	.catch((e) => {
 		console.log(
@@ -63,7 +67,7 @@ const prodRules = fetch('https://data.nosgestesclimat.fr/' + modelFile)
 		process.exit(-1)
 	})
 const prodPersonas = fetch(
-	`https://data.nosgestesclimat.fr/personas-${language}.json`
+	`${defaultURLToCompareWith}personas-${language}.json`
 )
 	.then((res) => res.json())
 	.catch((e) => {
