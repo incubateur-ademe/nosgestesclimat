@@ -93,7 +93,7 @@ transport . voiture . km:
 
     Par exemple, si vous êtes en mission professionnelle dans un autre département ou un autre pays, cela rentre dans la comptabilité de votre entreprise : ne le comptez pas ici.
 
-  par défaut: 12200
+  par défaut: km annuels moyen
   unité: km
   note: |
     Source pour les km annuels moyens : [datalab ministère écologie 2019](https://www.statistiques.developpement-durable.gouv.fr/bilan-annuel-des-transports-en-2019-0), page 3 G1.
@@ -103,6 +103,11 @@ transport . voiture . km:
     10km / jour: 3600
     1000km / mois: 12000
     20 000km / an: 20000
+
+transport . voiture . km annuels moyen:
+  formule: 12200
+  unité: km
+  note: Chiffre issu de [datalab ministère écologie 2019](https://www.statistiques.developpement-durable.gouv.fr/bilan-annuel-des-transports-en-2019-0), page 3 G1.
 
 transport . voiture . motorisation:
   question: Quel type de voiture utilisez-vous ?
@@ -220,13 +225,64 @@ transport . voiture . électrique . empreinte au kilomètre:
       - berline, SUV et VUL -> "haut de gamme - berline"
 
 transport . voiture . empreinte . usage:
-  formule: km * au kilomètre
+  formule: km * (empreinte au kilomètre + base au kilomètre)
+  unité: kgCO2e
 
-transport . voiture . empreinte . par km personne:
-  formule: au kilomètre / voyageurs
+transport . voiture . empreinte . base au kilomètre:
+  titre: Entretien et climatisation au kilomètre
+  formule: entretien pondéré + climatisation
   unité: kgCO2e/km
 
-transport . voiture . empreinte . au kilomètre:
+transport . voiture . empreinte . entretien pondéré:
+  formule:
+    variations:
+      - si: motorisation = 'thermique'
+        alors: entretien
+      - si: motorisation = 'hybride'
+        alors: entretien * 0.90
+      - sinon: entretien * 0.75
+  unité: kgCO2e/km
+  note: |
+    Plusieurs sources s'accordent pour dire que l'entretien d'un véhicule électrique est inférieur à celui d'un véhicule thermique de 25%. Comme [celle-ci](https://izi-by-edf.fr/blog/voiture-hybride-entretien/).
+
+    Pour ce qui est d'un véhicule hybride, son entretien se situe entre celui d'un véhicule électrique et celui d'un véhicule thermique. Cela dépend de l'utilisation du moteur électrique ou thermique. 
+    Nous choisissons de partir sur une hypothèse conservatrice de -10% de coût d'entretien par rapport aux véhicules thermiques.
+
+transport . voiture . empreinte . entretien:
+  formule: ((empreinte branche . G45 * 1000000 kgCO2e/ktCO2e * 0.07) / nombre véhicules circulation) / transport . voiture . km annuels moyen
+  unité: kgCO2e/km
+  note: |
+    Dans le poste G45, nous prenons la part Entretien et réparation de véhicules automobiles (7%).
+    Nous le divisons par le nombre de véhicules en circulation, puis par 12200 km (la moyenne de km effectués par véhicule) pour obtenir une empreinte en kgCO2e / km.
+
+transport . voiture . empreinte . climatisation:
+  formule: (émissions gaz fluorés transport / nombre véhicules circulation) / transport . voiture . km annuels moyen
+  unité: kgCO2e/km
+  note: |
+    L'idée ici est de prendre en compte une part des émissions liées aux gaz fluorés issus des climatisations des véhicules 
+    en France via le total des émissions dues à ces gaz sur le secteur du transport (voitures et VUL diesel, essence, GNV, GPL, électrique).
+
+transport . voiture . empreinte . climatisation . émissions gaz fluorés transport:
+  titre: Emissions nationales dûes aux climatisations des voitures et VUL
+  formule: 1374000000
+  unité: kgCO2e
+  note: |
+    Ce chiffre provient de l'étude [SECTEN](https://www.citepa.org/fr/secten/) (le rapport de référence sur les émissions de gaz à effet de serre et de polluants atmosphériques en France).
+
+    D'après l'excel [Données par substance de gaz à effet de serre (GES) édition 2023, onglet "GF-UE_total"](https://www.citepa.org/wp-content/uploads/publications/secten/2023/Citepa_gaz_a_effet_de_serre_v2.zip), 
+    les émissions de gaz fluorés pour le secteur du transport (provenant des équipements de réfrigération et d'air conditionné, utilisant des halocarbures ou du SF6), sont de 1374 ktCO₂e.
+
+transport . voiture . empreinte . nombre véhicules circulation:
+  formule: 38700000 + 5977000
+  note: |
+    Ce chiffre concerne les véhicules particuliers (voitures et VUL).
+    Il est issu des statistiques [INSEE](https://www.insee.fr/fr/statistiques/2045167#tableau-figure1_radio1).
+
+transport . voiture . empreinte . par km personne:
+  formule: empreinte au kilomètre / voyageurs
+  unité: kgCO2e/km
+
+transport . voiture . empreinte . empreinte au kilomètre:
   formule:
     variations:
       - si: motorisation = 'thermique'

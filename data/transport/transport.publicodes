@@ -174,7 +174,7 @@ transport . bus . heures par semaine:
 transport . deux roues:
   icônes: 🛵
   applicable si: usager
-  formule: empreinte * km
+  formule: ( empreinte + entretien pondéré ) * km
 
 transport . deux roues . usager:
   question: Utilisez-vous un deux-roues ?
@@ -239,6 +239,26 @@ transport . deux roues . empreinte:
     Moto > 250 cm3 - Mixte - 2018 ; 191 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
 
     Les chiffres ci-dessus incluent la fabrication du véhicule, contrairement aux données précédentes (2021).
+
+transport . deux roues . entretien pondéré: 
+  formule:
+    variations:
+      - si: type = 'scooter électrique'
+        alors: entretien * 0.75
+      - sinon: entretien
+  unité: kgCO2e / km
+  note: Nous choisissons de pondérer l'entretien des scooters électriques par le même facteur qui réduit celui des véhicules électriques par rapport aux véhicules thermiques. 
+
+transport . deux roues . entretien:
+  formule: empreinte branche . G45 * 1000000 * 0.02 * 0.07 / ( 0.69 + 0.07 ) / nombre deux roues circulation / 3000
+  unité: kgCO2e / km
+  note: |
+    Dans le poste G45, nous proratisons le poste Commerce et réparation de motocycles (2%) sur le même rapport que les voitures pour extraire l'entretien de ce poste comprenant également le commerce.
+    Nous le divisons par le nombre de véhicules en circulation, puis par 3000 km (la moyenne de km effectués par véhicule) pour obtenir une empreinte en kgCO2e / km.
+
+transport . deux roues . nombre deux roues circulation:
+  formule: 2700000
+  note: Le nombre de deux-roues en circulation en 2020, stable, est de [2,7 millions](https://www.onisr.securite-routiere.gouv.fr/etudes-et-recherches/vehicules/parc-des-vehicules/le-parc-deux-roues-motorises-des-menages)
 
 transport . deux roues . conso:
   formule:
