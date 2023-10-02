@@ -32,10 +32,9 @@ const rulesToKeep = [
 
 export function compressRules(jsonPathWithoutExtension) {
 	const destPath = `${jsonPathWithoutExtension}-opti.json`
-	const err = constantFoldingFromJSONFile(
+	let res = constantFoldingFromJSONFile(
 		jsonPathWithoutExtension + '.json',
 		destPath,
-		['**/translated-*.yaml'],
 		([ruleName, ruleNode]) => {
 			return (
 				rulesToKeep.includes(ruleName) ||
@@ -44,48 +43,38 @@ export function compressRules(jsonPathWithoutExtension) {
 			)
 		}
 	)
-	return err
+	return res
 }
 
 /**
  * Applies a constant folding optimization pass to the parsed rules from the [model] path.
  *
- * @param model Path to the folder containing the Publicodes files or to a JSON file (the extension must be '.json' then).
+ * @param modelPath Path to the folder containing the Publicodes files or to a JSON file (the extension must be '.json' then).
  * @param json Path to the JSON file target.
- * @param ignore Regexp matching files to ignore from the model tree.
  * @param toKeep Predicate function to determine which rule should be kept.
- * @param verbose Whether to log the optimization pass.
+ * @param verbose If true, the function will log the steps of the optimization pass.
  *
  * @returns An error message if the optimization pass failed, undefined otherwise.
  */
 export function constantFoldingFromJSONFile(
-	model,
+	modelPath,
 	jsonDestPath,
-	ignore,
 	toKeep,
 	verbose = false
 ) {
 	const log = verbose ? console.log : function (_) {}
 	try {
-		var rules
-
-		if (path.extname(model) === '.json') {
-			log('Parsing rules from the JSON file:', model)
-			rules = JSON.parse(readFileSync(model, 'utf8'))
-		} else {
-			const modelPath = path.join(path.resolve(model), '**/*.publicodes')
-			log(`Parsing rules from ${modelPath}...`)
-			rules = readRawRules(modelPath, ignore ?? [])
-		}
-
+		log('Parsing rules from the JSON file:', modelPath)
+		const rules = JSON.parse(readFileSync(modelPath, 'utf8'))
 		const engine = new Engine(rules, { logger: disabledLogger })
 
 		log('Constant folding pass...')
-		const foldedRules = constantFolding(engine, toKeep)
+		const foldedRules = getRawNodes(constantFolding(engine, toKeep))
 
 		log(`Writing in '${jsonDestPath}'...`)
-		writeFileSync(jsonDestPath, JSON.stringify(getRawNodes(foldedRules)))
+		writeFileSync(jsonDestPath, JSON.stringify(foldedRules, null, 2))
+		return { nbRules: Object.keys(foldedRules).length }
 	} catch (error) {
-		return error
+		return { err }
 	}
 }

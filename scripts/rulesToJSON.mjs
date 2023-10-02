@@ -29,7 +29,7 @@ const { srcLang, srcFile, destLangs, destRegions, markdown } = cli.getArgs(
 		target: true,
 		model: { supportedRegionCodes },
 		file: true,
-		defaultSrcFile: 'data/**/*.publicodes',
+		defaultSrcFile: 'data',
 		markdown: true,
 	}
 )
@@ -42,7 +42,7 @@ function writeSupportedRegions() {
 		console.log(
 			markdown
 				? `| Supported regions | :heavy_check_mark: | Ø |`
-				: ` ✅ The supported regions have been correctly written in: ${supportedRegionPath}`
+				: `✅ The supported regions have been correctly written in: ${supportedRegionPath}`
 		)
 	} catch (err) {
 		if (markdown) {
@@ -51,7 +51,7 @@ function writeSupportedRegions() {
 			)
 		} else {
 			console.log(
-				' ❌ An error occured while writting rules in:',
+				'❌ An error occured while writting rules in:',
 				supportedRegionPath
 			)
 			console.log(err.message)
@@ -97,7 +97,7 @@ try {
 		verbose: !markdown,
 	})
 } catch (err) {
-	console.error(` ❌ An error occured while trying to parse the base rules:\n`)
+	console.error(`❌ An error occured while trying to parse the base rules:\n`)
 	console.error(err.message)
 	exit(-1)
 }
@@ -118,8 +118,16 @@ try {
 			err: (_) => {},
 		},
 	}).evaluate('bilan')
+
+	if (!markdown) {
+		console.log(
+			`✅ ${cli.yellow(
+				Object.keys(baseRules).length
+			)} base rules have been correctly parsed`
+		)
+	}
 } catch (err) {
-	console.error(` ❌ An error occured while trying to parse the base rules:\n`)
+	console.error(`❌ An error occured while trying to parse the base rules:\n`)
 	logPublicodesError(err)
 	exit(-1)
 }
