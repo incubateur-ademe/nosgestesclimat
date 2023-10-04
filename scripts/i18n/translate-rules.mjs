@@ -93,7 +93,9 @@ const translateTo = async (
 			previousKey = [rule, attr, 'suggestions' + PREVIOUS_REVIEW_KEY_EXT]
 			autoKey = [rule, attr, 'suggestions' + AUTO_KEY_EXT]
 			currentVal =
-				translatedRules[rule] && translatedRules[rule][attr]['suggestions']
+				translatedRules[rule] &&
+				translatedRules[rule][attr] &&
+				translatedRules[rule][attr]['suggestions']
 		}
 		if (
 			currentVal &&
