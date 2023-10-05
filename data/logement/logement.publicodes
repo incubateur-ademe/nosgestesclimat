@@ -9,10 +9,6 @@ logement:
     Mais ce n'est pas tout : construction, entretien, chauffage de l'eau chaude, électricité, tant de postes qui dépendent avant tout d'un seul paramètre : le nombre de m².
   couleur: '#04a4ac'
   icônes: 🏠
-  formule: impact / habitants
-  unité: kgCO2e
-
-logement . impact:
   formule:
     somme:
       - construction
@@ -23,6 +19,7 @@ logement . impact:
       - vacances
       - transport . vacances . caravane . empreinte . construction amortie
       - transport . vacances . camping car . empreinte . construction amortie
+  unité: kgCO2e
 
 logement . saisie habitants:
   question: Combien de personnes vivent chez vous ?
@@ -176,7 +173,7 @@ logement . construction:
   formule:
     variations:
       - si: âge < durée d'amortissement
-        alors: surface * annuelle et par surface
+        alors: surface * annuelle et par surface / habitants
       - sinon: 0
   note: |
     Un logement va en moyenne durer au moins 50 ans. C'est une valeur conservative.
@@ -190,7 +187,7 @@ logement . construction:
 
 logement . électricité:
   icônes: ⚡
-  formule: consommation * intensité carbone
+  formule: consommation * intensité carbone / habitants
 
 logement . électricité . consommation:
   icônes: ⚡
@@ -266,8 +263,8 @@ logement . chauffage:
   formule:
     variations:
       - si: choix utilisateur
-        alors: empreinte totale
-      - sinon: empreinte par défaut
+        alors: empreinte totale / habitants
+      - sinon: empreinte par défaut / habitants
 
 logement . chauffage . empreinte totale:
   formule:
