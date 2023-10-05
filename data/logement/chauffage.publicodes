@@ -71,55 +71,6 @@ logement . chauffage . choix utilisateur:
         alors: oui
       - sinon: non
 
-logement . chauffage . réseau de chaleur:
-  icônes: 🏭
-  applicable si: présent
-  formule: consommation * intensité carbone réseau de chaleur
-
-logement . chauffage . réseau de chaleur . présent:
-  question: Votre logement est-il chauffé via un réseau de chaleur ?
-  par défaut: non
-
-logement . chauffage . réseau de chaleur . estimation via le prix:
-  question: Pas de facture ? Entrez vos dépenses approximatives par mois
-  unité: €/kWh
-  formule: 0.085
-  description: |
-    Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois.
-
-    Ce chiffre est tiré de l'[Enquête des réseaux de chaleur et de froid](https://amorce.asso.fr/actualite/les-reseaux-de-chaleur-la-bonne-solution-de-chauffage-pour-le-pouvoir-d-achat-et-le-climat) 
-    basé sur les données 2021 qui donne un chiffre de 80€HT/MWh.
-
-    L'[Enquête sur le prix de vente de la chaleur et de froid de 2019](https://amorce.asso.fr/publications/enquete-sur-le-prix-de-vente-de-la-chaleur-et-de-froid-en-2019-rce36)
-    donnait un chiffre de 74,6€HT/MWh et 79,3€TTC/MWh, avec une médiane à 82,3€TTC/MWh.
-
-    Nous avons donc choisi dans une première approximation de nous baser sur la moyenne 2021 en conservant le ratio 2019 pour passer en TTC ce qui donne une valeur de 85€TTC/MWh
-    (ce n'est pas seulement un 5,5% ou 20%, car l'application de ces taux varie selon la proportion d'énergie verte dans le mix du réseau de chaleur, 
-    une TVA à 5,5% étant appliquée aux réseaux contenant plus de 50 % d'énergie renouvelable et de récupération).
-
-    C'est une valeur moyenne dont l'écart-type est relativement important.
-    Néanmoins, on peut lire dans l'enquête que "les prix de vente moyens des réseaux de chaleur affichent une très grande disparité, 89% de la chaleur livrée est vendue à un prix compris entre -30 et +30% de la moyenne nationale".
-
-logement . chauffage . réseau de chaleur . consommation:
-  icônes: 🔥
-  question: Quelle est votre consommation annuelle d'énergie via le réseau de chaleur raccordé à votre foyer ?
-  par défaut: parc français . chauffage . consommation réseau de chaleur par m2 * surface
-  aide: estimation via le prix
-  unité: kWh
-  description: |
-    Le contenu carbone du kWh de chaleur issu d'un réseau de chaleur dépend fortement du réseau auquel vous êtes raccordé. 
-
-    Pour le moment, nous nous basons sur un facteur d'émission moyen : nous avons fait le choix de ne pas vous demander votre adresse.
-
-    Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
-
-    > Il se peut que votre copropriété ne vous communique pas la consommation en kWh de votre logement, quand la chaudière est centralisée. Cela dit, elle doit vous fournir le montant en €, que vous pourrez saisir ci-dessous pour estimer vos kWh.
-
-logement . chauffage . intensité carbone réseau de chaleur:
-  formule: 0.125
-  unité: kgCO2e/kWh
-  note: FE issu de la moyenne de tous les réseaux de chaleur de la Base Carbone
-
 logement . chauffage . PAC:
   titre: Pompe à chaleur
   icônes: 🌡️
@@ -143,48 +94,6 @@ logement . chauffage . électricité:
 logement . chauffage . électricité . présent:
   question: Votre logement est-il chauffé à l'électricité ?
   par défaut: non
-
-logement . chauffage . fioul:
-  icônes: 🛢
-  applicable si: présent
-  titre: Fioul domestique
-  formule: consommation * intensité carbone fioul litre
-
-logement . chauffage . fioul . présent:
-  question: Votre logement est-il chauffé au fioul ?
-  par défaut: non
-
-logement . chauffage . fioul . estimation via le prix:
-  question: Pas de facture ? Entrez vos dépenses approximatives en fioul par mois
-  unité: €/l
-  formule: 1.5199
-  description: |
-    Cette formule nous permet de passer des €/mois aux litres/an.
-
-    Source : Fioul domestique 2000 à 4999 litres, 2ème semestre 2022.
-    Donnée issue de l'excel [Prix HTT et TTC depuis janvier 2020.xlsx](https://github.com/datagir/nosgestesclimat/files/11029116/Prix.HTT.et.TTC.depuis.janvier.2020.xlsx)
-    téléchargeable sur la page [Prix des produits pétroliers](https://www.ecologie.gouv.fr/prix-des-produits-petroliers#scroll-nav__4) du ministère de la Transition Écologique.
-  références:
-    écologie.gouv.fr: https://www.ecologie.gouv.fr/prix-des-produits-petroliers
-
-logement . chauffage . fioul . consommation:
-  question: Quelle est la consommation annuelle de fioul domestique de votre foyer ?
-  unité: l
-  description: |
-    Astuce : Vous trouverez vos consommations annuelles d'énergie sur votre facture de fioul ou sur votre compte en ligne sur le site de votre fournisseur.
-
-  par défaut: parc français . chauffage . consommation fioul par m2 * fioul kWh au litre * surface
-  aide: estimation via le prix
-
-logement . chauffage . intensité carbone fioul:
-  formule: 0.324
-  unité: kgCO2e/kWh
-
-logement . chauffage . intensité carbone fioul litre:
-  formule: 3.25
-  unité: kgCO2e/l
-  références:
-    - https://www.bilans-ges.ademe.fr - Fioul domestique France continental
 
 logement . chauffage . gaz:
   titre: Réseau de gaz
@@ -467,6 +376,48 @@ logement . chauffage . citerne propane . énergie par kg:
     ![](https://user-images.githubusercontent.com/55186402/224317812-b646f6d9-1b41-43f3-9823-0295a57dd6c1.png)
     ![](https://user-images.githubusercontent.com/55186402/224318088-78940efa-2201-407f-9905-545b2f3e09d8.png)
 
+logement . chauffage . fioul:
+  icônes: 🛢
+  applicable si: présent
+  titre: Fioul domestique
+  formule: consommation * intensité carbone fioul litre
+
+logement . chauffage . fioul . présent:
+  question: Votre logement est-il chauffé au fioul ?
+  par défaut: non
+
+logement . chauffage . fioul . estimation via le prix:
+  question: Pas de facture ? Entrez vos dépenses approximatives en fioul par mois
+  unité: €/l
+  formule: 1.5199
+  description: |
+    Cette formule nous permet de passer des €/mois aux litres/an.
+
+    Source : Fioul domestique 2000 à 4999 litres, 2ème semestre 2022.
+    Donnée issue de l'excel [Prix HTT et TTC depuis janvier 2020.xlsx](https://github.com/datagir/nosgestesclimat/files/11029116/Prix.HTT.et.TTC.depuis.janvier.2020.xlsx)
+    téléchargeable sur la page [Prix des produits pétroliers](https://www.ecologie.gouv.fr/prix-des-produits-petroliers#scroll-nav__4) du ministère de la Transition Écologique.
+  références:
+    écologie.gouv.fr: https://www.ecologie.gouv.fr/prix-des-produits-petroliers
+
+logement . chauffage . fioul . consommation:
+  question: Quelle est la consommation annuelle de fioul domestique de votre foyer ?
+  unité: l
+  description: |
+    Astuce : Vous trouverez vos consommations annuelles d'énergie sur votre facture de fioul ou sur votre compte en ligne sur le site de votre fournisseur.
+
+  par défaut: parc français . chauffage . consommation fioul par m2 * fioul kWh au litre * surface
+  aide: estimation via le prix
+
+logement . chauffage . intensité carbone fioul:
+  formule: 0.324
+  unité: kgCO2e/kWh
+
+logement . chauffage . intensité carbone fioul litre:
+  formule: 3.25
+  unité: kgCO2e/l
+  références:
+    - https://www.bilans-ges.ademe.fr - Fioul domestique France continental
+
 logement . chauffage . bois:
   icônes: 🪵
 
@@ -570,3 +521,53 @@ logement . chauffage . bois . facteur d'émission granulés:
   note: |
     FE de la Base Carbone Granulés/Blancs français (issus de connexe de scierie)
     Connexe de scierie signifie que les granulés sont issus de chutes de bois et non de bois brut
+
+logement . chauffage . réseau de chaleur:
+  icônes: 🏭
+  applicable si: présent
+  formule: consommation * intensité carbone réseau de chaleur
+
+logement . chauffage . réseau de chaleur . présent:
+  question: Votre logement est-il chauffé via un réseau de chaleur ?
+  par défaut: non
+
+logement . chauffage . réseau de chaleur . estimation via le prix:
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  unité: €/kWh
+  formule: 0.085
+  description: |
+    Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois.
+
+    Ce chiffre est tiré de l'[Enquête des réseaux de chaleur et de froid](https://amorce.asso.fr/actualite/les-reseaux-de-chaleur-la-bonne-solution-de-chauffage-pour-le-pouvoir-d-achat-et-le-climat) 
+    basé sur les données 2021 qui donne un chiffre de 80€HT/MWh.
+
+    L'[Enquête sur le prix de vente de la chaleur et de froid de 2019](https://amorce.asso.fr/publications/enquete-sur-le-prix-de-vente-de-la-chaleur-et-de-froid-en-2019-rce36)
+    donnait un chiffre de 74,6€HT/MWh et 79,3€TTC/MWh, avec une médiane à 82,3€TTC/MWh.
+
+    Nous avons donc choisi dans une première approximation de nous baser sur la moyenne 2021 en conservant le ratio 2019 pour passer en TTC ce qui donne une valeur de 85€TTC/MWh
+    (ce n'est pas seulement un 5,5% ou 20%, car l'application de ces taux varie selon la proportion d'énergie verte dans le mix du réseau de chaleur, 
+    une TVA à 5,5% étant appliquée aux réseaux contenant plus de 50 % d'énergie renouvelable et de récupération).
+
+    C'est une valeur moyenne dont l'écart-type est relativement important.
+    Néanmoins, on peut lire dans l'enquête que "les prix de vente moyens des réseaux de chaleur affichent une très grande disparité, 89% de la chaleur livrée est vendue à un prix compris entre -30 et +30% de la moyenne nationale".
+
+logement . chauffage . réseau de chaleur . consommation:
+  icônes: 🔥
+  question: Quelle est votre consommation annuelle d'énergie via le réseau de chaleur raccordé à votre foyer ?
+  par défaut: parc français . chauffage . consommation réseau de chaleur par m2 * surface
+  aide: estimation via le prix
+  unité: kWh
+  description: |
+    Le contenu carbone du kWh de chaleur issu d'un réseau de chaleur dépend fortement du réseau auquel vous êtes raccordé. 
+
+    Pour le moment, nous nous basons sur un facteur d'émission moyen : nous avons fait le choix de ne pas vous demander votre adresse.
+
+    Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
+
+    > Il se peut que votre copropriété ne vous communique pas la consommation en kWh de votre logement, quand la chaudière est centralisée. Cela dit, elle doit vous fournir le montant en €, que vous pourrez saisir ci-dessous pour estimer vos kWh.
+
+logement . chauffage . intensité carbone réseau de chaleur:
+  formule: 0.125
+  unité: kgCO2e/kWh
+  note: FE issu de la moyenne de tous les réseaux de chaleur de la Base Carbone
+
