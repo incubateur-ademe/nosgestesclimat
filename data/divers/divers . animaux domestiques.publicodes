@@ -48,7 +48,24 @@ divers . animaux domestiques . empreinte:
         chien moyen . nombre: 0
         gros chien . nombre: 0
         chats . nombre: 0
-  formule: empreinte totale
+  formule: 
+    variations:
+      - si: choix utilisateur
+        alors: empreinte totale
+      - sinon: empreinte par défaut
+
+divers . animaux domestiques . choix utilisateur:
+  description: L'utilisateur a-t-il fait un choix d'animaux ?
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - empreinte . chats . nombre > 0
+            - empreinte . petit chien . nombre > 0
+            - empreinte . chien moyen . nombre > 0
+            - empreinte . gros chien . nombre > 0
+        alors: oui
+      - sinon: non
 
 divers . animaux domestiques . empreinte totale:
   formule:
