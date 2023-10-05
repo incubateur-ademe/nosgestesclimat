@@ -253,6 +253,76 @@ logement . gaz . intensité carbone gaz utilisateur:
     - https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Gaz
   unité: kgCO2e/kWh
 
+logement . gaz . biogaz:
+  note: |
+    La base carbone retient le facteur d'émission biogaz suivant : `0.0444 kgCO2e/kWhPCI`. 
+
+    Voici davantage de documentation sur l'intégration de ce chiffres et ses limites.
+
+    <details><summary>Leur justification est dans la documentation [déplier]</summary>
+
+    Pour des questions méthodologiques, cette approche n’est pas compatible avec la logique de construction des facteurs d’émissions de la Base Carbone® et ne peut être utilisée pour la réalisation d’un bilan d’émissions de GES. Ainsi, des travaux complémentaires ont été menés aboutissant à une mise à jour de l'Analyse de Cycle de Vie en 2020 [[144]](https://bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/references.htm) et à un facteur d’émissions de 44,1 gCO2e / kWh PCI. Cette dernière valeur traduit l’impact GES induit par la production d’un kWh de biométhane, contrairement à la valeur de 23,4 gCO2e / kWh PCI issue de la précédente étude, qui traduit l’impact global de la filière de méthanisation et injection, intégrant impacts induits et réductions d’émissions de GES apportés par cette filière. </details>
+    <br/>
+
+    Il nous faudra préciser ce qui dans NGC, nous empêche d'utiliser le facteur le plus faible dans le cadre de ce modèle de calcul consommation qui est un calcul global couvrant également l'agriculture via l'alimentation.
+
+    Autre point crucial : le gaz se stocke, contrairement à l'électricité "verte", ce qui a motivé la non intégration de leur facteur d'émission pour l'instant dans NGC. 
+
+    Ajoutons que les fuites des installations de biométhane, par nature bien plus petites et nombreuses que le gaz fossile et donc difficile à controler, pourraient être sous-estimées. Cette [étude de 2022](https://www.cell.com/one-earth/fulltext/S2590-3322(22)00267-6) est-elle prise en compte dans le facteur d'émission ci-dessus (2020) ? 
+
+    ## Au sujet de l'utilisation des terres
+
+    Le lien de la base carbone vers l'étude de GRDF n'est plus en ligne. [La voici en PDF](https://github.com/datagir/nosgestesclimat/files/9542516/evaluation-des-impacts-ges-biomethane-_synthese-quantis_2017.pdf). On peut y voir : 
+
+    ![image](https://user-images.githubusercontent.com/1177762/189527416-4e8a3725-ef5a-448e-8557-0ad0007e0720.png)
+
+    Dont la part rouge est détaillée ici : 
+
+    ![image](https://user-images.githubusercontent.com/1177762/189527431-3fdcc5b2-22c0-49e1-b5f0-68762f780d57.png)
+
+    On peut y voir que les cultures dédiées sont très faibles en proportion, ce qui est plutôt très rassurant. 
+
+    Cela dit, et je ne sais pas trop comment le définir précisément, j'ai quand même une forte impression qu'une grande partie de ces composants pourraient être valorisés différemment : concrètement, on brûle et on valorise donc à un prix vendu très élevé (le gaz en prix de gros [coûte en septembre 2022](https://twitter.com/i/timeline) près de 2 fois le prix de production du biogaz (90€/MWh)) les restes de poulet de la cantine qu'on aurait pu juste ne pas produire (bleu); la pelouse domestique que le voisin tond toutes les semaines (bleu clair); le fumier de cultures qui auraient pu être dédiées à du végétal humain (mauve); etc. 
+
+    En bref, si une partie de l'énergie présente dans les matières utilisées par le biométhane était juste perdue, une autre partie subit simplement un changement d'allocation, d'une chose utile au monde agricole vers la combustion du gaz pour chauffer des logemens notamment. Sans compter l'effet d'aubaine pour des activités qui émettent, substituables par d'autres qui émettent moins. L'étude pourtant semble très complète, donc c'est à creuser, peut-être qu'elle répond à tout ça et que je n'ai pas vu (c'est complexe). 
+
+    On peut aussi citer [un article de Reporterre](https://reporterre.net/methanisation-un-digestat-bien-indigeste-pour-les-sols-et-les-eaux) qui s'inquiète des contaminations bactériennes dues à l'épendage du digestat ainsi qu'aux fuites de méthane et de protoxide d'azote N2O, qui seraient sous-estimées (car bien présentes donc évaluées dans l'étude citée par la base carbone). Mais attention, Reporterre n'est pas un organisme de recherche, mais un média d'opinion. 
+
+    Une investigation toute récente sur les méthaniseurs de Bretagne va dans le même sens, cataloguant les incidents ayant eu lieu dans la région : https://basta.media/des-methaniseurs-menacent-l-environnement-la-carte-inedite-des-accidents-en-Bretagne-Splann. 
+
+    Cela ne remet pas en question le fait d'intégrer dans NGC le facteur à mon avis. La production de gaz fossile est tout à fait concernée par ce genre de problèmes également, à titre d'exemple. 
+
+    Une autre question dont la réponse y est peut-être est celle-ci : la filière peut-elle faire x10 en production sans introduire des externalités négatives pour l'instant maitrisées ? Ce serait intéressant d'y répondre pour l'utilisateur de NGC, lui montrer que son choix peut passer à l'échelle de la société. Carbone4 semble y répondre négativement : le remplacement du gaz fossile par le biométhane ne doit pas conduire à une non réduction de la consommation de gaz en général, et encore moins à un effet rebond ! 
+
+    ![image](https://user-images.githubusercontent.com/1177762/189527887-931ee20a-8ad6-431f-bd4d-d705fa9eefca.png)
+
+    Un **avertissement** est donc être intégré pendant la simulation pour évoquer cet impossible passage à l'échelle : 
+
+    > Le biométhane réduit **énormément** les émissions de CO₂ du gaz que vous consommez, mais la production actuelle est **incapable de passer à l'échelle** : la réduction globale de toute consommation de gaz reste **essentielle**, que l'on consomme du biogaz ou du gaz fossile.
+
+logement . gaz . biogaz . facteur d'émission:
+  formule: biogaz . facteur d'émission base carbone * part + gaz . facteur d'émission base carbone * (1 - part)
+  description: |
+    Biogaz : Biométhane - Injecté dans les réseaux - Mix moyen
+
+logement . gaz . biogaz . facteur d'émission base carbone:
+  titre: Facteur d'émission du biogaz
+  formule: 0.0395
+  unité: kgCO2e/kWh
+  description: |
+    On raisonne en PCS (Pouvoir Calorifique Supérieur) et non en PCI (Pouvoir Calorifique Inférieur), car le PCS est utilisé en tant que coefficient de conversion dans les factures pour convertir le volume de gaz utilisé en kWh : 
+    on fait l'hypothèse que la chaudière gaz récupère bien la chaleur latente de condensation.
+
+    Biogaz : Biométhane - Injecté dans les réseaux - Mix moyen
+
+logement . gaz . biogaz . part:
+  question: Quelle est la part de biogaz garantie par votre contrat de gaz ?
+  description: |
+    Il existe peu de vendeurs de gaz proposant des contrats 100% biogaz, mais il en existe (en septembre 2022). 
+
+    Par contre, le premier vendeur de gaz français propose à ses clients une option biogaz avec une proportion reglable moyennant un coût supplémentaire (significatif mais qui ne fait pas non plus doubler la facture). N'hésitez pas à en parler à un conseiller.
+  par défaut: 20%
+
 logement . gaz . facteur d'émission base carbone:
   titre: Intensité carbone gaz naturel
   valeur: 0.221
@@ -396,3 +466,107 @@ logement . chauffage . citerne propane . énergie par kg:
 
     ![](https://user-images.githubusercontent.com/55186402/224317812-b646f6d9-1b41-43f3-9823-0295a57dd6c1.png)
     ![](https://user-images.githubusercontent.com/55186402/224318088-78940efa-2201-407f-9905-545b2f3e09d8.png)
+
+logement . chauffage . bois:
+  icônes: 🪵
+
+logement . chauffage . bois . empreinte:
+  titre: Empreinte du bois
+  applicable si: présent
+  formule:
+    variations:
+      - si: type = 'bûche'
+        alors: type . bûche . consommation * facteur d'émission bûche
+      - sinon: type . granulés . consommation * facteur d'émission granulés
+
+logement . chauffage . bois . présent:
+  question: Votre logement est-il chauffé au bois ?
+  par défaut: non
+
+logement . chauffage . bois . type:
+  titre: type de bois
+  question: Quel type de bois utilisez-vous ?
+  description: |
+    > Les poêles à bûches représentent 70% des poêles vendus.
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - bûche
+        - granulés
+  par défaut: "'bûche'"
+  références:
+    planetoscope: https://www.planetoscope.com/Source-d-energie/1521-.html
+
+logement . chauffage . bois . type . bûche:
+  titre: Bûches
+logement . chauffage . bois . type . granulés:
+  titre: Granulés
+
+logement . chauffage . bois . type . granulés . consommation:
+  question: Quelle est la consommation annuelle de bois en granulés de votre foyer ?
+  unité: kWh
+  aide: estimation via le coût
+  par défaut: parc français . chauffage . consommation bois par m2 * surface
+  description: |
+    > 💡 Astuce : en moyenne, 1kg de granulés produisent 4.6 kWh. Vous pouvez donc multiplier votre consommation annuelle (en tonnes) par 4600 kWh.
+  note: |
+    La valeur par défaut ici est à priori largement sur-estimée. En effet, les données utilisées ([CEREN](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel)) reflètent mal la réalité de l'énergie bois.
+    Les données relatives aux consommations de bois des ménages aggrègent à la fois des données sur les granulés (performant en termes de combustion) et sur le bois bûches en foyer ouvert (peu performant).
+
+    Et donc probablement que si la discrimination par type de bois de chauffe était faite dans les données du CEREN (pour les kWh consommés et les surface chauffées) on aboutirait à une valeur en kWh/m2 beaucoup plus faible pour les granulés que pour le bois bûches.
+
+logement . chauffage . bois . type . granulés . consommation . estimation via le coût:
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  unité: €/kWh
+  formule: granulés . prix kWh
+  description: |
+    Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois.
+
+logement . chauffage . bois . type . bûche . consommation:
+  formule: saisie * intensité énergétique
+logement . chauffage . bois . type . bûche . intensité énergétique:
+  formule: 1610
+  unité: kWh/stère
+  note: |
+    Nous faisons l'hypothèse d'une consommation de bûches de 20% d'humidité.
+    Source : dans le fichier ZIP (!) ci-dessous, fichier 1_chauffage_domestique_bois_appro_rapport.pdf page 10.
+  références:
+    - https://www.ademe.fr/etude-chauffage-domestique-bois
+
+logement . chauffage . bois . type . bûche . consommation . saisie:
+  question: Quelle la consommation annuelle de bois en bûches de votre foyer ?
+  aide: estimation via le coût
+  description: |
+    La consommation de bois de chauffage se compte traditionnellement en stères, ce qui correspond approximativement à un mètre cube de bûches.
+
+    ![](https://upload.wikimedia.org/wikipedia/commons/7/7c/Raummeter_hg.jpg)
+  unité: stère
+  par défaut: parc français . chauffage . consommation bois par m2 * surface / intensité énergétique
+
+logement . chauffage . bois . type . bûche . consommation . estimation via le coût:
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  unité: €/stère
+  formule: prix stère 2023
+  description: |
+    Cette formule nous permet de passer des €/mois au nombre de stères par an.
+  note: |
+    Prix calculé sur la base de l'indice prix bois énergie publié par l'INSEE.
+
+logement . chauffage . bois . facteur d'émission bûche:
+  titre: Empreinte bois bûche
+  formule: 0.0460
+  unité: kgCO2e/kWh
+  note: |
+    Attention faute de FE de statut "validé générique" pour le bois bûche dans la Base Carbone nous optons pour un FE "validé spécifique" (initiative E+/C- = label Energie Positive et Réduction Carbone) afin d'assurer une
+    certaine cohérence pour l'utilisateur parcourant le modèle de calcul. Cependant, les facteurs d'émissions E+/C- suivent des règles d'élaboration parfois différentes des
+    règles de calcul de la Base Carbone. Il est donc probable que ce FE sous-estime légèrement l'impact GES de la consommation d'un kWh de bois bûche en ne prenant pas en 
+    compte les émissions de méthane imbrulé.
+
+logement . chauffage . bois . facteur d'émission granulés:
+  titre: Empreinte bois granulés
+  formule: 0.0113
+  unité: kgCO2e/kWh
+  note: |
+    FE de la Base Carbone Granulés/Blancs français (issus de connexe de scierie)
+    Connexe de scierie signifie que les granulés sont issus de chutes de bois et non de bois brut
