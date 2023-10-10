@@ -18,14 +18,13 @@ import { constantFolding } from '@incubateur-ademe/publicodes-tools/optims'
 // rules that contain the 'icônes' key.
 // We also need to keep all notification rules, which are not used for compilation
 // but important for thee UI.
+//
+// @Clément: Do we still need those rules ? 'logement . chauffage . gaz' ? 'logement . chauffage . biogaz' ?
 const rulesToKeep = [
 	'actions',
-	'actions pétrole',
 	'bilan',
-	'logement . gaz',
-	'logement . gaz . biogaz',
-	'pétrole . pleins',
-	'pétrole . volume plein',
+	'logement . chauffage . gaz',
+	'logement . chauffage . biogaz',
 	'transport . voiture . thermique',
 	'transport . ferry . surface',
 ]
