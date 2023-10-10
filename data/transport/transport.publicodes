@@ -172,8 +172,12 @@ transport . bus . heures par semaine:
 
 transport . deux roues:
   icônes: 🛵
-  applicable si: usager
-  formule: ( empreinte + entretien pondéré ) * km
+  formule:
+    variations:
+      - si: usager
+        alors: ( empreinte + entretien pondéré ) * km
+      - sinon: ( empreinte + entretien pondéré ) * km * pourcentage motards
+  unité: kgCO2e
 
 transport . deux roues . usager:
   question: Utilisez-vous un deux-roues motorisé ?
@@ -255,6 +259,9 @@ transport . deux roues . entretien:
     Dans le poste G45, nous proratisons le poste Commerce et réparation de motocycles (2%) sur le même rapport que les voitures pour extraire l'entretien de ce poste comprenant également le commerce.
     Nous le divisons par le nombre de véhicules en circulation, puis par 3000 km (la moyenne de km effectués par véhicule) pour obtenir une empreinte en kgCO2e / km.
 
+transport . deux roues . pourcentage motards:
+  formule: nombre deux roues circulation / population
+  
 transport . deux roues . nombre deux roues circulation:
   formule: 2700000
   note: Le nombre de deux-roues en circulation en 2020, stable, est de [2,7 millions](https://www.onisr.securite-routiere.gouv.fr/etudes-et-recherches/vehicules/parc-des-vehicules/le-parc-deux-roues-motorises-des-menages)
