@@ -38,7 +38,7 @@ logement . chauffage . empreinte totale:
       - bouteille gaz
       - citerne propane
       - fioul
-      - bois . empreinte
+      - bois
       - réseau de chaleur
       # chauffage électrique et PAC déjà compté dans la conso électrique
   unité: kgCO2e
@@ -415,7 +415,13 @@ logement . chauffage . intensité carbone fioul litre:
     - https://www.bilans-ges.ademe.fr - Fioul domestique France continental
 
 logement . chauffage . bois:
+  titre: Bois ou granulés
   icônes: 🪵
+  formule:
+    variations:
+      - si: bois . présent
+        alors: bois . empreinte
+      - sinon: 0
 
 logement . chauffage . bois . empreinte:
   titre: Empreinte du bois
@@ -424,7 +430,8 @@ logement . chauffage . bois . empreinte:
     variations:
       - si: type = 'bûche'
         alors: type . bûche . consommation * facteur d'émission bûche
-      - sinon: type . granulés . consommation * facteur d'émission granulés
+      - si: type = 'granulés'
+        alors: type . granulés . consommation * facteur d'émission granulés
 
 logement . chauffage . bois . présent:
   question: Votre logement est-il chauffé au bois ?
