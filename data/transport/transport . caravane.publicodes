@@ -9,11 +9,14 @@ transport . vacances . caravane . propriétaire:
 transport . vacances . caravane . empreinte:
   titre: Caravane
   icônes: 🚎
-  applicable si:
-    toutes ces conditions:
-      - transport . voiture . km > 0
-      - propriétaire
-  formule: usage réel + construction amortie
+  formule: 
+    variations:
+      - si: 
+          toutes ces conditions:
+           - transport . voiture . km > 0
+           - propriétaire
+        alors: usage réel + construction amortie
+      - sinon: (usage réel + construction amortie) * pourcentage caravaniers
   note: |
     On considère une surconsommation pour les km parcourus avec la caravance.
 
@@ -64,3 +67,7 @@ transport . vacances . caravane . durée de vie:
   note: |
     Comme pour le camping car on considère une durée de vie de [25 ans](https://objectifpleinair.com/combien-de-temps-dure-un-camping-car/).
     Cette hypothèse nécessite d'être mieux sourcée.
+
+transport . vacances . caravane . pourcentage caravaniers:
+  formule: 700000 / population
+  note: Il s'est vendu moitié moins de caravanes en France en 2021 que de camping-cars. On peut supposer qu'il y a moitié moins de caravaniers que de camping-caristes ([source](https://ffcc.fr/chiffres-cles/)).
