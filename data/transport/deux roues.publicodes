@@ -1,7 +1,11 @@
 transport . deux roues:
   icônes: 🛵
-  applicable si: usager
-  formule: ( empreinte + entretien pondéré ) * km
+  formule:
+    variations:
+      - si: usager
+        alors: ( empreinte + entretien pondéré ) * km
+      - sinon: ( empreinte + entretien pondéré ) * km * pourcentage motards
+  unité: kgCO2e
 
 transport . deux roues . usager:
   question: Utilisez-vous un deux-roues motorisé ?
@@ -24,7 +28,7 @@ transport . deux roues . km:
 
 transport . deux roues . type:
   question: Quel type de deux-roues utilisez-vous ?
-  par défaut: "'scooter thermique'"
+  par défaut: "'moto sup 250'"
   formule:
     une possibilité:
       choix obligatoire: oui
@@ -86,3 +90,6 @@ transport . deux roues . entretien:
 transport . deux roues . nombre deux roues circulation:
   formule: 2700000
   note: Le nombre de deux-roues en circulation en 2020, stable, est de [2,7 millions](https://www.onisr.securite-routiere.gouv.fr/etudes-et-recherches/vehicules/parc-des-vehicules/le-parc-deux-roues-motorises-des-menages)
+
+transport . deux roues . pourcentage motards:
+  formule: nombre deux roues circulation / population
