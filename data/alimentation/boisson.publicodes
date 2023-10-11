@@ -70,12 +70,12 @@ alimentation . boisson . chaude . chocolat chaud:
 
 alimentation . boisson . chaude . café . nombre:
   question: Nombre de cafés par semaine
-  par défaut: 7
+  par défaut: 10
   unité: tasse/semaine
 
 alimentation . boisson . chaude . thé . nombre:
   question: Nombre de thés par semaine
-  par défaut: 7
+  par défaut: 3
   unité: tasse/semaine
 
 alimentation . boisson . chaude . chocolat chaud . nombre:
@@ -216,7 +216,12 @@ alimentation . boisson . froide:
 
 alimentation . boisson . eau en bouteille:
   applicable si: affirmatif
-  formule: consommation annuelle * empreinte
+  formule:
+    variations:
+      - si: affirmatif
+        alors: consommation annuelle * empreinte
+      - sinon: consommation moyenne * empreinte
+  unité: kgCO2e
 
 alimentation . boisson . eau en bouteille . consommation annuelle:
   formule: commun . jours par an * 1.5 l/jour
@@ -243,6 +248,13 @@ alimentation . boisson . eau en bouteille . affirmatif:
     Les français boivent en moyenne entre 100 et 150 litres d'eau en bouteille par an [source](https://www.planetoscope.com/consommation-eau/854-litres-d-eau-en-bouteille-vendus-en-france.html), soit environ un tiers de nos besoins de 1-1,5l par jour [source](https://www.mangerbouger.fr/Le-Mag/Bien-etre/L-eau-indispensable-a-notre-bonne-sante).
 
     Nous avons considéré que la valeur par défaut était donc "non".
+
+alimentation . boisson . eau en bouteille . consommation moyenne:
+  formule: 135
+  unité: l
+  note: |
+    La consommation moyenne de l'eau en bouteille est en 2018 de 135 litres par an par habitant (soit 90 bouteilles), 
+    d'après le syndicat des eaux minérales naturelles ([source](https://eaumineralenaturelle.fr/qui-sommes-nous/leau-minerale-en-chiffres))
 
 alimentation . boisson . sucrées:
   description: |
@@ -286,7 +298,7 @@ alimentation . boisson . sucrées . litres:
     nulle: 0
     modérée: 1
     importante: 5
-  par défaut: 2
+  par défaut: 1
   unité: l/semaine
 
 alimentation . boisson . alcool:
@@ -335,7 +347,7 @@ alimentation . boisson . alcool . litres:
   question: Quelle est votre consommation par semaine d'alcool (vin, bière, etc.) ?
   suggestions:
     nulle: 0
-    modérée: .5
-    importante: 2
-  par défaut: 1
+    modérée: 1
+    importante: 3
+  par défaut: 1.5
   unité: l/semaine
