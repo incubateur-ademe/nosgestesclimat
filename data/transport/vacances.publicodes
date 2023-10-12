@@ -16,10 +16,35 @@ transport . vacances:
 
     💡 Si vous ne possédez ni camping car, ni caravane, ou bien si vous les louez, vous pouvez cliquer sur "aucun" juste en dessous de cette question, puis "Suivant". La location n'est pas encore disponible dans notre modèle**.
   formule:
+    variations:
+      - si: choix utilisateur
+        alors: empreinte totale
+      - sinon: empreinte par défaut
+
+transport . vacances . empreinte totale:
+  formule:
     somme:
       - caravane . empreinte . usage réel
       - camping car . empreinte . usage réel
       - van
+
+transport . vacances . empreinte par défaut:
+  formule:
+    somme:
+      - caravane . empreinte . usage réel * caravane . pourcentage caravaniers 
+      - camping car . empreinte . usage réel * camping car . pourcentage camping-caristes
+      - van * van . pourcentage usagers van
+
+transport . vacances . choix utilisateur:
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - caravane . propriétaire
+            - camping car . propriétaire
+            - van . propriétaire
+        alors: oui
+      - sinon: non
 
 transport . vacances . caravane:
   formule: oui
@@ -87,6 +112,10 @@ transport . vacances . caravane . durée de vie:
   note: |
     Comme pour le camping car on considère une durée de vie de [25 ans](https://objectifpleinair.com/combien-de-temps-dure-un-camping-car/).
     Cette hypothèse nécessite d'être mieux sourcée.
+
+transport . vacances . caravane . pourcentage caravaniers:
+  formule: 700000 / population
+  note: Il s'est vendu moitié moins de caravanes en France en 2021 que de camping-cars. On peut supposer qu'il y a moitié moins de caravaniers que de camping-caristes ([source](https://ffcc.fr/chiffres-cles/)).
 
 transport . vacances . camping car:
   formule: oui
@@ -168,6 +197,10 @@ transport . vacances . camping car . empreinte au kilomètre:
 transport . vacances . camping car . empreinte . usage:
   formule: camping car . km * empreinte au kilomètre
   unité: kgCO2e
+
+transport . vacances . camping car . pourcentage camping-caristes:
+  formule: 1400000 * 77% / population
+  note: Il existe 1,4 millions de camping-caristes en France, dont 77% roulent en camping-car (23% en van / fourgon aménagé) [selon la Fédération des campeurs, caravaniers et camping-caristes](https://ffcc.fr/chiffres-cles/)
 
 transport . vacances . van:
   titre: Van
