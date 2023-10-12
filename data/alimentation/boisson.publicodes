@@ -215,29 +215,32 @@ alimentation . boisson . froide:
       - eau en bouteille
 
 alimentation . boisson . eau en bouteille:
-  applicable si: affirmatif
   formule:
     variations:
-      - si: affirmatif
+      - si: consommateur = 'affirmatif'
         alors: consommation annuelle * empreinte
-      - sinon: consommation moyenne * empreinte
+      - si: consommateur = 'négatif'
+        alors: 0
+      - si: consommateur = 'moyenne'
+        alors: consommation moyenne * empreinte
   unité: kgCO2e
 
-alimentation . boisson . eau en bouteille . consommation annuelle:
-  formule: commun . jours par an * 1.5 l/jour
-  unité: l
-  description: On considère que chacun boit 1,5 litres d'eau par jour.
-
-alimentation . boisson . eau en bouteille . empreinte:
-  formule: 0.27
-  unité: kgCO2e/l
-  références:
-    - https://agribalyse.ademe.fr/app/aliments/18430#Eau_embouteillée_de_source
-
-alimentation . boisson . eau en bouteille . affirmatif:
+alimentation . boisson . eau en bouteille . consommateur:
   titre: Eau en bouteille
   question: Buvez-vous votre eau en bouteille ?
-  par défaut: non
+  avec:
+    moyenne:
+    affirmatif:
+      titre: Oui
+    négatif:
+      titre: Non
+  par défaut: "'moyenne'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - affirmatif
+        - négatif
   description: |
     Si vous buvez principalement de l'eau du robinet et que votre consommation d'eau en bouteille se réduit à de rares occasions (par exemple un repas sur le pouce en boulangerie par semaine, avec leur fameux menu "sandwich + dessert + boisson en bouteille plastique"), répondez non.
 
@@ -249,12 +252,23 @@ alimentation . boisson . eau en bouteille . affirmatif:
 
     Nous avons considéré que la valeur par défaut était donc "non".
 
+alimentation . boisson . eau en bouteille . empreinte:
+  formule: 0.27
+  unité: kgCO2e/l
+  références:
+    - https://agribalyse.ademe.fr/app/aliments/18430#Eau_embouteillée_de_source
+
 alimentation . boisson . eau en bouteille . consommation moyenne:
   formule: 135
   unité: l
   note: |
     La consommation moyenne de l'eau en bouteille est en 2018 de 135 litres par an par habitant (soit 90 bouteilles), 
     d'après le syndicat des eaux minérales naturelles ([source](https://eaumineralenaturelle.fr/qui-sommes-nous/leau-minerale-en-chiffres))
+
+alimentation . boisson . eau en bouteille . consommation annuelle:
+  formule: commun . jours par an * 1.5 l/jour
+  unité: l
+  description: On considère que chacun boit 1,5 litres d'eau par jour.
 
 alimentation . boisson . sucrées:
   description: |
