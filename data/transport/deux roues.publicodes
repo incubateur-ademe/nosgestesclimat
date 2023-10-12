@@ -2,23 +2,51 @@ transport . deux roues:
   icônes: 🛵
   formule:
     variations:
-      - si: usager
-        alors: ( empreinte + entretien pondéré ) * km
-      - sinon: ( empreinte + entretien pondéré ) * km * pourcentage motards
+      - si: usager = 'affirmatif'
+        alors: empreinte
+      - si: usager = 'négatif'
+        alors: 0
+      - si: usager = 'moyenne'
+        alors: empreinte moyenne
   unité: kgCO2e
 
 transport . deux roues . usager:
   question: Utilisez-vous un deux-roues motorisé ?
   description: |
     Les scooters et motos sont aujourd'hui très majoritairement des engins qui fonctionnent au pétrole. Les scooters électriques ayant fait une réelle percée, ils sont ajoutés au modèle.
-  par défaut: non
+  avec:
+    moyenne:
+    affirmatif:
+      titre: Oui
+    négatif:
+      titre: Non
+  par défaut: "'moyenne'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - affirmatif
+        - négatif
+
+transport . deux roues . empreinte:
+  applicable si: usager = 'affirmatif'
+  icônes: 🛵
+  formule: (empreinte au km + entretien pondéré) * km
+  unité: kgCO2e
+
+transport . deux roues . empreinte moyenne:
+  formule:
+    recalcul:
+      règle: deux roues . empreinte
+      avec:
+        deux roues . usager: "'affirmatif'"
+        deux roues . type: "'moto sup 250'"
+        deux roues . km: km annuels * pourcentage motards
 
 transport . deux roues . km:
   question: Combien de km faites-vous à l'année avec votre scooter ou moto ?
-  par défaut: 3000
+  par défaut: km annuels
   unité: km
-  note: |
-    Source pour les km annuels moyens : [datalab ministère écologie 2019](https://www.statistiques.developpement-durable.gouv.fr/bilan-annuel-des-transports-en-2019-0), figure G1-1.
   suggestions:
     zéro: 0
     vacances: 2000
@@ -26,7 +54,14 @@ transport . deux roues . km:
     1000km / mois: 12000
     20 000km / an: 20000
 
+transport . deux roues . km annuels:
+  formule: 3000
+  unité: km
+  note: |
+    Source pour les km annuels moyens : [datalab ministère écologie 2019](https://www.statistiques.developpement-durable.gouv.fr/bilan-annuel-des-transports-en-2019-0), figure G1-1.
+
 transport . deux roues . type:
+  applicable si: usager = 'affirmatif'
   question: Quel type de deux-roues utilisez-vous ?
   par défaut: "'moto sup 250'"
   formule:
@@ -47,7 +82,7 @@ transport . deux roues . type . moto inf 250:
 transport . deux roues . type . moto sup 250:
   titre: Moto de plus de 250 cm3
 
-transport . deux roues . empreinte:
+transport . deux roues . empreinte au km:
   unité: kgCO2e/km
   formule:
     variations:
