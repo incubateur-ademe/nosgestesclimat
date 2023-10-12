@@ -6,9 +6,11 @@ transport . voiture:
     variations:
       - si: km = 0
         alors: 0
-      - si: utilisateur régulier
+      - si: utilisateur régulier = 'affirmatif'
         alors: empreinte calculée
-      - si: utilisateur régulier
+      - si: utilisateur régulier = 'moyenne'
+        alors: empreinte calculée * pourcentage conducteurs
+      - si: utilisateur régulier = 'négatif'
         alors: empreinte utilisateur irrégulier
   unité: kgCO2e
   description: |
@@ -45,6 +47,7 @@ transport . voiture . km annuels moyen:
   note: Chiffre issu de [datalab ministère écologie 2019](https://www.statistiques.developpement-durable.gouv.fr/bilan-annuel-des-transports-en-2019-0), page 3 G1.
 
 transport . voiture . utilisateur régulier:
+  applicable si: km > 0
   question: Utilisez-vous majoritairement la même voiture pour vous déplacer ?
   description: |
     Par opposition à l'utilisation exclusive de voitures de location partagées par d'autres personnes le reste du temps, ou l'utilisation ponctuelle de la voiture d'un ami, de la famille.
@@ -54,7 +57,19 @@ transport . voiture . utilisateur régulier:
     Répondez oui si vous utilisez dans la plupart des cas le même véhicule, que ce soit en tant que passager ou que conducteur. 
 
     Cela peut-être le cas s'il s'agit d'un véhicule appartenant à quelqu'un de votre famille, ou à des amis proches. Ou si vous louez systématiquement le même type de véhicule, comme dans le cas d'un abonnement à un service d'autopartage.
-  par défaut: oui
+  avec:
+    moyenne:
+    affirmatif:
+      titre: Oui
+    négatif:
+      titre: Non
+  par défaut: "'moyenne'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - affirmatif
+        - négatif
 
 transport . voiture . notif utilsateur irrégulier:
   type: notification
@@ -74,7 +89,7 @@ transport . voiture . empreinte utilisateur irrégulier . construction:
     recalcul:
       règle: voiture . construction
       avec:
-        voiture . utilisateur régulier: "'oui'"
+        voiture . utilisateur régulier: "'affirmatif'"
         voiture . gabarit: "'moyenne'"
         voiture . motorisation: "'thermique'"
 
@@ -83,7 +98,7 @@ transport . voiture . empreinte utilisateur irrégulier . usage:
     recalcul:
       règle: voiture . usage
       avec:
-        voiture . utilisateur régulier: "'oui'"
+        voiture . utilisateur régulier: "'affirmatif'"
         voiture . gabarit: "'moyenne'"
         voiture . motorisation: "'thermique'"
         voiture . thermique . carburant: "'essence E5 ou E10'"
@@ -248,7 +263,7 @@ transport . voiture . thermique . carburant:
 
     Le facteur d'émission associé au biocarburant E85 n'est pas représentatif des conséquences environnementales liées à l'utilisation des biocarburants.
     En effet, au vu des problématiques liées au changement d'affectation des sols et autres impacts environnementaux liés à la culture du maïs par exemple, les **biocarburants** ne sont pas pris en compte
-    (le facteur d'émission de la base carbone étant particulièrement incertain). Voir nos discussions [ici](https://github.com/datagir/nosgestesclimat/pull/1324).
+    (le facteur d'émission de la base carbone étant particulièrement incertain). Voir nos discussions [ici](https://github.com/incubateur-ademe/nosgestesclimat/pull/1324).
 
 transport . voiture . thermique . carburant . gazole B7 ou B10:
   titre: Gazole (B7 ou B10)
@@ -392,6 +407,9 @@ transport . voiture . nombre véhicules circulation:
   note: |
     Ce chiffre concerne les véhicules particuliers (voitures et VUL).
     Il est issu des statistiques [INSEE](https://www.insee.fr/fr/statistiques/2045167#tableau-figure1_radio1).
+
+transport . voiture . pourcentage conducteurs:
+  formule: nombre véhicules circulation / population
 
 transport . voiture . par km personne:
   formule: empreinte au kilomètre / voyageurs
