@@ -166,8 +166,6 @@ logement . chauffage . gaz . intensité carbone gaz utilisateur:
       - si: chauffage . gaz . biogaz
         alors: biogaz . facteur d'émission
       - sinon: facteur d'émission base carbone
-  références:
-    - https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Gaz
   unité: kgCO2e/kWh
 
 logement . chauffage . gaz . facteur d'émission base carbone:
@@ -255,9 +253,9 @@ logement . chauffage . biogaz . part:
 logement . chauffage . intensité carbone GPL:
   formule: 0.272
   unité: kgCO2e/kWh
-  référence:
-    - https://www.bilans-ges.ademe.fr - GPL pour véhicule routier
-  #Il n'y a pas de GPL de "maison" dans la Base Carbone. Pointer directement sur le FE gaz naturel ?
+  note: |
+    Facteur d'émission issu de le Base Carbone (GPL pour véhicule routier). 
+    Il n'y a pas de GPL de "maison" dans la Base Carbone. Une solution pourrait être de pointer directement sur le facteur d'émission gaz naturel ?
 
 logement . chauffage . bouteille gaz:
   icônes: 🛢️🔥
@@ -331,7 +329,7 @@ logement . chauffage . bouteille gaz . empreinte contenu:
   titre: Empreinte gaz d'une bonbonne
   formule: (empreinte butane + empreinte propane) / 2
   unité: kgCO2e/kg
-  note: Moyenne entre butane et propane, dont les FE sont néanmoins très proches.
+  note: Moyenne entre butane et propane, dont les facteurs d'émission sont néanmoins très proches.
 
 logement . chauffage . empreinte butane:
   titre: Empreinte butane
@@ -423,14 +421,12 @@ logement . chauffage . fioul . estimation via le prix:
   question: Pas de facture ? Entrez vos dépenses approximatives en fioul par mois
   unité: €/l
   formule: 1.5199
-  description: |
+  note: |
     Cette formule nous permet de passer des €/mois aux litres/an.
 
     Source : Fioul domestique 2000 à 4999 litres, 2ème semestre 2022.
     Donnée issue de l'excel [Prix HTT et TTC depuis janvier 2020.xlsx](https://github.com/datagir/nosgestesclimat/files/11029116/Prix.HTT.et.TTC.depuis.janvier.2020.xlsx)
     téléchargeable sur la page [Prix des produits pétroliers](https://www.ecologie.gouv.fr/prix-des-produits-petroliers#scroll-nav__4) du ministère de la Transition Écologique.
-  références:
-    écologie.gouv.fr: https://www.ecologie.gouv.fr/prix-des-produits-petroliers
 
 logement . chauffage . fioul . consommation:
   question: Quelle est la consommation annuelle de fioul domestique de votre foyer ?
@@ -444,8 +440,7 @@ logement . chauffage . fioul . consommation:
 logement . chauffage . intensité carbone fioul litre:
   formule: 3.25
   unité: kgCO2e/l
-  références:
-    - https://www.bilans-ges.ademe.fr - Fioul domestique France continental
+  note: Facteur d'émission issu de la Base Carbone (Fioul domestique France continental).
 
 logement . chauffage . bois:
   titre: Bois ou granulés
@@ -475,8 +470,6 @@ logement . chauffage . bois . présent:
 logement . chauffage . bois . type:
   titre: type de bois
   question: Quel type de bois utilisez-vous ?
-  description: |
-    > Les poêles à bûches représentent 70% des poêles vendus.
   formule:
     une possibilité:
       choix obligatoire: oui
@@ -484,8 +477,7 @@ logement . chauffage . bois . type:
         - bûche
         - granulés
   par défaut: "'bûche'"
-  références:
-    planetoscope: https://www.planetoscope.com/Source-d-energie/1521-.html
+  note: Les poêles à bûches représentent [70% des poêles vendus](https://www.planetoscope.com/Source-d-energie/1521-.html).
 
 logement . chauffage . bois . type . bûche:
   titre: Bûches
@@ -517,11 +509,7 @@ logement . chauffage . bois . type . bûche . consommation:
 logement . chauffage . bois . type . bûche . intensité énergétique:
   formule: 1610
   unité: kWh/stère
-  note: |
-    Nous faisons l'hypothèse d'une consommation de bûches de 20% d'humidité.
-    Source : dans le fichier ZIP (!) ci-dessous, fichier 1_chauffage_domestique_bois_appro_rapport.pdf page 10.
-  références:
-    - https://www.ademe.fr/etude-chauffage-domestique-bois
+  note: Nous faisons l'hypothèse d'une consommation de bûches de 20% d'humidité, d'après l'[étude ADEME sur le chauffahe domestique au bois](https://librairie.ademe.fr/produire-autrement/872-etude-sur-le-chauffage-domestique-au-bois.html), page 10.
 
 logement . chauffage . bois . type . bûche . consommation . saisie:
   question: Quelle la consommation annuelle de bois en bûches de votre foyer ?
@@ -547,9 +535,9 @@ logement . chauffage . bois . facteur d'émission bûche:
   formule: 0.0460
   unité: kgCO2e/kWh
   note: |
-    Attention faute de FE de statut "validé générique" pour le bois bûche dans la Base Carbone nous optons pour un FE "validé spécifique" (initiative E+/C- = label Energie Positive et Réduction Carbone) afin d'assurer une
+    Attention faute de facteur d'émission de statut "validé générique" pour le bois bûche dans la Base Carbone nous optons pour un facteur d'émission "validé spécifique" (initiative E+/C- = label Energie Positive et Réduction Carbone) afin d'assurer une
     certaine cohérence pour l'utilisateur parcourant le modèle de calcul. Cependant, les facteurs d'émissions E+/C- suivent des règles d'élaboration parfois différentes des
-    règles de calcul de la Base Carbone. Il est donc probable que ce FE sous-estime légèrement l'impact GES de la consommation d'un kWh de bois bûche en ne prenant pas en 
+    règles de calcul de la Base Carbone. Il est donc probable que ce facteur d'émission sous-estime légèrement l'impact GES de la consommation d'un kWh de bois bûche en ne prenant pas en 
     compte les émissions de méthane imbrulé.
 
 logement . chauffage . bois . facteur d'émission granulés:
@@ -557,7 +545,7 @@ logement . chauffage . bois . facteur d'émission granulés:
   formule: 0.0113
   unité: kgCO2e/kWh
   note: |
-    FE de la Base Carbone Granulés/Blancs français (issus de connexe de scierie)
+    Facteur d'émission de la Base Carbone Granulés/Blancs français (issus de connexe de scierie)
     Connexe de scierie signifie que les granulés sont issus de chutes de bois et non de bois brut
 
 logement . chauffage . réseau de chaleur:
@@ -619,4 +607,4 @@ logement . chauffage . réseau de chaleur . intensité carbone:
   titre: Empreinte carbone réseau de chaleur
   formule: 0.125
   unité: kgCO2e/kWh
-  note: FE issu de la moyenne de tous les réseaux de chaleur de la Base Carbone
+  note: Facteur d'émission issu de la moyenne de tous les réseaux de chaleur de la Base Carbone
