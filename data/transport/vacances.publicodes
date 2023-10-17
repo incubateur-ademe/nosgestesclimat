@@ -16,38 +16,34 @@ transport . vacances:
 
     💡 Si vous ne possédez ni camping car, ni caravane, ou bien si vous les louez, vous pouvez cliquer sur "aucun" juste en dessous de cette question, puis "Suivant". La location n'est pas encore disponible dans notre modèle**.
   formule:
-    variations:
-      - si: choix utilisateur
-        alors: empreinte totale
-      - sinon: empreinte par défaut
-
-transport . vacances . empreinte totale:
-  formule:
     somme:
       - caravane . empreinte . usage réel
       - camping car . empreinte . usage réel
       - van
 
-transport . vacances . empreinte par défaut:
-  formule:
-    somme:
-      - caravane . empreinte . usage réel * caravane . pourcentage caravaniers
-      - camping car . empreinte . usage réel * camping car . pourcentage camping-caristes
-      - van * van . pourcentage usagers van
+# @Clément: pour l'instant, nous gardons la valeur par défaut pour `transport . vacances` à false pour des raison de complexité :
+# - L'empreinte est divisée entre 2 catégorie : nous ne pouvons appliqué le même comportement / contournement que pour la mosaïque "chauffage" par exemple.
+# - L'empreinte par défaut est relativement faible au vu des proportions d'usagers de ces véhicules
+# transport . vacances . empreinte par défaut:
+#   formule:
+#     somme:
+#       - caravane . empreinte . usage réel * caravane . pourcentage caravaniers
+#       - camping car . empreinte . usage réel * camping car . pourcentage camping-caristes
+#       - van * van . pourcentage usagers van
 
-transport . vacances . choix utilisateur:
-  formule:
-    variations:
-      - si:
-          une de ces conditions:
-            - caravane . propriétaire
-            - camping car . propriétaire
-            - van . propriétaire
-        alors: oui
-      - sinon: non
+# transport . vacances . choix utilisateur:
+#   formule:
+#     variations:
+#       - si:
+#           une de ces conditions:
+#             - caravane . propriétaire
+#             - camping car . propriétaire
+#             - van . propriétaire
+#         alors: oui
+#       - sinon: non
 
 transport . vacances . caravane:
-  formule: oui
+  titre: Caravane
   icônes: 🚎
 
 transport . vacances . caravane . propriétaire:
@@ -55,8 +51,6 @@ transport . vacances . caravane . propriétaire:
   par défaut: non
 
 transport . vacances . caravane . empreinte:
-  titre: Caravane
-  icônes: 🚎
   applicable si:
     toutes ces conditions:
       - transport . voiture . km > 0
@@ -90,6 +84,11 @@ transport . vacances . caravane . distance:
   note: D'après la fédération des campeurs, caravaniers et camping-caristes, un camping-cariste fait en moyenne de 5000 à 7500 km par an ([source](https://ffcc.fr/chiffres-cles/))
   unité: km
 
+transport . vacances . caravane . empreinte . construction amortie:
+  titre: Construction de la caravane
+  formule: (construction / durée de vie) / logement . habitants
+  unité: kgCO2e
+
 transport . vacances . caravane . empreinte . construction:
   formule: voiture . gabarit . berline . empreinte * (caravane . poids / voiture . gabarit . berline . poids)
   unité: kgCO2e
@@ -102,11 +101,6 @@ transport . vacances . caravane . poids:
   formule: 750
   unité: kg
 
-transport . vacances . caravane . empreinte . construction amortie:
-  titre: Construction de la caravane
-  formule: (construction / durée de vie) / logement . habitants
-  unité: kgCO2e
-
 transport . vacances . caravane . durée de vie:
   formule: 25
   note: |
@@ -118,7 +112,7 @@ transport . vacances . caravane . pourcentage caravaniers:
   note: Il s'est vendu moitié moins de caravanes en France en 2021 que de camping-cars. On peut supposer qu'il y a moitié moins de caravaniers que de camping-caristes ([source](https://ffcc.fr/chiffres-cles/)).
 
 transport . vacances . camping car:
-  formule: oui
+  titre: Camping Car
   icônes: 🚐
 
 transport . vacances . camping car . propriétaire:
@@ -126,8 +120,6 @@ transport . vacances . camping car . propriétaire:
   par défaut: non
 
 transport . vacances . camping car . empreinte:
-  titre: Camping Car
-  icônes: 🚐
   applicable si:
     toutes ces conditions:
       - km > 0
