@@ -9,8 +9,8 @@ const R = require('ramda')
 const fs = require('fs')
 const yaml = require('yaml')
 
-const cli = require('./cli')
-const utils = require('./utils')
+const cli = require('@incubateur-ademe/nosgestesclimat-scripts/cli')
+const utils = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
 
 const { srcLang, destLangs, markdown } = cli.getArgs(
 	`Checks all personas have been translated.

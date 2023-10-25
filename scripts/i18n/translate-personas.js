@@ -1,8 +1,8 @@
 const R = require('ramda')
 const path = require('path')
-const utils = require('./utils')
-const cli = require('./cli')
-const deepl = require('./deepl')
+const utils = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
+const cli = require('@incubateur-ademe/nosgestesclimat-scripts/cli')
+const deepl = require('@incubateur-ademe/nosgestesclimat-scripts/deepl')
 
 const { srcLang, destLangs, force } = cli.getArgs(
 	`Calls the DeepL API to translate the rule questions, titles, notes,
