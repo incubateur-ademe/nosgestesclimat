@@ -1,0 +1,162 @@
+pétrole:
+
+pétrole . pleins:
+  formule: pétrole brut / volume plein
+  note: |
+    Pour le moment, la méthode de calcul choisie est basée sur une approche EROI (Energy Return On Investment) ou TRE (Taux de Retour Energétique).
+    Néanmmoins ce modèle présente des lacunes :
+      - Peu de sources primaires
+      - On considère que l'énergie d'entrée est du pétrole (ie 100% de l'énergie qui sert à extraire, raffiner, transporter le pétrole fini est du pétrole)
+      - On ne fait pas de différence entre les carburants
+    D'autres possibilités sont étudiées [ici](https://hackmd.io/8dZWonjHSVyCKlNXCFT7sw) (approche énergétique, approche baril)
+
+pétrole . volume plein:
+  formule: 50
+  unité: l
+
+pétrole . prix litre essence:
+  formule: 1.85
+  unité: €/l
+  note: |
+    Chiffre très variable dans le temps et l'espace, il est sans doute préférable d'éviter de s'en servir.
+
+    Cela dit, un modèle publicodes du prix du carburant à la pompe en France existe [ici](https://github.com/laem/futureco/blob/master/carburants.yaml).
+
+pétrole . pétrole brut:
+  formule: conso tous carburants * facteur extraction * facteur raffinage
+  unité: l
+
+pétrole . facteur extraction:
+  formule: 1.25
+  note: |
+    25% [Peak oil and the low-carbon energy transition A net-energy perspective](https://hal.archives-ouvertes.fr/hal-03360253/document).
+
+    > [...] by 2024, the production of oil liquids will require an amount of energy equal to 25% of its energy production.
+
+    Question: est-on sur que ce que ce chiffre ne contient pas le raffinage ?
+
+pétrole . facteur raffinage:
+  formule: 1.07
+  note: |
+    Chiffre tiré d'un article sans source primaire (https://energieetenvironnement.com/2018/12/19/le-fonctionnement-des-raffineries-de-petrole/)
+    En source plus fiable il y a l'[UFIP](https://www.energiesetmobilites.fr/activites/raffinage/comment-fonctionne-une-raffinerie) qui parle d'un facteur
+    5 à 7 % en France
+
+    Note importante : il semble qu'en France, gros pays consommateur de diesel par rapport à la moyenne mondiale, nous soyons sous-équipés en raffineries.
+    Ainsi, 40% de notre diesel proviendrait de la Russie. Voir [cette infographie S&P Global](https://twitter.com/Yvanldc/status/1512391163705237507/photo/1) et [cet article Carfree.fr](http://carfree.fr/index.php/2022/03/09/larme-secrete-pour-vaincre-poutine/) qui source via Le Figaro.
+
+    Le pétrole raffiné en France a potentiellement des besoins énergétiques différents de celui raffiné en Russie.
+
+pétrole . conso tous carburants:
+  formule:
+    somme:
+      - litres gazole
+      - litres essence
+      - litres kérosène
+      - litres fioul
+
+pétrole . litres gazole:
+  formule:
+    somme:
+      - voiture
+      - bus
+
+pétrole . litres gazole . voiture:
+  non applicable si: transport . voiture . motorisation = 'électrique'
+  applicable si: transport . voiture . thermique . carburant = 'gazole B7 ou B10'
+  formule: (transport . voiture . km / transport . voiture . voyageurs) * transport . voiture . thermique . consommation au kilomètre
+  unité: l
+
+pétrole . litres gazole . bus:
+  formule: |
+    part thermique
+    * consommation . par tête
+    * transport . bus . heures par semaine
+    * commun . semaines par an
+    * transport . bus . vitesse
+  unité: l
+
+pétrole . litres gazole . bus . consommation . par tête:
+  formule: consommation / remplissage moyen
+pétrole . litres gazole . bus . remplissage moyen:
+  formule: 7
+  note: |
+    C'est un ordre de grandeur, mal sourcé. Les bus urbains sont en moyenne assez peu remplis, hors grosse métropole.
+
+    Difficile d'obtenir ce genre d'estimation. La RATP et Dunkerque viennent tout juste d'installer des dispositifs de comptage en temps réel, mais impossible de trouver les données moyennes à l'année.
+
+    Autre méthode : remonter la source du calcul de l'empreinte au km du bus dans la base carbone. Le remplissage moyen y est forcément inclus, c'est d'ailleurs probablement un paramètre qui fait varier l'empreinte en fonction de la taille de la zone urbaine.
+
+    Avec une empreinte d'usage de 0.137g/km.passager, un [facteur de conversion de ~3](https://www.futura-sciences.com/planete/questions-reponses/automobile-carburant-emet-plus-co2-essence-gasoil-947/) pour le diesel amont compris, on retrouve un nombre de passagers de l'ordre de 7.
+
+pétrole . litres gazole . bus . consommation:
+  formule: 30.4 l / 100 km
+  unité: l/km
+  note: |
+    Source : https://fr.statista.com/statistiques/487208/consommation-de-carburant-moyenne-vehicule-lourd-france/
+
+pétrole . litres gazole . bus . part thermique:
+  formule: 100%
+  note: |
+    La flotte actuelle est presque exclusivement diesel: https://www.statistiques.developpement-durable.gouv.fr/69-000-autocars-en-circulation-au-1er-janvier-2020.
+    Mais ce chiffre tend à diminuer: 73.6% des nouveaux véhicules immatriculés en 2020 sont diesel, https://www.acea.auto/files/ACEA_buses_by_fuel_type_full-year_2020.pdf
+
+pétrole . litres essence:
+  formule:
+    somme:
+      - voiture
+      - deux roues
+
+pétrole . litres essence . voiture:
+  non applicable si: transport . voiture . motorisation = 'électrique'
+  applicable si:
+    une de ces conditions:
+      - transport . voiture . thermique . carburant = 'essence E5 ou E10'
+      - transport . voiture . thermique . carburant = 'essence E85'
+  formule: (transport . voiture . km / transport . voiture . voyageurs) * transport . voiture . thermique . consommation au kilomètre
+  unité: l
+
+pétrole . litres essence . deux roues:
+  applicable si: transport . deux roues . usager
+  formule: transport . deux roues . km * deux roues . conso
+  unité: l
+
+pétrole . litres essence . deux roues . conso:
+  formule:
+    variations:
+      - si: type = 'scooter électrique'
+        alors: 0
+      - si: type = 'scooter thermique'
+        alors: 2.3 l / 100 km
+      - si: type = 'moto inf 250'
+        alors: 2.2 l / 100 km
+      - si: type = 'moto sup 250'
+        alors: 6 l / 100 km
+  unité: l/km
+  description: Donnée utile pour le calcul de la métrique pétrole.
+  note: Données issues de HBEFA selon la documentation de la base carbone (https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?routier2.htm)
+
+pétrole . litres kérosène:
+  applicable si: transport . avion . usager
+  formule: km * conso passager
+  unité: l
+
+pétrole . litres kérosène . km:
+  formule:
+    somme:
+      - transport . avion . court courrier . heures de vol * transport . avion . court courrier . vitesse moyenne
+      - transport . avion . moyen courrier . heures de vol * transport . avion . moyen courrier . vitesse moyenne
+      - transport . avion . long courrier . heures de vol * transport . avion . long courrier . vitesse moyenne
+
+pétrole . litres kérosène . conso passager:
+  formule: 0.035
+  unité: l/km
+  note: |
+    Chiffre tiré du site d'Air France / KLM et d'une review de ce chiffre postée sur un blog (avec raisonnement scientifique clair et sourcé)
+    https://sustainabilityreport2020.airfranceklm.com/english-carbon-footprint/
+    http://cockpiter737.canalblog.com/archives/2019/05/20/37352138.html
+
+pétrole . litres fioul:
+  applicable si: logement . chauffage . fioul . présent
+  formule: logement . chauffage . fioul . consommation
+  unité: l

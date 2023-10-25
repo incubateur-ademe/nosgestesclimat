@@ -1,0 +1,179 @@
+transport . vacances:
+  mosaique:
+    type: selection
+    clé: propriétaire
+    suggestions:
+      aucun:
+        caravane . propriétaire: non
+        camping car . propriétaire: non
+        van . propriétaire: non
+  question: Que possédez-vous pour vos week-ends, vos vacances ?
+  icônes: 🏖
+  description: |
+    On vous propose ici de sélectionner ce que vous possédez pour vos vacances. Pour le moment, le choix est restreint à la caravane et au camping car.
+
+    > À noter que leur empreinte est séparée en deux : la partie usage est ajoutée au transport tandis que la partie construction est intégrée au logement.
+
+    💡 Si vous ne possédez ni camping car, ni caravane, ou bien si vous les louez, vous pouvez cliquer sur "aucun" juste en dessous de cette question, puis "Suivant". La location n'est pas encore disponible dans notre modèle**.
+  formule:
+    somme:
+      - caravane . empreinte . usage réel
+      - camping car . empreinte . usage réel
+      - van
+
+transport . vacances . caravane:
+  formule: oui
+  icônes: 🚎
+
+transport . vacances . caravane . propriétaire:
+  question: Possédez-vous une caravane ?
+  par défaut: non
+
+transport . vacances . caravane . empreinte:
+  titre: Caravane
+  icônes: 🚎
+  applicable si:
+    toutes ces conditions:
+      - transport . voiture . km > 0
+      - propriétaire
+  formule: usage réel + construction amortie
+  note: |
+    On considère une surconsommation pour les km parcourus avec la caravance.
+
+transport . vacances . caravane . empreinte . usage réel:
+  titre: Usage Caravane
+  formule: (surconsommation * distance) / logement . habitants
+  unité: kgCO2e
+
+transport . vacances . caravane . surconsommation:
+  formule: voiture . empreinte au kilomètre * ratio surconsommation
+
+transport . vacances . caravane . ratio surconsommation:
+  formule: 0.25
+  note: |
+    1.2 à 1.5 l/100 km [ici](https://www.lemondedupleinair.com/comment-limiter-sa-consommation-de-carburant-en-tractant-une-caravane/) ce qui peut être estimé à une surconsommation de 10 à 20%
+    40 à 50 % [ici](https://forum.lescaravaniers2.com/viewtopic.php?t=9973)
+    En première approximation, nous considérons donc une hypothèse de 25% de surconsommation
+
+transport . vacances . caravane . distance:
+  question: Quelle distance parcourez-vous à l'année en caravane ?
+  par défaut: 5000
+  description: |
+    Attention, pour faire ces km en caravane, vous les avez faits avec une voiture : vous devez donc les avoir inclus dans les km voiture (une question à laquelle vous avez probablement déjà répondu).
+
+    💡 Cette question nous sert à appliquer la surconsommation du tractage de votre caravane à une partie de vos km en voiture.
+  unité: km
+
+transport . vacances . caravane . empreinte . construction:
+  formule: voiture . gabarit . berline . empreinte * (caravane . poids / voiture . gabarit . berline . poids)
+  unité: kgCO2e
+  note: |
+    On extrapole l'impact de la fabrication d'une caravane car à partir d'un ratio sur le poids et en considérant les données de construction "Berline" (6300 kgCO2e et 1500 kg)
+    Source Figure 6 et tableau 1 [FNH-Carbone4](https://europeanclimate.org/wp-content/uploads/2019/11/quelle-contribution-du-vehicule-electrique-a-la-transition-ecologique-en-france.pdf)
+    On considère un poids de 750 kg pour une caravane.
+
+transport . vacances . caravane . poids:
+  formule: 750
+  unité: kg
+
+transport . vacances . caravane . empreinte . construction amortie:
+  titre: Construction de la caravane
+  formule: (construction / durée de vie) / logement . habitants
+  unité: kgCO2e
+
+transport . vacances . caravane . durée de vie:
+  formule: 25
+  note: |
+    Comme pour le camping car on considère une durée de vie de [25 ans](https://objectifpleinair.com/combien-de-temps-dure-un-camping-car/).
+    Cette hypothèse nécessite d'être mieux sourcée.
+
+transport . vacances . camping car:
+  formule: oui
+  icônes: 🚐
+
+transport . vacances . camping car . propriétaire:
+  question: Possédez-vous un camping car ?
+  par défaut: non
+
+transport . vacances . camping car . empreinte:
+  titre: Camping Car
+  icônes: 🚐
+  applicable si:
+    toutes ces conditions:
+      - km > 0
+      - propriétaire
+  formule: usage réel + construction amortie
+
+transport . vacances . camping car . empreinte . usage réel:
+  titre: Usage Camping Car
+  formule: usage / logement . habitants
+  unité: kgCO2e
+
+transport . vacances . camping car . empreinte . construction amortie:
+  titre: Construction du camping car
+  formule: (construction / durée de vie) / logement . habitants
+  unité: kgCO2e
+
+transport . vacances . camping car . empreinte . construction:
+  formule: voiture . gabarit . berline . empreinte * (camping car . poids / voiture . gabarit . berline . poids)
+  unité: kgCO2e
+  note: |
+    On extrapole l'impact de la fabrication d'une caravane car à partir d'un ratio sur le poids et en considérant les données de construction "Berline" (6300 kgCO2e et 1500 kg)
+    Source Figure 6 et tableau 1 [FNH-Carbone4](https://europeanclimate.org/wp-content/uploads/2019/11/quelle-contribution-du-vehicule-electrique-a-la-transition-ecologique-en-france.pdf)
+    On considère un poids de 3t pour le camping car la limite roulante (avec permis B) est à 3,5t (ce qui laisse 500 kg pour l'aménagement intérieur).
+
+transport . vacances . camping car . poids:
+  formule: 3000
+  unité: kg
+
+transport . vacances . camping car . durée de vie:
+  formule: 25
+  note: |
+    On considère une durée de vie de [25 ans](https://objectifpleinair.com/combien-de-temps-dure-un-camping-car/).
+    Cette hypothèse nécessite d'être mieux sourcée
+
+transport . vacances . camping car . km:
+  titre: km en camping car
+  applicable si: propriétaire
+  question: Quelle distance parcourez-vous à l'année en camping-car ?
+  description: |
+    Attention, ces km de camping car ne doivent pas être renseignés dans les km voiture (une question à laquelle vous avez probablement déjà répondu), ce sont deux questions différentes.
+  par défaut: 5000
+  unité: km
+
+transport . vacances . camping car . consommation aux 100:
+  question: Connaissez-vous la consommation moyenne de votre camping-car ?
+  par défaut: 15
+  unité: l/centkm
+  note: |
+    Par défaut on considère une consommation de [15 l au 100 km](http://www.france-camping-car.fr/utilisation/consommation-camping-car.php)
+
+transport . vacances . camping car . consommation au kilomètre:
+  formule: consommation aux 100 / 100 km/centkm
+  unité: l/km
+
+transport . vacances . camping car . empreinte au litre:
+  formule: 2.7
+  unité: kgCO2e/l
+  note: |
+    Source : [Base Carbone](https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element/categorie/405)
+
+transport . vacances . camping car . empreinte au kilomètre:
+  titre: empreinte au km camping-car
+  formule: consommation au kilomètre * empreinte au litre
+  unité: kgCO2e/km
+
+transport . vacances . camping car . empreinte . usage:
+  formule: camping car . km * empreinte au kilomètre
+  unité: kgCO2e
+
+transport . vacances . van:
+  titre: Van
+  icônes: 🚐
+  applicable si: propriétaire
+  formule: 0
+
+transport . vacances . van . propriétaire:
+  question: Possédez-vous un van ?
+  par défaut: non
+  inactif: oui
