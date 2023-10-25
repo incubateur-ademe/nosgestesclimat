@@ -22,8 +22,8 @@ function formatValueInKgCO2e(value) {
 }
 
 function fmtCLIErr(localResult, prodResult, diff, diffPercent, name, color) {
-	const sign = diff > 0 ? '+' : ''
-	const hd = color(diffPercent < 1 ? '[WARN]' : '[FAIL]')
+	const sign = diff > 0 ? '+' : '-'
+	const hd = color(diffPercent <= 1 ? '[WARN]' : '[FAIL]')
 	return `${hd} ${name} [${color(sign + diff)} ${kgCO2Str}, ${color(
 		sign + diffPercent
 	)}%]: ${formatValueInKgCO2e(localResult)} != ${formatValueInKgCO2e(
@@ -43,7 +43,7 @@ function fmtGHActionErr(localResult, prodResult, diff, diffPercent, name) {
 	)}%20kgCO2e-${color}?style=flat-square) | **${localResult.toLocaleString(
 		'en-us'
 	)}** | ${prodResult.toLocaleString('en-us')} | ${
-		diff > 0 ? '+' : ''
+		diff > 0 ? '+' : '-'
 	}${diffPercent}% |`
 }
 
@@ -82,7 +82,7 @@ export function printResults(
 			const localResult = Math.round(localResults[name])
 			const prodResult = Math.round(prodResults[name])
 			const diff = localResult - prodResult
-			const diffPercent = Math.round((diff / prodResult) * 100)
+			const diffPercent = Math.abs(Math.round((diff / prodResult) * 100))
 			const color = diffPercent <= 1 ? 'orange' : 'red'
 
 			console.log(

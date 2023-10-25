@@ -70,13 +70,15 @@ alimentation . boisson . chaude . chocolat chaud:
 
 alimentation . boisson . chaude . café . nombre:
   question: Nombre de cafés par semaine
-  par défaut: 7
+  par défaut: 10
   unité: tasse/semaine
+  note: Un français moyen boit 500 tasses de café par an ([source](https://fr.statista.com/themes/10144/le-cafe-en-france/#topFacts))
 
 alimentation . boisson . chaude . thé . nombre:
   question: Nombre de thés par semaine
-  par défaut: 7
+  par défaut: 3
   unité: tasse/semaine
+  note: Un français moyen consomme 250g de thé par an ([source](https://www.francesoir.fr/lifestyle-vie-quotidienne/le-boom-de-la-consommation-en-france)), soit 5 grammes par semaine. Nous avons estimé que cela correspondait approximativement à 3 tasses par semaine.
 
 alimentation . boisson . chaude . chocolat chaud . nombre:
   question: Nombre de chocolats chauds par semaine
@@ -210,23 +212,32 @@ alimentation . boisson . froide:
       - eau en bouteille
 
 alimentation . boisson . eau en bouteille:
-  applicable si: affirmatif
-  formule: consommation annuelle * empreinte
+  formule:
+    variations:
+      - si: consommateur = 'affirmatif'
+        alors: consommation annuelle * empreinte
+      - si: consommateur = 'négatif'
+        alors: 0
+      - si: consommateur = 'moyenne'
+        alors: consommation moyenne * empreinte
+  unité: kgCO2e
 
-alimentation . boisson . eau en bouteille . consommation annuelle:
-  formule: commun . jours par an * 1.5 l/jour
-  unité: l
-  description: On considère que chacun boit 1,5 litres d'eau par jour.
-
-alimentation . boisson . eau en bouteille . empreinte:
-  formule: 0.27
-  unité: kgCO2e/l
-  note: Facteur d'émission issu d'[Agibalyse, eau embouteillée de source](https://agribalyse.ademe.fr/app/aliments/18430#Eau_embouteillée_de_source).
-
-alimentation . boisson . eau en bouteille . affirmatif:
+alimentation . boisson . eau en bouteille . consommateur:
   titre: Eau en bouteille
   question: Buvez-vous votre eau en bouteille ?
-  par défaut: non
+  avec:
+    moyenne:
+    affirmatif:
+      titre: Oui
+    négatif:
+      titre: Non
+  par défaut: "'moyenne'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - affirmatif
+        - négatif
   description: |
     Si vous buvez principalement de l'eau du robinet et que votre consommation d'eau en bouteille se réduit à de rares occasions (par exemple un repas sur le pouce en boulangerie par semaine, avec leur fameux menu "sandwich + dessert + boisson en bouteille plastique"), répondez non.
 
@@ -237,6 +248,23 @@ alimentation . boisson . eau en bouteille . affirmatif:
     Les français boivent en moyenne entre 100 et 150 litres d'eau en bouteille par an [source](https://www.planetoscope.com/consommation-eau/854-litres-d-eau-en-bouteille-vendus-en-france.html), soit environ un tiers de nos besoins de 1-1,5l par jour [source](https://www.mangerbouger.fr/Le-Mag/Bien-etre/L-eau-indispensable-a-notre-bonne-sante).
 
     Nous avons considéré que la valeur par défaut était donc "non".
+
+alimentation . boisson . eau en bouteille . empreinte:
+  formule: 0.27
+  unité: kgCO2e/l
+  note: Facteur d'émission issu d'[Agibalyse, eau embouteillée de source](https://agribalyse.ademe.fr/app/aliments/18430#Eau_embouteillée_de_source).
+
+alimentation . boisson . eau en bouteille . consommation moyenne:
+  formule: 135
+  unité: l
+  note: |
+    La consommation moyenne de l'eau en bouteille est en 2018 de 135 litres par an par habitant (soit 90 bouteilles), 
+    d'après le syndicat des eaux minérales naturelles ([source](https://eaumineralenaturelle.fr/qui-sommes-nous/leau-minerale-en-chiffres))
+
+alimentation . boisson . eau en bouteille . consommation annuelle:
+  formule: commun . jours par an * 1.5 l/jour
+  unité: l
+  description: On considère que chacun boit 1,5 litres d'eau par jour.
 
 alimentation . boisson . sucrées:
   description: |
@@ -274,8 +302,9 @@ alimentation . boisson . sucrées . litres:
     nulle: 0
     modérée: 1
     importante: 5
-  par défaut: 2
+  par défaut: 1
   unité: l/semaine
+  note: La consommation de sodas et boissons sucrées en France est en moyenne de 50,9 litres par habitant ([source](https://www.sante-et-nutrition.com/consommation-soda-france/)) soit à peu près 1 litre par semaine.
 
 alimentation . boisson . alcool:
   unité: kgCO2e
@@ -317,7 +346,8 @@ alimentation . boisson . alcool . litres:
   question: Quelle est votre consommation par semaine d'alcool (vin, bière, etc.) ?
   suggestions:
     nulle: 0
-    modérée: .5
-    importante: 2
-  par défaut: 1
+    modérée: 1
+    importante: 3
+  par défaut: 1.5
   unité: l/semaine
+  note: La consommation d'alcool en France est de 79,6 litres d'alcool, tous alcools confondus, soit à peu près 1,5 litres par semaine ([source](https://www.insee.fr/fr/statistiques/4319377#graphique-figure2))
