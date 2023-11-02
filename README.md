@@ -1,5 +1,7 @@
 # nosgestesclimat 🌍🥵
 
+> TODO: to remove when the project is ready 
+
 Ici réside le modèle de calcul de https://nosgestesclimat.fr.
 
 ### Écriture des modèles du simulateur
