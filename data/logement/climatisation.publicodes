@@ -1,8 +1,7 @@
 logement . climatisation:
   icônes: ❄️
   titre: Empreinte de la climatisation
-  formule: empreinte climatiseurs
-  unité: kgCO2e
+  formule: empreinte climatiseurs / habitants
   description: |
     Nous estimons ici l'empreinte de la climatisation. 
     Son empreinte est quadruple :   
@@ -12,13 +11,13 @@ logement . climatisation:
       - annuelle
       - en fin de vie
   note: |
-    Nous avons une certaine différence avec l'étude ADEME car les hypothèses sont différentes de celles de la Base Carbone alors que cette dernière dit s'appuyer sur cette étude.
+    Nous avons une certaine différence avec l'étude ADEME car les hypothèses sont différentes de celles de la Base Empreinte alors que cette dernière dit s'appuyer sur cette étude.
 
     Les principales différences proviennent
 
-    - du taux de fuite annuelle considéré : 1% dans l'étude ADEME (tab p38) là ou mon modèle fait la moyenne des taux de fuites annuel du secteur résidentiel donnés dans la Base Carbone (soit 4,2 %)
-    - du fait que l'étude ADEME ne semble pas prendre en compte le taux de fuite en fin de vie (même amorti) qui lui est énorme dans la Base Carbone (moyenne de 66,4 %)
-    - du fait que je considère en première estimation le fluide frigo R410a là ou l'étude considère le R134a
+    - du taux de fuite annuelle considéré : 1% dans l'étude ADEME (tab p38) là ou notre modèle fait la moyenne des taux de fuites annuel du secteur résidentiel donnés dans la Base Empreinte (soit 4,2 %)
+    - du fait que l'étude ADEME ne semble pas prendre en compte le taux de fuite en fin de vie (même amorti) qui lui est énorme dans la Base Empreinte (moyenne de 66,4 %)
+    - du fait que nous considérons en première estimation le fluide frigo R410a là ou l'étude considère le R134a
 
 logement . climatisation . empreinte climatiseurs:
   titre: Empreinte des climatiseurs
@@ -32,7 +31,8 @@ logement . climatisation . présent:
     La climatisation utilise de l'électricité, que vous devez saisir en kWh ou en € dans la question électricité. L'empreinte de l'électricité consommée par le climatiseur est donc déjà calculée. 
 
     Mais en plus de cela, un climatiseur rejette d'autres gaz à effet de serre : d'où la nécessité de poser cette question.
-  par défaut: oui # valeur par défaut à oui pour l'intégrer dans l'empreinte moyenne
+  # Valeur par défaut à oui pour l'intégrer dans l'empreinte moyenne
+  par défaut: oui
 
 logement . climatisation . rappel kWh:
   type: notification
@@ -49,11 +49,6 @@ logement . climatisation . empreinte unitaire:
       - construction amortie
   unité: kgCO2e/climatiseur
 
-logement . climatisation . charge moyenne:
-  formule: 1.72
-  unité: kg/climatiseur
-  note: moyenne des charges moyennes du tableau résidentielle donné [ici](https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Refrigeration_et_climatisation)
-
 logement . climatisation . fuite annuelle:
   titre: Empreinte des fuites annuelles du climatiseur
   formule: quantité * fluide frigo empreinte
@@ -63,27 +58,14 @@ logement . climatisation . fuite annuelle . quantité:
   formule: charge moyenne * taux de fuite annuel
   unité: kg/climatiseur
 
+logement . climatisation . charge moyenne:
+  formule: 1.72
+  unité: kg/climatiseur
+  note: moyenne des charges moyennes du tableau résidentielle donné [ici](https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Refrigeration_et_climatisation)
+
 logement . climatisation . fuite annuelle . taux de fuite annuel:
   formule: 4.2%
   note: moyenne des taux de fuites annuel du tableau résidentielle donné [ici](https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Refrigeration_et_climatisation)
-
-logement . climatisation . fuite fin de vie:
-  titre: Empreinte des fuites de fin de vie du climatiseur
-  formule: quantité * fluide frigo empreinte
-  unité: kgCO2e/climatiseur
-
-logement . climatisation . fuite fin de vie amortie:
-  titre: Empreinte des fuites de fin de vie du climatiseur
-  formule: fuite fin de vie / durée de vie
-  unité: kgCO2e/climatiseur
-
-logement . climatisation . fuite fin de vie . quantité:
-  formule: charge moyenne * taux de fuite fin de vie
-  unité: kg/climatiseur
-
-logement . climatisation . fuite fin de vie . taux de fuite fin de vie:
-  formule: 66.4%
-  note: moyenne des taux de fuites en fin de vie du tableau résidentielle donné [ici](https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Refrigeration_et_climatisation)
 
 logement . climatisation . fluide frigo empreinte:
   formule: 1924
@@ -97,12 +79,27 @@ logement . climatisation . fluide frigo empreinte:
 
     On peut envisager une moyenne pondérée en fonction des proportions de chaque réfrigérant utiisé.
 
-logement . climatisation . construction:
-  formule: 239
+logement . climatisation . fuite fin de vie amortie:
+  titre: Empreinte des fuites de fin de vie du climatiseur
+  formule: fuite fin de vie / durée de vie
   unité: kgCO2e/climatiseur
-  note: Censé représenter l'impact de la construction d'un climatiseur mais je reprends le FE "climatiseur mobile"
-  #Vérifier que c'est bien un périmètre cradle-to-gate
-  #Mais ces données ne semblent significativement plus forte (en termes de chiffrage GES) que l'étude ADEME mentionnée dans les sources de la Base Carbone (cf. plus haut)
+
+logement . climatisation . fuite fin de vie:
+  titre: Empreinte des fuites de fin de vie du climatiseur
+  formule: quantité * fluide frigo empreinte
+  unité: kgCO2e/climatiseur
+
+logement . climatisation . fuite fin de vie . quantité:
+  formule: charge moyenne * taux de fuite fin de vie
+  unité: kg/climatiseur
+
+logement . climatisation . fuite fin de vie . taux de fuite fin de vie:
+  formule: 66.4%
+  note: moyenne des taux de fuites en fin de vie du tableau résidentielle donné [ici](https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Refrigeration_et_climatisation)
+
+logement . climatisation . durée de vie:
+  formule: 6
+  note: issu Tab 4-5 p33 de cette étude [ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/127-modelisation-et-evaluation-environnementale-de-produits-de-consommation-et-biens-d-equipement.html)
 
 logement . climatisation . construction amortie:
   formule: construction / durée de vie
@@ -111,9 +108,12 @@ logement . climatisation . construction amortie:
   #Vérifier que c'est bien un périmètre cradle-to-gate
   #Mais ces données ne semblent significativement plus forte (en termes de chiffrage GES) que l'étude ADEME mentionnée dans les sources de la Base Carbone (cf. plus haut)
 
-logement . climatisation . durée de vie:
-  formule: 6
-  note: issu Tab 4-5 p33 de cette étude [ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/127-modelisation-et-evaluation-environnementale-de-produits-de-consommation-et-biens-d-equipement.html)
+logement . climatisation . construction:
+  formule: 239
+  unité: kgCO2e/climatiseur
+  note: Censé représenter l'impact de la construction d'un climatiseur mais je reprends le FE "climatiseur mobile"
+  #Vérifier que c'est bien un périmètre cradle-to-gate
+  #Mais ces données ne semblent significativement plus forte (en termes de chiffrage GES) que l'étude ADEME mentionnée dans les sources de la Base Carbone (cf. plus haut)
 
 logement . climatisation . nombre:
   applicable si: présent

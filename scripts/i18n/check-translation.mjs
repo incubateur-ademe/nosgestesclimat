@@ -14,13 +14,13 @@ import {
 	ask,
 	printChecksResultTableHeader,
 	printChecksResult,
-} from './cli.js'
+} from '@incubateur-ademe/nosgestesclimat-scripts/cli'
 import {
 	writeYAML,
 	readYAML,
 	getMissingRules,
 	getNotUpToDateRuleTranslations,
-} from './utils.js'
+} from '@incubateur-ademe/nosgestesclimat-scripts/utils'
 import { getModelFromSource } from '@incubateur-ademe/publicodes-tools/compilation'
 
 const { destLangs, srcFile, markdown } = getArgs(

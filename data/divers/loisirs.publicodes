@@ -1,0 +1,648 @@
+divers . loisirs:
+  titre: Loisirs
+  description: |
+    Cette catégorie concerne toutes les pratiques culturelles, sportives, de détente et de bien-être. Dans une première version des "Loisirs", nous avons tout d'abord considéré les pratiques culturelles et sportives.
+  note: |
+    La diversité des loisirs est très grande. Nous tentons ici une première approche dite "macro", à savoir que nous partons de l'empreinte totale du secteur en France, et nous ramenons cela à un individu.
+  icônes: 🎭
+  couleur: '#0984e3'
+  formule:
+    somme:
+      - culture
+      - sports
+      # - bien-être
+
+divers . loisirs . culture:
+  icônes: 🎭
+  mosaique:
+    type: selection
+    clé: présent
+    suggestions:
+      aucun:
+        concerts et spectacles . présent: non
+        musées et monuments . présent: non
+        édition . présent: non
+        pratique de la musique . présent: non
+        choix utilisateur: oui
+  question: Quelles sont vos pratiques culturelles ?
+  titre: Pratiques culturelles
+  description: |
+    Nous entendons par "pratique culturelle" le fait d'aller au théâtre, au ballet, à l'opéra ou au cinéma, d'assister à du spectacle de rue, de pratiquer d'un instrument ou de visiter un musée ou un parc.
+  formule:
+    variations:
+      - si: choix utilisateur
+        alors: empreinte totale
+      - sinon: empreinte par défaut
+
+divers . loisirs . culture . empreinte totale:
+  formule:
+    somme:
+      - empreinte concerts et spectacles
+      - empreinte musées et monuments
+      - empreinte édition
+      - empreinte pratique de la musique
+  unité: kgCO2e
+  note: |
+    Pour le moment, nous prenons en compte les concerts et spectacles, musées, l'édition (presse, livres), la pratique de la musique.
+    Les achats d'abonnements TV ou les jeux d'argents sont exclus pour le moment.
+
+divers . loisirs . culture . empreinte par défaut:
+  description: Un calcul statistique des pratiques culturelles pour un Français moyen.
+  formule:
+    somme:
+      - concerts et spectacles . moyenne macro française
+      - musées et monuments . moyenne macro française
+      - édition . moyenne macro française
+      - pratique de la musique . moyenne macro française
+  unité: kgCO2e
+
+divers . loisirs . culture . choix utilisateur:
+  description: L'utilisateur a-t-il fait un choix de pratiques culturelles ?
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - concerts et spectacles . présent
+            - musées et monuments . présent
+            - édition . présent
+            - pratique de la musique . présent
+        alors: oui
+      - sinon: non
+
+divers . loisirs . culture . empreinte concerts et spectacles:
+  titre: Empreinte concerts et spectacles
+  icônes: 🎟
+  applicable si: concerts et spectacles . présent
+  formule: concerts et spectacles . moyenne macro pondérée
+  unité: kgCO2e
+  note: Cette catégorie comprend les concerts, théâtres, opéras, ballets, spectacles de rue et cinémas.
+
+divers . loisirs . culture . concerts et spectacles:
+  titre: Concerts et spectacles
+  icônes: 🎟
+
+divers . loisirs . culture . concerts et spectacles . présent:
+  question: Vous arrive-t-il d'assister à des concerts ou spectacles ?
+  par défaut: non
+
+divers . loisirs . culture . concerts et spectacles . moyenne macro pondérée:
+  formule: moyenne macro française * fréquence pondérée
+  unité: kgCO2e
+
+divers . loisirs . culture . concerts et spectacles . moyenne macro française:
+  formule: empreinte branche . R90 par hab + empreinte branche . J59 par hab * 0.9
+  unité: kgCO2e
+  note: |
+    Nous tirons la moyenne française des calculs effectués par le SDES (Service des Données et Études Statistiques). Elle correspond à la somme des domaines correspondant aux codes NAF R90 ("Activités créatives, artistiques et de spectacles") et J59.1 ("Activités cinématographiques, vidéo et de télévision").
+    ([Voir le détail de cette branche](https://nosgestesclimat.fr/documentation/empreinte-branche/J59-par-hab))
+    Cette empreinte est légèrement surévaluée, car les activités cinématographies, vidéo et de télévision englobent un pan plus large de l'économie que le seul cinéma. À ce jour, nous n'avons pas la possibilité de distinguer la partie de ce secteur correspondant au cinéma, et celle correspondant à la télévision.
+
+divers . loisirs . culture . concerts et spectacles . fréquence pondérée:
+  formule: fréquence / 3 spectacles/an
+  note: |
+    En 2022, les cinémas français ont enregistré [152 millions d'entrées](https://www.cnc.fr/professionnels/actualites/a-152-millions-dentrees-en-2022-fort-rebond-de-la-frequentation-dans-un-contexte-encore-atypique_1861985). 
+    Côté théâtre, [7,4 millions de billets ont été vendus en 2022](https://www.artcena.fr/sites/default/files/medias/ASTP-Etude%20Les%20Franc%CC%A7ais%20et%20le%20The%CC%81a%CC%82tre%202023-diffusion%20juin%202023.pdf). 
+    À cela nous pouvons ajouter [4,2 millions d'entrées pour les spectacles vivants](https://www.culture.gouv.fr/Thematiques/Etudes-et-statistiques/Statistiques-culturelles/Donnees-statistiques-par-domaine_Cultural-statistics-databases/Theatre-et-spectacles) (données de 2019).
+    Pour les spectacles de rue (même source), 37% ont assisté à un événement national, 25% à une fête locale et 12% à une animation dans un centre commercial. En sommant ces participations, nous pouvons estimer que la moitié de la population a assisté à un spectacle de rue.
+    Du côté des festivals, ils ont enregistré [7,4 millions d'entrées en 2022](https://www.touslesfestivals.com/actualites/le-bilan-des-festivals-de-lannee-2022-lannee-de-reprise-110123).
+    Enfin pour les concerts, en 2019 ils enregistraient [27,9 millions d'entrées](https://www.culture.gouv.fr/Thematiques/Etudes-et-statistiques/Statistiques-culturelles/Donnees-statistiques-par-domaine_Cultural-statistics-databases/Spectacles-musicaux).
+
+    L'ensemble de ces chiffres rapportés à la taille de la population nous porte à penser qu'en moyenne, un Français assiste à 3 spectacles par an, tous types de spectacles confondus (ceci est sûrement sous-évalué, car il manque une partie des spectacles ne donnant pas lieu à la vente de billets comptabilisés)
+    L'empreinte qu'on attribue à l'individu subit une règle de 3 par rapport à cette moyenne de fréquentation, qui correspond à l'empreinte moyenne du secteur divisée par la population.
+
+divers . loisirs . culture . concerts et spectacles . fréquence:
+  question: À quelle fréquence vous rendez-vous à des concerts / spectacles ou au cinéma chaque année ?
+  par défaut: 3
+  unité: spectacles/an
+  suggestions:
+    une fois par semaine: 50
+    une fois par mois: 12
+    deux fois par an: 2
+    une fois par an: 1
+
+divers . loisirs . culture . empreinte musées et monuments:
+  titre: Empreinte musées et monuments
+  icônes: 🖼️
+  applicable si: musées et monuments . présent
+  formule: musées et monuments . moyenne macro pondérée
+  unité: kgCO2e
+  note: Cette catégorie comprend les visites de musées et monuments nationaux, de parcs et zoos.
+
+divers . loisirs . culture . musées et monuments:
+  titre: Musées et monuments
+  icônes: 🖼️
+
+divers . loisirs . culture . musées et monuments . présent:
+  question: Vous arrive-t-il de visiter des musées, monuments et parcs nationaux ?
+  par défaut: non
+
+divers . loisirs . culture . musées et monuments . moyenne macro pondérée:
+  formule: moyenne macro française * fréquence approximée / proportion de visiteurs
+
+divers . loisirs . culture . musées et monuments . moyenne macro française:
+  formule: empreinte branche . R91 par hab
+  unité: kgCO2e
+  note: |
+    Nous tirons la moyenne française des calculs effectués par le SDES (Service des Données et Études Statistiques). 
+    Elle correspond au code NAF R91 ("Bibliothèques, archives, musées et autres activités culturelles").
+
+    > Cette division comprend les activités des bibliothèques et des archives, la gestion des musées de toute nature, des jardins botaniques et zoologiques, la gestion des sites historiques et les activités des réserves naturelles. Elle comprend également la préservation et l'exposition des objets, sites et curiosités naturelles présentant un intérêt historique, culturel et éducatif (sites du patrimoine mondial, etc.).
+divers . loisirs . culture . musées et monuments . fréquence approximée:
+  formule:
+    variations:
+      - si: fréquence = 'occasionnel'
+        alors: 1
+      - si: fréquence = 'amateur'
+        alors: 2
+  note: |
+    Ces facteurs ont été fixés arbitrairement, via l'étude ["La visite des musées, expositions et monuments en 2019"](https://www.culture.gouv.fr/Media/Thematiques/Etudes-et-statistiques/Files/Publications/Culture-etudes/20212/Note-de-synthese-CREDOC), publiée par le ministère de la culture.
+
+    D'après cette étude, nous avons pour les visites des musées et du patrimoine :
+
+    - 30% de la population qui est "amateur" : plus de 3 visites annuelles
+    - 37% de la population qui est visiteur "occasionnel" : 1 à 2 visites par an
+    - Le reste non-visiteur
+
+    Ces chiffres concernent les personnes de plus de 18 ans. On a donc un léger biais ici.
+
+    On pourrait également raisonner par [visite](https://www.culture.gouv.fr/Thematiques/Etudes-et-statistiques/Publications/Collections-de-synthese/Patrimostat/Patrimostat-edition-2021) ?
+
+divers . loisirs . culture . musées et monuments . fréquence:
+  question: À quelle fréquence visitez-vous des musées, monuments et parcs nationaux chaque année ?
+  par défaut: "'occasionnel'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - occasionnel
+        - amateur
+  note: Cette question permet de pondérer l'empreinte des visites en musées selon la table décrite dans la règle `musées et monuments . fréquence approximée`.
+
+divers . loisirs . culture . musées et monuments . fréquence . occasionnel:
+  titre: Une à deux fois par an
+divers . loisirs . culture . musées et monuments . fréquence . amateur:
+  titre: Trois fois ou plus par an
+
+divers . loisirs . culture . musées et monuments . proportion de visiteurs:
+  formule: 0.69
+  note: |
+    D'après l'étude ["La visite des musées, expositions et monuments en 2019"](https://www.culture.gouv.fr/Media/Thematiques/Etudes-et-statistiques/Files/Publications/Culture-etudes/20212/Note-de-synthese-CREDOC),
+    "69% de la population déclare avoir visité au moins un monument, un musée ou une exposition".
+    Ce chiffre est différent de celui que l'on retrouve en sommant les visiteurs occasionnels et amateurs (qui excluent peut-être les visiteurs d'expositions temporaires).
+    De plus, il concerne les personnes de plus de 18 ans. On a donc un léger biais ici.
+
+divers . loisirs . culture . empreinte édition:
+  titre: Empreinte édition (livres, presse et logiciels)
+  icônes: 📚
+  applicable si: édition . présent
+  formule: édition . moyenne macro pondérée
+  unité: kgCO2e
+  note: Il s'agit ici de comptabiliser l'empreinte carbone liée à l'achat de livres, de journaux et revues.
+
+divers . loisirs . culture . édition:
+  titre: Lectures (livres, journaux et revues)
+  icônes: 📚
+
+divers . loisirs . culture . édition . présent:
+  question: Achetez-vous parfois des livres, revues ou journaux ?
+  par défaut: non
+
+divers . loisirs . culture . édition . moyenne macro pondérée:
+  formule: moyenne macro française * fréquence pondérée
+
+divers . loisirs . culture . édition . moyenne macro française:
+  formule: empreinte branche . J58 par hab + empreinte branche . G47 par hab * 0.04 * (0.25 + 0.12)
+  unité: kgCO2e
+  note: |
+    Nous prenons ici en compte la branche édition (J58) ainsi que la part d'édition de livres et de journaux de la branche G47 "Commerce de détail, à l'exclusion des automobiles et des motocycles par habitant".
+    ([Voir le détail de cette branche](https://nosgestesclimat.fr/documentation/empreinte-branche/G47-par-hab))
+
+divers . loisirs . culture . édition . fréquence pondérée:
+  formule:
+    variations:
+      - si: fréquence = 'faible'
+        alors: 0.5
+      - si: fréquence = 'normale'
+        alors: 1
+      - si: fréquence = 'élevée'
+        alors: 2
+      - si: fréquence = 'très élevée'
+        alors: 3
+
+divers . loisirs . culture . édition . fréquence:
+  question: Combien dépensez-vous par mois pour vos journaux, revues ou livres ?
+  par défaut: "'normale'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - faible
+        - normale
+        - élevée
+        - très élevée
+  note: |
+    En moyenne, [les ménages consacrent 1040€ par an aux achats de biens et services culturels](https://www.insee.fr/fr/statistiques/6535285?sommaire=6535307), dont 22% pour les livres et la presse, soit 228€, soit un peu moins de 20€ par mois.
+    La taille du foyer étant en moyenne de 2,2 personnes, nous pouvons estimer qu'un adulte dépense en moyenne un peu moins de 10€ par mois pour la presse, les livres et les logiciels.
+
+divers . loisirs . culture . édition . fréquence . faible:
+  titre: Moins de 5€ par mois
+divers . loisirs . culture . édition . fréquence . normale:
+  titre: De 5 à 15€ par mois
+divers . loisirs . culture . édition . fréquence . élevée:
+  titre: De 15 à 30€ par mois
+divers . loisirs . culture . édition . fréquence . très élevée:
+  titre: Plus de 30€ par mois
+
+divers . loisirs . culture . empreinte pratique de la musique:
+  titre: Empreinte de la pratique de la musique
+  applicable si: pratique de la musique . présent
+  formule: pratique de la musique . moyenne macro pondérée
+  unité: kgCO2e
+  note: Nous comptons ici la pratique de la musique, au travers de la possession d'un ou plusieurs instruments de musique.
+
+divers . loisirs . culture . pratique de la musique:
+  titre: Pratique de la musique
+  icônes: 🎺
+
+divers . loisirs . culture . pratique de la musique . présent:
+  question: Possédez-vous un instrument de musique ?
+  par défaut: non
+
+divers . loisirs . culture . pratique de la musique . moyenne macro pondérée:
+  formule: moyenne macro française / proportion de pratiquants
+
+divers . loisirs . culture . pratique de la musique . moyenne macro française:
+  formule: empreinte branche . C32 par hab * 0.02
+  unité: kgCO2e
+  note: |
+    Actuellement, nous prenons ici en compte les branches :
+
+    - Fabrication d'instruments de musique (C32.2, correspondant à 2% de C32)
+     
+    Il pourrait être intéressant de réussir à intégrer :
+
+    - Commerce de détail d'instruments de musique et de partitions musicales (G47.00.58 mais nous n'avons pas ce niveau de détail : il appartient à la sous-catégorie Commerce de détail de meubles, appareils d'éclairage et autres articles de ménage en magasin spécialisé, correspondant à 0.34 * 0.10 * G47)
+    - Enseignement musical (P85.52.12 : entièrement compté dans les services publics actuellement)
+    - Services de réparation et entretien d'instruments de musique (S95.29.13 : actuellement compté dans la question "dépenses courantes / produits neufs")
+
+divers . loisirs . culture . pratique de la musique . proportion de pratiquants:
+  formule: 0.37
+  note: |
+    D'après [cette étude](https://www.ifop.com/wp-content/uploads/2018/03/3933-1-study_file.pdf), 6% des français pratiquent un instrument de musique régulièrement. 31% a appris mais ne pratique plus du tout ou quasiment plus du tout.
+    Cette [autre étude (malheureusement un peu datée)](https://www.ifop.com/wp-content/uploads/2018/03/3933-1-study_file.pdf) nous porte à croire que pourvu que l'individu ait appris la musique, il possède chez lui un instrument de musique (même proportion d'apprenants et de possédants).
+    Nous pouvons donc estimer que 37% des Français possèdent un instrument de musique chez eux.
+
+# divers . loisirs . culture . télévision et radio:
+#   titre: Télévision et radio
+#   applicable si: présent
+#   icônes: 📺
+#   formule: moyenne macro pondérée
+#   unité: kgCO2e
+#   note: |
+#     Lorem ipsum
+
+# divers . loisirs . culture . télévision et radio . présent:
+#   question: Avez-vous des abonnements télévisuels ou radio ?
+#   par défaut: non
+
+# divers . loisirs . culture . télévision et radio . moyenne macro pondérée:
+#   formule: moyenne macro française * fréquence pondérée
+
+# divers . loisirs . culture . télévision et radio . moyenne macro française:
+#   formule: empreinte branche . J59 par hab + empreinte branche . J60 par hab
+#   unité: kgCO2e
+#   note: |
+#     Nous prenons ici en compte la branche "Production de films cinématographiques, de vidéo et de programmes de télévision ; enregistrement sonore et édition musicale" (J59) ainsi que la branche Programmation et diffusion (J60)
+
+# divers . loisirs . culture . télévision et radio . fréquence pondérée:
+#   formule:
+#     variations:
+#       - si: fréquence = 'faible'
+#         alors: 0.5
+#       - si: fréquence = 'normale'
+#         alors: 1
+#       - si: fréquence = 'élevée'
+#         alors: 2
+#       - si: fréquence = 'très élevée'
+#         alors: 3
+
+# divers . loisirs . culture . télévision et radio . fréquence:
+#   question: Quelle est votre consommation de produits télévisuels et radio chaque mois ?
+#   par défaut: "'normale'"
+#   formule:
+#     une possibilité:
+#       choix obligatoire: oui
+#       possibilités:
+#         - faible
+#         - normale
+#         - élevée
+#         - très élevée
+#   note: |
+#     En moyenne, [les ménages consacrent 1040€ par an aux achats de biens et services culturels](https://www.insee.fr/fr/statistiques/6535285?sommaire=6535307), dont 26% pour les services audiovisuels, soit 270€, soit un peu plus de 20€ par mois.
+#     La taille du foyer étant en moyenne de 2,2 personnes, nous pouvons estimer qu'un adulte dépense en moyenne un peu plus de 10€ par mois pour les services audiovisuels (abonnements à des chaînes, programmes de VOD...).
+
+# divers . loisirs . culture . télévision et radio . fréquence . faible:
+#   titre: J'en consomme peu (moins de 10€ par mois)
+# divers . loisirs . culture . télévision et radio . fréquence . normale:
+#   titre: J'en consomme régulièrement (autour de 10€ par mois)
+# divers . loisirs . culture . télévision et radio . fréquence . élevée:
+#   titre: J'en consomme beaucoup (de 10 à 30€ par mois)
+# divers . loisirs . culture . télévision et radio . fréquence . très élevée:
+#   titre: J'en consomme énormément (plus de 30€ par mois)
+
+# divers . loisirs . culture . jeux de hasard et d'argent:
+#   titre: Jeux de hasard et d'argent
+#   applicable si: présent
+#   icônes: 🎲
+#   formule: moyenne macro pondérée
+#   unité: kgCO2e
+#   note: |
+#     Nous répartissons l'empreinte du secteur sur l'ensemble des joueurs parmi la population.
+
+# divers . loisirs . culture . jeux de hasard et d'argent . présent:
+#   question: Vous  arrive t-il de jouer à des jeux de hasard et d'argent ?
+#   par défaut: non
+
+# divers . loisirs . culture . jeux de hasard et d'argent . moyenne macro pondérée:
+#   formule: moyenne macro française / proportion de pratiquants
+
+# divers . loisirs . culture . jeux de hasard et d'argent . moyenne macro française:
+#   formule: empreinte branche . R92 par hab
+#   unité: kgCO2e
+#   note: |
+#     Ici, nous prenons en compte toute la branche correspondant aux jeux de hasard et d'argent.
+
+# divers . loisirs . culture . jeux de hasard et d'argent . proportion de pratiquants:
+#   formule: 0.472
+#   note: |
+#     D'après [cette étude de 2020](https://www.vie-publique.fr/en-bref/274997-jeux-dargent-et-de-hasard-les-francais-jouent-moins-mais-misent-plus), à peu près la moitié des Français jouent à des jeux de hasard et d'argent.
+
+divers . loisirs . sports:
+  mosaique:
+    type: selection
+    clé: présent
+    suggestions:
+      aucun sport:
+        individuel extérieur . présent: non
+        balle ou ballon . présent: non
+        aquatique . présent: non
+        martial ou combat . présent: non
+        athlétisme . présent: non
+        salle de sport . présent: non
+        équitation . présent: non
+        golf . présent: non
+        nautique . présent: non
+        hiver montagne . présent: non
+        sports énergivores . présent: non
+        autres sports . présent: non
+        choix utilisateur: oui
+  question: Quels sont les sports que vous pratiquez régulièrement ?
+  titre: Pratiques sportives
+  formule:
+    variations:
+      - si: choix utilisateur
+        alors: empreinte sportif
+      - sinon: empreinte par défaut
+  note: |
+    La notion de régularité est volontairement imprécise, car elle dépend des sports pratiqués ainsi que du niveau du sportif. 
+
+    Ainsi, on pourra estimer que faire de la voile une fois par mois est une pratique régulière, alors que faire un footing par mois est une pratique anecdotique.
+
+    Également, un sportif "engagé" considérera qu'une pratique régulière implique plusieurs entraînements par semaine, quand un sportif plus amateur placera peut-être la barre un peu plus bas.
+
+divers . loisirs . sports . empreinte sportif:
+  titre: Empreinte des loisirs sportifs
+  formule:
+    somme:
+      - empreinte répartie
+      - empreinte club
+      - empreinte fitness
+      - empreinte montagne
+  note: |
+    > Il y aurait tant de questions à poser pour estimer l'empreinte liée aux loisirs sportifs... 
+
+    Pour être exhaustif, il nous faudrait lister l'intégralité des sports existants, demander une fréquence de pratique, les infrastructures utilisées, l'adhésion ou non à un club et la fréquence de renouvellement du matériel personnel utilisé.
+
+    Mais cela représenterait un nombre de questions bien trop important au regard du poids du sport dans l'empreinte finale.
+
+    > Pour le moment, nous estimons cette empreinte avec une approche dite "macro", à savoir que nous partons de l'empreinte du secteur en France que nous rapportons à l'individu, en pondérant les valeurs grâce à des données "marché" : quantité de pratiquants, d'adhérents à des clubs...
+
+    La subdivision macro dont nous disposons nous permet d'isoler : l'utilisation d'infrastructures sportives ou de services sportifs généraux (attribués à tous les sportifs), l'appartenance à un club de sport (attribuée à tous les sportifs dont le sport se pratique *majoritairement* en club), et l'adhésion à un club de fitness (attribuée à ceux qui cochent "salle de sport ou de musculation").
+
+    En complément, une étude réalisé pour le compte des stations de Tignes, le Grand Bornand et la Clusaz nous permet d'attribuer aux pratiquants de sports d'hiver une empreinte dédiée à cette pratique.
+
+divers . loisirs . sports . empreinte par défaut:
+  formule: empreinte SDES sport par français
+  note: |
+    Nous prenons ici la répartition sur la population française de l'empreinte totale des activités liées au sport (63% de R93).
+    ([Voir le détail de cette branche](https://nosgestesclimat.fr/documentation/empreinte-branche/R93-par-hab))
+
+divers . loisirs . sports . choix utilisateur:
+  description: l'utilisateur a-t-il fait un choix de sport ?
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - balle ou ballon . présent
+            - aquatique . présent
+            - martial ou combat . présent
+            - athlétisme . présent
+            - équitation . présent
+            - golf . présent
+            - nautique . présent
+            - hiver montagne . présent
+            - autres sports . présent
+            - individuel extérieur . présent
+            - salle de sport . présent
+            - sports énergivores . présent
+        alors: oui
+      - sinon: non
+
+divers . loisirs . sports . individuel extérieur:
+  titre: Sports individuels en extérieur
+  description: Course à pied, skateboard, cyclisme...
+  icônes: 🛹👟
+  applicable si: présent
+divers . loisirs . sports . individuel extérieur . présent:
+  question: Faites-vous du roller ou du skateboard ?
+  par défaut: non
+
+divers . loisirs . sports . balle ou ballon:
+  titre: Sports de balle ou ballon
+  description: Foot, tennis, volley, badminton...
+  icônes: 🎾⚽️
+  applicable si: présent
+divers . loisirs . sports . balle ou ballon . présent:
+  question: Pratiquez-vous un sport de raquette ?
+  par défaut: non
+
+divers . loisirs . sports . aquatique:
+  titre: Sports en piscine
+  description: Natation, water-polo, apnée...
+  icônes: 🏊
+  applicable si: présent
+divers . loisirs . sports . aquatique . présent:
+  question: Pratiquez-vous un sport en piscine ?
+  par défaut: non
+
+divers . loisirs . sports . martial ou combat:
+  titre: Arts martiaux, combat
+  description: Judo, boxe, lutte...
+  icônes: 🥋
+  applicable si: présent
+divers . loisirs . sports . martial ou combat . présent:
+  question: Pratiquez-vous un art martial ou de combat ?
+  par défaut: non
+
+divers . loisirs . sports . athlétisme:
+  titre: Athlétisme
+  icônes: 🏃
+  applicable si: présent
+divers . loisirs . sports . athlétisme . présent:
+  question: Pratiquez-vous l'athlétisme ?
+  par défaut: non
+
+divers . loisirs . sports . salle de sport:
+  titre: Salle de sport ou musculation
+  description: Fitness, cours collectifs, pratique individuelle...
+  icônes: 🎽
+  applicable si: présent
+divers . loisirs . sports . salle de sport . présent:
+  question: Fréquentez-vous une salle de sport, fitness ou musculation ?
+  par défaut: non
+
+divers . loisirs . sports . équitation:
+  titre: Équitation
+  icônes: 🏇
+  applicable si: présent
+divers . loisirs . sports . équitation . présent:
+  question: Pratiquez-vous l'équitation ?
+  par défaut: non
+
+divers . loisirs . sports . golf:
+  titre: Golf
+  icônes: ⛳️
+  applicable si: présent
+divers . loisirs . sports . golf . présent:
+  question: Pratiquez-vous le golf ?
+  par défaut: non
+
+divers . loisirs . sports . nautique:
+  titre: Sports nautiques
+  description: Kayak, surf, voile...
+  icônes: 🚣
+  applicable si: présent
+divers . loisirs . sports . nautique . présent:
+  question: Pratiquez-vous un sport nautique ?
+  par défaut: non
+
+divers . loisirs . sports . hiver montagne:
+  titre: Sports d'hiver
+  description: Ski de descente, de fond, snowboard...
+  icônes: 🎿
+  applicable si: présent
+divers . loisirs . sports . hiver montagne . présent:
+  question: Pratiquez-vous un sport d'hiver ou de montagne ?
+  par défaut: non
+
+divers . loisirs . sports . sports énergivores:
+  titre: Sports motorisés ou nécessitant un engin à moteur
+  description: Karting, parachute, ski-nautique...
+  icônes: 🚤
+  applicable si: présent
+divers . loisirs . sports . sports énergivores . présent:
+  question: Pratiquez-vous un sport impliquant un véhicule motorisé ?
+  par défaut: non
+
+divers . loisirs . sports . autres sports:
+  titre: Autres (tir, escalade...)
+  description: Sports enchaînés, combinés, tir, escalade...
+  icônes: 🏹
+  applicable si: présent
+divers . loisirs . sports . autres sports . présent:
+  question: Pratiquez-vous un sport non listé ?
+  par défaut: non
+
+divers . loisirs . sports . notif sports carbonés:
+  type: notification
+  formule:
+    une de ces conditions:
+      - sports énergivores . présent = oui
+      - nautique . présent = oui
+  description: |
+    Certains sports (motorisés, nautiques ...) sont susceptible d'avoir une empreinte carbone significativement supérieure aux autres sports.
+    La méthode de calcul actuelle ne permet pas d'évaluer ces différences mais l'équipe travaille sur le sujet !
+  note: |
+    A noter que la pratique nous n'incluons pas le golf ici car a priori l'empreinte environnementale du golf est surtout liée à sa consommation d'eau.
+    Il faudrait néanmoins trouver l'empreinte liée à l'utilisation des sols.
+
+divers . loisirs . sports . empreinte club:
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - balle ou ballon . présent
+            - aquatique . présent
+            - martial ou combat . présent
+            - athlétisme . présent
+            - équitation . présent
+            - golf . présent
+            - nautique . présent
+            - hiver montagne . présent
+            - autres sports . présent
+            - sports énergivores . présent
+        alors: ((empreinte SDES sport par français / proportion pratiquants) / proportion pratiquants adhérents) * 0.41
+      - sinon: 0
+  note: |
+    Nous prenons ici la part concernant les Activités de clubs de sports (41%) de la branche économique R93, répartis sur la proportion de sportifs étant adhérent d'un club de sport.
+    ([Voir le détail de cette branche](https://nosgestesclimat.fr/documentation/empreinte-branche/R93-par-hab))
+
+divers . loisirs . sports . proportion pratiquants adhérents:
+  formule: 1 / 3
+  note: D'après [Les chiffres clef du sport 2020](https://www.calameo.com/books/0047558805b1d72793ccf?language=fr&page=1), en 2018, le tiers des pratiquants de sport était adhérent d'un club.
+
+divers . loisirs . sports . empreinte fitness:
+  applicable si: salle de sport . présent
+  formule: (empreinte SDES sport par français / proportion abonnés fitness) * 0.11
+  unité: kgCO2e
+  note: |
+    Nous prenons ici la part concernant les Activités de centres de culture physique (11%), répartis sur la proportion de sportifs étant abonné à ce type de centres.
+    ([Voir le détail de cette branche](https://nosgestesclimat.fr/documentation/empreinte-branche/R93-par-hab))
+
+divers . loisirs . sports . proportion abonnés fitness:
+  formule: 5960000 / population
+  note: D'après le cabinet [Deloitte](https://www2.deloitte.com/fr/fr/pages/presse/2019/le-fitness-en-france-edition-2019.html), en 2018, la France compte 5,96 millions d'abonnés à des clubs de fitness.
+
+divers . loisirs . sports . empreinte répartie:
+  formule: (empreinte SDES sport par français / proportion pratiquants) * ( 0.27 + 0.21 )
+  unité: kgCO2e
+  note: |
+    Nous prenons ici la part concernant la Gestion d'installations sportives (27%) et Autres activités liées au sport (21%) au sein de Activités liées au sport (63%), que l'on multiplie par la proportion de pratiquants déclarés en France.
+    ([Voir le détail de cette branche](https://nosgestesclimat.fr/documentation/empreinte-branche/R93-par-hab))
+
+divers . loisirs . sports . proportion pratiquants:
+  formule: 0.75
+  note: D'après [Les chiffres clef du sport 2020](https://www.calameo.com/books/0047558805b1d72793ccf?language=fr&page=1), en 2018, 75% des individus de plus de 15 ans déclarent avoir eu au moins une activité sportive, utilitaire ou récréative, dans l'année.
+
+divers . loisirs . sports . empreinte montagne:
+  applicable si: hiver montagne . présent
+  formule: empreinte jour montagne * nombre moyen jours montagne
+  unité: kgCO2e
+  note: Nous prenons la moyenne de temps passé aux sports d'hiver pour toute personne cochant la case.
+
+divers . loisirs . sports . empreinte jour montagne:
+  formule: 9.3
+  unité: kgCO2e/jour
+  note: Nous nous basons sur [cette étude](https://www.mairie-tignes.fr/cms_viewFile.php?idtf=71518&path=guide-sectoriel-montagne.pdf) commandée par Tignes, La Clusaz et le Grand Bornand, et ne prenons en compte que l'entretien du domaine (dameuses au gazole) et les infrastructures (remontées mécaniques).
+
+divers . loisirs . sports . nombre moyen jours montagne:
+  formule: 5.38
+  unité: jour
+  note: Basé sur [les chiffres d'Union Sports et Cycles](https://www.unionsportcycle.com/montagne/les-chiffres-cles-du-marche-du-ski-en-france), 53,8 millions de journées ski sont vendues chaque année à 10 millions de skieurs.
+
+divers . loisirs . sports . empreinte SDES sport par français:
+  formule: empreinte branche . R93 par hab * 0.63
+  unité: kgCO2e
+  note: |
+    63% correspond au chiffre d'affaire de la sous-branche 'Activités liées au sport' de la branche 'Services sportifs, récréatifs et de loisirs'.
+    ([Voir le détail de cette branche](https://nosgestesclimat.fr/documentation/empreinte-branche/R93-par-hab))

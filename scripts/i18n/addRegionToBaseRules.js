@@ -3,7 +3,7 @@
 	the base rules.
 */
 
-const utils = require('./utils')
+const utils = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
 
 const mechanismsThatCanBeOverriden = [
 	// Using the [avec] mechanism allows to use custom rules without having to add them

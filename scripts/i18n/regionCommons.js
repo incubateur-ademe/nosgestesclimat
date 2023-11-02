@@ -4,7 +4,10 @@ const path = require('path')
 const fs = require('fs')
 const { exit } = require('process')
 
-const { publicDir, customAssocPath, readYAML } = require('./utils')
+const {
+	customAssocPath,
+	readYAML,
+} = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
 const regionModelsPath = path.resolve('data/i18n/models')
 
 // TODO: use this type when we will be able to use typescript
@@ -26,7 +29,7 @@ const defaultRegionModelParam = {
 		en: { nom: 'metropolitan France', gentilé: 'french' },
 	},
 }
-const supportedRegionPath = path.join(publicDir, `supportedRegions.json`)
+const supportedRegionPath = 'public/supportedRegions.json'
 
 //
 // Reads all regions models and create a json file containing params of each region.
@@ -44,7 +47,7 @@ const supportedRegions = fs
 		}
 		try {
 			const langRegex = filename.match(/(?<=[A-Z]{2}-).*(?=.yaml)/) // match lang param in filename
-			const lang = langRegex[0] === 'en-us' ? 'en' : langRegex[0]
+			const lang = langRegex[0]
 			const regionPath = path.join(regionModelsPath, filename)
 			const rules = readYAML(regionPath)
 			const params = rules['params']

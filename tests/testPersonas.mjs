@@ -1,7 +1,10 @@
 import { readFile } from 'fs/promises'
 import { join } from 'path'
 import yargs from 'yargs'
-import { defaultLang, availableLanguages } from './../scripts/i18n/utils.js'
+import {
+	defaultLang,
+	availableLanguages,
+} from '@incubateur-ademe/nosgestesclimat-scripts/utils'
 import { testPersonas, printResults } from './commons.mjs'
 
 const { country, language, markdown } = yargs(process.argv.slice(2))
@@ -53,7 +56,11 @@ const localPersonas = readFile(`./public/personas-${language}.json`, {
 		process.exit(-1)
 	})
 
-const prodRules = fetch('https://data.nosgestesclimat.fr/' + modelFile)
+// Data url for preprod branch
+const defaultURLToCompareWith =
+	'https://deploy-preview-2085--ecolab-data.netlify.app/'
+
+const prodRules = fetch(defaultURLToCompareWith + modelFile)
 	.then((res) => res.json())
 	.catch((e) => {
 		console.log(
@@ -63,7 +70,7 @@ const prodRules = fetch('https://data.nosgestesclimat.fr/' + modelFile)
 		process.exit(-1)
 	})
 const prodPersonas = fetch(
-	`https://data.nosgestesclimat.fr/personas-${language}.json`
+	`${defaultURLToCompareWith}personas-${language}.json`
 )
 	.then((res) => res.json())
 	.catch((e) => {

@@ -16,7 +16,7 @@ import {
 	writeYAML,
 	readYAML,
 	getMissingRules,
-} from './utils.js'
+} from '@incubateur-ademe/nosgestesclimat-scripts/utils'
 
 import {
 	getArgs,
@@ -29,12 +29,17 @@ import {
 	yellow,
 	styledRuleNameWithOptionalAttr,
 	styledPromptActions,
-	ask,
-} from './cli.js'
+} from '@incubateur-ademe/nosgestesclimat-scripts/cli'
 
-import { fetchTranslation, fetchTranslationMarkdown } from './deepl.js'
+import {
+	fetchTranslation,
+	fetchTranslationMarkdown,
+} from '@incubateur-ademe/nosgestesclimat-scripts/deepl'
 import gitDiff from 'git-diff'
 import { getModelFromSource } from '@incubateur-ademe/publicodes-tools/compilation'
+import createPrompt from 'prompt-sync'
+
+const prompt = createPrompt()
 
 const { srcLang, destLangs, srcFile, onlyUpdateLocks, interactiveMode } =
 	getArgs(
@@ -49,6 +54,16 @@ const { srcLang, destLangs, srcFile, onlyUpdateLocks, interactiveMode } =
 			interactiveMode: true,
 		}
 	)
+
+const cmds = [
+	{ info: 'translate', cmd: 't' },
+	{ info: 'update .lock attribute', cmd: 'u' },
+	{ info: 'skip', cmd: 's' },
+	{ info: 'print current translation', cmd: 'p' },
+	{ info: 'abort', cmd: 'a' },
+]
+
+const abrvs = cmds.map(({ cmd }) => cmd)
 
 const translateTo = async (
 	srcLang,
@@ -80,7 +95,9 @@ const translateTo = async (
 			previousKey = [rule, attr, 'suggestions' + PREVIOUS_REVIEW_KEY_EXT]
 			autoKey = [rule, attr, 'suggestions' + AUTO_KEY_EXT]
 			currentVal =
-				translatedRules[rule] && translatedRules[rule][attr]['suggestions']
+				translatedRules[rule] &&
+				translatedRules[rule][attr] &&
+				translatedRules[rule][attr]['suggestions']
 		}
 		if (
 			currentVal &&
@@ -130,16 +147,24 @@ const translateTo = async (
 					}
 				)
 				console.log(
-					`\n${styledRuleNameWithOptionalAttr(rule, attr)}${
-						isNewRule ? ` ${italic(green('new'))}` : ''
-					}\n${diff}`
+					`\n${dim('---')} ${italic(
+						green(isNewRule ? 'NEW RULE' : 'MODIFIED RULE')
+					)} ${dim('---------------------------')}`
+				)
+				console.log(`\n${styledRuleNameWithOptionalAttr(rule, attr)}\n${diff}`)
+				console.log(
+					`${dim(
+						`----${
+							isNewRule ? '---------' : '--------------'
+						}---------------------------`
+					)}`
 				)
 				do {
 					if (answer === 'p') {
 						console.log(`${dim('')}${translatedRules[rule][attr]}`)
 					}
-					answer = ask(dim(`(tuspa): `), ['u', 's', 't', 'a'])
-				} while (!['u', 's', 't', 'a'].includes(answer))
+					answer = prompt(dim(`(${abrvs.join()}): `))
+				} while (!abrvs.includes(answer))
 			}
 			if (answer === 'a') {
 				console.log('Exiting...')
@@ -212,14 +237,7 @@ destLangs.forEach(async (destLang) => {
 		if (interactiveMode) {
 			console.log(
 				`For each rule, you can choose to:\n\n${styledPromptActions(
-					[
-						'translate',
-						'update .lock attribute',
-						'skip',
-						'print current translation',
-						'abort',
-						// TODO: add a 'suggest translation' option?
-					],
+					cmds.map(({ info }) => info),
 					'\n'
 				)}`
 			)
