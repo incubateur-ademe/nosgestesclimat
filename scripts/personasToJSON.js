@@ -2,8 +2,8 @@ const path = require('path')
 const R = require('ramda')
 const fs = require('fs')
 
-const utils = require('./i18n/utils')
-const cli = require('./i18n/cli')
+const utils = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
+const cli = require('@incubateur-ademe/nosgestesclimat-scripts/cli')
 const {
 	addTranslationToBasePersonas,
 } = require('./i18n/addTranslationToBasePersonas')

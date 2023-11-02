@@ -1,4 +1,4 @@
-const utils = require('./utils')
+const utils = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
 
 // read files
 const readSDES = utils.readJSON(

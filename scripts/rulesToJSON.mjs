@@ -10,8 +10,9 @@ import { exit } from 'process'
 import Engine from 'publicodes'
 import { Piscina } from 'piscina'
 
-import cli from './i18n/cli.js'
-import utils, { t9nDir } from './i18n/utils.js'
+import cli from '@incubateur-ademe/nosgestesclimat-scripts/cli'
+import utils from '@incubateur-ademe/nosgestesclimat-scripts/utils'
+import { getModelFromSource } from '@incubateur-ademe/publicodes-tools/compilation'
 
 import { addTranslationToBaseRules } from './i18n/addTranslationToBaseRules.js'
 
@@ -20,7 +21,8 @@ import {
 	supportedRegions,
 	supportedRegionCodes,
 } from './i18n/regionCommons.js'
-import { getModelFromSource } from '@incubateur-ademe/publicodes-tools/compilation'
+
+const t9nDir = 'data/i18n/t9n'
 
 const { srcLang, srcFile, destLangs, destRegions, markdown } = cli.getArgs(
 	`Aggregates the model to an unique JSON file.`,

@@ -2,9 +2,9 @@ const path = require('path')
 const { existsSync } = require('fs')
 const prompt = require('prompt-sync')()
 
-const cli = require('./cli')
-const deepl = require('./deepl')
-const utils = require('./utils')
+const cli = require('@incubateur-ademe/nosgestesclimat-scripts/cli')
+const deepl = require('@incubateur-ademe/nosgestesclimat-scripts/deepl')
+const utils = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
 
 const { regionModelsPath, supportedRegionCodes } = require('./regionCommons')
 
