@@ -15,8 +15,24 @@ intensité électricité:
     OCEN - SCDD pour l'électricité GE, moyenne 2017-2021 (5 ans)
 
 logement . chauffage . empreinte par défaut:
-  formule: 5176
-  note: empreinte du logement est calculée à partir de l'empreinte par personne avec S2000W (2021)*2.1 personnes/logement
+  résumé: Un calcul statistique du **chauffage** résidentiel genevois moyen
+  formule:
+    somme:
+      - logement . part chauffage . fioul * parc ge . chauffage . consommation par défaut * surface *  logement . chauffage . intensité carbone fioul 
+      - logement . part chauffage . gaz * parc ge . chauffage . consommation par défaut * surface *  logement . gaz * facteur d'émission base carbone
+      - logement . part chauffage . bois * parc ge . chauffage . consommation par défaut * surface *  (logement . chauffage . bois . facteur d'émission bûche + logement . chauffage . bois . facteur d'émission granulés)/2
+      - logement . part chauffage . réseau de chaleur * parc ge . chauffage . consommation par défaut * surface *  logement . chauffage . intensité réseau de chaleur 
+      - logement . part chauffage . chaleur de l'environnement * parc ge . chauffage . consommation par défaut * surface *  logement . chauffage . intensité carbone chaleur de l'environnement 
+
+  note: l'empreinte du logement par défaut est calculée sur la base de la moyenne du parc immobilier genevois
+  
+logement . chauffage . gaz . présent:
+  par défaut: oui
+  note: |
+    A Genève, les logements sont majoritairement chauffés au gaz.
+
+logement . chauffage . gaz . consommation:
+  par défaut: parc ge. chauffage . consommation par défaut * surface
 
 logement . chauffage . gaz . estimation via le coût:
   unité: CHF/kWh
@@ -25,6 +41,11 @@ logement . chauffage . gaz . estimation via le coût:
 
 logement . chauffage . gaz . facteur d'émission base carbone:
   valeur: 0.230
+  note: KBOB
+
+logement . chauffage . intensité carbone chaleur de l'environnement:
+  formule: 0.04
+  unité: kgCO2e/kWh
   note: KBOB
 
 # TRANSPORT
@@ -197,6 +218,15 @@ transport . deux roues . empreinte:
     - SMobitool motocyclette 11-35kW (hors infrastructure, avec construction)
     - Mobitool motocyclette >35kW (hors infrastructure, avec construction)
 
+transport . voiture . gabarit . petite:
+  description: Citadine type Renault Zoé, Fiat 500
+transport . voiture . gabarit . moyenne:
+  description: Modèle au dessus de la petite citadine, type Renault Mégane, VW Golf
+transport . voiture . gabarit . VUL:
+  description: Camionette ou minibus de type VW Multivan, Mercedes Vito
+transport . voiture . gabarit . berline:
+  description: Voiture longue type Peugeot 508, Tesla Model 3, Audi A4 ou A6
+
 transport . voiture . électrique . empreinte au kilomètre:
   formule:
     variations:
@@ -259,12 +289,18 @@ transport . voiture . durée de vie:
   formule: 17
   note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
 
+transport . ferry . présent:
+  par défaut: non
+
 transport . ferry . heures:
   suggestions:
     Marseille ⇄ Ajaccio: 22
     Toulon ⇄ Ajaccio: 16
     Gênes ⇄ Bastia: 13
     Gênes ⇄ Olbia: 24
+
+transport . mobilité douce:
+  question: Quels sont vos modes de déplacements "efficaces" ou "actifs" ?
 
 transport . mobilité douce . vélo . construction:
   formule: 76
@@ -298,6 +334,12 @@ transport . mobilité douce . autres véhicules à moteur . durée de vie:
   formule: 2
   note: Mobitool Trottinette électrique
 
+transport . deux roues . usager:
+  par défaut: oui
+
+transport . deux roues . type:
+  question: Quel type de deux-roues motorisé utilisez-vous ?
+
 # DIVERS
 divers . animaux domestiques . empreinte . chats . nombre:
   par défaut: 0
@@ -321,46 +363,79 @@ divers . numérique . préservation:
     Répondre "Aucun, je rachète souvent neuf" est la réponse la plus impactante car elle signifie que vous remplacez vos appareils précocement avant même qu'ils soient hors d'usage.
 
 divers . autres produits . niveau de dépenses:
+  question: Le test ne capte pas encore toutes vos consommations, combien estimez-vous dépenser par an en produits neufs (décoration, bricolage, jeux, loisirs créatifs, outils, etc...) ? 
   description: |
     Pour garder l'interface simple, nous proposons une estimation, via vos dépenses, de l'empreinte des biens de consommations
     que vous possédez et que vous ne pensez pas avoir inclus dans les questions précédentes.
 
     Elle concerne : **les jeux, la décoration, le matériel de cuisine, le linge de maison, les matériaux pour les loisirs créatifs ou bricolage, les plantes etc...**
+  par défaut: "'important'"
 
 divers . autres produits . niveau de dépenses . faible:
-  titre: Moins de 100CHF / mois
+  titre: Moins de 50CHF / mois
 
 divers . autres produits . niveau de dépenses . moyen:
-  titre: Environ 150CHF / mois
+  titre: Entre 50 et 120 CHF / mois
 
 divers . autres produits . niveau de dépenses . important:
-  titre: Plus 250CHF / mois
+  titre: Plus de 120 CHF / mois
+
+divers . loisirs . culture . édition . fréquence:
+  par défaut: "'élevée'"
 
 divers . loisirs . culture . édition . fréquence . faible:
-  titre: Peu (moins de 20CHF par mois)
+  titre: Moins de 5 CHF par mois
 
 divers . loisirs . culture . édition . fréquence . normale:
-  titre: Régulièrement (autour de 20CHF par mois)
+  titre: De 5 à 15 CHF par mois
 
 divers . loisirs . culture . édition . fréquence . élevée:
-  titre: Beaucoup (de 20 à 60CHF par mois)
+  titre: De 15 à 30 CHF par mois
 
 divers . loisirs . culture . édition . fréquence . très élevée:
-  titre: Énormément (plus de 60CHF par mois)
+  titre: Plus de 30 CHF par mois
 
 divers . numérique . internet . empreinte horaire:
   #formule: consommation horaire * intensité électricité
   formule: 0.02
 
+divers . produits consommables . consommation . normale:
+  titre: Modérée (environ 5 produits)
+
+
 # ALIMENTATION
+alimentation . plats:
+  question: Choisissez les plats de vos repas de midi et du soir pour une semaine type 
+  description: |
+    Choisissez 14 plats qui représentent votre semaine type : 7 repas du midi et 7 repas du soir.
+
+    > Aujourd'hui nous travaillons pour que les menus associés à vos repas soient les plus représentatifs de vos habitudes, n'hésitez pas à aller plus loin en parcourant la documentation.
+
+alimentation . petit déjeuner . type:
+  description: |
+      Nous avons fait choix de considérer un petit déjeuner standard proche du petit-déjeuner appelé "continental". Il comprend pain, beurre, confiture, viennoiserie et un fruit.
+      Il existe une variété infinie de petit déjeuners. Nous en avons sélectionné quelques uns pour que vous obteniez une réponse facilement. Même si vous ne retrouvez pas exactement votre petit déjeuner, choisissez celui qui s'en rapproche ! À noter que votre consommation de jus de fruit / café / thé / chocolat chaud est comptabilisée dans la question dédiée aux boissons chaudes.
+
 alimentation . petit déjeuner . type . continental:
+  titre: Viennoiserie et pain
   description: |
     Nous avons fait choix de considérer un petit déjeuner standard proche du petit-déjeuner appelé "continental". Il comprend pain, beurre, confiture, viennoiserie et un fruit.
-    Il existe une variété infinie de petit déjeuners. Nous en avons sélectionné quelques uns pour que vous obteniez une réponse facilement.
 
-    Même si vous ne retrouvez pas exactement votre petit déjeuner, choisissez celui qui s'en rapproche !
+alimentation . petit déjeuner . type . lait céréales:
+  description: |
+    Nous avons fait choix de considérer un petit déjeuner standard proche du petit-déjeuner appelé "continental". Il comprend pain, beurre, confiture, viennoiserie et un fruit.
 
-    > À noter que votre consommation de jus de fruit / café / thé / chocolat chaud est comptabilisée dans la question dédiée aux boissons chaudes.
+alimentation . petit déjeuner . type . britannique:
+  description: |
+    Un bol de lait ou un yaourt avec des céréales. L'origine (animale ou végétale) du lait que vous buvez vous sera demandé dans la suite !
+
+alimentation . petit déjeuner . type . végétalien:
+  description: |
+    Un petit dej' composé de fruits.
+
+alimentation . petit déjeuner . type . aucun:
+  description: |
+    Vous ne mangez rien au petit déjeuner (mais vous pouvez boire un café, un thé ou un chocolat chaud pris en compte dans une autre question).
 
 alimentation . de saison . consommation:
   description: |
@@ -467,9 +542,20 @@ logement . surface:
 
 logement . électricité . consommation:
   icônes: ⚡
-  par défaut: 3000
+  par défaut:
+    variations:
+      - si: logement . chauffage . choix utilisateur = non
+        alors: parc français . consommation électricité totale relative
+      - si:
+          toutes ces conditions:
+            - logement . chauffage . choix utilisateur = oui
+            - une de ces conditions:
+                - logement . chauffage . électricité . présent
+                - logement . chauffage . PAC . présent
+        alors: parc français . consommation électricité autre moyenne + surface * parc français . chauffage . consommation électricité par m2
+      - sinon: parc français . consommation électricité autre moyenne
   note: |
-    Consommation d'électricité 2021 (OCSTAT) ménages privés rapporté par personne * 2.1 personnes par ménage
+    on considère que seule la consommation d'électricité liée au chauffage est dépendante de la surface du logement
   description: |
     Astuce : vous trouverez la consommation annuelle d'électricité sur vos factures ou sur votre compte en ligne sur le site des SIG.
 
@@ -501,8 +587,15 @@ logement . chauffage:
 
 logement . chauffage . fioul . consommation:
   question: Quelle est la consommation annuelle de mazout de votre foyer ?
+  par défaut: fioul kWh au litre * parc ge . chauffage . consommation par défaut * surface
   description: |
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur votre facture de mazout ou sur votre décompte de charges annuelles envoyé par votre régie.
+
+logement . chauffage . bois . type . granulés . consommation:
+  par défaut: parc ge . chauffage . consommation par défaut * surface
+
+logement . chauffage . bois . type . bûche . consommation . saisie:
+  par défaut: parc ge . chauffage . consommation par défaut * bois par m2 * surface / intensité énergétique
 
 # pour supprimer la variation biogaz
 logement . chauffage . gaz . intensité carbone gaz utilisateur:
@@ -521,6 +614,7 @@ logement . chauffage . gaz . intensité carbone gaz utilisateur:
 # pour supprimer l'aide à la saisie réseau de chaleur
 logement . chauffage . réseau de chaleur . consommation:
   aide:
+  par défaut: parc ge. chauffage . consommation par défaut * surface
 
 # Services sociétaux
 services sociétaux . question rhétorique:
@@ -859,15 +953,19 @@ logement . baisse température:
 
 logement . baisse température . nombre degrés:
   description: |
-    Les ¾ de la consommation d’énergie d’un ménage sont consacrés au chauffage et à l’eau chaude.
+    Environ 85% de la consommation d’énergie finale d’un ménage est consacrée au chauffage et à l’eau chaude.
 
     Cette consommation d’énergie, en plus d’avoir un coût financier non négligeable, augmente l’empreinte carbone des ménages.
 
-    Elle peut toutefois facilement être limitée en diminuant la température des pièces occupées sans perdre de confort thermique ni ressentir une sensation de froid (à condition que le logement soit bien isolé).
+    Elle peut toutefois facilement être limitée en diminuant la température des pièces occupées sans perdre de confort thermique ni ressentir une sensation de froid.
 
     Par exemple, régler la température entre 19° et 21°C dans les pièces occupées la journée (et 17°C la nuit ou dans les pièces peu occupées).
 
     En effet, baisser la température de chauffage d’1°C représente une économie d’énergie de 7% à 10%. Cela peut paraître peu à l'échelle individuelle mais si tout le monde fait cette action, c'est un levier très fort de réduction des émissions de CO2.
+
+    Les fenêtres doivent bien entendu être maintenues fermées. Afin d'aérer votre logement, et si vous ne disposez pas d'une aération mécanique, ouvrez grand les fenêtres 1x par jour pendant 5 à 10 minutes par jour. 
+
+Une bonne gestion des stores ou volets vous permettra de gagner en confort et de réduire encore les émissions de votre logement: leur ouverture pendant la journée vous permettra de profiter de l'énergie du soleil, leur fermeture la nuit augmentera votre confort et réduira les pertes de chaleur.
 
 logement . baisse température . gains 1 degré:
   formule: 0.1
@@ -876,13 +974,57 @@ logement . baisse température . gains 1 degré:
 
     Nous retenons l'estimation donnée dans le [guide du Canton "Des gestes pour économiser notre énergie"](https://www.ge.ch/document/30986/annexe/0).
 
-# Clément : Pas de changement ici visiblement
-# logement . empreinte chauffage air:
-#   description: |
-#     Pour chaque kWh de chaque type d'énergie, quelle est la part utilisée pour le chauffage de l'air d'un foyer ?
+logement . empreinte chauffage air:
+ description: |
+   Pour chaque kWh de chaque type d'énergie, quelle est la part utilisée pour le chauffage de l'air d'un foyer ?
 
-#     > Nous utilisons ici [les données du CEREN](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel)
-#     via le travail réalisé dans le fichier [chiffres parc logements français.yaml](https://github.com/datagir/nosgestesclimat/blob/master/data/logement/chiffres%20parc%20logements%20fran%C3%A7ais.yaml).
+parc ge. chauffage . consommation par défaut:
+  formule: 125
+  unité: kWh/m2
+  note: Source - KBOB, consommation pour le chauffage par défaut de 450 MJ/m2
+
+parc français . consommation électricité autre moyennne:
+  formule: 
+      - si: appartement
+        alors: 1386 + 540 * habitants
+      - sinon: 1762 + 656 * habitants
+  note: Source (extrapolation) - L'efficacité énergétique dans les ménages, Suissenergie, novembre 2021; OCSTAT; OFS
+
+
+logement . part chauffage électricité:
+  formule: 0%
+  unité: '%'
+  note: Source - OCEN
+
+logement . part chauffage gaz:
+  formule: 60.80%
+  unité: '%'
+  note: Source - OCEN
+
+logement . part chauffage bois:
+  formule: 2.3%
+  unité: '%'
+  note: Source - OCEN
+
+logement . part chauffage fioul:
+  formule: 28.40%
+  unité: '%'
+  note: Source - OCEN
+
+logement . part chauffage réseau de chaleur:
+  formule: 5.2%
+  unité: '%'
+  note: Source - OCEN (incinération des déchets)
+
+logement . part chauffage GPL:
+  formule: 0%
+  unité: '%'
+  note: Source - OCEN
+
+logement . part chauffage . chaleur de l'environnement:
+  formule: 3.3%
+  note: Source - OCEN (nouvelle variable)
+  unité: '%'
 
 logement . éteindre appareils:
   description: |
@@ -918,8 +1060,6 @@ logement . remplacer gaz par PAC:
 
     💡 Leur principe est ingénieux : c'est un frigo inversé ! Votre frigo, grâce à un peu d'électricité, refroidit son intérieur et rejette la chaleur dans la pièce. La PAC refroidit l'air extérieur pour chauffer votre logement.
 
-    > Bonus : s'il fait trop chaud chez vous l'été, certaines PAC peuvent inverser leur fonctionnement et faire office de climatisation l'été.
-
     Découvrez [les subventions](https://ge-energie.ch/) pour passer aux renouvelables.
 
   note: |
@@ -929,14 +1069,32 @@ logement . remplacer gaz par PAC:
 # logement . séchage air libre:
 #   note: |
 #     Gain énergétique moyen après rénovation sur un programme de l'ANAH de 13 000 logements ciblant les "passoires thermiques".
+# Jean-Philippe: Pas compris, nous n'avons pas modifié séchage air libre!
+
+logement . rénovation énergétique:
+  description: |
+    Une rénovation peut permettre de réduire de 20 à 150% de la consommation d’énergie de son logement. 
+
+    Ce type de rénovation entraîne également, sur le long terme, de fortement réduire la facture énergétique.
+
+    Pour connaitre les rénovations les plus adaptées à votre logement ainsi que les aides disponibles : [ge-energie.ch](https://ge-energie.ch/).
+
+logement . gain rénovation:
+  formule: 20%
+  note: |
+    Le gain énergétique moyen après rénovation est très variable, en fonction du type de rénovation, du réglage des installations etc. Entre un bâtiment peu isolé et un bâtiment bien isolé, la différence de consommation est de l'ordre de 1.2 à 2.5.
+
 
 logement . propriétaire:
   description: |
     En tant que locataire, il est évidemment délicat de faire les investissements qui améliorent l'empreinte du logement : isoler son logement ou changer de source d'énergie sont des actions que seuls les propriétaires peuvent réaliser. Cela n’empêche pas les locataires de les leur demander !
 # Clément: pourquoi passer la valeur par défautr à "non" ?
 # par défaut: non
+# Jean-Philippe: Le taux en Suisse de propriétaire est de 36%, la majorité de la population est donc loactaire!
+  par défaut: non
 
 logement . raccordement réseau de chaleur:
+  titre: Se raccorder à un réseau de chaleur
   note: |
     Un réseau de chaleur est un système de canalisations qui permettent d’acheminer vers un ensemble de bâtiments de la chaleur produite localement et majoritairement à partir d’énergies renouvelables et de récupération. 
 
@@ -949,7 +1107,9 @@ logement . raccordement réseau de chaleur:
     Côté impact climat, il faut savoir qu'en général, un réseau de chaleur est alimenté via des sources d'énergie renouvelables ou de récupération locales (50% à minima à l'échelle genevoise, avec 80% comme objectif d'ici à 2030), c'est à dire, via l'incinération d'ordures ménagères, la combustion de biomasse, la géothermie ce qui permet de réduire considérablement l'impact CO2 du kWh d'énergie consommée par rapport au gaz ou au mazout.
 
   description: |
-    Alimentés à minima à 50% par des énergies renouvelables et de récupération locales (chaleur issue de l'incinération des déchets, biomasse, géothermie...), les réseaux de chaleur (ou chauffage urbain) constituent un mode de chauffage faiblement carboné et à prix compétitif. Le raccordement au chauffage urbain se fait à l'échelle d'un bâtiment entier. Il nécessite la présence d'un réseau de chaleur à proximité du bâtiment et est facilité lorsque le bâtiment est déjà équipé d'un chauffage collectif.
+    Alimentés à minima à 50% par des énergies renouvelables et de récupération locales (chaleur issue de l'incinération des déchets, biomasse, géothermie...), les réseaux de chaleur (ou chauffage urbain) constituent un mode de chauffage faiblement carboné. 
+
+    Le raccordement au chauffage urbain se fait à l'échelle d'un bâtiment entier. Il nécessite la présence d'un réseau de chaleur à proximité du bâtiment et est facilité lorsque le bâtiment est déjà équipé d'un chauffage collectif.
 
     >💡 Le canton fournit une carte des réseaux structurants : vérifiez si un [réseau de chaleur]( https://www.ge.ch/document/22488/annexe/21 ) passe près de votre immeuble !
 
@@ -962,6 +1122,7 @@ logement . chauffage collectif:
 # Clément: Cette règle est inactive dans le modèle de base (voir FAQ)
 # logement . électricité verte:
 #   titre: Souscrire à un contrat d'électricité verte
+# Jean-Philippe: ok
 
 # Clément: Nous n'utilisons pour le moment pas l'écriture inclusive dans le simulateur.
 # alimentation . réduire viande . par deux:
@@ -979,24 +1140,41 @@ logement . chauffage collectif:
 #     Il est tout à fait possible de réduire significativement l'empreinte de votre alimentation sans devenir strictement végétarien-ne.
 
 #     Sur ce geste, on remplace les 3/4 de vos repas carnés par des repas végétariens, ce qui est une bonne approximation d'une consommation de viande réservée aux week-ends.
+# Jean-Philippe: ok pas de soucis on ne prend en compte la modification
+
 
 # Clément: pourquoi ces modifications pour les 3 règles qui suivent?
+# Jean-Philippe: notamment pour végétalien ce n'est pas anodin de changer de régime, c'est pourquoi
+# nous voulions apporter des précisions.
+# pour la viande faible empreinte, il nous semblait important d'explicité que c'était la viande
+# rouge qui avait le plus d'impact.
+
 alimentation . devenir végétarien:
   description: |
-    Adopter un régime végétarien, c’est-à-dire sans viande ni poisson (mais avec des œufs, du lait, du fromage, des yaourts) permet de réduire très fortement son empreinte sur le climat.
+    Adopter un régime végétarien, c'est-à-dire sans viande ni poisson (mais avec des œufs, 
+    du lait, du fromage, des yaourts) permet de réduire très fortement son empreinte sur 
+    le climat.
 
 alimentation . devenir végétalien:
-  description: Adopter un régime végétalien, c’est-à-dire sans produits animaux (viande, poisson, œufs, lait, fromage, miel, etc.) permet de réduire encore plus fortement son empreinte carbone que le régime végétarien. Il est toutefois recommandé d’être bien informé-e sur la pyramide alimentaire pour répondre aux besoins nutritifs de l’organisme.
+  description: Adopter un régime végétalien, c'est-à-dire sans produits animaux 
+  (viande, poisson, œufs, lait, fromage, miel, etc.) permet de réduire encore plus 
+  fortement son empreinte carbone que le régime végétarien. Il est toutefois recommandé 
+  d'être bien informé sur la pyramide alimentaire pour répondre aux besoins nutritifs 
+  de l'organisme.
 
 alimentation . viande faible empreinte:
   description: |
-    L’empreinte climat de notre alimentation est directement corrélée à notre consommation de viande, mais il faut savoir que toutes les viandes n’ont pas le même impact. C’est la viande rouge qui a la plus forte empreinte carbone (bœuf, agneau). La volaille et le porc ont une empreinte carbone largement inférieure. 
+    L'empreinte climat de notre alimentation est directement corrélée à notre consommation 
+    de viande, mais il faut savoir que toutes les viandes n'ont pas le même impact. 
+    C'est la viande rouge qui a la plus forte empreinte carbone (bœuf, agneau). La 
+    volaille et le porc ont une empreinte carbone largement inférieure. 
 
-    > À titre de comparaison, ramenée au kilo, la production d’une entrecôte émet 6 fois plus de gaz à effet de serre que des filets de poulets.
+    > À titre de comparaison, ramenée au kilo, la production d'une entrecôte émet 6 fois 
+    plus de gaz à effet de serre que des filets de poulets.
 
 alimentation . manger local:
   description: |
-    L’alimentation locale permet de réduire les distances de transports des produits que nous consommons. Cependant, même si cela peut sembler contre intuitif, l'alimentation locale peut, en fonction des cas considérés, être défavorable en terme d'émissions de gaz à effet de serre : l'impact de la provenance de nos produits ne peut être résumé à une comparaison entre courte et longue distance. Les effets d’échelle, la centralisation des produits, l’efficacité des transports utilisés (ou à l'inverse la non efficacité) complexifient la chose d’un point de vue de la comptabilité carbone.
+    L'alimentation locale permet de réduire les distances de transports des produits que nous consommons. Cependant, même si cela peut sembler contre intuitif, l'alimentation locale peut, en fonction des cas considérés, être défavorable en terme d'émissions de gaz à effet de serre : l'impact de la provenance de nos produits ne peut être résumé à une comparaison entre courte et longue distance. Les effets d’échelle, la centralisation des produits, l’efficacité des transports utilisés (ou à l'inverse la non efficacité) complexifient la chose d’un point de vue de la comptabilité carbone.
 
     Néanmoins, l'alimentation locale a bien d'autres impacts positifs comme, par exemple, le soutien aux agriculteurs-trices de nos régions ! 
 
@@ -1077,3 +1255,9 @@ actions:
       - divers . avoir un stop pub
       - divers . numérique . appareils . allongement
       - divers . tabac . arrêter
+
+
+
+
+
+  
