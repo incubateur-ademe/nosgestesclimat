@@ -2,34 +2,19 @@ transport . deux roues:
   icônes: 🛵
   formule:
     variations:
-      - si: usager = 'affirmatif'
+      - si:
+          est défini: usager
         alors: empreinte
-      - si: usager = 'négatif'
-        alors: 0
-      - si: usager = 'moyenne'
-        alors: empreinte moyenne
+      - sinon: empreinte moyenne
   unité: kgCO2e
 
 transport . deux roues . usager:
   question: Utilisez-vous un deux-roues motorisé ?
   description: |
     Les scooters et motos sont aujourd'hui très majoritairement des engins qui fonctionnent au pétrole. Les scooters électriques ayant fait une réelle percée, ils sont ajoutés au modèle.
-  avec:
-    moyenne:
-    affirmatif:
-      titre: Oui
-    négatif:
-      titre: Non
-  par défaut: "'moyenne'"
-  formule:
-    une possibilité:
-      choix obligatoire: oui
-      possibilités:
-        - affirmatif
-        - négatif
 
 transport . deux roues . empreinte:
-  applicable si: usager = 'affirmatif'
+  applicable si: usager
   icônes: 🛵
   formule: (empreinte au km + entretien pondéré) * km
   unité: kgCO2e
@@ -39,7 +24,7 @@ transport . deux roues . empreinte moyenne:
     recalcul:
       règle: deux roues . empreinte
       avec:
-        deux roues . usager: "'affirmatif'"
+        deux roues . usager: oui
         deux roues . type: "'moto sup 250'"
         deux roues . km: km annuels moyen * pourcentage motards
 
@@ -61,7 +46,7 @@ transport . deux roues . km annuels moyen:
     Source pour les km annuels moyens : [datalab ministère écologie 2019](https://www.statistiques.developpement-durable.gouv.fr/bilan-annuel-des-transports-en-2019-0), figure G1-1.
 
 transport . deux roues . type:
-  applicable si: usager = 'affirmatif'
+  applicable si: usager
   question: Quel type de deux-roues utilisez-vous ?
   par défaut: "'moto sup 250'"
   formule:
