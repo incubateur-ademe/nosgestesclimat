@@ -75,6 +75,7 @@ export default ({
     }
   }
   const start = Date.now()
+  // TODO: simple use an instanciated engine instead of the path
   const { err, nbRules } = compressRules(destPathWithoutExtension)
   const optimDuration = Date.now() - start
   if (err) {

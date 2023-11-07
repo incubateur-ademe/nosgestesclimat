@@ -22,6 +22,7 @@ import {
   supportedRegions,
   supportedRegionCodes
 } from './i18n/regionCommons.js'
+import rulesToJSONWorker from './rulesToJSON.worker.mjs'
 
 const t9nDir = 'data/i18n/t9n'
 
@@ -105,10 +106,6 @@ try {
   exit(-1)
 }
 
-const piscina = new Piscina({
-  filename: new URL('./rulesToJSON.worker.mjs', import.meta.url).href
-})
-
 try {
   new Engine(baseRules, {
     logger: {
@@ -135,6 +132,16 @@ try {
   exit(-1)
 }
 
+const multiThread = destRegions.length > 1
+
+console.debug('Running in multi-thread mode:', multiThread)
+
+const piscina = multiThread
+  ? new Piscina({
+      filename: new URL('./rulesToJSON.worker.mjs', import.meta.url).href
+    })
+  : null
+
 try {
   destLangs.unshift(srcLang)
   const resultOfCompilationAndOptim = await Promise.all(
@@ -142,12 +149,19 @@ try {
       const translatedBaseRules = getTranslatedRules(baseRules, destLang)
       return destRegions.map((regionCode) => {
         try {
-          return piscina.run({
-            regionCode,
-            destLang,
-            translatedBaseRules,
-            markdown
-          })
+          return multiThread
+            ? piscina.run({
+                regionCode,
+                destLang,
+                translatedBaseRules,
+                markdown
+              })
+            : rulesToJSONWorker({
+                regionCode,
+                destLang,
+                translatedBaseRules,
+                markdown
+              })
         } catch (err) {
           console.log(`Error in worker ${regionCode}-${destLang}`, err)
           piscina.threads.forEach((thread) => thread.terminate())
@@ -155,6 +169,7 @@ try {
       })
     })
   )
+
   if (markdown) {
     console.log(
       `| Successfully compiled and optimized rules: <br><details><summary>Expand</summary> <ul>${resultOfCompilationAndOptim
