@@ -9,44 +9,10 @@ params:
 
 intensité électricité:
   titre: Intensité carbone du mix électrique suisse
-  #formule: 0.153
   formule: 0.091
   note: |
     OCEN - SCDD pour l'électricité GE, moyenne 2017-2021 (5 ans)
-
-logement . chauffage . empreinte par défaut:
-  résumé: Un calcul statistique du **chauffage** résidentiel genevois moyen
-  formule:
-    somme:
-      - logement . part chauffage . fioul * parc ge . chauffage . consommation par défaut * surface *  logement . chauffage . intensité carbone fioul 
-      - logement . part chauffage . gaz * parc ge . chauffage . consommation par défaut * surface *  logement . gaz * facteur d'émission base carbone
-      - logement . part chauffage . bois * parc ge . chauffage . consommation par défaut * surface *  (logement . chauffage . bois . facteur d'émission bûche + logement . chauffage . bois . facteur d'émission granulés) / 2
-      - logement . part chauffage . réseau de chaleur * parc ge . chauffage . consommation par défaut * surface *  logement . chauffage . intensité réseau de chaleur 
-      - logement . part chauffage . chaleur de l'environnement * parc ge . chauffage . consommation par défaut * surface *  logement . chauffage . intensité carbone chaleur de l'environnement 
-
-  note: l'empreinte du logement par défaut est calculée sur la base de la moyenne du parc immobilier genevois
-  
-logement . chauffage . gaz . présent:
-  par défaut: oui
-  note: |
-    A Genève, les logements sont majoritairement chauffés au gaz.
-
-logement . chauffage . gaz . consommation:
-  par défaut: parc ge. chauffage . consommation par défaut * surface
-
-logement . chauffage . gaz . estimation via le coût:
-  unité: CHF/kWh
-  formule: 0.143
-  note: OFS prix moyens de l'énergie su-f-05.02.91, moyenne 2022 - https://www.bfs.admin.ch/bfs/fr/home/statistiques/prix/indice-prix-consommation/resultats-detailles.assetdetail.25245904.html
-
-logement . chauffage . gaz . facteur d'émission base carbone:
-  valeur: 0.230
-  note: KBOB
-
-logement . chauffage . intensité carbone chaleur de l'environnement:
-  formule: 0.04
-  unité: kgCO2e/kWh
-  note: KBOB
+  # @Clement: à détailler
 
 # TRANSPORT
 transport . voiture . limitation autoroute:
@@ -88,7 +54,7 @@ transport . voiture . thermique . carburant . essence E85:
 
 transport . deux roues . km:
   par défaut: 400
-  note: Source manquante ?
+# @Clement: note: Source manquante ?
 
 transport . avion . usager:
   description: |
@@ -308,9 +274,6 @@ transport . ferry . heures:
     Gênes ⇄ Bastia: 13
     Gênes ⇄ Olbia: 24
 
-transport . mobilité douce:
-  question: Quels sont vos modes de déplacements "efficaces" ou "actifs" ?
-
 transport . mobilité douce . vélo . construction:
   formule: 76
   note: Mobitool Conventionnel ((fabrication + maintenance + fin de vie) * km
@@ -343,11 +306,9 @@ transport . mobilité douce . autres véhicules à moteur . durée de vie:
   formule: 2
   note: Mobitool Trottinette électrique
 
-transport . deux roues . usager:
-  par défaut: oui
-
-transport . deux roues . type:
-  question: Quel type de deux-roues motorisé utilisez-vous ?
+# @Clément Sera corrigé dans la version de base
+# transport . deux roues . type:
+#   question: Quel type de deux-roues motorisé utilisez-vous ?
 
 # DIVERS
 divers . animaux domestiques . empreinte . chats . nombre:
@@ -372,7 +333,7 @@ divers . numérique . préservation:
     Répondre "Aucun, je rachète souvent neuf" est la réponse la plus impactante car elle signifie que vous remplacez vos appareils précocement avant même qu'ils soient hors d'usage.
 
 divers . autres produits . niveau de dépenses:
-  question: Le test ne capte pas encore toutes vos consommations, combien estimez-vous dépenser par an en produits neufs (décoration, bricolage, jeux, loisirs créatifs, outils, etc...) ? 
+  question: Le test ne capte pas encore toutes vos consommations, combien estimez-vous dépenser par an en produits neufs (décoration, bricolage, jeux, loisirs créatifs, outils, etc...) ?
   description: |
     Pour garder l'interface simple, nous proposons une estimation, via vos dépenses, de l'empreinte des biens de consommations
     que vous possédez et que vous ne pensez pas avoir inclus dans les questions précédentes.
@@ -408,47 +369,48 @@ divers . numérique . internet . empreinte horaire:
   #formule: consommation horaire * intensité électricité
   formule: 0.02
 
-divers . produits consommables . consommation . normale:
-  titre: Modérée (environ 5 produits)
-
+# divers . produits consommables . consommation . normale:
+#   titre: Modérée (environ 5 produits)
 
 # ALIMENTATION
-alimentation . plats:
-  question: Choisissez les plats de vos repas de midi et du soir pour une semaine type 
-  description: |
-    Choisissez 14 plats qui représentent votre semaine type : 7 repas du midi et 7 repas du soir.
+# @Clément: C'est préférable de garder la consistance avec la version française.
+# alimentation . plats:
+#   question: Choisissez les plats de vos repas de midi et du soir pour une semaine type
+#   description: |
+#     Choisissez 14 plats qui représentent votre semaine type : 7 repas du midi et 7 repas du soir.
 
-    > Aujourd'hui nous travaillons pour que les menus associés à vos repas soient les plus représentatifs de vos habitudes, n'hésitez pas à aller plus loin en parcourant la documentation.
+#     > Aujourd'hui nous travaillons pour que les menus associés à vos repas soient les plus représentatifs de vos habitudes, n'hésitez pas à aller plus loin en parcourant la documentation.
 
-alimentation . petit déjeuner . type:
-  description: |
-      Nous avons fait choix de considérer un petit déjeuner standard proche du petit-déjeuner appelé "continental". Il comprend pain, beurre, confiture, viennoiserie et un fruit.
-      Il existe une variété infinie de petit déjeuners. Nous en avons sélectionné quelques uns pour que vous obteniez une réponse facilement. Même si vous ne retrouvez pas exactement votre petit déjeuner, choisissez celui qui s'en rapproche ! À noter que votre consommation de jus de fruit / café / thé / chocolat chaud est comptabilisée dans la question dédiée aux boissons chaudes.
+# alimentation . petit déjeuner . type:
+#   description: |
+#     Nous avons fait choix de considérer un petit déjeuner standard proche du petit-déjeuner appelé "continental". Il comprend pain, beurre, confiture, viennoiserie et un fruit.
+#     Il existe une variété infinie de petit déjeuners. Nous en avons sélectionné quelques uns pour que vous obteniez une réponse facilement. Même si vous ne retrouvez pas exactement votre petit déjeuner, choisissez celui qui s'en rapproche ! À noter que votre consommation de jus de fruit / café / thé / chocolat chaud est comptabilisée dans la question dédiée aux boissons chaudes.
 
 alimentation . petit déjeuner . type . continental:
   titre: Viennoiserie et pain
-  description: |
-    Nous avons fait choix de considérer un petit déjeuner standard proche du petit-déjeuner appelé "continental". Il comprend pain, beurre, confiture, viennoiserie et un fruit.
+# @Clément: Pourquoi changer les descriptions ?
+# description: |
+# Nous avons fait choix de considérer un petit déjeuner standard proche du petit-déjeuner appelé "continental". Il comprend pain, beurre, confiture, viennoiserie et un fruit.
 
-alimentation . petit déjeuner . type . lait céréales:
-  description: |
-    Nous avons fait choix de considérer un petit déjeuner standard proche du petit-déjeuner appelé "continental". Il comprend pain, beurre, confiture, viennoiserie et un fruit.
+# alimentation . petit déjeuner . type . lait céréales:
+#   description: |
+#     Nous avons fait choix de considérer un petit déjeuner standard proche du petit-déjeuner appelé "continental". Il comprend pain, beurre, confiture, viennoiserie et un fruit.
 
-alimentation . petit déjeuner . type . britannique:
-  description: |
-    Un bol de lait ou un yaourt avec des céréales. L'origine (animale ou végétale) du lait que vous buvez vous sera demandé dans la suite !
+# alimentation . petit déjeuner . type . britannique:
+#   description: |
+#     Un bol de lait ou un yaourt avec des céréales. L'origine (animale ou végétale) du lait que vous buvez vous sera demandé dans la suite !
 
-alimentation . petit déjeuner . type . végétalien:
-  description: |
-    Un petit dej' composé de fruits.
+# alimentation . petit déjeuner . type . végétalien:
+#   description: |
+#     Un petit dej' composé de fruits.
 
-alimentation . petit déjeuner . type . aucun:
-  description: |
-    Vous ne mangez rien au petit déjeuner (mais vous pouvez boire un café, un thé ou un chocolat chaud pris en compte dans une autre question).
+# alimentation . petit déjeuner . type . aucun:
+#   description: |
+#     Vous ne mangez rien au petit déjeuner (mais vous pouvez boire un café, un thé ou un chocolat chaud pris en compte dans une autre question).
 
-alimentation . de saison . consommation:
-  description: |
-    Cette question nous permet de corriger l'empreinte de votre régime alimentaire en fonction de votre habitude sur le caractère de saison de vos achats.
+# alimentation . de saison . consommation:
+#   description: |
+#     Cette question nous permet de corriger l'empreinte de votre régime alimentaire en fonction de votre habitude sur le caractère de saison de vos achats.
 
 alimentation . local . consommation:
   description: |
@@ -466,10 +428,74 @@ alimentation . déchets . quantité jetée:
     Sachez qu'en cas d'engagement "zéro déchet", nous considérons tout de même des émissions de gaz à effet (mais largement réduites) car il est très difficile voire impossible de ne générer aucun déchet, certains étant invisibles et inévitables.
     Vous avez renseigné un mode de vie zéro déchet. Il faut savoir que ce niveau d'engagement correspond à une personne qui est investie à 100% dans la démarche de réduction de ses déchets. Consommer en vrac n'est pas suffisant pour être zéro-déchet.
 
-alimentation . déchets . gestes:
-  description: Les différents gestes que vous mettez en place pour réduire l'empreinte de votre poubelle.
+# alimentation . déchets . gestes:
+#   description: Les différents gestes que vous mettez en place pour réduire l'empreinte de votre poubelle.
 
 #LOGEMENT
+parc français . surface moyenne:
+  titre: Surface moyenne par logement
+  formule: 80
+  unité: m2
+
+parc français . chauffage . consommation électricité par m2:
+  formule: 125
+  unité: kWh/m2
+  note: Source - KBOB, consommation pour le chauffage par défaut de 450 MJ/m2
+
+parc français . chauffage . consommation gaz par m2:
+  formule: 125
+  unité: kWh/m2
+  note: Source - KBOB, consommation pour le chauffage par défaut de 450 MJ/m2
+
+parc français . chauffage . consommation fioul par m2:
+  formule: 125 * fioul kWh au litre
+  unité: kWh/m2
+  note: Source - KBOB, consommation pour le chauffage par défaut de 450 MJ/m2
+
+parc français . chauffage . consommation bois par m2:
+  formule: 125
+  unité: kWh/m2
+  note: Source - KBOB, consommation pour le chauffage par défaut de 450 MJ/m2
+
+parc français . chauffage . consommation réseau de chaleur par m2:
+  formule: 125
+  unité: kWh/m2
+  note: Source - KBOB, consommation pour le chauffage par défaut de 450 MJ/m2
+
+parc français . chauffage . consommation GPL par m2:
+  formule: 125
+  unité: kWh/m2
+  note: Source - KBOB, consommation pour le chauffage par défaut de 450 MJ/m2
+
+# @Clément On a besoin des parts de chaque type d'énergie dans le parc genevois. Il semble y avoir un pb avec ceux relevés dans le fichier.
+# On distingue parts des énergies dans le parc genevois et part dédiée au chauffage pour chaque type d'énergie (cf plus bas).
+parc français . surface . part électricité:
+  formule: 0%
+
+parc français . surface . part gaz:
+  formule: 60.80%
+
+parc français . surface . part fioul:
+  formule: 28.40%
+
+parc français . surface . part bois:
+  formule: 2.3%
+
+parc français . surface . part réseau de chaleur:
+  formule: 5.2%
+
+# @Clément A priori non pertinent car "consommation électricité autre moyennne" est définie comme :
+# "consommation électricité autre par m2 * surface moyenne". Il manque donc
+# "parc français . consommation électricité autre par m2" normalement, qui correspond à la consommation d'électricité par m2 hors chauffage.
+
+# parc français . consommation électricité autre moyennne:
+#   formule:
+#     - si: appartement
+#       alors: 1386 + 540 * saisie habitants
+#     - sinon: 1762 + 656 * saisie habitants
+#   unité: kWh
+#   note: Source (extrapolation) - L'efficacité énergétique dans les ménages, Suissenergie, novembre 2021; OCSTAT; OFS
+
 logement . électricité . estimation via le coût:
   unité: CHF/kWh
   formule: 0.280
@@ -512,8 +538,7 @@ logement . appartement:
     Cette information influence notamment l'empreinte de construction, mais aussi les possibilités de travaux d'isolation par exemple.
 
     > Si vous vivez dans un habitat original, par exemple un camping car, pas de problème : choisissez "appartement" et saisissez les m² de ce qui constitue quand même votre logement.
-  note: Source manquante ?
-
+# @Clément note: Source manquante ?
 logement . construction . par surface:
   formule:
     variations:
@@ -535,13 +560,13 @@ logement . âge:
 
 logement . saisie habitants:
   par défaut: 2.1
-  note: Source manquante ?
+  # @Clément note: Source manquante ?
 
 logement . surface:
   titre: Surface
   question: Quelle est la surface de votre logement ?
   par défaut: 80
-  note: source manquante ?
+  # @Clément note: source manquante ?
   suggestions:
     studio: 25
     3 pièces: 70
@@ -550,21 +575,6 @@ logement . surface:
   unité: m2
 
 logement . électricité . consommation:
-  icônes: ⚡
-  par défaut:
-    variations:
-      - si: logement . chauffage . choix utilisateur = non
-        alors: parc français . consommation électricité totale relative
-      - si:
-          toutes ces conditions:
-            - logement . chauffage . choix utilisateur = oui
-            - une de ces conditions:
-                - logement . chauffage . électricité . présent
-                - logement . chauffage . PAC . présent
-        alors: parc français . consommation électricité autre moyenne + surface * parc français . chauffage . consommation électricité par m2
-      - sinon: parc français . consommation électricité autre moyenne
-  note: |
-    on considère que seule la consommation d'électricité liée au chauffage est dépendante de la surface du logement
   description: |
     Astuce : vous trouverez la consommation annuelle d'électricité sur vos factures ou sur votre compte en ligne sur le site des SIG.
 
@@ -594,17 +604,43 @@ logement . chauffage:
 
     Cochez tous les modes que vous utilisez.
 
+# @Clément: Il n'est finalement pas possible d'ajouter de nouvelles règles, je corrige ici le calcul mais sans la partie "intensité carbone chaleur de l'environnement"
+# (que je ne comprends pas).
+# L'électricité est comprise dans ce calcul par l'intermédiaire de la question sur la consommation d'électricité.
+# Les parts doivent être définie plus haut.
+logement . chauffage . empreinte par défaut:
+  résumé: Un calcul statistique du **chauffage** résidentiel genevois moyen
+  # formule:
+  #   somme:
+  #     - 28.40% * parc français . chauffage . consommation fioul par m2 * surface *  logement . chauffage . intensité carbone fioul litre
+  #     - 60.80% * parc français . chauffage . consommation gaz par m2 * surface *  logement . chauffage . gaz * gaz . facteur d'émission base carbone
+  #     - 2.3% * parc français . chauffage . consommation bois par m2 * surface *  (logement . chauffage . bois . facteur d'émission bûche + logement . chauffage . bois . facteur d'émission granulés) / 2
+  #     - 5.2% * parc français . chauffage . consommation réseau de chaleur par m2 * surface *  logement . chauffage . réseau de chaleur . intensité carbone
+  note: l'empreinte du logement par défaut est calculée sur la base de la moyenne du parc immobilier genevois
+
+logement . chauffage . gaz . consommation:
+  par défaut: parc français . chauffage . consommation gaz par m2 * surface
+
+logement . chauffage . gaz . estimation via le coût:
+  unité: CHF/kWh
+  formule: 0.143
+  note: OFS prix moyens de l'énergie su-f-05.02.91, moyenne 2022 - https://www.bfs.admin.ch/bfs/fr/home/statistiques/prix/indice-prix-consommation/resultats-detailles.assetdetail.25245904.html
+
+logement . chauffage . gaz . facteur d'émission base carbone:
+  valeur: 0.230
+  note: KBOB
+
 logement . chauffage . fioul . consommation:
   question: Quelle est la consommation annuelle de mazout de votre foyer ?
-  par défaut: fioul kWh au litre * parc ge . chauffage . consommation par défaut * surface
+  par défaut: fioul kWh au litre * parc français . chauffage . consommation fioul par m2 * surface
   description: |
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur votre facture de mazout ou sur votre décompte de charges annuelles envoyé par votre régie.
 
 logement . chauffage . bois . type . granulés . consommation:
-  par défaut: parc ge . chauffage . consommation par défaut * surface
+  par défaut: parc français . chauffage . consommation bois par m2 * surface
 
 logement . chauffage . bois . type . bûche . consommation . saisie:
-  par défaut: parc ge . chauffage . consommation par défaut * bois par m2 * surface / intensité énergétique
+  par défaut: parc français . chauffage . consommation bois par m2 * surface / intensité énergétique
 
 # pour supprimer la variation biogaz
 logement . chauffage . gaz . intensité carbone gaz utilisateur:
@@ -623,7 +659,7 @@ logement . chauffage . gaz . intensité carbone gaz utilisateur:
 # pour supprimer l'aide à la saisie réseau de chaleur
 logement . chauffage . réseau de chaleur . consommation:
   aide:
-  par défaut: parc ge. chauffage . consommation par défaut * surface
+  par défaut: parc français . chauffage . consommation réseau de chaleur par m2 * surface
 
 # Services sociétaux
 services sociétaux . question rhétorique:
@@ -874,7 +910,6 @@ transport . réduction covoiturage:
 transport . boulot . distance . km aller:
   description: |
     Nous parlons ici de la distance *aller*, avec le mode de transport que vous privilégiez.
-
   par défaut: 7 km
 
 transport . boulot . commun:
@@ -899,13 +934,12 @@ transport . boulot . commun . empreinte:
     On considère qu'un déplacement domicile travail effectué en voiture peut être remplacé par un train régional et non par un Inter-City.
 
 transport . boulot . commun . type:
-  #  par défaut: "tramway"
+  par défaut: "'bus'"
   formule:
     une possibilité:
       choix obligatoire: oui
       possibilités:
         - bus
-        #       - tramway
         - TER
         - vélo classique
         - vélo électrique
@@ -972,7 +1006,7 @@ logement . baisse température . nombre degrés:
 
     En effet, baisser la température de chauffage d'1°C représente une [économie d'énergie de 7% à 10%](https://www.ge.ch/document/30986/annexe/0). Cela peut paraître peu à l'échelle individuelle mais si tout le monde fait cette action, c'est un levier très fort de réduction des émissions de CO2.
 
-    Les fenêtres doivent bien entendu être maintenues fermées. Afin d'aérer votre logement, et si vous ne disposez pas d'une aération mécanique, ouvrez grand les fenêtres 1x par jour pendant 5 à 10 minutes par jour. 
+    Les fenêtres doivent bien entendu être maintenues fermées. Afin d'aérer votre logement, et si vous ne disposez pas d'une aération mécanique, ouvrez grand les fenêtres 1x par jour pendant 5 à 10 minutes par jour.
 
 Une bonne gestion des stores ou volets vous permettra de gagner en confort et de réduire encore les émissions de votre logement: leur ouverture pendant la journée vous permettra de profiter de l'énergie du soleil, leur fermeture la nuit augmentera votre confort et réduira les pertes de chaleur.
 
@@ -984,56 +1018,41 @@ logement . baisse température . gains 1 degré:
     Nous retenons l'estimation donnée dans le [guide du Canton "Des gestes pour économiser notre énergie"](https://www.ge.ch/document/30986/annexe/0).
 
 logement . empreinte chauffage air:
- description: |
-   Pour chaque kWh de chaque type d'énergie, quelle est la part utilisée pour le chauffage de l'air d'un foyer ?
+  description: |
+    Pour chaque kWh de chaque type d'énergie, quelle est la part utilisée pour le chauffage de l'air d'un foyer ?
 
-parc ge. chauffage . consommation par défaut:
-  formule: 125
-  unité: kWh/m2
-  note: Source - KBOB, consommation pour le chauffage par défaut de 450 MJ/m2
+# @Clément: Nécessaire d'avoir ici les parts dédiées au chauffage pour chaque source d'énergie, la formule étant :
+# formule:
+#   somme:
+#     - parc français . consommation électricité totale relative * électricité . intensité carbone * part chauffage électricité
+#     - parc français . chauffage . consommation gaz moyenne relative * chauffage . gaz . facteur d'émission base carbone * part chauffage gaz
+#     - parc français . chauffage . consommation fioul moyenne relative en litres * chauffage . intensité carbone fioul litre * part chauffage fioul
+#     - parc français . chauffage . consommation bois moyenne relative * ((chauffage . bois . facteur d'émission bûche + chauffage . bois . facteur d'émission granulés) / 2) * part chauffage bois
+#     - parc français . chauffage . consommation réseau de chaleur moyenne relative * chauffage . réseau de chaleur . intensité carbone * part chauffage réseau de chaleur
+#     - parc français . chauffage . consommation GPL moyenne relative * chauffage . intensité carbone GPL * part chauffage GPL
+# Si on se base sur l'exemple de l'empreinte chauffage par défaut, on aurait pour la suisse quelque chose comme :
+# formule:
+#   somme:
+#     - xx% * parc français . chauffage . consommation électricité par m2 * surface * électricité . intensité carbone * part chauffage électricité
+#     - 28.40% * parc français . chauffage . consommation fioul par m2 * surface *  logement . chauffage . intensité carbone fioul litre * part chauffage fioul
+#     - 60.80% * parc français . chauffage . consommation gaz par m2 * surface *  logement . chauffage . gaz * gaz . facteur d'émission base carbone * part chauffage gaz
+#     - 2.3% * parc français . chauffage . consommation bois par m2 * surface *  ((logement . chauffage . bois . facteur d'émission bûche + logement . chauffage . bois . facteur d'émission granulés) / 2) * part chauffage bois
+#     - 5.2% * parc français . chauffage . consommation réseau de chaleur par m2 * surface *  logement . chauffage . réseau de chaleur . intensité carbone * part chauffage réseau de chaleur
 
-parc français . consommation électricité autre moyennne:
-  formule: 
-      - si: appartement
-        alors: 1386 + 540 * habitants
-      - sinon: 1762 + 656 * habitants
-  note: Source (extrapolation) - L'efficacité énergétique dans les ménages, Suissenergie, novembre 2021; OCSTAT; OFS
+# logement . part chauffage électricité:
+#   formule:
 
+# logement . part chauffage gaz:
+#   formule:
 
-logement . part chauffage électricité:
-  formule: 0%
-  unité: '%'
-  note: Source - OCEN
+# logement . part chauffage fioul:
+#   formule:
 
-logement . part chauffage gaz:
-  formule: 60.80%
-  unité: '%'
-  note: Source - OCEN
+# logement . part chauffage fioul:
+#   formule:
 
-logement . part chauffage bois:
-  formule: 2.3%
-  unité: '%'
-  note: Source - OCEN
-
-logement . part chauffage fioul:
-  formule: 28.40%
-  unité: '%'
-  note: Source - OCEN
-
-logement . part chauffage réseau de chaleur:
-  formule: 5.2%
-  unité: '%'
-  note: Source - OCEN (incinération des déchets)
-
-logement . part chauffage GPL:
-  formule: 0%
-  unité: '%'
-  note: Source - OCEN
-
-logement . part chauffage . chaleur de l'environnement:
-  formule: 3.3%
-  note: Source - OCEN (nouvelle variable)
-  unité: '%'
+# logement . part chauffage réseau de chaleur:
+#   formule:
 
 logement . éteindre appareils:
   description: |
@@ -1058,7 +1077,7 @@ logement . remplacer fioul par bois:
 
 logement . éclairage . consommation de l'éclairage:
   formule: électricité * 10%
-  # Clément: Lien ?
+  # @Clément: Lien ?
   note: Consommation électrique d'un ménage, Août 2021, suisseénergie
 
 logement . remplacer gaz par PAC:
@@ -1074,12 +1093,6 @@ logement . remplacer gaz par PAC:
   note: |
     Nous considérons pour l'instant que le remplacement des kWh de gaz par la même quantité de kWh électrique est une bonne approximation de premier ordre. Nous pourrons par la suite l'adapter en fonction du rendement des installations résidentielles.
 
-# Clément: la note ne correspond pas à la règle
-# logement . séchage air libre:
-#   note: |
-#     Gain énergétique moyen après rénovation sur un programme de l'ANAH de 13 000 logements ciblant les "passoires thermiques".
-# Jean-Philippe: Pas compris, nous n'avons pas modifié séchage air libre!
-
 logement . rénovation énergétique:
   description: |
     Une rénovation peut permettre de réduire de 20 à 150% de la consommation d'énergie de son logement. 
@@ -1093,17 +1106,14 @@ logement . gain rénovation:
   note: |
     Le gain énergétique moyen après rénovation est très variable, en fonction du type de rénovation, du réglage des installations etc. Entre un bâtiment peu isolé et un bâtiment bien isolé, la différence de consommation est de l'ordre de 1.2 à 2.5.
 
-
 logement . propriétaire:
   description: |
     En tant que locataire, il est évidemment délicat de faire les investissements qui améliorent l'empreinte du logement : isoler son logement ou changer de source d'énergie sont des actions que seuls les propriétaires peuvent réaliser. Cela n'empêche pas les locataires de les leur demander !
-# Clément: pourquoi passer la valeur par défautr à "non" ?
-# par défaut: non
-# Jean-Philippe: Le taux en Suisse de propriétaire est de 36%, la majorité de la population est donc loactaire!
   par défaut: non
 
 logement . raccordement réseau de chaleur:
-  titre: Se raccorder à un réseau de chaleur
+  # @Clément: Sera corrigé dans la version de base
+  # titre: Se raccorder à un réseau de chaleur
   note: |
     Un réseau de chaleur est un système de canalisations qui permettent d'acheminer vers un ensemble de bâtiments de la chaleur produite localement et majoritairement à partir d'énergies renouvelables et de récupération. 
 
@@ -1127,36 +1137,6 @@ logement . chauffage collectif:
     On fait l'hypothèse que l'action est applicable seulement pour les appartements chauffés via un réseau de gaz ou mazout collectif.  
 
     En effet, côté particulier, il est préférable de travailler avec les copropriétaires d'un immeuble car le logement individuel n'est pas une cible prioritaire pour ce type de solution, à la fois pour des questions de rentabilité économique mais également car la densité thermique du réseau serait trop faible au vu de la consommation d'un logement individuel.
-
-# Clément: Cette règle est inactive dans le modèle de base (voir FAQ)
-# logement . électricité verte:
-#   titre: Souscrire à un contrat d'électricité verte
-# Jean-Philippe: ok
-
-# Clément: Nous n'utilisons pour le moment pas l'écriture inclusive dans le simulateur.
-# alimentation . réduire viande . par deux:
-#   description: |
-#     > ... ou le soir
-
-#     Il est tout à fait possible de réduire significativement l'empreinte de votre alimentation sans devenir strictement végétarien-ne.
-
-#     Remplacez la moitié de vos repas avec de la viande par des repas végétariens.
-
-#   effort: modéré
-
-# alimentation . réduire viande . par quatre:
-#   description: |
-#     Il est tout à fait possible de réduire significativement l'empreinte de votre alimentation sans devenir strictement végétarien-ne.
-
-#     Sur ce geste, on remplace les 3/4 de vos repas carnés par des repas végétariens, ce qui est une bonne approximation d'une consommation de viande réservée aux week-ends.
-# Jean-Philippe: ok pas de soucis on ne prend en compte la modification
-
-
-# Clément: pourquoi ces modifications pour les 3 règles qui suivent?
-# Jean-Philippe: notamment pour végétalien ce n'est pas anodin de changer de régime, c'est pourquoi
-# nous voulions apporter des précisions.
-# pour la viande faible empreinte, il nous semblait important d'explicité que c'était la viande
-# rouge qui avait le plus d'impact.
 
 alimentation . devenir végétarien:
   description: |
@@ -1257,9 +1237,3 @@ actions:
       - divers . avoir un stop pub
       - divers . numérique . appareils . allongement
       - divers . tabac . arrêter
-
-
-
-
-
-  
