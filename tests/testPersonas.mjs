@@ -1,7 +1,10 @@
 import { readFile } from 'fs/promises'
 import { join } from 'path'
 import yargs from 'yargs'
-import { defaultLang, availableLanguages } from './../scripts/i18n/utils.js'
+import {
+	defaultLang,
+	availableLanguages,
+} from '@incubateur-ademe/nosgestesclimat-scripts/utils'
 import { testPersonas, printResults } from './commons.mjs'
 
 const { country, language, markdown } = yargs(process.argv.slice(2))

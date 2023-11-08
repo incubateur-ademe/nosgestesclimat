@@ -1,4 +1,4 @@
-const utils = require('./utils')
+const utils = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
 
 const ca_branches = utils.readJSON(
 	'scripts/services-societaux/input/ca_branches_2017.json'

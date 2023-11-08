@@ -5,8 +5,8 @@
 	NOTE: this function is used by the RulesProvider.js file of the website.
 */
 
-const utils = require('./utils')
-const cli = require('./cli')
+const utils = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
+const cli = require('@incubateur-ademe/nosgestesclimat-scripts/cli')
 
 const addTranslationToBaseRules = (baseRules, translatedRules) => {
 	const updateBaseRules = (ruleName, attributes, val) => {

@@ -16,7 +16,7 @@ import {
 	writeYAML,
 	readYAML,
 	getMissingRules,
-} from './utils.js'
+} from '@incubateur-ademe/nosgestesclimat-scripts/utils'
 
 import {
 	getArgs,
@@ -29,10 +29,12 @@ import {
 	yellow,
 	styledRuleNameWithOptionalAttr,
 	styledPromptActions,
-	ask,
-} from './cli.js'
+} from '@incubateur-ademe/nosgestesclimat-scripts/cli'
 
-import { fetchTranslation, fetchTranslationMarkdown } from './deepl.js'
+import {
+	fetchTranslation,
+	fetchTranslationMarkdown,
+} from '@incubateur-ademe/nosgestesclimat-scripts/deepl'
 import gitDiff from 'git-diff'
 import { getModelFromSource } from '@incubateur-ademe/publicodes-tools/compilation'
 import createPrompt from 'prompt-sync'

@@ -1,4 +1,4 @@
-const utils = require('./utils')
+const utils = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
 
 const empreinte_par_branche = utils.readYAML(
 	'data/empreinte SDES/empreinte par branche.publicodes'
@@ -59,14 +59,14 @@ products_sum.map((product) => {
 	}
 })
 
-const messageGénérationAuto = `# Ce fichier a été généré automatiquement via le script 'scripts/generate_product_rules.js' dans le dépôt nosgestesclimat. 
+const messageGénérationAuto = `# Ce fichier a été généré automatiquement via le script 'scripts/generate_product_rules.js' dans le dépôt nosgestesclimat.
 # Le fichier permettant de modifier les données importantes de répartition et justification de ces produits
 # est 'scripts/services-societaux/input/répartition_autres_produits.yaml'. Pour en savoir plus, n'hésitez pas à parcourir notre guide !\n\n`
 
 utils.writeYAML(
 	'data/empreinte SDES/empreinte par branche.publicodes',
 	dataObject,
-	`# Ce fichier a été généré automatiquement via le script 'scripts/generate_services_rules.js' dans le dépôt nosgestesclimat. 
+	`# Ce fichier a été généré automatiquement via le script 'scripts/generate_services_rules.js' dans le dépôt nosgestesclimat.
 # Le fichier permettant de modifier les données importantes de répartition et justification des services sociétaux
 # est 'scripts/services-societaux/input/répartition_services_sociétaux.yaml'. Pour en savoir plus, n'hésitez pas à parcourir notre guide !\n\n`
 )

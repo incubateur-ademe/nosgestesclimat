@@ -1,6 +1,6 @@
 import fs from 'fs'
-import cli from './i18n/cli.js'
-import utils, { publicDir } from './i18n/utils.js'
+import cli from '@incubateur-ademe/nosgestesclimat-scripts/cli'
+import utils from '@incubateur-ademe/nosgestesclimat-scripts/utils'
 import path from 'path'
 import { addRegionToBaseRules } from './i18n/addRegionToBaseRules.js'
 import { defaultModelCode, regionModelsPath } from './i18n/regionCommons.js'
@@ -59,7 +59,7 @@ export default ({
 		destLang
 	)
 	const destPathWithoutExtension = path.resolve(
-		path.join(publicDir, `co2-model.${regionCode}-lang.${destLang}`)
+		`public/co2-model.${regionCode}-lang.${destLang}`
 	)
 	const werr = writeRules(
 		localizedTranslatedBaseRules,
