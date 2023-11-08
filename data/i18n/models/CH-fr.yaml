@@ -7,7 +7,7 @@ params:
   nom: Suisse
   gentilé: suisse
 
-intensité électricité:
+commun . intensité électricité:
   titre: Intensité carbone du mix électrique suisse
   formule: 0.091
   note: |
@@ -52,8 +52,14 @@ transport . voiture . thermique . carburant . essence E5 ou E10:
 transport . voiture . thermique . carburant . essence E85:
   titre: Essence E85
 
-transport . deux roues . km:
-  par défaut: 400
+transport . deux roues . empreinte moyenne:
+  formule:
+    recalcul:
+      règle: deux roues . empreinte
+      avec:
+        deux roues . usager: "'affirmatif'"
+        deux roues . type: "'moto sup 250'"
+        deux roues . km: 400
 # @Clement: note: Source manquante ?
 
 transport . avion . usager:
@@ -65,7 +71,7 @@ transport . avion . usager:
 
     > 💡 Si vous avez pris l'avion ppour faire Zurich-New-York en 2022 (environ 19h A/R), vos émissions associées (près de 2 tonnes) seront échelonnées sur les 3 dernières années.
 
-transport . avion . court courrier . durée moyennne:
+transport . avion . court courrier . durée moyenne:
   titre: Durée moyenne passée par un Suisse dans les vols court-courrier
 
 transport . avion . court courrier . passager km moyen:
@@ -79,7 +85,7 @@ transport . avion . court courrier . passager km moyen:
       - Moyen-courrier: 7.4%
       - Long-courrier: 90.2%
 
-transport . avion . moyen courrier . durée moyennne:
+transport . avion . moyen courrier . durée moyenne:
   titre: Durée moyenne passée par un Suisse dans les vols moyen-courrier
 
 transport . avion . moyen courrier . passager km moyen:
@@ -93,7 +99,7 @@ transport . avion . moyen courrier . passager km moyen:
       - Moyen-courrier: 7.4%
       - Long-courrier: 90.2%
 
-transport . avion . long courrier . durée moyennne:
+transport . avion . long courrier . durée moyenne:
   titre: Durée moyenne passée par un Suisse dans les vols long-courrier
 
 transport . avion . long courrier . passager km moyen:
@@ -212,7 +218,7 @@ transport . voiture . électrique . empreinte au kilomètre:
       - sinon: 0.028
   note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
 
-transport . voiture . empreinte . construction . barème thermique:
+transport . voiture . construction . barème thermique:
   formule:
     variations:
       - si:
@@ -228,7 +234,7 @@ transport . voiture . empreinte . construction . barème thermique:
         alors: 11722
   note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool ((fabrication + maintenance + fin de vie) * km * nb de passagers) - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
 
-transport . voiture . empreinte . construction . barème électrique:
+transport . voiture . construction . barème électrique:
   formule:
     variations:
       - si:
@@ -244,7 +250,7 @@ transport . voiture . empreinte . construction . barème électrique:
         alors: 18895
   note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool ((fabrication + maintenance + fin de vie) * km * nb de passagers) - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
 
-transport . voiture . empreinte . construction . barème hybride:
+transport . voiture . construction . barème hybride:
   formule:
     variations:
       - si:
@@ -264,8 +270,8 @@ transport . voiture . durée de vie:
   formule: 17
   note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
 
-transport . ferry . présent:
-  par défaut: non
+transport . ferry . usager:
+  par défaut: "'négatif'"
 
 transport . ferry . heures:
   suggestions:
@@ -311,8 +317,9 @@ transport . mobilité douce . autres véhicules à moteur . durée de vie:
 #   question: Quel type de deux-roues motorisé utilisez-vous ?
 
 # DIVERS
-divers . animaux domestiques . empreinte . chats . nombre:
-  par défaut: 0
+
+divers . animaux domestiques . empreinte par défaut:
+  formule: 0
 
 divers . électroménager . préservation:
   description: |
@@ -980,10 +987,6 @@ transport . voiture électrique:
 
     Néanmoins le chiffre de réduction présenté pour cette action correspond bien à la différence d'émissions de gaz à effet de serre qui aurait eu lieu si vous aviez parcouru vos km avec un véhicule électrique et non thermique.
 
-transport . âge nouvelle voiture électrique . occasion:
-  description: |
-    La durée d'autonomie d'une batterie est variable d'un modèle à l'autre, mais rappelez-vous qu'en moyenne nos trajets en voiture [font  11 km]( https://statistique.ge.ch/domaines/11/11_02/tableaux.asp) !
-
 logement . baisse température:
   description: |
     Le logement, et en particulier son chauffage (au mazout ou au gaz), a un impact très important sur le climat.
@@ -1008,7 +1011,7 @@ logement . baisse température . nombre degrés:
 
     Les fenêtres doivent bien entendu être maintenues fermées. Afin d'aérer votre logement, et si vous ne disposez pas d'une aération mécanique, ouvrez grand les fenêtres 1x par jour pendant 5 à 10 minutes par jour.
 
-Une bonne gestion des stores ou volets vous permettra de gagner en confort et de réduire encore les émissions de votre logement: leur ouverture pendant la journée vous permettra de profiter de l'énergie du soleil, leur fermeture la nuit augmentera votre confort et réduira les pertes de chaleur.
+    Une bonne gestion des stores ou volets vous permettra de gagner en confort et de réduire encore les émissions de votre logement: leur ouverture pendant la journée vous permettra de profiter de l'énergie du soleil, leur fermeture la nuit augmentera votre confort et réduira les pertes de chaleur.
 
 logement . baisse température . gains 1 degré:
   formule: 0.1
