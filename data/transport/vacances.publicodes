@@ -17,19 +17,32 @@ transport . vacances:
     💡 Si vous ne possédez ni camping car, ni caravane, ou bien si vous les louez, vous pouvez cliquer sur "aucun" juste en dessous de cette question, puis "Suivant". La location n'est pas encore disponible dans notre modèle**.
   formule:
     somme:
-      - caravane . empreinte . usage réel
-      - camping car . empreinte . usage réel
+      - caravane
+      - camping car
       - van
 
+# @Clément: pour l'instant, nous gardons la valeur par défaut pour `transport . vacances` à false pour des raison de complexité :
+# - L'empreinte est divisée entre 2 catégorie : nous ne pouvons appliqué le même comportement / contournement que pour la mosaïque "chauffage" par exemple.
+# - L'empreinte par défaut est relativement faible au vu des proportions d'usagers de ces véhicules
+# transport . vacances . empreinte par défaut:
+#   formule:
+#     somme:
+#       - caravane . empreinte . usage réel * caravane . pourcentage caravaniers
+#       - camping car . empreinte . usage réel * camping car . pourcentage camping-caristes
+#       - van * van . pourcentage usagers van
+
+# transport . vacances . choix utilisateur:
+#   formule:
+#     variations:
+#       - si:
+#           une de ces conditions:
+#             - caravane . propriétaire
+#             - camping car . propriétaire
+#             - van . propriétaire
+#         alors: oui
+#       - sinon: non
+
 transport . vacances . caravane:
-  formule: oui
-  icônes: 🚎
-
-transport . vacances . caravane . propriétaire:
-  question: Possédez-vous une caravane ?
-  par défaut: non
-
-transport . vacances . caravane . empreinte:
   titre: Caravane
   icônes: 🚎
   applicable si:
@@ -40,7 +53,11 @@ transport . vacances . caravane . empreinte:
   note: |
     On considère une surconsommation pour les km parcourus avec la caravance.
 
-transport . vacances . caravane . empreinte . usage réel:
+transport . vacances . caravane . propriétaire:
+  question: Possédez-vous une caravane ?
+  par défaut: non
+
+transport . vacances . caravane . usage réel:
   titre: Usage Caravane
   formule: (surconsommation * distance) / logement . habitants
   unité: kgCO2e
@@ -57,14 +74,20 @@ transport . vacances . caravane . ratio surconsommation:
 
 transport . vacances . caravane . distance:
   question: Quelle distance parcourez-vous à l'année en caravane ?
-  par défaut: 5000
+  par défaut: 6250
   description: |
     Attention, pour faire ces km en caravane, vous les avez faits avec une voiture : vous devez donc les avoir inclus dans les km voiture (une question à laquelle vous avez probablement déjà répondu).
 
     💡 Cette question nous sert à appliquer la surconsommation du tractage de votre caravane à une partie de vos km en voiture.
+  note: D'après la fédération des campeurs, caravaniers et camping-caristes, un camping-cariste fait en moyenne de 5000 à 7500 km par an ([source](https://ffcc.fr/chiffres-cles/))
   unité: km
 
-transport . vacances . caravane . empreinte . construction:
+transport . vacances . caravane . construction amortie:
+  titre: Construction de la caravane
+  formule: (construction / durée de vie) / logement . habitants
+  unité: kgCO2e
+
+transport . vacances . caravane . construction:
   formule: voiture . gabarit . berline . empreinte * (caravane . poids / voiture . gabarit . berline . poids)
   unité: kgCO2e
   note: |
@@ -76,26 +99,17 @@ transport . vacances . caravane . poids:
   formule: 750
   unité: kg
 
-transport . vacances . caravane . empreinte . construction amortie:
-  titre: Construction de la caravane
-  formule: (construction / durée de vie) / logement . habitants
-  unité: kgCO2e
-
 transport . vacances . caravane . durée de vie:
   formule: 25
   note: |
     Comme pour le camping car on considère une durée de vie de [25 ans](https://objectifpleinair.com/combien-de-temps-dure-un-camping-car/).
     Cette hypothèse nécessite d'être mieux sourcée.
 
+transport . vacances . caravane . pourcentage caravaniers:
+  formule: 700000 / population
+  note: Il s'est vendu moitié moins de caravanes en France en 2021 que de camping-cars. On peut supposer qu'il y a moitié moins de caravaniers que de camping-caristes ([source](https://ffcc.fr/chiffres-cles/)).
+
 transport . vacances . camping car:
-  formule: oui
-  icônes: 🚐
-
-transport . vacances . camping car . propriétaire:
-  question: Possédez-vous un camping car ?
-  par défaut: non
-
-transport . vacances . camping car . empreinte:
   titre: Camping Car
   icônes: 🚐
   applicable si:
@@ -104,17 +118,21 @@ transport . vacances . camping car . empreinte:
       - propriétaire
   formule: usage réel + construction amortie
 
-transport . vacances . camping car . empreinte . usage réel:
+transport . vacances . camping car . propriétaire:
+  question: Possédez-vous un camping car ?
+  par défaut: non
+
+transport . vacances . camping car . usage réel:
   titre: Usage Camping Car
   formule: usage / logement . habitants
   unité: kgCO2e
 
-transport . vacances . camping car . empreinte . construction amortie:
+transport . vacances . camping car . construction amortie:
   titre: Construction du camping car
   formule: (construction / durée de vie) / logement . habitants
   unité: kgCO2e
 
-transport . vacances . camping car . empreinte . construction:
+transport . vacances . camping car . construction:
   formule: voiture . gabarit . berline . empreinte * (camping car . poids / voiture . gabarit . berline . poids)
   unité: kgCO2e
   note: |
@@ -138,8 +156,9 @@ transport . vacances . camping car . km:
   question: Quelle distance parcourez-vous à l'année en camping-car ?
   description: |
     Attention, ces km de camping car ne doivent pas être renseignés dans les km voiture (une question à laquelle vous avez probablement déjà répondu), ce sont deux questions différentes.
-  par défaut: 5000
+  par défaut: 8869
   unité: km
+  note: D'après la fédération des campeurs, caravaniers et camping-caristes, un camping-cariste fait en moyenne 8869 km par an ([source](https://ffcc.fr/actualite/qui-sont-les-camping-caristes-et-les-vanlifers-en-2021/))
 
 transport . vacances . camping car . consommation aux 100:
   question: Connaissez-vous la consommation moyenne de votre camping-car ?
@@ -163,9 +182,13 @@ transport . vacances . camping car . empreinte au kilomètre:
   formule: consommation au kilomètre * empreinte au litre
   unité: kgCO2e/km
 
-transport . vacances . camping car . empreinte . usage:
+transport . vacances . camping car . usage:
   formule: camping car . km * empreinte au kilomètre
   unité: kgCO2e
+
+transport . vacances . camping car . pourcentage camping-caristes:
+  formule: 1400000 * 77% / population
+  note: Il existe 1,4 millions de camping-caristes en France, dont 77% roulent en camping-car (23% en van / fourgon aménagé) [selon la Fédération des campeurs, caravaniers et camping-caristes](https://ffcc.fr/chiffres-cles/)
 
 transport . vacances . van:
   titre: Van
@@ -177,3 +200,16 @@ transport . vacances . van . propriétaire:
   question: Possédez-vous un van ?
   par défaut: non
   inactif: oui
+# transport . vacances . van . km:
+#   titre: km en van
+#   applicable si: propriétaire
+#   question: Quelle distance parcourez-vous à l'année en van ?
+#   description: |
+#     Attention, ces km de camping car ne doivent pas être renseignés dans les km voiture (une question à laquelle vous avez probablement déjà répondu), ce sont deux questions différentes.
+#   par défaut: 9310
+#   unité: km
+#   note: D'après la fédération des campeurs, caravaniers et camping-caristes, un vanlifer fait en moyenne 9310 km par an ([source](https://ffcc.fr/actualite/qui-sont-les-camping-caristes-et-les-vanlifers-en-2021/))
+
+# transport . vacances . van . pourcentage usagers van:
+#   formule: 1400000 * 23% / population
+#   note: Il existe 1,4 millions de camping-caristes en France, dont 23% roulent en van / fourgon aménagé [selon la Fédération des campeurs, caravaniers et camping-caristes](https://ffcc.fr/chiffres-cles/)

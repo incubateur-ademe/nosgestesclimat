@@ -1,10 +1,43 @@
-# nosgestesclimat 🌍🥵
 
-Ici réside le modèle de calcul de https://nosgestesclimat.fr.
+<div align="center">
+  <h3 align="center">
+	<big>Nos Gestes Climat</big>
+  </h3>
+  <p align="center">
+   <a href="https://github.com/incubateur-ademe/nosgestesclimat/issues">Report Bug</a>
+   •
+   <a href="https://nogestesclimat.fr">nosgestesclimat.fr</a>
+   •
+   <a href="https://github.com/incubateur-ademe/nosgestesclimat-site-nextjs">Code du site</a>
+  </p>
 
-### Écriture des modèles du simulateur
+<!-- ![CI][ci-link] ![NPM][npm-link] -->
+Modèle de calcul de l'empreinte climat personnelle.
 
-Le modèle d'empreinte climat personnelle est écrit dans un français le plus lisible possible :
+</div>
+
+## Utilisation
+
+Vous pouvez parcourir le modèle grâce à ça [documentation en
+ligne](https://nosgestesclimat.fr/documentation) ou bien utiliser le paquet npm
+`@incubateur-ademe/nosgestesclimat` :
+
+```sh
+yarn add @incubateur-ademe/nosgestesclimat
+```
+
+```ts
+import { rules } from "@incubateur-ademe/nosgestesclimat";
+import Engine from "publicodes";
+
+const engine = new Engine(rules);
+console.log(engine.evaluate("bilan"))
+```
+
+## Écriture des modèles du simulateur
+
+Le modèle d'empreinte climat personnelle est écrit dans un français le plus
+lisible possible :
 
 ```yaml
 # Premier extrait
@@ -31,12 +64,12 @@ transport . avion . coefficient de forçage radiatif:
     - https://fr.wikipedia.org/wiki/Impact_climatique_du_transport_a%C3%A9rien#Pond%C3%A9ration_des_%C3%A9missions
 ```
 
-:pen: Suivez [le guide pour contribuer](https://github.com/datagir/nosgestesclimat/blob/master/CONTRIBUTING.md).
+:pen: Suivez [le guide pour
+contribuer](https://github.com/incubateur-ademe/nosgestesclimat/blob/master/CONTRIBUTING.md).
 
-Tous les modèles sont dans [le dossier `data`](https://github.com/datagir/nosgestesclimat/tree/master/data).
+Tous les modèles sont dans [le dossier
+`data`](https://github.com/incubateur-ademe/nosgestesclimat/tree/master/data).
 
-Ils reposent sur le nouveau langage de programmation `publicodes` documenté sur https://publi.codes et développé dans le cadre de https://beta.gouv.fr.
-
-### Code de l'interface
-
-Le code du site est ici [`datagir/nosgestesclimat-site`](https://github.com/datagir/nosgestesclimat-site).
+Ils reposent sur le nouveau langage de programmation
+[`publicodes`](https://publi.codes) et développé dans le cadre de
+https://beta.gouv.fr.

@@ -5,14 +5,14 @@
 	NOTE: this function is used by the file Personas.tsx of the website.
 */
 
-const utils = require('./utils')
+const utils = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
 
 const addTranslationToBasePersonas = (basePersonas, translatedPersonas) => {
 	var resPersonas = basePersonas
 
 	Object.entries(translatedPersonas).forEach(([personaId, attrs]) => {
 		Object.entries(attrs)
-			.filter(([attr, _]) => !attr.endsWith('.lock'))
+			.filter(([attr, _]) => !attr.endsWith(utils.LOCK_KEY_EXT))
 			.forEach(([attr, transVal]) => {
 				const key = [personaId, attr]
 				if (utils.objPath(key, basePersonas)) {
