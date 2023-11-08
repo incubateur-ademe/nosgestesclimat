@@ -17,8 +17,8 @@ transport . vacances:
     💡 Si vous ne possédez ni camping car, ni caravane, ou bien si vous les louez, vous pouvez cliquer sur "aucun" juste en dessous de cette question, puis "Suivant". La location n'est pas encore disponible dans notre modèle**.
   formule:
     somme:
-      - caravane . empreinte . usage réel
-      - camping car . empreinte . usage réel
+      - caravane
+      - camping car
       - van
 
 # @Clément: pour l'instant, nous gardons la valeur par défaut pour `transport . vacances` à false pour des raison de complexité :
@@ -45,12 +45,6 @@ transport . vacances:
 transport . vacances . caravane:
   titre: Caravane
   icônes: 🚎
-
-transport . vacances . caravane . propriétaire:
-  question: Possédez-vous une caravane ?
-  par défaut: non
-
-transport . vacances . caravane . empreinte:
   applicable si:
     toutes ces conditions:
       - transport . voiture . km > 0
@@ -59,7 +53,11 @@ transport . vacances . caravane . empreinte:
   note: |
     On considère une surconsommation pour les km parcourus avec la caravance.
 
-transport . vacances . caravane . empreinte . usage réel:
+transport . vacances . caravane . propriétaire:
+  question: Possédez-vous une caravane ?
+  par défaut: non
+
+transport . vacances . caravane . usage réel:
   titre: Usage Caravane
   formule: (surconsommation * distance) / logement . habitants
   unité: kgCO2e
@@ -84,12 +82,12 @@ transport . vacances . caravane . distance:
   note: D'après la fédération des campeurs, caravaniers et camping-caristes, un camping-cariste fait en moyenne de 5000 à 7500 km par an ([source](https://ffcc.fr/chiffres-cles/))
   unité: km
 
-transport . vacances . caravane . empreinte . construction amortie:
+transport . vacances . caravane . construction amortie:
   titre: Construction de la caravane
   formule: (construction / durée de vie) / logement . habitants
   unité: kgCO2e
 
-transport . vacances . caravane . empreinte . construction:
+transport . vacances . caravane . construction:
   formule: voiture . gabarit . berline . empreinte * (caravane . poids / voiture . gabarit . berline . poids)
   unité: kgCO2e
   note: |
@@ -114,29 +112,27 @@ transport . vacances . caravane . pourcentage caravaniers:
 transport . vacances . camping car:
   titre: Camping Car
   icônes: 🚐
-
-transport . vacances . camping car . propriétaire:
-  question: Possédez-vous un camping car ?
-  par défaut: non
-
-transport . vacances . camping car . empreinte:
   applicable si:
     toutes ces conditions:
       - km > 0
       - propriétaire
   formule: usage réel + construction amortie
 
-transport . vacances . camping car . empreinte . usage réel:
+transport . vacances . camping car . propriétaire:
+  question: Possédez-vous un camping car ?
+  par défaut: non
+
+transport . vacances . camping car . usage réel:
   titre: Usage Camping Car
   formule: usage / logement . habitants
   unité: kgCO2e
 
-transport . vacances . camping car . empreinte . construction amortie:
+transport . vacances . camping car . construction amortie:
   titre: Construction du camping car
   formule: (construction / durée de vie) / logement . habitants
   unité: kgCO2e
 
-transport . vacances . camping car . empreinte . construction:
+transport . vacances . camping car . construction:
   formule: voiture . gabarit . berline . empreinte * (camping car . poids / voiture . gabarit . berline . poids)
   unité: kgCO2e
   note: |
@@ -186,7 +182,7 @@ transport . vacances . camping car . empreinte au kilomètre:
   formule: consommation au kilomètre * empreinte au litre
   unité: kgCO2e/km
 
-transport . vacances . camping car . empreinte . usage:
+transport . vacances . camping car . usage:
   formule: camping car . km * empreinte au kilomètre
   unité: kgCO2e
 
