@@ -455,7 +455,7 @@ parc français . chauffage . consommation gaz par m2:
   note: Source - KBOB, consommation pour le chauffage par défaut de 450 MJ/m2
 
 parc français . chauffage . consommation fioul par m2:
-  formule: 125 * logement . chauffage . fioul kWh au litre
+  formule: 125
   unité: kWh/m2
   note: Source - KBOB, consommation pour le chauffage par défaut de 450 MJ/m2
 
@@ -469,15 +469,11 @@ parc français . chauffage . consommation réseau de chaleur par m2:
   unité: kWh/m2
   note: Source - KBOB, consommation pour le chauffage par défaut de 450 MJ/m2
 
-parc français . chauffage . consommation GPL par m2:
-  formule: 125
-  unité: kWh/m2
-  note: Source - KBOB, consommation pour le chauffage par défaut de 450 MJ/m2
-
 # @Clément On a besoin des parts de chaque type d'énergie dans le parc genevois. Il semble y avoir un pb avec ceux relevés dans le fichier.
 # On distingue parts des énergies dans le parc genevois et part dédiée au chauffage pour chaque type d'énergie (cf plus bas).
 parc français . surface . part électricité:
-  formule: 0%
+  formule: 3.3%
+  note: Pas de chauffage électrique, on prend en compte ici la part liée à la consommation des pompes à chaleur
 
 parc français . surface . part gaz:
   formule: 60.80%
@@ -491,17 +487,12 @@ parc français . surface . part bois:
 parc français . surface . part réseau de chaleur:
   formule: 5.2%
 
-# @Clément A priori non pertinent car "consommation électricité autre moyennne" est définie comme :
-# "consommation électricité autre par m2 * surface moyenne". Il manque donc
-# "parc français . consommation électricité autre par m2" normalement, qui correspond à la consommation d'électricité par m2 hors chauffage.
-
-# parc français . consommation électricité autre moyennne:
-#   formule:
-#     - si: appartement
-#       alors: 1386 + 540 * saisie habitants
-#     - sinon: 1762 + 656 * saisie habitants
-#   unité: kWh
-#   note: Source (extrapolation) - L'efficacité énergétique dans les ménages, Suissenergie, novembre 2021; OCSTAT; OFS
+parc français . consommation électricité autre par m2:
+  formule: 31.5
+  unité: kWh/m2
+  note: |
+    Source (extrapolation) - L'efficacité énergétique dans les ménages, Suissenergie, novembre 2021; OCSTAT; OFS
+    Basé sur un foyer moyen de type appartement
 
 logement . électricité . estimation via le coût:
   unité: CHF/kWh
@@ -617,12 +608,12 @@ logement . chauffage:
 # Les parts doivent être définie plus haut.
 logement . chauffage . empreinte par défaut:
   résumé: Un calcul statistique du **chauffage** résidentiel genevois moyen
-  # formule:
-  #   somme:
-  #     - 28.40% * parc français . chauffage . consommation fioul par m2 * surface *  logement . chauffage . intensité carbone fioul litre
-  #     - 60.80% * parc français . chauffage . consommation gaz par m2 * surface *  logement . chauffage . gaz * gaz . facteur d'émission base carbone
-  #     - 2.3% * parc français . chauffage . consommation bois par m2 * surface *  (logement . chauffage . bois . facteur d'émission bûche + logement . chauffage . bois . facteur d'émission granulés) / 2
-  #     - 5.2% * parc français . chauffage . consommation réseau de chaleur par m2 * surface *  logement . chauffage . réseau de chaleur . intensité carbone
+  formule:
+    somme:
+      - parc français . chauffage . consommation gaz moyenne relative * gaz . facteur d'émission base carbone
+      - parc français . chauffage . consommation fioul moyenne relative en litres * intensité carbone fioul litre
+      - parc français . chauffage . consommation bois moyenne relative * ((bois . facteur d'émission bûche + bois . facteur d'émission granulés) / 2)
+      - parc français . chauffage . consommation réseau de chaleur moyenne relative * réseau de chaleur . intensité carbone
   note: l'empreinte du logement par défaut est calculée sur la base de la moyenne du parc immobilier genevois
 
 logement . chauffage . gaz . consommation:
@@ -1023,39 +1014,13 @@ logement . baisse température . gains 1 degré:
 logement . empreinte chauffage air:
   description: |
     Pour chaque kWh de chaque type d'énergie, quelle est la part utilisée pour le chauffage de l'air d'un foyer ?
-
-# @Clément: Nécessaire d'avoir ici les parts dédiées au chauffage pour chaque source d'énergie, la formule étant :
-# formule:
-#   somme:
-#     - parc français . consommation électricité totale relative * électricité . intensité carbone * part chauffage électricité
-#     - parc français . chauffage . consommation gaz moyenne relative * chauffage . gaz . facteur d'émission base carbone * part chauffage gaz
-#     - parc français . chauffage . consommation fioul moyenne relative en litres * chauffage . intensité carbone fioul litre * part chauffage fioul
-#     - parc français . chauffage . consommation bois moyenne relative * ((chauffage . bois . facteur d'émission bûche + chauffage . bois . facteur d'émission granulés) / 2) * part chauffage bois
-#     - parc français . chauffage . consommation réseau de chaleur moyenne relative * chauffage . réseau de chaleur . intensité carbone * part chauffage réseau de chaleur
-#     - parc français . chauffage . consommation GPL moyenne relative * chauffage . intensité carbone GPL * part chauffage GPL
-# Si on se base sur l'exemple de l'empreinte chauffage par défaut, on aurait pour la suisse quelque chose comme :
-# formule:
-#   somme:
-#     - xx% * parc français . chauffage . consommation électricité par m2 * surface * électricité . intensité carbone * part chauffage électricité
-#     - 28.40% * parc français . chauffage . consommation fioul par m2 * surface *  logement . chauffage . intensité carbone fioul litre * part chauffage fioul
-#     - 60.80% * parc français . chauffage . consommation gaz par m2 * surface *  logement . chauffage . gaz * gaz . facteur d'émission base carbone * part chauffage gaz
-#     - 2.3% * parc français . chauffage . consommation bois par m2 * surface *  ((logement . chauffage . bois . facteur d'émission bûche + logement . chauffage . bois . facteur d'émission granulés) / 2) * part chauffage bois
-#     - 5.2% * parc français . chauffage . consommation réseau de chaleur par m2 * surface *  logement . chauffage . réseau de chaleur . intensité carbone * part chauffage réseau de chaleur
-
-# logement . part chauffage électricité:
-#   formule:
-
-# logement . part chauffage gaz:
-#   formule:
-
-# logement . part chauffage fioul:
-#   formule:
-
-# logement . part chauffage fioul:
-#   formule:
-
-# logement . part chauffage réseau de chaleur:
-#   formule:
+  formule:
+    somme:
+      - parc français . consommation électricité totale relative * électricité . intensité carbone * part chauffage électricité
+      - parc français . chauffage . consommation gaz moyenne relative * chauffage . gaz . facteur d'émission base carbone * part chauffage gaz
+      - parc français . chauffage . consommation fioul moyenne relative en litres * chauffage . intensité carbone fioul litre * part chauffage fioul
+      - parc français . chauffage . consommation bois moyenne relative * ((chauffage . bois . facteur d'émission bûche + chauffage . bois . facteur d'émission granulés) / 2) * part chauffage bois
+      - parc français . chauffage . consommation réseau de chaleur moyenne relative * chauffage . réseau de chaleur . intensité carbone * part chauffage réseau de chaleur
 
 logement . éteindre appareils:
   description: |
