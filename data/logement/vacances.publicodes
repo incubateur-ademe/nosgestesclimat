@@ -11,6 +11,7 @@ logement . vacances:
         locations . présent: non
         famille ou amis . présent: non
         échange . présent: non
+        choix utilisateur: oui
   question: Comment êtes-vous hébergé pour vos week-ends, vos vacances ?
   icônes: 🏖
   description: |
@@ -73,16 +74,20 @@ logement . vacances . empreinte par défaut:
   unité: kgCO2e
 
 logement . vacances . choix utilisateur:
-  titre: Choix utilisateur pour les nuitées
+  description: l'utilisateur a-t-il fait un choix de nuitées ?
   formule:
-    une de ces conditions:
-      - est défini: hotel . présent
-      - est défini: camping . présent
-      - est défini: auberge de jeunesse . présent
-      - est défini: locations . présent
-      - est défini: famille ou amis . présent
-      - est défini: échange . présent
-      # - est défini: maison secondaire . présent
+    variations:
+      - si:
+          une de ces conditions:
+            - hotel . présent
+            - camping . présent
+            - auberge de jeunesse . présent
+            - locations . présent
+            - famille ou amis . présent
+            - échange . présent
+            # - maison secondaire . présent
+        alors: oui
+      - sinon: non
 
 logement . vacances . nombre de nuits hors logement:
   formule: 26.5
@@ -153,6 +158,7 @@ logement . vacances . hotel:
 
 logement . vacances . hotel . présent:
   question: Allez-vous à l'hôtel ?
+  par défaut: non
 
 logement . vacances . empreinte hotel par nuit:
   formule: 6.93
@@ -220,6 +226,7 @@ logement . vacances . camping:
 
 logement . vacances . camping . présent:
   question: Allez-vous en camping ?
+  par défaut: non
 
 logement . vacances . camping . empreinte par nuit:
   formule: 1.4
@@ -265,6 +272,7 @@ logement . vacances . auberge de jeunesse:
 
 logement . vacances . auberge de jeunesse . présent:
   question: Allez-vous en auberge de jeunesse ?
+  par défaut: non
 
 logement . vacances . auberge de jeunesse . empreinte par nuit:
   formule: empreinte hotel par nuit / nombre de personnes dans le dortoir
@@ -313,7 +321,7 @@ logement . vacances . locations:
 
 logement . vacances . locations . présent:
   question: Allez-vous en vacances en location meublée (type Airbnb) ?
-
+  par défaut: non
   description: |
     💡 Déclarez ici les nuits passées en locations meublées de type Airbnb ou Abritel.
 
@@ -363,7 +371,7 @@ logement . vacances . échange:
 
 logement . vacances . échange . présent:
   question: Pratiquez-vous l'échange de maison ?
-
+  par défaut: non
   description: |
     💡 Déclarez ici les nuits passées en échange de maison (HomeExchange, SwitchHome...).
 
@@ -410,6 +418,7 @@ logement . vacances . famille ou amis:
 
 logement . vacances . famille ou amis . présent:
   question: Allez-vous chez des amis ou de la famille ?
+  par défaut: non
 
 logement . vacances . famille ou amis . notif:
   type: notification
@@ -429,4 +438,5 @@ logement . vacances . maison secondaire:
 
 logement . vacances . maison secondaire . présent:
   question: Possédez-vous une maison secondaire ?
+  par défaut: non
   inactif: oui

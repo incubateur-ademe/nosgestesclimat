@@ -49,13 +49,45 @@ divers . animaux domestiques . empreinte:
         chien moyen . nombre: 0
         gros chien . nombre: 0
         chats . nombre: 0
-  formule: empreinte totale
+        choix utilisateur: oui
+  formule:
+    variations:
+      - si: choix utilisateur
+        alors: empreinte totale
+      - sinon: empreinte par défaut
+
+divers . animaux domestiques . empreinte . choix utilisateur:
+  description: L'utilisateur a-t-il fait un choix d'animaux ?
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - empreinte . chats . nombre > 0
+            - empreinte . petit chien . nombre > 0
+            - empreinte . chien moyen . nombre > 0
+            - empreinte . gros chien . nombre > 0
+        alors: oui
+      - sinon: non
 
 divers . animaux domestiques . empreinte totale:
   formule:
     somme:
       - empreinte . chats
       - empreinte . chiens
+
+divers . animaux domestiques . empreinte par défaut:
+  formule:
+    somme:
+      - empreinte . chats . nombre moyen * empreinte . chats . empreinte
+      - empreinte . chien moyen . nombre moyen * empreinte . chien moyen . empreinte
+
+divers . animaux domestiques . empreinte . chats . nombre moyen:
+  formule: 0.49
+  note: Il y a en France 15 millions de chats domestiques, soit 0.49 par foyer.
+
+divers . animaux domestiques . empreinte . chien moyen . nombre moyen:
+  formule: 0.25
+  note: Il y a en France 7,5 millions de chiens domestiques, soit 0.25 par foyer. Nous considérons qu'en moyenne un chien est de taille... moyenne !
 
 divers . animaux domestiques . empreinte . chats:
   icônes: 🐱
@@ -64,7 +96,7 @@ divers . animaux domestiques . empreinte . chats:
 
 divers . animaux domestiques . empreinte . chats . nombre:
   question: Combien de chats possédez-vous dans votre foyer ?
-  par défaut: 0.49
+  par défaut: 0
 
 divers . animaux domestiques . empreinte . chats . empreinte:
   titre: Empreinte d'un chat de taille moyenne
@@ -223,7 +255,7 @@ divers . animaux domestiques . empreinte . chien moyen:
 
 divers . animaux domestiques . empreinte . chien moyen . nombre:
   question: Combien de chiens possédez-vous dans votre foyer ?
-  par défaut: 0.25
+  par défaut: 0
 
 divers . animaux domestiques . empreinte . chien moyen . empreinte:
   titre: Empreinte d'un chien de taille moyenne
@@ -325,6 +357,8 @@ divers . animaux domestiques . empreinte . chiens . alimentation . besoins éner
     On retient la formule: (poids chien)^0.75 * 110 kcal pour un animal moyennement actif.
 
 divers . animaux domestiques . empreinte . chiens . alimentation . besoins énergétiques journaliers . facteur poids:
+  avec:
+    taille chien:
   formule:
     variations:
       - si: taille chien = 'gros chien'
@@ -337,16 +371,6 @@ divers . animaux domestiques . empreinte . chiens . alimentation . besoins éner
     Formule : (poids chien)^0.75, formule issue de [FEDIAF, Nutritional Guidelines](https://europeanpetfood.org/wp-content/uploads/2022/03/Updated-Nutritional-Guidelines.pdf)
 
     Publicodes ne supporte pas la fonction puissance. On considère des chiens de 5, 20 et 40kg.
-
-divers . animaux domestiques . empreinte . chiens . alimentation . besoins énergétiques journaliers . facteur poids . taille chien:
-  formule:
-    une possibilité:
-      choix obligatoire: oui
-      possibilités:
-        - gros chien
-        - chien moyen
-        - petit chien
-
 divers . animaux domestiques . empreinte . chiens . alimentation . besoins énergétiques journaliers . facteur énergie:
   formule:
     variations:
