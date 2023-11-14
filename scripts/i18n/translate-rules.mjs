@@ -135,14 +135,13 @@ const translateTo = async (
       if (interactiveMode) {
         const translatedRule = translatedRules[rule]
         const isNewRule = translatedRule === undefined
-        const diff = gitDiff(
-          isNewRule ? '' : translatedRule[attr + LOCK_KEY_EXT],
-          refVal,
-          {
-            color: true,
-            forceFake: true
-          }
-        )
+        const isNewAttr = isNewRule || translatedRule[attr] === undefined
+        const newVal =
+          isNewRule || isNewAttr ? '' : translatedRule[attr + LOCK_KEY_EXT]
+        const diff = gitDiff(newVal, refVal, {
+          color: true,
+          forceFake: true,
+        })
         console.log(
           `\n${c.dim('---')} ${c.green.italic(
             isNewRule ? 'NEW RULE' : 'MODIFIED RULE'
