@@ -146,9 +146,8 @@ simply send your suggestion in a mail to: datagir@ademe.fr.
       > value to translate from.
    5. When all changes have been made, go to the bottom of the page under the `Commit
 changes` section. Enter in the first text field:
-      ```
-      fix(t9n): update translation in the <edited_filename>.
-      ```
+      `       fix(t9n): update translation in the <edited_filename>.
+      `
 3. Finally, select the `Create a new branch for this commit and start a pull
 request.` option. You can add more information if you want about your
    translation before clicking on the `Create pull request` button to open the

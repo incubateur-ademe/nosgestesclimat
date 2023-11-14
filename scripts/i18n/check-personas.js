@@ -18,12 +18,12 @@ const { srcLang, destLangs, markdown } = cli.getArgs(
   {
     source: true,
     target: true,
-    markdown: true,
-  },
+    markdown: true
+  }
 )
 
 const basePersonas = utils.readYAML(
-  path.resolve(`personas/personas-${srcLang}.yaml`),
+  path.resolve(`personas/personas-${srcLang}.yaml`)
 )
 
 cli.printChecksResultTableHeader(markdown)
@@ -31,14 +31,14 @@ cli.printChecksResultTableHeader(markdown)
 destLangs.forEach((destLang) => {
   const destPath = `personas/personas-${destLang}.yaml`
   const translatedPersonas = R.mergeAll(
-    yaml.parse(fs.readFileSync(destPath, 'utf8')),
+    yaml.parse(fs.readFileSync(destPath, 'utf8'))
   )
   const missingRules = utils.getMissingPersonas(
     basePersonas,
-    translatedPersonas,
+    translatedPersonas
   )
   const missingRuleNames = missingRules.map(
-    (obj) => `${obj.personaId} -> ${obj.attr}`,
+    (obj) => `${obj.personaId} -> ${obj.attr}`
   )
 
   const nbMissing = missingRules.length
@@ -48,7 +48,7 @@ destLangs.forEach((destLang) => {
     missingRuleNames,
     'personas',
     destLang,
-    markdown,
+    markdown
   )
   if (
     !markdown &&
@@ -56,7 +56,7 @@ destLangs.forEach((destLang) => {
     cli.askYesNo(`Do you want to log missing personas ?`)
   ) {
     missingRules.map(({ personaId: persona, attr }) =>
-      console.log(cli.styledRuleNameWithOptionalAttr(persona, attr)),
+      console.log(cli.styledRuleNameWithOptionalAttr(persona, attr))
     )
   }
 })

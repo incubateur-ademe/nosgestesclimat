@@ -26,5 +26,5 @@ const addTranslationToBasePersonas = (basePersonas, translatedPersonas) => {
 }
 
 module.exports = {
-  addTranslationToBasePersonas,
+  addTranslationToBasePersonas
 }

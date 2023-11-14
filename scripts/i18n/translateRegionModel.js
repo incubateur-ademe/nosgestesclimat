@@ -13,8 +13,8 @@ const { srcLang, destLangs, destRegions } = cli.getArgs(
   {
     source: true,
     target: true,
-    model: { supportedRegionCodes },
-  },
+    model: { supportedRegionCodes }
+  }
 )
 
 // TODO: support multiple models
@@ -28,14 +28,14 @@ const translateRule = async ([ruleName, ruleVal], destLang) => {
     return deepl.fetchTranslation(
       str,
       srcLang.toUpperCase(),
-      destLang.toUpperCase(),
+      destLang.toUpperCase()
     )
   }
   const translateMd = (str) => {
     return deepl.fetchTranslationMarkdown(
       str,
       srcLang.toUpperCase(),
-      destLang.toUpperCase(),
+      destLang.toUpperCase()
     )
   }
   const translateAttr = async (attr, val) => {
@@ -46,8 +46,8 @@ const translateRule = async ([ruleName, ruleVal], destLang) => {
             Object.entries(val).map(async ([key, val]) => {
               const translatedKey = await translate(key)
               return [translatedKey, val]
-            }),
-          ),
+            })
+          )
         )
         break
       }
@@ -75,9 +75,9 @@ const translateRule = async ([ruleName, ruleVal], destLang) => {
             return translateAttr(attr, val)
           }
           return [attr, val]
-        }),
-      ),
-    ),
+        })
+      )
+    )
   ]
 }
 
@@ -86,8 +86,8 @@ const translateModel = async (srcRules, destLang) => {
     await Promise.all(
       Object.entries(srcRules).map(async (rule) => {
         return await translateRule(rule, destLang)
-      }),
-    ),
+      })
+    )
   )
 }
 
@@ -97,7 +97,7 @@ destLangs.forEach(async (destLang) => {
     'Translating',
     path.basename(srcFile),
     'to',
-    path.basename(destFile),
+    path.basename(destFile)
   )
   if (existsSync(destFile)) {
     cli.printWarn(`File ${destFile} already exists.`)

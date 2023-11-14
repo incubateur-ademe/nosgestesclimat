@@ -8,7 +8,7 @@ const utils = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
 const mechanismsThatCanBeOverriden = [
   // Using the [avec] mechanism allows to use custom rules without having to add them
   // to the base rules.
-  'avec',
+  'avec'
 ]
 
 const addRegionToBaseRules = (baseRules, newRegionalRules) => {
@@ -34,5 +34,5 @@ const addRegionToBaseRules = (baseRules, newRegionalRules) => {
 }
 
 module.exports = {
-  addRegionToBaseRules,
+  addRegionToBaseRules
 }

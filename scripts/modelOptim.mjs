@@ -26,7 +26,7 @@ const rulesToKeep = [
   'logement . chauffage . gaz',
   'logement . chauffage . biogaz',
   'transport . voiture . thermique',
-  'transport . ferry . surface',
+  'transport . ferry . surface'
 ]
 
 export function compressRules(jsonPathWithoutExtension) {
@@ -40,7 +40,7 @@ export function compressRules(jsonPathWithoutExtension) {
         'icônes' in ruleNode.rawNode ||
         ruleNode.rawNode.type === 'notification'
       )
-    },
+    }
   )
   return res
 }
@@ -59,7 +59,7 @@ export function constantFoldingFromJSONFile(
   modelPath,
   jsonDestPath,
   toKeep,
-  verbose = false,
+  verbose = false
 ) {
   const log = verbose ? console.log : function (_) {}
   try {

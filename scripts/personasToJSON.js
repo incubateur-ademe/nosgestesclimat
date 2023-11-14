@@ -6,7 +6,7 @@ const c = require('ansi-colors')
 const utils = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
 const cli = require('@incubateur-ademe/nosgestesclimat-scripts/cli')
 const {
-  addTranslationToBasePersonas,
+  addTranslationToBasePersonas
 } = require('./i18n/addTranslationToBasePersonas')
 
 const outputJSONPath = './public'
@@ -16,8 +16,8 @@ const { srcLang, destLangs, markdown } = cli.getArgs(
   {
     source: true,
     markdown: true,
-    target: true,
-  },
+    target: true
+  }
 )
 
 const writePersonas = (personas, path, lang) => {
@@ -25,13 +25,13 @@ const writePersonas = (personas, path, lang) => {
     if (err) {
       if (markdown) {
         console.log(
-          `| Personas compilation to JSON for _${lang}_ | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`,
+          `| Personas compilation to JSON for _${lang}_ | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
         )
       } else {
         console.error(
           ` ❌ An error occured while compililing personas to JSON for ${c.yellow(
-            lang,
-          )}:`,
+            lang
+          )}:`
         )
         console.error(err)
       }
@@ -41,19 +41,19 @@ const writePersonas = (personas, path, lang) => {
     console.log(
       markdown
         ? `| Personas compilation to JSON for _${lang}_ | :heavy_check_mark: | Ø |`
-        : `✅ Personas compilation to JSON for ${c.yellow(lang)}`,
+        : `✅ Personas compilation to JSON for ${c.yellow(lang)}`
     )
   })
 }
 
 const basePersonas = utils.readYAML(
-  path.resolve(`personas/personas-${srcLang}.yaml`),
+  path.resolve(`personas/personas-${srcLang}.yaml`)
 )
 
 writePersonas(
   basePersonas,
   path.join(outputJSONPath, `personas-${srcLang}.json`),
-  srcLang,
+  srcLang
 )
 
 destLangs.forEach((destLang) => {
@@ -62,7 +62,7 @@ destLangs.forEach((destLang) => {
     utils.readYAML(path.resolve(`personas/personas-${destLang}.yaml`)) ?? {}
   const translatedPersonas = addTranslationToBasePersonas(
     basePersonas,
-    translatedPersonasAttrs,
+    translatedPersonasAttrs
   )
   writePersonas(translatedPersonas, destPath, destLang)
 })

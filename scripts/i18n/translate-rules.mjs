@@ -16,7 +16,7 @@ import {
   PREVIOUS_REVIEW_KEY_EXT,
   writeYAML,
   readYAML,
-  getMissingRules,
+  getMissingRules
 } from '@incubateur-ademe/nosgestesclimat-scripts/utils'
 
 import {
@@ -25,12 +25,12 @@ import {
   printWarn,
   printErr,
   styledRuleNameWithOptionalAttr,
-  styledPromptActions,
+  styledPromptActions
 } from '@incubateur-ademe/nosgestesclimat-scripts/cli'
 
 import {
   fetchTranslation,
-  fetchTranslationMarkdown,
+  fetchTranslationMarkdown
 } from '@incubateur-ademe/nosgestesclimat-scripts/deepl'
 import gitDiff from 'git-diff'
 import { getModelFromSource } from '@incubateur-ademe/publicodes-tools/compilation'
@@ -48,8 +48,8 @@ const { srcLang, destLangs, srcFile, onlyUpdateLocks, interactiveMode } =
       file: true,
       onlyUpdateLocks: true,
       defaultSrcFile: 'data/**/*.publicodes',
-      interactiveMode: true,
-    },
+      interactiveMode: true
+    }
   )
 
 const cmds = [
@@ -57,7 +57,7 @@ const cmds = [
   { info: 'update .lock attribute', cmd: 'u' },
   { info: 'skip', cmd: 's' },
   { info: 'print current translation', cmd: 'p' },
-  { info: 'abort', cmd: 'a' },
+  { info: 'abort', cmd: 'a' }
 ]
 
 const abrvs = cmds.map(({ cmd }) => cmd)
@@ -67,7 +67,7 @@ const translateTo = async (
   destLang,
   destPath,
   entryToTranslate,
-  translatedRules,
+  translatedRules
 ) => {
   let previoulsyReviewedTranslations = []
   let skippedValues = []
@@ -78,7 +78,7 @@ const translateTo = async (
     attr,
     transVal,
     refVal,
-    onlyNeedToUpdateLocks,
+    onlyNeedToUpdateLocks
   ) => {
     let key = [rule, attr]
     let refKey = [rule, attr + LOCK_KEY_EXT]
@@ -118,14 +118,14 @@ const translateTo = async (
     return fetchTranslation(
       value,
       srcLang.toUpperCase(),
-      destLang.toUpperCase(),
+      destLang.toUpperCase()
     )
   }
   const translateMarkdown = (value) => {
     return fetchTranslationMarkdown(
       value,
       srcLang.toUpperCase(),
-      destLang.toUpperCase(),
+      destLang.toUpperCase()
     )
   }
 
@@ -140,21 +140,21 @@ const translateTo = async (
           refVal,
           {
             color: true,
-            forceFake: true,
-          },
+            forceFake: true
+          }
         )
         console.log(
           `\n${c.dim('---')} ${c.green.italic(
-            isNewRule ? 'NEW RULE' : 'MODIFIED RULE',
-          )} ${c.dim('---------------------------')}`,
+            isNewRule ? 'NEW RULE' : 'MODIFIED RULE'
+          )} ${c.dim('---------------------------')}`
         )
         console.log(`\n${styledRuleNameWithOptionalAttr(rule, attr)}\n${diff}`)
         console.log(
           `${c.dim(
             `----${
               isNewRule ? '---------' : '--------------'
-            }---------------------------`,
-          )}`,
+            }---------------------------`
+          )}`
         )
         do {
           if (answer === 'p') {
@@ -182,7 +182,7 @@ const translateTo = async (
         if (!translatedValue && !onlyNeedToUpdateLocks) {
           skippedValues.push({
             rule,
-            msg: 'an error occurred while translating',
+            msg: 'an error occurred while translating'
           })
         } else {
           if (onlyNeedToUpdateLocks) {
@@ -193,13 +193,13 @@ const translateTo = async (
             attr,
             translatedValue,
             refVal,
-            onlyNeedToUpdateLocks,
+            onlyNeedToUpdateLocks
           )
         }
       } catch (err) {
         skippedValues.push({ rule, msg: err.message })
       }
-    }),
+    })
   )
 
   skippedTranslations.forEach((rule) => {
@@ -210,7 +210,7 @@ const translateTo = async (
   })
   previoulsyReviewedTranslations.forEach((rule) => {
     printErr(
-      `[PREVIOUSLY REVIEWED] - '${rule}': previous translation has been previously corrected by hand`,
+      `[PREVIOUSLY REVIEWED] - '${rule}': previous translation has been previously corrected by hand`
     )
   })
   console.log(`Writing translated rules to: ${destPath}`)
@@ -228,15 +228,15 @@ destLangs.forEach(async (destLang) => {
   if (0 < missingRules.length) {
     console.log(
       `Translating ${c.green(missingRules.length)} new entries to ${c.yellow(
-        destLang,
-      )}...`,
+        destLang
+      )}...`
     )
     if (interactiveMode) {
       console.log(
         `For each rule, you can choose to:\n\n${styledPromptActions(
           cmds.map(({ info }) => info),
-          '\n',
-        )}`,
+          '\n'
+        )}`
       )
     }
 

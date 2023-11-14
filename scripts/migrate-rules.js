@@ -24,8 +24,8 @@ const modifiedRules = rules.map((rule) => {
     lines = [
       dottedName + ':',
       ...lines.filter(
-        (l) => !l.match(matchLine.nom) && !l.match(matchLine.espace),
-      ),
+        (l) => !l.match(matchLine.nom) && !l.match(matchLine.espace)
+      )
     ]
   }
   return lines.join('\n')

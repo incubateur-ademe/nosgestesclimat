@@ -20,9 +20,9 @@ const writeJSON = (path, content, messageGénérationAuto = '') => {
       path,
       format(messageGénérationAuto + JSON.stringify(content), {
         ...prettierConfig,
-        parser: 'json',
-      }),
-    ),
+        parser: 'json'
+      })
+    )
   )
 }
 
@@ -36,7 +36,7 @@ const writeYAML = (
   path,
   content,
   messageGénérationAuto = '',
-  blockQuote = 'literal',
+  blockQuote = 'literal'
 ) => {
   resolveConfig(process.cwd()).then((prettierConfig) =>
     fs.writeFileSync(
@@ -47,11 +47,11 @@ const writeYAML = (
             sortMapEntries: true,
             aliasDuplicateObjects: false,
             blockQuote,
-            lineWidth: 0,
+            lineWidth: 0
           }),
-        { ...prettierConfig, parser: 'yaml' },
-      ),
-    ),
+        { ...prettierConfig, parser: 'yaml' }
+      )
+    )
   )
 }
 
@@ -98,5 +98,5 @@ module.exports = {
   roundValueToPercent,
   roundValue,
   getGroupSum,
-  getPart,
+  getPart
 }

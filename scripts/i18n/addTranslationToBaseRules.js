@@ -31,14 +31,14 @@ const addTranslationToBaseRules = (baseRules, translatedRules) => {
     baseRuleName,
     baseRuleAttributes,
     baseRuleSuggestions,
-    translatedSuggestionsKeys,
+    translatedSuggestionsKeys
   ) => {
     const suggestionValues = Object.values(baseRuleSuggestions)
     const translatedSuggestions = Object.fromEntries(
       translatedSuggestionsKeys.map((translatedKey, i) => [
         translatedKey,
-        suggestionValues[i],
-      ]),
+        suggestionValues[i]
+      ])
     )
     updateBaseRules(baseRuleName, baseRuleAttributes, translatedSuggestions)
   }
@@ -55,7 +55,7 @@ const addTranslationToBaseRules = (baseRules, translatedRules) => {
                 rule,
                 attr,
                 baseRule.suggestions,
-                transVal,
+                transVal
               )
               break
             }
@@ -64,7 +64,7 @@ const addTranslationToBaseRules = (baseRules, translatedRules) => {
                 rule,
                 [attr, 'suggestions'],
                 baseRule.mosaique.suggestions,
-                transVal.suggestions,
+                transVal.suggestions
               )
               break
             }
@@ -75,7 +75,7 @@ const addTranslationToBaseRules = (baseRules, translatedRules) => {
         })
     } else {
       cli.printWarn(
-        `Il semble que la règle "${rule}", traduite, n'est plus présente dans le modèle de base. Veillez à la supprimer du fichier de traduction.`,
+        `Il semble que la règle "${rule}", traduite, n'est plus présente dans le modèle de base. Veillez à la supprimer du fichier de traduction.`
       )
     }
   })
@@ -83,5 +83,5 @@ const addTranslationToBaseRules = (baseRules, translatedRules) => {
 }
 
 module.exports = {
-  addTranslationToBaseRules,
+  addTranslationToBaseRules
 }

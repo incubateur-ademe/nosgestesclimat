@@ -2,7 +2,7 @@ import { readFile } from 'fs/promises'
 import yargs from 'yargs'
 import {
   defaultLang,
-  availableLanguages,
+  availableLanguages
 } from '@incubateur-ademe/nosgestesclimat-scripts/utils'
 import { testPersonas, printResults } from './commons.mjs'
 
@@ -12,19 +12,19 @@ const { country, language, markdown } = yargs(process.argv.slice(2))
     alias: 'c',
     describe: 'Target country code',
     type: 'string',
-    default: 'FR',
+    default: 'FR'
   })
   .option('language', {
     alias: 'l',
     describe: 'Target language code',
     type: 'string',
     default: defaultLang,
-    choices: availableLanguages,
+    choices: availableLanguages
   })
   .option('markdown', {
     alias: 'm',
     type: 'boolean',
-    description: 'Prints the result in a Markdown table format.',
+    description: 'Prints the result in a Markdown table format.'
   })
 
   .help('h')
@@ -33,13 +33,13 @@ const { country, language, markdown } = yargs(process.argv.slice(2))
 const baseRules = readFile(
   `./public/co2-model.${country}-lang.${language}.json`,
   {
-    encoding: 'utf8',
-  },
+    encoding: 'utf8'
+  }
 )
   .then((res) => JSON.parse(res))
   .catch((e) => {
     console.log(
-      `No local rules found for ${country} and ${language}, using base rules:`,
+      `No local rules found for ${country} and ${language}, using base rules:`
     )
     console.log(e.message)
     process.exit(-1)
@@ -48,25 +48,25 @@ const baseRules = readFile(
 const optimRules = readFile(
   `./public/co2-model.${country}-lang.${language}-opti.json`,
   {
-    encoding: 'utf8',
-  },
+    encoding: 'utf8'
+  }
 )
   .then((res) => JSON.parse(res))
   .catch((e) => {
     console.log(
-      `No local rules found for ${country} and ${language}, using base rules:`,
+      `No local rules found for ${country} and ${language}, using base rules:`
     )
     console.log(e.message)
     process.exit(-1)
   })
 
 const personas = readFile(`./public/personas-${language}.json`, {
-  encoding: 'utf8',
+  encoding: 'utf8'
 })
   .then((res) => JSON.parse(res))
   .catch((e) => {
     console.log(
-      `No local personas found for ${country} and ${language}, using personas:`,
+      `No local personas found for ${country} and ${language}, using personas:`
     )
     console.log(e.message)
     process.exit(-1)

@@ -3,7 +3,7 @@ import { join } from 'path'
 import yargs from 'yargs'
 import {
   defaultLang,
-  availableLanguages,
+  availableLanguages
 } from '@incubateur-ademe/nosgestesclimat-scripts/utils'
 import { testPersonas, printResults } from './commons.mjs'
 
@@ -13,19 +13,19 @@ const { country, language, markdown } = yargs(process.argv.slice(2))
     alias: 'c',
     describe: 'Target country code',
     type: 'string',
-    default: 'FR',
+    default: 'FR'
   })
   .option('language', {
     alias: 'l',
     describe: 'Target language code',
     type: 'string',
     default: defaultLang,
-    choices: availableLanguages,
+    choices: availableLanguages
   })
   .option('markdown', {
     alias: 'm',
     type: 'boolean',
-    description: 'Prints the result in a Markdown table format.',
+    description: 'Prints the result in a Markdown table format.'
   })
 
   .help('h')
@@ -33,24 +33,24 @@ const { country, language, markdown } = yargs(process.argv.slice(2))
 
 const modelFile = `co2-model.${country}-lang.${language}.json`
 const localRules = readFile(join('./public', modelFile), {
-  encoding: 'utf8',
+  encoding: 'utf8'
 })
   .then((res) => JSON.parse(res))
   .catch((e) => {
     console.log(
-      `No local rules found for ${country} and ${language}, using prod rules:`,
+      `No local rules found for ${country} and ${language}, using prod rules:`
     )
     console.log(e.message)
     process.exit(-1)
   })
 
 const localPersonas = readFile(`./public/personas-${language}.json`, {
-  encoding: 'utf8',
+  encoding: 'utf8'
 })
   .then((res) => JSON.parse(res))
   .catch((e) => {
     console.log(
-      `No local personas found for ${country} and ${language}, using prod personas:`,
+      `No local personas found for ${country} and ${language}, using prod personas:`
     )
     console.log(e.message)
     process.exit(-1)
@@ -64,18 +64,18 @@ const prodRules = fetch(defaultURLToCompareWith + modelFile)
   .then((res) => res.json())
   .catch((e) => {
     console.log(
-      `No prod rules found for ${country} and ${language}, using local rules:`,
+      `No prod rules found for ${country} and ${language}, using local rules:`
     )
     console.log(e.message)
     process.exit(-1)
   })
 const prodPersonas = fetch(
-  `${defaultURLToCompareWith}personas-${language}.json`,
+  `${defaultURLToCompareWith}personas-${language}.json`
 )
   .then((res) => res.json())
   .catch((e) => {
     console.log(
-      `No prod personas found for ${country} and ${language}, using local personas:`,
+      `No prod personas found for ${country} and ${language}, using local personas:`
     )
     console.log(e.message)
     process.exit(-1)
@@ -85,7 +85,7 @@ const allData = Promise.all([
   localRules,
   localPersonas,
   prodRules,
-  prodPersonas,
+  prodPersonas
 ])
 
 allData.then((res) => {

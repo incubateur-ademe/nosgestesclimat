@@ -8,14 +8,14 @@ const deepl = require('@incubateur-ademe/nosgestesclimat-scripts/deepl')
 const { srcLang, destLangs, force } = cli.getArgs(
   `Calls the DeepL API to translate the rule questions, titles, notes,
 	summaries and suggestions.`,
-  { source: true, target: true, force: true },
+  { source: true, target: true, force: true }
 )
 
 const translateTo = async (
   destPath,
   destLang,
   destPersonas,
-  missingTranslations,
+  missingTranslations
 ) => {
   let previoulsyReviewedTranslation = []
   const updateTranslatedPersonas = (personaId, attr, transVal, refVal) => {
@@ -34,7 +34,7 @@ const translateTo = async (
       translatedPersonas = R.assocPath(
         previousKey,
         translatedPersonas[personaId][attr],
-        translatedPersonas,
+        translatedPersonas
       )
       previoulsyReviewedTranslation.push(`${personaId} -> ${attr}`)
     }
@@ -51,10 +51,10 @@ const translateTo = async (
       const transVal = await deepl.fetchTranslation(
         refVal,
         srcLang.toUpperCase(),
-        destLang.toUpperCase(),
+        destLang.toUpperCase()
       )
       updateTranslatedPersonas(personaId, attr, transVal, refVal)
-    }),
+    })
   )
 
   previoulsyReviewedTranslation.forEach((rule) => {
@@ -64,18 +64,18 @@ const translateTo = async (
   utils.writeYAML(destPath, translatedPersonas)
   console.log(
     `${c.green(missingTranslations.length)} translations written in ${c.yellow(
-      destPath,
-    )}`,
+      destPath
+    )}`
   )
 }
 
 const refPersonas = utils.readYAML(
-  path.resolve(`personas/personas-${srcLang}.yaml`),
+  path.resolve(`personas/personas-${srcLang}.yaml`)
 )
 
 destLangs.forEach(async (destLang) => {
   console.log(
-    `Translating personas from ${c.yellow(srcLang)} to ${c.yellow(destLang)}`,
+    `Translating personas from ${c.yellow(srcLang)} to ${c.yellow(destLang)}`
   )
   try {
     const destPath = path.resolve(`personas/personas-${destLang}.yaml`)
@@ -83,17 +83,17 @@ destLangs.forEach(async (destLang) => {
     const missingTranslations = utils.getMissingPersonas(
       refPersonas,
       destPersonas,
-      force,
+      force
     )
 
     if (0 < missingTranslations.length) {
       console.log(
-        `Found ${c.yellow(missingTranslations.length)} translations...`,
+        `Found ${c.yellow(missingTranslations.length)} translations...`
       )
       translateTo(destPath, destLang, destPersonas, missingTranslations)
     } else {
       console.log(
-        'Nothing to be done, all personas translations are up to date!',
+        'Nothing to be done, all personas translations are up to date!'
       )
     }
   } catch (err) {

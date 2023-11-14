@@ -1,19 +1,19 @@
 const utils = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
 
 const SDES_data = utils.readJSON(
-  'scripts/services-societaux/output/liste_SDES_traitée.json',
+  'scripts/services-societaux/output/liste_SDES_traitée.json'
 )
 
 const analyse_CA_NAF = utils.readJSON(
-  'scripts/services-societaux/output/analyse_CA_NAF.json',
+  'scripts/services-societaux/output/analyse_CA_NAF.json'
 )
 
 const répartition_services_sociétaux = utils.readYAML(
-  'scripts/services-societaux/input/répartition_services_sociétaux.yaml',
+  'scripts/services-societaux/input/répartition_services_sociétaux.yaml'
 )
 
 const titres_raccourcis = utils.readYAML(
-  'scripts/services-societaux/input/titres_raccourcis.yaml',
+  'scripts/services-societaux/input/titres_raccourcis.yaml'
 )
 
 const SP_sum = []
@@ -47,14 +47,14 @@ const data = SDES_data.map(({ code_CPA, ...att }) => {
           'Émissions contenues dans les biens et services adressés à la demande finale de la France'
         ],
       unité: 'ktCO2e',
-      description: `${titre}\n\n> La description ci-dessous correspond à la part de chaque sous-classe de la branche ${code_CPA} (en % de chiffre d'affaire)\n${description}`,
+      description: `${titre}\n\n> La description ci-dessous correspond à la part de chaque sous-classe de la branche ${code_CPA} (en % de chiffre d'affaire)\n${description}`
     },
     [ruleCPAparHab]: {
       titre: `${titre_raccourci} par habitant`,
       formule: `${code_CPA} * 1000000 kgCO2e/ktCO2e / population`,
       unité: 'kgCO2e',
-      description: `${titre} par habitant\n\n> La description ci-dessous correspond à la part de chaque sous-classe de la branche (en % de chiffre d'affaire)\n${description}`,
-    },
+      description: `${titre} par habitant\n\n> La description ci-dessous correspond à la part de chaque sous-classe de la branche (en % de chiffre d'affaire)\n${description}`
+    }
   }
   const répartition_SP =
     répartition_services_sociétaux['services publics'][code_CPA]
@@ -71,7 +71,7 @@ const data = SDES_data.map(({ code_CPA, ...att }) => {
         titre: `${répartition_SP.ratio} ${titre_raccourci}`,
         description: répartition_SP.justification,
         formule: `${code_CPA} par hab * ratio services publics`,
-        unité: 'kgCO2e',
+        unité: 'kgCO2e'
       }
       SP_sum.push(ruleNameSP)
     }
@@ -82,7 +82,7 @@ const data = SDES_data.map(({ code_CPA, ...att }) => {
         titre: `${répartition_SM.ratio} ${titre_raccourci}`,
         description: répartition_SM.justification,
         formule: `${code_CPA} par hab * ratio services marchands`,
-        unité: 'kgCO2e',
+        unité: 'kgCO2e'
       }
       SM_sum.push(ruleNameSM)
     }
@@ -102,8 +102,8 @@ const SPobject = {
     formule: { somme: SP_sum },
     unité: 'kgCO2e',
     description: `Les services publics ne sont qu'une partie des [services sociétaux](https://nosgestesclimat.fr/documentation/services-soci%C3%A9taux) dont le calcul est basé sur
-[l'estimation de l'empreinte nationale française par le Ministère de l'Écologie](https://www.statistiques.developpement-durable.gouv.fr/lempreinte-carbone-de-la-france-de-1995-2021).`,
-  },
+[l'estimation de l'empreinte nationale française par le Ministère de l'Écologie](https://www.statistiques.developpement-durable.gouv.fr/lempreinte-carbone-de-la-france-de-1995-2021).`
+  }
 }
 
 const SMobject = {
@@ -115,8 +115,8 @@ const SMobject = {
     formule: { somme: SM_sum },
     unité: 'kgCO2e',
     description: `Les services marchands ne sont qu'une partie des [services sociétaux](https://nosgestesclimat.fr/documentation/services-soci%C3%A9taux) dont le calcul est basé sur
-[l'estimation de l'empreinte nationale française par le Ministère de l'Écologie](https://www.statistiques.developpement-durable.gouv.fr/lempreinte-carbone-de-la-france-de-1995-2021).`,
-  },
+[l'estimation de l'empreinte nationale française par le Ministère de l'Écologie](https://www.statistiques.developpement-durable.gouv.fr/lempreinte-carbone-de-la-france-de-1995-2021).`
+  }
 }
 
 // console.log(yaml.stringify(dataObject))
@@ -128,23 +128,23 @@ const messageGénérationAuto = `# Ce fichier a été généré automatiquement 
 utils.writeYAML(
   'data/empreinte SDES/empreinte par branche.publicodes',
   dataObject,
-  messageGénérationAuto,
+  messageGénérationAuto
 )
 utils.writeYAML(
   'data/services sociétaux/services publics.publicodes',
   SPobject,
-  messageGénérationAuto,
+  messageGénérationAuto
 )
 utils.writeYAML(
   'data/services sociétaux/services marchands.publicodes',
   SMobject,
-  messageGénérationAuto,
+  messageGénérationAuto
 )
 
 console.log(
   '\x1b[32m',
   '- Les règles `empreinte SDES/empreinte par branche.publicodes`, `services sociétaux/services publics.publicodes`, `services sociétaux/services marchands.publicodes` ont été écrites avec succès.',
-  '\x1b[0m',
+  '\x1b[0m'
 )
 
 console.warn('\x1b[33m', 'Veillez à bien vérifier les diff.', '\x1b[0m')

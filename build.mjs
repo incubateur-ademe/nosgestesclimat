@@ -7,7 +7,7 @@ const destPath = 'nosgestesclimat.model.json'
 
 const model = getModelFromSource('data', {
   ignore: ['data/i18n/**'],
-  verbose: true,
+  verbose: true
 })
 
 try {
@@ -26,7 +26,7 @@ writeFileSync(
 import rules from "./${destPath}" assert { type: "json" };
 
 export default rules;
-`,
+`
 )
 console.log(`✅ index.js generated`)
 
@@ -36,7 +36,7 @@ let indexDTypes = Object.keys(model).reduce(
 import { Rule } from "publicodes";
 
 export type DottedName = 
-`,
+`
 )
 
 indexDTypes += `

@@ -12,9 +12,9 @@ function fmtCLIErr(localResult, prodResult, diff, diffPercent, name, color) {
   const sign = diff > 0 ? '+' : diff < 0 ? '-' : ''
   const hd = color(diffPercent <= 1 ? '[WARN]' : '[FAIL]')
   return `${hd} ${name} [${color(sign + Math.abs(diff))} ${kgCO2Str}, ${color(
-    sign + diffPercent,
+    sign + diffPercent
   )}%]: ${formatValueInKgCO2e(localResult)} != ${formatValueInKgCO2e(
-    prodResult,
+    prodResult
   )}`
 }
 
@@ -24,11 +24,11 @@ function fmtGHActionErr(localResult, prodResult, diff, diffPercent, name) {
   const sign = diff > 0 ? '%2B' : '-'
   return `|![](https://img.shields.io/badge/${name.replaceAll(
     ' ',
-    '%20',
+    '%20'
   )}-${sign}${Math.round(diff).toLocaleString(
-    'en-us',
+    'en-us'
   )}%20kgCO2e-${color}?style=flat-square) | **${localResult.toLocaleString(
-    'en-us',
+    'en-us'
   )}** | ${prodResult.toLocaleString('en-us')} | ${
     diff > 0 ? '+' : '-'
   }${diffPercent}% |`
@@ -39,20 +39,20 @@ export function printResults(
   localResults,
   prodResults,
   markdown,
-  withOptim = false,
+  withOptim = false
 ) {
   if (markdown) {
     console.log(
       `#### ${
         withOptim ? 'Test model optimisation' : 'Test personas regression'
-      }`,
+      }`
     )
     console.log(
       `| Persona | Total PR ${
         withOptim ? 'with optim.' : ''
       } (kg CO2e) | Total ${
         withOptim ? 'PR without optim.' : 'in prod.'
-      } (kg CO2e) | Δ (%) |`,
+      } (kg CO2e) | Δ (%) |`
     )
     console.log('|-----:|:------:|:------:|:----:|')
   } else {
@@ -61,7 +61,7 @@ export function printResults(
         withOptim
           ? c.white('====== With optimisation ======')
           : c.white('====== Base model ======')
-      }`,
+      }`
     )
   }
   for (let name in localResults) {
@@ -80,15 +80,15 @@ export function printResults(
               diff,
               diffPercent,
               name,
-              color,
+              color
             )
-          : fmtCLIErr(localResult, prodResult, diff, diffPercent, name, color),
+          : fmtCLIErr(localResult, prodResult, diff, diffPercent, name, color)
       )
     } else if (!markdown) {
       console.log(
         `${c.green('[PASS]')} ${name}: ${formatValueInKgCO2e(
-          localResults[name],
-        )}`,
+          localResults[name]
+        )}`
       )
     }
   }
@@ -104,8 +104,8 @@ export function testPersonas(rules, personas) {
     const personaData = persona.situation || {}
     const validPersonaRules = Object.fromEntries(
       Object.entries(personaData).filter(([ruleName, _]) =>
-        modelRules.includes(ruleName),
-      ),
+        modelRules.includes(ruleName)
+      )
     )
 
     engine.setSituation(validPersonaRules)

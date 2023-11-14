@@ -20,7 +20,7 @@ import { addTranslationToBaseRules } from './i18n/addTranslationToBaseRules.js'
 import {
   supportedRegionPath,
   supportedRegions,
-  supportedRegionCodes,
+  supportedRegionCodes
 } from './i18n/regionCommons.js'
 
 const t9nDir = 'data/i18n/t9n'
@@ -33,8 +33,8 @@ const { srcLang, srcFile, destLangs, destRegions, markdown } = cli.getArgs(
     model: { supportedRegionCodes },
     file: true,
     defaultSrcFile: 'data',
-    markdown: true,
-  },
+    markdown: true
+  }
 )
 
 /// ---------------------- Helper functions ----------------------
@@ -45,17 +45,17 @@ function writeSupportedRegions() {
     console.log(
       markdown
         ? `| Supported regions | :heavy_check_mark: | Ø |`
-        : `✅ The supported regions have been correctly written in: ${supportedRegionPath}`,
+        : `✅ The supported regions have been correctly written in: ${supportedRegionPath}`
     )
   } catch (err) {
     if (markdown) {
       console.log(
-        `| Supported regions | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`,
+        `| Supported regions | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
       )
     } else {
       console.log(
         '❌ An error occured while writting rules in:',
-        supportedRegionPath,
+        supportedRegionPath
       )
       console.log(err.message)
     }
@@ -97,7 +97,7 @@ let baseRules
 try {
   baseRules = getModelFromSource(srcFile, {
     ignore: ['data/i18n/**'],
-    verbose: !markdown,
+    verbose: !markdown
   })
 } catch (err) {
   console.error(`❌ An error occured while trying to parse the base rules:\n`)
@@ -106,7 +106,7 @@ try {
 }
 
 const piscina = new Piscina({
-  filename: new URL('./rulesToJSON.worker.mjs', import.meta.url).href,
+  filename: new URL('./rulesToJSON.worker.mjs', import.meta.url).href
 })
 
 try {
@@ -118,15 +118,15 @@ try {
           console.warn(message)
         }
       },
-      err: (_) => {},
-    },
+      err: (_) => {}
+    }
   }).evaluate('bilan')
 
   if (!markdown) {
     console.log(
       `✅ ${c.yellow(
-        Object.keys(baseRules).length,
-      )} base rules have been correctly parsed`,
+        Object.keys(baseRules).length
+      )} base rules have been correctly parsed`
     )
   }
 } catch (err) {
@@ -146,20 +146,20 @@ try {
             regionCode,
             destLang,
             translatedBaseRules,
-            markdown,
+            markdown
           })
         } catch (err) {
           console.log(`Error in worker ${regionCode}-${destLang}`, err)
           piscina.threads.forEach((thread) => thread.terminate())
         }
       })
-    }),
+    })
   )
   if (markdown) {
     console.log(
       `| Successfully compiled and optimized rules: <br><details><summary>Expand</summary> <ul>${resultOfCompilationAndOptim
         .map(({ ok }) => ok ?? '')
-        .join(' ')}</ul></details> | :heavy_check_mark: | Ø |`,
+        .join(' ')}</ul></details> | :heavy_check_mark: | Ø |`
     )
   }
   const errors = resultOfCompilationAndOptim

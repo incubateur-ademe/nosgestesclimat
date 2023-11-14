@@ -12,13 +12,13 @@ import {
   styledRuleNameWithOptionalAttr,
   ask,
   printChecksResultTableHeader,
-  printChecksResult,
+  printChecksResult
 } from '@incubateur-ademe/nosgestesclimat-scripts/cli'
 import {
   writeYAML,
   readYAML,
   getMissingRules,
-  getNotUpToDateRuleTranslations,
+  getNotUpToDateRuleTranslations
 } from '@incubateur-ademe/nosgestesclimat-scripts/utils'
 import { getModelFromSource } from '@incubateur-ademe/publicodes-tools/compilation'
 
@@ -29,24 +29,24 @@ const { destLangs, srcFile, markdown } = getArgs(
     target: true,
     file: true,
     markdown: true,
-    defaultSrcFile: 'data/**/*.publicodes',
-  },
+    defaultSrcFile: 'data/**/*.publicodes'
+  }
 )
 
 function manageNotUpToDateRuleTranslations(
   notUpToDateTranslationRules,
   destPath,
-  destRules,
+  destRules
 ) {
   let removed = false
   console.log(
     `⚠️ There are ${c.yellow(
-      notUpToDateTranslationRules.length,
-    )} not up-to-date rule translations:`,
+      notUpToDateTranslationRules.length
+    )} not up-to-date rule translations:`
   )
   if (askYesNo(`Do you want to log them?`)) {
     notUpToDateTranslationRules.forEach((rule) =>
-      console.log(styledRuleNameWithOptionalAttr(rule)),
+      console.log(styledRuleNameWithOptionalAttr(rule))
     )
   }
   switch (ask(`Do you want to remove them?`, ['all', 'one', 'none'])) {
@@ -61,7 +61,7 @@ function manageNotUpToDateRuleTranslations(
       notUpToDateTranslationRules.forEach((rule) => {
         if (
           askYesNo(
-            `Do you want to remove ${styledRuleNameWithOptionalAttr(rule)}?`,
+            `Do you want to remove ${styledRuleNameWithOptionalAttr(rule)}?`
           )
         ) {
           removed = true
@@ -81,7 +81,7 @@ function manageNotUpToDateRuleTranslations(
 }
 
 const rules = getModelFromSource(srcFile, ['data/i18n/**'], {
-  verbose: !markdown,
+  verbose: !markdown
 })
 
 printChecksResultTableHeader(markdown)
@@ -93,7 +93,7 @@ destLangs.forEach((destLang) => {
   const missingRuleNames = missingRules.map((obj) =>
     markdown
       ? `<li><b>${obj.rule}</b> > ${obj.attr}</li>`
-      : styledRuleNameWithOptionalAttr(obj.rule, obj.attr),
+      : styledRuleNameWithOptionalAttr(obj.rule, obj.attr)
   )
   const nbMissing = missingRules.length
 
@@ -105,13 +105,13 @@ destLangs.forEach((destLang) => {
     askYesNo(`Do you want to log missing rules?`)
   ) {
     missingRules.map(({ rule: ruleName, attr }) =>
-      console.log(styledRuleNameWithOptionalAttr(ruleName, attr)),
+      console.log(styledRuleNameWithOptionalAttr(ruleName, attr))
     )
   }
 
   const notUpToDateRuleTranslations = getNotUpToDateRuleTranslations(
     rules,
-    destRules,
+    destRules
   )
   const nbNotUpToDate = notUpToDateRuleTranslations.length
 
@@ -122,13 +122,13 @@ destLangs.forEach((destLang) => {
         notUpToDateRuleTranslations.map((rule) => `<li><b>${rule}</b></li>`),
         'rules (not up-to-date)',
         destLang,
-        markdown,
+        markdown
       )
     } else {
       manageNotUpToDateRuleTranslations(
         notUpToDateRuleTranslations,
         destPath,
-        destRules,
+        destRules
       )
     }
   }

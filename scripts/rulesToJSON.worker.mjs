@@ -9,7 +9,7 @@ import { compressRules } from './modelOptim.mjs'
 
 function getStyledReportString(name, verb, nbRules, duration) {
   return `✅ ${c.green(name)} ${verb} (${c.yellow(
-    nbRules,
+    nbRules
   )} rules) in ${c.magenta(duration)} ms`
 }
 
@@ -24,8 +24,8 @@ function writeRules(rules, path, destLang, regionCode, markdown) {
           `${regionCode}-${destLang}`,
           'written',
           Object.keys(rules).length,
-          timeElapsed,
-        ),
+          timeElapsed
+        )
       )
     }
   } catch (err) {
@@ -39,7 +39,7 @@ function getLocalizedRules(translatedBaseRules, regionCode, destLang) {
   }
   try {
     const localizedAttrs = utils.readYAML(
-      path.join(regionModelsPath, `${regionCode}-${destLang}.yaml`),
+      path.join(regionModelsPath, `${regionCode}-${destLang}.yaml`)
     )
     return addRegionToBaseRules(translatedBaseRules, localizedAttrs)
   } catch (err) {
@@ -52,26 +52,26 @@ export default ({
   regionCode,
   destLang,
   translatedBaseRules,
-  markdown = false,
+  markdown = false
 }) => {
   const localizedTranslatedBaseRules = getLocalizedRules(
     translatedBaseRules,
     regionCode,
-    destLang,
+    destLang
   )
   const destPathWithoutExtension = path.resolve(
-    `public/co2-model.${regionCode}-lang.${destLang}`,
+    `public/co2-model.${regionCode}-lang.${destLang}`
   )
   const werr = writeRules(
     localizedTranslatedBaseRules,
     destPathWithoutExtension + '.json',
     destLang,
     regionCode,
-    markdown,
+    markdown
   )
   if (werr) {
     return {
-      err: `❌ Compilation ${regionCode}-${destLang}: ${werr}`,
+      err: `❌ Compilation ${regionCode}-${destLang}: ${werr}`
     }
   }
   const start = Date.now()
@@ -85,8 +85,8 @@ export default ({
         `${regionCode}-${destLang}`,
         'optimized',
         nbRules,
-        optimDuration,
-      ),
+        optimDuration
+      )
     )
   }
 

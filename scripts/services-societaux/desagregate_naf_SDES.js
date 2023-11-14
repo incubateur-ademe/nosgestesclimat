@@ -2,16 +2,16 @@ const utils = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
 
 // read files
 const readSDES = utils.readJSON(
-  'scripts/services-societaux/input/liste_SDES.json',
+  'scripts/services-societaux/input/liste_SDES.json'
 )
 const SDES_groups = utils.readJSON(
-  'scripts/services-societaux/input/SDES_groups.json',
+  'scripts/services-societaux/input/SDES_groups.json'
 )
 const ca_branches = utils.readJSON(
-  'scripts/services-societaux/input/ca_branches_2017.json',
+  'scripts/services-societaux/input/ca_branches_2017.json'
 )
 const readNAF = utils.readJSON(
-  'scripts/services-societaux/input/liste_NAF.json',
+  'scripts/services-societaux/input/liste_NAF.json'
 )
 
 // Get list of NAF code level 2 as :
@@ -30,7 +30,7 @@ const NAF_niveau2 = readNAF.reduce((memo, elt) => {
   if (lastId !== currentId) {
     memo.push({
       code_NAF: currentId,
-      libellé: elt.label_2,
+      libellé: elt.label_2
     })
   }
   return memo
@@ -59,7 +59,7 @@ const dataSDES = readSDES
     if (composition.length === 1) {
       return {
         ...obj,
-        code_CPA: composition[0],
+        code_CPA: composition[0]
       }
     } else {
       const findNumber = /\d+/
@@ -68,7 +68,7 @@ const dataSDES = readSDES
       const indexes = composition.map((elt) => +elt.match(findNumber))
       const newComposition = Array.from(
         { length: indexes[1] - indexes[0] + 1 },
-        (_, i) => letter + String(indexes[0] + i).padStart(2, '0'),
+        (_, i) => letter + String(indexes[0] + i).padStart(2, '0')
       )
       const newObjects = newComposition.map((elt) => {
         const facteur =
@@ -84,16 +84,16 @@ const dataSDES = readSDES
             utils.roundValue(
               obj[
                 'Émissions contenues dans les biens et services adressés à la demande finale de la France'
-              ] * facteur,
+              ] * facteur
             ),
           'émissions de la production intérieure (hors exportations)':
             utils.roundValue(
               obj['émissions de la production intérieure (hors exportations)'] *
-                facteur,
+                facteur
             ),
           'émissions associées aux importations': utils.roundValue(
-            obj['émissions associées aux importations'] * facteur,
-          ),
+            obj['émissions associées aux importations'] * facteur
+          )
         }
       })
       return newObjects
@@ -104,11 +104,11 @@ const dataSDES = readSDES
 // console.log(dataSDES)
 utils.writeJSON(
   'scripts/services-societaux/output/liste_SDES_traitée.json',
-  dataSDES,
+  dataSDES
 )
 
 console.log(
   '\x1b[32m',
   '- Le fichier `liste_SDES.json` contenant les données de décomposition de l’empreinte carbone de la demande finale de la France a été traité avec succès pour donner `liste_SDES_traitée.json`',
-  '\x1b[0m',
+  '\x1b[0m'
 )

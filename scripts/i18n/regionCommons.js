@@ -6,7 +6,7 @@ const { exit } = require('process')
 
 const {
   customAssocPath,
-  readYAML,
+  readYAML
 } = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
 const regionModelsPath = path.resolve('data/i18n/models')
 
@@ -26,8 +26,8 @@ const defaultModelCode = 'FR'
 const defaultRegionModelParam = {
   FR: {
     fr: { nom: 'France métropolitaine', gentilé: 'française' },
-    en: { nom: 'metropolitan France', gentilé: 'french' },
-  },
+    en: { nom: 'metropolitan France', gentilé: 'french' }
+  }
 }
 const supportedRegionPath = 'public/supportedRegions.json'
 
@@ -53,7 +53,7 @@ const supportedRegions = fs
       const params = rules['params']
       if (params === undefined) {
         console.log(
-          ` ❌ The file ${filename} doesn't contain a 'params' key, aborting...`,
+          ` ❌ The file ${filename} doesn't contain a 'params' key, aborting...`
         )
         exit(-1)
       }
@@ -64,7 +64,7 @@ const supportedRegions = fs
         ' ❌ An error occured while reading the file:',
         filename,
         ':\n\n',
-        err.message,
+        err.message
       )
       exit(-1)
     }
@@ -77,5 +77,5 @@ module.exports = {
   supportedRegionCodes,
   supportedRegions,
   defaultModelCode,
-  regionModelsPath,
+  regionModelsPath
 }
