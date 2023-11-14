@@ -21,28 +21,28 @@ import { constantFolding } from '@incubateur-ademe/publicodes-tools/optims'
 //
 // @Clément: Do we still need those rules ? 'logement . chauffage . gaz' ? 'logement . chauffage . biogaz' ?
 const rulesToKeep = [
-	'actions',
-	'bilan',
-	'logement . chauffage . gaz',
-	'logement . chauffage . biogaz',
-	'transport . voiture . thermique',
-	'transport . ferry . surface',
+  'actions',
+  'bilan',
+  'logement . chauffage . gaz',
+  'logement . chauffage . biogaz',
+  'transport . voiture . thermique',
+  'transport . ferry . surface'
 ]
 
 export function compressRules(jsonPathWithoutExtension) {
-	const destPath = `${jsonPathWithoutExtension}-opti.json`
-	let res = constantFoldingFromJSONFile(
-		jsonPathWithoutExtension + '.json',
-		destPath,
-		([ruleName, ruleNode]) => {
-			return (
-				rulesToKeep.includes(ruleName) ||
-				'icônes' in ruleNode.rawNode ||
-				ruleNode.rawNode.type === 'notification'
-			)
-		}
-	)
-	return res
+  const destPath = `${jsonPathWithoutExtension}-opti.json`
+  let res = constantFoldingFromJSONFile(
+    jsonPathWithoutExtension + '.json',
+    destPath,
+    ([ruleName, ruleNode]) => {
+      return (
+        rulesToKeep.includes(ruleName) ||
+        'icônes' in ruleNode.rawNode ||
+        ruleNode.rawNode.type === 'notification'
+      )
+    }
+  )
+  return res
 }
 
 /**
@@ -56,24 +56,24 @@ export function compressRules(jsonPathWithoutExtension) {
  * @returns An error message if the optimization pass failed, undefined otherwise.
  */
 export function constantFoldingFromJSONFile(
-	modelPath,
-	jsonDestPath,
-	toKeep,
-	verbose = false
+  modelPath,
+  jsonDestPath,
+  toKeep,
+  verbose = false
 ) {
-	const log = verbose ? console.log : function (_) {}
-	try {
-		log('Parsing rules from the JSON file:', modelPath)
-		const rules = JSON.parse(readFileSync(modelPath, 'utf8'))
-		const engine = new Engine(rules, { logger: disabledLogger })
+  const log = verbose ? console.log : function (_) {}
+  try {
+    log('Parsing rules from the JSON file:', modelPath)
+    const rules = JSON.parse(readFileSync(modelPath, 'utf8'))
+    const engine = new Engine(rules, { logger: disabledLogger })
 
-		log('Constant folding pass...')
-		const foldedRules = getRawNodes(constantFolding(engine, toKeep))
+    log('Constant folding pass...')
+    const foldedRules = getRawNodes(constantFolding(engine, toKeep))
 
-		log(`Writing in '${jsonDestPath}'...`)
-		writeFileSync(jsonDestPath, JSON.stringify(foldedRules, null, 2))
-		return { nbRules: Object.keys(foldedRules).length }
-	} catch (error) {
-		return { err }
-	}
+    log(`Writing in '${jsonDestPath}'...`)
+    writeFileSync(jsonDestPath, JSON.stringify(foldedRules, null, 2))
+    return { nbRules: Object.keys(foldedRules).length }
+  } catch (error) {
+    return { err }
+  }
 }
