@@ -1,12 +1,9 @@
 # From: https://github.com/garronej/ts-ci
 
-name: GitHub release and NPM publishing
+name: GitHub release / NPM publishing / API update
 
 on:
   push:
-    branches:
-      - master
-  pull_request:
     branches:
       - master
 
@@ -35,11 +32,16 @@ jobs:
           branch: ${{ github.head_ref || github.ref }}
 
   create_github_release:
+    name: Create GitHub release
     runs-on: ubuntu-latest
     # We create release only if the version in the package.json have been upgraded and this CI is running against the main branch.
     # We allow branches with a PR open on main to publish pre-release (x.y.z-rc.u) but not actual releases.
     if: |
-      needs.check_if_version_upgraded.outputs.from_version != needs.check_if_version_upgraded.outputs.to_version
+      needs.check_if_version_upgraded.outputs.is_upgraded_version == 'true' &&
+      (
+        github.event_name == 'push' ||
+        needs.check_if_version_upgraded.outputs.is_pre_release == 'true'
+      )
     needs:
       - check_if_version_upgraded
     steps:
@@ -55,6 +57,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish_on_npm:
+    name: Publish on NPM
     runs-on: ubuntu-latest
     needs:
       - create_github_release
