@@ -7,7 +7,7 @@ const destPath = 'nosgestesclimat.model.json'
 
 const model = getModelFromSource('data', {
   ignore: ['data/i18n/**'],
-  verbose: true,
+  verbose: true
 })
 
 try {
