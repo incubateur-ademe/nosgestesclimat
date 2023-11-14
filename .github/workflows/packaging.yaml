@@ -6,6 +6,9 @@ on:
   push:
     branches:
       - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   check_if_version_upgraded:
@@ -20,31 +23,34 @@ jobs:
       github.event.pull_request.head.repo.owner.login == github.event.pull_request.base.repo.owner.login
     runs-on: ubuntu-latest
     outputs:
-      changed: ${{ steps.check.outputs.changed }}
-      version: ${{ steps.check.outputs.version }}
+      from_version: ${{ steps.step1.outputs.from_version }}
+      to_version: ${{ steps.step1.outputs.to_version }}
+      is_upgraded_version: ${{ steps.step1.outputs.is_upgraded_version }}
+      is_pre_release: ${{steps.step1.outputs.is_pre_release }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: EndBug/version-check@v2
-        id: check
-        # with:
-        #   action_name: is_package_json_version_upgraded
-        #   branch: ${{ github.head_ref || github.ref }}
+      - uses: garronej/ts-ci@v2.1.0
+        id: step1
+        with:
+          action_name: is_package_json_version_upgraded
+          branch: ${{ github.head_ref || github.ref }}
 
   create_github_release:
     runs-on: ubuntu-latest
     # We create release only if the version in the package.json have been upgraded and this CI is running against the main branch.
     # We allow branches with a PR open on main to publish pre-release (x.y.z-rc.u) but not actual releases.
-    if: needs.check_if_version_upgraded.outputs.changed == 'true'
+    if: |
+      needs.check_if_version_upgraded.outputs.from_version != needs.check_if_version_upgraded.outputs.to_version
     needs:
       - check_if_version_upgraded
     steps:
       - uses: softprops/action-gh-release@v1
         with:
-          name: Release v${{ needs.check_if_version_upgraded.outputs.version }}
-          tag_name: v${{ needs.check_if_version_upgraded.outputs.version }}
+          name: Release v${{ needs.check_if_version_upgraded.outputs.to_version }}
+          tag_name: v${{ needs.check_if_version_upgraded.outputs.to_version }}
           target_commitish: ${{ github.head_ref || github.ref }}
           generate_release_notes: true
           draft: false
+          prerelease: ${{ needs.check_if_version_upgraded.outputs.is_pre_release == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -53,7 +59,6 @@ jobs:
     needs:
       - create_github_release
       - check_if_version_upgraded
-    if: needs.check_if_version_upgraded.outputs.changed == 'true'
     steps:
       - uses: actions/checkout@v3
         with:
@@ -73,7 +78,12 @@ jobs:
             echo "Can't publish on NPM, You must first create a secret called NPM_TOKEN that contains your NPM auth token. https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets"
             false
           fi
+          EXTRA_ARGS=""
+          if [ "$IS_PRE_RELEASE" = "true" ]; then
+              EXTRA_ARGS="--tag next"
+          fi
           npm publish $EXTRA_ARGS
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-          VERSION: ${{ needs.check_if_version_upgraded.outputs.version }}
+          VERSION: ${{ needs.check_if_version_upgraded.outputs.to_version }}
+          IS_PRE_RELEASE: ${{ needs.check_if_version_upgraded.outputs.is_pre_release }}
