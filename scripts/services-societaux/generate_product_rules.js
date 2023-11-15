@@ -1,4 +1,4 @@
-const utils = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
+const utils = require('./utils')
 
 const empreinte_par_branche = utils.readYAML(
   'data/empreinte SDES/empreinte par branche.publicodes'
