@@ -37,9 +37,8 @@ const writeYAML = (
   messageGénérationAuto = '',
   blockQuote = 'literal'
 ) => {
-  resolveConfig(process.cwd()).then((prettierConfig) =>
-    fs.writeFileSync(
-      path,
+  resolveConfig(process.cwd())
+    .then((prettierConfig) =>
       format(
         messageGénérationAuto +
           yaml.stringify(content, {
@@ -51,7 +50,9 @@ const writeYAML = (
         { ...prettierConfig, parser: 'yaml' }
       )
     )
-  )
+    .then((formattedContent) => {
+      fs.writeFileSync(path, formattedContent)
+    })
 }
 
 const roundValueToPercent = (x) => Math.round(x * 100)
