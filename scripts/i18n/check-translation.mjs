@@ -80,7 +80,8 @@ function manageNotUpToDateRuleTranslations(
   }
 }
 
-const rules = getModelFromSource(srcFile, ['data/i18n/**'], {
+const rules = getModelFromSource(srcFile, {
+  ignore: ['data/i18n/**'],
   verbose: !markdown
 })
 
