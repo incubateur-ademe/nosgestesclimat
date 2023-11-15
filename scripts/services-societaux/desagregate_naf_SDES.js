@@ -80,10 +80,10 @@ const dataSDES = readSDES
           'Libellé CPA': NAF_niveau2.find((obj) => obj.code_NAF === elt)[
             'libellé'
           ],
-          'Émissions contenues dans les biens et services adressés à la demande finale de la France':
+          'émissions contenues dans les biens et services adressés à la demande finale de la France':
             utils.roundValue(
               obj[
-                'Émissions contenues dans les biens et services adressés à la demande finale de la France'
+                'émissions contenues dans les biens et services adressés à la demande finale de la France'
               ] * facteur
             ),
           'émissions de la production intérieure (hors exportations)':
