@@ -15,15 +15,14 @@ const sortJSON = (unordered) =>
     }, {})
 
 const writeJSON = (path, content, messageGénérationAuto = '') => {
-  resolveConfig(process.cwd()).then((prettierConfig) =>
-    fs.writeFileSync(
-      path,
-      format(messageGénérationAuto + JSON.stringify(content), {
-        ...prettierConfig,
-        parser: 'json'
-      })
-    )
-  )
+  resolveConfig(process.cwd()).then((prettierConfig) => {
+    format(messageGénérationAuto + JSON.stringify(content), {
+      ...prettierConfig,
+      parser: 'json'
+    }).then((formattedContent) => {
+      fs.writeFileSync(path, formattedContent)
+    })
+  })
 }
 
 //Duplicate of readYAML in i18n/utils.js
