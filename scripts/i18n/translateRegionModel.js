@@ -20,7 +20,7 @@ const { srcLang, destLangs, destRegions } = cli.getArgs(
 // TODO: support multiple models
 const model = destRegions[0]
 
-const srcFile = path.join(regionModelsPath, `${model}-${srcLang}.yaml`)
+const srcFile = path.join(regionModelsPath, `${model}-${srcLang}.publicodes`)
 const srcModel = utils.readYAML(srcFile)
 
 const translateRule = async ([ruleName, ruleVal], destLang) => {
@@ -92,7 +92,7 @@ const translateModel = async (srcRules, destLang) => {
 }
 
 destLangs.forEach(async (destLang) => {
-  const destFile = path.join(regionModelsPath, `${model}-${destLang}.yaml`)
+  const destFile = path.join(regionModelsPath, `${model}-${destLang}.publicodes`)
   console.log(
     'Translating',
     path.basename(srcFile),
