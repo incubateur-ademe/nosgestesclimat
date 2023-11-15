@@ -1,11 +1,13 @@
-const utils = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
+const utils = require('./utils')
+
+const year = 2018
 
 const SDES_data = utils.readJSON(
-  'scripts/services-societaux/output/liste_SDES_traitée.json'
+  `scripts/services-societaux/output/${year}/liste_SDES_traitée.json`
 )
 
 const analyse_CA_NAF = utils.readJSON(
-  'scripts/services-societaux/output/analyse_CA_NAF.json'
+  `scripts/services-societaux/output/${year}/analyse_CA_NAF.json`
 )
 
 const répartition_services_sociétaux = utils.readYAML(
@@ -97,7 +99,7 @@ const SPobject = {
   'services publics': {
     titre: 'Services publics',
     couleur: '#0c2461',
-    abréviation: 'Publics',
+    abréviation: 'S. publics',
     icônes: '🏛',
     formule: { somme: SP_sum },
     unité: 'kgCO2e',
@@ -110,7 +112,7 @@ const SMobject = {
   'services marchands': {
     titre: 'Services marchands',
     couleur: '#3c0c61',
-    abréviation: 'Marchands',
+    abréviation: 'S. marchands',
     icônes: '✉️',
     formule: { somme: SM_sum },
     unité: 'kgCO2e',
