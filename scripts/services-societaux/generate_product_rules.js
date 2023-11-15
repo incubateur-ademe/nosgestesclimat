@@ -72,7 +72,7 @@ utils.writeYAML(
 )
 
 utils.writeYAML(
-  'data/divers/divers . autres produits macro.publicodes',
+  'data/divers/autres produits macro.publicodes',
   produits_object,
   messageGénérationAuto
 )
