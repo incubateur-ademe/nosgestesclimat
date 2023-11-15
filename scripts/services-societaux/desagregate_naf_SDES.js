@@ -1,14 +1,16 @@
-const utils = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
+const utils = require('./utils')
+
+const year = 2018
 
 // read files
 const readSDES = utils.readJSON(
-  'scripts/services-societaux/input/liste_SDES.json'
+  `scripts/services-societaux/input/${year}/liste_SDES.json`
 )
 const SDES_groups = utils.readJSON(
   'scripts/services-societaux/input/SDES_groups.json'
 )
 const ca_branches = utils.readJSON(
-  'scripts/services-societaux/input/ca_branches_2017.json'
+  `scripts/services-societaux/input/${year}/ca_branches.json`
 )
 const readNAF = utils.readJSON(
   'scripts/services-societaux/input/liste_NAF.json'
@@ -103,7 +105,7 @@ const dataSDES = readSDES
 
 // console.log(dataSDES)
 utils.writeJSON(
-  'scripts/services-societaux/output/liste_SDES_traitée.json',
+  `scripts/services-societaux/output/${year}/liste_SDES_traitée.json`,
   dataSDES
 )
 
