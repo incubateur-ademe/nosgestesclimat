@@ -1,0 +1,30 @@
+name: Update the nightly API
+
+on:
+  push:
+    branches: [preprod]
+
+jobs:
+  update_api_nightly:
+    name: Update the API (nightly)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'yarn'
+      - run: yarn install --immutable
+      - name: Compile
+        run: yarn compile
+      - name: Pushes to nosgestesclimat-api/data/nightly (main branch)
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.REPO_ACCESS_TOKEN }}
+        with:
+          source-directory: 'public'
+          target-directory: 'data/nightly'
+          destination-github-username: 'incubateur-ademe'
+          destination-repository-name: 'nosgestesclimat-api'
+          user-email: emile.rolley@tuta.io
+          target-branch: 'main'
