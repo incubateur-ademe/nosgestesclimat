@@ -13,7 +13,7 @@ import c from 'ansi-colors'
 
 import cli from '@incubateur-ademe/nosgestesclimat-scripts/cli'
 import utils from '@incubateur-ademe/nosgestesclimat-scripts/utils'
-import { getModelFromSource } from '@incubateur-ademe/publicodes-tools/compilation'
+import { getModelFromSource } from '@publicodes/tools/compilation'
 
 import { addTranslationToBaseRules } from './i18n/addTranslationToBaseRules.js'
 

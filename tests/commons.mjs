@@ -1,4 +1,4 @@
-import { disabledLogger } from '@incubateur-ademe/publicodes-tools'
+import { disabledLogger } from '@publicodes/tools'
 import {
   defaultLang,
   availableLanguages

@@ -32,7 +32,7 @@ introduced a new meta-mechanism : `importer!`.
 
 ### Usage
 
-The import resolution is done via the `@incubateur-ademe/publicodes-tools` lib,
+The import resolution is done via the `@publicodes/tools` lib,
 for more information see the [dedicated doc
 page](https://incubateur-ademe.github.io/publicodes-tools/modules/compilation.html#md:import-rules-from-a-npm-package).
 
