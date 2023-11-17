@@ -450,7 +450,8 @@ logement . vacances . résidence secondaire . surface:
     variations:
       - si: 
           une de ces conditions:
-            - localisation = 'littoral'
+            - localisation = 'littoral méditerranéen'
+            - localisation = 'littoral nord-ouest'
             - localisation = 'montagne'
             - localisation = 'ville'
         alors: parc français . surface moyenne appartement
@@ -477,7 +478,8 @@ logement . vacances . résidence secondaire . par surface:
     variations:
       - si: 
           une de ces conditions:
-            - localisation = 'littoral'
+            - localisation = 'littoral méditerranéen'
+            - localisation = 'littoral nord-ouest'
             - localisation = 'montagne'
             - localisation = 'ville'
         alors: 525
@@ -512,15 +514,19 @@ logement . vacances . résidence secondaire . localisation:
     une possibilité:
       choix obligatoire: oui
       possibilités:
-        - littoral
+        - littoral méditerranéen
+        - littoral nord-ouest
         - montagne
         - ville
         - campagne
   description: Si votre résidence secondaire se situe en ville, sur le littoral, privilégiez "littoral".
 
-logement . vacances . résidence secondaire . localisation . littoral:
-  titre: Littoral
-  description: Appartement ou maison situé en bord de mer
+logement . vacances . résidence secondaire . localisation . littoral méditerranéen:
+  titre: Littoral méditerranéen
+  description: Appartement ou maison situé sur le pourtour méditerranéen
+  logement . vacances . résidence secondaire . localisation . littoral nord-ouest:
+  titre: Littoral nord-ouest
+  description: Appartement ou maison situé en Atlantique, Manche ou Mer du Nord
 logement . vacances . résidence secondaire . localisation . montagne:
   titre: Montagne
   description: Appartement ou maison situé dans les Alpes, les Vosges, le Jura, le Massif Central ou les Pyrénées
@@ -543,7 +549,163 @@ logement . vacances . résidence secondaire . durée:
   par défaut: 42
   unité: nuit
 
-# logement . vacances . résidence secondaire . chauffage:
-#   formule:
-#     variations:
-#       - 
+logement . vacances . résidence secondaire . chauffage:
+  formule: facteur saison * logement . chauffage . empreinte par défaut / commun . jours par an * durée
+
+logement . vacances . résidence secondaire . chauffage . facteur saison:
+  formule:
+    variations:
+      - si: localisation = 'littoral méditerranéen'
+        alors: littoral méditerranéen . facteur saison
+      - si: localisation = 'littoral nord-ouest'
+        alors: littoral nord-ouest . facteur saison
+      - si: localisation = 'montagne'
+        alors: montagne . facteur saison
+      - si: localisation = 'campagne'
+        alors: campagne . facteur saison
+      - sinon: ville . facteur saison
+
+logement . vacances . résidence secondaire . localisation . littoral méditerranéen . facteur saison:
+  formule:
+    variations:
+      - si: saison = 'hiver'
+        alors: littoral méditerranéen . facteur hiver
+      - si: saison = 'surtout hiver'
+        alors: littoral méditerranéen . facteur surtout hiver
+      - si: saison = 'été'
+        alors: littoral méditerranéen . facteur été
+      - si: saison = 'surtout été'
+        alors: littoral méditerranéen . facteur surtout été
+
+logement . vacances . résidence secondaire . localisation . littoral méditerranéen . facteur hiver:
+  formule: 6.48
+
+logement . vacances . résidence secondaire . localisation . littoral méditerranéen . facteur surtout hiver:
+  formule: 2.42
+
+logement . vacances . résidence secondaire . localisation . littoral méditerranéen . facteur été:
+  formule: 0
+
+logement . vacances . résidence secondaire . localisation . littoral méditerranéen . facteur surtout été:
+  formule: 0.22
+
+logement . vacances . résidence secondaire . localisation . littoral nord-ouest . facteur saison:
+  formule:
+    variations:
+      - si: saison = 'hiver'
+        alors: littoral nord-ouest . facteur hiver
+      - si: saison = 'surtout hiver'
+        alors: littoral nord-ouest . facteur surtout hiver
+      - si: saison = 'été'
+        alors: littoral nord-ouest . facteur été
+      - si: saison = 'surtout été'
+        alors: littoral nord-ouest . facteur surtout été
+
+logement . vacances . résidence secondaire . localisation . littoral nord-ouest . facteur hiver:
+  formule: 9.05
+
+logement . vacances . résidence secondaire . localisation . littoral nord-ouest . facteur surtout hiver:
+  formule: 2.93
+
+logement . vacances . résidence secondaire . localisation . littoral nord-ouest . facteur été:
+  formule: 0.25
+
+logement . vacances . résidence secondaire . localisation . littoral nord-ouest . facteur surtout été:
+  formule: 0.8
+
+logement . vacances . résidence secondaire . localisation . campagne . facteur saison:
+  formule:
+    variations:
+      - si: saison = 'hiver'
+        alors: campagne . facteur hiver
+      - si: saison = 'surtout hiver'
+        alors: campagne . facteur surtout hiver
+      - si: saison = 'été'
+        alors: campagne . facteur été
+      - si: saison = 'surtout été'
+        alors: campagne . facteur surtout été
+
+logement . vacances . résidence secondaire . localisation . campagne . facteur hiver:
+  formule: 9.05
+
+logement . vacances . résidence secondaire . localisation . campagne . facteur surtout hiver:
+  formule: 2.93
+
+logement . vacances . résidence secondaire . localisation . campagne . facteur été:
+  formule: 0.25
+
+logement . vacances . résidence secondaire . localisation . campagne . facteur surtout été:
+  formule: 0.8
+
+logement . vacances . résidence secondaire . localisation . ville . facteur saison:
+  formule:
+    variations:
+      - si: saison = 'hiver'
+        alors: ville . facteur hiver
+      - si: saison = 'surtout hiver'
+        alors: ville . facteur surtout hiver
+      - si: saison = 'été'
+        alors: ville . facteur été
+      - si: saison = 'surtout été'
+        alors: ville . facteur surtout été
+
+logement . vacances . résidence secondaire . localisation . ville . facteur hiver:
+  formule: 9.05
+
+logement . vacances . résidence secondaire . localisation . ville . facteur surtout hiver:
+  formule: 2.93
+
+logement . vacances . résidence secondaire . localisation . ville . facteur été:
+  formule: 0.25
+
+logement . vacances . résidence secondaire . localisation . ville . facteur surtout été:
+  formule: 0.8
+
+logement . vacances . résidence secondaire . localisation . montagne . facteur saison:
+  formule:
+    variations:
+      - si: saison = 'hiver'
+        alors: montagne . facteur hiver
+      - si: saison = 'surtout hiver'
+        alors: montagne . facteur surtout hiver
+      - si: saison = 'été'
+        alors: montagne . facteur été
+      - si: saison = 'surtout été'
+        alors: montagne . facteur surtout été
+
+logement . vacances . résidence secondaire . localisation . montagne . facteur hiver:
+  formule: 10.72
+
+logement . vacances . résidence secondaire . localisation . montagne . facteur surtout hiver:
+  formule: 3.69
+
+logement . vacances . résidence secondaire . localisation . montagne . facteur été:
+  formule: 0.76
+
+logement . vacances . résidence secondaire . localisation . montagne . facteur surtout été:
+  formule: 1.3
+
+logement . vacances . résidence secondaire . saison:
+  question: À quelle(s) saison(s) vous rendez-vous majoritairement dans votre résidence secondaire ?
+  applicable si: maison secondaire . présent
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - été
+        - surtout été
+        - surtout hiver
+        - hiver
+
+logement . vacances . résidence secondaire . saison . été: 
+  titre: Été
+  description: Vous ne vous rendez dans votre résidence secondaire qu'en été.
+logement . vacances . résidence secondaire . saison . surtout été: 
+  titre: Surtout l'été
+  description: Vous vous rendez dans votre résidence secondaire majoritairement en été.
+logement . vacances . résidence secondaire . saison . surtout hiver: 
+  titre: Surtout l'hiver
+  description: Vous vous rendez dans votre résidence secondaire majoritairement en hiver.
+logement . vacances . résidence secondaire . saison . été: 
+  titre: Hiver
+  description: Vous ne vous rendez dans votre résidence secondaire qu'en hiver.
