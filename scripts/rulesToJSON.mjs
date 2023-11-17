@@ -134,7 +134,12 @@ try {
 
 const multiThread = destRegions.length > 1
 
-console.debug('Running in multi-thread mode:', multiThread)
+if (!markdown) {
+  console.log(
+    'ℹ️ Multi-threading mode:',
+    multiThread ? c.green('ON') : c.yellow('OFF')
+  )
+}
 
 const piscina = multiThread
   ? new Piscina({
@@ -142,48 +147,48 @@ const piscina = multiThread
     })
   : null
 
-try {
-  destLangs.unshift(srcLang)
-  const resultOfCompilationAndOptim = await Promise.all(
-    destLangs.flatMap((destLang) => {
-      const translatedBaseRules = getTranslatedRules(baseRules, destLang)
-      return destRegions.map((regionCode) => {
-        try {
-          return multiThread
-            ? piscina.run({
-                regionCode,
-                destLang,
-                translatedBaseRules,
-                markdown
-              })
-            : rulesToJSONWorker({
-                regionCode,
-                destLang,
-                translatedBaseRules,
-                markdown
-              })
-        } catch (err) {
-          console.log(`Error in worker ${regionCode}-${destLang}`, err)
-          piscina.threads.forEach((thread) => thread.terminate())
-        }
-      })
-    })
+const printErrorAndExit = (err, regionCode, destLang) => {
+  console.error(
+    `❌ ${c.red(regionCode + '-' + destLang)} error while compiling:`
   )
+  console.error(err.message)
+  exit(-1)
+}
 
-  if (markdown) {
-    console.log(
-      `| Successfully compiled and optimized rules: <br><details><summary>Expand</summary> <ul>${resultOfCompilationAndOptim
-        .map(({ ok }) => ok ?? '')
-        .join(' ')}</ul></details> | :heavy_check_mark: | Ø |`
-    )
-  }
-  const errors = resultOfCompilationAndOptim
-    .map(({ err }) => err)
-    .filter(Boolean)
-  if (errors.length > 0) {
-    errors.forEach((err) => console.error(err))
-    exit(-1)
-  }
-} catch (err) {
-  piscina.threads.forEach((thread) => thread.terminate())
+destLangs.unshift(srcLang)
+const resultOfCompilationAndOptim = await Promise.all(
+  destLangs.flatMap((destLang) => {
+    const translatedBaseRules = getTranslatedRules(baseRules, destLang)
+    return destRegions.map((regionCode) => {
+      if (multiThread) {
+        return piscina
+          .run({
+            regionCode,
+            destLang,
+            translatedBaseRules,
+            markdown
+          })
+          .catch((err) => printErrorAndExit(err, regionCode, destLang))
+      }
+
+      try {
+        return rulesToJSONWorker({
+          regionCode,
+          destLang,
+          translatedBaseRules,
+          markdown
+        })
+      } catch (err) {
+        printErrorAndExit(err, regionCode, destLang)
+      }
+    })
+  })
+)
+
+if (markdown) {
+  console.log(
+    `| Successfully compiled and optimized rules: <br><details><summary>Expand</summary> <ul>${resultOfCompilationAndOptim
+      .map((ok) => ok)
+      .join(' ')}</ul></details> | :heavy_check_mark: | Ø |`
+  )
 }

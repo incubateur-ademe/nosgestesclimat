@@ -29,20 +29,19 @@ const rulesToKeep = [
   'transport . ferry . surface'
 ]
 
-export function compressRules(jsonPathWithoutExtension) {
+export function compressRules(engine, jsonPathWithoutExtension) {
   const destPath = `${jsonPathWithoutExtension}-opti.json`
-  let res = constantFoldingFromJSONFile(
-    jsonPathWithoutExtension + '.json',
-    destPath,
-    ([ruleName, ruleNode]) => {
-      return (
-        rulesToKeep.includes(ruleName) ||
-        'icônes' in ruleNode.rawNode ||
-        ruleNode.rawNode.type === 'notification'
-      )
-    }
-  )
-  return res
+  const toKeep = ([ruleName, ruleNode]) => {
+    return (
+      rulesToKeep.includes(ruleName) ||
+      'icônes' in ruleNode.rawNode ||
+      ruleNode.rawNode.type === 'notification'
+    )
+  }
+  const foldedRules = getRawNodes(constantFolding(engine, toKeep))
+
+  writeFileSync(destPath, JSON.stringify(foldedRules, null, 2))
+  return Object.keys(foldedRules).length
 }
 
 /**
