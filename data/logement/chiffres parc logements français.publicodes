@@ -103,34 +103,37 @@ parc français . surface . part réseau de chaleur:
 parc français . surface . part GPL:
   formule: GPL / surface
 
-parc français . consommation électricité totale:
+parc français . empreinte électricité totale par m2:
   formule:
     somme:
-      - chauffage . consommation électricité moyenne
-      - consommation électricité autre moyenne
-  unité: kWh
+      - chauffage . empreinte électricité par m2
+      - empreinte électricité autre par m2
+  unité: kgCO2e/m2
 
-parc français . consommation électricité totale relative:
+parc français . empreinte électricité relative par m2:
   formule:
     somme:
-      - chauffage . consommation électricité moyenne relative
-      - consommation électricité autre moyenne
-  unité: kWh
+      - chauffage . empreinte électricité moyenne par m2
+      - empreinte électricité autre par m2
+  unité: kgCO2e/m2
 
 parc français . chauffage:
   note: |
     La consommation pour l'eau chaude sanitaire (ECS) et pour la cuisson sont également intégrées dans les consommations.
 
 parc français . chauffage . empreinte moyenne par m2:
-  formule: 
+  note: L'électricité est traitée séparément.
+  formule:
     somme:
-      - empreinte gaz par m2
-      - empreinte fioul par m2
-      - empreinte buches par m2
-      - empreinte granulés par m2
-      - empreinte réseau de chaleur par m2
-      - empreinte GPL par m2
-      - empreinte électricité par m2
+      - surface . part gaz * empreinte gaz par m2
+      - surface . part fioul * empreinte fioul par m2
+      - surface . part bois * empreinte buches par m2 / 2
+      - surface . part bois * empreinte granulés par m2 / 2
+      - surface . part réseau de chaleur * empreinte réseau de chaleur par m2
+      - surface . part GPL * empreinte GPL par m2
+
+parc français . chauffage . empreinte électricité moyenne par m2:
+  formule: surface . part électricité * empreinte électricité par m2
 
 parc français . chauffage . consommation électricité:
   formule: chauffage + ecs + cuisson
@@ -321,39 +324,6 @@ parc français . chauffage . consommation GPL moyenne:
   formule: consommation GPL par m2 * logement . surface
   unité: kWh
 
-parc français . chauffage . consommation électricité moyenne relative:
-  formule: consommation électricité moyenne * surface . part électricité
-  note: électricité + pompe à chaleur
-  unité: kWh
-
-parc français . chauffage . consommation gaz moyenne relative:
-  formule: consommation gaz moyenne * surface . part gaz
-  unité: kWh
-
-parc français . chauffage . consommation fioul moyenne relative:
-  formule: consommation fioul moyenne * surface . part fioul
-  unité: kWh
-
-parc français . chauffage . consommation bois moyenne relative:
-  formule: consommation bois moyenne * surface . part bois
-  unité: kWh
-
-parc français . chauffage . consommation réseau de chaleur moyenne relative:
-  formule: consommation réseau de chaleur moyenne * surface . part réseau de chaleur
-  unité: kWh
-
-parc français . chauffage . consommation GPL moyenne relative:
-  formule: consommation GPL moyenne * surface . part GPL
-  unité: kWh
-
-parc français . chauffage . consommation fioul moyenne relative en litres:
-  formule: consommation fioul moyenne * surface . part fioul * logement . chauffage . fioul kWh au litre
-  unité: l
-
-parc français . chauffage . consommation fioul moyenne en litres:
-  formule: consommation fioul moyenne * logement . chauffage . fioul kWh au litre
-  unité: l
-
 parc français . consommation électricité autre:
   formule: 79384041653
   unité: kWh
@@ -362,6 +332,35 @@ parc français . consommation électricité autre par m2:
   formule: consommation électricité autre / surface totale
   unité: kWh/m2
 
-parc français . consommation électricité autre moyenne:
-  formule: consommation électricité autre par m2 * logement . surface
-  unité: kWh
+parc français . empreinte électricité autre par m2:
+  formule: consommation électricité autre par m2 * logement . électricité . intensité carbone
+  unité: kgCO2e/m2
+
+parc français . chauffage . empreinte moyenne chauffage air par m2:
+  formule:
+    somme:
+      - empreinte électricité par m2 * part chauffage air électricité
+      - empreinte gaz par m2 * part chauffage air gaz
+      - empreinte fioul par m2 * part chauffage air fioul
+      - empreinte buches par m2 * part chauffage air bois / 2
+      - empreinte granulés par m2 * part chauffage air bois / 2
+      - empreinte réseau de chaleur par m2 * part chauffage air réseau de chaleur
+      - empreinte GPL par m2 * part chauffage air GPL
+
+parc français . chauffage . part chauffage air électricité:
+  formule: consommation électricité . chauffage / (consommation électricité + consommation électricité autre)
+
+parc français . chauffage . part chauffage air gaz:
+  formule: consommation gaz . chauffage / consommation gaz
+
+parc français . chauffage . part chauffage air bois:
+  formule: consommation bois . chauffage / consommation bois
+
+parc français . chauffage . part chauffage air fioul:
+  formule: consommation fioul . chauffage / consommation fioul
+
+parc français . chauffage . part chauffage air réseau de chaleur:
+  formule: consommation réseau de chaleur . chauffage / consommation réseau de chaleur
+
+parc français . chauffage . part chauffage air GPL:
+  formule: consommation GPL . chauffage / consommation GPL
