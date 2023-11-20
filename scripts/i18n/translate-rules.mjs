@@ -33,7 +33,7 @@ import {
   fetchTranslationMarkdown
 } from '@incubateur-ademe/nosgestesclimat-scripts/deepl'
 import gitDiff from 'git-diff'
-import { getModelFromSource } from '@incubateur-ademe/publicodes-tools/compilation'
+import { getModelFromSource } from '@publicodes/tools/compilation'
 import createPrompt from 'prompt-sync'
 
 const prompt = createPrompt()
