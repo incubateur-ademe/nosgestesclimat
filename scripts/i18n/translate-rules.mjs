@@ -140,7 +140,7 @@ const translateTo = async (
           isNewRule || isNewAttr ? '' : translatedRule[attr + LOCK_KEY_EXT]
         const diff = gitDiff(newVal, refVal, {
           color: true,
-          forceFake: true,
+          forceFake: true
         })
         console.log(
           `\n${c.dim('---')} ${c.green.italic(
@@ -216,7 +216,10 @@ const translateTo = async (
   writeYAML(destPath, translatedRules)
 }
 
-const rules = getModelFromSource(srcFile, ['data/i18n/**'], { verbose: true })
+const rules = getModelFromSource(srcFile, {
+  ignore: ['data/i18n/**'],
+  verbose: true
+})
 
 destLangs.forEach(async (destLang) => {
   const destPath = resolve(`data/i18n/t9n/translated-rules-${destLang}.yaml`)
