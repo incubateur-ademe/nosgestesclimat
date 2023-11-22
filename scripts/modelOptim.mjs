@@ -1,13 +1,13 @@
 // Description: contains wrappers around the constant folding optimization pass from
-// 				[@incubateur-ademe/publicodes-tools] to be used in the build scripts: rulesToJSON.
+// 				[@publicodes/tools] to be used in the build scripts: rulesToJSON.
 //
-// [@incubateur-ademe/publicodes-tools]: https:github.com/incubateur-ademe/publicodes-tools
+// [@publicodes/tools]: https:github.com/incubateur-ademe/publicodes-tools
 
 import Engine from 'publicodes'
 import path from 'path'
 import { readFileSync, writeFileSync } from 'fs'
-import { disabledLogger, getRawNodes } from '@incubateur-ademe/publicodes-tools'
-import { constantFolding } from '@incubateur-ademe/publicodes-tools/optims'
+import { disabledLogger, getRawNodes } from '@publicodes/tools'
+import { constantFolding } from '@publicodes/tools/optims'
 
 // Rule names which should be kept in the optimized model.
 //
@@ -29,20 +29,19 @@ const rulesToKeep = [
   'transport . ferry . surface'
 ]
 
-export function compressRules(jsonPathWithoutExtension) {
+export function compressRules(engine, jsonPathWithoutExtension) {
   const destPath = `${jsonPathWithoutExtension}-opti.json`
-  let res = constantFoldingFromJSONFile(
-    jsonPathWithoutExtension + '.json',
-    destPath,
-    ([ruleName, ruleNode]) => {
-      return (
-        rulesToKeep.includes(ruleName) ||
-        'icônes' in ruleNode.rawNode ||
-        ruleNode.rawNode.type === 'notification'
-      )
-    }
-  )
-  return res
+  const toKeep = ([ruleName, ruleNode]) => {
+    return (
+      rulesToKeep.includes(ruleName) ||
+      'icônes' in ruleNode.rawNode ||
+      ruleNode.rawNode.type === 'notification'
+    )
+  }
+  const foldedRules = getRawNodes(constantFolding(engine, toKeep))
+
+  writeFileSync(destPath, JSON.stringify(foldedRules, null, 2))
+  return Object.keys(foldedRules).length
 }
 
 /**
