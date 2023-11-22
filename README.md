@@ -1,4 +1,3 @@
-
 <div align="center">
   <h3 align="center">
 	<big>Nos Gestes Climat</big>
@@ -12,6 +11,7 @@
   </p>
 
 <!-- ![CI][ci-link] ![NPM][npm-link] -->
+
 Modèle de calcul de l'empreinte climat personnelle.
 
 </div>
@@ -27,11 +27,11 @@ yarn add @incubateur-ademe/nosgestesclimat
 ```
 
 ```ts
-import { rules } from "@incubateur-ademe/nosgestesclimat";
-import Engine from "publicodes";
+import { rules } from '@incubateur-ademe/nosgestesclimat'
+import Engine from 'publicodes'
 
-const engine = new Engine(rules);
-console.log(engine.evaluate("bilan"))
+const engine = new Engine(rules)
+console.log(engine.evaluate('bilan'))
 ```
 
 ## Écriture des modèles du simulateur
@@ -73,3 +73,29 @@ Tous les modèles sont dans [le dossier
 Ils reposent sur le nouveau langage de programmation
 [`publicodes`](https://publi.codes) et développé dans le cadre de
 https://beta.gouv.fr.
+
+## Développement
+
+### CI
+
+Le projet utilise plusieurs GitHub Actions pour automatiser les tâches de
+développement.
+
+Pour chaque _pull request_, les actions suivantes sont exécutées :
+
+- `upload-compilation-result.yaml` : compile les modèles et les personas (`yarn compile`) et exécute
+  les tests (`yarn test:personas` et `yarn test:optim`)
+- `pr-updater.yaml` : utilise l'artifact généré par
+  `upload-compilation-result.yaml` pour mettre à jour la PR avec les résultats
+  de la compilation et des tests
+
+Pour chaque _push_ sur la branche `master`, le workflow `packaging.yaml` est exécuté.
+Si la version du paquet npm est incrémentée, alors :
+
+- une nouvelle _release_ GitHub est créée
+- la version française du modèle (le résultat de `yarn build`) est publiée dans
+  une nouvelle version du paquet npm
+  [`@incubateur-ademe/nosgestesclimat`](https://www.npmjs.com/package/@incubateur-ademe/nosgestesclimat)
+- toutes les versions ainsi que les personas (le résultat de `yarn compile`)
+  sont _push_ dans une nouvelle branche dans le dépôt
+  [`nosgestesclimat-api`](https://github.com/incubateur-ademe/nosgestesclimat-api)

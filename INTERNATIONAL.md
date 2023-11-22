@@ -18,7 +18,7 @@ Il faut savoir que ces fichiers contiennent de règles de calcul (format yaml) c
 
 ### Votre modèle n'est pas encore supporté dans NGC ?
 
-Créez le votre : votre fichier doit être nommé avec le code de votre pays suivi de l'extension `.yaml`, par exemple pour le Belgique, `UK-fr.yaml` (pour le modèle en français). Commencez ensuite par écrire votre première règle : `params` contenant les caractéristiques de votre région (les attributes nom et code sont obligatoires) :
+Créez le votre : votre fichier doit être nommé avec le code de votre pays suivi de l'extension `.publicodes`, par exemple pour le Belgique, `UK-fr.publicodes` (pour le modèle en français). Commencez ensuite par écrire votre première règle : `params` contenant les caractéristiques de votre région (les attributes nom et code sont obligatoires) :
 
 Exemple pour la Grande Bretagne:
 
@@ -38,7 +38,7 @@ Vous pouvez vous rendre dans le fichier correspondant à votre région (selon so
 
 L'idée est ensuite de réecrire dans ce fichier les règles du modèle "de base", français, que vous souhaitez modifier en veillant à reporter **exactement** les clés du modèle (= nom des règles).
 
-Par exemple, le mix électrique est défini dans la règle `intensité électricité` du fichier `data/divers/commun.yaml`. Pour modifier sa valeur et son titre dans le modèle nouvellement créé, il faut réécrire cette règle avec les bons attributs qui viendront écraser ceux du modèle français lors de la compilation.
+Par exemple, le mix électrique est défini dans la règle `intensité électricité` du fichier `data/divers/commun.publicodes`. Pour modifier sa valeur et son titre dans le modèle nouvellement créé, il faut réécrire cette règle avec les bons attributs qui viendront écraser ceux du modèle français lors de la compilation.
 
 Exemple pour la Grande Bretagne:
 
@@ -53,7 +53,7 @@ intensité électricité:
 > **Note**
 > Sachez que le code du modèle peut contenir certaines subtilités (notamment pour la gestions des questions "Mosaïques"), n'hésitez pas à nous contacter si vous bloquez !
 
-Attention, pour que vos modifications soient prises en compte pour les anglophones, il est nécessaire de créer un fichier jumeau `XX-en-us.yaml` contenant les règles identiques à votre fichier `XX-fr.yaml` mais traduites. Vous pouvez utilisez le script `scripts/i18n/translateRegionModel.js` pour traduire automatiquement votre fichier. Attention, le fichier traduit précédemment sera écraser. Si des améliorations de la traductions automatiques ont été faites auparavant, pensez à jeter à oeil aux diffs. (Documentation dans le [wiki](https://github.com/datagir/nosgestesclimat/wiki/Translation#translateregionmodeljs))
+Attention, pour que vos modifications soient prises en compte pour les anglophones, il est nécessaire de créer un fichier jumeau `XX-en.publicodes` contenant les règles identiques à votre fichier `XX-fr.publicodes` mais traduites. Vous pouvez utilisez le script `scripts/i18n/translateRegionModel.js` pour traduire automatiquement votre fichier. Attention, le fichier traduit précédemment sera écraser. Si des améliorations de la traductions automatiques ont été faites auparavant, pensez à jeter à oeil aux diffs. (Documentation dans le [wiki](https://github.com/datagir/nosgestesclimat/wiki/Translation#translateregionmodeljs))
 
 ### Points d'attention
 
@@ -101,7 +101,7 @@ an account on GitHub and find our repository : [datagir/nosgestesclimat](https:/
 
 You can create your own !  
 Your file should be named with the country-code (uppercase), dash-separated with the language code (lowercase) and the
-extension `.yaml`, for instance: for the United-Kingdom, in english the file is named `UK-en-us.yaml` (`UK` being the
+extension `.publicodes`, for instance: for the United-Kingdom, in english the file is named `UK-en-us.publicodes` (`UK` being the
 country code of the United Kingdom and `en-us` being the language code). You can then start writing your own rule.
 
 > **Warning**  
@@ -131,7 +131,7 @@ You can then follow the steps below to improve your model.
    > will not be operational. You can copy-paste them in order to be sure they are exactly the same.
 
    For instance, the carbon intensity of the electricity mix is defined in the rule `intensité électricité` of the file
-   `data/divers/commun.yaml`. To edit that value and title in the newly created model, you should re-write this rule
+   `data/divers/commun.publicodes`. To edit that value and title in the newly created model, you should re-write this rule
    with the new attributes.
 
    Example for the UK:
@@ -148,7 +148,7 @@ You can then follow the steps below to improve your model.
 > The model's code may contain minor subtilities (in particular in order to generate 'Mosaics'), do not hesitate to ask
 > for help if you don't understand something.
 
-For your modifications to be taken into account, it is necessary to have both file `XX-fr.yaml` and `XX-en-us.yaml` (for french and english language) containing the rules identical to the twin file but translated. You can use the `scripts/i18n/translateRegionModel.js` script to automatically translate your file. Be carefull, the previously translated file will be overwritten. If translation improvements have been made before, take a look at the diffs. (Documentation in the [wiki](https://github.com/datagir/nosgestesclimat/wiki/Translation#translateregionmodeljs))
+For your modifications to be taken into account, it is necessary to have both file `XX-fr.publicodes` and `XX-en.publicodes` (for french and english language) containing the rules identical to the twin file but translated. You can use the `scripts/i18n/translateRegionModel.js` script to automatically translate your file. Be carefull, the previously translated file will be overwritten. If translation improvements have been made before, take a look at the diffs. (Documentation in the [wiki](https://github.com/datagir/nosgestesclimat/wiki/Translation#translateregionmodeljs))
 
 ### Remarks
 
