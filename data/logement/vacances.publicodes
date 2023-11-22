@@ -435,11 +435,10 @@ logement . vacances . résidence secondaire:
   titre: résidence secondaire
   icônes: 🏡
   applicable si: présent
-  formule: 
+  formule:
     somme:
       - construction
-      - électricité
-      - chauffage
+      - énergie
   unité: kgCO2e
 
 logement . vacances . résidence secondaire . présent:
@@ -536,7 +535,14 @@ logement . vacances . résidence secondaire . localisation . campagne:
   icônes: 🚜
   description: Résidence située à distance de la mer, de la montagne, ou d'une grande ville
 
-logement . vacances . résidence secondaire . électricité: 
+logement . vacances . résidence secondaire . énergie:
+  formule:
+    somme:
+      - électricité
+      - chauffage
+  unité: kgCO2e
+
+logement . vacances . résidence secondaire . électricité:
   formule: parc français . consommation électricité autre par m2 * surface * pro-rata présence annuelle
 
 logement . vacances . résidence secondaire . pro-rata présence annuelle:
@@ -551,7 +557,7 @@ logement . vacances . résidence secondaire . durée:
     D'après [cette source](https://www.lesechos.fr/2012/06/tres-chere-residence-secondaire-359079), le temps moyen passé dans une résidence secondaire est de 42 nuitées par an.
 
 logement . vacances . résidence secondaire . chauffage:
-  formule: facteur saison * chauffage . empreinte par défaut / commun . jours par an * durée
+  formule: facteur saison * ((parc français . chauffage . empreinte moyenne par m2 hors électricité + parc français . chauffage . empreinte électricité moyenne par m2) / commun . jours par an) * durée
   description: |
     Pour calculer les facteurs saisons, dépendant à la fois de la localisation de la résidence secondaire et de la saison où il est fréquenté, nous nous sommes appuyés sur les données de degrés-heures disponibles par zones climatiques.
 
@@ -560,11 +566,8 @@ logement . vacances . résidence secondaire . chauffage:
       - Les logements situés sur le littoral nord-ouest, en campagne ou à la ville, correspondent à la moyenne des zones H1 et H2 < 800 mètres d'altitude
       - Les logements situés sur le littoral méditerranéen correspondent à la zone H3 < 400 mètres d'altitude
       - Les logements situés en montagne correspondent aux zones H1 et H2 > 800 mètres d'altitude
-    
-    Nous avons rapporté cela à la moyenne par jour des degrés-heures à l'année, pour établir les facteurs, disponibles dans [ce tableau](https://user-images.githubusercontent.com/4005340/283758960-63aac365-1a9d-4ee7-8ccc-51237d105283.png).
 
-logement . vacances . résidence secondaire . chauffage . empreinte par défaut:
-  formule: logement . chauffage . empreinte par défaut / parc français . surface moyenne * surface
+    Nous avons rapporté cela à la moyenne par jour des degrés-heures à l'année, pour établir les facteurs, disponibles dans [ce tableau](https://user-images.githubusercontent.com/4005340/283758960-63aac365-1a9d-4ee7-8ccc-51237d105283.png).
 
 logement . vacances . résidence secondaire . chauffage . facteur saison:
   formule:
