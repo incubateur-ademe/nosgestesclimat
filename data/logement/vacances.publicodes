@@ -548,13 +548,44 @@ logement . vacances . résidence secondaire . électricité:
 logement . vacances . résidence secondaire . pro-rata présence annuelle:
   formule: durée / commun . jours par an
 
-logement . vacances . résidence secondaire . durée: 
+logement . vacances . résidence secondaire . durée:
+  mosaique:
+    type: nombre
+    clé: nombre
+    suggestions:
+      tout l'été:
+        nuités week end . nombre: 0
+        nuités semaine . nombre: 8
   question: Combien de temps passez-vous dans votre résidence secondaire chaque année ?
   description: Ne renseignez bien que le temps que vous y passez vous. Si votre résidence secondaire est utilisée par d'autres (famille, amis), l'empreinte associée à cet usage leur est imputé.
-  par défaut: 42
+  formule:
+    somme:
+      - nuités week end
+      - nuités semaine
   unité: nuit
   note: |
     D'après [cette source](https://www.lesechos.fr/2012/06/tres-chere-residence-secondaire-359079), le temps moyen passé dans une résidence secondaire est de 42 nuitées par an.
+    Nous attribuons donc par défaut 6 semaines passées en résidence secondaire.
+
+logement . vacances . résidence secondaire . durée . nuités week end:
+  titre: Week-end(s)
+  icônes: 📆
+  formule: nombre * 2
+  note: On considère qu'un week-end correspond à 2 nuités.
+
+logement . vacances . résidence secondaire . durée . nuités week end . nombre:
+  question: Combien de week-ends passez-vous dans votre maison secondaire ?
+  par défaut: 0
+
+logement . vacances . résidence secondaire . durée . nuités semaine:
+  titre: Semaine(s)
+  icônes: 🗓️
+  formule: nombre * 7
+  note: On considère qu'un week-end correspond à 7 nuités.
+
+logement . vacances . résidence secondaire . durée . nuités semaine . nombre:
+  question: Combien de week-ends passez-vous dans votre maison secondaire ?
+  par défaut: 6
 
 logement . vacances . résidence secondaire . chauffage:
   formule: facteur saison * ((parc français . chauffage . empreinte moyenne par m2 hors électricité + parc français . chauffage . empreinte électricité moyenne par m2) / commun . jours par an) * durée
