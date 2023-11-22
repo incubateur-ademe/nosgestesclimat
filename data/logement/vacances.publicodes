@@ -453,18 +453,21 @@ logement . vacances . résidence secondaire . construction:
   formule: surface * annuelle et par surface
   unité: kgCO2e
 
-logement . vacances . résidence secondaire . surface: 
+logement . vacances . résidence secondaire . appartement:
+  formule:
+    une de ces conditions:
+      - localisation = 'littoral méditerranéen'
+      - localisation = 'littoral nord-ouest'
+      - localisation = 'montagne'
+      - localisation = 'ville'
+
+logement . vacances . résidence secondaire . surface:
   titre: Surface
   applicable si: résidence secondaire . présent
   question: Quelle est la surface de votre résidence secondaire ?
   par défaut:
     variations:
-      - si: 
-          une de ces conditions:
-            - localisation = 'littoral méditerranéen'
-            - localisation = 'littoral nord-ouest'
-            - localisation = 'montagne'
-            - localisation = 'ville'
+      - si: appartement
         alors: parc français . surface moyenne appartement
       - sinon: parc français . surface moyenne maison
   note: |
@@ -483,12 +486,6 @@ logement . vacances . résidence secondaire . annuelle et par surface:
 logement . vacances . résidence secondaire . par surface:
   formule:
     variations:
-      - si: 
-          une de ces conditions:
-            - localisation = 'littoral méditerranéen'
-            - localisation = 'littoral nord-ouest'
-            - localisation = 'montagne'
-            - localisation = 'ville'
         alors: 525
       - sinon: 425
   unité: kgCO2e/m2
