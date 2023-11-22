@@ -46,13 +46,7 @@ logement . chauffage . empreinte totale:
 
 logement . chauffage . empreinte par défaut:
   résumé: Un calcul statistique du **chauffage** résidentiel français moyen
-  formule:
-    somme:
-      - parc français . chauffage . consommation gaz moyenne relative * gaz . facteur d'émission base carbone
-      - parc français . chauffage . consommation fioul moyenne relative en litres * intensité carbone fioul litre
-      - parc français . chauffage . consommation bois moyenne relative * ((bois . facteur d'émission bûche + bois . facteur d'émission granulés) / 2)
-      - parc français . chauffage . consommation réseau de chaleur moyenne relative * réseau de chaleur . intensité carbone
-      - parc français . chauffage . consommation GPL moyenne relative * intensité carbone GPL
+  formule: parc français . chauffage . empreinte moyenne par m2 hors électricité * logement . surface
   unité: kgCO2e
 
 logement . chauffage . choix utilisateur:
@@ -469,8 +463,8 @@ logement . chauffage . bois . empreinte:
   applicable si: présent
   formule:
     variations:
-      - si: type = 'bûche'
-        alors: type . bûche . consommation * facteur d'émission bûche
+      - si: type = 'bûches'
+        alors: type . bûches . consommation * bois . type . bûches . intensité énergétique * facteur d'émission bûches
       - si: type = 'granulés'
         alors: type . granulés . consommation * facteur d'émission granulés
   unité: kgCO2e
@@ -486,12 +480,12 @@ logement . chauffage . bois . type:
     une possibilité:
       choix obligatoire: oui
       possibilités:
-        - bûche
+        - bûches
         - granulés
-  par défaut: "'bûche'"
+  par défaut: "'bûches'"
   note: Les poêles à bûches représentent [70% des poêles vendus](https://www.planetoscope.com/Source-d-energie/1521-.html).
 
-logement . chauffage . bois . type . bûche:
+logement . chauffage . bois . type . bûches:
   titre: Bûches
 logement . chauffage . bois . type . granulés:
   titre: Granulés
@@ -516,14 +510,12 @@ logement . chauffage . bois . type . granulés . estimation via le coût:
   note: |
     Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois.
 
-logement . chauffage . bois . type . bûche . consommation:
-  formule: saisie * intensité énergétique
-logement . chauffage . bois . type . bûche . intensité énergétique:
+logement . chauffage . bois . type . bûches . intensité énergétique:
   formule: 1610
   unité: kWh/stère
   note: Nous faisons l'hypothèse d'une consommation de bûches de 20% d'humidité, d'après l'[étude ADEME sur le chauffahe domestique au bois](https://librairie.ademe.fr/produire-autrement/872-etude-sur-le-chauffage-domestique-au-bois.html), page 10.
 
-logement . chauffage . bois . type . bûche . consommation . saisie:
+logement . chauffage . bois . type . bûches . consommation:
   question: Quelle la consommation annuelle de bois en bûches de votre foyer ?
   aide: estimation via le coût
   description: |
@@ -533,7 +525,7 @@ logement . chauffage . bois . type . bûche . consommation . saisie:
   unité: stère
   par défaut: parc français . chauffage . consommation bois par m2 * surface / intensité énergétique
 
-logement . chauffage . bois . type . bûche . estimation via le coût:
+logement . chauffage . bois . type . bûches . estimation via le coût:
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
   unité: €/stère
   formule: prix stère 2023
@@ -542,8 +534,8 @@ logement . chauffage . bois . type . bûche . estimation via le coût:
 
     Prix calculé sur la base de l'indice prix bois énergie publié par l'INSEE.
 
-logement . chauffage . bois . facteur d'émission bûche:
-  titre: Empreinte bois bûche
+logement . chauffage . bois . facteur d'émission bûches:
+  titre: Empreinte bois bûches
   formule: 0.0460
   unité: kgCO2e/kWh
   note: |

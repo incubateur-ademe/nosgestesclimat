@@ -13,7 +13,7 @@ import c from 'ansi-colors'
 
 import cli from '@incubateur-ademe/nosgestesclimat-scripts/cli'
 import utils from '@incubateur-ademe/nosgestesclimat-scripts/utils'
-import { getModelFromSource } from '@incubateur-ademe/publicodes-tools/compilation'
+import { getModelFromSource } from '@publicodes/tools/compilation'
 
 import { addTranslationToBaseRules } from './i18n/addTranslationToBaseRules.js'
 
@@ -22,6 +22,7 @@ import {
   supportedRegions,
   supportedRegionCodes
 } from './i18n/regionCommons.js'
+import rulesToJSONWorker from './rulesToJSON.worker.mjs'
 
 const t9nDir = 'data/i18n/t9n'
 
@@ -105,10 +106,6 @@ try {
   exit(-1)
 }
 
-const piscina = new Piscina({
-  filename: new URL('./rulesToJSON.worker.mjs', import.meta.url).href
-})
-
 try {
   new Engine(baseRules, {
     logger: {
@@ -135,40 +132,63 @@ try {
   exit(-1)
 }
 
-try {
-  destLangs.unshift(srcLang)
-  const resultOfCompilationAndOptim = await Promise.all(
-    destLangs.flatMap((destLang) => {
-      const translatedBaseRules = getTranslatedRules(baseRules, destLang)
-      return destRegions.map((regionCode) => {
-        try {
-          return piscina.run({
+const multiThread = destRegions.length > 1
+
+if (!markdown) {
+  console.log(
+    'ℹ️ Multi-threading mode:',
+    multiThread ? c.green('ON') : c.yellow('OFF')
+  )
+}
+
+const piscina = multiThread
+  ? new Piscina({
+      filename: new URL('./rulesToJSON.worker.mjs', import.meta.url).href
+    })
+  : null
+
+const printErrorAndExit = (err, regionCode, destLang) => {
+  console.error(
+    `❌ ${c.red(regionCode + '-' + destLang)} error while compiling:`
+  )
+  console.error(err.message)
+  exit(-1)
+}
+
+destLangs.unshift(srcLang)
+const resultOfCompilationAndOptim = await Promise.all(
+  destLangs.flatMap((destLang) => {
+    const translatedBaseRules = getTranslatedRules(baseRules, destLang)
+    return destRegions.map((regionCode) => {
+      if (multiThread) {
+        return piscina
+          .run({
             regionCode,
             destLang,
             translatedBaseRules,
             markdown
           })
-        } catch (err) {
-          console.log(`Error in worker ${regionCode}-${destLang}`, err)
-          piscina.threads.forEach((thread) => thread.terminate())
-        }
-      })
+          .catch((err) => printErrorAndExit(err, regionCode, destLang))
+      }
+
+      try {
+        return rulesToJSONWorker({
+          regionCode,
+          destLang,
+          translatedBaseRules,
+          markdown
+        })
+      } catch (err) {
+        printErrorAndExit(err, regionCode, destLang)
+      }
     })
+  })
+)
+
+if (markdown) {
+  console.log(
+    `| Successfully compiled and optimized rules: <br><details><summary>Expand</summary> <ul>${resultOfCompilationAndOptim
+      .map((ok) => ok)
+      .join(' ')}</ul></details> | :heavy_check_mark: | Ø |`
   )
-  if (markdown) {
-    console.log(
-      `| Successfully compiled and optimized rules: <br><details><summary>Expand</summary> <ul>${resultOfCompilationAndOptim
-        .map(({ ok }) => ok ?? '')
-        .join(' ')}</ul></details> | :heavy_check_mark: | Ø |`
-    )
-  }
-  const errors = resultOfCompilationAndOptim
-    .map(({ err }) => err)
-    .filter(Boolean)
-  if (errors.length > 0) {
-    errors.forEach((err) => console.error(err))
-    exit(-1)
-  }
-} catch (err) {
-  piscina.threads.forEach((thread) => thread.terminate())
 }
