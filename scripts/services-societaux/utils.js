@@ -14,9 +14,9 @@ const sortJSON = (unordered) =>
       return obj
     }, {})
 
-const writeJSON = (path, content, messageGénérationAuto = '') => {
+const writeJSON = (path, content, messageAuto = '') => {
   resolveConfig(process.cwd()).then((prettierConfig) => {
-    format(messageGénérationAuto + JSON.stringify(content), {
+    format(messageAuto + JSON.stringify(content), {
       ...prettierConfig,
       parser: 'json'
     }).then((formattedContent) => {
@@ -31,16 +31,11 @@ const readYAML = (path) => {
 }
 
 //Duplicate of writeYAML in i18n/utils.js
-const writeYAML = (
-  path,
-  content,
-  messageGénérationAuto = '',
-  blockQuote = 'literal'
-) => {
+const writeYAML = (path, content, messageAuto = '', blockQuote = 'literal') => {
   resolveConfig(process.cwd())
     .then((prettierConfig) =>
       format(
-        messageGénérationAuto +
+        messageAuto +
           yaml.stringify(content, {
             sortMapEntries: true,
             aliasDuplicateObjects: false,
