@@ -42,9 +42,17 @@ La première catégorie "services publics" comprend par exemple l'empreinte des 
 
 La deuxième catégorie "services marchands" comprend notamment le réseau de télécommunications (fibre, téléphone, etc.), mais aussi les assurances ou encore la poste. Ce sont des services utilisés par la grande majorité de la population pour lesquels nous n'avons pas encore le détail qui nous permettrait de répartir l'empreinte en fonction des choix de consommation des citoyens.
 
+Pour 2017, on avait donc cette décomposition:
+
+![Graphe S. Sociétaux 2017](https://storage.gra.cloud.ovh.net/v1/AUTH_0f20d409cb2a4c9786c769e2edec0e06/imagespadincubateurnet/uploads/upload_cd83618ee65063258012cd3d4ce17933.png)
+
+Et avec les chiffres les plus récents, de 2018:
+
+![Graphe S. Sociétaux 2018](https://github.com/incubateur-ademe/nosgestesclimat/assets/55186402/bff2b90b-2512-4ba2-8351-17eee5a30939)
+
 ## Principe général
 
-En France, le calcul de l'empreinte carbone nationale est géré par le Service des Données et Etudes Statistiques (SDES) du Ministère de l'Écologie. Le dernier résultat précis est [disponible pour l'année **2017**](https://www.statistiques.developpement-durable.gouv.fr/la-decomposition-de-lempreinte-carbone-de-la-demande-finale-de-la-france-par-postes-de-consommation). C'est à partir de ces données que l'on retrouve l'ordre de grandeur des 10 tonnes de CO2e par an et par personne ([voir derniers chiffres sortis fin 2022](https://www.statistiques.developpement-durable.gouv.fr/lempreinte-carbone-de-la-france-de-1995-2021)).
+En France, le calcul de l'empreinte carbone nationale est géré par le Service des Données et Etudes Statistiques (SDES) du Ministère de l'Écologie. Le dernier résultat précis est [disponible pour l'année **2018**](https://www.statistiques.developpement-durable.gouv.fr/lempreinte-carbone-de-la-france-de-1995-2021) (sont disponibles également les chiffres pour [2017](https://www.statistiques.developpement-durable.gouv.fr/la-decomposition-de-lempreinte-carbone-de-la-demande-finale-de-la-france-par-postes-de-consommation)). C'est à partir de ces données que l'on retrouve l'ordre de grandeur des 10 tonnes de CO2e par an et par personne.
 
 Les données fournies par le SDES donnent une empreinte carbone correspondant à ce qui est consommé sur le territoire français par branche économique ou bien par groupement de branches économiques. Ces branches sont issues de la nomenclature CPA (Classification européenne des Produits par Activité). **Il est alors possible de diviser l'empreinte carbone calculée au niveau "macro" selon les secteurs d'activités et donc selon les postes de consommation.**
 
@@ -60,13 +68,11 @@ Pour aller encore plus loin sur un niveau de précision plus avancé (sous-branc
 
 Ainsi, nous disposons d'informations suffisantes pour proposer une première version de la décomposition des services sociétaux, "dans l'attente de mieux". Par ailleurs, et vous le verrez dans la suite du document, ces calculs sont automatisés via des scripts javascript qui permettent de **reproduire ce travail d'analyse et mettre à jour le modèle avec de nouvelles données en quelques minutes** !
 
-![](https://storage.gra.cloud.ovh.net/v1/AUTH_0f20d409cb2a4c9786c769e2edec0e06/imagespadincubateurnet/uploads/upload_cd83618ee65063258012cd3d4ce17933.png)
-
 ## Données de départ
 
 Pour réaliser ce travail d'hybridation du modèle d'empreinte carbone individuelle, nous disposons de données très intéressantes :
 
-- [Les données de décomposition de l’empreinte carbone de la demande finale de la France](https://www.statistiques.developpement-durable.gouv.fr/la-decomposition-de-lempreinte-carbone-de-la-demande-finale-de-la-france-par-postes-de-consommation) du SDES. On dispose alors de l'intensité carbone associée à la demande finale totale de la population française pour chaque branche économique (code CPA). Ici en [json](https://github.com/datagir/nosgestesclimat/blob/master/scripts/naf/donn%C3%A9es/liste_SDES.json).
+- [Les données de décomposition de l’empreinte carbone de la demande finale de la France](https://www.statistiques.developpement-durable.gouv.fr/la-decomposition-de-lempreinte-carbone-de-la-demande-finale-de-la-france-par-postes-de-consommation) du SDES. On dispose alors de l'intensité carbone associée à la demande finale totale de la population française pour chaque branche économique (code CPA). Ici en [json](https://github.com/incubateur-ademe/nosgestesclimat/blob/master/scripts/services-societaux/input/2018/liste_SDES.json).
 
 A noter que la nomenclature **CPA** correspond à la **Classification européenne des Produits par Activité** [parallèle de la nomenclature **NACE**](<https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Glossary:Statistical_classification_of_products_by_activity_(CPA)/fr>) qui correspond à la classification statistique des activités économiques dans les communautés européennes [dont découlent les code **NAF** (Nomenclature d'Activité Française)](https://webmarche.adullact.org/?page=Entreprise.EntreprisePopupCodeNaf). Il semble la nomenclature entre CPA, NACE et NAF esu quasi-identique. Leur contenu ne l'est pas.
 
@@ -74,9 +80,9 @@ A noter que la nomenclature **CPA** correspond à la **Classification européenn
 
 ![](https://storage.gra.cloud.ovh.net/v1/AUTH_0f20d409cb2a4c9786c769e2edec0e06/imagespadincubateurnet/uploads/upload_d34243e2db7588c3ab981df2996fa237.png)
 
-- La [liste des codes NAF](https://www.data.gouv.fr/fr/datasets/nomenclature-dactivites-francaise-naf/), ici en [json](https://github.com/datagir/nosgestesclimat/blob/master/scripts/naf/donn%C3%A9es/liste_NAF.json), dont les contenus sont explicité sur [le site de l'INSEE](https://www.insee.fr/fr/metadonnees/nafr2/?champRecherche=true) ou sur le site [NACEV2](https://nacev2.com/fr).
+- La [liste des codes NAF](https://www.data.gouv.fr/fr/datasets/nomenclature-dactivites-francaise-naf/), ici en [json](https://github.com/incubateur-ademe/nosgestesclimat/blob/master/scripts/services-societaux/input/liste_NAF.json), dont les contenus sont explicité sur [le site de l'INSEE](https://www.insee.fr/fr/metadonnees/nafr2/?champRecherche=true) ou sur le site [NACEV2](https://nacev2.com/fr).
 
-- [Le chiffre d'affaire par branche économique en France en 2017](https://www.insee.fr/fr/statistiques/4226067?sommaire=4226092), selon la nomenclature NAF et au niveau de la "sous-classe", ici en [json](https://github.com/datagir/nosgestesclimat/blob/master/scripts/naf/donn%C3%A9es/ca_branches_2017.json)
+- [Le chiffre d'affaire par branche économique en France](https://www.insee.fr/fr/statistiques/4226067?sommaire=4226092), selon la nomenclature NAF et au niveau de la "sous-classe", ici en [json](https://github.com/incubateur-ademe/nosgestesclimat/blob/master/scripts/services-societaux/input/2018/ca_branches.json)
 
 ## Reproduire le calcul
 
@@ -86,7 +92,7 @@ Pour cette première étape, on utilise le script `analyze_NAF_CA.js` qui permet
 
 > N'oublions pas que l'objectif final est d'atribuer, parmi l'ensemble des branches écnomiques, celles qui composent les services sociétaux, ce qui nécessite parfois de descendre au niveau de la "sous-branche".
 
-> Le fichier d'entrée (`ca_branches_2017.json`) correspond au chiffre d'affaire par branche économique en France en 2017. Il est tout a fait possible de traiter de la même manière les données pour d'autres années.
+> Le fichier d'entrée (`ca_branches.json` pour l'année étudiée) correspond au chiffre d'affaire par branche économique en France.
 
 Le fichier de sortie est `analyse_CA_NAF.json`.
 
@@ -247,7 +253,7 @@ Une autre option était d'ignorer les branches secrètes. On ne connait pas ces 
 
 ### 2) Décomposer les données du SDES
 
-La deuxième étape est la désagrégation des données du SDES (`liste_SDES.json`) via les parts du chiffre d'affaire de chaque branche (`ca_branches_2017.json`). Pour rappel, les données de décomposition de l’empreinte carbone de la demande finale de la France sont rapportées parfois au niveau de la branche économique, parfois au niveau d'un regroupement de branches (exemple : CPA_E36 / CPA_E37_E39).
+La deuxième étape est la désagrégation des données du SDES (`liste_SDES.json`) via les parts du chiffre d'affaire de chaque branche (`ca_branches.json`). Pour rappel, les données de décomposition de l’empreinte carbone de la demande finale de la France sont rapportées parfois au niveau de la branche économique, parfois au niveau d'un regroupement de branches (exemple : CPA_E36 / CPA_E37_E39).
 
 > Ces aggrégations semblent d'ailleurs volontaire car elles permettent de ne pas pouvoir remonter aux valeurs statistiques secrètes. Elles sont également dépendantes du niveau de données accessibles pour les calculs matriciels intermédiaires.
 
@@ -296,6 +302,8 @@ Le premier est à la base des règles appelées dans les 2 derniers mais aussi d
 
 ### `desagregate_naf_SDES.js`
 
-### `genereate_rules.js`
+### `generate_services_rules`
+
+### `generate_product_rules.js`
 
 ### `utils.js`
