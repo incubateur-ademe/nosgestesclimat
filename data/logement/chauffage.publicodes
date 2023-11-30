@@ -117,7 +117,7 @@ logement . chauffage . gaz . présent:
 logement . chauffage . gaz . estimation via le coût:
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
   unité: €/kWh
-  formule: gaz . prix
+  formule: gaz . prix / commun . mois par an
   note: |
     Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois.
 
@@ -297,14 +297,9 @@ logement . chauffage . bouteille gaz . consommation:
 logement . chauffage . bouteille gaz . estimation via le poids:
   question: Vous utilisez un format de bonbonne différent ? Entrez votre consommation annuelle en kg.
   unité: kg/bouteille
-  formule: 13 * 12
+  formule: 13
   note: |
     Cette aide permet de simplifier la conversion des kg de gaz consommés en bouteille de gaz au format 13kg.
-
-    Ce mécanisme d'aide à l'estimation est conçu pour recevoir une consommation mensuelle en entrée (cf InputEstimation.tsx côté site).
-    Néanmoins, pour ce cas précis, nous souhaitons proposer une aide à l'estimation sur l'année et attendons une consommation par an 
-    et non par mois (période correspondant davantage aux factures de fournisseurs).
-    C'est pourquoi , la formule présente un facteur 12.
 
 logement . chauffage . bouteille gaz . énergie par bouteille:
   titre: Energie bouteille de gaz (13 kg)
@@ -372,7 +367,7 @@ logement . chauffage . citerne propane . consommation:
 logement . chauffage . citerne propane . estimation via le coût:
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
   unité: €/kg
-  formule: 1.8
+  formule: 1.8 / commun . mois par an
   note: |
     Selon les informations agrégées par le site [HelloWatt](https://www.hellowatt.fr/gaz-propane-citerne/comparatif-prix), 
     le prix du propane en citerne oscille autour de 1800€ par tonne (selon le fournisseur).
@@ -415,10 +410,10 @@ logement . chauffage . fioul . présent:
   question: Votre logement est-il chauffé au fioul ?
   par défaut: non
 
-logement . chauffage . fioul . estimation via le prix:
+logement . chauffage . fioul . estimation via le coût:
   question: Pas de facture ? Entrez vos dépenses approximatives en fioul par mois
   unité: €/l
-  formule: 1.5199
+  formule: 1.5199 / commun . mois par an
   note: |
     Cette formule nous permet de passer des €/mois aux litres/an.
 
@@ -433,7 +428,7 @@ logement . chauffage . fioul . consommation:
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur votre facture de fioul ou sur votre compte en ligne sur le site de votre fournisseur.
 
   par défaut: parc français . chauffage . consommation fioul par m2 * fioul kWh au litre * surface
-  aide: estimation via le prix
+  aide: estimation via le coût
 
 logement . chauffage . fioul kWh au litre:
   formule: 0.101436943
@@ -506,7 +501,7 @@ logement . chauffage . bois . type . granulés . consommation:
 logement . chauffage . bois . type . granulés . estimation via le coût:
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
   unité: €/kWh
-  formule: granulés . prix kWh
+  formule: granulés . prix kWh / commun . mois par an
   note: |
     Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois.
 
@@ -528,7 +523,7 @@ logement . chauffage . bois . type . bûches . consommation:
 logement . chauffage . bois . type . bûches . estimation via le coût:
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
   unité: €/stère
-  formule: prix stère 2023
+  formule: prix stère 2023 / commun . mois par an
   note: |
     Cette formule nous permet de passer des €/mois au nombre de stères par an.
 
@@ -572,10 +567,10 @@ logement . chauffage . réseau de chaleur . présent:
   question: Votre logement est-il chauffé via un réseau de chaleur ?
   par défaut: non
 
-logement . chauffage . réseau de chaleur . estimation via le prix:
+logement . chauffage . réseau de chaleur . estimation via le coût:
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
   unité: €/kWh
-  formule: 0.085
+  formule: 0.085 €/kWh / commun . mois par an
   note: |
     Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois.
 
@@ -596,7 +591,7 @@ logement . chauffage . réseau de chaleur . consommation:
   icônes: 🔥
   question: Quelle est votre consommation annuelle d'énergie via le réseau de chaleur raccordé à votre foyer ?
   par défaut: parc français . chauffage . consommation réseau de chaleur par m2 * surface
-  aide: estimation via le prix
+  aide: estimation via le coût
   unité: kWh
   description: |
     Le contenu carbone du kWh de chaleur issu d'un réseau de chaleur dépend fortement du réseau auquel vous êtes raccordé. 
