@@ -20,7 +20,7 @@ import {
   getMissingRules,
   getNotUpToDateRuleTranslations
 } from '@incubateur-ademe/nosgestesclimat-scripts/utils'
-import { getModelFromSource } from '@incubateur-ademe/publicodes-tools/compilation'
+import { getModelFromSource } from '@publicodes/tools/compilation'
 
 const { destLangs, srcFile, markdown } = getArgs(
   `Checks all rules have been translated.`,
@@ -80,7 +80,8 @@ function manageNotUpToDateRuleTranslations(
   }
 }
 
-const rules = getModelFromSource(srcFile, ['data/i18n/**'], {
+const rules = getModelFromSource(srcFile, {
+  ignore: ['data/i18n/**'],
   verbose: !markdown
 })
 

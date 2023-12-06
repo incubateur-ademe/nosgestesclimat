@@ -2,7 +2,9 @@ import fs from 'fs'
 import c from 'ansi-colors'
 import cli from '@incubateur-ademe/nosgestesclimat-scripts/cli'
 import utils from '@incubateur-ademe/nosgestesclimat-scripts/utils'
+import { disabledLogger } from '@publicodes/tools'
 import path from 'path'
+import Engine from 'publicodes'
 import { addRegionToBaseRules } from './i18n/addRegionToBaseRules.js'
 import { defaultModelCode, regionModelsPath } from './i18n/regionCommons.js'
 import { compressRules } from './modelOptim.mjs'
@@ -39,7 +41,7 @@ function getLocalizedRules(translatedBaseRules, regionCode, destLang) {
   }
   try {
     const localizedAttrs = utils.readYAML(
-      path.join(regionModelsPath, `${regionCode}-${destLang}.yaml`)
+      path.join(regionModelsPath, `${regionCode}-${destLang}.publicodes`)
     )
     return addRegionToBaseRules(translatedBaseRules, localizedAttrs)
   } catch (err) {
@@ -62,24 +64,21 @@ export default ({
   const destPathWithoutExtension = path.resolve(
     `public/co2-model.${regionCode}-lang.${destLang}`
   )
-  const werr = writeRules(
+  const engine = new Engine(localizedTranslatedBaseRules, {
+    logger: disabledLogger
+  })
+  writeRules(
     localizedTranslatedBaseRules,
     destPathWithoutExtension + '.json',
     destLang,
     regionCode,
     markdown
   )
-  if (werr) {
-    return {
-      err: `❌ Compilation ${regionCode}-${destLang}: ${werr}`
-    }
-  }
   const start = Date.now()
-  const { err, nbRules } = compressRules(destPathWithoutExtension)
+  const nbRules = compressRules(engine, destPathWithoutExtension)
   const optimDuration = Date.now() - start
-  if (err) {
-    return { err: `❌ Optimization ${regionCode}-${destLang}: ${err}` }
-  } else if (!markdown && !err) {
+
+  if (!markdown) {
     console.log(
       getStyledReportString(
         `${regionCode}-${destLang}`,
@@ -90,5 +89,5 @@ export default ({
     )
   }
 
-  return { ok: `<li>${regionCode}-${destLang}</li>` }
+  return `<li>${regionCode}-${destLang}</li>`
 }

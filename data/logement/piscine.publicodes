@@ -23,13 +23,17 @@ importer!:
 
 logement . piscine:
   icônes: 🏊‍♀️
-  non applicable si: logement . appartement
+  non applicable si:
+    toutes ces conditions:
+      - est défini: logement . appartement
+      - appartement
   formule:
     variations:
       - si:
           est défini: piscine . présent
         alors: empreinte / habitants
-      - sinon: empreinte moyenne / habitants
+      - sinon: 0
+  # @Clément: Pour le moment, pas de valeur par défaut représentative pour la piscine.
   unité: kgCO2e
   description: |
     L'installation de piscines privées **enterrées** dans les jardins français s'est accélérée ces dernières années. On en compte aujourd'hui plus de [3 millions](https://bonpote.com/impact-ecologique-dune-piscine-individuelle/).
@@ -45,15 +49,6 @@ logement . piscine . présent:
     Aujourd'hui, nous posons la question à toutes les personnes qui possèdent une maison.
     Afin de limiter l'apparition de cette question pour les utilisateurs qui ne possèdent pas de terrain, ou qui ne sont absoluement pas concernés par la piscine, 
     on pourrait filtrer l'affichage de la question selon la surface de la maison par exemple.
-
-logement . piscine . empreinte moyenne:
-  # @Clément: Pour le moment, pas de valeur par défaut représentative pour la piscine.
-  formule:
-    recalcul:
-      règle: piscine . empreinte
-      avec:
-        présent: non
-  unité: kgCO2e
 
 logement . piscine . empreinte:
   formule:
