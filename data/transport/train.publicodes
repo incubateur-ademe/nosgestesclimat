@@ -12,14 +12,12 @@ transport . train . impact par km:
       - proportion TER * TER
       - proportion intercités * intercités
   unité: kgCO2e/km
-  avec:
-    proportion TGV: 73%
-    proportion TER: 23%
-    proportion intercités: 4%
   note: |
     Les différents types de trains ont des impacts carbone par passager par kilomètres différents.
     Nous calculons une moyenne pondérée en proportion du nombre total de kilomètres parcourus dans chaque type de train au niveau national.
     Source : [Autorité de régulation des transports](https://www.autorite-transports.fr/wp-content/uploads/2023/06/bilan-ferroviaire-2022-a-mi-2023.pdf)
+
+    ![Répartition Passagers.km](https://github.com/incubateur-ademe/nosgestesclimat/assets/55186402/4bbdf823-8e9a-4570-90da-77ff8af05b14)
 
 transport . train . TGV:
   formule: 0.00293
@@ -39,6 +37,27 @@ transport . train . intercités:
   node: |
     Intercités - 2022 ; 8.98 gCO2e/km/personne ; Base Carbone consultée le 19/11/2023 (Données SNCF)
 
+transport . train . proportion TGV:
+  formule: (54 + 7) / total passagers km
+  note: |
+    Chiffres issus de l'[autorité de régulation des transports](https://www.autorite-transports.fr/wp-content/uploads/2023/06/bilan-ferroviaire-2022-a-mi-2023.pdf).
+
+transport . train . proportion TER:
+  formule: 19 / total passagers km
+  note: |
+    Chiffres issus de l'[autorité de régulation des transports](https://www.autorite-transports.fr/wp-content/uploads/2023/06/bilan-ferroviaire-2022-a-mi-2023.pdf).
+
+transport . train . proportion intercités:
+  formule: (3 + 0.5) / total passagers km
+  note: |
+    Chiffres issus de l'[autorité de régulation des transports](https://www.autorite-transports.fr/wp-content/uploads/2023/06/bilan-ferroviaire-2022-a-mi-2023.pdf).
+
+transport . train . total passagers km:
+  formule: 54 + 7 + 19 + 3 + 0.5
+  note: |
+    Chiffres issus de l'[autorité de régulation des transports](https://www.autorite-transports.fr/wp-content/uploads/2023/06/bilan-ferroviaire-2022-a-mi-2023.pdf).
+    On omet ici les trajets en RER et transilien.
+
 transport . train . km:
   question: Combien de kilomètres parcourez-vous en train par an ?
   description: Les suggestions sont basées sur la distance à vol d'oiseau doublée pour considérer un aller-retour.
@@ -50,4 +69,3 @@ transport . train . km:
     💳 grand voyageur plus ultra: 25000
   unité: km
   par défaut: 1000
-
