@@ -17,8 +17,6 @@ logement:
       - chauffage
       - climatisation
       - vacances
-      - transport . vacances . caravane . empreinte . construction amortie
-      - transport . vacances . camping car . empreinte . construction amortie
   unité: kgCO2e
 
 logement . saisie habitants:
@@ -61,9 +59,14 @@ logement . surface:
   question: Quelle est la surface de votre logement ?
   par défaut:
     variations:
-      - si: appartement
-        alors: parc français . surface moyenne appartement
-      - sinon: parc français . surface moyenne maison
+      - si:
+          est défini: appartement
+        alors:
+          variations:
+            - si: appartement
+              alors: parc français . surface moyenne appartement
+            - sinon: parc français . surface moyenne maison
+      - sinon: parc français . surface moyenne
   note: |
     Valeur par défaut obtenue dans [ce jeu de données du Ceren et SDES](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel).
 
@@ -87,7 +90,6 @@ logement . notif minimum surface:
 logement . appartement:
   titre: Appartement
   question: Votre logement est-il un appartement ?
-  par défaut: non
   description: |
     Par opposition à une maison individuelle.
 

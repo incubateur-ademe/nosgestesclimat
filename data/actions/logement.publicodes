@@ -52,7 +52,7 @@ logement . empreinte chauffage air:
     variations:
       - si: chauffage . choix utilisateur
         alors: empreinte chauffage air utilisateur
-      - sinon: empreinte par défaut chauffage air
+      - sinon: parc français . chauffage . empreinte moyenne chauffage air par m2 * logement . surface
   description: |
     Pour chaque kWh de chaque type d'énergie, quelle est la part utilisée pour le chauffage de l'air d'un foyer ?
 
@@ -62,39 +62,11 @@ logement . empreinte chauffage air:
 logement . empreinte chauffage air utilisateur:
   formule:
     somme:
-      - chauffage . électricité . présent * électricité * part chauffage électricité
-      - (chauffage . gaz . présent * chauffage . gaz + chauffage . citerne propane . présent * chauffage . citerne propane) * part chauffage gaz
-      - chauffage . bois . présent * chauffage . bois * part chauffage bois
-      - chauffage . fioul . présent * chauffage . fioul * part chauffage fioul
-      - chauffage . réseau de chaleur . présent * chauffage . réseau de chaleur * part chauffage réseau de chaleur
-
-logement . empreinte par défaut chauffage air:
-  formule:
-    somme:
-      - parc français . consommation électricité totale relative * électricité . intensité carbone * part chauffage électricité
-      - parc français . chauffage . consommation gaz moyenne relative * chauffage . gaz . facteur d'émission base carbone * part chauffage gaz
-      - parc français . chauffage . consommation fioul moyenne relative en litres * chauffage . intensité carbone fioul litre * part chauffage fioul
-      - parc français . chauffage . consommation bois moyenne relative * ((chauffage . bois . facteur d'émission bûche + chauffage . bois . facteur d'émission granulés) / 2) * part chauffage bois
-      - parc français . chauffage . consommation réseau de chaleur moyenne relative * chauffage . réseau de chaleur . intensité carbone * part chauffage réseau de chaleur
-      - parc français . chauffage . consommation GPL moyenne relative * chauffage . intensité carbone GPL * part chauffage GPL
-
-logement . part chauffage électricité:
-  formule: parc français . chauffage . consommation électricité . chauffage / (parc français . chauffage . consommation électricité + parc français . consommation électricité autre)
-
-logement . part chauffage gaz:
-  formule: parc français . chauffage . consommation gaz . chauffage / parc français . chauffage . consommation gaz
-
-logement . part chauffage bois:
-  formule: parc français . chauffage . consommation bois . chauffage / parc français . chauffage . consommation bois
-
-logement . part chauffage fioul:
-  formule: parc français . chauffage . consommation fioul . chauffage / parc français . chauffage . consommation fioul
-
-logement . part chauffage réseau de chaleur:
-  formule: parc français . chauffage . consommation réseau de chaleur . chauffage / parc français . chauffage . consommation réseau de chaleur
-
-logement . part chauffage GPL:
-  formule: parc français . chauffage . consommation GPL . chauffage / parc français . chauffage . consommation GPL
+      - chauffage . électricité . présent * électricité * parc français . chauffage . part chauffage air électricité
+      - (chauffage . gaz . présent * chauffage . gaz + chauffage . citerne propane . présent * chauffage . citerne propane) * parc français . chauffage . part chauffage air gaz
+      - chauffage . bois . présent * chauffage . bois * parc français . chauffage . part chauffage air bois
+      - chauffage . fioul . présent * chauffage . fioul * parc français . chauffage . part chauffage air fioul
+      - chauffage . réseau de chaleur . présent * chauffage . réseau de chaleur * parc français . chauffage . part chauffage air réseau de chaleur
 
 logement . éteindre appareils:
   formule: empreinte du foyer / habitants
@@ -157,7 +129,7 @@ logement . remplacer fioul par bois:
     Nous considérons pour l'instant que le remplacement des kWh de fioul par la même quantité de kWh de bois est une bonne approximation de premier ordre. Nous pourrons par la suite l'adapter en fonction du rendement des installations résidentielles.
 
 logement . remplacer fioul par bois . alternative:
-  formule: chauffage . fioul . consommation / fioul kWh au litre * chauffage . bois . facteur d'émission granulés
+  formule: chauffage . fioul . consommation / chauffage . fioul kWh au litre * chauffage . bois . facteur d'émission granulés
 
 logement . éclairage: oui
 logement . éclairage . LED:
@@ -301,7 +273,7 @@ logement . rénovation énergétique BBC . gain rénovation:
   note: Gain énergétique maximal atteint après une rénovation BBC, source à préciser.
 
 logement . raccordement réseau de chaleur:
-  titre: Se raccorder à réseau de chaleur
+  titre: Se raccorder à un réseau de chaleur
   icônes: 👥🏭
   effort: modéré
   applicable si:
@@ -352,7 +324,7 @@ logement . raccordement réseau de chaleur . recalcul:
   formule:
     somme:
       - chauffage . réseau de chaleur . intensité carbone * chauffage . gaz . consommation
-      - chauffage . réseau de chaleur . intensité carbone * chauffage . fioul . consommation / fioul kWh au litre
+      - chauffage . réseau de chaleur . intensité carbone * chauffage . fioul . consommation / chauffage . fioul kWh au litre
 
 logement . chauffage collectif:
   avec:

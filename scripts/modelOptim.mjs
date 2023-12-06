@@ -1,13 +1,13 @@
 // Description: contains wrappers around the constant folding optimization pass from
-// 				[@incubateur-ademe/publicodes-tools] to be used in the build scripts: rulesToJSON.
+// 				[@publicodes/tools] to be used in the build scripts: rulesToJSON.
 //
-// [@incubateur-ademe/publicodes-tools]: https:github.com/incubateur-ademe/publicodes-tools
+// [@publicodes/tools]: https:github.com/incubateur-ademe/publicodes-tools
 
 import Engine from 'publicodes'
 import path from 'path'
 import { readFileSync, writeFileSync } from 'fs'
-import { disabledLogger, getRawNodes } from '@incubateur-ademe/publicodes-tools'
-import { constantFolding } from '@incubateur-ademe/publicodes-tools/optims'
+import { disabledLogger, getRawNodes } from '@publicodes/tools'
+import { constantFolding } from '@publicodes/tools/optims'
 
 // Rule names which should be kept in the optimized model.
 //
@@ -21,28 +21,27 @@ import { constantFolding } from '@incubateur-ademe/publicodes-tools/optims'
 //
 // @Clément: Do we still need those rules ? 'logement . chauffage . gaz' ? 'logement . chauffage . biogaz' ?
 const rulesToKeep = [
-	'actions',
-	'bilan',
-	'logement . chauffage . gaz',
-	'logement . chauffage . biogaz',
-	'transport . voiture . thermique',
-	'transport . ferry . surface',
+  'actions',
+  'bilan',
+  'logement . chauffage . gaz',
+  'logement . chauffage . biogaz',
+  'transport . voiture . thermique',
+  'transport . ferry . surface'
 ]
 
-export function compressRules(jsonPathWithoutExtension) {
-	const destPath = `${jsonPathWithoutExtension}-opti.json`
-	let res = constantFoldingFromJSONFile(
-		jsonPathWithoutExtension + '.json',
-		destPath,
-		([ruleName, ruleNode]) => {
-			return (
-				rulesToKeep.includes(ruleName) ||
-				'icônes' in ruleNode.rawNode ||
-				ruleNode.rawNode.type === 'notification'
-			)
-		}
-	)
-	return res
+export function compressRules(engine, jsonPathWithoutExtension) {
+  const destPath = `${jsonPathWithoutExtension}-opti.json`
+  const toKeep = ([ruleName, ruleNode]) => {
+    return (
+      rulesToKeep.includes(ruleName) ||
+      'icônes' in ruleNode.rawNode ||
+      ruleNode.rawNode.type === 'notification'
+    )
+  }
+  const foldedRules = getRawNodes(constantFolding(engine, toKeep))
+
+  writeFileSync(destPath, JSON.stringify(foldedRules, null, 2))
+  return Object.keys(foldedRules).length
 }
 
 /**
@@ -56,24 +55,24 @@ export function compressRules(jsonPathWithoutExtension) {
  * @returns An error message if the optimization pass failed, undefined otherwise.
  */
 export function constantFoldingFromJSONFile(
-	modelPath,
-	jsonDestPath,
-	toKeep,
-	verbose = false
+  modelPath,
+  jsonDestPath,
+  toKeep,
+  verbose = false
 ) {
-	const log = verbose ? console.log : function (_) {}
-	try {
-		log('Parsing rules from the JSON file:', modelPath)
-		const rules = JSON.parse(readFileSync(modelPath, 'utf8'))
-		const engine = new Engine(rules, { logger: disabledLogger })
+  const log = verbose ? console.log : function (_) {}
+  try {
+    log('Parsing rules from the JSON file:', modelPath)
+    const rules = JSON.parse(readFileSync(modelPath, 'utf8'))
+    const engine = new Engine(rules, { logger: disabledLogger })
 
-		log('Constant folding pass...')
-		const foldedRules = getRawNodes(constantFolding(engine, toKeep))
+    log('Constant folding pass...')
+    const foldedRules = getRawNodes(constantFolding(engine, toKeep))
 
-		log(`Writing in '${jsonDestPath}'...`)
-		writeFileSync(jsonDestPath, JSON.stringify(foldedRules, null, 2))
-		return { nbRules: Object.keys(foldedRules).length }
-	} catch (error) {
-		return { err }
-	}
+    log(`Writing in '${jsonDestPath}'...`)
+    writeFileSync(jsonDestPath, JSON.stringify(foldedRules, null, 2))
+    return { nbRules: Object.keys(foldedRules).length }
+  } catch (error) {
+    return { err }
+  }
 }

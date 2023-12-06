@@ -6,12 +6,16 @@
 
 1. [**Home**](https://github.com/datagir/nosgestesclimat/wiki)
 2. [**Documentation**](https://github.com/datagir/nosgestesclimat/wiki/Documentation)
-  - [Online rules documentation](https://github.com/datagir/nosgestesclimat/wiki/Documentation#online-rules-documentation)
-  - [_Guide Services Sociétaux_ (French)](https://github.com/datagir/nosgestesclimat/wiki/Guide-technique-services-sociétaux)
+
+- [Online rules documentation](https://github.com/datagir/nosgestesclimat/wiki/Documentation#online-rules-documentation)
+- [_Guide Services Sociétaux_ (French)](https://github.com/datagir/nosgestesclimat/wiki/Guide-technique-services-sociétaux)
+
 3. [**Publicodes**](https://github.com/datagir/nosgestesclimat/wiki/Publicodes)
-  - [Packaging](https://github.com/datagir/nosgestesclimat/wiki/Publicodes#packaging)
-  - [Custom mechanisms](https://github.com/datagir/nosgestesclimat/wiki/Publicodes#custom-mechanisms)
-    - [`mosaic`](https://github.com/datagir/nosgestesclimat/wiki/mosaic)
+
+- [Packaging](https://github.com/datagir/nosgestesclimat/wiki/Publicodes#packaging)
+- [Custom mechanisms](https://github.com/datagir/nosgestesclimat/wiki/Publicodes#custom-mechanisms)
+  - [`mosaic`](https://github.com/datagir/nosgestesclimat/wiki/mosaic)
+
 4. [**Translation**](https://github.com/datagir/nosgestesclimat/wiki/Translation)
    - [Configuration](https://github.com/datagir/nosgestesclimat/wiki/Translation#configuration)
    - [Available languages](https://github.com/datagir/nosgestesclimat/wiki/Translation#available-languages)

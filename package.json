@@ -1,64 +1,85 @@
 {
-	"name": "nosgestesclimat",
-	"version": "1.6.0",
-	"description": "Le modèle de calcul d'empreinte climat individuelle de consommation",
-	"engines": {
-		"node": ">=18"
-	},
-	"scripts": {
-		"compile:md": "node scripts/rulesToJSON.mjs --markdown && node scripts/personasToJSON.js --markdown && node scripts/documentationToJSON.js --markdown",
-		"compile": "node scripts/rulesToJSON.mjs && node scripts/personasToJSON.js && node scripts/documentationToJSON.js",
-		"compile:fr": "node scripts/rulesToJSON.mjs -o FR && node scripts/personasToJSON.js && node scripts/documentationToJSON.js",
-		"compile:personas": "node scripts/personasToJSON.js",
-		"compile:rules": "node scripts/rulesToJSON.mjs",
-		"compile:rules-watch": "nodemon -e \"publicodes yaml js mjs\" --watch data/ --watch scripts/ scripts/rulesToJSON.mjs",
-		"compile:rules-watch:fr": "nodemon -e \"publicodes yaml js mjs\" --watch data/ --watch scripts/ scripts/rulesToJSON.mjs -t fr -o FR",
-		"compile-watch": "nodemon -e \"publicodes yaml js mjs\" --watch data/ --watch scripts/ scripts/rulesToJSON.mjs & nodemon -e publicodes --watch personas/ scripts/personasToJSON.js & nodemon -e md --watch contenu-ecrit/ scripts/documentationToJSON.js ",
-		"serve": "yarn run http-server --cors -p 9000",
-		"dev": "yarn run compile-watch & yarn run serve",
-		"dev:rules-fr": "yarn run compile:rules-watch:fr & yarn run serve",
-		"test:personas": "node tests/testPersonas.mjs",
-		"test:optim": "node tests/testOptim.mjs",
-		"translate": "node scripts/i18n/translate-rules.js && node scripts/i18n/translate-personas.js",
-		"check:personas": "node scripts/i18n/check-personas.js ",
-		"translate:personas": "node scripts/i18n/translate-personas.js",
-		"check:rules": "node scripts/i18n/check-translation.mjs",
-		"translate:rules": "node scripts/i18n/translate-rules.mjs",
-		"generate:servicesRules": "node scripts/services-societaux/analyze_naf_ca.js && node scripts/services-societaux/desagregate_naf_SDES.js && node scripts/services-societaux/generate_rules.js",
-		"translate:model": "node scripts/i18n/translateRegionModel.js"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/betagouv/ecolab-data.git"
-	},
-	"author": "",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/betagouv/ecolab-data/issues"
-	},
-	"homepage": "https://github.com/betagouv/ecolab-data#readme",
-	"dependencies": {
-		"csv-parser": "^3.0.0",
-		"futureco-data": "^0.0.1-beta.7",
-		"glob": "^8.0.3",
-		"http-server": "^14.1.1",
-		"nodemon": "^2.0.20",
-		"prettier": "^2.7.1",
-		"publicodes": "^1.0.0-beta.77",
-		"yaml": "^2.2.2"
-	},
-	"devDependencies": {
-		"@incubateur-ademe/publicodes-commun": "^0.1.2",
-		"@incubateur-ademe/publicodes-tools": "^0.4.2",
-		"@types/glob": "^8.1.0",
-		"cli-progress": "^3.11.2",
-		"deepl-node": "^1.7.0",
-		"dotenv": "^16.0.3",
-		"git-diff": "^2.0.6",
-		"isomorphic-fetch": "^3.0.0",
-		"piscina": "^3.2.0",
-		"prompt-sync": "^4.2.0",
-		"ramda": "^0.28.0",
-		"yargs": "^17.6.0"
-	}
+  "name": "@incubateur-ademe/nosgestesclimat",
+  "version": "1.0.5",
+  "description": "Le modèle de calcul d'empreinte climat individuelle de consommation",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "module": "index.js",
+  "files": [
+    "nosgestesclimat.model.json",
+    "index.js",
+    "index.d.ts"
+  ],
+  "scripts": {
+    "build": "node build.mjs",
+    "compile:md": "node scripts/rulesToJSON.mjs --markdown && node scripts/personasToJSON.js --markdown",
+    "compile": "node scripts/rulesToJSON.mjs && node scripts/personasToJSON.js",
+    "compile:fr": "node scripts/rulesToJSON.mjs -o FR && node scripts/personasToJSON.js",
+    "compile:personas": "node scripts/personasToJSON.js",
+    "compile:rules": "node scripts/rulesToJSON.mjs",
+    "compile:rules-watch": "nodemon -e \"publicodes js mjs\" --watch data/ --watch scripts/ scripts/rulesToJSON.mjs",
+    "compile:rules-watch:fr": "nodemon -e \"publicodes js mjs\" --watch data/ --watch scripts/ scripts/rulesToJSON.mjs -t fr -o FR",
+    "compile-watch": "nodemon -e \"publicodes js mjs\" --watch data/ --watch scripts/ scripts/rulesToJSON.mjs & nodemon -e publicodes --watch personas/ scripts/personasToJSON.js & nodemon -e md --watch contenu-ecrit/ scripts/documentationToJSON.js ",
+    "serve": "yarn run http-server --cors -p 9000",
+    "dev": "yarn run compile-watch & yarn run serve",
+    "dev:rules-fr": "yarn run compile:rules-watch:fr & yarn run serve",
+    "test:personas": "node tests/testPersonas.mjs",
+    "test:optim": "node tests/testOptim.mjs",
+    "translate": "node scripts/i18n/translate-rules.js && node scripts/i18n/translate-personas.js",
+    "check:personas": "node scripts/i18n/check-personas.js ",
+    "translate:personas": "node scripts/i18n/translate-personas.js",
+    "check:rules": "node scripts/i18n/check-translation.mjs",
+    "translate:rules": "node scripts/i18n/translate-rules.mjs",
+    "generate:servicesRules": "node scripts/services-societaux/analyze_naf_ca.js && node scripts/services-societaux/desagregate_naf_SDES.js && node scripts/services-societaux/generate_rules.js",
+    "translate:model": "node scripts/i18n/translateRegionModel.js",
+    "format": "prettier . --write"
+  },
+  "contributors": [
+    "Clément Auger <clement.auger@beta.gouv.fr>",
+    "Benjamin Boisserie",
+    "Julie Pouliquen <julie.pouliquen@gmail.com>",
+    "Emile Rolley <emile.rolley@tuta.io>",
+    "Maël Thomas <laem@kont.me>"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/incubateur-ademe/nosgestesclimat.git"
+  },
+  "bugs": {
+    "url": "https://github.com/incubateur-ademe/nosgestesclimat/issues"
+  },
+  "homepage": "https://github.com/incubateur-ademe/nosgestesclimat#readme",
+  "dependencies": {
+    "csv-parser": "^3.0.0",
+    "futureco-data": "^0.0.1-beta.7",
+    "glob": "^8.0.3",
+    "http-server": "^14.1.1",
+    "nodemon": "^3.0.1",
+    "prettier": "^3.1.0",
+    "publicodes": "^1.0.0-beta.77",
+    "yaml": "^2.2.2"
+  },
+  "devDependencies": {
+    "@incubateur-ademe/nosgestesclimat-scripts": "^0.3.1",
+    "@incubateur-ademe/publicodes-commun": "^0.1.2",
+    "@publicodes/tools": "^0.4.3",
+    "@types/glob": "^8.1.0",
+    "ansi-colors": "^4.1.3",
+    "cli-progress": "^3.11.2",
+    "deepl-node": "^1.7.0",
+    "dotenv": "^16.0.3",
+    "git-diff": "^2.0.6",
+    "isomorphic-fetch": "^3.0.0",
+    "piscina": "^4.1.0",
+    "prompt-sync": "^4.2.0",
+    "ramda": "^0.29.1",
+    "yargs": "^17.6.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }
