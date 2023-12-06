@@ -41,7 +41,7 @@ transport . avion . long courrier . heures de vol:
 # Durées obtenues sur https://www.travelmath.com/flying-time/
 
 transport . train . impact par km:
-  formule: (AVE * proportion passagers km AVE) + (cercanias * (1 - proportion passagers km AVE))
+  formule: (TGV * proportion passagers km AVE) + (TER * (1 - proportion passagers km AVE))
   avec:
     proportion passagers km AVE: 0.523
   unité: kgCO2e/km
@@ -50,12 +50,13 @@ transport . train . impact par km:
     Nous appliquons le facteur d'émissions de l'AVE aux 52,3% de trajets effectués en grande vitesse (AVE, Euromed, Avant) et le facteur d'émissions des trains régionaux Cercanías au reste.
     Source : [Observatoire espagnol des chemins de fer](https://cdn.mitma.gob.es/portal-web-drupal/ferroviario/observatorio/ofe_2021_feb2023_v2.pdf), 2021
 
-transport . train . AVE:
-  formule: (intensité GHG TGV France / 1000) * intensité mix électrique Espagne continentale / intensité mix électrique France métropolitaine
+transport . train . TGV:
+  titre: Trains grande vitesse AVE
+  formule: (intensité GHG TGV France / 1000 gCO2e/kgCO2e) * intensité mix électrique Espagne continentale / intensité mix électrique France métropolitaine
   avec:
     intensité mix électrique France métropolitaine: 90 gCO2e/kWh
     intensité mix électrique Espagne continentale: 206 gCO2e/kWh
-    intensité GHG TGV France: 2.36 gCO2e/pkm
+    intensité GHG TGV France: 2.36 gCO2e/km
   unité: kgCO2e/km
   note: |
     L'impact du train espagnol à grande vitesse est calculé sur la base du TGV français, en lui appliquant l'intensité carbone du mix électrique de l'Espagne.
@@ -63,7 +64,8 @@ transport . train . AVE:
     - Intensités carbone des mix électriques des deux pays : [Electricity Map](https://app.electricitymaps.com/map), 2022
     - Impact TGV France : 2.36 gCO2e/km/personne ; Base Carbone consultée le 04/04/2022 (Données SNCF)
 
-transport . train . cercanias:
+transport . train . TER:
+  titre: Trains régionaux Cercanías
   formule: 0.0328
   unité: kgCO2e/km
   note: |
