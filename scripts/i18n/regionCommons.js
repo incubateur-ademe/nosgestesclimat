@@ -34,19 +34,19 @@ const supportedRegionPath = 'public/supportedRegions.json'
 //
 // Reads all regions models and create a json file containing params of each region.
 //
-// Only XX-fr.yaml files are read in 'data/i18n/models' directory, their are the base models.
-// (XX-YY.yaml files are not read, they are the translation of the base models.)
+// Only XX-fr.publicodes files are read in 'data/i18n/models' directory, their are the base models.
+// (XX-YY.publicodes files are not read, they are the translation of the base models.)
 //
 // The default region and hardcoded one is FR.
 //
 const supportedRegions = fs
   .readdirSync(regionModelsPath)
   .reduce((acc, filename) => {
-    if (!filename.match(/[A-Z]{2}.*.yaml/)) {
+    if (!filename.match(/[A-Z]{2}.*.publicodes/)) {
       return acc
     }
     try {
-      const langRegex = filename.match(/(?<=[A-Z]{2}-).*(?=.yaml)/) // match lang param in filename
+      const langRegex = filename.match(/(?<=[A-Z]{2}-).*(?=.publicodes)/) // match lang param in filename
       const lang = langRegex[0]
       const regionPath = path.join(regionModelsPath, filename)
       const rules = readYAML(regionPath)
