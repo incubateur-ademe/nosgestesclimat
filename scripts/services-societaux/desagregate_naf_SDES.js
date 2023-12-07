@@ -1,14 +1,16 @@
-const utils = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
+const utils = require('./utils')
+
+const year = 2018
 
 // read files
 const readSDES = utils.readJSON(
-  'scripts/services-societaux/input/liste_SDES.json'
+  `scripts/services-societaux/input/${year}/liste_SDES.json`
 )
 const SDES_groups = utils.readJSON(
   'scripts/services-societaux/input/SDES_groups.json'
 )
 const ca_branches = utils.readJSON(
-  'scripts/services-societaux/input/ca_branches_2017.json'
+  `scripts/services-societaux/input/${year}/ca_branches.json`
 )
 const readNAF = utils.readJSON(
   'scripts/services-societaux/input/liste_NAF.json'
@@ -80,10 +82,10 @@ const dataSDES = readSDES
           'Libellé CPA': NAF_niveau2.find((obj) => obj.code_NAF === elt)[
             'libellé'
           ],
-          'Émissions contenues dans les biens et services adressés à la demande finale de la France':
+          'émissions contenues dans les biens et services adressés à la demande finale de la France':
             utils.roundValue(
               obj[
-                'Émissions contenues dans les biens et services adressés à la demande finale de la France'
+                'émissions contenues dans les biens et services adressés à la demande finale de la France'
               ] * facteur
             ),
           'émissions de la production intérieure (hors exportations)':
@@ -103,7 +105,7 @@ const dataSDES = readSDES
 
 // console.log(dataSDES)
 utils.writeJSON(
-  'scripts/services-societaux/output/liste_SDES_traitée.json',
+  `scripts/services-societaux/output/${year}/liste_SDES_traitée.json`,
   dataSDES
 )
 

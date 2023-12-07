@@ -52,7 +52,17 @@ La deuxième catégorie "services marchands" comprend notamment le réseau de t�
 
 ## Principe général de l'approche macroéconomique
 
-En France, le calcul de l'empreinte carbone nationale est géré par le Service des Données et Etudes Statistiques (SDES) du Ministère de la Transition Écologique. Le dernier résultat précis est [disponible pour l'année **2017**](https://www.statistiques.developpement-durable.gouv.fr/la-decomposition-de-lempreinte-carbone-de-la-demande-finale-de-la-france-par-postes-de-consommation). C'est à partir de ces données que l'on retrouve l'ordre de grandeur des "10 tonnes" de CO2e par an et par personne. On parle bien ici d'ordre grandeur car les [derniers chiffres sortis fin 2022 ont évolué](https://www.statistiques.developpement-durable.gouv.fr/lempreinte-carbone-de-la-france-de-1995-2021)).
+Pour 2017, on avait donc cette décomposition:
+
+![Graphe S. Sociétaux 2017](https://storage.gra.cloud.ovh.net/v1/AUTH_0f20d409cb2a4c9786c769e2edec0e06/imagespadincubateurnet/uploads/upload_cd83618ee65063258012cd3d4ce17933.png)
+
+Et avec les chiffres les plus récents, de 2018:
+
+![Graphe S. Sociétaux 2018](https://github.com/incubateur-ademe/nosgestesclimat/assets/55186402/bff2b90b-2512-4ba2-8351-17eee5a30939)
+
+## Principe général
+
+En France, le calcul de l'empreinte carbone nationale est géré par le Service des Données et Etudes Statistiques (SDES) du Ministère de la Transition Écologique. Le dernier résultat précis est [disponible pour l'année **2018**](https://www.statistiques.developpement-durable.gouv.fr/lempreinte-carbone-de-la-france-de-1995-2021) (sont disponibles également les chiffres pour [2017](https://www.statistiques.developpement-durable.gouv.fr/la-decomposition-de-lempreinte-carbone-de-la-demande-finale-de-la-france-par-postes-de-consommation)). C'est à partir de ces données que l'on retrouve l'ordre de grandeur des 10 tonnes de CO2e par an et par personne.
 
 L‘empreinte carbone fournie par le SDES se décompose en :
 
@@ -118,7 +128,7 @@ Ce travail n'a pas été évident : pour certaines données, comme nous l’avon
 
 **Alors comment faire ?**
 
-Pour nous aider, nous avons utilisé [les chiffres d'affaires par branche économique en France en 2017](https://www.insee.fr/fr/statistiques/4226067?sommaire=4226092) (disponible en json [ici](https://github.com/datagir/nosgestesclimat/blob/master/scripts/services-societaux/input/ca_branches_2017.json) catégorisés selon la nomenclature NAF (voir plus bas) et qui, eux, sont disponibles à l’échelle de code, sous-code et sous-sous-code CPA. Cela nous a ainsi permis de décomposer les intensités carbone des branches (échelle code CPA) selon les intensité économique des sous branches (échelle sous-code CPA). Un problème apparait : certaines données sont confidentielles et donc secrètes. Alors que faire ? Nous avons fait l'hypothèse que ces données l'étaient également pour le calcul de l'empreinte carbone nationale. Faute d'informations supplémentaires, nous avons choisi de ne pas les considérer dans ces calculs de décomposition. Il semble que ces données sont connues à des fins statistiques par le SDES mais nous n'y avons pas accès (voir [Limites du calcul](#limites-du-calcul)).
+Pour nous aider, nous avons utilisé [les chiffres d'affaires par branche économique en France en 2018](https://www.insee.fr/fr/statistiques/4654487) (disponible en json [ici](https://github.com/incubateur-ademe/nosgestesclimat/blob/master/scripts/services-societaux/input/2018/ca_branches.json) catégorisés selon la nomenclature NAF (voir plus bas) et qui, eux, sont disponibles à l’échelle de code, sous-code et sous-sous-code CPA. Cela nous a ainsi permis de décomposer les intensités carbone des branches (échelle code CPA) selon les intensité économique des sous branches (échelle sous-code CPA). Un problème apparait : certaines données sont confidentielles et donc secrètes. Alors que faire ? Nous avons fait l'hypothèse que ces données l'étaient également pour le calcul de l'empreinte carbone nationale. Faute d'informations supplémentaires, nous avons choisi de ne pas les considérer dans ces calculs de décomposition. Il semble que ces données sont connues à des fins statistiques par le SDES mais nous n'y avons pas accès (voir [Limites du calcul](#limites-du-calcul)).
 
 Pour illustrer un cas de données agrégées au niveau supérieur CPA, reprenons l'exemple de la construction. Dans les données du SDES, les codes CPA F.41, F.42 et F.43 sont agrégés en un seul code CPA_F dont les émissions de GES sont estimées à 54116 kTCO2e). Via les ratios issus des chiffres d'affaires, on a : F41=25%, F42=13.5%, F43=61.5%.
 
@@ -126,15 +136,13 @@ Pour aller encore plus loin et mettre en avant un niveau d'allocation plus avanc
 
 Ainsi, avec les données du SDES et les chiffres d’affaires des branches de l’économie française, nous disposons d'informations suffisantes pour catégoriser et évaluer l'empreinte carbone des services sociétaux. Par ailleurs, et vous le verrez dans la suite du document, ces calculs sont automatisés via des scripts javascript qui permettent de **reproduire ce travail d'analyse et mettre à jour le modèle avec de nouvelles données en quelques minutes** !
 
-![](https://storage.gra.cloud.ovh.net/v1/AUTH_0f20d409cb2a4c9786c769e2edec0e06/imagespadincubateurnet/uploads/upload_cd83618ee65063258012cd3d4ce17933.png)
-
 Cependant, il s’agit d’une première version, qui souffre de quelques limitations (voir [Limites du calcul](#limites-du-calcul))
 
 ## Focus sur les nomenclatures
 
 Revenons sur les nomenclatures que nous venons d’aborder.
 
-Nous avons mentionné la nomenclature statistique des activités économiques dans la Communauté européenne (NACE) ainsi que la classification européenne des Produits par activités (CPA). Les catégories de produits de la classification CPA sont liées aux activités définies par la nomenclature NACE. Chaque produit de la classification CPA – tout bien ou service transportable ou non – est ainsi associé à une seule activité de la NACE. Ce lien avec les activités de la NACE donne à la CPA une [structure parallèle](<https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Glossary:Statistical_classification_of_products_by_activity_(CPA)/fr>) à celle de la NACE. A savoir également : c’est de la nomenclature NACE européenne que découle la nomenclature NAF française (Nomenclature d'Activité Française). Cette dernière est accessible ici en [json](https://github.com/datagir/nosgestesclimat/blob/master/scripts/services-societaux/input/liste_NAF.json) et les contenus sont explicités sur le site de [l'INSEE](https://www.insee.fr/fr/metadonnees/nafr2/?champRecherche=true) ou sur le site [NACEV2](https://nacev2.com/fr).
+Nous avons mentionné la nomenclature statistique des activités économiques dans la Communauté européenne (NACE) ainsi que la classification européenne des Produits par activités (CPA). Les catégories de produits de la classification CPA sont liées aux activités définies par la nomenclature NACE. Chaque produit de la classification CPA – tout bien ou service transportable ou non – est ainsi associé à une seule activité de la NACE. Ce lien avec les activités de la NACE donne à la CPA une [structure parallèle](<https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Glossary:Statistical_classification_of_products_by_activity_(CPA)/fr>) à celle de la NACE. A savoir également : c’est de la nomenclature NACE européenne que découle la nomenclature NAF française (Nomenclature d'Activité Française). Cette dernière est accessible ici en [json](https://github.com/incubateur-ademe/nosgestesclimat/blob/master/scripts/services-societaux/input/liste_NAF.json) et les contenus sont explicités sur le site de [l'INSEE](https://www.insee.fr/fr/metadonnees/nafr2/?champRecherche=true) ou sur le site [NACEV2](https://nacev2.com/fr).
 
 [Un schéma sera plus parlant](https://user-images.githubusercontent.com/66410914/232066436-5b86d987-9d90-4dfb-ae58-f46ccd44ac48.png)
 
@@ -164,7 +172,7 @@ Pour cette première étape, on utilise le script `analyze_NAF_CA.js` qui permet
 
 > N'oublions pas que l'objectif final est de catégoriser les branches économiques relevant des services sociétaux, ce qui nécessite parfois de descendre au niveau de la "sous-branche".
 
-> Le fichier d'entrée (`ca_branches_2017.json`) correspond au chiffre d'affaire par branche économique en France en 2017. Il est tout a fait possible de traiter de la même manière les données pour d'autres années.
+> Le fichier d'entrée (`ca_branches.json` pour l'année étudiée) correspond au chiffre d'affaire par branche économique en France.
 
 Le fichier de sortie est `analyse_CA_NAF.json`.
 
@@ -327,7 +335,7 @@ Nous avons opté pour la première pour le moment.
 
 ### 2) Décomposer les données du SDES
 
-La deuxième étape est l'allocation GES à partir des données du SDES (`liste_SDES.json`) via les parts du chiffre d'affaire de chaque branche (`ca_branches_2017.json`). Pour rappel, les données GES de l’empreinte carbone de la demande finale de la France n’existent qu’à l’échelle de code CPA entier et sont même parfois agrégés à l’échelle de plusieurs codes (exemple : CPA_E36 / CPA_E37_E39).
+La deuxième étape est l'allocation GES à partir des données du SDES (`liste_SDES.json`) via les parts du chiffre d'affaire de chaque branche (`ca_branches.json`). Pour rappel, les données GES de l’empreinte carbone de la demande finale de la France n’existent qu’à l’échelle de code CPA entier et sont même parfois agrégés à l’échelle de plusieurs codes (exemple : CPA_E36 / CPA_E37_E39).
 
 > Ces agrégations ne sont pas issues de la volonté du SDES, mais de la disponibilité des données monétaires qui se trouvent déjà agrégés pour certains codes et des données d’émissions de GES restituées par branches à 2 chiffres par le Citepa ou par Eurostat pour nos partenaires commerciaux.
 
@@ -376,6 +384,8 @@ Le premier est à la base des règles appelées dans les 2 derniers mais aussi �
 
 ### `desagregate_naf_SDES.js`
 
-### `genereate_rules.js`
+### `generate_services_rules`
+
+### `generate_product_rules.js`
 
 ### `utils.js`

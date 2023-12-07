@@ -1,11 +1,13 @@
-const utils = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
+const utils = require('./utils')
+
+const year = 2018
 
 const SDES_data = utils.readJSON(
-  'scripts/services-societaux/output/liste_SDES_traitée.json'
+  `scripts/services-societaux/output/${year}/liste_SDES_traitée.json`
 )
 
 const analyse_CA_NAF = utils.readJSON(
-  'scripts/services-societaux/output/analyse_CA_NAF.json'
+  `scripts/services-societaux/output/${year}/analyse_CA_NAF.json`
 )
 
 const répartition_services_sociétaux = utils.readYAML(
@@ -44,7 +46,7 @@ const data = SDES_data.map(({ code_CPA, ...att }) => {
       titre: `${titre_raccourci} (France)`,
       formule:
         att[
-          'Émissions contenues dans les biens et services adressés à la demande finale de la France'
+          'émissions contenues dans les biens et services adressés à la demande finale de la France'
         ],
       unité: 'ktCO2e',
       description: `${titre}\n\n> La description ci-dessous correspond à la part de chaque sous-classe de la branche ${code_CPA} (en % de chiffre d'affaire)\n${description}`
@@ -97,7 +99,7 @@ const SPobject = {
   'services publics': {
     titre: 'Services publics',
     couleur: '#0c2461',
-    abréviation: 'Publics',
+    abréviation: 'S. publics',
     icônes: '🏛',
     formule: { somme: SP_sum },
     unité: 'kgCO2e',
@@ -110,7 +112,7 @@ const SMobject = {
   'services marchands': {
     titre: 'Services marchands',
     couleur: '#3c0c61',
-    abréviation: 'Marchands',
+    abréviation: 'S. marchands',
     icônes: '✉️',
     formule: { somme: SM_sum },
     unité: 'kgCO2e',
@@ -121,24 +123,24 @@ const SMobject = {
 
 // console.log(yaml.stringify(dataObject))
 
-const messageGénérationAuto = `# Ce fichier a été généré automatiquement via le script 'scripts/generate_services_rules.js' dans le dépôt nosgestesclimat.
+const messageAuto = `# Ce fichier a été généré automatiquement via le script 'scripts/generate_services_rules.js' dans le dépôt nosgestesclimat.
 # Le fichier permettant de modifier les données importantes de répartition et justification des services sociétaux
 # est 'scripts/services-societaux/input/répartition_services_sociétaux.yaml'. Pour en savoir plus, n'hésitez pas à parcourir notre guide !\n\n`
 
 utils.writeYAML(
   'data/empreinte SDES/empreinte par branche.publicodes',
   dataObject,
-  messageGénérationAuto
+  messageAuto
 )
 utils.writeYAML(
   'data/services sociétaux/services publics.publicodes',
   SPobject,
-  messageGénérationAuto
+  messageAuto
 )
 utils.writeYAML(
   'data/services sociétaux/services marchands.publicodes',
   SMobject,
-  messageGénérationAuto
+  messageAuto
 )
 
 console.log(
