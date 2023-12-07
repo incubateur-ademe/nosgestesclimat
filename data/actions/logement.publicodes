@@ -273,11 +273,13 @@ logement . raccordement réseau de chaleur:
       - est défini: appartement
       - appartement
       - chauffage collectif = "collectif"
+      - est défini: chauffage . gaz . présent
+      - est défini: chauffage . fioul . présent
       - une de ces conditions:
           - chauffage . gaz . présent
           - chauffage . fioul . présent
   non applicable si: chauffage . réseau de chaleur . présent
-  formule: (logement . chauffage - recalcul) / habitants
+  formule: (logement . chauffage - recalcul / habitants)
   # TODO : Cette `note` est plus grand public que technique, à voir si ce texte n'a pas sa place ailleurs.
   note: |
     Un réseau de chaleur est un système de canalisations qui permettent d’acheminer vers un ensemble de bâtiments de la 
@@ -316,8 +318,8 @@ logement . raccordement réseau de chaleur . recalcul:
   note: on considère que la consommation de gaz/fioul sera identique suite à un raccordement au réseau de chaleur.
   formule:
     somme:
-      - chauffage . réseau de chaleur . intensité carbone * chauffage . gaz . consommation
-      - chauffage . réseau de chaleur . intensité carbone * chauffage . fioul . consommation / chauffage . fioul kWh au litre
+      - chauffage . gaz . présent * chauffage . réseau de chaleur . intensité carbone * chauffage . gaz . consommation
+      - chauffage . fioul . présent * chauffage . réseau de chaleur . intensité carbone * chauffage . fioul . consommation / chauffage . fioul kWh au litre
 
 logement . chauffage collectif:
   avec:
