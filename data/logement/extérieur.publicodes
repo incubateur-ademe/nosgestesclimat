@@ -1,0 +1,158 @@
+logement . extérieur: 
+  icônes: ☘️
+  titre: L'empreinte de votre extérieur (jardin, terrasse)
+  non applicable si: appartement
+  mosaique:
+    type: selection
+    options:
+      - salon de jardin bois . présent
+      - salon de jardin résine ou métal . présent
+      - tondeuse électrique ou robot . présent
+      - tondeuse thermique . présent
+      # - barbecue . présent
+    suggestions:
+      aucun:
+        salon de jardin bois . présent: non
+        salon de jardin résine ou métal . présent: non
+        tondeuse électrique ou robot . présent: non
+        tondeuse thermique . présent: non
+        barbecue . présent: non
+  question: Que possédez-vous dans votre jardin ?
+  description: |
+    Nous essayons ici de couvrir les éléments principaux d'un jardin individuel type. Il manque encore des éléments, qui seront ajoutés progressivement.
+  formule:
+    variations:
+      - si: choix utilisateur
+        alors: empreinte totale
+      - sinon: empreinte par défaut
+
+logement . extérieur . choix utilisateur:
+  titre: Choix utilisateur pour le jardin
+  formule:
+    une de ces conditions:
+      - est défini: salon de jardin bois . présent
+      - est défini: salon de jardin résine ou métal . présent
+      - est défini: tondeuse électrique ou robot . présent
+      - est défini: tondeuse thermique . présent
+      # - est défini: barbecue . présent
+
+logement . extérieur . empreinte totale:
+  formule:
+    somme:
+      - empreinte salon de jardin bois amorti
+      - empreinte salon de jardin résine ou métal amorti
+      - empreinte tondeuse électrique ou robot amortie
+      - empreinte tondeuse thermique amortie
+      # - empreinte barbecue amorti
+  unité: kgCO2e
+
+logement . extérieur . empreinte par défaut:
+  description: calcul statistique pour établir l'équipement "moyen" d'un jardin français (et non, "à la française", ce qui serait très différent...)
+  somme:
+    - empreinte salon de jardin bois amorti * part propriétaires salon jardin bois
+    - empreinte salon de jardin résine ou métal amorti * part propriétaires salon jardin résine ou métal
+    - empreinte tondeuse électrique ou robot amortie * part propriétaires tondeuse électrique ou robot
+    - empreinte tondeuse thermique amortie * part propriétaires tondeuse thermique
+    # - empreinte barbecue amorti * part propriétaires barbecue
+
+logement . extérieur . salon de jardin bois . présent:
+  question: Possédez-vous un salon de jardin en bois ?
+
+logement . extérieur . empreinte salon de jardin bois amorti:
+  formule: empreinte salon de jardin bois / durée de vie salon de jardin bois
+
+logement . extérieur . empreinte salon de jardin bois:
+  formule: 69.2
+  note: Facteur d'émission issu de la base empreinte
+  unité: kgCO2e
+
+logement . extérieur . durée de vie salon de jardin bois:
+  formule: 10
+  note: Nous supposons qu'un salon de jardin est conservé 10 ans.
+
+logement . extérieur . part propriétaires salon jardin bois:
+  formule: 0.5 * 0.25
+  note: Nous supposons que la moitié des français possède un salon de jardin. Parmi ces propriétaires de salon de jardin, nous supposons que 50% est en résine, 25% en bois, 25% en métal.
+
+logement . extérieur . salon de jardin résine ou métal . présent:
+  question: Possédez-vous un salon de jardin en résine ou métal ?
+
+logement . extérieur . empreinte salon de jardin résine ou métal amorti:
+  formule: empreinte salon de jardin résine ou métal / durée de vie salon de jardin résine ou métal
+  unité: kgCO2e
+
+logement . extérieur . empreinte salon de jardin résine ou métal:
+  formule: 
+    moyenne:
+      - empreinte salon de jardin résine
+      - empreinte salon de jardin métal
+  
+logement . extérieur . empreinte salon de jardin résine:
+  formule: 238
+  unité: kgCO2e
+  note: Facteur d'émission issu de la base empreinte
+
+logement . extérieur . empreinte salon de jardin métal:
+  formule: 260
+  unité: kgCO2e
+  note: Facteur d'émission issu de la base empreinte
+
+logement . extérieur . durée de vie salon de jardin résine ou métal:
+  formule: 10
+  note: Nous supposons qu'un salon de jardin en résine ou en métal est conservé 10 ans.
+
+logement . extérieur . part propriétaires salon jardin résine ou métal:
+  formule: 0.5 * 0.25
+  note: Nous supposons que la moitié des français habitant en maison possède un salon de jardin. Parmi ces propriétaires de salon de jardin, nous supposons que 50% est en résine, 25% en bois, 25% en métal.
+
+logement . extérieur . tondeuse électrique ou robot . présent:
+  question: Possédez-vous une tondeuse électrique ou robot ?
+
+logement . extérieur . empreinte tondeuse électrique ou robot amortie:
+  formule: empreinte tondeuse électrique ou robot / durée de vie tondeuse
+  unité: kgCO2e
+
+logement . extérieur . empreinte tondeuse électrique ou robot:
+  formule:
+    moyenne:
+      - empreinte tondeuse électrique
+      - empreinte tondeuse robot
+
+logement . extérieur . empreinte tondeuse électrique:
+  formule: 70.1
+  unité: kgCO2e
+  note: Facteur d'émission issu de la base empreinte
+
+logement . extérieur . part propriétaires tondeuse électrique ou robot:
+  formule: 0.5 * 0.5
+  note: Il se vend 700 000 tondeuses chaque année, pour la moitié thermiques. 66% des français vivent en maison, soit à peu près 20 millions de foyers. Nous pouvons donc supposer que 50% des foyers habitant en maison possède une tondeuse, dont la durée de vie est de 15 ans.
+
+logement . extérieur . empreinte tondeuse robot:
+  formule: 109
+  unité: kgCO2e
+  note: Facteur d'émission issu de la base empreinte
+
+logement . extérieur . durée de vie tondeuse:
+  formule: 15
+  note: Nous supposons qu'une tondeuse a une durée de vie de 10 ans en moyenne.
+
+logement . extérieur . tondeuse thermique . présent:
+  question: Possédez-vous une tondeuse thermique ?
+
+logement . extérieur . empreinte tondeuse thermique amortie:
+  formule: empreinte tondeuse thermique / durée de vie tondeuse
+  unité: kgCO2e
+
+logement . extérieur . empreinte tondeuse thermique:
+  formule: 209
+  unité: kgCO2e
+  note: Facteur d'émission issu de la base empreinte
+
+logement . extérieur . part propriétaires tondeuse thermique:
+  formule: 0.5 * 0.5
+  note: Il se vend 700 000 tondeuses chaque année, pour la moitié thermiques. 66% des français vivent en maison, soit à peu près 20 millions de foyers. Nous pouvons donc supposer que 50% des foyers habitant en maison possède une tondeuse, dont la durée de vie est de 15 ans.
+
+
+# logement . extérieur . empreinte barbecue amorti: 
+#   formule: empreinte barbecue / durée de vie barbecue + empreinte usage barbecue
+
