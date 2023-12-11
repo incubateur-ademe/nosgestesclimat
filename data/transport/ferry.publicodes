@@ -40,16 +40,13 @@ transport . ferry:
   icônes: ⛴
   formule:
     variations:
-      - si: usager = 'affirmatif'
+      - si:
+          est défini: usager
         alors: empreinte
-      - si: usager = 'négatif'
-        alors: 0
-      - si: usager = 'moyenne'
-        alors: empreinte moyenne
+      - sinon: empreinte moyenne
   unité: kgCO2e
 
 transport . ferry . empreinte:
-  applicable si: usager = 'affirmatif'
   formule: heures * futureco-data . transport . ferry . vitesse moyenne . métrique * futureco-data . transport . ferry . empreinte par km volume
   description: |
     Le modèle ferry provient de [Futur.eco](https://futur.eco/ferry).
@@ -71,26 +68,13 @@ transport . ferry . usager:
     Si vous ne prenez pas le ferry tous les ans, mais que vous comptez continuer à le prendre, répondez "oui" et estimez grossièrement le nombre d'heures ramené à l'année.
 
     Par exemple pour une traversée de 9h (une nuit) tous les 3 ans, répondez `3`.
-  avec:
-    moyenne:
-    affirmatif:
-      titre: Oui
-    négatif:
-      titre: Non
-  par défaut: "'moyenne'"
-  formule:
-    une possibilité:
-      choix obligatoire: oui
-      possibilités:
-        - affirmatif
-        - négatif
 
 transport . ferry . empreinte moyenne:
   formule:
     recalcul:
       règle: ferry . empreinte
       avec:
-        usager: "'affirmatif'"
+        usager: oui
         heures: durée moyenne par français
 
 transport . ferry . empreinte moyenne . durée moyenne par français:
@@ -107,6 +91,7 @@ transport . ferry . empreinte moyenne . durée moyenne par français:
     On fait donc une hypothèse forte ici en estimant que 10 millions de français voyagent en ferry chaque année pour une durée moyenne de 8 heures.
 
 transport . ferry . heures:
+  applicable si: usager
   titre: Heures de ferry dans l'année
   question: Combien d'heures par an voyagez-vous en ferry ou croisière ?
   description: |

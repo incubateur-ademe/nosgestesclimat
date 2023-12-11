@@ -21,8 +21,12 @@ logement . climatisation:
 
 logement . climatisation . empreinte climatiseurs:
   titre: Empreinte des climatiseurs
-  applicable si: présent
-  formule: nombre * empreinte unitaire
+  formule:
+    variations:
+      - si:
+          est défini: climatisation . présent
+        alors: nombre * empreinte unitaire
+      - sinon: nombre par défaut * empreinte unitaire
   unité: kgCO2e
 
 logement . climatisation . présent:
@@ -31,8 +35,6 @@ logement . climatisation . présent:
     La climatisation utilise de l'électricité, que vous devez saisir en kWh ou en € dans la question électricité. L'empreinte de l'électricité consommée par le climatiseur est donc déjà calculée. 
 
     Mais en plus de cela, un climatiseur rejette d'autres gaz à effet de serre : d'où la nécessité de poser cette question.
-  # Valeur par défaut à oui pour l'intégrer dans l'empreinte moyenne
-  par défaut: oui
 
 logement . climatisation . rappel kWh:
   type: notification
@@ -40,6 +42,28 @@ logement . climatisation . rappel kWh:
   description: |
     Vous avez une climatisation ? Sa consommation d'électricité sera simplement à inclure dans la facture d'électricité, comme tous les appareils électriques du logement. Sont prises en compte ici, **les fuites de gaz frigorigènes**.
   formule: présent
+
+logement . climatisation . nombre par défaut:
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: logement . appartement
+            - appartement
+        alors: 0.20
+      - sinon: 0.31
+  unité: climatiseur
+  note: |
+    Source pour le chiffre par défaut : [La climatisation de confort dans les bâtiments résidentiels et tertiaires, état des lieux 2020, juin 2021](https://librairie.ademe.fr/air-et-bruit/4745-la-climatisation-de-confort-dans-les-batiments-residentiels-et-tertiaires.html), page 3.
+
+    > Pour sa part l’enquête réalisée à l’été 2020 par CODA Stratégies auprès de 800 ménages dans le cadre de la présente étude, a constaté un taux d’équipement de 25 % cohérent avec les données récoltées par EDF environ un an avant.
+
+    > Ce taux moyen de 25 % recouvre de fortes disparités. Ainsi les possesseurs de maisons individuelles sont-ils 31 % à posséder un équipement de climatisation contre seulement 20 % des ménages habitant en logement collectif.
+
+logement . climatisation . nombre:
+  applicable si: présent
+  question: Combien de climatiseurs électriques possédez-vous ?
+  par défaut: 1
 
 logement . climatisation . empreinte unitaire:
   formule:
@@ -114,19 +138,3 @@ logement . climatisation . construction:
   note: Censé représenter l'impact de la construction d'un climatiseur mais je reprends le FE "climatiseur mobile"
   #Vérifier que c'est bien un périmètre cradle-to-gate
   #Mais ces données ne semblent significativement plus forte (en termes de chiffrage GES) que l'étude ADEME mentionnée dans les sources de la Base Carbone (cf. plus haut)
-
-logement . climatisation . nombre:
-  applicable si: présent
-  question: Combien de climatiseurs électriques possédez-vous ?
-  par défaut:
-    variations:
-      - si: appartement
-        alors: 0.20
-      - sinon: 0.31
-  unité: climatiseur
-  note: |
-    Source pour le chiffre par défaut : [La climatisation de confort dans les bâtiments résidentiels et tertiaires, état des lieux 2020, juin 2021](https://librairie.ademe.fr/air-et-bruit/4745-la-climatisation-de-confort-dans-les-batiments-residentiels-et-tertiaires.html), page 3.
-
-    > Pour sa part l’enquête réalisée à l’été 2020 par CODA Stratégies auprès de 800 ménages dans le cadre de la présente étude, a constaté un taux d’équipement de 25 % cohérent avec les données récoltées par EDF environ un an avant.
-
-    > Ce taux moyen de 25 % recouvre de fortes disparités. Ainsi les possesseurs de maisons individuelles sont-ils 31 % à posséder un équipement de climatisation contre seulement 20 % des ménages habitant en logement collectif.

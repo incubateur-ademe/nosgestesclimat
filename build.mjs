@@ -1,13 +1,13 @@
 import { writeFileSync } from 'fs'
-import { getModelFromSource } from '@incubateur-ademe/publicodes-tools/compilation'
-import { disabledLogger } from '@incubateur-ademe/publicodes-tools'
+import { getModelFromSource } from '@publicodes/tools/compilation'
+import { disabledLogger } from '@publicodes/tools'
 import Engine from 'publicodes'
 
 const destPath = 'nosgestesclimat.model.json'
 
 const model = getModelFromSource('data', {
   ignore: ['data/i18n/**'],
-  verbose: true,
+  verbose: true
 })
 
 try {

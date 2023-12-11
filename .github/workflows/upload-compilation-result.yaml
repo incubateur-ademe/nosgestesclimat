@@ -28,8 +28,8 @@ jobs:
       - run: yarn install --immutable
       - run: git log | head && git status
       - id: compilation
+        name: Compiles the model and stores the result -- with escaped special characters.
         run: |
-          # Compiles the model and stores the result -- with escaped special characters.
           yarn compile:md > compile.res
           body="$(cat compile.res | tail --lines=+3 | head --lines=-1)"
           body="${body//'%'/'%25'}"
@@ -37,8 +37,8 @@ jobs:
           body="${body//$'\r'/'%0D'}"
           echo "::set-output name=result::${body}"
       - id: check-translation
+        name: Checks the rules translation
         run: |
-          # Checks the rules translation
           yarn check:rules --markdown > check-rules.res
           body="$(cat check-rules.res | tail --lines=+3 | head --lines=-1)"
           body="${body//'%'/'%25'}"
@@ -46,8 +46,8 @@ jobs:
           body="${body//$'\r'/'%0D'}"
           echo "::set-output name=result::${body}"
       - id: check-personas
+        name: Checks the personas translation
         run: |
-          # Checks the personas translation
           yarn check:personas --markdown > check-personas.res
           body="$(cat check-personas.res | tail --lines=+3 | head --lines=-1)"
           body="${body//'%'/'%25'}"
@@ -55,8 +55,8 @@ jobs:
           body="${body//$'\r'/'%0D'}"
           echo "::set-output name=result::${body}"
       - id: test-personas
+        name: Test the personas bilans against production
         run: |
-          # Test the personas bilans against production
           yarn test:personas --markdown > test-personas.res
           body="$(cat test-personas.res | tail --lines=+3 | head --lines=-1)"
           body="${body//'%'/'%25'}"
@@ -64,8 +64,8 @@ jobs:
           body="${body//$'\r'/'%0D'}"
           echo "::set-output name=result::${body}"
       - id: test-optim
+        name: # Test the personas bilans against production
         run: |
-          # Test the personas bilans against production
           yarn test:optim --markdown > test-optim.res
           body="$(cat test-optim.res | tail --lines=+3 | head --lines=-1)"
           body="${body//'%'/'%25'}"

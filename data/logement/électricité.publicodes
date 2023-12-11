@@ -9,15 +9,17 @@ logement . électricité . consommation:
   par défaut:
     variations:
       - si: logement . chauffage . choix utilisateur = non
-        alors: parc français . consommation électricité totale relative
+        alors: surface * (parc français . consommation électricité autre par m2 + parc français . surface . part électricité * parc français . chauffage . consommation électricité par m2)
       - si:
           toutes ces conditions:
             - logement . chauffage . choix utilisateur = oui
+            - est défini: logement . chauffage . électricité . présent
+            - est défini: logement . chauffage . PAC . présent
             - une de ces conditions:
                 - logement . chauffage . électricité . présent
                 - logement . chauffage . PAC . présent
-        alors: parc français . consommation électricité autre moyenne + surface * parc français . chauffage . consommation électricité par m2
-      - sinon: parc français . consommation électricité autre moyenne
+        alors: surface * (parc français . consommation électricité autre par m2 + parc français . chauffage . consommation électricité par m2)
+      - sinon: surface * parc français . consommation électricité autre par m2
   note: on considère que seule la consommation d'électricité liée au chauffage est dépendante de la surface du logement
   aide: estimation via le coût
   description: |

@@ -10,25 +10,25 @@
 
 <!-- vim-markdown-toc GitLab -->
 
-* [Configuration](#configuration)
-  * [DeepL API key](#deepl-api-key)
-  * [Dev dependencies](#dev-dependencies)
-* [Available languages](#available-languages)
-* [Architecture](#architecture)
-* [Workflow](#workflow)
-  * [Modification of the `./data` files](#modification-of-the-data-files)
-  * [Modification of the `./personas` files](#modification-of-the-personas-files)
-  * [Improving an existing translation](#improving-an-existing-translation)
-    * [Contribution guide for translation from GitHub](#contribution-guide-for-translation-from-github)
-  * [Translating region models](#translating-region-models)
-* [Available scripts](#available-scripts)
-  * [`translate-rules.js`](#translate-rulesjs)
-  * [`check-translation.js`](#check-translationjs)
-  * [`rulesToJSON.js`](#rulestojsonjs)
-  * [`translate-personas.js`](#translate-personasjs)
-  * [`personasToJSON.js`](#personastojsonjs)
-  * [`check-personas.js`](#check-personasjs)
-  * [`translateRegionModel.js`](#translateregionmodeljs)
+- [Configuration](#configuration)
+  - [DeepL API key](#deepl-api-key)
+  - [Dev dependencies](#dev-dependencies)
+- [Available languages](#available-languages)
+- [Architecture](#architecture)
+- [Workflow](#workflow)
+  - [Modification of the `./data` files](#modification-of-the-data-files)
+  - [Modification of the `./personas` files](#modification-of-the-personas-files)
+  - [Improving an existing translation](#improving-an-existing-translation)
+    - [Contribution guide for translation from GitHub](#contribution-guide-for-translation-from-github)
+  - [Translating region models](#translating-region-models)
+- [Available scripts](#available-scripts)
+  - [`translate-rules.js`](#translate-rulesjs)
+  - [`check-translation.js`](#check-translationjs)
+  - [`rulesToJSON.js`](#rulestojsonjs)
+  - [`translate-personas.js`](#translate-personasjs)
+  - [`personasToJSON.js`](#personastojsonjs)
+  - [`check-personas.js`](#check-personasjs)
+  - [`translateRegionModel.js`](#translateregionmodeljs)
 
 <!-- vim-markdown-toc -->
 
@@ -58,14 +58,15 @@ running:
 ```
 yarn install
 ```
+
 ## Available languages
 
 Currently, the model and the website UI are available in:
 
-* `fr` -- is the reference language.
-* `en-us` -- has been review by hand.
-* `es` -- automatically generated.
-* `it` -- automatically generated.
+- `fr` -- is the reference language.
+- `en-us` -- has been review by hand.
+- `es` -- automatically generated.
+- `it` -- automatically generated.
 
 ## Architecture
 
@@ -130,26 +131,25 @@ simply send your suggestion in a mail to: datagir@ademe.fr.
 1. The first step consists of finding the file where is stored the targeted
    translation. You can refer to the [dedicated section](#architecture) or
    search for it from with the GitHub search bar:
-    1. Press `/` and paste the searched text.
-    2. Choose the `In this repository` choice.
-    3. Look at `code results` and click on the corresponding file name.
+   1. Press `/` and paste the searched text.
+   2. Choose the `In this repository` choice.
+   3. Look at `code results` and click on the corresponding file name.
 2. Once you've found the file, you need to edit it.
-    1. Select the `master` branch on the button -- at the left of the file
-       path.
-    2. Then, press `E` to edit the file -- or click in the pencil button. By
-       pressing `.` you can open the file in the GitHub online editor.
-    3. Click on the text, and press `Ctrl-F` to search for the specific
-       translation.
-    4. Now, you can edit the translation text.
-        > Make sure to not edit `.lock` attributes, its corresponds to reference
-        > value to translate from.
-    5. When all changes have been made, go to the bottom of the page under the `Commit
-       changes` section. Enter in the first text field:
-        ```
-        fix(t9n): update translation in the <edited_filename>.
-        ```
+   1. Select the `master` branch on the button -- at the left of the file
+      path.
+   2. Then, press `E` to edit the file -- or click in the pencil button. By
+      pressing `.` you can open the file in the GitHub online editor.
+   3. Click on the text, and press `Ctrl-F` to search for the specific
+      translation.
+   4. Now, you can edit the translation text.
+      > Make sure to not edit `.lock` attributes, its corresponds to reference
+      > value to translate from.
+   5. When all changes have been made, go to the bottom of the page under the `Commit
+changes` section. Enter in the first text field:
+      `       fix(t9n): update translation in the <edited_filename>.
+      `
 3. Finally, select the `Create a new branch for this commit and start a pull
-   request.` option. You can add more information if you want about your
+request.` option. You can add more information if you want about your
    translation before clicking on the `Create pull request` button to open the
    pull request.
 
@@ -178,19 +178,19 @@ This script allows to automatically translate the model's rules by using the Dee
 
 The translated [_mécanismes_](https://publi.codes/docs/m%C3%A9canismes) are:
 
-* `titre`
-* `description`
-* `question`
-* `résumé`
-* `note`
-* `suggestions`
-* `mosaique`
+- `titre`
+- `description`
+- `question`
+- `résumé`
+- `note`
+- `suggestions`
+- `mosaique`
 
->   To run with `yarn`:
+> To run with `yarn`:
 >
->   ```
->   yarn translate:rules -h
->   ```
+> ```
+> yarn translate:rules -h
+> ```
 
 **The method**
 
@@ -219,11 +219,11 @@ by the ones present in the corresponding `translated-rules-<lang>.yaml` file.
 
 This script allows to get missing model's rules translations.
 
->   To run with `yarn`:
+> To run with `yarn`:
 >
->   ```
->   yarn check:rules -h
->   ```
+> ```
+> yarn check:rules -h
+> ```
 
 ### `rulesToJSON.js`
 
@@ -233,11 +233,11 @@ engine.
 
 It generates `public/co2-<lang>.json` files.
 
->   To run with `yarn`:
+> To run with `yarn`:
 >
->   ```
->   yarn compile:rules -h
->   ```
+> ```
+> yarn compile:rules -h
+> ```
 
 ### `translate-personas.js`
 
@@ -245,15 +245,15 @@ This script allows to automatically translate the personas by using the DeepL AP
 
 The translated [_mécanismes_](https://publi.codes/docs/m%C3%A9canismes) are:
 
-* `nom`
-* `description`
-* `résumé`
+- `nom`
+- `description`
+- `résumé`
 
->   To run with `yarn`:
+> To run with `yarn`:
 >
->   ```
->   yarn translate:personas -h
->   ```
+> ```
+> yarn translate:personas -h
+> ```
 
 **The method**
 
@@ -289,21 +289,21 @@ each [supported language](#available-languages).
 
 It generates `public/personas-<lang>.json` files.
 
->   To run with `yarn`:
+> To run with `yarn`:
 >
->   ```
->   yarn compile:personas -h
->   ```
+> ```
+> yarn compile:personas -h
+> ```
 
 ### `check-personas.js`
 
 This script allows to get missing personas translations.
 
->   To run with `yarn`:
+> To run with `yarn`:
 >
->   ```
->   yarn check:personas -h
->   ```
+> ```
+> yarn check:personas -h
+> ```
 
 ### `translateRegionModel.js`
 

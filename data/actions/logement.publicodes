@@ -1,7 +1,6 @@
 logement . baisse température:
   titre: Réduire la température de mon chauffage de 1° ou 2°
   icônes: 🏠🌡
-  effort: modéré
   description: |
     Le logement et en particulier son chauffage (au fioul ou au gaz) a un impact sur le climat important.
 
@@ -52,7 +51,7 @@ logement . empreinte chauffage air:
     variations:
       - si: chauffage . choix utilisateur
         alors: empreinte chauffage air utilisateur
-      - sinon: empreinte par défaut chauffage air
+      - sinon: parc français . chauffage . empreinte moyenne chauffage air par m2 * logement . surface
   description: |
     Pour chaque kWh de chaque type d'énergie, quelle est la part utilisée pour le chauffage de l'air d'un foyer ?
 
@@ -62,43 +61,14 @@ logement . empreinte chauffage air:
 logement . empreinte chauffage air utilisateur:
   formule:
     somme:
-      - chauffage . électricité . présent * électricité * part chauffage électricité
-      - (chauffage . gaz . présent * chauffage . gaz + chauffage . citerne propane . présent * chauffage . citerne propane) * part chauffage gaz
-      - chauffage . bois . présent * chauffage . bois * part chauffage bois
-      - chauffage . fioul . présent * chauffage . fioul * part chauffage fioul
-      - chauffage . réseau de chaleur . présent * chauffage . réseau de chaleur * part chauffage réseau de chaleur
-
-logement . empreinte par défaut chauffage air:
-  formule:
-    somme:
-      - parc français . consommation électricité totale relative * électricité . intensité carbone * part chauffage électricité
-      - parc français . chauffage . consommation gaz moyenne relative * chauffage . gaz . facteur d'émission base carbone * part chauffage gaz
-      - parc français . chauffage . consommation fioul moyenne relative en litres * chauffage . intensité carbone fioul litre * part chauffage fioul
-      - parc français . chauffage . consommation bois moyenne relative * ((chauffage . bois . facteur d'émission bûche + chauffage . bois . facteur d'émission granulés) / 2) * part chauffage bois
-      - parc français . chauffage . consommation réseau de chaleur moyenne relative * chauffage . réseau de chaleur . intensité carbone * part chauffage réseau de chaleur
-      - parc français . chauffage . consommation GPL moyenne relative * chauffage . intensité carbone GPL * part chauffage GPL
-
-logement . part chauffage électricité:
-  formule: parc français . chauffage . consommation électricité . chauffage / (parc français . chauffage . consommation électricité + parc français . consommation électricité autre)
-
-logement . part chauffage gaz:
-  formule: parc français . chauffage . consommation gaz . chauffage / parc français . chauffage . consommation gaz
-
-logement . part chauffage bois:
-  formule: parc français . chauffage . consommation bois . chauffage / parc français . chauffage . consommation bois
-
-logement . part chauffage fioul:
-  formule: parc français . chauffage . consommation fioul . chauffage / parc français . chauffage . consommation fioul
-
-logement . part chauffage réseau de chaleur:
-  formule: parc français . chauffage . consommation réseau de chaleur . chauffage / parc français . chauffage . consommation réseau de chaleur
-
-logement . part chauffage GPL:
-  formule: parc français . chauffage . consommation GPL . chauffage / parc français . chauffage . consommation GPL
+      - chauffage . électricité . présent * électricité * parc français . chauffage . part chauffage air électricité
+      - (chauffage . gaz . empreinte + chauffage . citerne propane . empreinte) * parc français . chauffage . part chauffage air gaz
+      - chauffage . bois . empreinte * parc français . chauffage . part chauffage air bois
+      - chauffage . fioul . empreinte * parc français . chauffage . part chauffage air fioul
+      - chauffage . réseau de chaleur . empreinte * parc français . chauffage . part chauffage air réseau de chaleur
 
 logement . éteindre appareils:
   formule: empreinte du foyer / habitants
-  effort: faible
   unité: kgCO2e
   titre: Eteindre mes appareils en veille
   icônes: 🏠📺
@@ -146,10 +116,10 @@ logement . remplacer fioul par bois:
   applicable si:
     toutes ces conditions:
       - propriétaire
+      - est défini: chauffage . fioul . présent
       - chauffage . fioul . présent
-  effort: conséquent
   icônes: 🛢️🪵
-  formule: (chauffage . fioul - alternative) / habitants
+  formule: (chauffage . fioul . empreinte - alternative) / habitants
   description: |
     Les chaudières au fuel sont les plus polluantes. Les remplacer par des alternatives moins carbonnées comme ici le bois en granulés est un geste fort pour réduire votre empreinte carbone.
   inactive: non
@@ -162,7 +132,6 @@ logement . remplacer fioul par bois . alternative:
 logement . éclairage: oui
 logement . éclairage . LED:
   titre: Remplacer mes ampoules par des LED
-  effort: faible
   icônes: 💡🔄
   formule: (consommation de l'éclairage - avec LED) / habitants
   description: |
@@ -194,10 +163,10 @@ logement . remplacer gaz par PAC:
   applicable si:
     toutes ces conditions:
       - propriétaire
+      - est défini: chauffage . gaz . présent
       - chauffage . gaz . présent
-  effort: conséquent
   icônes: 🔥🔄
-  formule: (chauffage . gaz - pompe à chaleur) / habitants
+  formule: (chauffage . gaz . empreinte - pompe à chaleur) / habitants
   description: |
     Les chaudières au gaz sont parmi les plus émissives de CO₂. Les remplacer par des alternatives moins carbonnées comme des pompes à chaleur est un geste fort pour réduire votre empreinte carbone.
 
@@ -234,7 +203,6 @@ logement . chaudière remplacement:
 logement . séchage air libre:
   titre: Privilégier l'étendoir au sèche-linge
   applicable si: divers . électroménager . appareils . sèche-linge . nombre > 0
-  effort: faible
   icônes: 💨👗
   description: |
     Faire sécher son linge à l'air libre c'est de l'énergie économisée et des habits préservés qui durent ainsi plus longtemps.
@@ -251,7 +219,6 @@ logement . rénovation énergétique:
   titre: Rénover mon logement
   icônes: 🏚️✨
   formule: (logement . empreinte chauffage air * gain rénovation) / habitants
-  effort: conséquent
   applicable si: propriétaire
   inactive: non
   description: |
@@ -274,7 +241,6 @@ logement . propriétaire:
     En tant que locataire, il est évidemment délicat de faire les investissements qui améliorent l'empreinte du logement : isolation, changement de source d'énergie sont impossibles sauf à tomber sur un propriétaire particulièrement conciliant. 
 
     Pourtant, la loi pourrait dès 2023 être un soutien de poids : les passoires thermiques [seront interdites à la location](https://www.gouvernement.fr/interdiction-a-la-location-des-logements-avec-une-forte-consommation-d-energie-des-2023), forçant les propriétaires à lancer des travaux substentiels.
-
   par défaut: oui
 
 logement . rénovation énergétique BBC:
@@ -284,7 +250,6 @@ logement . rénovation énergétique BBC:
   titre: Rénover mon logement en BBC
   icônes: 🏠✨
   formule: (logement . empreinte chauffage air * gain rénovation) / habitants
-  effort: conséquent
   applicable si: propriétaire
   description: |
 
@@ -303,16 +268,18 @@ logement . rénovation énergétique BBC . gain rénovation:
 logement . raccordement réseau de chaleur:
   titre: Se raccorder à un réseau de chaleur
   icônes: 👥🏭
-  effort: modéré
   applicable si:
     toutes ces conditions:
+      - est défini: appartement
       - appartement
-      - chauffage collectif
+      - chauffage collectif = "collectif"
+      - est défini: chauffage . gaz . présent
+      - est défini: chauffage . fioul . présent
       - une de ces conditions:
           - chauffage . gaz . présent
           - chauffage . fioul . présent
   non applicable si: chauffage . réseau de chaleur . présent
-  formule: (logement . chauffage - recalcul) / habitants
+  formule: (logement . chauffage - recalcul / habitants)
   # TODO : Cette `note` est plus grand public que technique, à voir si ce texte n'a pas sa place ailleurs.
   note: |
     Un réseau de chaleur est un système de canalisations qui permettent d’acheminer vers un ensemble de bâtiments de la 
@@ -351,8 +318,8 @@ logement . raccordement réseau de chaleur . recalcul:
   note: on considère que la consommation de gaz/fioul sera identique suite à un raccordement au réseau de chaleur.
   formule:
     somme:
-      - chauffage . réseau de chaleur . intensité carbone * chauffage . gaz . consommation
-      - chauffage . réseau de chaleur . intensité carbone * chauffage . fioul . consommation / chauffage . fioul kWh au litre
+      - chauffage . gaz . présent * chauffage . réseau de chaleur . intensité carbone * chauffage . gaz . consommation
+      - chauffage . fioul . présent * chauffage . réseau de chaleur . intensité carbone * chauffage . fioul . consommation / chauffage . fioul kWh au litre
 
 logement . chauffage collectif:
   avec:

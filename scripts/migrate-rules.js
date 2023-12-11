@@ -11,24 +11,24 @@ const rules = file.split(/\n-/)
 
 const matchLine = { nom: '  nom:', espace: '  espace:' }
 
-const modifiedRules = rules.map(rule => {
-	let lines = (' ' + rule).split(/\n/)
-	const nomLine = lines.find(l => l.match(matchLine.nom))
+const modifiedRules = rules.map((rule) => {
+  let lines = (' ' + rule).split(/\n/)
+  const nomLine = lines.find((l) => l.match(matchLine.nom))
 
-	const espaceLine = lines.find(l => l.match(matchLine.espace))
-	if (nomLine) {
-		const nom = nomLine.substring(matchLine.nom.length).trim()
-		const espace =
-			espaceLine && espaceLine.substring(matchLine.espace.length).trim()
-		const dottedName = ((espace ? espace + ' . ' : '') + nom).trim()
-		lines = [
-			dottedName + ':',
-			...lines.filter(
-				l => !l.match(matchLine.nom) && !l.match(matchLine.espace)
-			)
-		]
-	}
-	return lines.join('\n')
+  const espaceLine = lines.find((l) => l.match(matchLine.espace))
+  if (nomLine) {
+    const nom = nomLine.substring(matchLine.nom.length).trim()
+    const espace =
+      espaceLine && espaceLine.substring(matchLine.espace.length).trim()
+    const dottedName = ((espace ? espace + ' . ' : '') + nom).trim()
+    lines = [
+      dottedName + ':',
+      ...lines.filter(
+        (l) => !l.match(matchLine.nom) && !l.match(matchLine.espace)
+      )
+    ]
+  }
+  return lines.join('\n')
 })
 
 console.log(modifiedRules.join('\n'))
