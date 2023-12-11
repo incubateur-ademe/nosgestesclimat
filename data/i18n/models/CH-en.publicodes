@@ -44,7 +44,7 @@ transport . deux roues . empreinte moyenne:
     recalcul:
       règle: deux roues . empreinte
       avec:
-        deux roues . usager: "'affirmatif'"
+        deux roues . usager: oui
         deux roues . type: "'moto sup 250'"
         deux roues . km: 400
 transport . avion . usager:
@@ -228,7 +228,7 @@ transport . voiture . durée de vie:
   formule: 17
   note: We use the emission factor from the Mobitool platform - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
 transport . ferry . usager:
-  par défaut: "'négatif'"
+  par défaut: non
 transport . ferry . heures:
   suggestions:
     Marseille ⇄ Ajaccio: 22
@@ -259,8 +259,10 @@ transport . mobilité douce . autres véhicules à moteur . construction:
 transport . mobilité douce . autres véhicules à moteur . durée de vie:
   formule: 2
   note: Mobitool Electric scooter
-divers . animaux domestiques . empreinte par défaut:
-  formule: 0
+divers . animaux domestiques . empreinte . chats . nombre:
+  par défaut: 0
+divers . animaux domestiques . empreinte . chien moyen . nombre:
+  par défaut: 0.25
 divers . électroménager . préservation:
   description: |
     To avoid asking you to give the precise age of the ten or so appliances you own, we use a grid of the average age of each appliance.
@@ -280,7 +282,7 @@ divers . numérique . préservation:
 divers . autres produits . niveau de dépenses:
   question: The test does not yet capture all your consumption. How much do you estimate you spend per year on new products (decoration, DIY, games, hobbies, tools, etc.)?
   description: |
-    To keep the interface simple, we propose an estimate, via your expenditure, of the footprint of the consumer goods that you own and that you think you have not included in the previous questions
+    To keep the interface simple, we propose an estimate, via your expenditure, of the footprint of the consumer goods you own and which you think you have not included in the previous questions
     that you own and that you don't think you included in the previous questions.
 
     This concerns: **games, decoration, kitchen equipment, household linen, materials for creative hobbies or DIY, plants, etc
@@ -354,6 +356,27 @@ parc français . surface . part bois:
   formule: 2.3%
 parc français . surface . part réseau de chaleur:
   formule: 5.2%
+logement . chauffage . empreinte par défaut:
+  résumé: A statistical calculation of average residential heating in Geneva
+  note: the default housing footprint is calculated on the basis of the average housing stock in Geneva
+parc français . chauffage . empreinte moyenne par m2 hors électricité:
+  note: Electricity is treated separately.
+  formule:
+    somme:
+      - surface . part gaz * empreinte gaz par m2
+      - surface . part fioul * empreinte fioul par m2
+      - surface . part bois * empreinte buches par m2 / 2
+      - surface . part bois * empreinte granulés par m2 / 2
+      - surface . part réseau de chaleur * empreinte réseau de chaleur par m2
+parc français . chauffage . empreinte moyenne chauffage air par m2:
+  formule:
+    somme:
+      - empreinte électricité par m2 * part chauffage air électricité
+      - empreinte gaz par m2 * part chauffage air gaz
+      - empreinte fioul par m2 * part chauffage air fioul
+      - empreinte buches par m2 * part chauffage air bois / 2
+      - empreinte granulés par m2 * part chauffage air bois / 2
+      - empreinte réseau de chaleur par m2 * part chauffage air réseau de chaleur
 parc français . consommation électricité autre par m2:
   formule: 31.5
   unité: kWh/m2
@@ -369,9 +392,9 @@ logement . chauffage . citerne propane . estimation via le coût:
   unité: CHF/kg
 logement . chauffage . bois . type . granulés . estimation via le coût:
   unité: CHF/kWh
-logement . chauffage . bois . type . bûche . estimation via le coût:
+logement . chauffage . bois . type . bûches . estimation via le coût:
   unité: CHF/stère
-logement . chauffage . bois . type . bûche . prix stère 2023:
+logement . chauffage . bois . type . bûches . prix stère 2023:
   formule: 180
   unité: CHF/stère
   note: Swiss Farmers' Union, firewood 2023, direct sales, medium species https://www.sbv-usp.ch/fr/prix/vente-directe/bois-de-cheminee
@@ -386,7 +409,6 @@ logement . chauffage . fioul . estimation via le prix:
   unité: CHF/litre
   formule: 1.397
 logement . appartement:
-  par défaut: oui
   description: |
     As opposed to a detached house or villa.
 
@@ -398,29 +420,17 @@ logement . construction . par surface:
     variations:
       - si: éco-construit
         alors: 144 kgCO2e/m2
-      - si: appartement
-        alors: 696 kgCO2e/m2
       - sinon: 696 kgCO2e/m2
   note: Haute école fribourg 2021 report (60-year amortisation)
 logement . construction . durée d'amortissement:
-  formule: 60 ans
+  formule: 60
   note: SIA standard assumption
 logement . âge:
   question: How old is your home?
-  par défaut: 45 ans
+  par défaut: 45
   note: In the canton of Geneva, more than half of all residential buildings and detached houses were built before 1980.
 logement . saisie habitants:
   par défaut: 2.1
-logement . surface:
-  titre: Surface
-  question: What is the surface area of your home?
-  par défaut: 80
-  suggestions:
-    studio: 25
-    3 pieces: 70
-    home: 120
-    castle 🏰: 1000
-  unité: m2
 logement . électricité . consommation:
   description: |
     Tip: you can find your annual electricity consumption on your bills or in your online account on the SIG website.
@@ -437,7 +447,7 @@ logement . chauffage . fioul:
   titre: Fuel oil
 logement . chauffage:
   description: |
-    > This question covers all the energy sources you use to power your heaters, water heaters, hobs, etc.
+    > This question covers all the energy sources you use to power your heating systems, water heaters, hobs, etc.
 
     Some homes use electricity only, others are heated entirely by gas, and more rarely by wood or oil.
     In still other situations, a home may be heated mainly by electric heaters or a heat pump,
@@ -446,15 +456,6 @@ logement . chauffage:
     If you live in several homes (for example, if you have a second home), try to "reduce" these consumption figures to those of your main home, to get the most accurate estimate possible.
 
     Tick all the modes you use.
-logement . chauffage . empreinte par défaut:
-  résumé: A statistical calculation of average residential heating in Geneva
-  formule:
-    somme:
-      - parc français . chauffage . consommation gaz moyenne relative * gaz . facteur d'émission base carbone
-      - parc français . chauffage . consommation fioul moyenne relative en litres * intensité carbone fioul litre
-      - parc français . chauffage . consommation bois moyenne relative * ((bois . facteur d'émission bûche + bois . facteur d'émission granulés) / 2)
-      - parc français . chauffage . consommation réseau de chaleur moyenne relative * réseau de chaleur . intensité carbone
-  note: the default housing footprint is calculated on the basis of the average housing stock in Geneva
 logement . chauffage . gaz . consommation:
   par défaut: parc français . chauffage . consommation gaz par m2 * surface
   description: |
@@ -470,13 +471,8 @@ logement . chauffage . gaz . facteur d'émission base carbone:
   note: KBOB
 logement . chauffage . fioul . consommation:
   question: What is your household's annual oil consumption?
-  par défaut: logement . chauffage . fioul kWh au litre * parc français . chauffage . consommation fioul par m2 * surface
   description: |
     Tip: You can find your annual energy consumption on your heating oil bill or on your annual service charge statement sent by your property management company.
-logement . chauffage . bois . type . granulés . consommation:
-  par défaut: parc français . chauffage . consommation bois par m2 * surface
-logement . chauffage . bois . type . bûche . consommation . saisie:
-  par défaut: parc français . chauffage . consommation bois par m2 * surface / intensité énergétique
 logement . chauffage . gaz . intensité carbone gaz utilisateur:
   formule: gaz . facteur d'émission base carbone
 logement . chauffage . réseau de chaleur . consommation:
@@ -503,7 +499,7 @@ services sociétaux . voter:
   description: |
     Around 4 times a year, every Swiss citizen has the opportunity to vote on various issues at federal, cantonal and municipal level.
 
-    Depending on the subject, the votes can be an opportunity to raise the issue of climate change. It's a way of taking indirect action on the carbon footprint of public services, and on other issues where individual efforts are not enough.
+    Depending on the subject, the votes can be an opportunity to raise the issue of climate change. It's a way of acting indirectly on the carbon footprint of public services, and on other issues where individual efforts are not enough.
 
     But that's not all! You can take part in citizens' forums or assemblies! If you are a student, there may be processes in place (assemblies, petitions, votes, etc.) to steer your university towards sustainability If you're an employee, can you influence the choices your company makes? If you're retired, can you give some of your time to cooperatives or associations?
 services sociétaux . pression locale:
@@ -557,7 +553,7 @@ divers . électroménager . allongement:
 
     To extend the life of your household appliances, don't hesitate to have them repaired. The https://www.ge-repare.ch website provides a list of repair addresses.
 
-    If you really want to get rid of a piece of household electrical equipment, think about the ressourceries or recycleries, which are places dedicated to re-use!
+    If you really want to get rid of a piece of household electrical equipment, think of the ressourceries or recycleries, which are places dedicated to re-use!
 divers . ameublement . allongement:
   description: |
     Increasing the lifespan of your furniture (by taking care of it or repairing it) helps to limit its impact on the climate. 
@@ -673,7 +669,7 @@ transport . boulot:
   description: |
     While long-distance car-sharing is well known in Switzerland, short-distance car-sharing is almost non-existent: today, only 4% of home-to-work journeys are made by car-sharing.
 
-    Numerous websites offer free platforms for bringing together people who make the same journey, whether on a regular basis, for example to go to work, or on a one-off basis, for example for a ski trip.
+    Numerous websites offer free platforms for bringing together people who make the same journey, whether regularly, for example to go to work, or occasionally, for example on a ski trip.
 
     -<a href="http://www.e-covoiturage.ch/index.php/fr/">e-carpooling website</a>: Swiss carpooling platform;
 
@@ -794,16 +790,6 @@ logement . baisse température . gains 1 degré:
     This is the estimated reduction in energy consumption when we lower the temperature of our heated home by 1°C within the usual temperature range (around 20°).
 
     We use the estimate given in the <a href="https://www.ge.ch/document/30986/annexe/0">Canton guide "Des gestes pour économiser notre énergie"</a>.
-logement . empreinte chauffage air:
-  description: |
-    For each kWh of each type of energy, how much is used to heat the air in a home?
-  formule:
-    somme:
-      - parc français . consommation électricité totale relative * électricité . intensité carbone * part chauffage électricité
-      - parc français . chauffage . consommation gaz moyenne relative * chauffage . gaz . facteur d'émission base carbone * part chauffage gaz
-      - parc français . chauffage . consommation fioul moyenne relative en litres * chauffage . intensité carbone fioul litre * part chauffage fioul
-      - parc français . chauffage . consommation bois moyenne relative * ((chauffage . bois . facteur d'émission bûche + chauffage . bois . facteur d'émission granulés) / 2) * part chauffage bois
-      - parc français . chauffage . consommation réseau de chaleur moyenne relative * chauffage . réseau de chaleur . intensité carbone * part chauffage réseau de chaleur
 logement . éteindre appareils:
   description: |
     Our homes and flats are full of electronic devices and household appliances that are often left on or on standby.
@@ -916,7 +902,7 @@ alimentation . déchets . réduire gaspillage:
     For more information: https://www.ge.ch/dossier/alimentation-durable-geneve/climat-dans-votre-assiette/gaspillage-alimentaire
 alimentation . déchets . composter:
   description: |
-    Our bio-waste, i.e. the putrescible waste from our food (peelings, leftovers from meals, etc.), accounts for a large proportion of the weight of our rubbish bin, contributing to the carbon footprint associated with waste management. This waste is often little or poorly recycled, despite the environmental benefits it can bring: compost, a rich organic substance that is beneficial to the soil. Composting our bio-waste (individually or collectively) helps to reduce the size of our bins and encourages the creation of compost that can eventually be used as an alternative to chemical fertilisers.
+    Our bio-waste, i.e. the putrescible waste from our food (peelings, leftovers from meals, etc.), accounts for a large proportion of the weight of our rubbish bin, contributing to the carbon footprint associated with waste management. This waste is very often little or poorly recycled, despite the environmental benefits it can bring: compost, a rich organic substance that is beneficial to the soil. Composting our bio-waste (either individually or collectively) reduces the size of our bins and encourages the creation of compost that can eventually be used as an alternative to chemical fertilisers.
 
     Find out all the tips for <a href="https://www.ge.ch/teaser/p-tite-poubelle-verte">making compost</a>
 actions:
