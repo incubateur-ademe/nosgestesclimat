@@ -62,10 +62,10 @@ logement . empreinte chauffage air utilisateur:
   formule:
     somme:
       - chauffage . électricité . présent * électricité * parc français . chauffage . part chauffage air électricité
-      - (chauffage . gaz . présent * chauffage . gaz + chauffage . citerne propane . présent * chauffage . citerne propane) * parc français . chauffage . part chauffage air gaz
-      - chauffage . bois . présent * chauffage . bois * parc français . chauffage . part chauffage air bois
-      - chauffage . fioul . présent * chauffage . fioul * parc français . chauffage . part chauffage air fioul
-      - chauffage . réseau de chaleur . présent * chauffage . réseau de chaleur * parc français . chauffage . part chauffage air réseau de chaleur
+      - (chauffage . gaz . empreinte + chauffage . citerne propane . empreinte) * parc français . chauffage . part chauffage air gaz
+      - chauffage . bois . empreinte * parc français . chauffage . part chauffage air bois
+      - chauffage . fioul . empreinte * parc français . chauffage . part chauffage air fioul
+      - chauffage . réseau de chaleur . empreinte * parc français . chauffage . part chauffage air réseau de chaleur
 
 logement . éteindre appareils:
   formule: empreinte du foyer / habitants
@@ -116,9 +116,10 @@ logement . remplacer fioul par bois:
   applicable si:
     toutes ces conditions:
       - propriétaire
+      - est défini: chauffage . fioul . présent
       - chauffage . fioul . présent
   icônes: 🛢️🪵
-  formule: (chauffage . fioul - alternative) / habitants
+  formule: (chauffage . fioul . empreinte - alternative) / habitants
   description: |
     Les chaudières au fuel sont les plus polluantes. Les remplacer par des alternatives moins carbonnées comme ici le bois en granulés est un geste fort pour réduire votre empreinte carbone.
   inactive: non
@@ -162,9 +163,10 @@ logement . remplacer gaz par PAC:
   applicable si:
     toutes ces conditions:
       - propriétaire
+      - est défini: chauffage . gaz . présent
       - chauffage . gaz . présent
   icônes: 🔥🔄
-  formule: (chauffage . gaz - pompe à chaleur) / habitants
+  formule: (chauffage . gaz . empreinte - pompe à chaleur) / habitants
   description: |
     Les chaudières au gaz sont parmi les plus émissives de CO₂. Les remplacer par des alternatives moins carbonnées comme des pompes à chaleur est un geste fort pour réduire votre empreinte carbone.
 
@@ -239,7 +241,6 @@ logement . propriétaire:
     En tant que locataire, il est évidemment délicat de faire les investissements qui améliorent l'empreinte du logement : isolation, changement de source d'énergie sont impossibles sauf à tomber sur un propriétaire particulièrement conciliant. 
 
     Pourtant, la loi pourrait dès 2023 être un soutien de poids : les passoires thermiques [seront interdites à la location](https://www.gouvernement.fr/interdiction-a-la-location-des-logements-avec-une-forte-consommation-d-energie-des-2023), forçant les propriétaires à lancer des travaux substentiels.
-
   par défaut: oui
 
 logement . rénovation énergétique BBC:
@@ -269,13 +270,16 @@ logement . raccordement réseau de chaleur:
   icônes: 👥🏭
   applicable si:
     toutes ces conditions:
+      - est défini: appartement
       - appartement
-      - chauffage collectif
+      - chauffage collectif = "collectif"
+      - est défini: chauffage . gaz . présent
+      - est défini: chauffage . fioul . présent
       - une de ces conditions:
           - chauffage . gaz . présent
           - chauffage . fioul . présent
   non applicable si: chauffage . réseau de chaleur . présent
-  formule: (logement . chauffage - recalcul) / habitants
+  formule: (logement . chauffage - recalcul / habitants)
   # TODO : Cette `note` est plus grand public que technique, à voir si ce texte n'a pas sa place ailleurs.
   note: |
     Un réseau de chaleur est un système de canalisations qui permettent d’acheminer vers un ensemble de bâtiments de la 
@@ -314,8 +318,8 @@ logement . raccordement réseau de chaleur . recalcul:
   note: on considère que la consommation de gaz/fioul sera identique suite à un raccordement au réseau de chaleur.
   formule:
     somme:
-      - chauffage . réseau de chaleur . intensité carbone * chauffage . gaz . consommation
-      - chauffage . réseau de chaleur . intensité carbone * chauffage . fioul . consommation / chauffage . fioul kWh au litre
+      - chauffage . gaz . présent * chauffage . réseau de chaleur . intensité carbone * chauffage . gaz . consommation
+      - chauffage . fioul . présent * chauffage . réseau de chaleur . intensité carbone * chauffage . fioul . consommation / chauffage . fioul kWh au litre
 
 logement . chauffage collectif:
   avec:
