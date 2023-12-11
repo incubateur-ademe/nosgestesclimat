@@ -56,7 +56,7 @@ transport . deux roues . empreinte moyenne:
     recalcul:
       règle: deux roues . empreinte
       avec:
-        deux roues . usager: "'affirmatif'"
+        deux roues . usager: oui
         deux roues . type: "'moto sup 250'"
         deux roues . km: 400
 # @Clement: note: Source manquante ?
@@ -270,7 +270,7 @@ transport . voiture . durée de vie:
   note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
 
 transport . ferry . usager:
-  par défaut: "'négatif'"
+  par défaut: non
 
 transport . ferry . heures:
   suggestions:
@@ -311,14 +311,13 @@ transport . mobilité douce . autres véhicules à moteur . durée de vie:
   formule: 2
   note: Mobitool Trottinette électrique
 
-# @Clément Sera corrigé dans la version de base
-# transport . deux roues . type:
-#   question: Quel type de deux-roues motorisé utilisez-vous ?
-
 # DIVERS
 
-divers . animaux domestiques . empreinte par défaut:
-  formule: 0
+divers . animaux domestiques . empreinte . chats . nombre:
+  par défaut: 0
+
+divers . animaux domestiques . empreinte . chien moyen . nombre:
+  par défaut: 0.25
 
 divers . électroménager . préservation:
   description: |
@@ -434,9 +433,6 @@ alimentation . déchets . quantité jetée:
     Sachez qu'en cas d'engagement "zéro déchet", nous considérons tout de même des émissions de gaz à effet (mais largement réduites) car il est très difficile voire impossible de ne générer aucun déchet, certains étant invisibles et inévitables.
     Vous avez renseigné un mode de vie zéro déchet. Il faut savoir que ce niveau d'engagement correspond à une personne qui est investie à 100% dans la démarche de réduction de ses déchets. Consommer en vrac n'est pas suffisant pour être zéro-déchet.
 
-# alimentation . déchets . gestes:
-#   description: Les différents gestes que vous mettez en place pour réduire l'empreinte de votre poubelle.
-
 #LOGEMENT
 parc français . surface moyenne:
   titre: Surface moyenne par logement
@@ -486,6 +482,34 @@ parc français . surface . part bois:
 parc français . surface . part réseau de chaleur:
   formule: 5.2%
 
+# @Clément: Il n'est finalement pas possible d'ajouter de nouvelles règles, je corrige ici le calcul mais sans la partie "intensité carbone chaleur de l'environnement"
+# (que je ne comprends pas).
+# L'électricité est comprise dans ce calcul par l'intermédiaire de la question sur la consommation d'électricité.
+# Les parts doivent être définie plus haut.
+logement . chauffage . empreinte par défaut:
+  résumé: Un calcul statistique du **chauffage** résidentiel genevois moyen
+  note: l'empreinte du logement par défaut est calculée sur la base de la moyenne du parc immobilier genevois
+
+parc français . chauffage . empreinte moyenne par m2 hors électricité:
+  note: L'électricité est traitée séparément.
+  formule:
+    somme:
+      - surface . part gaz * empreinte gaz par m2
+      - surface . part fioul * empreinte fioul par m2
+      - surface . part bois * empreinte buches par m2 / 2
+      - surface . part bois * empreinte granulés par m2 / 2
+      - surface . part réseau de chaleur * empreinte réseau de chaleur par m2
+
+parc français . chauffage . empreinte moyenne chauffage air par m2:
+  formule:
+    somme:
+      - empreinte électricité par m2 * part chauffage air électricité
+      - empreinte gaz par m2 * part chauffage air gaz
+      - empreinte fioul par m2 * part chauffage air fioul
+      - empreinte buches par m2 * part chauffage air bois / 2
+      - empreinte granulés par m2 * part chauffage air bois / 2
+      - empreinte réseau de chaleur par m2 * part chauffage air réseau de chaleur
+
 parc français . consommation électricité autre par m2:
   formule: 31.5
   unité: kWh/m2
@@ -506,10 +530,10 @@ logement . chauffage . citerne propane . estimation via le coût:
 logement . chauffage . bois . type . granulés . estimation via le coût:
   unité: CHF/kWh
 
-logement . chauffage . bois . type . bûche . estimation via le coût:
+logement . chauffage . bois . type . bûches . estimation via le coût:
   unité: CHF/stère
 
-logement . chauffage . bois . type . bûche . prix stère 2023:
+logement . chauffage . bois . type . bûches . prix stère 2023:
   formule: 180
   unité: CHF/stère
   note: Union suisse des paysans, bois de cheminée 2023, vente directe, moyenne essences	https://www.sbv-usp.ch/fr/prix/vente-directe/bois-de-cheminee
@@ -528,7 +552,6 @@ logement . chauffage . fioul . estimation via le prix:
   formule: 1.397
 
 logement . appartement:
-  par défaut: oui
   description: |
     Par opposition à une maison individuelle ou une villa.
 
@@ -541,35 +564,21 @@ logement . construction . par surface:
     variations:
       - si: éco-construit
         alors: 144 kgCO2e/m2
-      - si: appartement
-        alors: 696 kgCO2e/m2
       - sinon: 696 kgCO2e/m2
   note: Rapport haute école fribourg 2021 (amortissement 60 ans)
 
 logement . construction . durée d'amortissement:
-  formule: 60 ans
+  formule: 60
   note: Hypothèse norme SIA
 
 logement . âge:
   question: Quel est l'âge de votre logement ?
-  par défaut: 45 ans
+  par défaut: 45
   note: Dans le canton de Genève, plus de la moitié des bâtiments à usage d'habitation et des maisons individuelles ont été construits avant 1980.
 
 logement . saisie habitants:
   par défaut: 2.1
   # @Clément note: Source manquante ?
-
-logement . surface:
-  titre: Surface
-  question: Quelle est la surface de votre logement ?
-  par défaut: 80
-  # @Clément note: source manquante ?
-  suggestions:
-    studio: 25
-    3 pièces: 70
-    maison: 120
-    château 🏰: 1000
-  unité: m2
 
 logement . électricité . consommation:
   description: |
@@ -601,20 +610,6 @@ logement . chauffage:
 
     Cochez tous les modes que vous utilisez.
 
-# @Clément: Il n'est finalement pas possible d'ajouter de nouvelles règles, je corrige ici le calcul mais sans la partie "intensité carbone chaleur de l'environnement"
-# (que je ne comprends pas).
-# L'électricité est comprise dans ce calcul par l'intermédiaire de la question sur la consommation d'électricité.
-# Les parts doivent être définie plus haut.
-logement . chauffage . empreinte par défaut:
-  résumé: Un calcul statistique du **chauffage** résidentiel genevois moyen
-  formule:
-    somme:
-      - parc français . chauffage . consommation gaz moyenne relative * gaz . facteur d'émission base carbone
-      - parc français . chauffage . consommation fioul moyenne relative en litres * intensité carbone fioul litre
-      - parc français . chauffage . consommation bois moyenne relative * ((bois . facteur d'émission bûche + bois . facteur d'émission granulés) / 2)
-      - parc français . chauffage . consommation réseau de chaleur moyenne relative * réseau de chaleur . intensité carbone
-  note: l'empreinte du logement par défaut est calculée sur la base de la moyenne du parc immobilier genevois
-
 logement . chauffage . gaz . consommation:
   par défaut: parc français . chauffage . consommation gaz par m2 * surface
   description: |
@@ -633,15 +628,8 @@ logement . chauffage . gaz . facteur d'émission base carbone:
 
 logement . chauffage . fioul . consommation:
   question: Quelle est la consommation annuelle de mazout de votre foyer ?
-  par défaut: logement . chauffage . fioul kWh au litre * parc français . chauffage . consommation fioul par m2 * surface
   description: |
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur votre facture de mazout ou sur votre décompte de charges annuelles envoyé par votre régie.
-
-logement . chauffage . bois . type . granulés . consommation:
-  par défaut: parc français . chauffage . consommation bois par m2 * surface
-
-logement . chauffage . bois . type . bûche . consommation . saisie:
-  par défaut: parc français . chauffage . consommation bois par m2 * surface / intensité énergétique
 
 # pour supprimer la variation biogaz
 logement . chauffage . gaz . intensité carbone gaz utilisateur:
@@ -1014,17 +1002,6 @@ logement . baisse température . gains 1 degré:
 
     Nous retenons l'estimation donnée dans le [guide du Canton "Des gestes pour économiser notre énergie"](https://www.ge.ch/document/30986/annexe/0).
 
-logement . empreinte chauffage air:
-  description: |
-    Pour chaque kWh de chaque type d'énergie, quelle est la part utilisée pour le chauffage de l'air d'un foyer ?
-  formule:
-    somme:
-      - parc français . consommation électricité totale relative * électricité . intensité carbone * part chauffage électricité
-      - parc français . chauffage . consommation gaz moyenne relative * chauffage . gaz . facteur d'émission base carbone * part chauffage gaz
-      - parc français . chauffage . consommation fioul moyenne relative en litres * chauffage . intensité carbone fioul litre * part chauffage fioul
-      - parc français . chauffage . consommation bois moyenne relative * ((chauffage . bois . facteur d'émission bûche + chauffage . bois . facteur d'émission granulés) / 2) * part chauffage bois
-      - parc français . chauffage . consommation réseau de chaleur moyenne relative * chauffage . réseau de chaleur . intensité carbone * part chauffage réseau de chaleur
-
 logement . éteindre appareils:
   description: |
     Nos appartements et nos maisons regorgent d'appareils électroniques et électroménagers, qui restent souvent allumés ou bien en veille.
@@ -1083,8 +1060,6 @@ logement . propriétaire:
   par défaut: non
 
 logement . raccordement réseau de chaleur:
-  # @Clément: Sera corrigé dans la version de base
-  # titre: Se raccorder à un réseau de chaleur
   note: |
     Un réseau de chaleur est un système de canalisations qui permettent d'acheminer vers un ensemble de bâtiments de la chaleur produite localement et majoritairement à partir d'énergies renouvelables et de récupération. 
 
