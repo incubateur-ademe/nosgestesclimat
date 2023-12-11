@@ -16,14 +16,17 @@ divers . loisirs . culture:
   icônes: 🎭
   mosaique:
     type: selection
-    clé: présent
+    options:
+      - concerts et spectacles . présent
+      - musées et monuments . présent
+      - édition . présent
+      - pratique de la musique . présent
     suggestions:
       aucun:
         concerts et spectacles . présent: non
         musées et monuments . présent: non
         édition . présent: non
         pratique de la musique . présent: non
-        choix utilisateur: oui
   question: Quelles sont vos pratiques culturelles ?
   titre: Pratiques culturelles
   description: |
@@ -57,22 +60,21 @@ divers . loisirs . culture . empreinte par défaut:
   unité: kgCO2e
 
 divers . loisirs . culture . choix utilisateur:
-  description: L'utilisateur a-t-il fait un choix de pratiques culturelles ?
+  titre: Choix utilisateur pour les pratiques culturelles
   formule:
-    variations:
-      - si:
-          une de ces conditions:
-            - concerts et spectacles . présent
-            - musées et monuments . présent
-            - édition . présent
-            - pratique de la musique . présent
-        alors: oui
-      - sinon: non
+    une de ces conditions:
+      - est défini: concerts et spectacles . présent
+      - est défini: musées et monuments . présent
+      - est défini: édition . présent
+      - est défini: pratique de la musique . présent
 
 divers . loisirs . culture . empreinte concerts et spectacles:
   titre: Empreinte concerts et spectacles
   icônes: 🎟
-  applicable si: concerts et spectacles . présent
+  applicable si:
+    toutes ces conditions:
+      - est défini: concerts et spectacles . présent
+      - concerts et spectacles . présent
   formule: concerts et spectacles . moyenne macro pondérée
   unité: kgCO2e
   note: Cette catégorie comprend les concerts, théâtres, opéras, ballets, spectacles de rue et cinémas.
@@ -83,7 +85,6 @@ divers . loisirs . culture . concerts et spectacles:
 
 divers . loisirs . culture . concerts et spectacles . présent:
   question: Vous arrive-t-il d'assister à des concerts ou spectacles ?
-  par défaut: non
 
 divers . loisirs . culture . concerts et spectacles . moyenne macro pondérée:
   formule: moyenne macro française * fréquence pondérée
@@ -123,7 +124,10 @@ divers . loisirs . culture . concerts et spectacles . fréquence:
 divers . loisirs . culture . empreinte musées et monuments:
   titre: Empreinte musées et monuments
   icônes: 🖼️
-  applicable si: musées et monuments . présent
+  applicable si:
+    toutes ces conditions:
+      - est défini: musées et monuments . présent
+      - musées et monuments . présent
   formule: musées et monuments . moyenne macro pondérée
   unité: kgCO2e
   note: Cette catégorie comprend les visites de musées et monuments nationaux, de parcs et zoos.
@@ -134,7 +138,6 @@ divers . loisirs . culture . musées et monuments:
 
 divers . loisirs . culture . musées et monuments . présent:
   question: Vous arrive-t-il de visiter des musées, monuments et parcs nationaux ?
-  par défaut: non
 
 divers . loisirs . culture . musées et monuments . moyenne macro pondérée:
   formule: moyenne macro française * fréquence approximée / proportion de visiteurs
@@ -194,7 +197,10 @@ divers . loisirs . culture . musées et monuments . proportion de visiteurs:
 divers . loisirs . culture . empreinte édition:
   titre: Empreinte édition (livres, presse et logiciels)
   icônes: 📚
-  applicable si: édition . présent
+  applicable si:
+    toutes ces conditions:
+      - est défini: édition . présent
+      - édition . présent
   formule: édition . moyenne macro pondérée
   unité: kgCO2e
   note: Il s'agit ici de comptabiliser l'empreinte carbone liée à l'achat de livres, de journaux et revues.
@@ -205,7 +211,6 @@ divers . loisirs . culture . édition:
 
 divers . loisirs . culture . édition . présent:
   question: Achetez-vous parfois des livres, revues ou journaux ?
-  par défaut: non
 
 divers . loisirs . culture . édition . moyenne macro pondérée:
   formule: moyenne macro française * fréquence pondérée
@@ -255,7 +260,10 @@ divers . loisirs . culture . édition . fréquence . très élevée:
 
 divers . loisirs . culture . empreinte pratique de la musique:
   titre: Empreinte de la pratique de la musique
-  applicable si: pratique de la musique . présent
+  applicable si:
+    toutes ces conditions:
+      - est défini: pratique de la musique . présent
+      - pratique de la musique . présent
   formule: pratique de la musique . moyenne macro pondérée
   unité: kgCO2e
   note: Nous comptons ici la pratique de la musique, au travers de la possession d'un ou plusieurs instruments de musique.
@@ -266,7 +274,6 @@ divers . loisirs . culture . pratique de la musique:
 
 divers . loisirs . culture . pratique de la musique . présent:
   question: Possédez-vous un instrument de musique ?
-  par défaut: non
 
 divers . loisirs . culture . pratique de la musique . moyenne macro pondérée:
   formule: moyenne macro française / proportion de pratiquants
@@ -380,7 +387,19 @@ divers . loisirs . culture . pratique de la musique . proportion de pratiquants:
 divers . loisirs . sports:
   mosaique:
     type: selection
-    clé: présent
+    options:
+      - individuel extérieur . présent
+      - balle ou ballon . présent
+      - aquatique . présent
+      - martial ou combat . présent
+      - athlétisme . présent
+      - salle de sport . présent
+      - équitation . présent
+      - golf . présent
+      - nautique . présent
+      - hiver montagne . présent
+      - sports énergivores . présent
+      - autres sports . présent
     suggestions:
       aucun sport:
         individuel extérieur . présent: non
@@ -395,7 +414,6 @@ divers . loisirs . sports:
         hiver montagne . présent: non
         sports énergivores . présent: non
         autres sports . présent: non
-        choix utilisateur: oui
   question: Quels sont les sports que vous pratiquez régulièrement ?
   titre: Pratiques sportives
   formule:
@@ -438,25 +456,21 @@ divers . loisirs . sports . empreinte par défaut:
     ([Voir le détail de cette branche](https://nosgestesclimat.fr/documentation/empreinte-branche/R93-par-hab))
 
 divers . loisirs . sports . choix utilisateur:
-  description: l'utilisateur a-t-il fait un choix de sport ?
+  titre: Choix utilisateur pour les pratiques sportives
   formule:
-    variations:
-      - si:
-          une de ces conditions:
-            - balle ou ballon . présent
-            - aquatique . présent
-            - martial ou combat . présent
-            - athlétisme . présent
-            - équitation . présent
-            - golf . présent
-            - nautique . présent
-            - hiver montagne . présent
-            - autres sports . présent
-            - individuel extérieur . présent
-            - salle de sport . présent
-            - sports énergivores . présent
-        alors: oui
-      - sinon: non
+    une de ces conditions:
+      - est défini: balle ou ballon . présent
+      - est défini: aquatique . présent
+      - est défini: martial ou combat . présent
+      - est défini: athlétisme . présent
+      - est défini: équitation . présent
+      - est défini: golf . présent
+      - est défini: nautique . présent
+      - est défini: hiver montagne . présent
+      - est défini: autres sports . présent
+      - est défini: individuel extérieur . présent
+      - est défini: salle de sport . présent
+      - est défini: sports énergivores . présent
 
 divers . loisirs . sports . individuel extérieur:
   titre: Sports individuels en extérieur
@@ -465,7 +479,6 @@ divers . loisirs . sports . individuel extérieur:
   applicable si: présent
 divers . loisirs . sports . individuel extérieur . présent:
   question: Faites-vous du roller ou du skateboard ?
-  par défaut: non
 
 divers . loisirs . sports . balle ou ballon:
   titre: Sports de balle ou ballon
@@ -474,7 +487,6 @@ divers . loisirs . sports . balle ou ballon:
   applicable si: présent
 divers . loisirs . sports . balle ou ballon . présent:
   question: Pratiquez-vous un sport de raquette ?
-  par défaut: non
 
 divers . loisirs . sports . aquatique:
   titre: Sports en piscine
@@ -483,7 +495,6 @@ divers . loisirs . sports . aquatique:
   applicable si: présent
 divers . loisirs . sports . aquatique . présent:
   question: Pratiquez-vous un sport en piscine ?
-  par défaut: non
 
 divers . loisirs . sports . martial ou combat:
   titre: Arts martiaux, combat
@@ -492,7 +503,6 @@ divers . loisirs . sports . martial ou combat:
   applicable si: présent
 divers . loisirs . sports . martial ou combat . présent:
   question: Pratiquez-vous un art martial ou de combat ?
-  par défaut: non
 
 divers . loisirs . sports . athlétisme:
   titre: Athlétisme
@@ -500,7 +510,6 @@ divers . loisirs . sports . athlétisme:
   applicable si: présent
 divers . loisirs . sports . athlétisme . présent:
   question: Pratiquez-vous l'athlétisme ?
-  par défaut: non
 
 divers . loisirs . sports . salle de sport:
   titre: Salle de sport ou musculation
@@ -509,7 +518,6 @@ divers . loisirs . sports . salle de sport:
   applicable si: présent
 divers . loisirs . sports . salle de sport . présent:
   question: Fréquentez-vous une salle de sport, fitness ou musculation ?
-  par défaut: non
 
 divers . loisirs . sports . équitation:
   titre: Équitation
@@ -517,7 +525,6 @@ divers . loisirs . sports . équitation:
   applicable si: présent
 divers . loisirs . sports . équitation . présent:
   question: Pratiquez-vous l'équitation ?
-  par défaut: non
 
 divers . loisirs . sports . golf:
   titre: Golf
@@ -525,7 +532,6 @@ divers . loisirs . sports . golf:
   applicable si: présent
 divers . loisirs . sports . golf . présent:
   question: Pratiquez-vous le golf ?
-  par défaut: non
 
 divers . loisirs . sports . nautique:
   titre: Sports nautiques
@@ -534,7 +540,6 @@ divers . loisirs . sports . nautique:
   applicable si: présent
 divers . loisirs . sports . nautique . présent:
   question: Pratiquez-vous un sport nautique ?
-  par défaut: non
 
 divers . loisirs . sports . hiver montagne:
   titre: Sports d'hiver
@@ -543,7 +548,6 @@ divers . loisirs . sports . hiver montagne:
   applicable si: présent
 divers . loisirs . sports . hiver montagne . présent:
   question: Pratiquez-vous un sport d'hiver ou de montagne ?
-  par défaut: non
 
 divers . loisirs . sports . sports énergivores:
   titre: Sports motorisés ou nécessitant un engin à moteur
@@ -552,7 +556,6 @@ divers . loisirs . sports . sports énergivores:
   applicable si: présent
 divers . loisirs . sports . sports énergivores . présent:
   question: Pratiquez-vous un sport impliquant un véhicule motorisé ?
-  par défaut: non
 
 divers . loisirs . sports . autres sports:
   titre: Autres (tir, escalade...)
@@ -561,7 +564,6 @@ divers . loisirs . sports . autres sports:
   applicable si: présent
 divers . loisirs . sports . autres sports . présent:
   question: Pratiquez-vous un sport non listé ?
-  par défaut: non
 
 divers . loisirs . sports . notif sports carbonés:
   type: notification
@@ -614,6 +616,20 @@ divers . loisirs . sports . proportion abonnés fitness:
   note: D'après le cabinet [Deloitte](https://www2.deloitte.com/fr/fr/pages/presse/2019/le-fitness-en-france-edition-2019.html), en 2018, la France compte 5,96 millions d'abonnés à des clubs de fitness.
 
 divers . loisirs . sports . empreinte répartie:
+  applicable si:
+    une de ces conditions:
+      - balle ou ballon . présent
+      - aquatique . présent
+      - martial ou combat . présent
+      - athlétisme . présent
+      - équitation . présent
+      - golf . présent
+      - nautique . présent
+      - hiver montagne . présent
+      - autres sports . présent
+      - sports énergivores . présent
+      - individuel extérieur . présent
+      - salle de sport . présent
   formule: (empreinte SDES sport par français / proportion pratiquants) * ( 0.27 + 0.21 )
   unité: kgCO2e
   note: |
