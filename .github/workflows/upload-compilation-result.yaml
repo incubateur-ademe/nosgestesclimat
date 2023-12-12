@@ -16,7 +16,8 @@ jobs:
       compilation-result: ${{ steps.compilation.outputs.result }}
       check-translation-result: ${{ steps.check-translation.outputs.result }}
       check-personas-result: ${{ steps.check-personas.outputs.result }}
-      test-personas-result: ${{ steps.test-personas.outputs.result }}
+      test-personas-nightly-result: ${{ steps.test-personas-nightly.outputs.result }}
+      test-personas-latest-result: ${{ steps.test-personas-latest.outputs.result }}
       test-optim-result: ${{ steps.test-optim.outputs.result }}
       test-url: ${{ steps.set-test-url.outputs.fr }}
     steps:
@@ -54,11 +55,20 @@ jobs:
           body="${body//$'\n'/'%0A'}"
           body="${body//$'\r'/'%0D'}"
           echo "::set-output name=result::${body}"
-      - id: test-personas
+      - id: test-personas-latest
         name: Test the personas bilans against production
         run: |
-          yarn test:personas --markdown > test-personas.res
-          body="$(cat test-personas.res | tail --lines=+3 | head --lines=-1)"
+          yarn test:personas --markdown -v latest > test-personas-latest.res
+          body="$(cat test-personas-latest.res | tail --lines=+3 | head --lines=-1)"
+          body="${body//'%'/'%25'}"
+          body="${body//$'\n'/'%0A'}"
+          body="${body//$'\r'/'%0D'}"
+          echo "::set-output name=result::${body}"
+      - id: test-personas-nightly
+        name: Test the personas bilans against develop
+        run: |
+          yarn test:personas --markdown -v nightly > test-personas-nightly.res
+          body="$(cat test-personas-nightly.res | tail --lines=+3 | head --lines=-1)"
           body="${body//'%'/'%25'}"
           body="${body//$'\n'/'%0A'}"
           body="${body//$'\r'/'%0D'}"
@@ -112,7 +122,15 @@ jobs:
 
           ### :couple: Personas changes
 
-          ${{ needs.compile.outputs.test-personas-result }}
+          #### Test personas bilans against [production](https://nosgestesclimat-api.osc-fr1.scalingo.io/latest/fr/FR/rules)
+
+          ${{ needs.compile.outputs.test-personas-latest-result }}
+
+          #### Test personas bilans against [preprod](https://nosgestesclimat-api.osc-fr1.scalingo.io/nightly/fr/FR/rules)
+
+          ${{ needs.compile.outputs.test-personas-nightly-result }}
+
+          #### Test the model [optimisation](https://publicodes.github.io/tools/modules/optims.html)
 
           ${{ needs.compile.outputs.test-optim-result }}
 

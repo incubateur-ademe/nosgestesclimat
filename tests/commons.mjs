@@ -125,11 +125,7 @@ export function printResults(
   version,
   withOptim = false
 ) {
-  const title = withOptim
-    ? 'Test model optimisation'
-    : 'Test personas regression against ' + version
   if (markdown) {
-    console.log(`#### ${title}`)
     console.log(
       `| Persona | Total PR ${
         withOptim ? 'with optim.' : ''
@@ -139,6 +135,9 @@ export function printResults(
     )
     console.log('|-----:|:------:|:------:|:----:|')
   } else {
+    const title = withOptim
+      ? 'Test model optimisation'
+      : `Test personas regression against ${c.green(version)}`
     console.log(`[ ${title} ]\n`)
   }
   const fails = []
