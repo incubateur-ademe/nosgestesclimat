@@ -5,10 +5,17 @@ transport . voiture:
     variations:
       - si: km = 0
         alors: 0
-      - si: utilisateur régulier
+      - si: 
+          toutes ces conditions:
+            - est défini: utilisateur régulier
+            - utilisateur régulier
         alors: empreinte calculée
-      - si: utilisateur régulier = non
+      - si: 
+          toutes ces conditions:
+            - est défini: utilisateur régulier
+            - utilisateur régulier = non
         alors: empreinte utilisateur irrégulier
+      - sinon: empreinte moyenne
   unité: kgCO2e
   description: |
     ![](https://images.unsplash.com/photo-1572312284222-ecf6d70f1907?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=80)
@@ -53,12 +60,12 @@ transport . voiture . utilisateur régulier:
     Répondez oui si vous utilisez dans la plupart des cas le même véhicule, que ce soit en tant que passager ou que conducteur. 
 
     Cela peut-être le cas s'il s'agit d'un véhicule appartenant à quelqu'un de votre famille, ou à des amis proches. Ou si vous louez systématiquement le même type de véhicule, comme dans le cas d'un abonnement à un service d'autopartage.
-  par défaut: oui
 
 transport . voiture . notif utilsateur irrégulier:
   type: notification
   formule:
     toutes ces conditions:
+      - est défini: voiture . utilisateur régulier
       - utilisateur régulier = non
       - km > 0
   description: |
@@ -73,20 +80,34 @@ transport . voiture . empreinte utilisateur irrégulier . construction:
     recalcul:
       règle: voiture . construction
       avec:
-        voiture . utilisateur régulier: "'oui'"
-        voiture . gabarit: "'moyenne'"
+        voiture . utilisateur régulier: oui
+        voiture . gabarit: "'berline'"
         voiture . motorisation: "'thermique'"
+        voiture . véhicule récent: oui
 
 transport . voiture . empreinte utilisateur irrégulier . usage:
   formule:
     recalcul:
       règle: voiture . usage
       avec:
-        voiture . utilisateur régulier: "'oui'"
-        voiture . gabarit: "'moyenne'"
+        voiture . utilisateur régulier: oui
+        voiture . gabarit: "'berline'"
         voiture . motorisation: "'thermique'"
         voiture . thermique . carburant: "'essence E5 ou E10'"
         voiture . thermique . consommation aux 100: voiture . consommation estimée
+        voiture . véhicule récent: oui
+
+transport . voiture . empreinte moyenne:
+  formule:
+    recalcul:
+      règle: voiture . empreinte calculée
+      avec:
+        voiture . utilisateur régulier: oui
+        voiture . gabarit: "'berline'"
+        voiture . motorisation: "'thermique'"
+        voiture . thermique . carburant: "'essence E5 ou E10'"
+        voiture . thermique . consommation aux 100: voiture . consommation estimée
+        voiture . véhicule récent: oui
 
 transport . voiture . empreinte calculée:
   formule: (usage + construction amortie) / voyageurs
@@ -161,6 +182,7 @@ transport . voiture . motorisation:
   applicable si:
     toutes ces conditions:
       - km > 0
+      - est défini: utilisateur régulier
       - utilisateur régulier
   question: Quel type de voiture utilisez-vous ?
   description: 💡 **Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
@@ -223,6 +245,7 @@ transport . voiture . thermique . carburant:
   applicable si:
     toutes ces conditions:
       - km > 0
+      - est défini: utilisateur régulier
       - utilisateur régulier
   question: Quel type de carburant votre voiture consomme-t-elle ?
   description: |
@@ -288,6 +311,7 @@ transport . voiture . gabarit:
   applicable si:
     toutes ces conditions:
       - km > 0
+      - est défini: utilisateur régulier
       - utilisateur régulier
   question: Quel est le gabarit de la voiture ?
   description: |
@@ -511,6 +535,7 @@ transport . voiture . véhicule récent:
   applicable si:
     toutes ces conditions:
       - km > 0
+      - est défini: utilisateur régulier
       - utilisateur régulier
   question: Votre véhicule a t-il moins de 10 ans ?
   par défaut: oui
