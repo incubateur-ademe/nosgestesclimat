@@ -2,7 +2,15 @@ logement . chauffage:
   titre: Energie logement
   mosaique:
     type: selection
-    clé: présent
+    options:
+      - PAC . présent
+      - électricité . présent
+      - gaz . présent
+      - réseau de chaleur . présent
+      - bouteille gaz . présent
+      - citerne propane . présent
+      - fioul . présent
+      - bois . présent
     suggestions:
       pas de chauffage:
         PAC . présent: non
@@ -13,7 +21,6 @@ logement . chauffage:
         citerne propane . présent: non
         fioul . présent: non
         bois . présent: non
-        choix utilisateur: oui
   icônes: 🌡️
   question: Quel type d'énergie utilisez-vous pour le chauffage de votre logement, eau chaude, cuisson, etc. ?
   description: |
@@ -35,12 +42,12 @@ logement . chauffage:
 logement . chauffage . empreinte totale:
   formule:
     somme:
-      - gaz
-      - bouteille gaz
-      - citerne propane
-      - fioul
-      - bois
-      - réseau de chaleur
+      - gaz . empreinte
+      - bouteille gaz . empreinte
+      - citerne propane . empreinte
+      - fioul . empreinte
+      - bois . empreinte
+      - réseau de chaleur . empreinte
       # chauffage électrique et PAC déjà compté dans la conso électrique
   unité: kgCO2e
 
@@ -50,21 +57,17 @@ logement . chauffage . empreinte par défaut:
   unité: kgCO2e
 
 logement . chauffage . choix utilisateur:
-  description: l'utilisateur a-t-il fait un choix de chauffage ?
+  titre: Choix utilisateur pour le chauffage
   formule:
-    variations:
-      - si:
-          une de ces conditions:
-            - électricité . présent
-            - PAC . présent
-            - gaz . présent
-            - réseau de chaleur . présent
-            - bouteille gaz . présent
-            - citerne propane . présent
-            - fioul . présent
-            - bois . présent
-        alors: oui
-      - sinon: non
+    une de ces conditions:
+      - est défini: électricité . présent
+      - est défini: PAC . présent
+      - est défini: gaz . présent
+      - est défini: réseau de chaleur . présent
+      - est défini: bouteille gaz . présent
+      - est défini: citerne propane . présent
+      - est défini: fioul . présent
+      - est défini: bois . présent
 
 logement . chauffage . PAC:
   titre: Pompe à chaleur
@@ -72,14 +75,16 @@ logement . chauffage . PAC:
 
 logement . chauffage . PAC . présent:
   question: Votre logement est-il chauffé via une pompe à chaleur ?
-  par défaut: non
 
 logement . chauffage . notif électrique:
   type: notification
   formule:
-    une de ces conditions:
-      - PAC . présent = oui
-      - électricité . présent = oui
+    toutes ces conditions:
+      - est défini: PAC . présent
+      - est défini: électricité . présent
+      - une de ces conditions:
+          - PAC . présent = oui
+          - électricité . présent = oui
   description: |
     Vous avez renseigné une pompe à chaleur ou un chauffage électrique : leur consommation est prise en compte via votre facture globale d'électricité.
 
@@ -88,27 +93,23 @@ logement . chauffage . électricité:
 
 logement . chauffage . électricité . présent:
   question: Votre logement est-il chauffé à l'électricité ?
-  par défaut: non
 
 logement . chauffage . gaz:
   titre: Réseau de gaz
   icônes: 🔥
-  formule:
-    variations:
-      - si: gaz . présent
-        alors: gaz . empreinte
-      - sinon: 0
   unité: kgCO2e
 
 logement . chauffage . gaz . empreinte:
   titre: Empreinte de la consommation de gaz
-  applicable si: présent
+  applicable si:
+    toutes ces conditions:
+      - est défini: gaz . présent
+      - gaz . présent
   formule: consommation * gaz . intensité carbone gaz utilisateur
   unité: kgCO2e
 
 logement . chauffage . gaz . présent:
   question: Votre logement est-il chauffé au gaz ?
-  par défaut: non
   note: |
     Bien que le chauffage majoritaire en France soit électrique [source](https://fr.statista.com/statistiques/856283/types-chauffage-logement-principal-france), nous mettons ici la valeur par défaut à oui pour se rapprocher de la moyenne d'empreinte du logement.
 
@@ -256,21 +257,19 @@ logement . chauffage . intensité carbone GPL:
 logement . chauffage . bouteille gaz:
   icônes: 🛢️🔥
   titre: Bouteille de gaz
-  variations:
-    - si: bouteille gaz . présent
-      alors: bouteille gaz . empreinte
-    - sinon: 0
   unité: kgCO2e
 
 logement . chauffage . bouteille gaz . empreinte:
   titre: Empreinte de la consommation de bouteilles de gaz
-  applicable si: présent
+  applicable si:
+    toutes ces conditions:
+      - est défini: bouteille gaz . présent
+      - bouteille gaz . présent
   formule: empreinte bouteille * consommation
   unité: kgCO2e
 
 logement . chauffage . bouteille gaz . présent:
   question: Utilisez-vous des bouteille de gaz ?
-  par défaut: non
 
 logement . chauffage . bouteille gaz . consommation:
   question: Quelle est votre consommation annuelle en bouteilles de gaz (13 kg) ?
@@ -343,21 +342,19 @@ logement . chauffage . empreinte propane:
 logement . chauffage . citerne propane:
   icônes: 🛢️🔥
   titre: Gaz propane en citerne
-  variations:
-    - si: citerne propane . présent
-      alors: citerne propane . empreinte
-    - sinon: 0
   unité: kgCO2e
 
 logement . chauffage . citerne propane . empreinte:
   titre: Empreinte de la consommation de gaz propane en citerne
-  applicable si: présent
+  applicable si:
+    toutes ces conditions:
+      - est défini: citerne propane . présent
+      - citerne propane . présent
   formule: empreinte propane * consommation
   unité: kgCO2e
 
 logement . chauffage . citerne propane . présent:
   question: Votre logement est-il chauffé via une citerne de propane ?
-  par défaut: non
 
 logement . chauffage . citerne propane . consommation:
   question: Quelle est la consommation annuelle de gaz propane en citerne de votre foyer ?
@@ -399,21 +396,19 @@ logement . chauffage . citerne propane . énergie par kg:
 logement . chauffage . fioul:
   icônes: 🛢
   titre: Fioul domestique
-  variations:
-    - si: fioul . présent
-      alors: fioul . empreinte
-    - sinon: 0
   unité: kgCO2e
 
 logement . chauffage . fioul . empreinte:
   titre: Empreinte de la consommation de fioul domestique
-  applicable si: présent
+  applicable si:
+    toutes ces conditions:
+      - est défini: fioul . présent
+      - fioul . présent
   formule: consommation * intensité carbone fioul litre
   unité: kgCO2e
 
 logement . chauffage . fioul . présent:
   question: Votre logement est-il chauffé au fioul ?
-  par défaut: non
 
 logement . chauffage . fioul . estimation via le prix:
   question: Pas de facture ? Entrez vos dépenses approximatives en fioul par mois
@@ -451,16 +446,14 @@ logement . chauffage . intensité carbone fioul litre:
 logement . chauffage . bois:
   titre: Bois ou granulés
   icônes: 🪵
-  formule:
-    variations:
-      - si: bois . présent
-        alors: bois . empreinte
-      - sinon: 0
   unité: kgCO2e
 
 logement . chauffage . bois . empreinte:
   titre: Empreinte de la consommation de bois
-  applicable si: présent
+  applicable si:
+    toutes ces conditions:
+      - est défini: bois . présent
+      - bois . présent
   formule:
     variations:
       - si: type = 'bûches'
@@ -471,7 +464,6 @@ logement . chauffage . bois . empreinte:
 
 logement . chauffage . bois . présent:
   question: Votre logement est-il chauffé au bois ?
-  par défaut: non
 
 logement . chauffage . bois . type:
   titre: type de bois
@@ -555,22 +547,19 @@ logement . chauffage . bois . facteur d'émission granulés:
 logement . chauffage . réseau de chaleur:
   icônes: 🏭
   titre: Réseau de chaleur
-  formule:
-    variations:
-      - si: réseau de chaleur . présent
-        alors: réseau de chaleur . empreinte
-      - sinon: 0
   unité: kgCO2e
 
 logement . chauffage . réseau de chaleur . empreinte:
   titre: Empreinte de la consommation de gaz via réseau de chaleur
-  applicable si: présent
+  applicable si:
+    toutes ces conditions:
+      - est défini: réseau de chaleur . présent
+      - réseau de chaleur . présent
   formule: consommation * intensité carbone
   unité: kgCO2e
 
 logement . chauffage . réseau de chaleur . présent:
   question: Votre logement est-il chauffé via un réseau de chaleur ?
-  par défaut: non
 
 logement . chauffage . réseau de chaleur . estimation via le prix:
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
