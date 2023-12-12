@@ -70,7 +70,7 @@ logement . vacances . empreinte par défaut:
       - auberge de jeunesse . nombre de nuitées . moyenne * auberge de jeunesse . empreinte par nuit * logement . habitants
       - locations . nombre de nuitées . moyenne * locations . empreinte par nuit
       - échange . nombre de nuitées . moyenne * échange . empreinte par nuit
-      # - résidence secondaire non inclu dans la moyenne associée à cette question pour le moment.
+      - résidence secondaire . nombre de nuitées . moyenne * résidence secondaire . empreinte moyenne par nuit
   unité: kgCO2e
 
 logement . vacances . choix utilisateur:
@@ -447,6 +447,27 @@ logement . vacances . résidence secondaire . présent:
     Pour le moment, nous n'attribuons l'empreinte de la maison secondaire seulement pour les propriétaire 
     et non "une partie" de l'empreinte à tous les français.
 
+logement . vacances . résidence secondaire . empreinte moyenne par nuit:
+  formule: empreinte moyenne construction + ( empreinte moyenne une nuitée * nombre de nuitées . moyenne )
+
+logement . vacances . résidence secondaire . empreinte moyenne construction:
+  formule: parc français . surface moyenne * annuelle et par surface * pourcentage population propriétaire résidence secondaire
+
+logement . vacances . résidence secondaire . pourcentage population propriétaire résidence secondaire:
+  formule: 0.013
+  note: |
+    [Source](https://www.data.gouv.fr/fr/reuses/classement-des-25-communes-avec-le-plus-fort-taux-de-residences-secondaires/)
+
+logement . vacances . résidence secondaire . empreinte moyenne une nuitée: 
+  formule: 
+    recalcul:
+      règle: résidence secondaire . énergie
+      avec: 
+        surface: parc français . surface moyenne
+        durée: nombre de nuitées . moyenne
+        chauffage . facteur saison: "'facteur surtout été'"
+        localisation: "'littoral nord ouest'"
+
 logement . vacances . résidence secondaire . construction:
   formule: surface * annuelle et par surface
   unité: kgCO2e
@@ -532,6 +553,18 @@ logement . vacances . résidence secondaire . électricité:
 
 logement . vacances . résidence secondaire . pro-rata présence annuelle:
   formule: durée / commun . jours par an * 1 jour/nuit
+
+logement . vacances . résidence secondaire . nombre de nuitées . moyenne:
+  titre: Nombre de nuitées en moyenne par français
+  formule: nombre de nuits hors logement * part mode d'hébergement résidence secondaire
+  unité: nuit
+
+logement . vacances . résidence secondaire . nombre de nuitées . moyenne . part mode d'hébergement résidence secondaire: 
+  formule: 0.077
+  note: |
+    Excel "Caractéristiques des voyageurs personnels et professionnels - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
+
+    On considère ici les hébergements "résidence secondaire".
 
 logement . vacances . résidence secondaire . durée:
   mosaique:
