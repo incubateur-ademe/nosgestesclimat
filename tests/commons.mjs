@@ -8,7 +8,7 @@ import c from 'ansi-colors'
 import yargs from 'yargs'
 import { readFile } from 'fs/promises'
 
-const API_URL = 'https://nosgestesclimat-api.osc-fr1.scalingo.io/'
+const API_URL = 'https://nosgestesclimat-api.osc-fr1.scalingo.io'
 
 export function getArgs() {
   return yargs(process.argv.slice(2))
