@@ -2,7 +2,13 @@ logement . vacances:
   titre: Nuitées week-end ou vacances
   mosaique:
     type: selection
-    clé: présent
+    options:
+      - hotel . présent
+      - camping . présent
+      - auberge de jeunesse . présent
+      - locations . présent
+      - famille ou amis . présent
+      - échange . présent
     suggestions:
       aucun:
         hotel . présent: non
@@ -11,7 +17,6 @@ logement . vacances:
         locations . présent: non
         famille ou amis . présent: non
         échange . présent: non
-        choix utilisateur: oui
   question: Comment êtes-vous hébergé pour vos week-ends, vos vacances ?
   icônes: 🏖
   description: |
@@ -74,7 +79,7 @@ logement . vacances . empreinte par défaut:
   unité: kgCO2e
 
 logement . vacances . choix utilisateur:
-  description: l'utilisateur a-t-il fait un choix de nuitées ?
+  titre: Choix utilisateur pour les nuitées
   formule:
     variations:
       - si:
@@ -100,7 +105,10 @@ logement . vacances . nombre de nuits hors logement:
 
 logement . vacances . empreinte hotel:
   titre: Empreinte hôtel ou chambre d'hôtes
-  applicable si: hotel . présent
+  applicable si:
+    toutes ces conditions:
+      - est défini: hotel . présent
+      - hotel . présent
   formule:
     variations:
       - si: logement . habitants > 8
@@ -158,7 +166,6 @@ logement . vacances . hotel:
 
 logement . vacances . hotel . présent:
   question: Allez-vous à l'hôtel ?
-  par défaut: non
 
 logement . vacances . empreinte hotel par nuit:
   formule: 6.93
@@ -217,7 +224,10 @@ logement . vacances . hotel . nombre de nuitées . moyenne . part mode d'héberg
 
 logement . vacances . empreinte camping:
   titre: Empreinte emplacement en camping
-  applicable si: camping . présent
+  applicable si:
+    toutes ces conditions:
+      - est défini: camping . présent
+      - camping . présent
   formule: camping . empreinte par nuit * camping . nombre de nuitées
 
 logement . vacances . camping:
@@ -226,7 +236,6 @@ logement . vacances . camping:
 
 logement . vacances . camping . présent:
   question: Allez-vous en camping ?
-  par défaut: non
 
 logement . vacances . camping . empreinte par nuit:
   formule: 1.4
@@ -263,7 +272,10 @@ logement . vacances . camping . nombre de nuitées . moyenne . part mode d'hébe
 
 logement . vacances . empreinte auberge de jeunesse:
   titre: Empreinte auberge de jeunesse
-  applicable si: auberge de jeunesse . présent
+  applicable si:
+    toutes ces conditions:
+      - est défini: auberge de jeunesse . présent
+      - auberge de jeunesse . présent
   formule: auberge de jeunesse . empreinte par nuit * auberge de jeunesse . nombre de nuitées
 
 logement . vacances . auberge de jeunesse:
@@ -272,7 +284,6 @@ logement . vacances . auberge de jeunesse:
 
 logement . vacances . auberge de jeunesse . présent:
   question: Allez-vous en auberge de jeunesse ?
-  par défaut: non
 
 logement . vacances . auberge de jeunesse . empreinte par nuit:
   formule: empreinte hotel par nuit / nombre de personnes dans le dortoir
@@ -312,7 +323,10 @@ logement . vacances . auberge de jeunesse . nombre de nuitées . moyenne . part 
 
 logement . vacances . empreinte locations:
   titre: Empreinte locations meublées
-  applicable si: locations . présent
+  applicable si:
+    toutes ces conditions:
+      - est défini: locations . présent
+      - locations . présent
   formule: locations . empreinte par nuit * locations . nombre de nuitées
 
 logement . vacances . locations:
@@ -321,7 +335,7 @@ logement . vacances . locations:
 
 logement . vacances . locations . présent:
   question: Allez-vous en vacances en location meublée (type Airbnb) ?
-  par défaut: non
+
   description: |
     💡 Déclarez ici les nuits passées en locations meublées de type Airbnb ou Abritel.
 
@@ -362,7 +376,10 @@ logement . vacances . locations . nombre de nuitées . moyenne . part mode d'hé
 
 logement . vacances . empreinte échange:
   titre: Empreinte échange de maison
-  applicable si: échange . présent
+  applicable si:
+    toutes ces conditions:
+      - est défini: échange . présent
+      - échange . présent
   formule: échange . empreinte par nuit * échange . nombre de nuitées
 
 logement . vacances . échange:
@@ -371,7 +388,7 @@ logement . vacances . échange:
 
 logement . vacances . échange . présent:
   question: Pratiquez-vous l'échange de maison ?
-  par défaut: non
+
   description: |
     💡 Déclarez ici les nuits passées en échange de maison (HomeExchange, SwitchHome...).
 
@@ -408,7 +425,10 @@ logement . vacances . échange . nombre de nuitées . moyenne . part mode d'héb
 
 logement . vacances . empreinte famille ou amis:
   titre: Empreinte famille ou amis
-  applicable si: famille ou amis . présent
+  applicable si:
+    toutes ces conditions:
+      - est défini: famille ou amis . présent
+      - famille ou amis . présent
   formule: 0
   note: Nous considérons que l'empreinte de la nuit est aujourd'hui indirectement comptée dans l'empreinte des accueillants.
 
@@ -418,7 +438,6 @@ logement . vacances . famille ou amis:
 
 logement . vacances . famille ou amis . présent:
   question: Allez-vous chez des amis ou de la famille ?
-  par défaut: non
 
 logement . vacances . famille ou amis . notif:
   type: notification

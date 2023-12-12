@@ -14,16 +14,15 @@ const sortJSON = (unordered) =>
       return obj
     }, {})
 
-const writeJSON = (path, content, messageGénérationAuto = '') => {
-  resolveConfig(process.cwd()).then((prettierConfig) =>
-    fs.writeFileSync(
-      path,
-      format(messageGénérationAuto + JSON.stringify(content), {
-        ...prettierConfig,
-        parser: 'json'
-      })
-    )
-  )
+const writeJSON = (path, content, messageAuto = '') => {
+  resolveConfig(process.cwd()).then((prettierConfig) => {
+    format(messageAuto + JSON.stringify(content), {
+      ...prettierConfig,
+      parser: 'json'
+    }).then((formattedContent) => {
+      fs.writeFileSync(path, formattedContent)
+    })
+  })
 }
 
 //Duplicate of readYAML in i18n/utils.js
@@ -32,17 +31,11 @@ const readYAML = (path) => {
 }
 
 //Duplicate of writeYAML in i18n/utils.js
-const writeYAML = (
-  path,
-  content,
-  messageGénérationAuto = '',
-  blockQuote = 'literal'
-) => {
-  resolveConfig(process.cwd()).then((prettierConfig) =>
-    fs.writeFileSync(
-      path,
+const writeYAML = (path, content, messageAuto = '', blockQuote = 'literal') => {
+  resolveConfig(process.cwd())
+    .then((prettierConfig) =>
       format(
-        messageGénérationAuto +
+        messageAuto +
           yaml.stringify(content, {
             sortMapEntries: true,
             aliasDuplicateObjects: false,
@@ -52,7 +45,9 @@ const writeYAML = (
         { ...prettierConfig, parser: 'yaml' }
       )
     )
-  )
+    .then((formattedContent) => {
+      fs.writeFileSync(path, formattedContent)
+    })
 }
 
 const roundValueToPercent = (x) => Math.round(x * 100)

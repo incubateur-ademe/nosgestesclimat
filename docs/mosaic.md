@@ -13,22 +13,27 @@ compile and is understandable without this feature.
 
 An attribute `mosaique` can be set. It includes multiple arguments:
 
-- `type`: selection or number, for boolean questions or numbered question
-- `clé`: key that corresponds to the rules we want to be in the mosaic
+- `type`: selection or number, for boolean questions or numbered question.
+- `options`: a list of rules we want to be in the mosaic. We don't want to repeat the parent rule at the begining of each namespace. Implicitly, we consider the rulename of the mosaic as the parent rule of each option.
 - `suggestions`: as classic questions, some suggestions can be set.
-- `total`: only for numbered mosaics, to display message according the the total the user selection (ex: diet question)
+
+### Example for "selection" mosaics:
 
 ```yaml
 a:
   question: Cochez ce qui vous correspond
   mosaique:
     type: selection
-    clé: présent
+    options:
+      - b . présent
+      - c . présent
     suggestions:
       tout:
-        café . nombre: oui
-        thé . nombre: oui
-      aucun: aucun
+        b . présent: oui
+        c  . présent: oui
+      aucun:
+        b . présent: non
+        c  . présent: non
   formule:
     somme:
       - b
@@ -39,6 +44,7 @@ a . b:
   formule: 1
 
 a . b . présent:
+  question: b est-il présent ?
   par défaut: oui
 
 a . c:
@@ -46,20 +52,15 @@ a . c:
   formule: d
 
 a . c . présent:
+  question: c est-il présent ?
   par défaut: non
 
 a . c . d:
   formule: 100
 ```
 
-> Note: children mosaic rules have to be of degree 2. In the example above, the
-> rule `a . c . e . présent` would not be in the mosaic.
+> Note: Each mosdaique suggestions must contain a choice "Aucun" with all the option to `false` or `0` as it allows users validate the question directly with "no choice".
 
 ## Workarounds on site side
 
-In
-[`Conversation.tsx`](https://github.com/datagir/nosgestesclimat-site/blob/master/source/components/conversation/Conversation.tsx)
-and
-[`RuleInput.tsx`](https://github.com/datagir/nosgestesclimat-site/blob/master/source/components/conversation/RuleInput.tsx),
-specific treatment is given to mosaic question with the function
-[`getRelatedMosaicInfosIfExists`](https://github.com/datagir/nosgestesclimat-site/blob/master/source/components/conversation/RuleInput.tsx#L56-L83).
+To be completed.

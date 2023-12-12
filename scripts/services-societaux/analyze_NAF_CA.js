@@ -1,7 +1,9 @@
-const utils = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
+const utils = require('./utils')
+
+const year = 2018
 
 const ca_branches = utils.readJSON(
-  'scripts/services-societaux/input/ca_branches_2017.json'
+  `scripts/services-societaux/input/${year}/ca_branches.json`
 )
 
 const findNumber = /\d{2}/
@@ -57,15 +59,15 @@ Object.values(ca_lvl2).map((nafGroupObj) => {
   nafGroupObj['composition'] = nafComposition
 })
 
-// console.log(utils.sortJSON(data))
+console.log(utils.sortJSON(data))
 
 utils.writeJSON(
-  'scripts/services-societaux/output/analyse_CA_NAF.json',
+  `scripts/services-societaux/output/${year}/analyse_CA_NAF.json`,
   utils.sortJSON(data)
 )
 
 console.log(
   '\x1b[32m',
-  "- Le fichier `ca_branches_2017.json` contenant les chiffres d'affaires des branches NAF a été traité avec succès pour donner `analyse_CA_NAF.json`",
+  "- Le fichier `ca_branches.json` contenant les chiffres d'affaires des branches NAF a été traité avec succès pour donner `analyse_CA_NAF.json`",
   '\x1b[0m'
 )

@@ -8,7 +8,10 @@ alimentation . boisson:
 alimentation . boisson . chaude:
   mosaique:
     type: nombre
-    clé: nombre
+    options:
+      - café . nombre
+      - thé . nombre
+      - chocolat chaud . nombre
     suggestions:
       pas de boisson chaude:
         café . nombre: 0
@@ -212,32 +215,17 @@ alimentation . boisson . froide:
       - eau en bouteille
 
 alimentation . boisson . eau en bouteille:
+  titre: Eau en bouteille
   formule:
     variations:
-      - si: consommateur = 'affirmatif'
+      - si:
+          est défini: consommateur
         alors: consommation annuelle * empreinte
-      - si: consommateur = 'négatif'
-        alors: 0
-      - si: consommateur = 'moyenne'
-        alors: consommation moyenne * empreinte
+      - sinon: consommation moyenne * empreinte
   unité: kgCO2e
 
 alimentation . boisson . eau en bouteille . consommateur:
-  titre: Eau en bouteille
   question: Buvez-vous votre eau en bouteille ?
-  avec:
-    moyenne:
-    affirmatif:
-      titre: Oui
-    négatif:
-      titre: Non
-  par défaut: "'moyenne'"
-  formule:
-    une possibilité:
-      choix obligatoire: oui
-      possibilités:
-        - affirmatif
-        - négatif
   description: |
     Si vous buvez principalement de l'eau du robinet et que votre consommation d'eau en bouteille se réduit à de rares occasions (par exemple un repas sur le pouce en boulangerie par semaine, avec leur fameux menu "sandwich + dessert + boisson en bouteille plastique"), répondez non.
 
@@ -262,6 +250,7 @@ alimentation . boisson . eau en bouteille . consommation moyenne:
     d'après le syndicat des eaux minérales naturelles ([source](https://eaumineralenaturelle.fr/qui-sommes-nous/leau-minerale-en-chiffres))
 
 alimentation . boisson . eau en bouteille . consommation annuelle:
+  applicable si: consommateur
   formule: commun . jours par an * 1.5 l/jour
   unité: l
   description: On considère que chacun boit 1,5 litres d'eau par jour.

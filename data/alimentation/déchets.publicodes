@@ -1,5 +1,4 @@
 alimentation . déchets:
-  résumé: Un modèle inédit d'empreinte des **déchets**
   icônes: 🚮
   description: |
     Nous avons rangé ce poste dans la catégorie "Alimentation" car une grande partie de nos déchets ont une origine alimentaire (85% des emballages jetés par 
@@ -8,7 +7,10 @@ alimentation . déchets:
     variations:
       - si: quantité jetée = 'zéro déchet'
         alors: niveau zéro déchets
-      - sinon: niveau moyen
+      - sinon:
+          somme:
+            - niveau moyen
+            - gestes
 
 alimentation . déchets . quantité jetée:
   question: Comment estimeriez-vous la quantité de déchets que vous jetez ?
@@ -77,7 +79,6 @@ alimentation . déchets . niveau moyen:
       - omr
       - collecte separee
       - dechetterie
-      - gestes
   description: |
     Ce niveau correspond à la moyenne française.
 
@@ -85,7 +86,11 @@ alimentation . déchets . gestes:
   applicable si: quantité jetée = 'réduction'
   mosaique:
     type: selection
-    clé: présent
+    options:
+      - compostage biodéchets . présent
+      - gaspillage alimentaire
+      - stop pub . présent
+      - acheter en vrac . présent
     suggestions:
       aucun:
         compostage biodéchets . présent: non
