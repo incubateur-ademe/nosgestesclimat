@@ -1,3 +1,10 @@
+/**
+ * This script is only used to generate the model.json file packaged in the npm package.
+ *
+ * For complete compilation, see the ./scripts/rulesToJSON.mjs script
+ *
+ * TODO: this script should be abstracted into a standalone bin in @publicodes/tools
+ */
 import { writeFileSync } from 'fs'
 import { getModelFromSource } from '@publicodes/tools/compilation'
 import { disabledLogger } from '@publicodes/tools'
