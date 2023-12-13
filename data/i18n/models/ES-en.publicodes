@@ -1,0 +1,87 @@
+params:
+  code: ES
+  nom: Spain
+  gentilé: spanish
+  drapeau: ES
+  authors:
+    - nom: Jean-Charles Prabonneau
+      url: https://github.com/jc-prabonneau
+intensité électricité:
+  titre: Carbon intensity of the electricity mix in mainland Spain (tCO2e / MWh)
+  formule: 0.206
+  note: |
+    Source: <a href="https://app.electricitymaps.com/map">Electricity Map</a>, 2022
+transport . avion . court courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Madrid ⇄ Barcelona: 2.27
+    Madrid ⇄ Palma de Mallorca: 2.37
+    Barcelona ⇄ Palma de Mallorca: 1.5
+    Barcelona ⇄ Seville: 3
+transport . avion . moyen courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Madrid ⇄ Gran Canaria: 6
+    Madrid ⇄ Paris: 3.7
+    Madrid ⇄ Amsterdam: 4.7
+    Barcelona ⇄ London: 4
+transport . avion . long courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Madrid ⇄ New York: 15.4
+    Madrid ⇄ Mexico City: 22
+    Madrid ⇄ Tokyo: 28
+    Barcelona ⇄ Sydney: 44
+transport . train . impact par km:
+  formule: (TGV * proportion passagers km AVE) + (TER * (1 - proportion passagers km AVE))
+  avec:
+    proportion passagers km AVE: 0.523
+  unité: kgCO2e/km
+  note: |
+    We have chosen not to differentiate between high-speed and conventional trains for the time being (to avoid asking two questions).
+    We apply the AVE emissions factor to the 52.3% of journeys made at high speed (AVE, Euromed, Avant) and the Cercanías regional train emissions factor to the rest.
+    Source: <a href="https://cdn.mitma.gob.es/portal-web-drupal/ferroviario/observatorio/ofe_2021_feb2023_v2.pdf">Spanish Rail Observatory</a>, 2021
+transport . train . TGV:
+  titre: AVE high-speed trains
+  formule: (intensité GHG TGV France / 1000 gCO2e/kgCO2e) * intensité mix électrique Espagne continentale / intensité mix électrique France métropolitaine
+  avec:
+    intensité mix électrique France métropolitaine: 90 gCO2e/kWh
+    intensité mix électrique Espagne continentale: 206 gCO2e/kWh
+    intensité GHG TGV France: 2.36 gCO2e/km
+  unité: kgCO2e/km
+  note: |
+    The impact of the Spanish high-speed train is calculated on the basis of the French TGV, by applying the carbon intensity of Spain's electricity mix.
+    Source:
+    - Carbon intensities of the two countries' electricity mixes: <a href="https://app.electricitymaps.com/map">Electricity Map</a>, 2022
+    - Impact TGV France: 2.36 gCO2e/km/person; Base Carbone consulted on 04/04/2022 (SNCF data)
+transport . train . TER:
+  titre: Cercanías regional trains
+  formule: 0.0328
+  unité: kgCO2e/km
+  note: |
+    Cercanías regional trains - 32.8 gCO2e/passenger-km; <a href="https://sede.idae.gob.es/lang/extras/tramites-servicios/2021/MOVES_Proyectos_Singulares_II/Factores_de_conversion_ahorros_y_emisiones_de_CO2.pdf">IDAE data</a>, 2021
+transport . train . km:
+  suggestions:
+    crossing a region: 300
+    Madrid ⇄ Barcelona: 1100
+    Barcelona ⇄ Paris: 2000
+    💳 Renfe Más Plata: 10000
+    💳 Renfe Más Oro: 20000
+services sociétaux:
+  description: |
+    > The calculation of emissions from Spanish public services is based on the French estimate, adjusted for Spanish public spending, of the carbon intensity of the Spanish economy and its population. 
+    > This is an initial macroscopic estimate that may be revised in the future.
+  formule: poids des services publics espagnols
+  avec:
+    poids des services publics espagnols: 1142.5
+  note: |
+    Source: <a href="https://docs.google.com/spreadsheets/d/1zJ-CkVQ8W_HdFVvNyaN4xlRsyoZPzRef4rpiCqyowG4/edit?usp=sharing">Detailed estimate</a>
+services marchands:
+  description: |
+    > The calculation of emissions from Spanish market services is based on the French estimate, adjusted for Spain's territorial emissions and population. 
+    > This is an initial macroscopic estimate that may be revised in the future.
+  formule: poids des services marchands espagnols
+  avec:
+    poids des services marchands espagnols: 195.06
+  note: |
+    Source: <a href="https://docs.google.com/spreadsheets/d/1zJ-CkVQ8W_HdFVvNyaN4xlRsyoZPzRef4rpiCqyowG4/edit?usp=sharing">Detailed estimate</a>
