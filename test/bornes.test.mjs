@@ -17,5 +17,6 @@ test('adds 1 + 2 to equal 3', () => {
 testBornes(
   'transport . voiture . voyageurs',
   "Lorsque l'utilisateur entre 0 voyageurs, le nombre de voyageurs vaut 1.",
-  { 'transport . voiture . saisie voyageurs': 0 }
+  { 'transport . voiture . saisie voyageurs': 0 },
+  1
 )

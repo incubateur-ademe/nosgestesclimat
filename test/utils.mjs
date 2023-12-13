@@ -1,5 +1,6 @@
 import Engine from 'publicodes'
 import { getModelFromSource } from '@publicodes/tools/compilation'
+import { expect, test } from 'bun:test'
 
 function testOf(srcFile, evaluatedDottedName, description, situation, output) {
   test(`${evaluatedDottedName} ${description}`, () => {
