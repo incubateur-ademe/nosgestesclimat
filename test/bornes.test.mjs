@@ -1,4 +1,4 @@
-const { testOf, sum } = require('./utils.mjs')
+import { testOf, sum } from './utils.mjs'
 
 const testBornes = (evaluatedDottedName, description, situation, result) => {
   testOf(

@@ -1,5 +1,6 @@
-const Engine = require('publicodes').default
-const { getModelFromSource } = require('@publicodes/tools/compilation')
+import Engine from 'publicodes'
+import { getModelFromSource } from '@publicodes/tools/compilation'
+import { expect, test } from 'bun:test'
 
 function testOf(srcFile, evaluatedDottedName, description, situation, output) {
   test(`${evaluatedDottedName} ${description}`, () => {
@@ -21,4 +22,4 @@ function sum(a, b) {
   return a + b
 }
 
-module.exports = { testOf, sum }
+export { testOf, sum }
