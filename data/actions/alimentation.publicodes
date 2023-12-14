@@ -65,6 +65,39 @@ alimentation . réduire viande . par quatre . par semaine . nouveau régime . co
   formule: plats . végétarien . empreinte * (nombre de plats viande * (3 / 4))
   description: On compense la division par 4 des plats de viande par des plats végétariens.
 
+alimentation . viande faible empreinte:
+  applicable si: plats . viande 2 . nombre > 0
+  action:
+    dépasse:
+      - alimentation . réduire viande . par quatre
+      - alimentation . réduire viande . par deux
+  titre: Privilégier la volaille ou le porc
+  formule: par semaine * commun . semaines par an
+  icônes: 🥩🍗
+  description: |
+    L’empreinte climat de notre alimentation est directement corrélée à notre consommation de viande, mais il faut savoir que toutes ne sont pas égales de ce point de vue.
+
+    > À titre de comparaison, ramenée au kilo une entrecôte émet 6 fois plus de gaz à effet de serre que des filets de poulets.
+
+    Pour en savoir plus sur les impacts de notre consommation de viande, n'hésitez pas à consulter l'[explication complète](/actions/plus/alimentation/réduire-viande/par-deux).
+
+alimentation . viande faible empreinte . par semaine:
+  formule: plats - nouveau régime
+
+alimentation . viande faible empreinte . par semaine . nouveau régime:
+  formule:
+    somme:
+      - plats . viande 1
+      - compensation viande 1
+      - plats . végétalien
+      - plats . végétarien
+      - plats . poisson 1
+      - plats . poisson 2
+
+alimentation . viande faible empreinte . par semaine . nouveau régime . compensation viande 1:
+  formule: plats . viande 1 . empreinte * (plats . viande 2 . nombre)
+  description: On compense la suppression des plat viande 2 en plat viande 1.
+
 alimentation . réduire poisson:
 
 alimentation . réduire poisson . par deux:
@@ -96,6 +129,35 @@ alimentation . réduire poisson . par deux . par semaine . nouveau régime:
 alimentation . réduire poisson . par deux . par semaine . nouveau régime . compensation végétarienne:
   formule: plats . végétarien . empreinte * (nombre de plats poisson / 2)
   description: On compense la division par 2 des plats de poisson par des plats végétariens.
+
+alimentation . poisson faible empreinte:
+  applicable si: plats . poisson 2 . nombre > 0
+  action:
+    dépasse:
+      - alimentation . réduire poisson . par quatre
+      - alimentation . réduire poisson . par deux
+  titre: Privilégier les poissons comme le thon, le saumon, la sardine ou le maquereau
+  formule: par semaine * commun . semaines par an
+  icônes: 🥩🍗
+  description: |
+    Les empreintes de nos consommations de poisson sont loin d'être égales. En moyenne, un repas avec poisson blanc a une empreinte 50% supérieure à un repas avec un poisson comme le thon, le maquereau, le saumon ou les sardines.
+
+alimentation . poisson faible empreinte . par semaine:
+  formule: plats - nouveau régime
+
+alimentation . poisson faible empreinte . par semaine . nouveau régime:
+  formule:
+    somme:
+      - plats . viande 1
+      - plats . viande 2
+      - plats . végétalien
+      - plats . végétarien
+      - plats . poisson 1
+      - compensation poisson 1
+
+alimentation . poisson faible empreinte . par semaine . nouveau régime . compensation poisson 1:
+  formule: plats . poisson 1 . empreinte * (plats . poisson 2 . nombre)
+  description: On compense la suppression des plats poisson 2 en plat poisson 1.
 
 alimentation . devenir végétarien:
   titre: Devenir végétarien
@@ -193,39 +255,6 @@ alimentation . une semaine chocolat chaud végétalien:
       règle: boisson . chaude . chocolat chaud
       avec:
         alimentation . type de lait: "'lait d'avoine'"
-
-alimentation . viande faible empreinte:
-  applicable si: plats . viande 2 . nombre > 0
-  action:
-    dépasse:
-      - alimentation . réduire viande . par quatre
-      - alimentation . réduire viande . par deux
-  titre: Privilégier la volaille ou le porc
-  formule: par semaine * commun . semaines par an
-  icônes: 🥩🍗
-  description: |
-    L’empreinte climat de notre alimentation est directement corrélée à notre consommation de viande, mais il faut savoir que toutes ne sont pas égales de ce point de vue.
-
-    > À titre de comparaison, ramenée au kilo une entrecôte émet 6 fois plus de gaz à effet de serre que des filets de poulets.
-
-    Pour en savoir plus sur les impacts de notre consommation de viande, n'hésitez pas à consulter l'[explication complète](/actions/plus/alimentation/réduire-viande/par-deux).
-
-alimentation . viande faible empreinte . par semaine:
-  formule: plats - nouveau régime
-
-alimentation . viande faible empreinte . par semaine . nouveau régime:
-  formule:
-    somme:
-      - plats . viande 1
-      - compensation viande 1
-      - plats . végétalien
-      - plats . végétarien
-      - plats . poisson 1
-      - plats . poisson 2
-
-alimentation . viande faible empreinte . par semaine . nouveau régime . compensation viande 1:
-  formule: plats . viande 1 . empreinte * (plats . viande 2 . nombre)
-  description: On compense la suppression des plat viande 2 en plat viande 1.
 
 alimentation . manger local:
   non applicable si: local . consommation = 'oui toujours'
