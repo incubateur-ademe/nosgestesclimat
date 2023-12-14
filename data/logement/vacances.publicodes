@@ -77,7 +77,7 @@ logement . vacances . empreinte par défaut:
       - auberge de jeunesse . nombre de nuitées . moyenne * auberge de jeunesse . empreinte par nuit * logement . habitants
       - locations . nombre de nuitées . moyenne * locations . empreinte par nuit
       - échange . nombre de nuitées . moyenne * échange . empreinte par nuit
-      - résidence secondaire . nombre de nuitées . moyenne * résidence secondaire . empreinte moyenne par nuit
+      - résidence secondaire . empreinte moyenne
   unité: kgCO2e
 
 logement . vacances . choix utilisateur:
@@ -449,42 +449,40 @@ logement . vacances . famille ou amis . notif:
 
 logement . vacances . empreinte résidence secondaire:
   titre: Empreinte résidence secondaire
-  applicable si: résidence secondaire . présent
-  formule: résidence secondaire
-
-logement . vacances . résidence secondaire:
-  titre: résidence secondaire
   applicable si:
     toutes ces conditions:
       - est défini: résidence secondaire . présent
       - résidence secondaire . présent
-  icônes: 🏡
   formule:
     somme:
-      - construction
-      - énergie
+      - résidence secondaire . construction
+      - résidence secondaire . énergie
   unité: kgCO2e
+
+logement . vacances . résidence secondaire:
+  titre: résidence secondaire
+  icônes: 🏡
 
 logement . vacances . résidence secondaire . présent:
   question: Possédez-vous une résidence secondaire ?
   par défaut: non
   note: |
-    Pour le moment, nous n'attribuons l'empreinte de la maison secondaire seulement pour les propriétaire 
+    Pour le moment, nous n'attribuons l'empreinte de la maison secondaire qu'aux propriétaires,
     et non "une partie" de l'empreinte à tous les français.
 
-logement . vacances . résidence secondaire . empreinte moyenne par nuit:
-  formule: empreinte moyenne construction par nuit + empreinte moyenne une nuitée
+logement . vacances . résidence secondaire . empreinte moyenne:
+  formule: empreinte moyenne construction + empreinte moyenne nuitées
 
-logement . vacances . résidence secondaire . empreinte moyenne construction par nuit:
-  formule: parc français . surface moyenne * annuelle et par surface * pourcentage population propriétaire résidence secondaire / nombre de nuitées . moyenne
+logement . vacances . résidence secondaire . empreinte moyenne construction:
+  formule: parc français . surface moyenne * résidence secondaire . annuelle et par surface * pourcentage population propriétaire résidence secondaire
 
 logement . vacances . résidence secondaire . pourcentage population propriétaire résidence secondaire:
   formule: 0.013
   note: |
     [Source](https://www.data.gouv.fr/fr/reuses/classement-des-25-communes-avec-le-plus-fort-taux-de-residences-secondaires/)
 
-logement . vacances . résidence secondaire . empreinte moyenne une nuitée:
-  formule:
+logement . vacances . résidence secondaire . empreinte moyenne nuitées:
+  formule: 
     recalcul:
       règle: résidence secondaire . énergie
       avec:
@@ -492,7 +490,7 @@ logement . vacances . résidence secondaire . empreinte moyenne une nuitée:
         durée: nombre de nuitées . moyenne
         chauffage . facteur saison: "'facteur surtout été'"
         localisation: "'littoral nord ouest'"
-  unité: kgCO2e / nuit
+  unité: kgCO2e
 
 logement . vacances . résidence secondaire . construction:
   formule: surface * annuelle et par surface
