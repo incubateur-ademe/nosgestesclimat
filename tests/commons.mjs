@@ -8,11 +8,11 @@ import c from 'ansi-colors'
 import yargs from 'yargs'
 import { readFile } from 'fs/promises'
 
-const NIGHTLY_API_URL =
-  'https://nosgestesclimat-api.osc-fr1.scalingo.io/nightly'
+const API_URL = 'https://nosgestesclimat-api.osc-fr1.scalingo.io'
 
 export function getArgs() {
   return yargs(process.argv.slice(2))
+    .version(false)
     .usage('Compare local and prod personas results\n\nUsage: $0 [options]')
     .option('country', {
       alias: 'c',
@@ -31,6 +31,12 @@ export function getArgs() {
       alias: 'm',
       type: 'boolean',
       description: 'Prints the result in a Markdown table format.'
+    })
+    .option('version', {
+      alias: 'v',
+      type: 'string',
+      description: 'The version of the model to test agains (default: nightly)',
+      default: 'nightly'
     })
 
     .help('h')
@@ -64,21 +70,25 @@ export function getLocalPersonas(region, lang) {
     })
 }
 
-export function getProdRules(region, lang) {
-  return fetch(`${NIGHTLY_API_URL}/${lang}/${region}/rules`)
+export function getRulesFromAPI(version, region, lang) {
+  return fetch(`${API_URL}/${version}/${lang}/${region}/rules`)
     .then((res) => res.json())
     .catch((e) => {
-      console.error(`No prod rules found for ${region} and ${lang}:`)
+      console.error(
+        `No prod rules found for ${region} and ${lang} (${version}):`
+      )
       console.error(e.message)
       process.exit(-1)
     })
 }
 
-export function getProdPersonas(region, lang) {
-  return fetch(`${NIGHTLY_API_URL}/${lang}/personas`)
+export function getPersonasFromAPI(version, region, lang) {
+  return fetch(`${API_URL}/${version}/${lang}/personas`)
     .then((res) => res.json())
     .catch((e) => {
-      console.error(`No prod personas found for ${region} and ${lang}:`)
+      console.error(
+        `No prod personas found for ${region} and ${lang} (${version}):`
+      )
       console.error(e.message)
       process.exit(-1)
     })
@@ -112,14 +122,10 @@ export function printResults(
   localResults,
   prodResults,
   markdown,
+  version,
   withOptim = false
 ) {
   if (markdown) {
-    console.log(
-      `#### ${
-        withOptim ? 'Test model optimisation' : 'Test personas regression'
-      }`
-    )
     console.log(
       `| Persona | Total PR ${
         withOptim ? 'with optim.' : ''
@@ -129,14 +135,13 @@ export function printResults(
     )
     console.log('|-----:|:------:|:------:|:----:|')
   } else {
-    console.log(
-      `${
-        withOptim
-          ? c.white('====== With optimisation ======')
-          : c.white('====== Base model ======')
-      }`
-    )
+    const title = withOptim
+      ? 'Test model optimisation'
+      : `Test personas regression against ${c.green(version)}`
+    console.log(`[ ${title} ]\n`)
   }
+  const fails = []
+  const nbTests = Object.keys(localResults).length
   for (let name in localResults) {
     const localResult = Math.fround(localResults[name])
     const prodResult = Math.fround(prodResults[name])
@@ -145,24 +150,30 @@ export function printResults(
       const diffPercent = Math.abs(Math.round((diff / prodResult) * 100))
       const color = diffPercent <= 1 ? c.yellow : c.red
 
-      console.log(
-        markdown
-          ? fmtGHActionErr(
-              localResult,
-              prodResult,
-              diff,
-              diffPercent,
-              name,
-              color
-            )
-          : fmtCLIErr(localResult, prodResult, diff, diffPercent, name, color)
-      )
-    } else if (!markdown) {
-      console.log(
-        `${c.green('[PASS]')} ${name}: ${formatValueInKgCO2e(
-          localResults[name]
-        )}`
-      )
+      if (markdown) {
+        console.log(
+          fmtGHActionErr(
+            localResult,
+            prodResult,
+            diff,
+            diffPercent,
+            name,
+            color
+          )
+        )
+      } else {
+        fails.push(
+          fmtCLIErr(localResult, prodResult, diff, diffPercent, name, color)
+        )
+      }
+    }
+  }
+  if (!markdown) {
+    const nbFails = fails.length
+    fails.forEach((fail) => console.log(fail))
+    console.log(`\n${c.green('OK')} ${nbTests - nbFails}/${nbTests}`)
+    if (nbFails > 0) {
+      console.log(`${c.red('FAIL')} ${nbFails}/${nbTests}`)
     }
   }
 }
