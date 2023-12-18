@@ -1,4 +1,4 @@
-# Master code merged is from 8 November 2023
+# Master code merged is from 18 December 2023
 # -----------------------------------------
 
 params:
@@ -10,7 +10,7 @@ commun . intensité électricité:
   titre: Intensité carbone du mix électrique suisse
   formule: 0.091
   note: |
-    OCEN - SCDD pour l'électricité GE, moyenne 2017-2021 (5 ans)
+    OCEN - SCDD pour l'électricité GE, moyenne 2017-2021 (5 ans).
   # @Clement: à détailler
 
 # TRANSPORT
@@ -20,28 +20,18 @@ transport . voiture . limitation autoroute:
 transport . voiture . limitation autoroute . réduction:
   titre: Gain de consommation 120 -> 100
   formule: 25%
-  description: |
-    ![](https://imgur.com/NB9CUUt.jpg)
-    D'après ce graphique, par déduction graphique (nous n'avons pas encore remonté aux données [de l'étude](http://theses.univ-lyon2.fr/documents/getpart.php?id=1026&action=pdf), page 151 figure 26), on trouve les données ci-dessous.
-
-    Diesel : 6.5 l/100 à 130km/h -> 4.75 à 110km/h 
-
-    Essence : 11.75 l/100 à 130km/h -> 8.65 à 110km/h
-
-    Donc -27% en diesel et - 26% en essence en passant de 130 à 110. Nous retenons l'ordre de grandeur de 25%.
   note: On considère que passer de 120 à 100km/h sur l'autoroute est équivalent au passage de 130 à 110 km/h en terme de réduction de consommation.
 
-transport . voiture . km:
-  par défaut: 7000 km/an
-  description: |
-    Ne comptez que les kilomètres de déplacement personnel (courses, loisirs, famille etc.) et de déplacement domicile travail pour rejoindre votre lieu de travail habituel.
-
-    Par exemple, si vous êtes en mission professionnelle dans un autre canton ou un autre pays cela rentre dans la comptabilité de votre entreprise : ne le comptez pas ici.
+transport . voiture . km annuels moyen:
+  formule: 7000
+  unité: km
   note: |
-    Source pour les km annuels moyens : [Office fédéral de la statistique](https://www.bfs.admin.ch/bfs/fr/home/statistiques/mobilite-transports/transport-personnes/comportements-transports/distance-duree-jour-deplacements.html).
+    Source : [Office fédéral de la statistique](https://www.bfs.admin.ch/bfs/fr/home/statistiques/mobilite-transports/transport-personnes/comportements-transports/distance-duree-jour-deplacements.html).
 
 transport . voiture . thermique . carburant:
   description: |
+    Pour comprendre les différents types de carburants, [cet article pédagogique](https://www.francetvinfo.fr/economie/automobile/essence/les-carburants-changent-de-nom-a-la-pompe-voici-comment-vous-y-retrouver_2967013.html) est très utile.
+
     > Attention, si le type de carburant fait varier de façon significative l'empreinte climat au litre, la consommation en litre par 100km elle aussi varie. Veillez à saisir une consommation au litre basée sur votre moyenne réelle.
 
 transport . voiture . thermique . carburant . gazole B7 ou B10:
@@ -63,10 +53,9 @@ transport . deux roues . empreinte moyenne:
 
 transport . avion . usager:
   description: |
-    Nous faisons ici le choix de vous proposer de compter l'impact de vos déplacements en avion sur plusieurs années. 
-    L'empreinte sur le climat est telle qu'il est important de prendre cela en compte. 
-    Ainsi, que vous preniez l'avion tous les ans ou non, répondez "oui" et vous aurez l'option par la suite de saisir vos temps de vol 
-    des 3 dernières années.
+    Nous faisons ici le choix de vous proposer de compter l'impact de vos déplacements en avion sur plusieurs années. L'empreinte sur le climat est telle qu'il est important de prendre cela en compte.
+
+    Ainsi, que vous preniez l'avion tous les ans ou non, répondez "oui" et vous aurez l'option par la suite de saisir vos temps de vol des 3 dernières années.
 
     > 💡 Si vous avez pris l'avion ppour faire Zurich-New-York en 2022 (environ 19h A/R), vos émissions associées (près de 2 tonnes) seront échelonnées sur les 3 dernières années.
 
@@ -142,10 +131,10 @@ transport . train . km:
     Genève ⇄ Berne: 260
     Genève ⇄ Zurich: 440
     Genève ⇄ Paris: 820
-  par défaut: 2700 km/an
+  par défaut: 2700
 
 transport . métro ou tram . heures par semaine:
-  question: Combien d'heures passez-vous par semaine en tram ?
+  question: Combien d'heures par semaine passez-vous en tram ?
 
 # transport factors for GE
 transport . avion . court courrier . empreinte par km:
@@ -197,15 +186,6 @@ transport . deux roues . empreinte:
     - Mobitool moyenne scooter (hors infrastructure, avec construction)
     - SMobitool motocyclette 11-35kW (hors infrastructure, avec construction)
     - Mobitool motocyclette >35kW (hors infrastructure, avec construction)
-
-transport . voiture . gabarit . petite:
-  description: Citadine type Renault Zoé, Fiat 500
-transport . voiture . gabarit . moyenne:
-  description: Modèle au dessus de la petite citadine, type Renault Mégane, VW Golf
-transport . voiture . gabarit . VUL:
-  description: Camionette ou minibus de type VW Multivan, Mercedes Vito
-transport . voiture . gabarit . berline:
-  description: Voiture longue type Peugeot 508, Tesla Model 3, Audi A4 ou A6
 
 transport . voiture . électrique . empreinte au kilomètre:
   formule:
@@ -319,32 +299,15 @@ divers . animaux domestiques . empreinte . chats . nombre:
 divers . animaux domestiques . empreinte . chien moyen . nombre:
   par défaut: 0.25
 
-divers . électroménager . préservation:
-  description: |
-    Pour éviter de vous demander de renseigner l'âge précis de la dizaine d'appareils électroménagers que vous possédez, nous utilisons une grille d'âge moyen constaté pour chaque appareil.
-
-    Par exemple, un frigo dure en moyenne 10 ans, un four 12 ans et une bouilloire 6 ans. 
-
-    Il ne s'agit pas de l'âge de l'appareil quand il claque, mais de son âge quand son propriétaire décide de le remplacer par du neuf.
-
-    A vous de vous placer par rapport à la moyenne.
-
-divers . numérique . préservation:
-  description: |
-    Pour éviter de vous demander de renseigner l'âge précis de tous les appareils électroniques que vous possédez, nous utilisons une grille d'âge moyen constaté pour chaque appareil que l'on fait évoluer en fonction de vos efforts à les préserver ou non.
-
-    A vous donc de juger vos efforts pour les faire durer le plus longtemps possible
-
-    Répondre "Aucun, je rachète souvent neuf" est la réponse la plus impactante car elle signifie que vous remplacez vos appareils précocement avant même qu'ils soient hors d'usage.
-
 divers . autres produits . niveau de dépenses:
   question: Le test ne capte pas encore toutes vos consommations, combien estimez-vous dépenser par an en produits neufs (décoration, bricolage, jeux, loisirs créatifs, outils, etc...) ?
   description: |
-    Pour garder l'interface simple, nous proposons une estimation, via vos dépenses, de l'empreinte des biens de consommations
+    Pour garder l'interface simple, nous proposons une estimation, via vos dépenses, de l'empreinte des biens de consommation
     que vous possédez et que vous ne pensez pas avoir inclus dans les questions précédentes.
 
-    Elle concerne : **les jeux, la décoration, le matériel de cuisine, le linge de maison, les matériaux pour les loisirs créatifs ou bricolage, les plantes etc...**
+    Elle concerne : **les jeux, la décoration, le matériel de cuisine, le linge de maison, les matériaux pour les loisirs créatifs ou bricolage, les plantes, etc.**
   par défaut: "'important'"
+# @Clément: Source pour cette valeur par défaut ?
 
 divers . autres produits . niveau de dépenses . faible:
   titre: Moins de 50CHF / mois
@@ -357,6 +320,7 @@ divers . autres produits . niveau de dépenses . important:
 
 divers . loisirs . culture . édition . fréquence:
   par défaut: "'élevée'"
+# @Clément: Source pour cette valeur par défaut ?
 
 divers . loisirs . culture . édition . fréquence . faible:
   titre: Moins de 5 CHF par mois
@@ -370,74 +334,17 @@ divers . loisirs . culture . édition . fréquence . élevée:
 divers . loisirs . culture . édition . fréquence . très élevée:
   titre: Plus de 30 CHF par mois
 
-divers . numérique . internet . empreinte horaire:
-  #formule: consommation horaire * intensité électricité
-  formule: 0.02
-
-# divers . produits consommables . consommation . normale:
-#   titre: Modérée (environ 5 produits)
+# divers . numérique . internet . empreinte horaire:
+#   formule: 0.02
+# @Clément: Sans source, non validé car sujet complexe.
 
 # ALIMENTATION
-# @Clément: C'est préférable de garder la consistance avec la version française.
-# alimentation . plats:
-#   question: Choisissez les plats de vos repas de midi et du soir pour une semaine type
-#   description: |
-#     Choisissez 14 plats qui représentent votre semaine type : 7 repas du midi et 7 repas du soir.
 
-#     > Aujourd'hui nous travaillons pour que les menus associés à vos repas soient les plus représentatifs de vos habitudes, n'hésitez pas à aller plus loin en parcourant la documentation.
-
-# alimentation . petit déjeuner . type:
-#   description: |
-#     Nous avons fait choix de considérer un petit déjeuner standard proche du petit-déjeuner appelé "continental". Il comprend pain, beurre, confiture, viennoiserie et un fruit.
-#     Il existe une variété infinie de petit déjeuners. Nous en avons sélectionné quelques uns pour que vous obteniez une réponse facilement. Même si vous ne retrouvez pas exactement votre petit déjeuner, choisissez celui qui s'en rapproche ! À noter que votre consommation de jus de fruit / café / thé / chocolat chaud est comptabilisée dans la question dédiée aux boissons chaudes.
-
-alimentation . petit déjeuner . type . continental:
-  titre: Viennoiserie et pain
-# @Clément: Pourquoi changer les descriptions ?
-# description: |
-# Nous avons fait choix de considérer un petit déjeuner standard proche du petit-déjeuner appelé "continental". Il comprend pain, beurre, confiture, viennoiserie et un fruit.
-
-# alimentation . petit déjeuner . type . lait céréales:
-#   description: |
-#     Nous avons fait choix de considérer un petit déjeuner standard proche du petit-déjeuner appelé "continental". Il comprend pain, beurre, confiture, viennoiserie et un fruit.
-
-# alimentation . petit déjeuner . type . britannique:
-#   description: |
-#     Un bol de lait ou un yaourt avec des céréales. L'origine (animale ou végétale) du lait que vous buvez vous sera demandé dans la suite !
-
-# alimentation . petit déjeuner . type . végétalien:
-#   description: |
-#     Un petit dej' composé de fruits.
-
-# alimentation . petit déjeuner . type . aucun:
-#   description: |
-#     Vous ne mangez rien au petit déjeuner (mais vous pouvez boire un café, un thé ou un chocolat chaud pris en compte dans une autre question).
-
-# alimentation . de saison . consommation:
-#   description: |
-#     Cette question nous permet de corriger l'empreinte de votre régime alimentaire en fonction de votre habitude sur le caractère de saison de vos achats.
-
-alimentation . local . consommation:
-  description: |
-    Cette question nous permet de corriger l'empreinte de votre régime alimentaire en fonction de votre habitude sur le caractère local de vos achats.
-    Nous considérons "locaux" les aliments qui sont issus de la région où vous vivez ou de régions proches. Si vous mangez "suisse" considérez votre alimentation comme locale.
-    Ce critère a un impact relativement faible car la part du transport dans l'empreinte carbone des produits que nous consommons est faible devant les émissions liées à la production, la transformation ou l'emballage, surtout quand votre régime est carné.
-    Mais c'est toujours ça de gagné, et les avantages d'une consommation locale ne s'arrêtent pas à l'empreinte climat.
-
-    ⚠️ Attention, si vous faites vos courses en voiture à plusieurs km de chez vous chaque semaine, il est possible que l'empreinte du dernier km dépasse les gains d'une alimentation locale !
-
-alimentation . déchets . quantité jetée:
-  description: |
-    Répondez 'Zéro Déchet' uniquement si vous traquez le moindre déchet. Pour en savoir plus sur les modes de vie zéro déchets, visitez le site Zero Waste Genève.
-
-    Sachez qu'en cas d'engagement "zéro déchet", nous considérons tout de même des émissions de gaz à effet (mais largement réduites) car il est très difficile voire impossible de ne générer aucun déchet, certains étant invisibles et inévitables.
-    Vous avez renseigné un mode de vie zéro déchet. Il faut savoir que ce niveau d'engagement correspond à une personne qui est investie à 100% dans la démarche de réduction de ses déchets. Consommer en vrac n'est pas suffisant pour être zéro-déchet.
+# @Clément: pour le moment, pas de modifications textuelles nécessaires sur l'alimentation.
 
 #LOGEMENT
 parc français . surface moyenne:
-  titre: Surface moyenne par logement
   formule: 80
-  unité: m2
 
 parc français . chauffage . consommation électricité par m2:
   formule: 125
@@ -563,8 +470,8 @@ logement . construction . par surface:
   formule:
     variations:
       - si: éco-construit
-        alors: 144 kgCO2e/m2
-      - sinon: 696 kgCO2e/m2
+        alors: 144
+      - sinon: 696
   note: Rapport haute école fribourg 2021 (amortissement 60 ans)
 
 logement . construction . durée d'amortissement:
@@ -572,8 +479,6 @@ logement . construction . durée d'amortissement:
   note: Hypothèse norme SIA
 
 logement . âge:
-  question: Quel est l'âge de votre logement ?
-  par défaut: 45
   note: Dans le canton de Genève, plus de la moitié des bâtiments à usage d'habitation et des maisons individuelles ont été construits avant 1980.
 
 logement . saisie habitants:
@@ -584,29 +489,20 @@ logement . électricité . consommation:
   description: |
     Astuce : vous trouverez la consommation annuelle d'électricité sur vos factures ou sur votre compte en ligne sur le site des SIG.
 
-    Si vous vivez dans plusieurs logements (par exemple, si vous avez une résidence secondaire), essayez de "ramener" ces consommations dans celles du logement principal afin d'avoir l'estimation la plus juste possible.
-
-logement . climatisation . présent:
-  question: Utilisez-vous un système de climatisation pour refroidir votre logement (climatiseur électrique, pompe à chaleur) ?
-  description: |
-    Vous avez une climatisation ? Sa consommation d'électricité sera simplement à inclure dans la facture d'électricité, comme tous les appareils électriques du logement. Sont prises en compte ici, les fuites de gaz frigorigènes.
-  par défaut: non
-
-logement . climatisation . nombre:
-  par défaut: 1
+# @Clément note: pour le moment, on garde la valeur par défaut française.
+# logement . climatisation . nombre par défaut:
+#   formule: 0
 
 logement . chauffage . fioul:
   titre: Mazout
 
 logement . chauffage:
   description: |
-    > Cette question couvre l'ensemble des sources d'énergie qui vous permet d'alimenter vos chauffages, votre chauffe-eau, vos plaques de cuissons etc...
+    > Cette question couvre l'ensemble des sources d'énergie qui vous permet d'alimenter vos chauffages, votre chauffe-eau, vos plaques de cuisson, etc.
 
     Certains logements utilisent uniquement de l'électricité, d'autres sont entièrement chauffés au gaz, et plus rarement au bois ou au mazout.
     Dans d'autres situations encore, un logement peut être chauffé principalement via des chauffages électriques ou une pompe à chaleur,
-    mais avec un appoint bois, par exemple. Enfin, il est possible de prendre en compte également vos consommations de gaz pour votre van ou camping car. 
-
-    Si vous vivez dans plusieurs logements (par exemple, si vous avez une résidence secondaire), essayez de "ramener" ces consommations dans celles du logement principal afin d'avoir l'estimation la plus juste possible.
+    mais avec un appoint bois, par exemple. Enfin, il est possible de prendre en compte également vos consommations de gaz pour votre van ou camping-car. 
 
     Cochez tous les modes que vous utilisez.
 
@@ -631,7 +527,7 @@ logement . chauffage . fioul . consommation:
   description: |
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur votre facture de mazout ou sur votre décompte de charges annuelles envoyé par votre régie.
 
-# pour supprimer la variation biogaz
+# Pour supprimer la variation biogaz
 logement . chauffage . gaz . intensité carbone gaz utilisateur:
   formule: gaz . facteur d'émission base carbone
 
@@ -645,7 +541,7 @@ logement . chauffage . gaz . intensité carbone gaz utilisateur:
 #       - bois . empreinte
 #       - réseau de chaleur
 
-# pour supprimer l'aide à la saisie réseau de chaleur
+# Pour supprimer l'aide à la saisie réseau de chaleur
 logement . chauffage . réseau de chaleur . consommation:
   aide:
   par défaut: parc français . chauffage . consommation réseau de chaleur par m2 * surface
@@ -659,17 +555,11 @@ services sociétaux . question rhétorique:
 
 ## On considère que les services sociétaux ne concernent que les services publics calculés selon les bilans carbone territoriaux VdG et Canton (cf. fichier services sociétaux)
 services sociétaux:
-  formule: services publics
+  formule: 1583
   description: |
     Ce poste inclus l'empreinte des services publics suisses.
-
-services publics:
-  formule: 1583
   note: calcul basé sur les bilans carbone territoriaux VdG et Canton (cf. fichier services sociétaux)
-
-services marchands:
-  formule: 0
-  note: Dans la version GE du calculateur, nous avons directement associé les émissions des services marchands aux différentes catégories (par exemple la fabrication de la voiture est intégrée à l'impact de l'utilisation de la voiture).
+  # @Clément note: Source manquante ?
 
 # ACTIONS
 
@@ -694,12 +584,6 @@ services sociétaux . pression locale:
 
     La première étape est d'en discuter avec vos amis et vos connaissances, puis de prendre contact avec les responsables du canton ou de votre commune. Ainsi vous pourrez les alerter de la situation et voir quelles démarches ont déjà été entreprises à ce sujet.
 
-divers . numérique . internet . diminuer:
-  description: |
-    Le streaming vidéo contribue aux émissions de GES (d'autant plus quand on utilise la connexion mobile) car il nécessite une multitude d'infrastructures, par exemple les serveurs informatiques. 
-
-    En limiter sa consommation, par exemple passer de deux heures par jour à une heure, et privilégier des alternatives comme la lecture permet de réduire son empreinte carbone numérique.
-
 divers . numérique . appareils . allongement:
   description: |
     Augmenter la durée de vie de ses appareils ménagers ou électroniques (en en prenant soin ou en les réparant) permet de limiter son impact sur le climat.
@@ -709,26 +593,6 @@ divers . numérique . appareils . allongement:
     Pour augmenter la durée de vie de vos appareils, n'hésitez pas à les faire réparer. Le site http://www.ge-repare.ch propose une liste d'adresses de réparation.
 
     Si vous souhaitez absolument vous séparer d'un appareil, pensez aux ressourceries ou recycleries, qui sont des lieux dédiés au réemploi !
-
-divers . aider les autres:
-  description: |
-    Il arrive un moment où réduire son empreinte carbone devient très compliqué. 
-
-    Si votre empreinte passe sous les 4 tonnes, ou si certaines contraintes rendent vos progrès impossibles, plutôt que de vous focaliser uniquement sur votre propre impact, vous avez probablement plus intérêt à aider les autres à réduire leur empreinte. 
-
-    Comment ? En diffusant ce calculateur, en discutant de ces sujets avec vos proches, en animant des ateliers en entreprise ou association, ou même en aidant de façon pratique quelqu'un à changer l'une de ses habitudes.
-
-divers . avoir un stop pub:
-  description: |
-    Le stop pub est un autocollant à placer sur votre boîte aux lettres qui informe les distributeurs de publicité et la poste que vous refusez de recevoir des catalogues, des promotions et publicités en tout genre qui poussent à la consommation.
-
-    Cet autocollant n'empêche pas toute publicité, mais envoie un signal fort et réduit en général considérablement la quantité de déchets papiers reçus.
-
-divers . publicité:
-  description: |
-    Par les désirs qu'ils créent en nous, la publicité et le marketing nous incitent à la surconsommation et au renouvellement précoce de nos équipements. Ces promotions servent à maximiser les taux de renouvellement et les volumes de marchandises écoulées, volumes très souvent disproportionnés par rapport à la demande réelle.
-
-    Ne pas renouveler trop tôt ses appareils et équipements et les faire durer au maximum est un geste fort pour le climat.
 
 divers . électroménager . allongement:
   description: |
@@ -762,19 +626,6 @@ transport . arrêter l'avion:
 
     Le calculateur transport de [myclimate](https://co2.myclimate.org/fr/calculate_emissions) permet de visualiser cette empreinte et la comparer aux autres moyens de transport.
 
-  aller plus loin: |
-    ## Forçage radiatif total
-
-    L'avion a un impact important sur le climat à la fois à cause de ses émissions de CO₂ et d'autres effets (dit forçage radiatif additionnel).
-
-    Du fait que les avions volent en haute altitude, la combustion du kérosène crée des traînées et perturbe les cycles d'autres gaz à effet de serre que le CO₂ (vapeur d'eau, eau condensée sous diverses formes, NOx et méthane qui, ensemble, produisent de l'ozone, etc.).
-
-    ## Avion vs voiture
-
-    Ramené au passager, l'impact carbone d'un trajet en avion est dans certains cas du même ordre que celui d'un trajet en voiture. Toutefois, l'empreinte de la voiture elle-même est élevée. Comparer l'avion à la voiture ne rend pas ce premier vertueux.
-
-    Deuxièmement, un trajet en avion est en général bien plus long. Quand il s'agit de choisir la destination des vacances par exemple, un trajet en voiture a donc toutes les chances d'être beaucoup moins polluant. Cela dit, notons aussi que nos kilométrages en voiture sont tels que le match est relancé quand on regarde l'empreinte à l'année.
-
 transport . arrêter l'avion court:
   description: |
     L'avion a bouleversé nos modes de vies et nos façons de voyager. Nous pouvons maintenant aller plus loin, plus vite, plus fréquemment, mais ce n'est malheureusement pas sans contrepartie pour le climat. 
@@ -783,13 +634,7 @@ transport . arrêter l'avion court:
 
     C'est pourquoi adapter nos week-ends et nos vacances en nous tournant vers des offres de mobilités bas carbone et/ou en repensant notre manière de voyager est essentiel si l'on souhaite tant à l'échelle individuelle qu'à l'échelle de la société réduire notre impact sur le climat
 
-    Découvrez quelles destinations sont accessibles en train depuis chez vous : [Chronotrains](https://www.chronotrains.com/fr); [CFF (sbb.ch)](https://www.sbb.ch/fr/) ;  [Interrail](https://www.sbb.ch/fr/loisirs-et-vacances/trains-excursions/interrail.html)   
-
-    Enfin, [comparez les modes de transport ici](https://monimpacttransport.fr)
-
-    ## chiffres clefs
-    Un aller-retour Genève – Zurich émet environ 224 kgCO2eq en avion contre seulement 3 kgCO2eq en train (source : Mobitool / myclimate)
-    Choisir de se rendre, depuis Genève, à Rome (en train) plutôt qu'à Marrakech (en avion) permettra d'éviter d'émettre 685 kg de CO2eq (source : Mobitool / myclimate)
+    Découvrez quelles destinations sont accessibles en train depuis chez vous : [Chronotrains](https://www.chronotrains.com/fr); [CFF (sbb.ch)](https://www.sbb.ch/fr/) ;  [Interrail](https://www.sbb.ch/fr/loisirs-et-vacances/trains-excursions/interrail.html)
 
 transport . prendre moins l'avion:
   description: |
@@ -828,7 +673,7 @@ transport . éco-conduite:
 
     Pour en savoir plus: [EcoDrive – chaque litre compte](https://www.ecodrive.ch/fr/)
 
-  références:
+  note: |
     EcoDrive – chaque litre compte: https://www.ecodrive.ch/fr/
 
 transport . covoiturage:
@@ -893,14 +738,6 @@ transport . réduction covoiturage:
   description: |
     D'après une étude menée en France, le covoiturage permet de réduire les émissions d'environ 20%.
 
-  référence:
-    - https://www.sciencedirect.com/science/article/pii/S1361920918303201
-
-transport . boulot . distance . km aller:
-  description: |
-    Nous parlons ici de la distance *aller*, avec le mode de transport que vous privilégiez.
-  par défaut: 7 km
-
 transport . boulot . commun:
   description: |
     Quand c'est possible, prendre les transports en commun ou légers (marche à pied, vélo, trottinette ...) pour aller au travail réduit notre empreinte climatique, mais améliore aussi notre qualité de vie.
@@ -913,26 +750,9 @@ transport . boulot . commun:
 
     >💡 Le saviez-vous ? Le canton et plusieurs communes subventionnent les vélos mécaniques, électriques, cargo, pliants, etc. Calculez votre aide 🚲️ en 3 clics ( [Subventions vélo | ge.ch](https://www.ge.ch/subventions-velo) ).
 
-transport . seuil d'activation boulot:
-  description: |
-    Distance minimale pour déclencher cette action. 
-    > Si quelqu'un nous dit qu'il ne fait que 500km de voiture dans l'année, il y a peu de chances qu'il aille en voiture au travail.
-
 transport . boulot . commun . empreinte:
   note: |
     On considère qu'un déplacement domicile travail effectué en voiture peut être remplacé par un train régional et non par un Inter-City.
-
-transport . boulot . commun . type:
-  par défaut: "'bus'"
-  formule:
-    une possibilité:
-      choix obligatoire: oui
-      possibilités:
-        - bus
-        - TER
-        - vélo classique
-        - vélo électrique
-        - trotinette électrique
 
 transport . voiture 5km:
   description: |
@@ -941,11 +761,6 @@ transport . voiture 5km:
     Découvrez comment se déplacer à vélo [à Genève](https://www.ge.ch/document/carte-velo), et [en Suisse](https://schweizmobil.ch/fr/ete).
 
       >💡 Le saviez-vous ? Le canton et plusieurs communes subventionnent les vélos mécaniques, électriques, cargo, pliants, etc. [Calculez votre aide 🚲️ en 3 clics](https://www.ge.ch/subventions-velo).
-
-transport . voiture 5km . fréquence:
-  description: |
-    Je vais chercher mon pain à 2km en voiture, cela représente un aller-retour.
-    Je vais au travail tous les jours du lundi au vendredi à 4km, c'est 5 allers-retours.
 
 transport . scooter électrique:
   description: |
@@ -1001,6 +816,7 @@ logement . baisse température . gains 1 degré:
     C'est la baisse estimée de dépense d'énergie quand on baisse la température de notre foyer chauffé de 1°C dans la gamme de température usuelle (autour de 20°).
 
     Nous retenons l'estimation donnée dans le [guide du Canton "Des gestes pour économiser notre énergie"](https://www.ge.ch/document/30986/annexe/0).
+  # @Clément: quelle est la source ?
 
 logement . éteindre appareils:
   description: |
@@ -1009,12 +825,6 @@ logement . éteindre appareils:
     L'usage de simples multiprises permet de les éteindre complètement en un clin d'œil.
 
     Retrouvez de nombreux conseils pour économiser de l'énergie dans votre logement sur le site https://www.energie-environnement.ch/maison/renovation-et-chauffage.
-
-logement . énergie de veille . puissance:
-  note: |
-    De plus, il est probable que l'on sous-estime le nombre de Watt en veille. Notamment, il apparait que les box internet et TV à elle-seules en consomment plus que 50 W.
-
-    > La « box » est un équipement de plus en plus courant, qui reste souvent allumé 24 h sur 24 et qui génère une consommation pouvant dépasser 200 kWh / an, soit autant que le lave-linge.
 
 logement . remplacer fioul par bois:
   titre: Remplacer ma chaudière mazout par du bois
@@ -1025,7 +835,7 @@ logement . remplacer fioul par bois:
 
 logement . éclairage . consommation de l'éclairage:
   formule: électricité * 10%
-  # @Clément: Lien ?
+  # @Clément: Lien pour la source ?
   note: Consommation électrique d'un ménage, Août 2021, suisseénergie
 
 logement . remplacer gaz par PAC:
@@ -1053,6 +863,7 @@ logement . gain rénovation:
   formule: 20%
   note: |
     Le gain énergétique moyen après rénovation est très variable, en fonction du type de rénovation, du réglage des installations etc. Entre un bâtiment peu isolé et un bâtiment bien isolé, la différence de consommation est de l'ordre de 1.2 à 2.5.
+  # @Clément: Source ?
 
 logement . propriétaire:
   description: |
@@ -1078,28 +889,6 @@ logement . raccordement réseau de chaleur:
 
     >💡 Le canton fournit une carte des réseaux structurants : vérifiez si un [réseau de chaleur]( https://www.ge.ch/document/22488/annexe/21 ) passe près de votre immeuble !
 
-logement . chauffage collectif:
-  note: |
-    On fait l'hypothèse que l'action est applicable seulement pour les appartements chauffés via un réseau de gaz ou mazout collectif.  
-
-    En effet, côté particulier, il est préférable de travailler avec les copropriétaires d'un immeuble car le logement individuel n'est pas une cible prioritaire pour ce type de solution, à la fois pour des questions de rentabilité économique mais également car la densité thermique du réseau serait trop faible au vu de la consommation d'un logement individuel.
-
-alimentation . devenir végétarien:
-  description: |
-    Adopter un régime végétarien, c'est-à-dire sans viande ni poisson (mais avec des œufs, du lait, du fromage, des yaourts) permet de réduire très fortement son empreinte sur 
-    le climat.
-
-alimentation . devenir végétalien:
-  description: |
-    Adopter un régime végétalien, c'est-à-dire sans produits animaux (viande, poisson, œufs, lait, fromage, miel, etc.) permet de réduire encore plus fortement son empreinte carbone que le régime végétarien. Il est toutefois recommandé d'être bien informé sur la pyramide alimentaire pour répondre aux besoins nutritifs de l'organisme.
-
-alimentation . viande faible empreinte:
-  description: |
-    L'empreinte climat de notre alimentation est directement corrélée à notre consommation de viande, mais il faut savoir que toutes les viandes n'ont pas le même impact. 
-    C'est la viande rouge qui a la plus forte empreinte carbone (bœuf, agneau). La volaille et le porc ont une empreinte carbone largement inférieure. 
-
-    > À titre de comparaison, ramenée au kilo, la production d'une entrecôte émet 6 fois plus de gaz à effet de serre que des filets de poulets.
-
 alimentation . manger local:
   description: |
     L'alimentation locale permet de réduire les distances de transports des produits que nous consommons. Cependant, même si cela peut sembler contre intuitif, l'alimentation locale peut, en fonction des cas considérés, être défavorable en terme d'émissions de gaz à effet de serre : l'impact de la provenance de nos produits ne peut être résumé à une comparaison entre courte et longue distance. Les effets d'échelle, la centralisation des produits, l'efficacité des transports utilisés (ou à l'inverse la non efficacité) complexifient la chose d'un point de vue de la comptabilité carbone.
@@ -1118,10 +907,6 @@ alimentation . manger de saison:
 
     Retrouvez plus d'informations sur : https://www.ge.ch/dossier/alimentation-durable-geneve/climat-dans-votre-assiette/proximite
 
-alimentation . boisson . eau en bouteille . arrêter:
-  description: |
-    L'eau en bouteille a un impact environnemental 450 fois supérieur à l'eau du robinet. Elle coute entre 100 et 300 fois plus cher (80 % du prix est issu de la production de l'emballage) et participe fortement à la pollution plastique des océans.
-
 alimentation . déchets . réduire gaspillage:
   description: |
     En Suisse, le gaspillage alimentaire moyen est évalué à 90 kg d'aliments par personne et par an. 
@@ -1134,7 +919,11 @@ alimentation . déchets . réduire gaspillage:
 
 alimentation . déchets . composter:
   description: |
-    Nos biodéchets, c'est à dire les déchets putrescibles issus de notre alimentation (épluchures, restes de repas, etc.), représentent une grande partie du poids de notre poubelle contribuant ainsi à majorer l'empreinte carbone associée à la gestion de nos déchets. Ces déchets sont très souvent peu ou mal valorisés malgré le bénéfice environnemental qu'ils peuvent apporter : un compost, substance organique riche et bénéfique pour les sols. Composter nos biodéchets (de manière individuelle ou collective) permet donc de réduire la taille de nos poubelles et de favoriser la création de ce compost pouvant à terme être utilisé comme alternative aux engrais chimiques.
+    Nos biodéchets, c’est à dire les déchets putrescibles issus de notre alimentation (épluchures, restes de repas, etc.),
+    représentent une grande partie du poids de notre poubelle grise contribuant ainsi à majorer l’empreinte carbone associée
+    à la gestion de nos déchets. Ces déchets sont très souvent peu ou mal valorisés malgré le bénéfice environnemental qu’ils peuvent apporter :
+    un compost, substance organique riche et bénéfique pour les sols. Composter nos biodéchets (de manière individuelle ou collective) permet donc de réduire
+    la taille de nos poubelles et de favoriser la création de ce compost pouvant à terme être utilisé comme alternative aux engrais chimiques.
 
     Retrouvez toutes les astuces pour [faire un compost](https://www.ge.ch/teaser/p-tite-poubelle-verte)
 
