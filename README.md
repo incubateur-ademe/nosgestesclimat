@@ -76,6 +76,23 @@ https://beta.gouv.fr.
 
 ## Développement
 
+### Quick Doc
+
+Pour faciliter le développement, nous avons mis en place une documentation
+minimale basée sur [`@publicodes/react-ui`](https://publi.codes/docs/api/react-ui)
+et [Vite](https://vitejs.dev/).
+
+```bash
+yarn --cwd quick-doc
+yarn doc
+```
+
+> [!TIP]
+> Pour rapidement itérer sur le modèle, nous vous conseillons de lancer `yarn
+> doc` dans un terminal et d'exécuter `yarn compile:rules-watch:fr dans un
+> autre terminal pour recompiler le modèle à chaque modification. La
+> documentation sera automatiquement mise à jour à la fin de la compilation.
+
 ### CI
 
 Le projet utilise plusieurs GitHub Actions pour automatiser les tâches de
