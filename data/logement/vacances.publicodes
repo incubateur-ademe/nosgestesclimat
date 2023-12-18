@@ -2,7 +2,14 @@ logement . vacances:
   titre: Nuitées week-end ou vacances
   mosaique:
     type: selection
-    clé: présent
+    options:
+      - hotel . présent
+      - camping . présent
+      - auberge de jeunesse . présent
+      - locations . présent
+      - famille ou amis . présent
+      - échange . présent
+      - résidence secondaire . présent
     suggestions:
       aucun:
         hotel . présent: non
@@ -11,7 +18,7 @@ logement . vacances:
         locations . présent: non
         famille ou amis . présent: non
         échange . présent: non
-        choix utilisateur: oui
+        résidence secondaire . présent: non
   question: Comment êtes-vous hébergé pour vos week-ends, vos vacances ?
   icônes: 🏖
   description: |
@@ -27,13 +34,13 @@ logement . vacances:
       - Locations meublées
       - Famille ou amis
       - Échange de maison
-      - Maison secondaire
+      - Résidence secondaire
 
     Sont donc exclues les nuits en hôtel pour **raisons professionnelles**.
 
     ### Vers une première version
 
-    Dans un premier temps, l'idée est de restreindre le périmètre de la V1 au secteur du tourisme (maison secondaire exclue).
+    Dans un premier temps, l'idée est de restreindre le périmètre de la V1 au secteur du tourisme (résidence secondaire exclue).
 
     Pour l'empreinte d'une nuit au sein de sa famille ou chez des amis, l'empreinte est aujourd'hui indirectement comptée dans l'empreinte des accueillants.
 
@@ -58,8 +65,8 @@ logement . vacances . empreinte totale:
       - empreinte locations
       - empreinte échange
       - empreinte famille ou amis
-      - maison secondaire
-    unité: kgCO2e
+      - empreinte résidence secondaire
+  unité: kgCO2e
 
 logement . vacances . empreinte par défaut:
   description: Un calcul statistique des nuitées pour les séjours hors logement pour un français moyen sur la base des données du modèle NGC.
@@ -70,24 +77,20 @@ logement . vacances . empreinte par défaut:
       - auberge de jeunesse . nombre de nuitées . moyenne * auberge de jeunesse . empreinte par nuit * logement . habitants
       - locations . nombre de nuitées . moyenne * locations . empreinte par nuit
       - échange . nombre de nuitées . moyenne * échange . empreinte par nuit
-      # - maison secondaire non disponible
+      - résidence secondaire . empreinte moyenne
   unité: kgCO2e
 
 logement . vacances . choix utilisateur:
-  description: l'utilisateur a-t-il fait un choix de nuitées ?
+  titre: Choix utilisateur pour les nuitées
   formule:
-    variations:
-      - si:
-          une de ces conditions:
-            - hotel . présent
-            - camping . présent
-            - auberge de jeunesse . présent
-            - locations . présent
-            - famille ou amis . présent
-            - échange . présent
-            # - maison secondaire . présent
-        alors: oui
-      - sinon: non
+    une de ces conditions:
+      - est défini: hotel . présent
+      - est défini: camping . présent
+      - est défini: auberge de jeunesse . présent
+      - est défini: locations . présent
+      - est défini: famille ou amis . présent
+      - est défini: échange . présent
+      - est défini: résidence secondaire . présent
 
 logement . vacances . nombre de nuits hors logement:
   formule: 26.5
@@ -100,7 +103,10 @@ logement . vacances . nombre de nuits hors logement:
 
 logement . vacances . empreinte hotel:
   titre: Empreinte hôtel ou chambre d'hôtes
-  applicable si: hotel . présent
+  applicable si:
+    toutes ces conditions:
+      - est défini: hotel . présent
+      - hotel . présent
   formule:
     variations:
       - si: logement . habitants > 8
@@ -158,7 +164,6 @@ logement . vacances . hotel:
 
 logement . vacances . hotel . présent:
   question: Allez-vous à l'hôtel ?
-  par défaut: non
 
 logement . vacances . empreinte hotel par nuit:
   formule: 6.93
@@ -217,7 +222,10 @@ logement . vacances . hotel . nombre de nuitées . moyenne . part mode d'héberg
 
 logement . vacances . empreinte camping:
   titre: Empreinte emplacement en camping
-  applicable si: camping . présent
+  applicable si:
+    toutes ces conditions:
+      - est défini: camping . présent
+      - camping . présent
   formule: camping . empreinte par nuit * camping . nombre de nuitées
 
 logement . vacances . camping:
@@ -226,7 +234,6 @@ logement . vacances . camping:
 
 logement . vacances . camping . présent:
   question: Allez-vous en camping ?
-  par défaut: non
 
 logement . vacances . camping . empreinte par nuit:
   formule: 1.4
@@ -263,7 +270,10 @@ logement . vacances . camping . nombre de nuitées . moyenne . part mode d'hébe
 
 logement . vacances . empreinte auberge de jeunesse:
   titre: Empreinte auberge de jeunesse
-  applicable si: auberge de jeunesse . présent
+  applicable si:
+    toutes ces conditions:
+      - est défini: auberge de jeunesse . présent
+      - auberge de jeunesse . présent
   formule: auberge de jeunesse . empreinte par nuit * auberge de jeunesse . nombre de nuitées
 
 logement . vacances . auberge de jeunesse:
@@ -272,7 +282,6 @@ logement . vacances . auberge de jeunesse:
 
 logement . vacances . auberge de jeunesse . présent:
   question: Allez-vous en auberge de jeunesse ?
-  par défaut: non
 
 logement . vacances . auberge de jeunesse . empreinte par nuit:
   formule: empreinte hotel par nuit / nombre de personnes dans le dortoir
@@ -312,7 +321,10 @@ logement . vacances . auberge de jeunesse . nombre de nuitées . moyenne . part 
 
 logement . vacances . empreinte locations:
   titre: Empreinte locations meublées
-  applicable si: locations . présent
+  applicable si:
+    toutes ces conditions:
+      - est défini: locations . présent
+      - locations . présent
   formule: locations . empreinte par nuit * locations . nombre de nuitées
 
 logement . vacances . locations:
@@ -321,7 +333,7 @@ logement . vacances . locations:
 
 logement . vacances . locations . présent:
   question: Allez-vous en vacances en location meublée (type Airbnb) ?
-  par défaut: non
+
   description: |
     💡 Déclarez ici les nuits passées en locations meublées de type Airbnb ou Abritel.
 
@@ -362,7 +374,10 @@ logement . vacances . locations . nombre de nuitées . moyenne . part mode d'hé
 
 logement . vacances . empreinte échange:
   titre: Empreinte échange de maison
-  applicable si: échange . présent
+  applicable si:
+    toutes ces conditions:
+      - est défini: échange . présent
+      - échange . présent
   formule: échange . empreinte par nuit * échange . nombre de nuitées
 
 logement . vacances . échange:
@@ -371,7 +386,7 @@ logement . vacances . échange:
 
 logement . vacances . échange . présent:
   question: Pratiquez-vous l'échange de maison ?
-  par défaut: non
+
   description: |
     💡 Déclarez ici les nuits passées en échange de maison (HomeExchange, SwitchHome...).
 
@@ -408,7 +423,10 @@ logement . vacances . échange . nombre de nuitées . moyenne . part mode d'héb
 
 logement . vacances . empreinte famille ou amis:
   titre: Empreinte famille ou amis
-  applicable si: famille ou amis . présent
+  applicable si:
+    toutes ces conditions:
+      - est défini: famille ou amis . présent
+      - famille ou amis . présent
   formule: 0
   note: Nous considérons que l'empreinte de la nuit est aujourd'hui indirectement comptée dans l'empreinte des accueillants.
 
@@ -418,7 +436,6 @@ logement . vacances . famille ou amis:
 
 logement . vacances . famille ou amis . présent:
   question: Allez-vous chez des amis ou de la famille ?
-  par défaut: non
 
 logement . vacances . famille ou amis . notif:
   type: notification
@@ -426,17 +443,336 @@ logement . vacances . famille ou amis . notif:
   description: |
     Vous avez renseigné "Famille ou amis" : l'empreinte associée à ces nuits sera nulle, c'est compté dans l'empreinte des accueillants !
 
-logement . vacances . maison secondaire:
-  titre: Maison secondaire
-  icônes: 🏡
-  applicable si: présent
-  formule: 0
-  note: |
-    Pour le moment, nous n'avons pas implémenté le modèle de la maison secondaire mais les discussions sont en cours sur notre dépôt Github :
-      - https://github.com/datagir/nosgestesclimat/issues/1309
-      - https://github.com/datagir/nosgestesclimat/pull/1455
+logement . vacances . empreinte résidence secondaire:
+  titre: Empreinte résidence secondaire
+  applicable si:
+    toutes ces conditions:
+      - est défini: résidence secondaire . présent
+      - résidence secondaire . présent
+  formule:
+    somme:
+      - résidence secondaire . construction
+      - résidence secondaire . énergie
+  unité: kgCO2e
 
-logement . vacances . maison secondaire . présent:
-  question: Possédez-vous une maison secondaire ?
-  par défaut: non
-  inactif: oui
+logement . vacances . résidence secondaire:
+  titre: résidence secondaire
+  icônes: 🏡
+
+logement . vacances . résidence secondaire . présent:
+  question: Possédez-vous une résidence secondaire ?
+  note: |
+    Pour le moment, nous n'attribuons l'empreinte de la maison secondaire qu'aux propriétaires,
+    et non "une partie" de l'empreinte à tous les français.
+
+logement . vacances . résidence secondaire . empreinte moyenne:
+  formule: empreinte moyenne construction + empreinte moyenne énergie
+
+logement . vacances . résidence secondaire . empreinte moyenne construction:
+  formule: parc français . surface moyenne * résidence secondaire . annuelle et par surface * pourcentage population propriétaire résidence secondaire
+
+logement . vacances . résidence secondaire . pourcentage population propriétaire résidence secondaire:
+  formule: 0.13
+  note: |
+    [Source](https://www.data.gouv.fr/fr/reuses/classement-des-25-communes-avec-le-plus-fort-taux-de-residences-secondaires/)
+
+logement . vacances . résidence secondaire . empreinte moyenne énergie:
+  formule:
+    recalcul:
+      règle: résidence secondaire . énergie
+      avec:
+        résidence secondaire . surface: parc français . surface moyenne
+        résidence secondaire . durée: résidence secondaire . nombre de nuitées . moyenne
+  unité: kgCO2e
+
+logement . vacances . résidence secondaire . construction:
+  formule: surface * annuelle et par surface
+  unité: kgCO2e
+
+logement . vacances . résidence secondaire . surface:
+  titre: Surface
+  question: Quelle est la surface de votre résidence secondaire ?
+  par défaut: parc français . surface moyenne
+  note: |
+    Valeur par défaut obtenue dans [ce jeu de données du Ceren et SDES](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel).
+  suggestions:
+    studio: 25
+    3 pièces: 70
+    maison: 120
+    château 🏰: 1000
+  unité: m2
+
+logement . vacances . résidence secondaire . annuelle et par surface:
+  formule: par surface / logement . construction . durée d'amortissement
+  unité: kgCO2e/m2
+
+logement . vacances . résidence secondaire . par surface:
+  formule:
+    moyenne:
+      - logement . construction . par surface . appartement
+      - logement . construction . par surface . maison
+  unité: kgCO2e/m2
+
+logement . vacances . résidence secondaire . localisation:
+  titre: Localisation
+  question: Où se situe votre résidence secondaire ?
+  note: |
+    D'après [cette source](https://www.insee.fr/fr/statistiques/5416748#graphique-figure3), nous avons la répartition des résidences secondaires par type d'EPCI (établissements publics de coopération intercommunale, autrement souvent appelés "communautés de communes") :
+
+    - EPCI sur le littoral nord-ouest : 25%
+    - EPCI sur le littoral méditerranéen : 16%
+    - EPCI à plus de 750 m d’altitude : 16%
+    - EPCI densément peuplés, hors littoral et altitude : 12%
+    - Autres EPCI : 32%
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - littoral méditerranéen
+        - littoral nord ouest
+        - montagne
+        - ville
+        - campagne
+  par défaut: "'littoral nord ouest'"
+  description: Si votre résidence secondaire se situe en ville, sur le littoral, privilégiez "littoral".
+
+logement . vacances . résidence secondaire . localisation . littoral méditerranéen:
+  titre: Littoral méditerranéen
+  icônes: 🏖️
+  description: Appartement ou maison situé sur le pourtour méditerranéen
+logement . vacances . résidence secondaire . localisation . littoral nord ouest:
+  titre: Littoral nord-ouest
+  icônes: 🌊
+  description: Appartement ou maison situé en Atlantique, Manche ou Mer du Nord
+logement . vacances . résidence secondaire . localisation . montagne:
+  titre: Montagne
+  icônes: ⛰️
+  description: Appartement ou maison situé dans les Alpes, les Vosges, le Jura, le Massif Central ou les Pyrénées
+logement . vacances . résidence secondaire . localisation . ville:
+  titre: Ville
+  icônes: 🏙️
+  description: Appartement ou maison situé en centre-ville
+logement . vacances . résidence secondaire . localisation . campagne:
+  titre: Campagne
+  icônes: 🚜
+  description: Résidence située à distance de la mer, de la montagne, ou d'une grande ville
+
+logement . vacances . résidence secondaire . énergie:
+  formule:
+    somme:
+      - électricité
+      - chauffage
+
+logement . vacances . résidence secondaire . électricité:
+  formule: parc français . empreinte électricité autre par m2 * surface * pro-rata présence annuelle
+  unité: kgCO2e
+
+logement . vacances . résidence secondaire . pro-rata présence annuelle:
+  formule: durée / commun . jours par an * 1 jour/nuit
+
+logement . vacances . résidence secondaire . nombre de nuitées . moyenne:
+  titre: Nombre de nuitées en moyenne par français
+  formule: nombre de nuits hors logement * part mode d'hébergement résidence secondaire
+  unité: nuit
+
+logement . vacances . résidence secondaire . nombre de nuitées . moyenne . part mode d'hébergement résidence secondaire:
+  formule: 0.077
+  note: |
+    Excel "Caractéristiques des voyageurs personnels et professionnels - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
+
+    On considère ici les hébergements "résidence secondaire".
+
+logement . vacances . résidence secondaire . durée:
+  mosaique:
+    type: nombre
+    options:
+      - nuitées week end . nombre
+      - nuitées semaine . nombre
+    suggestions:
+      tout l'été:
+        nuitées week end . nombre: 0
+        nuitées semaine . nombre: 8
+  question: Combien de temps passez-vous dans votre résidence secondaire chaque année ?
+  description: Ne renseignez bien que le temps que vous y passez vous. Si votre résidence secondaire est utilisée par d'autres (famille, amis), l'empreinte associée à cet usage leur est imputé.
+  formule:
+    somme:
+      - nuitées week end
+      - nuitées semaine
+  unité: nuit
+  note: |
+    D'après [cette source](https://www.lesechos.fr/2012/06/tres-chere-residence-secondaire-359079), le temps moyen passé dans une résidence secondaire est de 42 nuitées par an.
+    Nous attribuons donc par défaut 3 week-ends et 5 semaines passées en résidence secondaire.
+
+logement . vacances . résidence secondaire . durée . nuitées week end:
+  titre: Week-end(s)
+  icônes: 📆
+  formule: nombre * 2
+  note: On considère qu'un week-end correspond à 2 nuitées.
+
+logement . vacances . résidence secondaire . durée . nuitées week end . nombre:
+  question: Combien de week-ends passez-vous dans votre maison secondaire ?
+  par défaut: 3
+  unité: nuit
+
+logement . vacances . résidence secondaire . durée . nuitées semaine:
+  titre: Semaine(s)
+  icônes: 🗓️
+  formule: nombre * 7
+  note: On considère qu'une semaine correspond à 7 nuitées.
+
+logement . vacances . résidence secondaire . durée . nuitées semaine . nombre:
+  question: Combien de semaines passez-vous dans votre maison secondaire ?
+  par défaut: 5
+  unité: nuit
+
+logement . vacances . résidence secondaire . chauffage:
+  formule: facteur saison * (parc français . chauffage . empreinte moyenne par m2 hors électricité + parc français . chauffage . empreinte électricité moyenne par m2) * surface * pro-rata présence annuelle
+  unité: kgCO2e
+  description: |
+    Pour calculer les facteurs saisons, dépendant à la fois de la localisation de la résidence secondaire et de la saison où il est fréquenté, nous nous sommes appuyés sur les données de degrés-heures disponibles par zones climatiques, 
+    que l'on peut retrouver dans [ce tableau](https://docs.google.com/spreadsheets/d/1sQp51C2zgBi3KiKrMCvXNtd26NJGHhE41z_UxsBKU94/edit#gid=0).
+    Ces degrés-heures sont trouvables en annexe de l'Arrêté du 8 octobre 2021 modifiant la méthode de calcul et les modalités d’établissement du diagnostic de performance énergétique, [disponible ici](https://www.socotec-certification-international.fr/s3fs-public/2022-10/arrete-8-octobre-2021_compressed.pdf).
+
+    En France, on distingue trois zones climatiques : H1, la zone la plus froide, la moitié Nord-Est de la France. H2, une zone tempérée à l'Ouest et au Sud-Ouest. H3, la zone la plus chaude, le Sud-Est de la France et les DOM-TOM.
+
+    ![Zones climatiques France](https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/RT_2005_zone_climatique-2.svg/1176px-RT_2005_zone_climatique-2.svg.png)
+
+    Pour nos calculs, nous avons opté pour les hypothèses suivantes :
+
+      - Les logements situés sur le littoral nord-ouest, en campagne ou à la ville, correspondent à la moyenne des zones H1 et H2 < 800 mètres d'altitude
+      - Les logements situés sur le littoral méditerranéen correspondent à la zone H3 < 400 mètres d'altitude
+      - Les logements situés en montagne correspondent aux zones H1 et H2 > 800 mètres d'altitude
+
+    Nous avons rapporté cela à la moyenne par jour des degrés-heures à l'année, pour établir les facteurs multiplicateurs de la moyenne de degrés-heures de chauffage pour une journée quelle que soit la localisation.
+
+    ![Facteurs multiplicateurs par zone climatique et par période](https://github.com/incubateur-ademe/nosgestesclimat/assets/55186402/c328fa42-bae6-4391-becf-a31cbaf32201)
+
+logement . vacances . résidence secondaire . chauffage . facteur saison:
+  formule:
+    variations:
+      - si: localisation = 'littoral méditerranéen'
+        alors: localisation . littoral méditerranéen . facteur saison
+      - si: localisation = 'littoral nord ouest'
+        alors: localisation . littoral nord ouest . facteur saison
+      - si: localisation = 'montagne'
+        alors: localisation . montagne . facteur saison
+      - si: localisation = 'campagne'
+        alors: localisation . campagne . facteur saison
+      - si: localisation = 'ville'
+        alors: localisation . ville . facteur saison
+
+logement . vacances . résidence secondaire . localisation . littoral méditerranéen . facteur saison:
+  avec:
+    facteur hiver: 1.62
+    facteur surtout hiver: 1.41
+    facteur été: 0
+    facteur surtout été: 0.13
+  formule:
+    variations:
+      - si: saison = 'hiver'
+        alors: facteur hiver
+      - si: saison = 'surtout hiver'
+        alors: facteur surtout hiver
+      - si: saison = 'été'
+        alors: facteur été
+      - si: saison = 'surtout été'
+        alors: facteur surtout été
+
+logement . vacances . résidence secondaire . localisation . littoral nord ouest . facteur saison:
+  avec:
+    facteur hiver: 2.26
+    facteur surtout hiver: 1.71
+    facteur été: 0.06
+    facteur surtout été: 0.46
+  formule:
+    variations:
+      - si: saison = 'hiver'
+        alors: facteur hiver
+      - si: saison = 'surtout hiver'
+        alors: facteur surtout hiver
+      - si: saison = 'été'
+        alors: facteur été
+      - si: saison = 'surtout été'
+        alors: facteur surtout été
+
+logement . vacances . résidence secondaire . localisation . campagne . facteur saison:
+  avec:
+    facteur hiver: 2.26
+    facteur surtout hiver: 1.71
+    facteur été: 0.06
+    facteur surtout été: 0.46
+  formule:
+    variations:
+      - si: saison = 'hiver'
+        alors: facteur hiver
+      - si: saison = 'surtout hiver'
+        alors: facteur surtout hiver
+      - si: saison = 'été'
+        alors: facteur été
+      - si: saison = 'surtout été'
+        alors: facteur surtout été
+
+logement . vacances . résidence secondaire . localisation . ville . facteur saison:
+  avec:
+    facteur hiver: 2.26
+    facteur surtout hiver: 1.71
+    facteur été: 0.06
+    facteur surtout été: 0.46
+  formule:
+    variations:
+      - si: saison = 'hiver'
+        alors: facteur hiver
+      - si: saison = 'surtout hiver'
+        alors: facteur surtout hiver
+      - si: saison = 'été'
+        alors: facteur été
+      - si: saison = 'surtout été'
+        alors: facteur surtout été
+
+logement . vacances . résidence secondaire . localisation . montagne . facteur saison:
+  avec:
+    facteur hiver: 2.68
+    facteur surtout hiver: 2.15
+    facteur été: 0.06
+    facteur surtout été: 0.76
+  formule:
+    variations:
+      - si: saison = 'hiver'
+        alors: facteur hiver
+      - si: saison = 'surtout hiver'
+        alors: facteur surtout hiver
+      - si: saison = 'été'
+        alors: facteur été
+      - si: saison = 'surtout été'
+        alors: facteur surtout été
+
+logement . vacances . résidence secondaire . saison:
+  question: À quelle(s) saison(s) vous rendez-vous majoritairement dans votre résidence secondaire ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - été
+        - surtout été
+        - surtout hiver
+        - hiver
+  par défaut: "'surtout été'"
+  note: |
+    Au vu de la répartition des vacances scolaires annuelle, et de la répartition des localisations de résidences secondaires (40% sur le littoral, moins de 20% à la montagne), nous choisissons de considérer qu'en moyenne les propriétaires de résidence secondaire les fréquentent surtout en période estivale.
+
+logement . vacances . résidence secondaire . saison . été:
+  titre: Seulement l'été
+  icônes: ☀️
+  description: Vous ne vous rendez dans votre résidence secondaire qu'en été.
+logement . vacances . résidence secondaire . saison . surtout été:
+  titre: Surtout l'été
+  icônes: 🌤️
+  description: Vous vous rendez dans votre résidence secondaire majoritairement en été.
+logement . vacances . résidence secondaire . saison . surtout hiver:
+  titre: Surtout l'hiver
+  icônes: ⛈️
+  description: Vous vous rendez dans votre résidence secondaire majoritairement en hiver.
+logement . vacances . résidence secondaire . saison . hiver:
+  titre: Seulement l'hiver
+  icônes: ❄️
+  description: Vous ne vous rendez dans votre résidence secondaire qu'en hiver.

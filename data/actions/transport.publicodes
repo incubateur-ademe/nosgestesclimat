@@ -1,10 +1,13 @@
 transport . arrêter l'avion:
   icônes: 🛬🧳
+  applicable si:
+    toutes ces conditions:
+      - est défini: avion . usager
+      - avion . usager
   action:
     dépasse:
       - transport . arrêter l'avion court
       - transport . prendre moins l'avion
-  effort: conséquent
   formule: transport . avion
   description: |
     L'avion a une empreinte importante sur le climat. 
@@ -36,8 +39,11 @@ transport . arrêter l'avion:
 
 transport . arrêter l'avion court:
   titre: Privilégier le train au lieu de l'avion
-  effort: modéré
   icônes: 🛬🚆
+  applicable si:
+    toutes ces conditions:
+      - est défini: avion . usager
+      - avion . usager
   formule: transport . avion . court courrier + compensation train
   # Mettre histogramme GES qui compare les trajets train vs avion.
   description: |
@@ -67,10 +73,13 @@ transport . arrêter l'avion court . ratio distance supplémentaire train:
 transport . prendre moins l'avion:
   titre: Prendre deux fois moins l'avion
   icônes: 📉🛬
+  applicable si:
+    toutes ces conditions:
+      - est défini: avion . usager
+      - avion . usager
   action:
     dépasse:
       - transport . arrêter l'avion court
-  effort: conséquent
   formule: transport . avion / 2
   description: |
     > 💡 Essayez de faire au moins l'un des trajets vers votre destination en train !
@@ -102,8 +111,10 @@ transport . prendre moins l'avion:
 
 transport . éco-conduite:
   titre: Adopter une éco-conduite
-  applicable si: voiture . utilisateur régulier
-  effort: faible
+  applicable si:
+    toutes ces conditions:
+      - est défini: voiture . utilisateur régulier
+      - voiture . utilisateur régulier
   icônes: 🚗☮
   formule: transport . voiture . empreinte calculée - transport . éco-conduite . recalcul
   description: |
@@ -135,8 +146,10 @@ transport . éco-conduite . usage réduit:
 
 transport . covoiturage:
   titre: Privilégier le covoiturage
-  effort: modéré
-  applicable si: voiture . utilisateur régulier
+  applicable si:
+    toutes ces conditions:
+      - est défini: voiture . utilisateur régulier
+      - voiture . utilisateur régulier
   action:
     dépasse:
       - transport . boulot . covoiturage
@@ -155,7 +168,6 @@ transport . boulot:
   icônes: 🏢
 transport . boulot . covoiturage:
   titre: Aller au travail en covoiturage
-  effort: modéré
   applicable si:
     toutes ces conditions:
       - voiture . utilisateur régulier
@@ -233,7 +245,6 @@ transport . boulot . commun:
       - transport . boulot . covoiturage
       - transport . boulot . télétravail
   titre: Aller au travail autrement qu'en voiture
-  effort: conséquent
   icônes: 🚌🚲
   description: |
     Quand c'est possible, prendre les transports en commun ou des véhicules légers (marche à pied, vélo, trottinette personnelle, ...) pour aller au travail réduit notre empreinte climat, mais améliore aussi notre qualité de vie.
@@ -338,7 +349,6 @@ transport . boulot . recalcul autres véhicules à moteur:
 
 transport . boulot . télétravail:
   titre: Faire du télétravail
-  effort: conséquent
   icônes: 🏠💻
   description: |
     Le télétravail permet d'éviter des déplacements journaliers pour se rendre au boulot.
@@ -381,7 +391,10 @@ transport . voiture 5km:
   titre: Se passer de voiture pour moins de 5 km
   icônes: 🚗🚲
   formule: transport . voiture . empreinte calculée - transport . voiture 5km . recalcul
-  applicable si: voiture . utilisateur régulier
+  applicable si:
+    toutes ces conditions:
+      - est défini: voiture . utilisateur régulier
+      - voiture . utilisateur régulier
   non applicable si: voiture . km < seuil d'activation 5km
   note: |
     On fait l'hypothèse qu'une personne qui n'est pas propriétaire de voiture se passe *déjà* d'une voiture pour de courts trajets.
@@ -488,7 +501,8 @@ transport . scooter électrique:
   icônes: 🔌🛵
   applicable si:
     toutes ces conditions:
-      - transport . deux roues . usager = 'affirmatif'
+      - est défini: transport . deux roues . usager
+      - transport . deux roues . usager
       - transport . deux roues . type = 'scooter thermique'
   formule: transport . deux roues - transport . scooter électrique . recalcul
   description: |
@@ -513,7 +527,10 @@ transport . scooter électrique . recalcul:
 transport . voiture électrique:
   titre: Rouler en voiture électrique
   icônes: 🔌🚗
-  applicable si: voiture . utilisateur régulier
+  applicable si:
+    toutes ces conditions:
+      - est défini: voiture . utilisateur régulier
+      - voiture . utilisateur régulier
   non applicable si: transport . voiture . motorisation = 'électrique'
   formule: transport . voiture . empreinte calculée - transport . voiture électrique . recalcul
   description: |
@@ -556,7 +573,10 @@ transport . voiture électrique . recalcul:
 transport . voiture . limitation autoroute:
   titre: Passer de 130 à 110km/h
   icônes: 🚗🛣️
-  applicable si: voiture . utilisateur régulier
+  applicable si:
+    toutes ces conditions:
+      - est défini: voiture . utilisateur régulier
+      - voiture . utilisateur régulier
   formule: réduction * empreinte autoroute
   description: |
     La convention citoyenne pour le climat a proposé en 2020 une réduction de la limitation de vitesse sur les autoroutes de 130km/h à 110km/h. 
