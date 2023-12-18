@@ -88,10 +88,11 @@ yarn doc
 ```
 
 > [!TIP]
-> Pour rapidement itérer sur le modèle, nous vous conseillons de lancer `yarn
-> doc` dans un terminal et d'exécuter `yarn compile:rules-watch:fr dans un
-> autre terminal pour recompiler le modèle à chaque modification. La
-> documentation sera automatiquement mise à jour à la fin de la compilation.
+> Pour rapidement itérer sur le modèle, nous vous conseillons de lancer `yarn dev`.
+> Cela va lancer un serveur de développement qui va recompiler le modèle à
+> chaque modification ainsi que les personas. Puis avec `yarn doc`, vous pouvez
+> visualiser les résultats de la compilation dans votre navigateur, les
+> modifications seront automatiquement prises en compte.
 
 ### CI
 

@@ -50,12 +50,9 @@ function getLocalizedRules(translatedBaseRules, regionCode, destLang) {
   }
 }
 
-export default ({
-  regionCode,
-  destLang,
-  translatedBaseRules,
-  markdown = false
-}) => {
+export default ({ regionCode, destLang, translatedBaseRules, opts }) => {
+  const { markdown, optimDisabled } = opts
+
   const localizedTranslatedBaseRules = getLocalizedRules(
     translatedBaseRules,
     regionCode,
@@ -74,19 +71,22 @@ export default ({
     regionCode,
     markdown
   )
-  const start = Date.now()
-  const nbRules = compressRules(engine, destPathWithoutExtension)
-  const optimDuration = Date.now() - start
 
-  if (!markdown) {
-    console.log(
-      getStyledReportString(
-        `${regionCode}-${destLang}`,
-        'optimized',
-        nbRules,
-        optimDuration
+  if (!optimDisabled) {
+    const start = Date.now()
+    const nbRules = compressRules(engine, destPathWithoutExtension)
+    const optimDuration = Date.now() - start
+
+    if (!markdown) {
+      console.log(
+        getStyledReportString(
+          `${regionCode}-${destLang}`,
+          'optimized',
+          nbRules,
+          optimDuration
+        )
       )
-    )
+    }
   }
 
   return `<li>${regionCode}-${destLang}</li>`
