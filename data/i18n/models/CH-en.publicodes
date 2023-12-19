@@ -4,13 +4,59 @@ params:
   gentilé: switzerland
 commun . intensité électricité:
   titre: Carbon intensity of the Swiss electricity mix
-  formule: 0.153
+  formule: 0.091
   note: |
-    [Electricity Map](https://app.electricitymaps.com/map) 5-year view, 2022
+    OCEN - SCDD for GE electricity, average 2017-2021 (5 years)
+transport . voiture . limitation autoroute:
+  titre: Reducing speed from 120 to 100km/h
+transport . voiture . limitation autoroute . réduction:
+  titre: Consumption gain 120 -&gt; 100
+  formule: 25%
+  description: |
+    ![](https://imgur.com/NB9CUUt.jpg)
+    From this graph, by graphical deduction (we have not yet gone back to the data <a href="http://theses.univ-lyon2.fr/documents/getpart.php?id=1026&action=pdf">in the study</a>, page 151 figure 26), we find the data below.
+
+    Diesel: 6.5 l/100 at 130km/h -> 4.75 at 110km/h 
+
+    Petrol: 11.75 l/100 at 130km/h -> 8.65 at 110km/h
+
+    So -27% for diesel and -26% for petrol by going from 130 to 110. We will retain the order of magnitude of 25%.
+  note: Going from 120 to 100 km/h on the motorway is equivalent to going from 130 to 110 km/h in terms of fuel consumption.
 transport . voiture . km:
-  par défaut: 13430 km/an
+  par défaut: 7000 km/an
+  description: |
+    Count only personal journeys (shopping, leisure, family etc.) and journeys to and from your usual place of work.
+
+    For example, if you are on a business assignment in another canton or another country, this is included in your company's accounts: do not count it here.
   note: |
     Source for average annual km: Swiss <a href="https://www.bfs.admin.ch/bfs/fr/home/statistiques/mobilite-transports/transport-personnes/comportements-transports/distance-duree-jour-deplacements.html">Federal Statistical Office</a>.
+transport . voiture . thermique . carburant:
+  description: |
+    > Please note that while the type of fuel varies significantly in terms of the climate footprint per litre, consumption in litres per 100km also varies. Be sure to enter a consumption per litre based on your actual average.
+transport . voiture . thermique . carburant . gazole B7 ou B10:
+  titre: Diesel
+transport . voiture . thermique . carburant . essence E5 ou E10:
+  titre: Petrol
+transport . voiture . thermique . carburant . essence E85:
+  titre: E85 petrol
+transport . deux roues . empreinte moyenne:
+  formule:
+    recalcul:
+      règle: deux roues . empreinte
+      avec:
+        deux roues . usager: oui
+        deux roues . type: "'moto sup 250'"
+        deux roues . km: 400
+transport . avion . usager:
+  description: |
+    We have chosen to offer you a way of counting the impact of your air travel over several years. 
+    The impact on the climate is such that it's important to take this into account. 
+    So, whether you fly every year or not, answer "yes" and you'll then have the option of entering your flight times 
+    for the last 3 years.
+
+    > If you flew from Zurich to New York in 2022 (approximately 19h return), your associated emissions (almost 2 tonnes) will be spread over the last 3 years.
+transport . avion . court courrier . durée moyenne:
+  titre: Average time spent by a Swiss on short-haul flights
 transport . avion . court courrier . passager km moyen:
   titre: Average distance travelled by a Swiss on short-haul flights
   formule: 0.024 * 9000
@@ -21,6 +67,8 @@ transport . avion . court courrier . passager km moyen:
       - Short-haul: 2.4
       - Medium-haul: 7.4
       - Long-haul: 90.2%
+transport . avion . moyen courrier . durée moyenne:
+  titre: Average time spent by Swiss passengers on medium-haul flights
 transport . avion . moyen courrier . passager km moyen:
   titre: Average distance travelled by a Swiss on medium-haul flights
   formule: 0.074 * 9000
@@ -31,6 +79,8 @@ transport . avion . moyen courrier . passager km moyen:
       - Short-haul: 2.4
       - Medium-haul: 7.4
       - Long-haul: 90.2%
+transport . avion . long courrier . durée moyenne:
+  titre: Average time spent on long-haul flights by Swiss citizens
 transport . avion . long courrier . passager km moyen:
   titre: Average distance travelled by a Swiss on long-haul flights
   formule: 0.902 * 9000
@@ -44,28 +94,858 @@ transport . avion . long courrier . passager km moyen:
 transport . avion . court courrier . heures de vol:
   suggestions:
     🚫✈️: 0
-    Zurich ⇄ Geneva: 1.7
-    Zurich ⇄ Venice: 2
-    Zurich ⇄ Paris: 3
+    Geneva ⇄ Zurich: 1.5
+    Geneva ⇄ Paris: 2.5
+    Geneva ⇄ Brussels: 2.5
+    Geneva ⇄ Barcelona: 3
 transport . avion . moyen courrier . heures de vol:
   suggestions:
     🚫✈️: 0
-    Zurich ⇄ Madrid: 5
-    Zurich ⇄ Helsinki: 6
-    Zurich ⇄ Cairo: 8
-    Zurich ⇄ Dubai: 12
+    Geneva ⇄ Madrid: 4
+    Geneva ⇄ Porto: 4
+    Geneva ⇄ Lisbon: 5
+    Geneva ⇄ Istanbul: 6
 transport . avion . long courrier . heures de vol:
   suggestions:
     🚫✈️: 0
-    Zurich ⇄ New York: 19
-    Zurich ⇄ Kinshasa: 22
-    Zurich ⇄ Tokyo: 26
-    Zurich ⇄ Lima: 36
-    Zurich ⇄ Sydney: 44
+    Geneva ⇄ Dubai: 12.5
+    Geneva ⇄ New York: 17
+    Geneva ⇄ Beijing: 20.25
 transport . train . km:
   suggestions:
-    crossing a region: 300
-    Zurich ⇄ Geneva: 450
-    Zurich ⇄ Paris: 1000
-    💳 frequent flyer: 10000
-    💳 grand voyageur plus ultra: 25000
+    Geneva ⇄ Nyon: 42
+    Geneva ⇄ Lausanne: 100
+    Geneva ⇄ Bern: 260
+    Geneva ⇄ Zurich: 440
+    Geneva ⇄ Paris: 820
+  par défaut: 2700 km/an
+transport . métro ou tram . heures par semaine:
+  question: How many hours a week do you spend on the tram?
+transport . avion . court courrier . empreinte par km:
+  formule: 0.305
+  description: We use the emission factor from the Mobitool platform - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
+transport . avion . moyen courrier . empreinte par km:
+  formule: 0.257
+  description: We use the emission factor from the Mobitool platform - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
+transport . avion . long courrier . empreinte par km:
+  formule: 0.235
+  description: We use the emission factor from the Mobitool platform - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
+transport . train . impact par km:
+  formule: 0.002
+  note: We use the emission factor from the Mobitool platform - Mobitool electric mix SBB (excluding road infrastructure)
+transport . métro ou tram . impact par km:
+  formule: 0.021
+  note: We use the emission factor from the Mobitool platform - Mobitool tramway (excluding infrastructure)
+transport . métro ou tram . vitesse:
+  formule: 15.4
+  note: TPG (2022 management report - average tram commercial speed)
+transport . bus . impact par km:
+  formule: 0.067
+  note: We use the emission factor from the Mobitool platform - Mobitool based on the TPG fleet (2022 Management Report - 30% trolleybuses, 70% buses, mainly articulated)
+transport . bus . vitesse:
+  formule: 18
+  note: TPG (2022 Management Report - estimate based on bus commercial speed)
+transport . deux roues . empreinte:
+  formule:
+    variations:
+      - si: type = 'scooter thermique'
+        alors: 0.124
+      - si: type = 'scooter électrique'
+        alors: 0.03
+      - si: type = 'moto inf 250'
+        alors: 0.146
+      - si: type = 'moto sup 250'
+        alors: 0.194
+  note: |
+    We use the emission factor from the Mobitool platform - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
+
+    - Mobitool medium scooter (excluding infrastructure, with construction)
+    - SMobitool motorbike 11-35kW (excluding infrastructure, with construction)
+    - Mobitool motorbike >35kW (excluding infrastructure, with construction)
+transport . voiture . gabarit . petite:
+  description: Renault Zoé or Fiat 500 city car
+transport . voiture . gabarit . moyenne:
+  description: Model above the small city car, such as Renault Mégane or VW Golf
+transport . voiture . gabarit . VUL:
+  description: VW Multivan or Mercedes Vito van or minibus
+transport . voiture . gabarit . berline:
+  description: Long car such as Peugeot 508, Tesla Model 3, Audi A4 or A6
+transport . voiture . électrique . empreinte au kilomètre:
+  formule:
+    variations:
+      - si: gabarit = 'petite'
+        alors: 0.021
+      - si: gabarit = 'moyenne'
+        alors: 0.024
+      - sinon: 0.028
+  note: We use the emission factor from the Mobitool platform - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
+transport . voiture . construction . barème thermique:
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - gabarit = 'petite'
+            - gabarit = 'moyenne'
+        alors: 7758
+      - si: gabarit = 'VUL'
+        alors: 10340
+      - si: gabarit = 'berline'
+        alors: 8958
+      - si: gabarit = 'SUV'
+        alors: 11722
+  note: We use the emission factor from the Mobitool platform ((manufacture + maintenance + end of life) * km * number of passengers) - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
+transport . voiture . construction . barème électrique:
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - gabarit = 'petite'
+            - gabarit = 'moyenne'
+        alors: 11013
+      - si: gabarit = 'VUL'
+        alors: 16093
+      - si: gabarit = 'berline'
+        alors: 13291
+      - si: gabarit = 'SUV'
+        alors: 18895
+  note: We use the emission factor from the Mobitool platform ((manufacture + maintenance + end of life) * km * number of passengers) - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
+transport . voiture . construction . barème hybride:
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - gabarit = 'petite'
+            - gabarit = 'moyenne'
+        alors: 8880
+      - si: gabarit = 'VUL'
+        alors: 11957
+      - si: gabarit = 'berline'
+        alors: 10298
+      - si: gabarit = 'SUV'
+        alors: 13616
+  note: We use the emission factor from the Mobitool platform ((manufacture + maintenance + end of life) * km * number of passengers) - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
+transport . voiture . durée de vie:
+  formule: 17
+  note: We use the emission factor from the Mobitool platform - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
+transport . ferry . usager:
+  par défaut: non
+transport . ferry . heures:
+  suggestions:
+    Marseille ⇄ Ajaccio: 22
+    Toulon ⇄ Ajaccio: 16
+    Genoa ⇄ Bastia: 13
+    Genoa ⇄ Olbia: 24
+transport . mobilité douce . vélo . construction:
+  formule: 76
+  note: Mobitool Conventional ((manufacture + maintenance + end of life) * km
+transport . mobilité douce . vélo . durée de vie:
+  formule: 15
+  note: Mobitool Conventional
+transport . mobilité douce . vae . empreinte:
+  formule: 0.001
+  note: Mobitool medium e-bike 25 km/h, 45 km/h and cargo bike (energy supply)
+transport . mobilité douce . vae . construction:
+  formule: 198
+  note: Mobitool average e-bike 25 km/h, 45 km/h and cargo bike ((manufacture + maintenance + end of life) * km
+transport . mobilité douce . vae . durée de vie:
+  formule: 10
+  note: Mobitool average e-bike 25 km/h, 45 km/h and cargo bike
+transport . mobilité douce . autres véhicules à moteur . empreinte:
+  formule: 0.003
+  note: Mobitool Electric scooter
+transport . mobilité douce . autres véhicules à moteur . construction:
+  formule: 71
+  note: Mobitool Electric scooter ((manufacture + maintenance + end of life) * km
+transport . mobilité douce . autres véhicules à moteur . durée de vie:
+  formule: 2
+  note: Mobitool Electric scooter
+divers . animaux domestiques . empreinte . chats . nombre:
+  par défaut: 0
+divers . animaux domestiques . empreinte . chien moyen . nombre:
+  par défaut: 0.25
+divers . électroménager . préservation:
+  description: |
+    To avoid asking you to give the precise age of the ten or so appliances you own, we use a grid of the average age of each appliance.
+
+    For example, a fridge lasts an average of 10 years, an oven 12 years and a kettle 6 years. 
+
+    This is not the age of the appliance when it breaks down, but its age when the owner decides to replace it with a new one.
+
+    It's up to you to see where you stand in relation to the average.
+divers . numérique . préservation:
+  description: |
+    To avoid asking you to give the precise age of all the electronic devices you own, we use an average age scale for each device, which is adjusted according to your efforts to preserve it or not.
+
+    It's up to you to judge your efforts to make them last as long as possible
+
+    Answering "None, I often buy new" is the most impactful answer because it means that you replace your appliances early even before they are out of use.
+divers . autres produits . niveau de dépenses:
+  question: The test does not yet capture all your consumption. How much do you estimate you spend per year on new products (decoration, DIY, games, hobbies, tools, etc.)?
+  description: |
+    To keep the interface simple, we propose an estimate, via your expenditure, of the footprint of the consumer goods you own and which you think you have not included in the previous questions
+    that you own and that you don't think you included in the previous questions.
+
+    This concerns: **games, decoration, kitchen equipment, household linen, materials for creative hobbies or DIY, plants, etc
+  par défaut: "'important'"
+divers . autres produits . niveau de dépenses . faible:
+  titre: Less than 50CHF / month
+divers . autres produits . niveau de dépenses . moyen:
+  titre: Between CHF 50 and 120 / month
+divers . autres produits . niveau de dépenses . important:
+  titre: More than CHF 120 / month
+divers . loisirs . culture . édition . fréquence:
+  par défaut: "'élevée'"
+divers . loisirs . culture . édition . fréquence . faible:
+  titre: Less than CHF 5 per month
+divers . loisirs . culture . édition . fréquence . normale:
+  titre: From CHF 5 to CHF 15 per month
+divers . loisirs . culture . édition . fréquence . élevée:
+  titre: From CHF 15 to CHF 30 per month
+divers . loisirs . culture . édition . fréquence . très élevée:
+  titre: More than CHF 30 per month
+divers . numérique . internet . empreinte horaire:
+  formule: 0.02
+alimentation . petit déjeuner . type . continental:
+  titre: Viennese pastries and bread
+alimentation . local . consommation:
+  description: |
+    This question allows us to adjust the footprint of your diet according to your habits about the local nature of your purchases.
+    We consider "local" to be food that comes from the region where you live or from nearby regions. If you eat "Swiss", consider your food to be local.
+    This criterion has a relatively small impact, as the share of transport in the carbon footprint of the products we consume is smaller than the emissions linked to production, processing or packaging, especially if you eat a meat-based diet.
+    But it's still a win-win situation, and the benefits of eating locally don't stop at the climate footprint.
+
+    ⚠️ Be careful, if you do your shopping by car several kilometres from home each week, it's possible that the footprint of the last kilometre will exceed the gains of eating locally!
+alimentation . déchets . quantité jetée:
+  description: |
+    Answer 'Zero Waste' only if you're tracking every last bit of waste. To find out more about zero waste lifestyles, visit the Zero Waste Geneva website.
+
+    Please note that in the case of a 'zero waste' commitment, we are still considering greenhouse gas emissions (albeit greatly reduced), as it is very difficult, if not impossible, to generate no waste at all, some of which is invisible and unavoidable.
+    You have indicated a zero waste lifestyle. This level of commitment corresponds to someone who is 100% committed to reducing their waste. Buying in bulk is not enough to be zero waste.
+parc français . surface moyenne:
+  titre: Average floor area per dwelling
+  formule: 80
+  unité: m2
+parc français . chauffage . consommation électricité par m2:
+  formule: 125
+  unité: kWh/m2
+  note: Source - KBOB, default heating consumption of 450 MJ/m2
+parc français . chauffage . consommation gaz par m2:
+  formule: 125
+  unité: kWh/m2
+  note: Source - KBOB, default heating consumption of 450 MJ/m2
+parc français . chauffage . consommation fioul par m2:
+  formule: 125
+  unité: kWh/m2
+  note: Source - KBOB, default heating consumption of 450 MJ/m2
+parc français . chauffage . consommation bois par m2:
+  formule: 125
+  unité: kWh/m2
+  note: Source - KBOB, default heating consumption of 450 MJ/m2
+parc français . chauffage . consommation réseau de chaleur par m2:
+  formule: 125
+  unité: kWh/m2
+  note: Source - KBOB, default heating consumption of 450 MJ/m2
+parc français . surface . part électricité:
+  formule: 3.3%
+  note: No electric heating, only the consumption of heat pumps is taken into account
+parc français . surface . part gaz:
+  formule: 60.80%
+parc français . surface . part fioul:
+  formule: 28.40%
+parc français . surface . part bois:
+  formule: 2.3%
+parc français . surface . part réseau de chaleur:
+  formule: 5.2%
+logement . chauffage . empreinte par défaut:
+  résumé: A statistical calculation of average residential heating in Geneva
+  note: the default housing footprint is calculated on the basis of the average housing stock in Geneva
+parc français . chauffage . empreinte moyenne par m2 hors électricité:
+  note: Electricity is treated separately.
+  formule:
+    somme:
+      - surface . part gaz * empreinte gaz par m2
+      - surface . part fioul * empreinte fioul par m2
+      - surface . part bois * empreinte buches par m2 / 2
+      - surface . part bois * empreinte granulés par m2 / 2
+      - surface . part réseau de chaleur * empreinte réseau de chaleur par m2
+parc français . chauffage . empreinte moyenne chauffage air par m2:
+  formule:
+    somme:
+      - empreinte électricité par m2 * part chauffage air électricité
+      - empreinte gaz par m2 * part chauffage air gaz
+      - empreinte fioul par m2 * part chauffage air fioul
+      - empreinte buches par m2 * part chauffage air bois / 2
+      - empreinte granulés par m2 * part chauffage air bois / 2
+      - empreinte réseau de chaleur par m2 * part chauffage air réseau de chaleur
+parc français . consommation électricité autre par m2:
+  formule: 31.5
+  unité: kWh/m2
+  note: |
+    Source (extrapolation) - Energy efficiency in households, Suissenergie, November 2021; OCSTAT; OFS
+    Based on an average flat household
+logement . électricité . estimation via le coût:
+  unité: CHF/kWh
+  formule: 0.28
+logement . chauffage . réseau de chaleur . intensité carbone:
+  formule: 0.067
+logement . chauffage . citerne propane . estimation via le coût:
+  unité: CHF/kg
+logement . chauffage . bois . type . granulés . estimation via le coût:
+  unité: CHF/kWh
+logement . chauffage . bois . type . bûches . estimation via le coût:
+  unité: CHF/stère
+logement . chauffage . bois . type . bûches . prix stère 2023:
+  formule: 180
+  unité: CHF/stère
+  note: Swiss Farmers' Union, firewood 2023, direct sales, medium species https://www.sbv-usp.ch/fr/prix/vente-directe/bois-de-cheminee
+logement . chauffage . bois . type . granulés vrac . prix 100 kWh:
+  formule: 11
+  note: FSO average energy prices su-f-05.02.91, average 2022 (4.8 kWh/kg) https://www.bfs.admin.ch/bfs/fr/home/statistiques/prix/indice-prix-consommation/resultats-detailles.assetdetail.25245904.html
+logement . chauffage . bois . type . granulés sac . prix 100 kWh:
+  formule: 11
+  note: FSO average energy prices su-f-05.02.91, average 2022 (4.8 kWh/kg) https://www.bfs.admin.ch/bfs/fr/home/statistiques/prix/indice-prix-consommation/resultats-detailles.assetdetail.25245904.html
+logement . chauffage . fioul . estimation via le prix:
+  question: No bill? Enter your approximate monthly heating oil costs
+  unité: CHF/litre
+  formule: 1.397
+logement . appartement:
+  description: |
+    As opposed to a detached house or villa.
+
+    This information influences not only the construction footprint, but also the scope for insulation work, for example.
+
+    > If you live in an unusual type of accommodation, such as a camper van, no problem: choose "flat" and enter the m² of what you actually live in.
+logement . construction . par surface:
+  formule:
+    variations:
+      - si: éco-construit
+        alors: 144 kgCO2e/m2
+      - sinon: 696 kgCO2e/m2
+  note: Haute école fribourg 2021 report (60-year amortisation)
+logement . construction . durée d'amortissement:
+  formule: 60
+  note: SIA standard assumption
+logement . âge:
+  question: How old is your home?
+  par défaut: 45
+  note: In the canton of Geneva, more than half of all residential buildings and detached houses were built before 1980.
+logement . saisie habitants:
+  par défaut: 2.1
+logement . électricité . consommation:
+  description: |
+    Tip: you can find your annual electricity consumption on your bills or in your online account on the SIG website.
+
+    If you live in several homes (for example, if you have a second home), try to "reduce" your consumption to that of your main home to get the most accurate estimate possible.
+logement . climatisation . présent:
+  question: Do you use an air conditioning system to cool your home (electric air conditioner, heat pump)?
+  description: |
+    Do you have air conditioning? Its electricity consumption will simply be included in the electricity bill, like all the electrical appliances in the home. Refrigerant gas leaks are taken into account here.
+  par défaut: non
+logement . climatisation . nombre:
+  par défaut: 1
+logement . chauffage . fioul:
+  titre: Fuel oil
+logement . chauffage:
+  description: |
+    > This question covers all the energy sources you use to power your heating systems, water heaters, hobs, etc.
+
+    Some homes use electricity only, others are heated entirely by gas, and more rarely by wood or oil.
+    In still other situations, a home may be heated mainly by electric heaters or a heat pump,
+    but with additional wood heating, for example. Finally, you can also take into account your gas consumption for your van or motorhome. 
+
+    If you live in several homes (for example, if you have a second home), try to "reduce" these consumption figures to those of your main home, to get the most accurate estimate possible.
+
+    Tick all the modes you use.
+logement . chauffage . gaz . consommation:
+  par défaut: parc français . chauffage . consommation gaz par m2 * surface
+  description: |
+    Tip: You can find your annual energy consumption on your gas bills.
+
+    > For heating, your heating company may not give you the consumption in kWh for your home when the boiler is centralised. You can enter the amount of your bill in CHF to estimate your kWh. If you have two bills for cooking gas and heating gas (charges), add the two amounts together.
+logement . chauffage . gaz . estimation via le coût:
+  unité: CHF/kWh
+  formule: 0.143
+  note: FSO average energy prices su-f-05.02.91, average 2022 - https://www.bfs.admin.ch/bfs/fr/home/statistiques/prix/indice-prix-consommation/resultats-detailles.assetdetail.25245904.html
+logement . chauffage . gaz . facteur d'émission base carbone:
+  valeur: 0.23
+  note: KBOB
+logement . chauffage . fioul . consommation:
+  question: What is your household's annual oil consumption?
+  description: |
+    Tip: You can find your annual energy consumption on your heating oil bill or on your annual service charge statement sent by your property management company.
+logement . chauffage . gaz . intensité carbone gaz utilisateur:
+  formule: gaz . facteur d'émission base carbone
+logement . chauffage . réseau de chaleur . consommation:
+  aide: null
+  par défaut: parc français . chauffage . consommation réseau de chaleur par m2 * surface
+services sociétaux . question rhétorique:
+  question: We allocate the footprint of public services (education, health, etc.) equally to each Geneva resident.
+  description: |
+    This category does not depend on your answers. The associated footprint is calculated using a macro approach, based in particular on the territorial carbon footprint of the canton of Geneva.
+    To find out more about this value, please consult the detailed explanations in our FAQ.
+services sociétaux:
+  formule: services publics
+  description: |
+    This item includes the footprint of Swiss public services.
+services publics:
+  formule: 1583
+  note: calculation based on the VdG and Canton territorial carbon footprints (see social services file)
+services marchands:
+  formule: 0
+  note: In the GE version of the calculator, we have directly associated emissions from market services with the different categories (for example, car manufacturing is included in the impact of car use).
+services sociétaux . voter:
+  icônes: 🗳️🏛️
+  titre: Acting in your spheres of influence
+  description: |
+    Around 4 times a year, every Swiss citizen has the opportunity to vote on various issues at federal, cantonal and municipal level.
+
+    Depending on the subject, the votes can be an opportunity to raise the issue of climate change. It's a way of acting indirectly on the carbon footprint of public services, and on other issues where individual efforts are not enough.
+
+    But that's not all! You can take part in citizens' forums or assemblies! If you are a student, there may be processes in place (assemblies, petitions, votes, etc.) to steer your university towards sustainability If you're an employee, can you influence the choices your company makes? If you're retired, can you give some of your time to cooperatives or associations?
+services sociétaux . pression locale:
+  description: |
+    The footprint of public services is the footprint of many activities managed by the confederation, canton or municipality, such as schools or the police.
+
+
+    > 🚸 Your children's school may be badly insulated
+
+    > 🛣️ Your local authority doesn't provide enough parking for bicycles
+
+    The first step is to discuss the situation with your friends and acquaintances, and then contact the people in charge at your local authority. That way, you can alert them to the situation and see what steps have already been taken.
+divers . numérique . internet . diminuer:
+  description: |
+    Video streaming contributes to GHG emissions (even more so when a mobile connection is used) because it requires a multitude of infrastructures, such as computer servers. 
+
+    Limiting its consumption, for example from two hours a day to one hour, and favouring alternatives such as reading, will help to reduce your digital carbon footprint.
+divers . numérique . appareils . allongement:
+  description: |
+    Increasing the lifespan of your household or electronic appliances (by taking care of them or repairing them) helps to limit your impact on the climate.
+
+    Renewing equipment prematurely, on the other hand, means producing more equipment for the same service.
+
+    To extend the life of your equipment, don't hesitate to have it repaired. The http://www.ge-repare.ch website provides a list of repair addresses.
+
+    If you absolutely have to get rid of an appliance, think of the ressourceries or recycleries, which are places dedicated to re-use!
+divers . aider les autres:
+  description: |
+    There comes a time when reducing your carbon footprint becomes very complicated. 
+
+    If your footprint falls below 4 tonnes, or if certain constraints make progress impossible, rather than focusing solely on your own impact, you are probably better off helping others to reduce their footprint. 
+
+    How can you do this? By distributing this calculator, by discussing these issues with your friends and family, by running workshops in your company or association, or even by helping someone in a practical way to change one of their habits.
+divers . avoir un stop pub:
+  description: |
+    The stop pub is a sticker you place on your letterbox to inform advertising distributors and the post office that you refuse to receive catalogues, promotions and advertising of all kinds that encourage consumption.
+
+    This sticker does not prevent all advertising, but it sends out a strong signal and generally considerably reduces the amount of paper waste received.
+divers . publicité:
+  description: |
+    Through the desires they create in us, advertising and marketing encourage us to over-consume and to renew our equipment prematurely. These promotions serve to maximise renewal rates and the volume of goods sold, volumes that are very often disproportionate to actual demand.
+
+    Not renewing your appliances and equipment too soon and making them last as long as possible is a strong gesture for the climate.
+divers . électroménager . allongement:
+  description: |
+    Increasing the lifespan of your household appliances (by taking care of them or repairing them when they break down) helps to limit your impact on the climate. 
+
+    Renewing equipment prematurely, on the other hand, means producing more equipment for the same service.
+
+    You can find lots of advice on how to use your household appliances at https://www.energie-environnement.ch/appareils-electromenagers
+
+    To extend the life of your household appliances, don't hesitate to have them repaired. The https://www.ge-repare.ch website provides a list of repair addresses.
+
+    If you really want to get rid of a piece of household electrical equipment, think of the ressourceries or recycleries, which are places dedicated to re-use!
+divers . ameublement . allongement:
+  description: |
+    Increasing the lifespan of your furniture (by taking care of it or repairing it) helps to limit its impact on the climate. 
+
+    Renewing furniture prematurely, on the other hand, means producing more furniture for the same service.
+
+    To extend the life of your furniture, don't hesitate to have it repaired. The https://www.ge-repare.ch website provides a list of repair addresses.
+
+    If you absolutely have to get rid of a piece of furniture, think of the ressourceries or recycleries, which are places dedicated to re-use!
+transport . arrêter l'avion:
+  description: |
+    Aircraft have a significant impact on the climate. 
+
+    It is not limited to CO₂ emissions alone. The actual footprint of the aircraft is estimated to be at least 2x that of the CO₂ emitted by burning paraffin, due to a radiative forcing effect. For more details, you can refer to myclimate's explanations.
+
+    The actual footprint of the aircraft is estimated to be at least 2x that of the CO₂ emitted by burning paraffin, due to a radiative forcing effect. 
+
+    The <a href="https://co2.myclimate.org/fr/calculate_emissions">myclimate</a> transport calculator makes it possible to visualise this footprint and compare it with other means of transport.
+  aller plus loin: |
+    ## Forçage radiatif total
+
+    L'avion a un impact important sur le climat à la fois à cause de ses émissions de CO₂ et d'autres effets (dit forçage radiatif additionnel).
+
+    Du fait que les avions volent en haute altitude, la combustion du kérosène crée des traînées et perturbe les cycles d'autres gaz à effet de serre que le CO₂ (vapeur d'eau, eau condensée sous diverses formes, NOx et méthane qui, ensemble, produisent de l'ozone, etc.).
+
+    ## Avion vs voiture
+
+    Ramené au passager, l'impact carbone d'un trajet en avion est dans certains cas du même ordre que celui d'un trajet en voiture. Toutefois, l'empreinte de la voiture elle-même est élevée. Comparer l'avion à la voiture ne rend pas ce premier vertueux.
+
+    Deuxièmement, un trajet en avion est en général bien plus long. Quand il s'agit de choisir la destination des vacances par exemple, un trajet en voiture a donc toutes les chances d'être beaucoup moins polluant. Cela dit, notons aussi que nos kilométrages en voiture sont tels que le match est relancé quand on regarde l'empreinte à l'année.
+transport . arrêter l'avion court:
+  description: |
+    Flying has revolutionised the way we live and travel. We can now travel further, faster and more frequently, but unfortunately this has not come without a downside for the climate. 
+
+    In fact, there is a ratio of 100 between the emission factors (quantity of CO₂ emitted per km travelled) of a plane and a train.
+
+    This is why adapting our weekends and holidays by turning to low-carbon mobility offers and/or rethinking the way we travel is essential if we want to reduce our impact on the climate, both individually and as a society
+
+    Find out which destinations are accessible by train from your home: <a href="https://www.chronotrains.com/fr">Chronotrains</a>; <a href="https://www.sbb.ch/fr/">SBB (sbb.ch)</a>; <a href="https://www.sbb.ch/fr/loisirs-et-vacances/trains-excursions/interrail.html">Interrail</a>  
+
+    Finally, <a href="https://monimpacttransport.fr">compare modes of transport here</a>
+
+    ## key figures
+    A return journey from Geneva to Zurich emits around 224 kgCO2eq by plane, compared with just 3 kgCO2eq by train (source: Mobitool / myclimate)
+    Choosing to travel from Geneva to Rome (by train) rather than Marrakech (by plane) will save 685 kg of CO2eq (source: Mobitool / myclimate)
+transport . prendre moins l'avion:
+  description: |
+    > 💡 Try to make at least one of the journeys to your destination by train!
+
+    Find out which destinations are accessible by train from your home: <a href="https://www.chronotrains.com/fr">Chronotrains</a>; <a href="https://www.sbb.ch/fr/">SBB (sbb.ch)</a>; <a href="https://www.sbb.ch/fr/loisirs-et-vacances/trains-excursions/interrail.html">Interrail</a> 
+
+    Flying has a major impact on the climate. 
+
+    It is not limited to CO₂ emissions alone. The aircraft's actual footprint is estimated to be at least 2x that of the CO₂ emitted by burning paraffin, due to a radiative forcing effect. For more details, you can refer to myclimate's explanations.
+
+    The actual footprint of the aircraft is estimated to be at least 2x that of the CO₂ emitted by burning paraffin, due to a radiative forcing effect. 
+
+    The <a href="https://co2.myclimate.org/fr/calculate_emissions">myclimate transport calculator</a> makes it possible to visualise this footprint and compare it with other means of transport.
+  aller plus loin: |
+    ## Forçage radiatif total
+
+    L'avion a un impact important sur le climat à la fois à cause de ses émissions de CO₂ et d'autres effets (dit forçage radiatif additionnel).
+
+    Du fait que les avions volent en haute altitude, la combustion du kérosène crée des traînées et perturbe les cycles d'autres gaz à effet de serre que le CO₂ (vapeur d'eau, eau condensée sous diverses formes, NOx et méthane qui, ensemble, produisent de l'ozone, etc.).
+
+    ## Avion vs voiture
+
+    Ramené au passager, l'impact carbone d'un trajet en avion est dans certains cas du même ordre que celui d'un trajet en voiture. Toutefois, l'empreinte de la voiture elle-même est élevée. Comparer l'avion à la voiture ne rend pas ce premier vertueux.
+
+    Deuxièmement, un trajet en avion est en général bien plus long. Quand il s'agit de choisir la destination des vacances par exemple, un trajet en voiture a donc toutes les chances d'être beaucoup moins polluant. Cela dit, notons aussi que nos kilométrages en voiture sont tels que le match est relancé quand on regarde l'empreinte à l'année.
+transport . éco-conduite:
+  description: |
+    Eco-driving is a simple and effective action that everyone can take.  It involves a series of recommendations to adopt, such as checking tyre pressure or optimising gear ratios.
+
+    By taking these steps, you can save up to 15% on fuel, cut vehicle maintenance costs, reduce the risk of accidents and make substantial savings that can amount to several hundred Swiss francs. 
+
+    Adopting eco-driving techniques is all the more relevant in towns and urban areas where there are frequent stops and restarts.
+
+    To find out more: <a href="https://www.ecodrive.ch/fr/">EcoDrive - every litre counts</a>
+  références:
+    EcoDrive – chaque litre compte: https://www.ecodrive.ch/fr/
+transport . covoiturage:
+  description: |
+    This action concerns all car journeys.
+
+    While long-distance car-sharing is well known in Switzerland, short-distance car-sharing is almost non-existent: today, only 4% of home-work journeys are made by car-sharing.
+
+    Numerous websites offer free platforms for bringing together people making the same journey, whether on a regular basis, for example to go to work, or on a one-off basis, for example for a ski outing.
+
+    -<a href="http://www.e-covoiturage.ch/index.php/fr/">e-carpooling website</a>: Swiss carpooling platform;
+
+    -<a href="http://www.covoiturage-leman.org/">Léman carpooling website</a>: carpooling platform for the Lake Geneva region;
+
+    -<a href="http://clem.mobi/covoiturage">Clem' website</a>: carpooling for home-to-work journeys in the Geneva region;
+
+    -<a href="http://www.klaxit.com/">Klaxit website</a>: home-to-work car-sharing for companies
+
+    -<a href="https://caroster.io/">Caroster website</a>: carpooling to manage transport within an association or sports club
+
+    For your journeys abroad, you can also consult the following websites:
+
+    -<a href="https://www.blablacar.fr/">blablacar website</a>: European car-sharing platform;
+
+    -<a href="http://www.europe-carpooling.com/">carpooling website</a>: carpooling platform in France;
+
+    -<a href="http://compartir.org/">compartir website</a>: carpooling platform in Spain and internationally;
+
+    -<a href="https://www.tictactrip.eu/company/carpooling/idvroom">iDVROOM website</a>: carpooling platform in France and abroad;
+
+
+    In all cases, remember to adapt your mode of transport to the distance and to favour soft modes or public transport (bus, metro, bike, walking, etc.) as much as possible.
+transport . boulot:
+  description: |
+    While long-distance car-sharing is well known in Switzerland, short-distance car-sharing is almost non-existent: today, only 4% of home-to-work journeys are made by car-sharing.
+
+    Numerous websites offer free platforms for bringing together people who make the same journey, whether regularly, for example to go to work, or occasionally, for example on a ski trip.
+
+    -<a href="http://www.e-covoiturage.ch/index.php/fr/">e-carpooling website</a>: Swiss carpooling platform;
+
+    -<a href="http://www.covoiturage-leman.org/">Léman carpooling website</a>: carpooling platform for the Lake Geneva region;
+
+    -<a href="http://clem.mobi/covoiturage">Clem' website</a>: carpooling for home-to-work journeys in the Geneva region;
+
+    -<a href="http://www.klaxit.com/">Klaxit website</a>: home-to-work car-sharing for companies
+
+    - Caroster website: carpooling to manage transport within an association or sports club
+    For your journeys abroad, you can also consult the following websites:
+
+    -<a href="https://www.blablacar.fr/">blablacar website</a>: European car-sharing platform;
+
+    -<a href="http://www.europe-carpooling.com/">carpooling website</a>: carpooling platform in France;
+
+    -<a href="http://compartir.org/">compartir website</a>: carpooling platform in Spain and internationally;
+
+    -<a href="https://www.tictactrip.eu/company/carpooling/idvroom">iDVROOM website</a>: carpooling platform in France and abroad;
+
+     In all cases, remember to adapt your mode of transport to the distance and to favour soft modes or public transport (bus, metro, bike, walking, etc.) as much as possible.
+transport . réduction covoiturage:
+  description: |
+    According to a study carried out in France, car-sharing can reduce emissions by around 20%.
+  référence:
+    - https://www.sciencedirect.com/science/article/pii/S1361920918303201
+transport . boulot . distance . km aller:
+  description: |
+    We're talking here about the distance *to*, using your preferred mode of transport.
+  par défaut: 7 km
+transport . boulot . commun:
+  description: |
+    Whenever possible, taking public transport or light forms of transport (walking, cycling, scootering, etc.) to work not only reduces our carbon footprint, but also improves our quality of life.
+
+    In Geneva, 45% of work-related journeys are made by car or motorised two-wheeler ( <a href="https://statistique.ge.ch/domaines/11/11_02/tableaux.asp">MRMT 2021</a>), mostly by people travelling alone in their cars. This is what is known as auto-solism.
+
+    As well as emitting a lot of greenhouse gases, this type of driving reduces the quality of the air in our towns and cities, and therefore our health, clogs up urban roads and creates noise pollution.
+
+    > In the canton of Geneva, for example, traffic jams account for <a href="[Geneva traffic report | TomTom Traffic Index](https://www.tomtom.com/traffic-index/geneva-traffic/">133 lost hours</a> per person per year, or around 6 days.
+
+    >Did you know? The canton and several communes subsidise mechanical, electric, cargo and folding bicycles, etc. Calculate your subsidy 🚲️ in 3 clicks ( <a href="https://www.ge.ch/subventions-velo">Subventions vélo | ge.</a> ch ).
+transport . seuil d'activation boulot:
+  description: |
+    Minimum distance to trigger this action. 
+    > If someone tells us they only drive 500km in a year, they're unlikely to drive to work.
+transport . boulot . commun . empreinte:
+  note: |
+    We consider that a journey to work made by car can be replaced by a regional train and not by an Inter-City train.
+transport . boulot . commun . type:
+  par défaut: "'bus'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - bus
+        - TER
+        - vélo classique
+        - vélo électrique
+        - trotinette électrique
+transport . voiture 5km:
+  description: |
+    Turning to active forms of transport (walking, rollerblading, cycling, scootering, etc.) for "short" journeys of less than 5 km can significantly reduce our greenhouse gas emissions, ease congestion on urban roads and reduce pollution (air and noise).
+
+    Find out how to get around by bike <a href="https://www.ge.ch/document/carte-velo">in Geneva</a> and <a href="https://schweizmobil.ch/fr/ete">Switzerland</a>.
+
+      >Did you know? The canton and several communes subsidise mechanical, electric, cargo and folding bikes, etc. <a href="https://www.ge.ch/subventions-velo">Calculate your subsidy 🚲️ in 3 clicks</a>.
+transport . voiture 5km . fréquence:
+  description: |
+    I drive 2km to get my bread, which is one round trip.
+    I go to work every day from Monday to Friday, 4km away, that's 5 round trips.
+transport . scooter électrique:
+  description: |
+    The electric scooter is not a miracle solution, but for certain uses it can be a (very) useful way of reducing our carbon footprint.
+
+    However, we must be careful not to come to the simplistic conclusion that simply switching to a fleet of electric vehicles will be enough to reduce the carbon footprint of Geneva's commuters. 
+
+    Priority should be given to walking, cycling or using public transport wherever possible. 
+
+    Nevertheless, the reduction figure presented for this action does correspond to the difference in greenhouse gas emissions that would have occurred if you had travelled your kilometres with an electric vehicle rather than a combustion engine.
+
+    Please note that the idea here is not to encourage the purchase of a new electric scooter. It's better to make your equipment last and buy second-hand!
+transport . voiture électrique:
+  description: |
+    The electric car is not a miracle solution, but for certain uses it can prove (very) useful in reducing our carbon footprint.
+
+    However, we must be careful not to come to the simplistic conclusion that all we need to do is switch to an electric car fleet to reduce the carbon footprint of Geneva's commuters. 
+
+    Priority should be given to walking, cycling or using public transport wherever possible.
+
+    Nevertheless, the reduction figure presented for this action does correspond to the difference in greenhouse gas emissions that would have occurred if you had travelled your kilometres with an electric vehicle rather than a combustion engine.
+logement . baisse température:
+  description: |
+    Housing, and in particular heating (oil or gas), has a major impact on the climate.
+
+    Lowering the temperature by one or two degrees can be a way of significantly reducing your carbon footprint.
+
+    For more tips on how to save energy in your home, visit https://www.energie-environnement.ch/maison/renovation-et-chauffage
+
+    Source: Ways to save energy https://www.ge.ch/document/30986/annexe/0
+logement . baisse température . nombre degrés:
+  description: |
+    Around 85% of a household's final energy consumption goes on heating and hot water.
+
+    As well as having a significant financial cost, this energy consumption increases the carbon footprint of households.
+
+    However, it can easily be limited by lowering the temperature of occupied rooms without losing thermal comfort or feeling cold.
+
+    For example, set the temperature at between 19° and 21°C in rooms that are occupied during the day (and 17°C at night or in rooms that are not very busy).
+
+    Lowering the heating temperature by 1°C represents <a href="https://www.ge.ch/document/30986/annexe/0">energy savings of 7% to 10%</a>. This may not seem much on an individual scale, but if everyone takes this action, it is a powerful lever for reducing CO2 emissions.
+
+    Windows should of course be kept closed. To ventilate your home, and if you don't have mechanical ventilation, open the windows wide 1x a day for 5 to 10 minutes a day.
+
+    Good management of blinds and shutters will increase your comfort and further reduce emissions from your home: opening them during the day will allow you to benefit from the sun's energy, while closing them at night will increase your comfort and reduce heat loss.
+logement . baisse température . gains 1 degré:
+  formule: 0.1
+  description: |
+    This is the estimated reduction in energy consumption when we lower the temperature of our heated home by 1°C within the usual temperature range (around 20°).
+
+    We use the estimate given in the <a href="https://www.ge.ch/document/30986/annexe/0">Canton guide "Des gestes pour économiser notre énergie"</a>.
+logement . éteindre appareils:
+  description: |
+    Our homes and flats are full of electronic devices and household appliances that are often left on or on standby.
+
+    By using simple power strips, you can switch them off completely in the blink of an eye.
+
+    You can find lots of tips on how to save energy in your home at https://www.energie-environnement.ch/maison/renovation-et-chauffage.
+logement . énergie de veille . puissance:
+  note: |
+    What's more, we're probably underestimating the number of watts consumed on standby. In particular, it appears that internet and TV boxes alone consume more than 50 W.
+
+    > The 'box' is an increasingly common piece of equipment, which is often left on 24 hours a day and can consume more than 200 kWh a year, or as much as a washing machine.
+logement . remplacer fioul par bois:
+  titre: Replacing my oil-fired boiler with wood
+  note: |
+    For the moment, we consider that replacing kWh of fuel oil with the same amount of kWh of wood is a good first-order approximation. This can then be adjusted to take account of the efficiency of residential installations.
+
+    Find out about <a href="https://ge-energie.ch/">subsidies</a> for switching to renewable energy.
+logement . éclairage . consommation de l'éclairage:
+  formule: électricité * 10%
+  note: Household electricity consumption, August 2021, suisseénergie
+logement . remplacer gaz par PAC:
+  description: |
+    Gas-fired boilers are among the biggest emitters of CO₂. Replacing them with less carbon-intensive alternatives such as heat pumps is a strong move towards reducing your carbon footprint.
+
+    > Heat pumps are often referred to as *PAC*.
+
+    💡 Their principle is ingenious: it's an inverted fridge! Using a little electricity, your fridge cools its interior and releases the heat into the room. The heat pump cools the outside air to heat your home.
+
+    Find out <a href="https://ge-energie.ch/">about grants</a> for switching to renewable energy.
+  note: |
+    For the moment, we consider that replacing kWh of gas with the same amount of kWh of electricity is a good first-order approximation. We can then adapt this to the performance of residential installations.
+logement . rénovation énergétique:
+  description: |
+    Renovation can reduce your home's energy consumption by 20 to 150%. 
+
+    In the long term, this type of renovation can also significantly reduce energy bills.
+
+    To find out which renovations are best suited to your home, and what grants are available, <a href="https://ge-energie.ch/">visit ge-energie.ch</a>.
+logement . gain rénovation:
+  formule: 20%
+  note: |
+    The average energy saving after renovation varies widely, depending on the type of renovation, how the installations are adjusted, etc. Between a poorly insulated building and a well insulated building, the difference in consumption is in the region of 1.2 to 2.5.
+logement . propriétaire:
+  description: |
+    As a tenant, it's obviously tricky to make investments that improve the property's footprint: insulating your home or changing your energy source are actions that only landlords can take. But that doesn't mean that tenants can't ask them to!
+  par défaut: non
+logement . raccordement réseau de chaleur:
+  note: |
+    A district heating network is a system of pipes used to transport locally produced heat, mainly from renewable and recovered energy sources, to a number of buildings. 
+
+    It is an ecological and economical alternative to gas or oil-fired boilers, for both apartment blocks and offices.
+
+    However, being connected to a heating network is not as simple as taking out an electricity contract. The feasibility of connection depends on <a href=" https://www.ge.ch/installations-chauffage-batiment/se-raccorder-reseau-chauffage-distance">a number of technical conditions</a>.
+
+    First of all, the connection is for an entire building: it is not possible to connect just your flat. Secondly, you need to check that there is a heating network close to the building, and then study the heating infrastructure within the building (a building with a collective heating system will allow you to connect at a lower cost)
+
+    As far as the impact on the climate is concerned, a heating network is generally supplied by local renewable or recovered energy sources (at least 50% in Geneva, with a target of 80% by 2030), i.e. by incinerating household waste, burning biomass or using geothermal energy, which considerably reduces the CO2 impact of the kWh of energy consumed compared with gas or oil.
+  description: |
+    Fuelled at least 50% by local renewable and recovered energies (heat from waste incineration, biomass, geothermal energy, etc.), district heating networks are a low-carbon form of heating. 
+
+    District heating is connected to an entire building. It requires the presence of a heating network close to the building, and is easier when the building is already equipped with a collective heating system.
+
+    >The canton provides a map of structuring networks: check whether a <a href=" https://www.ge.ch/document/22488/annexe/21 ">heating network</a> passes near your building!
+logement . chauffage collectif:
+  note: |
+    It is assumed that the action applies only to flats heated by a collective gas or oil network.  
+
+    On the private side, it is preferable to work with the co-owners of a building, as individual dwellings are not a priority target for this type of solution, both for reasons of economic profitability and because the thermal density of the network would be too low given the consumption of an individual dwelling.
+alimentation . devenir végétarien:
+  description: |
+    Adopting a vegetarian diet, i.e. without meat or fish (but with eggs, milk, cheese and yoghurt) can significantly reduce your impact on 
+    climate.
+alimentation . devenir végétalien:
+  description: |
+    Adopting a vegan diet, i.e. one that does not include animal products (meat, fish, eggs, milk, cheese, honey, etc.), allows you to reduce your carbon footprint even further than a vegetarian diet. However, it is advisable to be well-informed about the food pyramid in order to meet your body's nutritional needs.
+alimentation . viande faible empreinte:
+  description: |
+    The climate footprint of our food is directly correlated to our meat consumption, but it's important to remember that not all meats have the same impact. 
+    Red meat has the highest carbon footprint (beef, lamb). Poultry and pork have a much smaller carbon footprint. 
+
+    > By way of comparison, per kilo, the production of a rib steak emits 6 times more greenhouse gases than chicken fillets.
+alimentation . manger local:
+  description: |
+    Local food reduces the transport distances of the products we consume. However, even if this may seem counter-intuitive, local food can, depending on the case, be disadvantageous in terms of greenhouse gas emissions: the impact of the origin of our products cannot be summed up by a comparison between short and long distances. The effects of scale, the centralisation of products, the efficiency of the transport used (or conversely the lack of efficiency) make the matter more complex from a carbon accounting point of view.
+
+    Nevertheless, local food has many other positive impacts, such as supporting farmers in our regions! 
+
+    In Geneva, the "Genève Région Terre Avenir" (GRTA) label identifies products from local agriculture. The https://www.geneveterroir.ch/fr/marque-de-garantie-grta-info/2443 website lists the canton's GRTA producers.
+
+    For more information: https://www.ge.ch/dossier/alimentation-durable-geneve/climat-dans-votre-assiette/proximite
+alimentation . manger de saison:
+  description: |
+    Contrary to what one might imagine, the impact of this action is relatively small, as the proportion of seasonal products in the average Swiss diet is very low.
+
+    But there are many other benefits to seasonal eating, such as lower water consumption, greater crop diversity, and less dependence on hydrocarbons (gas and oil) to heat greenhouses. What's more, the body doesn't need the same nutrients all year round, and these needs correspond to seasonal foods.
+
+    For more information: https://www.ge.ch/dossier/alimentation-durable-geneve/climat-dans-votre-assiette/proximite
+alimentation . boisson . eau en bouteille . arrêter:
+  description: |
+    Bottled water has an environmental impact 450 times greater than tap water. It costs between 100 and 300 times more (80% of the price comes from the production of the packaging) and is a major contributor to plastic pollution of the oceans.
+alimentation . déchets . réduire gaspillage:
+  description: |
+    In Switzerland, the average amount of food wasted is estimated at 90 kg per person per year. 
+
+    If we consider the entire value chain (i.e. from field to plate), around 2.8 million tonnes of food are wasted every year, or 330 kg per inhabitant. Energy, water, financial and human resources were needed to produce this food, so these resources are also wasted. What's more, they also have an impact on the environment. 
+
+    Reducing food waste is therefore essential if we are to avoid producing to throw away, save resources and reduce our impact on the environment!
+
+    For more information: https://www.ge.ch/dossier/alimentation-durable-geneve/climat-dans-votre-assiette/gaspillage-alimentaire
+alimentation . déchets . composter:
+  description: |
+    Our bio-waste, i.e. the putrescible waste from our food (peelings, leftovers from meals, etc.), accounts for a large proportion of the weight of our rubbish bin, contributing to the carbon footprint associated with waste management. This waste is very often little or poorly recycled, despite the environmental benefits it can bring: compost, a rich organic substance that is beneficial to the soil. Composting our bio-waste (either individually or collectively) reduces the size of our bins and encourages the creation of compost that can eventually be used as an alternative to chemical fertilisers.
+
+    Find out all the tips for <a href="https://www.ge.ch/teaser/p-tite-poubelle-verte">making compost</a>
+actions:
+  formule:
+    somme:
+      - transport . arrêter l'avion
+      - transport . arrêter l'avion court
+      - transport . prendre moins l'avion
+      - alimentation . réduire viande . par deux
+      - alimentation . réduire viande . par quatre
+      - alimentation . devenir végétarien
+      - alimentation . devenir végétalien
+      - alimentation . viande faible empreinte
+      - alimentation . manger de saison
+      - alimentation . boisson . eau en bouteille . arrêter
+      - alimentation . manger local
+      - alimentation . déchets . réduire gaspillage
+      - alimentation . déchets . composter
+      - logement . éteindre appareils
+      - logement . remplacer fioul par bois
+      - logement . remplacer gaz par PAC
+      - logement . séchage air libre
+      - transport . éco-conduite
+      - logement . baisse température
+      - logement . éclairage . LED
+      - logement . rénovation énergétique
+      - logement . raccordement réseau de chaleur
+      - transport . boulot . covoiturage
+      - transport . boulot . commun
+      - transport . boulot . télétravail
+      - transport . covoiturage
+      - transport . voiture 5km
+      - transport . voiture électrique
+      - transport . voiture . limitation autoroute
+      - transport . scooter électrique
+      - divers . numérique . internet . diminuer
+      - divers . partage NGC
+      - divers . aider les autres
+      - divers . électroménager . allongement
+      - divers . ameublement . allongement
+      - services sociétaux . voter
+      - services sociétaux . pression locale
+      - divers . publicité
+      - divers . avoir un stop pub
+      - divers . numérique . appareils . allongement
+      - divers . tabac . arrêter
