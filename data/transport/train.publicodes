@@ -7,79 +7,27 @@ transport . train:
 
 transport . train . impact par km:
   formule:
-    somme:
-      - proportion TGV * TGV
-      - proportion TER * TER
-      - proportion intercités * intercités
+    moyenne:
+      - TER
+      - TGV
   unité: kgCO2e/km
   note: |
-    Les différents types de trains ont des impacts carbone par passager par kilomètres différents.
-    Nous calculons une moyenne pondérée en proportion du nombre total de kilomètres parcourus dans chaque type de train au niveau national.
-    Source : [Autorité de régulation des transports](https://www.autorite-transports.fr/wp-content/uploads/2023/06/bilan-ferroviaire-2022-a-mi-2023.pdf)
-
-    ![Répartition Passagers.km](https://github.com/incubateur-ademe/nosgestesclimat/assets/55186402/4bbdf823-8e9a-4570-90da-77ff8af05b14)
-
-transport . train . TGV:
-  formule: 0.00293
-  unité: kgCO2e/km
-  note: |
-    TGV - 2022 ; 2.93 gCO2e/km/personne ; Base Carbone consultée le 19/11/2023 (Données SNCF)
+    Nous faisons le choix de ne pas différencier TGV et TER pour le moment (pour éviter de poser deux questions)
+    On pourrait ajouter un curseur pour évaluer la pondération de la moyenne et être plus précis. Aujourd'hui on est à 50/50.
+    On prend donc le facteur d'émission moyen entre TER et TGV.
 
 transport . train . TER:
-  formule: 0.0277
+  formule: 0.0296
   unité: kgCO2e/km
   note: |
-    TER - 2022 - Traction moyenne ; 27.7 gCO2e/km/personne ; Base Carbone consultée le 19/11/2023 (Données SNCF)
+    TER - 2019 - Traction moyenne ; 29.6 gCO2e/km/personne ; Base Carbone consultée le 04/04/2022 (Données SNCF)
 
-transport . train . intercités:
-  formule: 0.00898
+transport . train . TGV:
+  formule: 0.00236
   unité: kgCO2e/km
-  node: |
-    Intercités - 2022 ; 8.98 gCO2e/km/personne ; Base Carbone consultée le 19/11/2023 (Données SNCF)
-
-transport . train . proportion TGV:
-  formule: passagers km TGV / total passagers km
   note: |
-    Chiffres issus de l'[autorité de régulation des transports](https://www.autorite-transports.fr/wp-content/uploads/2023/06/bilan-ferroviaire-2022-a-mi-2023.pdf).
+    TGV - 2019 ; 2.36 gCO2e/km/personne ; Base Carbone consultée le 04/04/2022 (Données SNCF)
 
-transport . train . proportion TER:
-  formule: passagers km TER / total passagers km
-  note: |
-    Chiffres issus de l'[autorité de régulation des transports](https://www.autorite-transports.fr/wp-content/uploads/2023/06/bilan-ferroviaire-2022-a-mi-2023.pdf).
-
-transport . train . proportion intercités:
-  formule: passagers km intercités / total passagers km
-  note: |
-    Chiffres issus de l'[autorité de régulation des transports](https://www.autorite-transports.fr/wp-content/uploads/2023/06/bilan-ferroviaire-2022-a-mi-2023.pdf).
-
-transport . train . total passagers km:
-  formule: 
-    somme:
-      - passagers km TGV
-      - passagers km TER
-      - passagers km intercités
-  note: |
-    Chiffres issus de l'[autorité de régulation des transports](https://www.autorite-transports.fr/wp-content/uploads/2023/06/bilan-ferroviaire-2022-a-mi-2023.pdf).
-    On omet ici les trajets en RER et transilien.
-
-transport . train . passagers km TGV:
-  formule: 54 + 7
-  note: |
-    Chiffres issus de l'[autorité de régulation des transports](https://www.autorite-transports.fr/wp-content/uploads/2023/06/bilan-ferroviaire-2022-a-mi-2023.pdf).
-    On omet ici les trajets en RER et transilien.
-
-transport . train . passagers km TER:
-  formule: 19   
-  note: |
-    Chiffres issus de l'[autorité de régulation des transports](https://www.autorite-transports.fr/wp-content/uploads/2023/06/bilan-ferroviaire-2022-a-mi-2023.pdf).
-    On omet ici les trajets en RER et transilien.
-
-transport . train . passagers km intercités:
-  formule: 3 + 0.5
-  note: |
-    Chiffres issus de l'[autorité de régulation des transports](https://www.autorite-transports.fr/wp-content/uploads/2023/06/bilan-ferroviaire-2022-a-mi-2023.pdf).
-    On omet ici les trajets en RER et transilien.
-    
 transport . train . km:
   question: Combien de kilomètres parcourez-vous en train par an ?
   description: Les suggestions sont basées sur la distance à vol d'oiseau doublée pour considérer un aller-retour.
@@ -91,3 +39,4 @@ transport . train . km:
     💳 grand voyageur plus ultra: 25000
   unité: km
   par défaut: 1000
+
