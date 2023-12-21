@@ -1,3 +1,6 @@
+# Master code merged is from 18 December 2023
+# -----------------------------------------
+
 params:
   code: CH
   nom: Suisse
@@ -5,14 +8,59 @@ params:
 
 commun . intensité électricité:
   titre: Intensité carbone du mix électrique suisse
-  formule: 0.153
+  formule: 0.091
   note: |
-    [Electricity Map](https://app.electricitymaps.com/map) vue 5 ans, 2022
+    OCEN - SCDD pour l'électricité GE, moyenne 2017-2021 (5 ans).
+  # @Clement: à détailler
 
-transport . voiture . km:
-  par défaut: 13430 km/an
+# TRANSPORT
+transport . voiture . limitation autoroute:
+  titre: Passer de 120 à 100km/h
+
+transport . voiture . limitation autoroute . réduction:
+  titre: Gain de consommation 120 -> 100
+  formule: 25%
+  note: On considère que passer de 120 à 100km/h sur l'autoroute est équivalent au passage de 130 à 110 km/h en terme de réduction de consommation.
+
+transport . voiture . km annuels moyen:
+  formule: 7000
+  unité: km
   note: |
-    Source pour les km annuels moyens : [Office fédéral de la statistique](https://www.bfs.admin.ch/bfs/fr/home/statistiques/mobilite-transports/transport-personnes/comportements-transports/distance-duree-jour-deplacements.html).
+    Source : [Office fédéral de la statistique](https://www.bfs.admin.ch/bfs/fr/home/statistiques/mobilite-transports/transport-personnes/comportements-transports/distance-duree-jour-deplacements.html).
+
+transport . voiture . thermique . carburant:
+  description: |
+    Pour comprendre les différents types de carburants, [cet article pédagogique](https://www.francetvinfo.fr/economie/automobile/essence/les-carburants-changent-de-nom-a-la-pompe-voici-comment-vous-y-retrouver_2967013.html) est très utile.
+
+    > Attention, si le type de carburant fait varier de façon significative l'empreinte climat au litre, la consommation en litre par 100km elle aussi varie. Veillez à saisir une consommation au litre basée sur votre moyenne réelle.
+
+transport . voiture . thermique . carburant . gazole B7 ou B10:
+  titre: Diesel
+transport . voiture . thermique . carburant . essence E5 ou E10:
+  titre: Essence
+transport . voiture . thermique . carburant . essence E85:
+  titre: Essence E85
+
+transport . deux roues . empreinte moyenne:
+  formule:
+    recalcul:
+      règle: deux roues . empreinte
+      avec:
+        deux roues . usager: oui
+        deux roues . type: "'moto sup 250'"
+        deux roues . km: 400
+# @Clement: note: Source manquante ?
+
+transport . avion . usager:
+  description: |
+    Nous faisons ici le choix de vous proposer de compter l'impact de vos déplacements en avion sur plusieurs années. L'empreinte sur le climat est telle qu'il est important de prendre cela en compte.
+
+    Ainsi, que vous preniez l'avion tous les ans ou non, répondez "oui" et vous aurez l'option par la suite de saisir vos temps de vol des 3 dernières années.
+
+    > 💡 Si vous avez pris l'avion ppour faire Zurich-New-York en 2022 (environ 19h A/R), vos émissions associées (près de 2 tonnes) seront échelonnées sur les 3 dernières années.
+
+transport . avion . court courrier . durée moyenne:
+  titre: Durée moyenne passée par un Suisse dans les vols court-courrier
 
 transport . avion . court courrier . passager km moyen:
   titre: Distance moyenne parcourue un Suisse sur des vols court-courrier
@@ -25,6 +73,9 @@ transport . avion . court courrier . passager km moyen:
       - Moyen-courrier: 7.4%
       - Long-courrier: 90.2%
 
+transport . avion . moyen courrier . durée moyenne:
+  titre: Durée moyenne passée par un Suisse dans les vols moyen-courrier
+
 transport . avion . moyen courrier . passager km moyen:
   titre: Distance moyenne parcourue un Suisse sur des vols moyen-courrier
   formule: 0.074 * 9000
@@ -36,6 +87,9 @@ transport . avion . moyen courrier . passager km moyen:
       - Moyen-courrier: 7.4%
       - Long-courrier: 90.2%
 
+transport . avion . long courrier . durée moyenne:
+  titre: Durée moyenne passée par un Suisse dans les vols long-courrier
+
 transport . avion . long courrier . passager km moyen:
   titre: Distance moyenne parcourue un Suisse sur des vols long-courrier
   formule: 0.902 * 9000
@@ -46,34 +100,871 @@ transport . avion . long courrier . passager km moyen:
       - Court-courrier: 2.4%
       - Moyen-courrier: 7.4%
       - Long-courrier: 90.2%
+
 transport . avion . court courrier . heures de vol:
   suggestions:
     🚫✈️: 0
-    Zurich ⇄ Genève: 1.7
-    Zurich ⇄ Venise: 2
-    Zurich ⇄ Paris: 3
+    Genève ⇄ Zurich: 1.5
+    Genève ⇄ Paris: 2.5
+    Genève ⇄ Bruxelles: 2.5
+    Genève ⇄ Barcelone: 3
 
 transport . avion . moyen courrier . heures de vol:
   suggestions:
     🚫✈️: 0
-    Zurich ⇄ Madrid: 5
-    Zurich ⇄ Helsinki: 6
-    Zurich ⇄ Le Caire: 8
-    Zurich ⇄ Dubaï: 12
+    Genève ⇄ Madrid: 4
+    Genève ⇄ Porto: 4
+    Genève ⇄ Lisbonne: 5
+    Genève ⇄ Istanbul: 6
 
 transport . avion . long courrier . heures de vol:
   suggestions:
     🚫✈️: 0
-    Zurich ⇄ New York: 19
-    Zurich ⇄ Kinshasa: 22
-    Zurich ⇄ Tokyo: 26
-    Zurich ⇄ Lima: 36
-    Zurich ⇄ Sydney: 44
+    Genève ⇄ Dubai: 12.5
+    Genève ⇄ New York: 17
+    Genève ⇄ Beijing: 20.25
 
 transport . train . km:
   suggestions:
-    traversée d'une région: 300
-    Zurich ⇄ Genève: 450
-    Zurich ⇄ Paris: 1000
-    💳 grand voyageur: 10000
-    💳 grand voyageur plus ultra: 25000
+    Genève ⇄ Nyon: 42
+    Genève ⇄ Lausanne: 100
+    Genève ⇄ Berne: 260
+    Genève ⇄ Zurich: 440
+    Genève ⇄ Paris: 820
+  par défaut: 2700
+
+transport . métro ou tram . heures par semaine:
+  question: Combien d'heures par semaine passez-vous en tram ?
+
+# transport factors for GE
+transport . avion . court courrier . empreinte par km:
+  formule: 0.305
+  description: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
+
+transport . avion . moyen courrier . empreinte par km:
+  formule: 0.257
+  description: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
+
+transport . avion . long courrier . empreinte par km:
+  formule: 0.235
+  description: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
+
+transport . train . impact par km:
+  formule: 0.002
+  note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - Mobitool mix électrique CFF (hors infrastructure routière)
+
+transport . métro ou tram . impact par km:
+  formule: 0.021
+  note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - Mobitool tramway (hors infrastructure)
+
+transport . métro ou tram . vitesse:
+  formule: 15.4
+  note: TPG (Rapport de gestion 2022 - moyenne vitesse commerciale tram)
+
+transport . bus . impact par km:
+  formule: 0.067
+  note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - Mobitool basé sur la flotte TPG (Rapport de gestion 2022 - 30% trolleybus, 70% autobus surtout articulés)
+
+transport . bus . vitesse:
+  formule: 18
+  note: TPG (Rapport de gestion 2022 - estimation basée sur la vitesse commerciale bus)
+
+transport . deux roues . empreinte:
+  formule:
+    variations:
+      - si: type = 'scooter thermique'
+        alors: 0.124
+      - si: type = 'scooter électrique'
+        alors: 0.030
+      - si: type = 'moto inf 250'
+        alors: 0.146
+      - si: type = 'moto sup 250'
+        alors: 0.194
+  note: |
+    Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
+
+    - Mobitool moyenne scooter (hors infrastructure, avec construction)
+    - SMobitool motocyclette 11-35kW (hors infrastructure, avec construction)
+    - Mobitool motocyclette >35kW (hors infrastructure, avec construction)
+
+transport . voiture . électrique . empreinte au kilomètre:
+  formule:
+    variations:
+      - si: gabarit = 'petite'
+        alors: 0.021
+      - si: gabarit = 'moyenne'
+        alors: 0.024
+      - sinon: 0.028
+  note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
+
+transport . voiture . construction . barème thermique:
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - gabarit = 'petite'
+            - gabarit = 'moyenne'
+        alors: 7758
+      - si: gabarit = 'VUL'
+        alors: 10340
+      - si: gabarit = 'berline'
+        alors: 8958
+      - si: gabarit = 'SUV'
+        alors: 11722
+  note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool ((fabrication + maintenance + fin de vie) * km * nb de passagers) - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
+
+transport . voiture . construction . barème électrique:
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - gabarit = 'petite'
+            - gabarit = 'moyenne'
+        alors: 11013
+      - si: gabarit = 'VUL'
+        alors: 16093
+      - si: gabarit = 'berline'
+        alors: 13291
+      - si: gabarit = 'SUV'
+        alors: 18895
+  note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool ((fabrication + maintenance + fin de vie) * km * nb de passagers) - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
+
+transport . voiture . construction . barème hybride:
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - gabarit = 'petite'
+            - gabarit = 'moyenne'
+        alors: 8880
+      - si: gabarit = 'VUL'
+        alors: 11957
+      - si: gabarit = 'berline'
+        alors: 10298
+      - si: gabarit = 'SUV'
+        alors: 13616
+  note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool ((fabrication + maintenance + fin de vie) * km * nb de passagers) - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
+
+transport . voiture . durée de vie:
+  formule: 17
+  note: Nous utilisons le facteur d'émission provenant de la plateforme Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
+
+transport . ferry . usager:
+  par défaut: non
+
+transport . ferry . heures:
+  suggestions:
+    Marseille ⇄ Ajaccio: 22
+    Toulon ⇄ Ajaccio: 16
+    Gênes ⇄ Bastia: 13
+    Gênes ⇄ Olbia: 24
+
+transport . mobilité douce . vélo . construction:
+  formule: 76
+  note: Mobitool Conventionnel ((fabrication + maintenance + fin de vie) * km
+
+transport . mobilité douce . vélo . durée de vie:
+  formule: 15
+  note: Mobitool Conventionnel
+
+transport . mobilité douce . vae . empreinte:
+  formule: 0.001
+  note: Mobitool moyenne e-bike 25 km/h, 45 km/h et vélo cargo (approvisionnement en énergie)
+
+transport . mobilité douce . vae . construction:
+  formule: 198
+  note: Mobitool moyenne e-bike 25 km/h, 45 km/h et vélo cargo ((fabrication + maintenance + fin de vie) * km
+
+transport . mobilité douce . vae . durée de vie:
+  formule: 10
+  note: Mobitool moyenne e-bike 25 km/h, 45 km/h et vélo cargo
+
+transport . mobilité douce . autres véhicules à moteur . empreinte:
+  formule: 0.003
+  note: Mobitool Trottinette électrique
+
+transport . mobilité douce . autres véhicules à moteur . construction:
+  formule: 71
+  note: Mobitool Trottinette électrique  ((fabrication + maintenance + fin de vie) * km
+
+transport . mobilité douce . autres véhicules à moteur . durée de vie:
+  formule: 2
+  note: Mobitool Trottinette électrique
+
+# DIVERS
+
+divers . animaux domestiques . empreinte . chats . nombre:
+  par défaut: 0
+
+divers . animaux domestiques . empreinte . chien moyen . nombre:
+  par défaut: 0.25
+
+divers . autres produits . niveau de dépenses:
+  question: Le test ne capte pas encore toutes vos consommations, combien estimez-vous dépenser par an en produits neufs (décoration, bricolage, jeux, loisirs créatifs, outils, etc...) ?
+  description: |
+    Pour garder l'interface simple, nous proposons une estimation, via vos dépenses, de l'empreinte des biens de consommation
+    que vous possédez et que vous ne pensez pas avoir inclus dans les questions précédentes.
+
+    Elle concerne : **les jeux, la décoration, le matériel de cuisine, le linge de maison, les matériaux pour les loisirs créatifs ou bricolage, les plantes, etc.**
+  par défaut: "'important'"
+# @Clément: Source pour cette valeur par défaut ?
+
+divers . autres produits . niveau de dépenses . faible:
+  titre: Moins de 50CHF / mois
+
+divers . autres produits . niveau de dépenses . moyen:
+  titre: Entre 50 et 120 CHF / mois
+
+divers . autres produits . niveau de dépenses . important:
+  titre: Plus de 120 CHF / mois
+
+divers . loisirs . culture . édition . fréquence:
+  par défaut: "'élevée'"
+# @Clément: Source pour cette valeur par défaut ?
+
+divers . loisirs . culture . édition . fréquence . faible:
+  titre: Moins de 5 CHF par mois
+
+divers . loisirs . culture . édition . fréquence . normale:
+  titre: De 5 à 15 CHF par mois
+
+divers . loisirs . culture . édition . fréquence . élevée:
+  titre: De 15 à 30 CHF par mois
+
+divers . loisirs . culture . édition . fréquence . très élevée:
+  titre: Plus de 30 CHF par mois
+
+# divers . numérique . internet . empreinte horaire:
+#   formule: 0.02
+# @Clément: Sans source, non validé car sujet complexe.
+
+# ALIMENTATION
+
+# @Clément: pour le moment, pas de modifications textuelles nécessaires sur l'alimentation.
+
+#LOGEMENT
+parc français . surface moyenne:
+  formule: 80
+
+parc français . chauffage . consommation électricité par m2:
+  formule: 125
+  unité: kWh/m2
+  note: Source - KBOB, consommation pour le chauffage par défaut de 450 MJ/m2
+
+parc français . chauffage . consommation gaz par m2:
+  formule: 125
+  unité: kWh/m2
+  note: Source - KBOB, consommation pour le chauffage par défaut de 450 MJ/m2
+
+parc français . chauffage . consommation fioul par m2:
+  formule: 125
+  unité: kWh/m2
+  note: Source - KBOB, consommation pour le chauffage par défaut de 450 MJ/m2
+
+parc français . chauffage . consommation bois par m2:
+  formule: 125
+  unité: kWh/m2
+  note: Source - KBOB, consommation pour le chauffage par défaut de 450 MJ/m2
+
+parc français . chauffage . consommation réseau de chaleur par m2:
+  formule: 125
+  unité: kWh/m2
+  note: Source - KBOB, consommation pour le chauffage par défaut de 450 MJ/m2
+
+# @Clément On a besoin des parts de chaque type d'énergie dans le parc genevois. Il semble y avoir un pb avec ceux relevés dans le fichier.
+# On distingue parts des énergies dans le parc genevois et part dédiée au chauffage pour chaque type d'énergie (cf plus bas).
+parc français . surface . part électricité:
+  formule: 3.3%
+  note: Pas de chauffage électrique, on prend en compte ici la part liée à la consommation des pompes à chaleur
+
+parc français . surface . part gaz:
+  formule: 60.80%
+
+parc français . surface . part fioul:
+  formule: 28.40%
+
+parc français . surface . part bois:
+  formule: 2.3%
+
+parc français . surface . part réseau de chaleur:
+  formule: 5.2%
+
+# @Clément: Il n'est finalement pas possible d'ajouter de nouvelles règles, je corrige ici le calcul mais sans la partie "intensité carbone chaleur de l'environnement"
+# (que je ne comprends pas).
+# L'électricité est comprise dans ce calcul par l'intermédiaire de la question sur la consommation d'électricité.
+# Les parts doivent être définie plus haut.
+logement . chauffage . empreinte par défaut:
+  résumé: Un calcul statistique du **chauffage** résidentiel genevois moyen
+  note: l'empreinte du logement par défaut est calculée sur la base de la moyenne du parc immobilier genevois
+
+parc français . chauffage . empreinte moyenne par m2 hors électricité:
+  note: L'électricité est traitée séparément.
+  formule:
+    somme:
+      - surface . part gaz * empreinte gaz par m2
+      - surface . part fioul * empreinte fioul par m2
+      - surface . part bois * empreinte buches par m2 / 2
+      - surface . part bois * empreinte granulés par m2 / 2
+      - surface . part réseau de chaleur * empreinte réseau de chaleur par m2
+
+parc français . chauffage . empreinte moyenne chauffage air par m2:
+  formule:
+    somme:
+      - empreinte électricité par m2 * part chauffage air électricité
+      - empreinte gaz par m2 * part chauffage air gaz
+      - empreinte fioul par m2 * part chauffage air fioul
+      - empreinte buches par m2 * part chauffage air bois / 2
+      - empreinte granulés par m2 * part chauffage air bois / 2
+      - empreinte réseau de chaleur par m2 * part chauffage air réseau de chaleur
+
+parc français . consommation électricité autre par m2:
+  formule: 31.5
+  unité: kWh/m2
+  note: |
+    Source (extrapolation) - L'efficacité énergétique dans les ménages, Suissenergie, novembre 2021; OCSTAT; OFS
+    Basé sur un foyer moyen de type appartement
+
+logement . électricité . estimation via le coût:
+  unité: CHF/kWh
+  formule: 0.280
+
+logement . chauffage . réseau de chaleur . intensité carbone:
+  formule: 0.067
+
+logement . chauffage . citerne propane . estimation via le coût:
+  unité: CHF/kg
+
+logement . chauffage . bois . type . granulés . estimation via le coût:
+  unité: CHF/kWh
+
+logement . chauffage . bois . type . bûches . estimation via le coût:
+  unité: CHF/stère
+
+logement . chauffage . bois . type . bûches . prix stère 2023:
+  formule: 180
+  unité: CHF/stère
+  note: Union suisse des paysans, bois de cheminée 2023, vente directe, moyenne essences	https://www.sbv-usp.ch/fr/prix/vente-directe/bois-de-cheminee
+
+logement . chauffage . bois . type . granulés vrac . prix 100 kWh:
+  formule: 11
+  note: OFS prix moyens de l'énergie su-f-05.02.91, moyenne 2022 (4.8 kWh/kg)	https://www.bfs.admin.ch/bfs/fr/home/statistiques/prix/indice-prix-consommation/resultats-detailles.assetdetail.25245904.html
+
+logement . chauffage . bois . type . granulés sac . prix 100 kWh:
+  formule: 11
+  note: OFS prix moyens de l'énergie su-f-05.02.91, moyenne 2022 (4.8 kWh/kg)	https://www.bfs.admin.ch/bfs/fr/home/statistiques/prix/indice-prix-consommation/resultats-detailles.assetdetail.25245904.html
+
+logement . chauffage . fioul . estimation via le prix:
+  question: Pas de facture ? Entrez vos dépenses approximatives en mazout par mois
+  unité: CHF/litre
+  formule: 1.397
+
+logement . appartement:
+  description: |
+    Par opposition à une maison individuelle ou une villa.
+
+    Cette information influence notamment l'empreinte de construction, mais aussi les possibilités de travaux d'isolation par exemple.
+
+    > Si vous vivez dans un habitat original, par exemple un camping car, pas de problème : choisissez "appartement" et saisissez les m² de ce qui constitue quand même votre logement.
+# @Clément note: Source manquante ?
+logement . construction . par surface:
+  formule: 696
+  note: Rapport haute école fribourg 2021 (amortissement 60 ans)
+
+logement . construction . durée d'amortissement:
+  formule: 60
+  note: Hypothèse norme SIA
+
+logement . âge:
+  note: Dans le canton de Genève, plus de la moitié des bâtiments à usage d'habitation et des maisons individuelles ont été construits avant 1980.
+
+logement . saisie habitants:
+  par défaut: 2.1
+  # @Clément note: Source manquante ?
+
+logement . électricité . consommation:
+  description: |
+    Astuce : vous trouverez la consommation annuelle d'électricité sur vos factures ou sur votre compte en ligne sur le site des SIG.
+
+# @Clément note: pour le moment, on garde la valeur par défaut française.
+# logement . climatisation . nombre par défaut:
+#   formule: 0
+
+logement . chauffage . fioul:
+  titre: Mazout
+
+logement . chauffage:
+  description: |
+    > Cette question couvre l'ensemble des sources d'énergie qui vous permet d'alimenter vos chauffages, votre chauffe-eau, vos plaques de cuisson, etc.
+
+    Certains logements utilisent uniquement de l'électricité, d'autres sont entièrement chauffés au gaz, et plus rarement au bois ou au mazout.
+    Dans d'autres situations encore, un logement peut être chauffé principalement via des chauffages électriques ou une pompe à chaleur,
+    mais avec un appoint bois, par exemple. Enfin, il est possible de prendre en compte également vos consommations de gaz pour votre van ou camping-car. 
+
+    Cochez tous les modes que vous utilisez.
+
+logement . chauffage . gaz . consommation:
+  par défaut: parc français . chauffage . consommation gaz par m2 * surface
+  description: |
+    Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz.
+
+    > Pour le chauffage, il se peut que votre régie ne vous communique pas la consommation en kWh de votre logement, quand la chaudière est centralisée. Vous pouvez saisir le montant de votre facture en CHF pour estimer vos kWh. Si vous avez deux factures pour le gaz cuisson et le gaz chauffage (charges), additionnez les deux montants.
+
+logement . chauffage . gaz . estimation via le coût:
+  unité: CHF/kWh
+  formule: 0.143
+  note: OFS prix moyens de l'énergie su-f-05.02.91, moyenne 2022 - https://www.bfs.admin.ch/bfs/fr/home/statistiques/prix/indice-prix-consommation/resultats-detailles.assetdetail.25245904.html
+
+logement . chauffage . gaz . facteur d'émission base carbone:
+  valeur: 0.230
+  note: KBOB
+
+logement . chauffage . fioul . consommation:
+  question: Quelle est la consommation annuelle de mazout de votre foyer ?
+  description: |
+    Astuce : Vous trouverez vos consommations annuelles d'énergie sur votre facture de mazout ou sur votre décompte de charges annuelles envoyé par votre régie.
+
+# Pour supprimer la variation biogaz
+logement . chauffage . gaz . intensité carbone gaz utilisateur:
+  formule: gaz . facteur d'émission base carbone
+
+# pour supprimer le gaz propane -> @Clément: Pour le moment, le fonctionnement actuel des mosaïques ne permet pas de supprimer l'option.. Nous esperons que ce sera possibl bientôt !
+# logement . chauffage . empreinte totale:
+#   formule:
+#     somme:
+#       - gaz
+#       - bouteille gaz
+#       - fioul
+#       - bois . empreinte
+#       - réseau de chaleur
+
+# Pour supprimer l'aide à la saisie réseau de chaleur
+logement . chauffage . réseau de chaleur . consommation:
+  aide:
+  par défaut: parc français . chauffage . consommation réseau de chaleur par m2 * surface
+
+# Services sociétaux
+services sociétaux . question rhétorique:
+  question: Nous attribuons l'empreinte des services publics (éducation, santé...) à chaque résident genevois de façon égale.
+  description: |
+    Cette catégorie ne dépend pas de vos réponses. L'empreinte associée est calculée via une approche macro à partir notamment du bilan carbone territorial du canton de Genève.
+    Pour en savoir plus sur cette valeur, n'hésitez pas à consulter les explications détaillées dans notre FAQ.
+
+## On considère que les services sociétaux ne concernent que les services publics calculés selon les bilans carbone territoriaux VdG et Canton (cf. fichier services sociétaux)
+services sociétaux:
+  formule: 1583
+  description: |
+    Ce poste inclus l'empreinte des services publics suisses.
+  note: calcul basé sur les bilans carbone territoriaux VdG et Canton (cf. fichier services sociétaux)
+  # @Clément note: Source manquante ?
+
+# ACTIONS
+
+services sociétaux . voter:
+  icônes: 🗳️🏛️
+  titre: Agir dans vos sphères d'influence
+  description: |
+    Environ 4 fois par année, nous avons chacun suisse et suissesse la possibilité de voter sur différents sujets, au niveau fédéral, cantonal et communal.
+
+    Selon les thèmes abordés, les votations peuvent être une occasion d'aborder le sujet du climat. C'est un moyen d'agir indirectement sur l'empreinte carbone des services publics, et sur les autres postes pour lesquels les efforts individuels ne sont pas suffisants.
+
+    Mais ce n'est pas tout ! Vous pouvez participer à des forums citoyens ou assemblées citoyennes ! Si vous êtes étudiant-e, des processus existent peut-être (assemblée, pétitions, votes ?) pour orienter votre université vers la durabilité ? Si vous êtes employé-e, pouvez-vous influer sur les choix de votre entreprise ? Si vous êtes retraité-e, pouvez-vous donner de votre temps au sein de coopératives ou d'associations ?
+
+services sociétaux . pression locale:
+  description: |
+    L'empreinte des services publics, c'est l'empreinte de pleins d'activités gérées par la confédération, le canton ou la commune, par exemple les écoles ou la police.
+
+
+    > 🚸 L'école de vos enfants est peut-être mal isolée
+
+    > 🛣️ Votre commune n'aménage pas assez de stationnements pour les vélos
+
+    La première étape est d'en discuter avec vos amis et vos connaissances, puis de prendre contact avec les responsables du canton ou de votre commune. Ainsi vous pourrez les alerter de la situation et voir quelles démarches ont déjà été entreprises à ce sujet.
+
+divers . numérique . appareils . allongement:
+  description: |
+    Augmenter la durée de vie de ses appareils ménagers ou électroniques (en en prenant soin ou en les réparant) permet de limiter son impact sur le climat.
+
+    Renouveler de manière prématurée ses équipements, à l'inverse, c'est contribuer à produire plus d'équipements pour un même service rendu.
+
+    Pour augmenter la durée de vie de vos appareils, n'hésitez pas à les faire réparer. Le site http://www.ge-repare.ch propose une liste d'adresses de réparation.
+
+    Si vous souhaitez absolument vous séparer d'un appareil, pensez aux ressourceries ou recycleries, qui sont des lieux dédiés au réemploi !
+
+divers . électroménager . allongement:
+  description: |
+    Augmenter la durée de vie de ses équipements électroménagers (en en prenant soin ou en les réparant lorsqu'ils tombent en panne) permet de limiter son impact sur le climat. 
+
+    Renouveler de manière prématurée ses équipements, à l'inverse, c'est contribuer à produire plus d'équipements pour un même service rendu.
+
+    Vous trouverez de nombreux conseils sur l'utilisation de vos appareils électroménagers sur le site https://www.energie-environnement.ch/appareils-electromenagers
+
+    Pour augmenter la durée de vie de vos équipements électroménagers, n'hésitez pas à les faire réparer. Le site https://www.ge-repare.ch propose une liste d'adresses de réparation.
+
+    Si vous souhaitez absolument vous séparer d'un équipement électroménager, pensez aux ressourceries ou recycleries, qui sont des lieux dédiés au réemploi !
+
+divers . ameublement . allongement:
+  description: |
+    Augmenter la durée de vie de ses meubles (en en prenant soin ou en les réparant) permet de limiter son impact sur le climat. 
+
+    Renouveler de manière prématurée ses meubles, à l'inverse, c'est contribuer à produire plus de meubles pour un même service rendu.
+
+    Pour augmenter la durée de vie de vos meubles, n'hésitez pas à les faire réparer. Le site https://www.ge-repare.ch propose une liste d'adresses de réparation.
+
+    Si vous souhaitez absolument vous séparer d'un meuble, pensez aux ressourceries ou recycleries, qui sont des lieux dédiés au réemploi !
+
+transport . arrêter l'avion:
+  description: |
+    L'avion a une empreinte importante sur le climat. 
+
+    Elle ne se limite pas aux seules émissions de CO₂. L'empreinte réelle de l'avion est estimée à au moins 2x celle du CO₂ émis par la combustion de kérosène, du fait d'un effet de forçage radiatif. Pour plus de détails, vous pouvez vous référer aux explications de myclimate.
+
+    L'empreinte réelle de l'avion est estimée à au moins 2x celle du CO₂ émis par la combustion de kérosène, du fait d'un effet de forçage radiatif. 
+
+    Le calculateur transport de [myclimate](https://co2.myclimate.org/fr/calculate_emissions) permet de visualiser cette empreinte et la comparer aux autres moyens de transport.
+
+transport . arrêter l'avion court:
+  description: |
+    L'avion a bouleversé nos modes de vies et nos façons de voyager. Nous pouvons maintenant aller plus loin, plus vite, plus fréquemment, mais ce n'est malheureusement pas sans contrepartie pour le climat. 
+
+    En effet, il existe notamment un rapport de 100 entre les facteurs d'émissions (quantité de CO₂ émise par km parcouru) d'un avion et d'un train.
+
+    C'est pourquoi adapter nos week-ends et nos vacances en nous tournant vers des offres de mobilités bas carbone et/ou en repensant notre manière de voyager est essentiel si l'on souhaite tant à l'échelle individuelle qu'à l'échelle de la société réduire notre impact sur le climat
+
+    Découvrez quelles destinations sont accessibles en train depuis chez vous : [Chronotrains](https://www.chronotrains.com/fr); [CFF (sbb.ch)](https://www.sbb.ch/fr/) ;  [Interrail](https://www.sbb.ch/fr/loisirs-et-vacances/trains-excursions/interrail.html)
+
+transport . prendre moins l'avion:
+  description: |
+    > 💡 Essayez de faire au moins l'un des trajets vers votre destination en train !
+
+    Découvrez quelles destinations sont accessibles  en train depuis chez vous : [Chronotrains](https://www.chronotrains.com/fr); [CFF (sbb.ch)](https://www.sbb.ch/fr/) ;  [Interrail](https://www.sbb.ch/fr/loisirs-et-vacances/trains-excursions/interrail.html) 
+
+    L'avion a une empreinte importante sur le climat. 
+
+    Elle ne se limite pas aux seules émissions de CO₂. L'empreinte réelle de l'avion est estimée à au moins 2x celle du CO₂ émis par la combustion de kérosène, du fait d'un effet de forçage radiatif. Pour plus de détails, vous pouvez vous référer aux explications de myclimate.
+
+    L'empreinte réelle de l'avion est estimée à au moins 2x celle du CO₂ émis par la combustion de kérosène, du fait d'un effet de forçage radiatif. 
+
+    Le [calculateur transport de myclimate](https://co2.myclimate.org/fr/calculate_emissions) permet de visualiser cette empreinte et la comparer aux autres moyens de transport.
+
+  aller plus loin: |
+    ## Forçage radiatif total
+
+    L'avion a un impact important sur le climat à la fois à cause de ses émissions de CO₂ et d'autres effets (dit forçage radiatif additionnel).
+
+    Du fait que les avions volent en haute altitude, la combustion du kérosène crée des traînées et perturbe les cycles d'autres gaz à effet de serre que le CO₂ (vapeur d'eau, eau condensée sous diverses formes, NOx et méthane qui, ensemble, produisent de l'ozone, etc.).
+
+    ## Avion vs voiture
+
+    Ramené au passager, l'impact carbone d'un trajet en avion est dans certains cas du même ordre que celui d'un trajet en voiture. Toutefois, l'empreinte de la voiture elle-même est élevée. Comparer l'avion à la voiture ne rend pas ce premier vertueux.
+
+    Deuxièmement, un trajet en avion est en général bien plus long. Quand il s'agit de choisir la destination des vacances par exemple, un trajet en voiture a donc toutes les chances d'être beaucoup moins polluant. Cela dit, notons aussi que nos kilométrages en voiture sont tels que le match est relancé quand on regarde l'empreinte à l'année.
+
+transport . éco-conduite:
+  description: |
+    L'éco-conduite est une action simple et efficace qui se tient à la portée de tous.  Il s'agit d'un ensemble de recommandations à adopter tel que vérifier la pression des pneus ou optimiser les rapports de vitesse.
+
+    Mettre en place ces actions permet d'économiser jusqu'à 15 % de carburant, de réduire les coûts d'entretien du véhicule, de réduire le risque d'accident et de réaliser des économies substantielles pouvant s'élever à plusieurs centaines de francs suisses. 
+
+    Adopter une éco-conduite est d'autant plus pertinent en ville et en zone urbaine ou les arrêts et le redémarrage sont fréquents.
+
+    Pour en savoir plus: [EcoDrive – chaque litre compte](https://www.ecodrive.ch/fr/)
+
+  note: |
+    EcoDrive – chaque litre compte: https://www.ecodrive.ch/fr/
+
+transport . covoiturage:
+  description: |
+    Cette action concerne l'ensemble de ses trajets en voiture.
+
+    Si le covoiturage longue distance est bien connu en Suisse, celui des courtes distances est presque inexistant : aujourd'hui seuls 4% des déplacements domicile-travail sont réalisés en covoiturage.
+
+    De nombreux sites web proposent des plates-formes gratuites pour mettre en contact des personnes effectuant le même trajet, que ce soit régulièrement, par exemple pour aller au travail, ou ponctuellement, par exemple pour une sortie de ski.
+
+    •	[site web de e-covoiturage](http://www.e-covoiturage.ch/index.php/fr/) : plate-forme suisse de covoiturage;
+
+    •	[site web de covoiturage Léman](http://www.covoiturage-leman.org/) : plate-forme de covoiturage du bassin lémanique;
+
+    •	[site web de Clem'](http://clem.mobi/covoiturage) : covoiturage pour les trajets domicile-travail dans la région genevoise;
+
+    •	[site web de Klaxit](http://www.klaxit.com/) : covoiturage "domicile-travail" pour les entreprises
+
+    •	[site web de Caroster](https://caroster.io/): covoiturage pour gérer les transports au sein d'une association ou club de sport
+
+    Pour vos trajets à l'étranger, vous pouvez aussi consulter les sites suivants:
+
+    •	[site web de blablacar](https://www.blablacar.fr/) : plate-forme européenne de covoiturage;
+
+    •	[site web de carpooling](http://www.europe-carpooling.com/) : plate-forme de covoiturage en France;
+
+    •	[site web de compartir](http://compartir.org/) : plate-forme de covoiturage en Espagne et à l'international;
+
+    •	[site web de iDVROOM](https://www.tictactrip.eu/company/carpooling/idvroom) : plate-forme de covoiturage en France et à l'international;
+
+
+    Dans tous les cas, pensez à adapter votre mode de transport à la distance et à privilégier les modes doux ou transports en commun (bus, métro, vélo, marche, etc.) le plus possible.
+
+transport . boulot:
+  description: |
+    Si le covoiturage longue distance est bien connu en Suisse, celui des courtes distances est presque inexistant : aujourd'hui seuls 4 % des déplacements domicile-travail sont réalisés en covoiturage.
+
+    De nombreux sites web proposent des plates-formes gratuites pour mettre en contact des personnes effectuant le même trajet, que ce soit régulièrement, par exemple pour aller au travail, ou ponctuellement, par exemple pour une sortie de ski.
+
+    •	[site web de e-covoiturage](http://www.e-covoiturage.ch/index.php/fr/) : plate-forme suisse de covoiturage;
+
+    •	[site web de covoiturage Léman](http://www.covoiturage-leman.org/) : plate-forme de covoiturage du bassin lémanique;
+
+    •	[site web de Clem'](http://clem.mobi/covoiturage) : covoiturage pour les trajets domicile-travail dans la région genevoise;
+
+    •	[site web de Klaxit](http://www.klaxit.com/) : covoiturage "domicile-travail" pour les entreprises
+
+    •	site web de Caroster: covoiturage pour gérer les transports au sein d'une association ou club de sport
+    Pour vos trajets à l'étranger, vous pouvez aussi consulter les sites suivants:
+
+    •	[site web de blablacar](https://www.blablacar.fr/) : plate-forme européenne de covoiturage;
+
+    •	[site web de carpooling](http://www.europe-carpooling.com/) : plate-forme de covoiturage en France;
+
+    •	[site web de compartir](http://compartir.org/) : plate-forme de covoiturage en Espagne et à l'international;
+
+    •	[site web de iDVROOM](https://www.tictactrip.eu/company/carpooling/idvroom) : plate-forme de covoiturage en France et à l'international;
+
+     Dans tous les cas, pensez à adapter votre mode de transport à la distance et à privilégier les modes doux ou transports en commun (bus, métro, vélo, marche, etc.) le plus possible.
+
+transport . réduction covoiturage:
+  description: |
+    D'après une étude menée en France, le covoiturage permet de réduire les émissions d'environ 20%.
+
+transport . boulot . commun:
+  description: |
+    Quand c'est possible, prendre les transports en commun ou légers (marche à pied, vélo, trottinette ...) pour aller au travail réduit notre empreinte climatique, mais améliore aussi notre qualité de vie.
+
+    A Genève, 45% des déplacements pour le motif "travail" sont effectués en voiture ou en deux-roues motorisés ([MRMT 2021](https://statistique.ge.ch/domaines/11/11_02/tableaux.asp)), la plupart du temps par des personnes seules dans leur voiture. C'est ce qu'on appelle l'auto-solisme.
+
+    En plus d'émettre beaucoup de gaz à effet de serre cet auto-solisme détériore la qualité de l'air de nos villes et donc notre santé, encombre les voies urbaines et crée de la pollution sonore.
+
+    > A titre d'exemple les bouchons représentent, dans le canton de Genève, par an et par personne [133 heures perdues]([Geneva traffic report | TomTom Traffic Index](https://www.tomtom.com/traffic-index/geneva-traffic/)) soit environ 6 jours.
+
+    >💡 Le saviez-vous ? Le canton et plusieurs communes subventionnent les vélos mécaniques, électriques, cargo, pliants, etc. Calculez votre aide 🚲️ en 3 clics ( [Subventions vélo | ge.ch](https://www.ge.ch/subventions-velo) ).
+
+transport . boulot . commun . empreinte:
+  note: |
+    On considère qu'un déplacement domicile travail effectué en voiture peut être remplacé par un train régional et non par un Inter-City.
+
+transport . voiture 5km:
+  description: |
+    Se tourner vers les mobilités actives (marche, rollers, vélo, trottinette...) pour les trajets « courts » de moins de 5 km permet de réduire de manière significative nos émissions de GES, de décongestionner les voies urbaines et de réduire les pollutions (air et bruit).
+
+    Découvrez comment se déplacer à vélo [à Genève](https://www.ge.ch/document/carte-velo), et [en Suisse](https://schweizmobil.ch/fr/ete).
+
+      >💡 Le saviez-vous ? Le canton et plusieurs communes subventionnent les vélos mécaniques, électriques, cargo, pliants, etc. [Calculez votre aide 🚲️ en 3 clics](https://www.ge.ch/subventions-velo).
+
+transport . scooter électrique:
+  description: |
+    Le scooter électrique n'est pas la solution miracle mais pour certains usages il peut s'avérer (très) utile pour réduire notre empreinte.
+
+    Attention toutefois à ne pas arriver à la conclusion simpliste qu'il suffirait uniquement de passer à un parc de véhicules électriques pour décarboner les déplacements des Genevois-e-s. 
+
+    Il faudrait en priorité se déplacer à pied, à vélo ou en transports en communs lorsque c'est possible. 
+
+    Néanmoins le chiffre de réduction présenté pour cette action correspond bien à la différence d'émissions de gaz à effet de serre qui aurait eu lieu si vous aviez parcouru vos km avec un véhicule électrique et non thermique.
+
+    Attention l'idée ici n'est pas de pousser vers l'achat d'un scooter électrique neuf, il vaut mieux faire durer son matériel et privilégier l'occasion !
+
+transport . voiture électrique:
+  description: |
+    La voiture électrique n'est pas la solution miracle mais pour certains usages elle peut s'avérer (très) utile pour réduire notre empreinte carbone.
+
+    Attention toutefois à ne pas arriver à la conclusion simpliste qu'il suffirait de passer à un parc automobile électrique pour décarboner les déplacements des Genevois-e-s. 
+
+    Il faudrait en priorité se déplacer à pied, en vélo ou en transports en communs lorsque c'est possible.
+
+    Néanmoins le chiffre de réduction présenté pour cette action correspond bien à la différence d'émissions de gaz à effet de serre qui aurait eu lieu si vous aviez parcouru vos km avec un véhicule électrique et non thermique.
+
+logement . baisse température:
+  description: |
+    Le logement, et en particulier son chauffage (au mazout ou au gaz), a un impact très important sur le climat.
+
+    Baisser la température d'un ou deux degrés peut être un moyen de réduire fortement son empreinte carbone.
+
+    Retrouvez d'autres conseils pour économiser de l'énergie dans votre logement sur le site https://www.energie-environnement.ch/maison/renovation-et-chauffage
+
+    Source : Des gestes pour économiser notre énergie https://www.ge.ch/document/30986/annexe/0
+
+logement . baisse température . nombre degrés:
+  description: |
+    Environ 85% de la consommation d'énergie finale d'un ménage est consacrée au chauffage et à l'eau chaude.
+
+    Cette consommation d'énergie, en plus d'avoir un coût financier non négligeable, augmente l'empreinte carbone des ménages.
+
+    Elle peut toutefois facilement être limitée en diminuant la température des pièces occupées sans perdre de confort thermique ni ressentir une sensation de froid.
+
+    Par exemple, régler la température entre 19° et 21°C dans les pièces occupées la journée (et 17°C la nuit ou dans les pièces peu occupées).
+
+    En effet, baisser la température de chauffage d'1°C représente une [économie d'énergie de 7% à 10%](https://www.ge.ch/document/30986/annexe/0). Cela peut paraître peu à l'échelle individuelle mais si tout le monde fait cette action, c'est un levier très fort de réduction des émissions de CO2.
+
+    Les fenêtres doivent bien entendu être maintenues fermées. Afin d'aérer votre logement, et si vous ne disposez pas d'une aération mécanique, ouvrez grand les fenêtres 1x par jour pendant 5 à 10 minutes par jour.
+
+    Une bonne gestion des stores ou volets vous permettra de gagner en confort et de réduire encore les émissions de votre logement: leur ouverture pendant la journée vous permettra de profiter de l'énergie du soleil, leur fermeture la nuit augmentera votre confort et réduira les pertes de chaleur.
+
+logement . baisse température . gains 1 degré:
+  formule: 0.1
+  description: |
+    C'est la baisse estimée de dépense d'énergie quand on baisse la température de notre foyer chauffé de 1°C dans la gamme de température usuelle (autour de 20°).
+
+    Nous retenons l'estimation donnée dans le [guide du Canton "Des gestes pour économiser notre énergie"](https://www.ge.ch/document/30986/annexe/0).
+  # @Clément: quelle est la source ?
+
+logement . éteindre appareils:
+  description: |
+    Nos appartements et nos maisons regorgent d'appareils électroniques et électroménagers, qui restent souvent allumés ou bien en veille.
+
+    L'usage de simples multiprises permet de les éteindre complètement en un clin d'œil.
+
+    Retrouvez de nombreux conseils pour économiser de l'énergie dans votre logement sur le site https://www.energie-environnement.ch/maison/renovation-et-chauffage.
+
+logement . remplacer fioul par bois:
+  titre: Remplacer ma chaudière mazout par du bois
+  note: |
+    Nous considérons pour l'instant que le remplacement des kWh de mazout par la même quantité de kWh de bois est une bonne approximation de premier ordre. Nous pourrons par la suite l'adapter en fonction du rendement des installations résidentielles.
+
+    Découvrez [les subventions](https://ge-energie.ch/) pour passer aux renouvelables.
+
+logement . éclairage . consommation de l'éclairage:
+  formule: électricité * 10%
+  # @Clément: Lien pour la source ?
+  note: Consommation électrique d'un ménage, Août 2021, suisseénergie
+
+logement . remplacer gaz par PAC:
+  description: |
+    Les chaudières au gaz sont parmi les plus émissives de CO₂. Les remplacer par des alternatives moins carbonées comme des pompes à chaleur est un geste fort pour réduire votre empreinte carbone.
+
+    > Les pompes à chaleur sont souvent appelées *PAC*.
+
+    💡 Leur principe est ingénieux : c'est un frigo inversé ! Votre frigo, grâce à un peu d'électricité, refroidit son intérieur et rejette la chaleur dans la pièce. La PAC refroidit l'air extérieur pour chauffer votre logement.
+
+    Découvrez [les subventions](https://ge-energie.ch/) pour passer aux renouvelables.
+
+  note: |
+    Nous considérons pour l'instant que le remplacement des kWh de gaz par la même quantité de kWh électrique est une bonne approximation de premier ordre. Nous pourrons par la suite l'adapter en fonction du rendement des installations résidentielles.
+
+logement . rénovation énergétique:
+  description: |
+    Une rénovation peut permettre de réduire de 20 à 150% de la consommation d'énergie de son logement. 
+
+    Ce type de rénovation entraîne également, sur le long terme, de fortement réduire la facture énergétique.
+
+    Pour connaitre les rénovations les plus adaptées à votre logement ainsi que les aides disponibles : [ge-energie.ch](https://ge-energie.ch/).
+
+logement . gain rénovation:
+  formule: 20%
+  note: |
+    Le gain énergétique moyen après rénovation est très variable, en fonction du type de rénovation, du réglage des installations etc. Entre un bâtiment peu isolé et un bâtiment bien isolé, la différence de consommation est de l'ordre de 1.2 à 2.5.
+  # @Clément: Source ?
+
+logement . propriétaire:
+  description: |
+    En tant que locataire, il est évidemment délicat de faire les investissements qui améliorent l'empreinte du logement : isoler son logement ou changer de source d'énergie sont des actions que seuls les propriétaires peuvent réaliser. Cela n'empêche pas les locataires de les leur demander !
+  par défaut: non
+
+logement . raccordement réseau de chaleur:
+  note: |
+    Un réseau de chaleur est un système de canalisations qui permettent d'acheminer vers un ensemble de bâtiments de la chaleur produite localement et majoritairement à partir d'énergies renouvelables et de récupération. 
+
+    C'est une alternative écologique et économique pour remplacer des chaudières au gaz ou mazout, aussi bien pour les bâtiments d'habitat collectif que pour les bureaux.
+
+    Néanmoins, être raccordé à un réseau de chaleur n'est pas aussi simple que de souscrire un contrat d'électricité. En effet, la faisabilité du raccordement dépend de [plusieurs conditions techniques]( https://www.ge.ch/installations-chauffage-batiment/se-raccorder-reseau-chauffage-distance).
+
+    Tout d'abord, le raccordement se fait pour tout un bâtiment : il n'est pas possible de raccorder seulement votre appartement. Ensuite, il est nécessaire de vérifier qu'il existe un réseau de chaleur à proximité du bâtiment, puis d'étudier les infrastructures de chauffage au sein du bâtiment (un bâtiment équipé d'un système de chauffage collectif permettra un raccordement à moindre coût)
+
+    Côté impact climat, il faut savoir qu'en général, un réseau de chaleur est alimenté via des sources d'énergie renouvelables ou de récupération locales (50% à minima à l'échelle genevoise, avec 80% comme objectif d'ici à 2030), c'est à dire, via l'incinération d'ordures ménagères, la combustion de biomasse, la géothermie ce qui permet de réduire considérablement l'impact CO2 du kWh d'énergie consommée par rapport au gaz ou au mazout.
+
+  description: |
+    Alimentés à minima à 50% par des énergies renouvelables et de récupération locales (chaleur issue de l'incinération des déchets, biomasse, géothermie...), les réseaux de chaleur (ou chauffage urbain) constituent un mode de chauffage faiblement carboné. 
+
+    Le raccordement au chauffage urbain se fait à l'échelle d'un bâtiment entier. Il nécessite la présence d'un réseau de chaleur à proximité du bâtiment et est facilité lorsque le bâtiment est déjà équipé d'un chauffage collectif.
+
+    >💡 Le canton fournit une carte des réseaux structurants : vérifiez si un [réseau de chaleur]( https://www.ge.ch/document/22488/annexe/21 ) passe près de votre immeuble !
+
+alimentation . manger local:
+  description: |
+    L'alimentation locale permet de réduire les distances de transports des produits que nous consommons. Cependant, même si cela peut sembler contre intuitif, l'alimentation locale peut, en fonction des cas considérés, être défavorable en terme d'émissions de gaz à effet de serre : l'impact de la provenance de nos produits ne peut être résumé à une comparaison entre courte et longue distance. Les effets d'échelle, la centralisation des produits, l'efficacité des transports utilisés (ou à l'inverse la non efficacité) complexifient la chose d'un point de vue de la comptabilité carbone.
+
+    Néanmoins, l'alimentation locale a bien d'autres impacts positifs comme, par exemple, le soutien aux agriculteurs-trices de nos régions ! 
+
+    A Genève, la marque « Genève Région Terre Avenir » (GRTA) permet d'identifier les produits issus de l'agriculture locale. Le site https://www.geneveterroir.ch/fr/marque-de-garantie-grta-info/2443 répertorie les producteurs GRTA du canton.
+
+    Retrouvez plus d'informations sur : https://www.ge.ch/dossier/alimentation-durable-geneve/climat-dans-votre-assiette/proximite
+
+alimentation . manger de saison:
+  description: |
+    Contrairement à ce qu'on pourrait imaginer, l'impact de cette action est relativement faible car la part de produits de saison est très faible dans l'alimentation moyenne d'un-e Suisse-sse.
+
+    Mais il existe de nombreux autres bénéfices à l'alimentation saisonnière comme la moindre consommation d'eau, la diversité des cultures, ou encore la moindre dépendance aux hydrocarbures (gaz et pétrole) qui chauffent les serres. De plus, le corps n'a pas besoin des mêmes nutriments toute l'année, ces besoins correspondent aux aliments de saison.
+
+    Retrouvez plus d'informations sur : https://www.ge.ch/dossier/alimentation-durable-geneve/climat-dans-votre-assiette/proximite
+
+alimentation . déchets . réduire gaspillage:
+  description: |
+    En Suisse, le gaspillage alimentaire moyen est évalué à 90 kg d'aliments par personne et par an. 
+
+    Si l'on considère l'ensemble de la chaîne de valeur (c'est-à-dire du champ à l'assiette), c'est environ 2.8 millions de tonnes d'aliments qui sont gaspillées par an, soit 330 kg par habitant-e. De l'énergie, de l'eau, des ressources financières et humaines ont été nécessaires pour produire ces aliments, ces ressources sont donc elles aussi gaspillées. De plus, elles ont également un impact sur l'environnement. 
+
+    Réduire le gaspillage alimentaire est donc essentiel afin d'éviter de produire pour jeter, d'économiser nos ressources et réduire notre impact sur l'environnement !
+
+    Retrouvez plus d'informations sur : https://www.ge.ch/dossier/alimentation-durable-geneve/climat-dans-votre-assiette/gaspillage-alimentaire
+
+alimentation . déchets . composter:
+  description: |
+    Nos biodéchets, c’est à dire les déchets putrescibles issus de notre alimentation (épluchures, restes de repas, etc.),
+    représentent une grande partie du poids de notre poubelle grise contribuant ainsi à majorer l’empreinte carbone associée
+    à la gestion de nos déchets. Ces déchets sont très souvent peu ou mal valorisés malgré le bénéfice environnemental qu’ils peuvent apporter :
+    un compost, substance organique riche et bénéfique pour les sols. Composter nos biodéchets (de manière individuelle ou collective) permet donc de réduire
+    la taille de nos poubelles et de favoriser la création de ce compost pouvant à terme être utilisé comme alternative aux engrais chimiques.
+
+    Retrouvez toutes les astuces pour [faire un compost](https://www.ge.ch/teaser/p-tite-poubelle-verte)
+
+## Supprime l'action "Rénover mon logement en BBC"
+actions:
+  formule:
+    somme:
+      - transport . arrêter l'avion
+      - transport . arrêter l'avion court
+      - transport . prendre moins l'avion
+      - alimentation . réduire viande . par deux
+      - alimentation . réduire viande . par quatre
+      - alimentation . devenir végétarien
+      - alimentation . devenir végétalien
+      - alimentation . viande faible empreinte
+      - alimentation . manger de saison
+      - alimentation . boisson . eau en bouteille . arrêter
+      - alimentation . manger local
+      - alimentation . déchets . réduire gaspillage
+      - alimentation . déchets . composter
+      - logement . éteindre appareils
+      - logement . remplacer fioul par bois
+      - logement . remplacer gaz par PAC
+      - logement . séchage air libre
+      - transport . éco-conduite
+      - logement . baisse température
+      - logement . éclairage . LED
+      - logement . rénovation énergétique
+      - logement . raccordement réseau de chaleur
+      - transport . boulot . covoiturage
+      - transport . boulot . commun
+      - transport . boulot . télétravail
+      - transport . covoiturage
+      - transport . voiture 5km
+      - transport . voiture électrique
+      - transport . voiture . limitation autoroute
+      - transport . scooter électrique
+      - divers . numérique . internet . diminuer
+      - divers . partage NGC
+      - divers . aider les autres
+      - divers . électroménager . allongement
+      - divers . ameublement . allongement
+      - services sociétaux . voter
+      - services sociétaux . pression locale
+      - divers . publicité
+      - divers . avoir un stop pub
+      - divers . numérique . appareils . allongement
+      - divers . tabac . arrêter
