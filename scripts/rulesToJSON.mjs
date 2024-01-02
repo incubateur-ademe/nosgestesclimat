@@ -26,17 +26,16 @@ import rulesToJSONWorker from './rulesToJSON.worker.mjs'
 
 const t9nDir = 'data/i18n/t9n'
 
-const { srcLang, srcFile, destLangs, destRegions, markdown } = cli.getArgs(
-  `Aggregates the model to an unique JSON file.`,
-  {
+const { srcLang, srcFile, destLangs, destRegions, markdown, optimDisabled } =
+  cli.getArgs(`Aggregates the model to an unique JSON file.`, {
     source: true,
     target: true,
     model: { supportedRegionCodes },
     file: true,
     defaultSrcFile: 'data',
-    markdown: true
-  }
-)
+    markdown: true,
+    optimCanBeDisabled: true
+  })
 
 /// ---------------------- Helper functions ----------------------
 
@@ -107,7 +106,7 @@ try {
 }
 
 try {
-  new Engine(baseRules, {
+  const engine = new Engine(baseRules, {
     logger: {
       log: (_) => {},
       warn: (message) => {
@@ -117,7 +116,10 @@ try {
       },
       err: (_) => {}
     }
-  }).evaluate('bilan')
+  })
+
+  engine.evaluate('bilan')
+  engine.evaluate('actions')
 
   if (!markdown) {
     console.log(
@@ -139,6 +141,9 @@ if (!markdown) {
     'ℹ️ Multi-threading mode:',
     multiThread ? c.green('ON') : c.yellow('OFF')
   )
+  console.log(
+    `ℹ️ Optimization mode: ${optimDisabled ? c.yellow('OFF') : c.green('ON')}`
+  )
 }
 
 const piscina = multiThread
@@ -155,6 +160,7 @@ const printErrorAndExit = (err, regionCode, destLang) => {
   exit(-1)
 }
 
+const opts = { markdown, optimDisabled }
 destLangs.unshift(srcLang)
 const resultOfCompilationAndOptim = await Promise.all(
   destLangs.flatMap((destLang) => {
@@ -166,7 +172,7 @@ const resultOfCompilationAndOptim = await Promise.all(
             regionCode,
             destLang,
             translatedBaseRules,
-            markdown
+            opts
           })
           .catch((err) => printErrorAndExit(err, regionCode, destLang))
       }
@@ -176,7 +182,7 @@ const resultOfCompilationAndOptim = await Promise.all(
           regionCode,
           destLang,
           translatedBaseRules,
-          markdown
+          opts
         })
       } catch (err) {
         printErrorAndExit(err, regionCode, destLang)

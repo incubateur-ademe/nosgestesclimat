@@ -96,19 +96,17 @@ export function getPersonasFromAPI(version, region, lang) {
 
 export function testPersonas(rules, personas) {
   const engine = new Engine(rules, { logger: disabledLogger })
-  const modelRules = Object.keys(engine.getParsedRules())
   const personasRules = Object.values(personas)
   const results = {}
 
-  for (let persona of personasRules) {
-    const personaData = persona.situation || {}
-    const validPersonaRules = Object.fromEntries(
-      Object.entries(personaData).filter(([ruleName, _]) =>
-        modelRules.includes(ruleName)
-      )
-    )
-
-    engine.setSituation(validPersonaRules)
+  for (const persona of personasRules) {
+    let personaData = persona.situation || {}
+    for (const ruleName in personaData) {
+      if (!(ruleName in rules)) {
+        delete personaData[ruleName]
+      }
+    }
+    engine.setSituation(personaData)
     results[persona.nom] = engine.evaluate('bilan').nodeValue
   }
 
