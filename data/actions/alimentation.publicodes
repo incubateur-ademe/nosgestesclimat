@@ -13,7 +13,7 @@ alimentation . réduire viande:
 #     Et si vous commenciez par réduire votre consommation de viande en n'en mangeant qu'une seule fois par jour ?
 
 # alimentation . réduire viande . max 1 par jour . par semaine:
-  
+
 alimentation . réduire viande . par deux:
   applicable si: nombre de plats viande > 2
   action:
@@ -268,50 +268,62 @@ alimentation . une semaine chocolat chaud végétalien:
       avec:
         alimentation . type de lait: "'lait d'avoine'"
 
-alimentation . réduire café: 
+alimentation . réduire café:
 
-alimentation . réduire café . max 2 par jour:
-  applicable si: boisson . chaude . café . nombre > ( commun . jours par semaine * 2 )
+alimentation . réduire café . max deux par jour:
+  applicable si: boisson . chaude . café . nombre > 14 tasse/semaine
   titre: Se limiter à deux cafés par jour
   icônes: ☕️2️⃣
-  formule: ( boisson . chaude . café . nombre - 14 ) * boisson . tasse de café * commun . semaines par an
+  formule: (boisson . chaude . café . nombre - 14 tasse/semaine) * boisson . tasse de café * commun . semaines par an
+  unité: kgCO2e
   description: |
-    Au risque de taquiner un peu, la consommation de café peut avoir une empreinte carbone non négligeable dans votre bilan. En moyenne, chaque tasse de café ajoute 120 g CO2e à votre empreinte.
+    Au risque de taquiner un peu, la consommation de café peut avoir une empreinte carbone non négligeable dans votre bilan. En moyenne, chaque tasse de café ajoute 120 grammes de CO₂e à votre empreinte.
 
     Et si vous commenciez par n'en consommer "plus que" deux par jour ?
 
-alimentation . réduire café . remplace un café par jour par thé: 
-  applicable si: boisson . chaude . café . nombre > commun . jours par semaine
+alimentation . réduire café . remplace un café par jour par thé:
+  applicable si: boisson . chaude . café . nombre > 7 tasse/semaine
   titre: Remplacer un café quotidien par un thé
   icônes: ☕️🫖
-  formule: ( boisson . tasse de café - boisson . tasse de thé ) * commun . jours par an
+  formule: (boisson . tasse de café - boisson . tasse de thé) * commun . jours par an
+  unité: kgCO2e
   description: |
     Le café a une empreinte carbone largement supérieure au thé (près de 20 fois supérieure !). Et si vous troquiez une de vos tasses de café quotidiennes par un thé ?
 
-alimentation . réduire café . remplace par chicorée: 
-  applicable si: boisson . chaude . café . nombre > commun . jours par semaine
-  titre: Remplacer la consommation de café par de la chicorée
+alimentation . réduire café . remplace par thé:
+  applicable si: boisson . chaude . café . nombre > 7 tasse/semaine
+  titre: Remplacer le café par du thé
+  icônes: ☕️🫖
+  formule: boisson . chaude . café . nombre * (boisson . tasse de café - boisson . tasse de thé) * commun . semaines par an
+  unité: kgCO2e
   description: |
     Nous faisons le choix de ne proposer cette action qu'aux "gros" buveurs de café, considérant que l'empreinte d'un café / jour reste "tolérable" dans une empreinte carbone annuelle (bien qu'elle représente, tout de même, plus de 40 kg CO2e / an).
+
+alimentation . réduire café . remplace par chicorée:
+  applicable si: boisson . chaude . café . nombre > 7 tasse/semaine
+  titre: Remplacer le café par de la chicorée
   icônes: ☕️🌿
-  formule: boisson . chaude . café . nombre * ( boisson . tasse de café - boisson . tasse de chicorée ) * commun . semaines par an
+  formule: boisson . chaude . café . nombre * (boisson . tasse de café - boisson . tasse de chicorée) * commun . semaines par an
+  unité: kgCO2e
+  description: |
+    Nous faisons le choix de ne proposer cette action qu'aux "gros" buveurs de café, considérant que l'empreinte d'un café / jour reste "tolérable" dans une empreinte carbone annuelle (bien qu'elle représente, tout de même, plus de 40 kg CO2e / an).
 
-alimentation . réduire chocolat chaud: 
+alimentation . réduire chocolat chaud:
 
-alimentation . réduire chocolat chaud . max 1 par jour:
-  applicable si: boisson . chaude . chocolat chaud . nombre > commun . jours par semaine
+alimentation . réduire chocolat chaud . max un par jour:
+  applicable si: boisson . chaude . chocolat chaud . nombre > 7 tasse/semaine
   titre: Se limiter à un chocolat chaud par jour
   icônes: ☕️1️⃣
-  formule: ( boisson . chaude . chocolat chaud . nombre - commun . jours par semaine ) * boisson . tasse de chocolat chaud * commun . semaines par an
+  formule: (boisson . chaude . chocolat chaud . nombre - commun . jours par semaine) * boisson . tasse de chocolat chaud * commun . semaines par an
   description: |
     Le chocolat chaud a une empreinte non négligeable : près de 600 gCO2e / tasse !
 
     Et si vous commenciez par n'en consommer "plus qu'un" par jour ?
 
-alimentation . réduire boissons sucrées: 
+alimentation . réduire boissons sucrées:
 
-alimentation . réduire boissons sucrées . max 2L par semaine:
-  applicable si: alimentation . boisson . sucrées . litres > 2
+alimentation . réduire boissons sucrées . max deux litres par semaine:
+  applicable si: alimentation . boisson . sucrées . litres > 2 l/semaine
   titre: Ne pas boire plus de deux litres de boissons sucrées par semaine
   icônes: 🥤
   formule: boisson . sucrées - recalcul
@@ -319,18 +331,18 @@ alimentation . réduire boissons sucrées . max 2L par semaine:
     L'empreinte carbone des boissons sucrées est loin d'être négligeable. Un litre de soda a une empreinte de 500 gCO2e, et un litre de jus de fruit 900 g.
 
     Se limiter à 2 litres par semaine est donc, déjà, un bon début pour réduire son empreinte.
-  
-alimentation . réduire boissons sucrées . max 2L par semaine . recalcul: 
+
+alimentation . réduire boissons sucrées . max deux litres par semaine . recalcul:
   formule:
     recalcul:
       règle: boisson . sucrées
       avec:
         boisson . sucrées . litres: 2
 
-alimentation . réduire alcool: 
+alimentation . réduire alcool:
 
-alimentation . réduire alcool . max 2L par semaine:
-  applicable si: alimentation . boisson . alcool . litres > 2
+alimentation . réduire alcool . max deux litres par semaine:
+  applicable si: alimentation . boisson . alcool . litres > 2 l/semaine
   titre: Ne pas boire plus de deux litres d'alcool par semaine
   icônes: 🥤
   formule: boisson . alcool - recalcul
@@ -338,8 +350,8 @@ alimentation . réduire alcool . max 2L par semaine:
     L'empreinte carbone de l'alcool est loin d'être négligeable. Un litre de bière a une empreinte de 1,12 kgCO2e, et un litre de vin 1,22 kg.
 
     Se limiter à 2 litres par semaine est donc, déjà, un bon début pour réduire son empreinte.
-  
-alimentation . réduire alcool . max 2L par semaine . recalcul: 
+
+alimentation . réduire alcool . max deux litres par semaine . recalcul:
   formule:
     recalcul:
       règle: boisson . alcool
