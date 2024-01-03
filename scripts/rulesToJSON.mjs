@@ -106,7 +106,7 @@ try {
 }
 
 try {
-  new Engine(baseRules, {
+  const engine = new Engine(baseRules, {
     logger: {
       log: (_) => {},
       warn: (message) => {
@@ -116,7 +116,10 @@ try {
       },
       err: (_) => {}
     }
-  }).evaluate('bilan')
+  })
+
+  engine.evaluate('bilan')
+  engine.evaluate('actions')
 
   if (!markdown) {
     console.log(
