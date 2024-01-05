@@ -36,16 +36,26 @@ logement . électricité . consommation:
         alors: surface * (parc français . consommation électricité autre par m2 + parc français . chauffage . consommation électricité PAC par m2)
       - sinon: surface * parc français . consommation électricité autre par m2
   note: on considère que seule la consommation d'électricité liée au chauffage est dépendante de la surface du logement
-  aide: estimation via le coût
   description: |
     Astuce : vous trouverez la consommation annuelle d'électricité sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
 
     Pour rappel, si vous vivez dans plusieurs logements (par exemple, si vous avez une résidence secondaire), essayez de "ramener" ces consommations dans celles du logement principal afin d'avoir l'estimation la plus juste possible.
 
 logement . électricité . estimation via le coût:
+  titre: Consommation estimée via le coût
+  applicable si:
+    est défini: estimation via le coût . saisie
+  remplace: logement . électricité . consommation
+  valeur: saisie * commun . mois par an / facteur
+  unité: kWh
+
+logement . électricité . estimation via le coût . saisie:
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
-  unité: €/kWh
+  unité: €/mois
+
+logement . électricité . estimation via le coût . facteur:
   formule: 0.2022
+  unité: €/kWh
   note: |
     Cette formule nous permet de passer des €/mois aux kWh/an.
 
