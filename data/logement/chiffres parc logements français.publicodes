@@ -347,8 +347,8 @@ parc français . chauffage . empreinte moyenne chauffage air par m2:
       - empreinte électricité chauffage air par m2
       - empreinte gaz chauffage air par m2
       - empreinte fioul chauffage air par m2
-      - empreinte buches chauffage air par m2
-      - empreinte granulés chauffage air par m2
+      - empreinte buches chauffage air par m2 / 2
+      - empreinte granulés chauffage air par m2 / 2
       - empreinte réseau de chaleur chauffage air par m2
       - empreinte GPL chauffage air par m2
 
@@ -380,10 +380,10 @@ parc français . chauffage . empreinte fioul chauffage air par m2:
   formule: empreinte fioul par m2 * part chauffage air fioul
 
 parc français . chauffage . empreinte buches chauffage air par m2:
-  formule: empreinte buches par m2 * part chauffage air bois / 2
+  formule: empreinte buches par m2 * part chauffage air bois
 
 parc français . chauffage . empreinte granulés chauffage air par m2:
-  formule: empreinte granulés par m2 * part chauffage air bois / 2
+  formule: empreinte granulés par m2 * part chauffage air bois
 
 parc français . chauffage . empreinte réseau de chaleur chauffage air par m2:
   formule: empreinte réseau de chaleur par m2 * part chauffage air réseau de chaleur
@@ -402,18 +402,24 @@ parc français . surface . électricité PAC:
   unité: m2
   note: Cette surface est compris dans `surface . électricité`.
 
+parc français . surface . part hors PAC électricité:
+  formule: surface . électricité hors PAC / surface . électricité
+
+parc français . surface . part PAC électricité:
+  formule: surface . électricité PAC / surface . électricité
+
 parc français . chauffage . consommation électricité hors PAC:
-  formule: consommation électricité hors PAC . chauffage + consommation électricité . ecs + consommation électricité . cuisson
+  formule: consommation électricité hors PAC . chauffage + surface . part hors PAC électricité * (consommation électricité . ecs + consommation électricité . cuisson)
   unité: kWh
 
 parc français . chauffage . consommation électricité hors PAC . chauffage:
-  titre: conso électrique via PAC liée au chauffage
+  titre: conso électrique hors PAC liée au chauffage
   formule: consommation électricité . chauffage - consommation électricité PAC . chauffage
   unité: kWh
   note: Cette consommation est compris dans `consommation électricité . chauffage`.
 
 parc français . chauffage . consommation électricité PAC:
-  formule: consommation électricité PAC . chauffage + consommation électricité . ecs + consommation électricité . cuisson
+  formule: consommation électricité PAC . chauffage + surface . part PAC électricité * (consommation électricité . ecs + consommation électricité . cuisson)
   unité: kWh
 
 parc français . chauffage . consommation électricité PAC . chauffage:
@@ -423,11 +429,11 @@ parc français . chauffage . consommation électricité PAC . chauffage:
   note: Cette consommation est compris dans `consommation électricité . chauffage`.
 
 parc français . chauffage . consommation électricité hors PAC par m2:
-  formule: consommation électricité hors PAC . chauffage / surface . électricité hors PAC
+  formule: consommation électricité hors PAC / surface . électricité hors PAC
   unité: kWh/m2
 
 parc français . chauffage . consommation électricité PAC par m2:
-  formule: consommation électricité PAC . chauffage / surface . électricité PAC
+  formule: consommation électricité PAC / surface . électricité PAC
   unité: kWh/m2
 
 parc français . chauffage . empreinte électricité hors PAC par m2:
