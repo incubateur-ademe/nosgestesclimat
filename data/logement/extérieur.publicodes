@@ -1,0 +1,322 @@
+logement . extérieur:
+  icônes: ☘️
+  titre: L'empreinte de votre extérieur (jardin, terrasse)
+  non applicable si:
+    toutes ces conditions:
+      - est défini: logement . appartement
+      - appartement
+  mosaique:
+    type: selection
+    options:
+      - salon de jardin bois . présent
+      - salon de jardin résine ou métal . présent
+      - tondeuse électrique ou robot . présent
+      - tondeuse thermique . présent
+      - barbecue électrique ou gaz . présent
+      - barbecue charbon . présent
+    suggestions:
+      aucun:
+        salon de jardin bois . présent: non
+        salon de jardin résine ou métal . présent: non
+        tondeuse électrique ou robot . présent: non
+        tondeuse thermique . présent: non
+        barbecue électrique ou gaz: non
+        barbecue charbon: non
+  question: Que possédez-vous dans votre jardin ?
+  description: |
+    Nous essayons ici de couvrir les éléments principaux d'un jardin individuel type. Il manque encore des éléments, qui seront ajoutés progressivement.
+  formule:
+    variations:
+      - si: choix utilisateur
+        alors: empreinte totale / habitants
+      - sinon: empreinte par défaut / habitants
+
+logement . extérieur . choix utilisateur:
+  titre: Choix utilisateur pour le jardin
+  formule:
+    une de ces conditions:
+      - est défini: salon de jardin bois . présent
+      - est défini: salon de jardin résine ou métal . présent
+      - est défini: tondeuse électrique ou robot . présent
+      - est défini: tondeuse thermique . présent
+      - est défini: barbecue électrique ou gaz . présent
+      - est défini: barbecue charbon . présent
+
+logement . extérieur . empreinte totale:
+  formule:
+    somme:
+      - empreinte salon de jardin bois amortie
+      - empreinte salon de jardin résine ou métal amortie
+      - empreinte tondeuse électrique ou robot amortie
+      - empreinte tondeuse thermique amortie
+      - empreinte barbecue électrique ou gaz amortie
+      - empreinte barbecue charbon
+  unité: kgCO2e
+
+logement . extérieur . empreinte par défaut:
+  description: calcul statistique pour établir l'équipement "moyen" d'un jardin français (et non, "à la française", ce qui serait très différent...)
+  somme:
+    - empreinte salon de jardin bois amortie * part propriétaires salon jardin bois
+    - empreinte salon de jardin résine ou métal amortie * part propriétaires salon jardin résine ou métal
+    - empreinte tondeuse électrique ou robot amortie * part propriétaires tondeuse électrique ou robot
+    - empreinte tondeuse thermique amortie * part propriétaires tondeuse thermique
+    - empreinte barbecue électrique ou gaz amortie * part propriétaires barbecue électrique ou gaz
+    - empreinte barbecue charbon * part propriétaires barbecue charbon
+  unité: kgCO2e
+
+logement . extérieur . salon de jardin bois:
+  titre: Salon de jardin en bois
+  icônes: 🏡🪵
+  applicable si:
+    toutes ces conditions:
+      - est défini: salon de jardin bois . présent
+      - salon de jardin bois . présent
+  formule: empreinte salon de jardin bois amortie
+
+logement . extérieur . salon de jardin bois . présent:
+  question: Possédez-vous un salon de jardin en bois ?
+
+logement . extérieur . empreinte salon de jardin bois amortie:
+  formule: empreinte salon de jardin bois / durée de vie salon de jardin bois
+  unité: kgCO2e
+
+logement . extérieur . empreinte salon de jardin bois:
+  formule: 69.2
+  note: Facteur d'émission issu de la Base Empreinte (Salon de jardin/bois)
+  unité: kgCO2e
+
+logement . extérieur . durée de vie salon de jardin bois:
+  formule: 10
+  note: Nous supposons qu'un salon de jardin est conservé 10 ans.
+
+logement . extérieur . part propriétaires salon jardin bois:
+  formule: 0.5 * 0.25
+  note: Nous supposons que la moitié des français possède un salon de jardin. Parmi ces propriétaires de salon de jardin, nous supposons que 50% est en résine, 25% en bois, 25% en métal.
+
+logement . extérieur . salon de jardin résine ou métal:
+  titre: Salon de jardin en résine ou métal
+  icônes: 🏡🪨
+  applicable si:
+    toutes ces conditions:
+      - est défini: salon de jardin résine ou métal . présent
+      - salon de jardin résine ou métal . présent
+  formule: empreinte salon de jardin résine ou métal amortie
+
+logement . extérieur . salon de jardin résine ou métal . présent:
+  question: Possédez-vous un salon de jardin en résine ou métal ?
+
+logement . extérieur . empreinte salon de jardin résine ou métal amortie:
+  formule: empreinte salon de jardin résine ou métal / durée de vie salon de jardin résine ou métal
+  unité: kgCO2e
+
+logement . extérieur . empreinte salon de jardin résine ou métal:
+  formule:
+    moyenne:
+      - empreinte salon de jardin résine
+      - empreinte salon de jardin métal
+  unité: kgCO2e
+
+logement . extérieur . empreinte salon de jardin résine:
+  formule: 260
+  unité: kgCO2e
+  note: Facteur d'émission issu de la Base Empreinte (Salon de jardin/résine tressée)
+
+logement . extérieur . empreinte salon de jardin métal:
+  formule: 238
+  unité: kgCO2e
+  note: Facteur d'émission issu de la Base Empreinte (Salon de jardin/métal)
+
+logement . extérieur . durée de vie salon de jardin résine ou métal:
+  formule: 10
+  note: Nous supposons qu'un salon de jardin en résine ou en métal est conservé 10 ans.
+
+logement . extérieur . part propriétaires salon jardin résine ou métal:
+  formule: 0.5 * 0.25
+  note: Nous supposons que la moitié des français habitant en maison possède un salon de jardin. Parmi ces propriétaires de salon de jardin, nous supposons que 50% est en résine, 25% en bois, 25% en métal.
+
+logement . extérieur . tondeuse électrique ou robot:
+  titre: Tondeuse électrique ou robot
+  icônes: 🌿🔌
+  applicable si:
+    toutes ces conditions:
+      - est défini: tondeuse électrique ou robot . présent
+      - tondeuse électrique ou robot . présent
+  formule: empreinte tondeuse électrique ou robot amortie
+
+logement . extérieur . tondeuse électrique ou robot . présent:
+  question: Possédez-vous une tondeuse électrique ou robot ?
+
+logement . extérieur . empreinte tondeuse électrique ou robot amortie:
+  formule: empreinte tondeuse électrique ou robot / durée de vie tondeuse
+  unité: kgCO2e
+
+logement . extérieur . empreinte tondeuse électrique ou robot:
+  formule:
+    moyenne:
+      - empreinte tondeuse électrique
+      - empreinte tondeuse robot
+  unité: kgCO2e
+
+logement . extérieur . empreinte tondeuse électrique:
+  formule: 70.1
+  unité: kgCO2e
+  note: Facteur d'émission issu de la Base Empreinte (Tondeuse/electrique 1200 W)
+
+logement . extérieur . part propriétaires tondeuse électrique ou robot:
+  formule: 0.5 * 0.5
+  note: |
+    Il se vend 700 000 tondeuses chaque année, pour la moitié thermiques. 66% des français vivent en maison, 
+    soit à peu près 20 millions de foyers. Nous pouvons donc supposer que 50% des foyers habitant en maison possède une tondeuse, 
+    dont la durée de vie est de 10 ans.
+
+logement . extérieur . empreinte tondeuse robot:
+  formule: 109
+  unité: kgCO2e
+  note: Facteur d'émission issu de la Base Empreinte (Robot tondeuse (Lithium Ion 3.2 Ah))
+
+logement . extérieur . durée de vie tondeuse:
+  formule: 10
+  note: Nous utilisons les suppositions de l'ADEME, à savoir qu'une tondeuse a une durée de vie de 10 ans.
+
+logement . extérieur . tondeuse thermique:
+  titre: Tondeuse thermique
+  icônes: 🌿⛽️
+  applicable si:
+    toutes ces conditions:
+      - est défini: tondeuse thermique . présent
+      - tondeuse thermique . présent
+  formule: empreinte tondeuse thermique amortie
+
+logement . extérieur . tondeuse thermique . présent:
+  question: Possédez-vous une tondeuse thermique ?
+
+logement . extérieur . empreinte tondeuse thermique amortie:
+  formule: (empreinte tondeuse thermique / durée de vie tondeuse) + tondeuse thermique . usage
+  unité: kgCO2e
+
+logement . extérieur . tondeuse thermique . usage:
+  formule: heures usage * consommation moyenne * empreinte au litre
+
+logement . extérieur . tondeuse thermique . heures usage:
+  formule: heures moyennes par semaine * nombre semaines par an
+  unité: heure
+
+logement . extérieur . tondeuse thermique . heures moyennes par semaine:
+  formule: 1
+  note: En moyenne, on peut supposer que les français possédant un jardin passent 1h à tondre leur pelouse ([source](https://www.rentables.fr/consommation-dune-tondeuse-thermique/))
+  unité: heure/semaine
+
+logement . extérieur . tondeuse thermique . nombre semaines par an:
+  formule: 9
+  unité: semaine
+  note: Nous nous basons sur les hypothèses de l'ADEME, à savoir que les français tondent leur pelouse toutes les trois semaines pendant à peu près 6 mois. Soit autour de 9 fois par an.
+
+logement . extérieur . tondeuse thermique . consommation moyenne:
+  formule: 1
+  unité: litre/heure
+
+logement . extérieur . tondeuse thermique . empreinte au litre:
+  formule: 2.7
+  unité: kgCO2e/litre
+  note: |
+    L'essence utilisée dans une tondeuse est généralement du E5 ou E10.
+    Nous utilisons le facteur d'émission de la Base Empreinte. 
+    Pour garder l'indépendance entre les modèles, nous n'appelons pas ici la variable associée à la voiture.
+
+logement . extérieur . empreinte tondeuse thermique:
+  formule: 209
+  unité: kgCO2e
+  note: Facteur d'émission issu de la Base Empreinte (Tondeuse/thermique 190 cm³)
+
+logement . extérieur . part propriétaires tondeuse thermique:
+  formule: 0.5 * 0.5
+  note: Il se vend 700 000 tondeuses chaque année, pour la moitié thermiques. 66% des français vivent en maison, soit à peu près 20 millions de foyers. Nous pouvons donc supposer que 50% des foyers habitant en maison possède une tondeuse, dont la durée de vie est de 15 ans.
+
+logement . extérieur . barbecue électrique ou gaz:
+  titre: Barbecue électrique ou gaz
+  icônes: ♨️🔌
+  applicable si:
+    toutes ces conditions:
+      - est défini: barbecue électrique ou gaz . présent
+      - barbecue électrique ou gaz . présent
+  formule: empreinte barbecue électrique ou gaz amortie
+
+logement . extérieur . barbecue électrique ou gaz . présent:
+  question: Possédez-vous un barbecue électrique ou gaz ?
+
+logement . extérieur . empreinte barbecue électrique ou gaz amortie:
+  formule: empreinte barbecue électrique ou gaz / durée de vie barbecue
+  unité: kgCO2e
+
+logement . extérieur . empreinte barbecue électrique ou gaz:
+  formule:
+    moyenne:
+      - 65.3 kgCO2e
+      - 43.4 kgCO2e
+  note: |
+    En l'absence de données sur l'empreinte de construction d'un barbecue, nous faisons la supposition qu'elle est équivalente à l'empreinte de plaques de cuisson (électrique, et au gaz)
+    Facteurs d'émission issus de la Base Empreinte (Plaques de cuisson/vitrocéramiques 9000W, Plaques de cuisson/au gaz 9000W)
+  unité: kgCO2e
+
+logement . extérieur . durée de vie barbecue:
+  formule: 10
+  note: Nous supposons qu'une tondeuse a une durée de vie de 10 ans en moyenne.
+
+logement . extérieur . part propriétaires barbecue électrique ou gaz:
+  formule: 0.85 * (1 - 0.37)
+  note: |
+    D'après [cette source](https://www.esprit-barbecue.fr/blog/des-chiffres-fous-pour-le-marche-du-barbecue/), nous savons que 85% des français possédant un jardin ont un barbecue.
+    Par ailleurs, [cette source[(http://www.bva-xsight.com/wp-content/uploads/2023/03/Weber_Les-Francais-et-le-barbecue_Infographie-2023.pdf)] nous donne la répartition des types de barbecue possédés. 
+    Nous comptons ici tous les barbecues sauf ceux au charbon.
+
+logement . extérieur . barbecue charbon:
+  titre: Barbecue au charbon
+  icônes: ♨️🔥
+  applicable si:
+    toutes ces conditions:
+      - est défini: barbecue charbon . présent
+      - barbecue charbon . présent
+  formule: empreinte barbecue charbon
+
+logement . extérieur . barbecue charbon . présent:
+  question: Possédez-vous un barbecue au charbon ?
+
+logement . extérieur . empreinte barbecue charbon:
+  formule: empreinte usage barbecue charbon * nombre moyen barbecues par an + empreinte construction barbecue charbon
+  note: |
+    À la différence des barbecues électrique et au gaz, le barbecue au charbon a une empreinte importante liée à l'usage : brûler du charbon pour cuire des aliments rejette une quantité importante de gaz à effet de serre. 
+    Nous comptabilisons donc les deux empreintes, de constrution et d'usage.
+  unité: kgCO2e
+
+logement . extérieur . empreinte usage barbecue charbon:
+  formule: 4.85
+  unité: kgCO2e
+  note: |
+    Cette donnée est issue du travail de Boris Proulx, Sandrine Vieira, Cédric Gagnon et Antoine Noreau pour Le Devoir ([source](https://www.ledevoir.com/documents/special/2022-07-13/bilan-carbone-barbecue/index.html))
+
+logement . extérieur . nombre moyen barbecues par an:
+  formule: 17
+  note: |
+    D'après cette étude [Statista](https://fr.statista.com/statistiques/693928/barbecue-frequence-annuelle-france/), nous pouvons estimer que le nombre moyen de barbecues par an et par français est de 17 (moyenne pondérée des tranches de population).
+
+logement . extérieur . empreinte construction barbecue charbon:
+  formule: poids moyen barbecue charbon * facteur acier
+  unité: kgCO2e
+  note: |
+    Il n'a pas été possible de trouver l'empreinte de construction d'un barbecue au charbon. En constatant qu'ils étaient majoritairement faits d'acier, nous leur attribuons donc l'empreinte de leur poids en acier.
+    Pour le poids, celui-ci étant très variable, nous avons décidé de partir sur le poids d'un barbecue "classique", de la marque Weber, diamètre 57 cm, soit 12 kg.
+
+logement . extérieur . poids moyen barbecue charbon:
+  formule: 12
+  unité: kg
+
+logement . extérieur . facteur acier:
+  formule: 2.21
+  unité: kgCO2e/kg
+  note: Facteur d'émission issu de la Base Empreinte (Acier ou fer blanc/neuf)
+
+logement . extérieur . part propriétaires barbecue charbon:
+  formule: 0.85 * 0.37
+  note: |
+    D'après [cette source](https://www.esprit-barbecue.fr/blog/des-chiffres-fous-pour-le-marche-du-barbecue/), nous savons que 85% des français possédant un jardin ont un barbecue.
+    Par ailleurs, [cette source[(http://www.bva-xsight.com/wp-content/uploads/2023/03/Weber_Les-Francais-et-le-barbecue_Infographie-2023.pdf)] nous donne la répartition des types de barbecue possédés. Nous comptons ici les barbecues au charbon.
