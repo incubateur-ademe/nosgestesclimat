@@ -95,7 +95,10 @@ export function getPersonasFromAPI(version, region, lang) {
 }
 
 export function testPersonas(rules, personas) {
-  const engine = new Engine(rules, { logger: disabledLogger })
+  const engine = new Engine(rules, {
+    logger: disabledLogger,
+    allowOrphanRules: true
+  })
   const personasRules = Object.values(personas)
   const results = {}
 
