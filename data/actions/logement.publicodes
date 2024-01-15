@@ -9,6 +9,7 @@ logement . baisse température:
     Source : ADEME - [40 trucs et astuces pour économiser l'eau et l'énergie](https://www.ademe.fr/40-trucs-astuces-economiser-leau-lenergie)
   applicable si: température > 19
   formule: (nombre degrés * gains 1 degré * empreinte chauffage air) / habitants
+  unité: kgCO2e
 
 logement . baisse température . nombre degrés:
   question: De combien de degrés seriez-vous prêt à diminuer la température de votre logement ?
@@ -91,6 +92,7 @@ logement . empreinte eau chaude sanitaire:
       - si: chauffage . choix utilisateur
         alors: empreinte eau chaude sanitaire utilisateur
       - sinon: parc français . chauffage . empreinte moyenne ecs par m2 * logement . surface
+  unité: kgCO2e
   description: |
     Pour chaque kWh de chaque type d'énergie, quelle est la part utilisée pour l'eau chaude sanitaire (ECS) d'un foyer ?
 
@@ -159,20 +161,21 @@ logement . remplacer fioul par bois:
       - chauffage . fioul . présent
   icônes: 🛢️🪵
   formule: (chauffage . fioul . empreinte - alternative) / habitants
+  unité: kgCO2e
   description: |
     Les chaudières au fuel sont les plus polluantes. Les remplacer par des alternatives moins carbonnées comme ici le bois en granulés est un geste fort pour réduire votre empreinte carbone.
-  inactive: non
   note: |
     Nous considérons pour l'instant que le remplacement des kWh de fioul par la même quantité de kWh de bois est une bonne approximation de premier ordre. Nous pourrons par la suite l'adapter en fonction du rendement des installations résidentielles.
 
 logement . remplacer fioul par bois . alternative:
   formule: chauffage . fioul . consommation / chauffage . fioul kWh au litre * chauffage . bois . facteur d'émission granulés
 
-logement . éclairage: oui
+logement . éclairage:
 logement . éclairage . LED:
   titre: Remplacer mes ampoules par des LED
   icônes: 💡🔄
   formule: (consommation de l'éclairage - avec LED) / habitants
+  unité: kgCO2e
   description: |
     Remplacer les ampoules classiques par des ampoules basse consommation de type LED permet de diviser par 6 sa consommation électrique liée à l’éclairage. 
 
@@ -206,6 +209,7 @@ logement . remplacer gaz par PAC:
       - chauffage . gaz . présent
   icônes: 🔥🔄
   formule: (chauffage . gaz . empreinte - pompe à chaleur) / habitants
+  unité: kgCO2e
   description: |
     Les chaudières au gaz sont parmi les plus émissives de CO₂. Les remplacer par des alternatives moins carbonnées comme des pompes à chaleur est un geste fort pour réduire votre empreinte carbone.
 
@@ -253,6 +257,7 @@ logement . climatisation . réduction:
   titre: Se séparer de ma climatisation
   icônes: ❄️✋
   formule: logement . climatisation + part électricité climatisation
+  unité: kgCO2e
   description: |
     Se passer de la climatisation n'est pas partout chose aisée. Mais il faut absolument que le recours à ce système de refroidissement 
     intervienne en dernier lieu, après que des solutions plus pérennes et moins carbonées aient été mises en œuvre.
@@ -275,7 +280,6 @@ logement . rénovation énergétique:
   icônes: 🏚️✨
   formule: (logement . empreinte chauffage air * gain rénovation) / habitants
   applicable si: propriétaire
-  inactive: non
   description: |
     La rénovation énergétique malgré son coût permet, sur le long terme, de très fortes économies d'énergies et participe ainsi à réduire l'empreinte carbone
     de son logement. 
@@ -335,6 +339,7 @@ logement . raccordement réseau de chaleur:
           - chauffage . fioul . présent
   non applicable si: chauffage . réseau de chaleur . présent
   formule: (logement . chauffage - recalcul / habitants)
+  unité: kgCO2e
   # TODO : Cette `note` est plus grand public que technique, à voir si ce texte n'a pas sa place ailleurs.
   note: |
     Un réseau de chaleur est un système de canalisations qui permettent d’acheminer vers un ensemble de bâtiments de la 
@@ -393,11 +398,6 @@ logement . chauffage collectif:
       possibilités:
         - collectif
         - individuel
-
-logement . électricité verte:
-  titre: Souscrire à un contrat d'électricité verte
-  icônes: ☮️⚡
-  inactive: oui
 
 logement . extérieur . barbecue plus écologique:
   applicable si:
