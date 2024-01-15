@@ -77,20 +77,34 @@ logement . installer thermostat:
   formule: empreinte chauffage air * 0.12 / habitants
   unité: kgCO2e
 
-# logement . installer chauffe-eau solaire:
-#   titre: Installer un chauffe-eau solaire
-#   icônes: 🌡️🛁☀️
-#   description: |
-#     L'installation d'un chauffe-eau solaire permettrait, d'après l'ADEME, de couvrir de 50 à 80% des besoins en eau-chaude sanitaire (ECS).
-#     Nous partons donc sur une moyenne de 65% des besoins en ECS couverts par cette installation.
-#   formule: empreinte ecs * 0.65
+logement . installer chauffe-eau solaire:
+  titre: Installer un chauffe-eau solaire
+  icônes: 🌡️🛁☀️
+  description: |
+    L'installation d'un chauffe-eau solaire permettrait, d'après l'ADEME, de couvrir de 50 à 80% des besoins en eau-chaude sanitaire (ECS).
+    Nous partons donc sur une moyenne de 65% des besoins en ECS couverts par cette installation.
+  formule: empreinte eau chaude sanitaire * 0.65 / habitants
 
-# logement . installer chauffe-eau solaire . empreinte ecs:
-#   formule:
-#     variations:
-#       - si: chauffage . choix utilisateur
-#         alors: empreinte ecs utilisateur
-#       - sinon: parc français . chauffage . empreinte moyenne ecs par m2 * logement . surface
+logement . empreinte eau chaude sanitaire:
+  formule:
+    variations:
+      - si: chauffage . choix utilisateur
+        alors: empreinte eau chaude sanitaire utilisateur
+      - sinon: parc français . chauffage . empreinte moyenne ecs par m2 * logement . surface
+  description: |
+    Pour chaque kWh de chaque type d'énergie, quelle est la part utilisée pour l'eau chaude sanitaire (ECS) d'un foyer ?
+
+    > Nous utilions ici [les données du CEREN](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel) 
+    via le travail réalisé dans le fichier [chiffres parc logements français.publicodes](https://github.com/datagir/nosgestesclimat/blob/master/data/logement/chiffres%20parc%20logements%20fran%C3%A7ais.publicodes).
+
+logement . empreinte eau chaude sanitaire utilisateur:
+  formule:
+    somme:
+      - chauffage . électricité . présent * électricité * parc français . chauffage . part ecs électricité
+      - (chauffage . gaz . empreinte + chauffage . citerne propane . empreinte) * parc français . chauffage . part ecs gaz
+      - chauffage . bois . empreinte * parc français . chauffage . part ecs bois
+      - chauffage . fioul . empreinte * parc français . chauffage . part ecs fioul
+      - chauffage . réseau de chaleur . empreinte * parc français . chauffage . part ecs réseau de chaleur
 
 logement . éteindre appareils:
   formule: empreinte du foyer / habitants
