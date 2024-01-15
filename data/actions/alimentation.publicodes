@@ -158,37 +158,32 @@ alimentation . viande faible empreinte . par semaine . nouveau régime . compens
   formule: plats . viande 1 . empreinte * (plats . viande 2 . nombre)
   description: On compense la suppression des plat viande 2 en plat viande 1.
 
-alimentation . réduire poisson:
-
-alimentation . réduire poisson . par deux:
+alimentation . réduire poisson . max 2 par semaine:
   applicable si: nombre de plats poisson > 2
-  titre: Diviser par deux sa consommation de poisson
+  action:
+    dépasse:
+      - alimentation . poisson faible empreinte
+  titre: Ne pas manger du poisson plus de deux fois par semaine
   formule: par semaine * commun . semaines par an
-  icônes: 🐟️📉
   description: |
-    > ... ou le soir
+    Et si vous vous donniez l'objectif de ne pas dépasser deux repas de poisson par semaine ?
 
-    Il est tout à fait possible de réduire significativement l'empreinte de votre alimentation sans devenir strictement végétarien.
-
-    Remplacez la moitié de vos repas avec du poisson par des repas végétariens.
-
-alimentation . réduire poisson . par deux . par semaine:
+alimentation . réduire poisson . max 2 par semaine . par semaine:
   formule: plats - nouveau régime
 
-alimentation . réduire poisson . par deux . par semaine . nouveau régime:
+alimentation . réduire poisson . max 2 par semaine . nouveau régime:
   formule:
     somme:
       - plats . viande 1
       - plats . viande 2
       - plats . végétalien
       - plats . végétarien
-      - plats . poisson 1 / 2
-      - plats . poisson 2 / 2
+      - plats . poisson 1 / nombre de plats poisson * 2 repas/semaine
+      - plats . poisson 2 / nombre de plats poisson * 2 repas/semaine
       - compensation végétarienne
 
-alimentation . réduire poisson . par deux . par semaine . nouveau régime . compensation végétarienne:
-  formule: plats . végétarien . empreinte * (nombre de plats poisson / 2)
-  description: On compense la division par 2 des plats de poisson par des plats végétariens.
+alimentation . réduire poisson . max 2 par semaine . nouveau régime . compensation végétarienne:
+  formule: plats . végétarien . empreinte * ( nombre de plats poisson - 2 )
 
 alimentation . poisson faible empreinte:
   applicable si: plats . poisson 2 . nombre > 0
@@ -199,7 +194,7 @@ alimentation . poisson faible empreinte:
   titre: Privilégier les poissons comme le thon, le saumon, la sardine ou le maquereau
   formule: par semaine * commun . semaines par an
   unité: kgCO2e
-  icônes: 🥩🍗
+  icônes: 🐟️
   description: |
     Les empreintes de nos consommations de poisson sont loin d'être égales. En moyenne, un repas avec poisson blanc a une empreinte 50% supérieure à un repas avec un poisson comme le thon, le maquereau, le saumon ou les sardines.
 
