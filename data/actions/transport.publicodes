@@ -388,6 +388,29 @@ transport . boulot . télétravail . compatible:
   question: Votre travail est-il totalement ou en partie compatible avec le télétravail ?
   par défaut: oui
 
+transport . autopartage:
+  titre: Se mettre à l'autopartage
+  icônes: 🚗🤝
+  formule: transport . voiture . empreinte calculée - recalcul
+  applicable si: voiture . km < plafond activation autopartage
+  description: |
+    Nous faisons l'hypothèse qu'une personne qui parcourt beaucoup de kilomètres chaque année en voiture aura du mal à se projeter dans une offre d'auto-partage. Ce sera bien plus évident pour quelqu'un qui en fait peu.
+
+    L'impact de l'autopartage sur la réduction de l'usage de la voiture individuelle n'est plus à prouver. 
+    Cette pratique conduit à une double baisse : baisse du nombre de kilomètres parcourus (en moyenne de 41%), et baisse de la motorisation des ménages. En moyenne, on estime qu'une voiture en autopartage peut remplacer jusqu'à 9 voitures individuelles.
+
+transport . autopartage . plafond activation autopartage:
+  formule: 7200
+  note: Nous supposons qu'au-delà de 600 km par mois en moyenne, il est difficile de se projeter dans un usage d'autopartage.
+  unité: km
+
+transport . autopartage . recalcul:
+  formule: 
+    recalcul:
+      règle: transport . voiture . empreinte calculée
+      avec:
+        voiture . km: voiture . km * ( 1 - 0.41 )
+
 transport . voiture 5km:
   titre: Se passer de voiture pour moins de 5 km
   icônes: 🚗🚲
