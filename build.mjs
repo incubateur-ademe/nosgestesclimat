@@ -7,12 +7,25 @@
  */
 import { writeFileSync } from 'fs'
 import { getModelFromSource } from '@publicodes/tools/compilation'
-const destPath = 'public/co2-model.FR-lang.fr-opti.json'
+import { disabledLogger } from '@publicodes/tools'
+import Engine from 'publicodes'
+
+const destPath = 'nosgestesclimat.model.json'
 
 const model = getModelFromSource('data', {
   ignore: ['data/i18n/**'],
   verbose: true
 })
+
+try {
+  new Engine(model, { logger: disabledLogger })
+} catch (e) {
+  console.error(`❌ Model compilation failed:\n${e.message}\n`)
+  process.exit(-1)
+}
+
+writeFileSync(destPath, JSON.stringify(model, null, 2))
+console.log(`✅ ${destPath} generated`)
 
 writeFileSync(
   'index.js',
