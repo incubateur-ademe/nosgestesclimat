@@ -148,11 +148,6 @@ logement . énergie de veille . temps d'absence . journalier:
   unité: h/jour
   description: On suppose qu'en moyenne, on n'est pas présent chez soi la moitié du temps, ou on dort. La nuit (8h) et en moyenne 4h en journée, pour prendre en compte les weekends qui compensent les journées de travail de 8h, et le fait que tout le monde dans le foyer n'est pas absent au même moment.
 
-logement . mutualiser:
-  titre: Mutualiser son logement
-  icônes: 🏠👥
-  inactive: oui
-
 logement . remplacer fioul par bois:
   titre: Remplacer ma chaudière fioul par du bois
   applicable si:
@@ -440,3 +435,62 @@ logement . extérieur . passer à la tondeuse électrique:
     La tondeuse thermique a une empreinte carbone doublement négative : d'abord au niveau de la partie construction (l'empreinte est trois fois supérieure à la tondeuse électrique), mais aussi, bien sûr, au niveau de l'usage (bien que cette empreinte ne soit, à ce jour, pas comptée).
   formule: empreinte tondeuse thermique amortie - empreinte tondeuse électrique ou robot amortie
   unité: kgCO2e
+
+logement . mutualiser son logement:
+  titre: Mutualiser son logement
+  icônes: 🏠👥
+  description: |
+    Vivre en colocation n'est pas seulement bon pour les finances ou les liens sociaux,
+    c'est aussi un moyen de réduire son empreinte sur le climat en mutualisant les espaces, les consommations, les équipements.
+  applicable si:
+    toutes ces conditions:
+      - logement . surface > 70
+      - logement . saisie habitants = 1
+  formule: 0
+
+logement . mutualiser son logement . habitants:
+  formule: 1 + nombre colocataires
+
+logement . mutualiser son logement . nombre colocataires:
+  question: Combien de colocataires pourriez-vous accueillir ?
+  par défaut: 1
+
+logement . mutualiser son logement . empreinte partagée:
+  formule:
+    somme:
+      - logement
+      - divers . numérique
+      - divers . électroménager
+      - divers . ameublement
+
+logement . mutualiser son logement . empreinte partagée . logement:
+  formule:
+    recalcul:
+      règle: logement
+      avec:
+        logement . saisie habitants: logement . mutualiser son logement . habitants
+        logement . vacances: 0
+
+logement . mutualiser son logement . empreinte partagée . divers:
+logement . mutualiser son logement . empreinte partagée . divers . numérique:
+  formule:
+    recalcul:
+      règle: divers . numérique . appareils
+      avec:
+        logement . saisie habitants: logement . mutualiser son logement . habitants
+
+logement . mutualiser son logement . empreinte partagée . divers . électroménager:
+  formule:
+    recalcul:
+      règle: divers . électroménager . appareils
+      avec:
+        logement . saisie habitants: logement . mutualiser son logement . habitants
+
+logement . mutualiser son logement . empreinte partagée . divers . ameublement:
+  formule:
+    recalcul:
+      règle: divers . ameublement
+      avec:
+        logement . saisie habitants: logement . mutualiser son logement . habitants
+        divers . ameublement . meubles . matelas: 0
+        divers . ameublement . meubles . lit: 0
