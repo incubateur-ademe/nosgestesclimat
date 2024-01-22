@@ -6,7 +6,7 @@
 import Engine from 'publicodes'
 import path from 'path'
 import { readFileSync, writeFileSync } from 'fs'
-import { disabledLogger, getRawNodes } from '@publicodes/tools'
+import { disabledLogger, serializeParsedRules } from '@publicodes/tools'
 import { constantFolding } from '@publicodes/tools/optims'
 
 // Rule names which should be kept in the optimized model.
@@ -38,7 +38,7 @@ export function compressRules(engine, jsonPathWithoutExtension) {
       ruleNode.rawNode.type === 'notification'
     )
   }
-  const foldedRules = getRawNodes(constantFolding(engine, toKeep))
+  const foldedRules = serializeParsedRules(constantFolding(engine, toKeep))
 
   writeFileSync(destPath, JSON.stringify(foldedRules, null, 2))
   return Object.keys(foldedRules).length
@@ -67,7 +67,7 @@ export function constantFoldingFromJSONFile(
     const engine = new Engine(rules, { logger: disabledLogger })
 
     log('Constant folding pass...')
-    const foldedRules = getRawNodes(constantFolding(engine, toKeep))
+    const foldedRules = serializeParsedRules(constantFolding(engine, toKeep))
 
     log(`Writing in '${jsonDestPath}'...`)
     writeFileSync(jsonDestPath, JSON.stringify(foldedRules, null, 2))
