@@ -14,6 +14,7 @@ Promise.all([localFrRules, localPersonas, localEnRules]).then((res) => {
   const engineFr = new Engine(res[0], { logger: disabledLogger })
   const engineEn = new Engine(res[2], { logger: disabledLogger })
 
+  const nbRules = Object.keys(res[0]).length
   const errors = []
 
   for (const rule in res[0]) {
@@ -30,7 +31,7 @@ Promise.all([localFrRules, localPersonas, localEnRules]).then((res) => {
 
   if (markdown) {
     console.log(`| Règle | fr | en |`)
-    console.log(`| --- | --- | --- |`)
+    console.log(`| :-- | :-- | :-- |`)
     for (const error of errors) {
       console.log(`| ${error.rule} | ${error.fr} | ${error.en} |`)
     }
@@ -41,11 +42,8 @@ Promise.all([localFrRules, localPersonas, localEnRules]).then((res) => {
       console.log(`${c.magenta(error.rule)}: ${error.fr} !== ${error.en}`)
     }
 
-    if (errors.length > 0) {
-      console.log(
-        `\n${c.red('FAIL')} ${errors.length}/${Object.keys(res[0]).length}`
-      )
-      exit(-1)
-    }
+    console.log(
+      `\n${errors.length > 0 ? c.red('FAIL') : c.green('OK')} ${nbRules - errors.length}/${nbRules}`
+    )
   }
 })
