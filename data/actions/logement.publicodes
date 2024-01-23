@@ -148,23 +148,46 @@ logement . énergie de veille . temps d'absence . journalier:
   unité: h/jour
   description: On suppose qu'en moyenne, on n'est pas présent chez soi la moitié du temps, ou on dort. La nuit (8h) et en moyenne 4h en journée, pour prendre en compte les weekends qui compensent les journées de travail de 8h, et le fait que tout le monde dans le foyer n'est pas absent au même moment.
 
-logement . remplacer fioul par bois:
-  titre: Remplacer ma chaudière fioul par du bois
+logement . se chauffer au bois:
+  titre: Se chauffer au bois
   applicable si:
     toutes ces conditions:
       - propriétaire
-      - est défini: chauffage . fioul . présent
-      - chauffage . fioul . présent
-  icônes: 🛢️🪵
-  formule: (chauffage . fioul . empreinte - alternative) / habitants
+      - une de ces conditions:
+          - toutes ces conditions:
+              - est défini: chauffage . gaz . présent
+              - chauffage . gaz . présent
+          - toutes ces conditions:
+              - est défini: chauffage . fioul . présent
+              - chauffage . fioul . présent
+          - toutes ces conditions:
+              - est défini: chauffage . citerne propane . présent
+              - chauffage . citerne propane . présent
+  icônes: 🔄🪵
+  formule: (logement . chauffage - recalcul) / habitants
   unité: kgCO2e
   description: |
-    Les chaudières au fuel sont les plus polluantes. Les remplacer par des alternatives moins carbonnées comme ici le bois en granulés est un geste fort pour réduire votre empreinte carbone.
+    Les chaudières fioul, gaz ou propane sont les plus polluantes. Les remplacer par des alternatives moins carbonnées comme ici le bois en granulés est un geste fort pour réduire votre empreinte carbone.
   note: |
-    Nous considérons pour l'instant que le remplacement des kWh de fioul par la même quantité de kWh de bois est une bonne approximation de premier ordre. Nous pourrons par la suite l'adapter en fonction du rendement des installations résidentielles.
+    Nous considérons pour l'instant que le remplacement des kWh dédiés au chauffage par la même quantité de kWh de bois est une bonne approximation de premier ordre. 
+    Nous pourrons par la suite l'adapter en fonction du rendement des installations résidentielles.
 
-logement . remplacer fioul par bois . alternative:
-  formule: chauffage . fioul . consommation / chauffage . fioul kWh au litre * chauffage . bois . facteur d'émission granulés
+logement . se chauffer au bois . recalcul:
+  formule:
+    recalcul:
+      règle: logement . chauffage . bois . empreinte
+      avec:
+        logement . chauffage . bois . présent: oui
+        logement . chauffage . bois . type: "'granulés'"
+        logement . chauffage . bois . type . granulés . consommation: recalcul . consommation
+  note: On considère un chauffage via granulés.
+
+logement . se chauffer au bois . recalcul . consommation:
+  formule:
+    somme:
+      - chauffage . gaz . présent * chauffage . gaz . consommation
+      - chauffage . fioul . présent * chauffage . fioul . consommation / chauffage . fioul kWh au litre
+      - chauffage . citerne propane . présent * chauffage . citerne propane . consommation * logement . chauffage . citerne propane . énergie par kg
 
 logement . éclairage:
 logement . éclairage . LED:
@@ -321,6 +344,7 @@ logement . rénovation énergétique:
   titre: Rénover mon logement
   icônes: 🏚️✨
   formule: (logement . empreinte chauffage air * gain rénovation) / habitants
+  unité: kgCO2e
   applicable si: propriétaire
   description: |
     La rénovation énergétique malgré son coût permet, sur le long terme, de très fortes économies d'énergies et participe ainsi à réduire l'empreinte carbone
@@ -351,6 +375,7 @@ logement . rénovation énergétique BBC:
   titre: Rénover mon logement en BBC
   icônes: 🏠✨
   formule: (logement . empreinte chauffage air * gain rénovation) / habitants
+  unité: kgCO2e
   applicable si: propriétaire
   description: |
 
