@@ -15,7 +15,7 @@ const addTranslationToBaseRules = (baseRules, translatedRules) => {
     let baseRule = baseRules[ruleName]
     if (typeof baseRule !== 'object') {
       // for rules with formula directly implemented (ex: transport . empreinte au km covoiturage: 0.2 kgCO2e/km)
-      baseRule = { ['formule']: baseRules[ruleName] }
+      baseRules[ruleName] = { valeur: baseRules[ruleName] }
     }
     if (
       baseRule &&
