@@ -16,6 +16,7 @@ jobs:
       compilation-result: ${{ steps.compilation.outputs.result }}
       check-translation-result: ${{ steps.check-translation.outputs.result }}
       check-personas-result: ${{ steps.check-personas.outputs.result }}
+      test-translation-result: ${{ steps.test-translation.outputs.result }}
       test-personas-nightly-result: ${{ steps.test-personas-nightly.outputs.result }}
       test-personas-latest-result: ${{ steps.test-personas-latest.outputs.result }}
       test-optim-result: ${{ steps.test-optim.outputs.result }}
@@ -55,6 +56,15 @@ jobs:
           body="${body//$'\n'/'%0A'}"
           body="${body//$'\r'/'%0D'}"
           echo "::set-output name=result::${body}"
+      - id: test-translation
+        name: Test the translated rules against production
+        run: |
+          yarn test:translation --markdown > test-translation.res
+          body="$(cat test-translation.res | tail --lines=+3 | head --lines=-1)"
+          body="${body//'%'/'%25'}"
+          body="${body//$'\n'/'%0A'}"
+          body="${body//$'\r'/'%0D'}"
+          echo "::set-output name=result::${body}"
       - id: test-personas-latest
         name: Test the personas bilans against production
         run: |
@@ -74,7 +84,7 @@ jobs:
           body="${body//$'\r'/'%0D'}"
           echo "::set-output name=result::${body}"
       - id: test-optim
-        name: # Test the personas bilans against production
+        name: Test the optimized rules against base rules
         run: |
           yarn test:optim --markdown > test-optim.res
           body="$(cat test-optim.res | tail --lines=+3 | head --lines=-1)"
@@ -117,6 +127,10 @@ jobs:
           ${{ needs.compile.outputs.check-personas-result }}
 
           > _You will find more information about the translation in the [dedicated file](https:/github.com/datagir/nosgestesclimat/blob/master/docs/translation.md)._
+
+          ### Test translation (fr -> en)
+
+          ${{ needs.compile.outputs.test-translation-result }}
 
           ---
 
