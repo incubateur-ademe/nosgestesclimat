@@ -35,7 +35,9 @@ everyModel.forEach((model) => {
 
   fs.writeFileSync(
     destPath + '/index.js',
-    generateIndex(`../../${isOptim ? '../' : ''}${everyModelFolder}/${model}`)
+    generateIndex(
+      `../../../${isOptim ? '../' : ''}${everyModelFolder}/${model}`
+    )
   )
   fs.writeFileSync(
     destPath + '/index.d.ts',
