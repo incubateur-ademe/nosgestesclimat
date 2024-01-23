@@ -47,9 +47,58 @@ everyModel.forEach((model) => {
 })
 
 // Generating main index and types
-fs.writeFileSync('index.js', generateIndex(`./${destPath}`))
+fs.writeFileSync(
+  'index.js',
+  generateIndex(`./${destPath}`) +
+    `
+import supportedRegions from './public/supportedRegions.json' assert { type: 'json' }
+import personasFr from './public/personas-fr.json' assert { type: 'json' }
+import personasEn from './public/personas-en.json' assert { type: 'json' }
 
-fs.writeFileSync('index.d.ts', generateTypes(destPath))
+const personas = {
+  fr: personasFr,
+  en: personasEn
+}
+
+export { supportedRegions, personas }`
+)
+
+fs.writeFileSync(
+  'index.d.ts',
+  generateTypes(destPath) +
+    `
+export type Persona = {
+  nom: string
+  description: string
+  icônes: string
+  résumé?: string
+  situation: Partial<Record<DottedName, string | number>>
+}
+
+export const personas: {
+  fr: Record<string, Persona>
+  en: Record<string, Persona>
+}
+
+export type RegionAuthor = {
+  nom: string
+  url?: string
+}
+
+export type SupportedRegionType = {
+  [currentLang: string]: {
+    code: string
+    nom: string
+    gentilé: string
+    authors: RegionAuthor[]
+    drapeau?: string
+  }
+}
+
+export type SuppportedRegions = { [key: string]: SupportedRegionType }
+
+export const supportedRegions: SuppportedRegions`
+)
 console.log(`✅ main index and types generated`)
 
 function generateIndex(pathToModel) {
