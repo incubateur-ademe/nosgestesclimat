@@ -1,25 +1,47 @@
 transport . transports commun:
+  titre: Transports en commun
   mosaique:
     type: selection
-    clé: usager
     options:
-      - bus . usager
-      - car . usager
-      - métro ou tram . usager
+      - bus . présent
+      - car . présent
+      - métro ou tram . présent
     suggestions:
       aucun:
-        bus . usager: non
-        car . usager: non
-        métro ou tram . usager: non
+        bus . présent: non
+        car . présent: non
+        métro ou tram . présent: non
   question: Quels transports en commun utilisez-vous ?
   icônes: 🚋
   description: |
     Sélectionnez ici les transports en commun que vous utilisez régulièrement (au moins une fois par mois). S'il vous est arrivé de faire un trajet en bus pendant vos vacances cette année, nous le considérerons comme négligeable.
   formule:
+    variations:
+      - si: choix utilisateur
+        alors: empreinte calculée 
+      - sinon: empreinte moyenne
+
+transport . transports commun . choix utilisateur:
+  titre: Choix de l'utilisateur pour les transports en commun
+  formule:
+    une de ces conditions:
+      - est défini: bus . présent
+      - est défini: car . présent
+      - est défini: métro ou tram . présent
+
+transport . transports commun . empreinte calculée: 
+  formule:
     somme:
       - bus
       - car
       - métro ou tram
+
+transport . transports commun . empreinte moyenne:
+  formule:
+    somme:
+      - bus . impact par heure * bus . temps moyen * commun . semaines par an
+      - car . impact par km * car . distance moyenne * commun . semaines par an
+      - métro ou tram . impact par heure * métro ou tram . temps moyen * commun . semaines par an
 
 transport . transports commun . bus:
   titre: Bus
@@ -27,11 +49,9 @@ transport . transports commun . bus:
   description: |
     ![](https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Alliance_Auch_ligne_6_Allées_Baylac.JPG/640px-Alliance_Auch_ligne_6_Allées_Baylac.JPG)
   formule: heures par semaine * impact par heure * commun . semaines par an
-  applicable si: usager
 
-transport . transports commun . bus . usager:
+transport . transports commun . bus . présent:
   question: Vous arrive t-il de prendre le bus ?
-  par défaut: oui
 
 transport . transports commun . bus . impact par heure:
   formule: impact par km * vitesse
@@ -59,17 +79,18 @@ transport . transports commun . bus . heures par semaine:
     1h / jour: 7
     2h / jour: 14
   unité: h/semaine
-  par défaut: 3 h/semaine
+  par défaut: temps moyen
+
+transport . transports commun . bus . temps moyen:
+  formule: 3 h/semaine
 
 transport . transports commun . car:
   titre: Autocar
   icônes: 🚌
   formule: km par semaine * impact par km * commun . semaines par an
-  applicable si: usager
 
-transport . transports commun . car . usager:
+transport . transports commun . car . présent:
   question: Vous arrive t-il de prendre le car ?
-  par défaut: oui
 
 transport . transports commun . car . km par semaine:
   question: Combien de kilomètres parcourez-vous en car par semaine ?
@@ -78,9 +99,12 @@ transport . transports commun . car . km par semaine:
     10 km / jour: 70
     50 km / jour: 140
   unité: km/semaine
-  par défaut: 13 km/semaine
+  par défaut: distance moyenne
   note: |
     D'après [l'étude "Chiffres clef du transport 2021" (données de 2019)](https://www.statistiques.developpement-durable.gouv.fr/edition-numerique/chiffres-cles-transport-2021/13-transport-routier-de-voyageurs), les français parcourent en moyenne 670 km en car par an, soit autour de 13 km par semaine.
+
+transport . transports commun . car . distance moyenne:
+  formule: 13 km/semaine
 
 transport . transports commun . car . impact par km:
   formule: 0.0295
@@ -96,11 +120,9 @@ transport . transports commun . métro ou tram:
 
     ![](https://images.unsplash.com/photo-1581262208435-41726149a759?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60)
   formule: heures par semaine * impact par heure * commun . semaines par an
-  applicable si: usager
 
-transport . transports commun . métro ou tram . usager:
-  question: Vous arrive t-il de prendre le car ?
-  par défaut: oui
+transport . transports commun . métro ou tram . présent:
+  question: Vous arrive t-il de prendre le métro ou tram ?
 
 transport . transports commun . métro ou tram . impact par heure:
   formule: impact par km * vitesse
@@ -137,4 +159,7 @@ transport . transports commun . métro ou tram . heures par semaine:
     1h / jour: 7
     2h / jour: 14
   unité: h/semaine
-  par défaut: 3
+  par défaut: temps moyen
+
+transport . transports commun . métro ou tram . temps moyen:
+  formule: 3 h/semaine
