@@ -477,15 +477,17 @@ logement . extérieur . passer à la tondeuse électrique:
   unité: kgCO2e
 
 logement . mutualiser son logement:
-  titre: Mutualiser son logement
+  titre: Partager son logement
   icônes: 🏠👥
   description: |
     Vivre en colocation n'est pas seulement bon pour les finances ou les liens sociaux,
     c'est aussi un moyen de réduire son empreinte sur le climat en mutualisant les espaces, les consommations, les équipements.
-  applicable si:
-    toutes ces conditions:
-      - logement . surface > 70
-      - logement . habitants = 1
+
+    Depuis plusieurs dizaines d'années, la surface par habitant des logements n'a fait qu'augmenter, passant de 30 m² dans les années 80 à plus de 40 m² actuellement ! 
+    Cela contribue fortement à l'artificialisation des sols et à l'émission d'une grande quantité de gaz à effet de serre liés à la construction de nouveaux logements.
+
+    Mieux partager le bâti actuel est donc un enjeu au potentiel important de réduction d'empreinte carbone.
+  applicable si: logement . surface / habitants > 60
   formule: nombre colocataires * empreinte partagée
 
 logement . nombre colocataires:
@@ -505,8 +507,9 @@ logement . mutualiser son logement . empreinte partagée . logement:
     recalcul:
       règle: logement
       avec:
-        logement . saisie habitants: 1 + nombre colocataires
+        logement . saisie habitants: logement . habitants + nombre colocataires
         logement . vacances: 0
+  note: On fait l'hypothèse que les vacances ne seront pas partagées avec le nouveau colocataire.
 
 logement . mutualiser son logement . empreinte partagée . divers:
 logement . mutualiser son logement . empreinte partagée . divers . numérique:
@@ -514,20 +517,20 @@ logement . mutualiser son logement . empreinte partagée . divers . numérique:
     recalcul:
       règle: divers . numérique . appareils
       avec:
-        logement . saisie habitants: 1 + nombre colocataires
+        logement . saisie habitants: logement . habitants + nombre colocataires
 
 logement . mutualiser son logement . empreinte partagée . divers . électroménager:
   formule:
     recalcul:
       règle: divers . électroménager . appareils
       avec:
-        logement . saisie habitants: 1 + nombre colocataires
+        logement . saisie habitants: logement . habitants + nombre colocataires
 
 logement . mutualiser son logement . empreinte partagée . divers . ameublement:
   formule:
     recalcul:
       règle: divers . ameublement
       avec:
-        logement . saisie habitants: 1 + nombre colocataires
+        logement . saisie habitants: logement . habitants + nombre colocataires
         divers . ameublement . meubles . matelas: 0
         divers . ameublement . meubles . lit: 0
