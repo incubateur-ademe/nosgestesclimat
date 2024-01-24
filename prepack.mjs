@@ -52,15 +52,18 @@ fs.writeFileSync(
   generateIndex(`./${destPath}`) +
     `
 import supportedRegions from './public/supportedRegions.json' assert { type: 'json' }
+
 import personasFr from './public/personas-fr.json' assert { type: 'json' }
 import personasEn from './public/personas-en.json' assert { type: 'json' }
+
+import migration from './public/migration.json' assert { type: 'json' }
 
 const personas = {
   fr: personasFr,
   en: personasEn
 }
 
-export { supportedRegions, personas }`
+export { supportedRegions, personas, migration }`
 )
 
 fs.writeFileSync(
