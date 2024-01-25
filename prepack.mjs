@@ -83,6 +83,11 @@ export const personas: {
   en: Record<string, Persona>
 }
 
+export type migrationType = {
+  keysToMigrate: Record<DottedName, DottedName>
+  valuesToMigrate: Record<DottedName, Record<string, NodeValue>>
+}
+
 export type RegionAuthor = {
   nom: string
   url?: string
