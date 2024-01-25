@@ -1,3 +1,19 @@
+transport . boulot:
+  icônes: 🏢
+
+transport . boulot . seuil activation:
+  titre: Seuil d'activation actions liées aux trajets "Boulot"
+  description: |
+    Distance minimale pour déclencher cette action. 
+
+    > Si quelqu'un nous dit qu'il ne fait que 500km de voiture dans l'année, il y a peu de chances 
+    > qu'il aille en voiture au boulot.
+
+    Nous définitions la distance du seuil à 2km (trajet aller), pour 5 jours par semaine.
+
+  formule: transport . boulot . distance
+  unité: km
+
 transport . boulot . distance:
   formule: semaines * hebdomadaire
   unité: km
@@ -43,7 +59,7 @@ transport . boulot . distance . km aller:
   note: Mettre un lien vers l'étude et mettre à jour avec les statistiques de l'enquête déplacement 2020 si disponible.
   par défaut: 10
 
-transport . boulot . commun:
+transport . boulot . sans voiture:
   action:
     dépasse:
       - transport . boulot . covoiturage
@@ -61,7 +77,7 @@ transport . boulot . commun:
 
     >💡 Le saviez-vous ? L'État et beaucoup de régions ou villes subventionnent les vélos mécaniques, électriques, cargo, pliants, etc. [Calculez votre aide 🚲️ en 3 clics](https://mesaidesvelo.fr).
 
-  applicable si: voiture . km > seuil d'activation boulot
+  applicable si: voiture . km > seuil activation
   formule:
     variations:
       - si:
@@ -76,24 +92,12 @@ transport . boulot . commun:
         alors: recalcul vae
       - si: type = 'trotinette électrique'
         alors: recalcul autres véhicules à moteur
+  unité: kgCO2e
 
-transport . seuil d'activation boulot:
-  titre: Seuil d'activation actions liées aux trajets "Boulot"
-  description: |
-    Distance minimale pour déclencher cette action. 
-
-    > Si quelqu'un nous dit qu'il ne fait que 500km de voiture dans l'année, il y a peu de chances 
-    > qu'il aille en voiture au boulot.
-
-    Nous définitions la distance du seuil à 2km (trajet aller), pour 5 jours par semaine.
-
-  formule: transport . boulot . distance
-  unité: km
-
-transport . boulot . commun . gain empreinte au km:
+transport . boulot . sans voiture . gain empreinte au km:
   formule: voiture . empreinte au kilomètre - empreinte
 
-transport . boulot . commun . empreinte:
+transport . boulot . sans voiture . empreinte:
   titre: Empreinte transport en commun choisi
   formule:
     variations:
@@ -107,7 +111,7 @@ transport . boulot . commun . empreinte:
   note: |
     On considère qu'un déplacement domicile travail effectué en voiture peut-être remplacé par un train régional et non par un TGV.
 
-transport . boulot . commun . type:
+transport . boulot . sans voiture . type:
   avec:
     bus:
     métro ou tramway:
@@ -163,7 +167,7 @@ transport . boulot . télétravail:
   applicable si:
     toutes ces conditions:
       - compatible
-      - voiture . km > seuil d'activation boulot
+      - voiture . km > seuil activation
       - jours travaillés en voiture > 0
   formule: empreinte jour voiture * jours gagnés * transport . boulot . semaines
 
@@ -190,15 +194,13 @@ transport . boulot . télétravail . compatible:
   question: Votre travail est-il totalement ou en partie compatible avec le télétravail ?
   par défaut: oui
 
-transport . boulot:
-  icônes: 🏢
 transport . boulot . covoiturage:
   titre: Aller au travail en covoiturage
   applicable si:
     toutes ces conditions:
       - est défini: voiture . utilisateur régulier
       - voiture . utilisateur régulier
-      - voiture . km > seuil d'activation boulot
+      - voiture . km > seuil activation
   icônes: 🚗👥
   formule: distance * voiture . empreinte au kilomètre * réduction covoiturage
   description: |
