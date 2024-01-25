@@ -18,7 +18,7 @@ Modèle de calcul de l'empreinte climat personnelle.
 
 ## Utilisation
 
-Vous pouvez parcourir le modèle grâce à ça [documentation en
+Vous pouvez parcourir le modèle grâce à sa [documentation en
 ligne](https://nosgestesclimat.fr/documentation) ou bien utiliser le paquet npm
 `@incubateur-ademe/nosgestesclimat` :
 
@@ -26,8 +26,14 @@ ligne](https://nosgestesclimat.fr/documentation) ou bien utiliser le paquet npm
 yarn add @incubateur-ademe/nosgestesclimat
 ```
 
+Chaque modèle régional peut être importé séparément en anglais ou en français, optimisé ou non en suivant la structure suivante :
 ```ts
-import { rules } from '@incubateur-ademe/nosgestesclimat'
+import rules from '@incubateur-ademe/nosgestesclimat/[regionCode]/[locale]/["optim" | ""]'`
+```
+
+Exemple d'utilisation :
+```ts
+import rules from '@incubateur-ademe/nosgestesclimat/FR/fr/optim'
 import Engine from 'publicodes'
 
 const engine = new Engine(rules)
@@ -111,9 +117,6 @@ Pour chaque _push_ sur la branche `master`, le workflow `packaging.yaml` est ex�
 Si la version du paquet npm est incrémentée, alors :
 
 - une nouvelle _release_ GitHub est créée
-- la version française du modèle (le résultat de `yarn build`) est publiée dans
+- le modèle est publié dans
   une nouvelle version du paquet npm
   [`@incubateur-ademe/nosgestesclimat`](https://www.npmjs.com/package/@incubateur-ademe/nosgestesclimat)
-- toutes les versions ainsi que les personas (le résultat de `yarn compile`)
-  sont _push_ dans une nouvelle branche dans le dépôt
-  [`nosgestesclimat-api`](https://github.com/incubateur-ademe/nosgestesclimat-api)
