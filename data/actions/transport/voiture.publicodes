@@ -36,20 +36,20 @@ transport . limitation autoroute:
 
     Nous proposons ici une évalution de cette mesure basée sur votre situation précise.
 
-transport . empreinte autoroute:
+transport . limitation autoroute . empreinte autoroute:
   formule:
     recalcul:
       règle: transport . voiture
       avec:
-        transport . voiture . km: km autoroute
+        transport . voiture . km: voiture . km * ratio autoroute
   unité: kgCO2e
 
-transport . empreinte autoroute réduit:
+transport . limitation autoroute . empreinte autoroute réduit:
   formule:
     recalcul:
       règle: transport . voiture
       avec:
-        transport . voiture . km: km autoroute
+        transport . voiture . km: voiture . km * ratio autoroute
         transport . voiture . usage: transport . voiture . usage * (1 - réduction)
   unité: kgCO2e
 
@@ -76,7 +76,7 @@ transport . limitation autoroute . réduction:
     - une autre évaluation, qui elle nous donne le calcul :)  : https://twitter.com/Tomsawy22670318/status/1274257122373570565
       Attention, pour être rigoureux, comme évoqué dans ce dernier fil, il faut prendre en compte la distribution de la vitesse et la catégorie de voiture (présence d'une 6ème vitesse par exemple). On ne roule évidement pas tout le temps à 130.
 
-transport . km autoroute:
+transport . limitation autoroute . km autoroute:
   question: Combien de km à l'année faites-vous sur autoroute (à peu près) ?
   unité: km
   description: |
@@ -86,9 +86,13 @@ transport . km autoroute:
     Brest ⇄ Nice: 3000
     Paris ⇄ Marseille: 1600
     Bordeaux ⇄ Lyon: 1100
-  par défaut: 10% * voiture . km
+  par défaut: 1200
   note: |
     Fil twitter intéressant sur le sujet: https://twitter.com/Tomsawy22670318/status/1274257124701462528.
+
+transport . limitation autoroute . ratio autoroute:
+  formule: km autoroute / voiture . km
+  par défaut: 0.1
 
 transport . covoiturage:
   titre: Privilégier le covoiturage
