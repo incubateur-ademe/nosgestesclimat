@@ -5,12 +5,12 @@ transport . voiture:
     variations:
       - si: km = 0
         alors: 0
-      - si: 
+      - si:
           toutes ces conditions:
             - est défini: utilisateur régulier
             - utilisateur régulier
         alors: empreinte calculée
-      - si: 
+      - si:
           toutes ces conditions:
             - est défini: utilisateur régulier
             - utilisateur régulier = non
@@ -94,7 +94,6 @@ transport . voiture . empreinte utilisateur irrégulier . usage:
         voiture . gabarit: "'berline'"
         voiture . motorisation: "'thermique'"
         voiture . thermique . carburant: "'essence E5 ou E10'"
-        voiture . thermique . consommation aux 100: voiture . consommation estimée
         voiture . véhicule récent: oui
 
 transport . voiture . empreinte moyenne:
@@ -106,7 +105,6 @@ transport . voiture . empreinte moyenne:
         voiture . gabarit: "'berline'"
         voiture . motorisation: "'thermique'"
         voiture . thermique . carburant: "'essence E5 ou E10'"
-        voiture . thermique . consommation aux 100: voiture . consommation estimée
         voiture . véhicule récent: oui
 
 transport . voiture . empreinte calculée:
@@ -205,8 +203,7 @@ transport . voiture . motorisation . électrique:
 transport . voiture . motorisation . hybride:
   titre: Hybride
 
-transport . voiture . thermique: oui # sans le 'oui', une question vide est posée
-
+transport . voiture . thermique:
 transport . voiture . thermique . empreinte au kilomètre:
   titre: empreinte au km thermique
   formule: consommation au kilomètre * empreinte au litre
@@ -218,6 +215,11 @@ transport . voiture . thermique . consommation au kilomètre:
   unité: l/km
 
 transport . voiture . thermique . consommation aux 100:
+  applicable si:
+    toutes ces conditions:
+      - km > 0
+      - est défini: utilisateur régulier
+      - utilisateur régulier
   question: Connaissez-vous la consommation moyenne de la voiture ?
   description: |
     **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
