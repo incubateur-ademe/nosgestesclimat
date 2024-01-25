@@ -10,7 +10,6 @@ transport . boulot . seuil activation:
     > qu'il aille en voiture au boulot.
 
     Nous définitions la distance du seuil à 2km (trajet aller), pour 5 jours par semaine.
-
   formule: transport . boulot . distance
   unité: km
 
@@ -21,7 +20,7 @@ transport . boulot . distance:
 transport . boulot . semaines:
   formule: 47
   unité: semaine
-  description: 47 semaines, plutôt que 52 pour prendre en compte les 5 semaines de congés.
+  description: 47 semaines, plutôt que 52 pour prendre en compte les 5 semaines de congés. C'est une approxiomation importante.
 
 transport . boulot . distance . hebdomadaire:
   formule: km par jour * jours travaillés en voiture
@@ -76,7 +75,7 @@ transport . boulot . sans voiture:
     > A titre d'exemple les bouchons représentent en Île-de-France par an et par personne [163 heures perdues](https://www.tomtom.com/en_gb/traffic-index/paris-traffic) soit environ 6 jours.
 
     >💡 Le saviez-vous ? L'État et beaucoup de régions ou villes subventionnent les vélos mécaniques, électriques, cargo, pliants, etc. [Calculez votre aide 🚲️ en 3 clics](https://mesaidesvelo.fr).
-
+  non applicable si: seuil activation = 0
   applicable si: voiture . km > seuil activation
   formule:
     variations:
@@ -163,7 +162,8 @@ transport . boulot . télétravail:
 
     Il n'est évidemment pas possible pour de nombreux salariés, mais la crise sanitaire de 2020 a montré que beaucoup de métiers sont effectivement télétravaillables.
 
-    Dans ce calcul, nous ne prenons en compte que les jours télétravaillés qui évitent un déplacement en voiture individuelle.
+    Dans ce calcul, nous ne prenons en compte que les jours télétravaillés qui évitent un déplacement en voiture individuelle, pas les effets rebonds.
+  non applicable si: seuil activation = 0
   applicable si:
     toutes ces conditions:
       - compatible
@@ -171,17 +171,18 @@ transport . boulot . télétravail:
       - jours travaillés en voiture > 0
   formule: empreinte jour voiture * jours gagnés * transport . boulot . semaines
 
-transport . boulot . jours gagnés:
+transport . boulot . télétravail . jours gagnés:
   valeur: jours télétravaillés
   plafond: jours travaillés en voiture
 
-transport . boulot . empreinte jour voiture:
+transport . boulot . télétravail . empreinte jour voiture:
   formule: distance . km par jour * voiture . empreinte au kilomètre
   unité: kgCO2e/jour
 
-transport . boulot . jours télétravaillés:
+transport . boulot . télétravail . jours télétravaillés:
   question: Combien de jours de télétravail par semaine pourriez-vous faire ?
-  par défaut: 1
+  applicable si: compatible
+  par défaut: 4
   unité: jour/semaine
   suggestions:
     1: 1
@@ -189,7 +190,9 @@ transport . boulot . jours télétravaillés:
     3: 3
     4: 4
     5: 5
-# TODO introduire des contrôles (mise à jour de publicodes nécessaire) ici : pas de jours de télétravail supplémentaires à
+  plancher: 1
+  plafond: 5
+
 transport . boulot . télétravail . compatible:
   question: Votre travail est-il totalement ou en partie compatible avec le télétravail ?
   par défaut: oui
