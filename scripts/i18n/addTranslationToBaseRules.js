@@ -8,12 +8,14 @@
 const utils = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
 const cli = require('@incubateur-ademe/nosgestesclimat-scripts/cli')
 
+const attrSuffixesToIgnore = ['.lock', '.auto', '.previous_review']
+
 const addTranslationToBaseRules = (baseRules, translatedRules) => {
   const updateBaseRules = (ruleName, attributes, val) => {
     let baseRule = baseRules[ruleName]
     if (typeof baseRule !== 'object') {
       // for rules with formula directly implemented (ex: transport . empreinte au km covoiturage: 0.2 kgCO2e/km)
-      baseRule = { ['formule']: baseRules[ruleName] }
+      baseRules[ruleName] = { valeur: baseRules[ruleName] }
     }
     if (
       baseRule &&
@@ -47,7 +49,9 @@ const addTranslationToBaseRules = (baseRules, translatedRules) => {
     let baseRule = baseRules[rule]
     if (baseRule) {
       Object.entries(attrs)
-        .filter(([attr, _]) => !attr.endsWith('.lock'))
+        .filter(([attr, _]) =>
+          attrSuffixesToIgnore.every((s) => !attr.endsWith(s))
+        )
         .forEach(([attr, transVal]) => {
           switch (attr) {
             case 'suggestions': {
