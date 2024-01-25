@@ -1,16 +1,13 @@
 transport . éco-conduite:
   titre: Adopter une éco-conduite
-  applicable si:
-    toutes ces conditions:
-      - est défini: voiture . utilisateur régulier
-      - voiture . utilisateur régulier
+  applicable si: voiture . km > 0
   icônes: 🚗☮
-  formule: transport . voiture . empreinte calculée - transport . éco-conduite . recalcul
+  formule: transport . voiture - transport . éco-conduite . recalcul
   description: |
     L’éco-conduite est une action simple et efficace qui se tient à la portée de tous.  
 
-    Elle permet notamment d'économiser en moyenne 15 % de carburant, 
-    de réduire les coûts d’entretien du véhicule, de réduire le risque d’accident de 10 à 15 % en moyenne et de réaliser des économies substantielles pouvant 
+    Elle permet notamment d'économiser en moyenne 15 % de carburant, de réduire les coûts d’entretien du véhicule, 
+    de réduire le risque d’accident de 10 à 15 % en moyenne et de réaliser des économies substantielles pouvant 
     s’élever à plusieurs centaines d’euros. 
 
     L’application de l’éco-conduite est d’autant plus pertinente en ville et en zone urbaine ou les arrêts et 
@@ -19,19 +16,12 @@ transport . éco-conduite:
     Voir le [Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter)
 
 transport . éco-conduite . recalcul:
-  note: Un recalcul est nécessaire ici, car l'utilisateur peut avoir utilisé l'outil d'aide à la saisie qui proratise alors la variable km au nombre de voyageurs. Sinon ce n'est pas le cas.
   formule:
     recalcul:
-      règle: transport . voiture . empreinte calculée
+      règle: transport . voiture
       avec:
-        transport . voiture . usage: transport . éco-conduite . usage réduit
-      # Impossible to change directly the rule we want to replace
-      # Can't do this : transport . voiture . empreinte . usage: transport . voiture . empreinte . usage * 0.85
-
-transport . éco-conduite . usage réduit:
-  formule: (transport . voiture . km * transport . voiture . empreinte au kilomètre) * 0.85
-  unité: kgCO2e
-  note: réduction de 15% (cf info règle éco-conduite)
+        transport . voiture . usage: transport . voiture . usage * 0.85
+  note: Hypothèse de réduction de 15% ([Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter))
 
 transport . covoiturage:
   titre: Privilégier le covoiturage
