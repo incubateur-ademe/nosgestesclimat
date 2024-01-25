@@ -38,6 +38,11 @@ export function getArgs() {
       description: 'The version of the model to test agains (default: nightly)',
       default: 'nightly'
     })
+    .option('persona', {
+      alias: 'p',
+      type: 'string',
+      description: 'Test only one persona'
+    })
 
     .help('h')
     .alias('h', 'help').argv
@@ -110,7 +115,10 @@ export function testPersonas(rules, personas) {
       }
     }
     engine.setSituation(personaData)
-    results[persona.nom] = engine.evaluate('bilan').nodeValue
+    results[persona.nom] = {}
+    for (const rule in rules) {
+      results[persona.nom][rule] = engine.evaluate(rule).nodeValue
+    }
   }
 
   return results
@@ -137,7 +145,7 @@ export function printResults(
     console.log('|-----:|:------:|:------:|:----:|')
   } else {
     const title = withOptim
-      ? 'Test model optimisation'
+      ? "Test model optimisation (only evaluating 'bilan')"
       : `Test personas regression against ${c.green(version)}`
     console.log(`[ ${title} ]\n`)
   }
