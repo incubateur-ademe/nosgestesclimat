@@ -1,0 +1,164 @@
+transport . transports commun:
+  titre: Transports en commun
+  mosaique:
+    type: selection
+    options:
+      - bus . présent
+      - car . présent
+      - métro ou tram . présent
+    suggestions:
+      aucun:
+        bus . présent: non
+        car . présent: non
+        métro ou tram . présent: non
+  question: Quels transports en commun utilisez-vous ?
+  icônes: 🚋
+  description: |
+    Sélectionnez ici les transports en commun que vous utilisez régulièrement (au moins une fois par mois). S'il vous est arrivé de faire un trajet en bus pendant vos vacances cette année, nous le considérerons comme négligeable.
+  formule:
+    variations:
+      - si: choix utilisateur
+        alors: empreinte calculée 
+      - sinon: empreinte moyenne
+
+transport . transports commun . choix utilisateur:
+  titre: Choix de l'utilisateur pour les transports en commun
+  formule:
+    une de ces conditions:
+      - est défini: bus . présent
+      - est défini: car . présent
+      - est défini: métro ou tram . présent
+
+transport . transports commun . empreinte calculée: 
+  formule:
+    somme:
+      - bus
+      - car
+      - métro ou tram
+
+transport . transports commun . empreinte moyenne:
+  formule:
+    somme:
+      - bus . impact par heure * bus . temps moyen * commun . semaines par an
+      - car . impact par km * car . distance moyenne * commun . semaines par an
+      - métro ou tram . impact par heure * métro ou tram . temps moyen * commun . semaines par an
+
+transport . transports commun . bus:
+  titre: Bus
+  icônes: 🚌
+  description: |
+    Transport urbain, assis ou debout.
+  formule: heures par semaine * impact par heure * commun . semaines par an
+
+transport . transports commun . bus . présent:
+  question: Vous arrive t-il de prendre le bus ?
+
+transport . transports commun . bus . impact par heure:
+  formule: impact par km * vitesse
+  unité: kgCO2e/h
+  description: |
+    Sur la base de 113 gCO2e/(passager.km) et de 12 km/h de vitesse moyenne
+
+transport . transports commun . bus . impact par km:
+  formule: 0.113
+  unité: kgCO2e/km
+  note: |
+    Autobus - Gazole ; 113 gCO2e/km/personne ; Base Carbone consultée le 04/04/2022
+    La flotte étant majoritairement Diesel en France (https://www.statistiques.developpement-durable.gouv.fr/69-000-autocars-en-circulation-au-1er-janvier-2020), on fait le choix de prendre ce FE (plus fiable que la référence "Autobus moyen" selon la base carbone)
+    La prise compte des autres motorisations de cette catégorie de la base carbone fera diminuer ce FE (en pondérant selon les caractéristiques de la flotte française). (Ex: Autobus - électrique = 21.7 gCO2e/km/personne)
+
+transport . transports commun . bus . vitesse:
+  formule: 12
+  unité: km/h
+  note: Hypothèse de 12 km/h de vitesse moyenne d'après [cet article](https://www.lemonde.fr/blog/transports/2013/03/11/les-petits-secrets-de-la-ratp-reveles-au-public/) sur la RATP)
+
+transport . transports commun . bus . heures par semaine:
+  question: Combien d'heures passez-vous dans un bus par semaine ?
+  suggestions:
+    zéro: 0
+    1h / jour: 7
+    2h / jour: 14
+  unité: h/semaine
+  par défaut: temps moyen
+
+transport . transports commun . bus . temps moyen:
+  formule: 3 h/semaine
+
+transport . transports commun . car:
+  titre: Autocar
+  description: Transport interurbain, assis.
+  icônes: 🚌
+  formule: km par semaine * impact par km * commun . semaines par an
+
+transport . transports commun . car . présent:
+  question: Vous arrive t-il de prendre le car ?
+
+transport . transports commun . car . km par semaine:
+  question: Combien de kilomètres parcourez-vous en car par semaine ?
+  suggestions:
+    zéro: 0
+    10 km / jour: 70
+    50 km / jour: 140
+  unité: km/semaine
+  par défaut: distance moyenne
+  note: |
+    D'après [l'étude "Chiffres clef du transport 2021" (données de 2019)](https://www.statistiques.developpement-durable.gouv.fr/edition-numerique/chiffres-cles-transport-2021/13-transport-routier-de-voyageurs), les français parcourent en moyenne 670 km en car par an, soit autour de 13 km par semaine.
+
+transport . transports commun . car . distance moyenne:
+  formule: 13 km/semaine
+
+transport . transports commun . car . impact par km:
+  formule: 0.0295
+  unité: kgCO2e/km
+  note: |
+    Autocar - Gazole ; 29,5 gCO2e/km.personne ; Base Empreinte consultée le 18/01/2024
+
+transport . transports commun . métro ou tram:
+  titre: Métro, tramway, RER
+  icônes: 🚊
+  description: |
+    Tous modes de transport urbains sur rails.
+  formule: heures par semaine * impact par heure * commun . semaines par an
+
+transport . transports commun . métro ou tram . présent:
+  question: Vous arrive t-il de prendre le métro ou tram ?
+
+transport . transports commun . métro ou tram . impact par heure:
+  formule: impact par km * vitesse
+  unité: kgCO2e/h
+  description: Nous confondons l'ensemble des moyens de transport urbains sur rails, à savoir métro, tramway et RER.
+
+transport . transports commun . métro ou tram . impact par km:
+  formule:
+    moyenne:
+      - impact par km métro
+      - impact par km RER
+  unité: kgCO2e/km
+  note: Nous faisons l'hypothèse (forte) d'une moyenne non pondérée pour le calcul de l'impact au km.
+
+transport . transports commun . métro ou tram . impact par km métro:
+  formule: 0.00503
+  unité: kgCO2e/km
+  note: Métro, tramway, trolleybus/2018/Agglomération de 100 000 à 250 000 habitants ; Base Carbone consultée le 06/12/2023
+
+transport . transports commun . métro ou tram . impact par km RER:
+  formule: 0.00978
+  unité: kgCO2e/km
+  note: RER et transilien/2022/Ile de France ; Base Carbone consultée le 06/12/2023
+
+transport . transports commun . métro ou tram . vitesse:
+  formule: 25
+  unité: km/h
+  note: Hypothèse de 25 km/h de vitesse moyenne, d'après l'article [Les petits secrets de la RATP révélés au public](http://transports.blog.lemonde.fr/2013/03/11/les-petits-secrets-de-la-ratp-reveles-au-public/)
+
+transport . transports commun . métro ou tram . heures par semaine:
+  question: Combien d'heures passez-vous par semaine en métro, tram, RER ?
+  suggestions:
+    zéro: 0
+    1h / jour: 7
+    2h / jour: 14
+  unité: h/semaine
+  par défaut: temps moyen
+
+transport . transports commun . métro ou tram . temps moyen:
+  formule: 3 h/semaine

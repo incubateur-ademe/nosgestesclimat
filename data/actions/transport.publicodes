@@ -6,7 +6,8 @@ transport . arrêter l'avion:
       - avion . usager
   action:
     dépasse:
-      - transport . arrêter l'avion court
+      - transport . avion court en train
+      - transport . avion court en car
       - transport . prendre moins l'avion
   formule: transport . avion
   description: |
@@ -37,14 +38,17 @@ transport . arrêter l'avion:
 
     Deuxièmement, on ne peut comparer la voiture et l'avion simplement parce qu'un trajet en avion est en général bien plus long. Quand il s'agit de choisir la destination des vacances par exemple, un trajet en voiture a donc toutes les chances d'être beaucoup moins polluant. Cela dit, notons aussi que nos kilométrages en voiture sont tels que le match est relancé quand on regarde l'empreinte à l'année.
 
-transport . arrêter l'avion court:
-  titre: Privilégier le train au lieu de l'avion
+transport . avion court en train:
+  titre: Privilégier le train aux avions courts-courriers
   icônes: 🛬🚆
+  action:
+    dépasse:
+      - transport . avion court en car
   applicable si:
     toutes ces conditions:
       - est défini: avion . usager
       - avion . usager
-  formule: transport . avion . court courrier + compensation train
+  formule: transport . avion . court courrier - compensation train
   # Mettre histogramme GES qui compare les trajets train vs avion.
   description: |
     L’avion a bouleversé nos modes de vies et nos façons de voyager. Nous pouvons maintenant aller plus loin, plus vite, plus fréquemment, mais ce n'est malheureusement pas sans contrepartie pour le climat. 
@@ -53,9 +57,8 @@ transport . arrêter l'avion court:
 
     > À titre d’exemple, un aller-retour Paris-Marseille émet environ 300 kgCO2eq en avion contre seulement 2 kgCO2eq en train. 
 
-    C’est pourquoi adapter nos week-ends et nos vacances 
-    en nous tournant vers des offres de mobilités bas carbone et/ou en repensant notre manière de voyager est essentiel si l’on souhaite tant à 
-    l’échelle individuelle qu’à l’échelle de la société réduire notre impact sur le climat
+    C’est pourquoi adapter nos week-ends et nos vacances en nous tournant vers des offres de mobilités bas carbone et/ou en repensant 
+    notre manière de voyager est essentiel si l’on souhaite tant à l’échelle individuelle qu’à l’échelle de la société réduire notre impact sur le climat.
 
     [Comparez les modes de transport ici](https://monimpacttransport.fr)
 
@@ -63,11 +66,36 @@ transport . arrêter l'avion court:
   #Un aller-retour Paris-Marseille émet environ 250 kgCO2eq en avion contre seulement 3 kgCO2eq en train (source Base Carbone)
   #Choisir de se rendre, depuis Paris, à Barcelone (en train) plutôt qu’à Marrakech (en avion) permettra d’éviter d’émettre 781 kg de CO2eq (source Base Carbone)
 
-transport . arrêter l'avion court . compensation train:
+transport . avion court en train . compensation train:
   formule: avion . court courrier . heures de vol * avion . court courrier . vitesse moyenne * ratio distance supplémentaire train * transport . train . impact par km
 
-transport . arrêter l'avion court . ratio distance supplémentaire train:
-  formule: 1.2
+transport . avion court en train . ratio distance supplémentaire train:
+  formule: 1.5
+  note: On fait l'hypothèse qu'un trajet en train est 50% plus long (en distance) qu'un trajet en avion.
+
+transport . avion court en car:
+  titre: Privilégier le car aux avions courts-courriers
+  icônes: 🛬🚆
+  applicable si:
+    toutes ces conditions:
+      - est défini: avion . usager
+      - avion . usager
+      - avion . court courrier . heures de vol > 0
+  formule: transport . avion . court courrier - compensation car
+  description: |
+    L’avion a bouleversé nos modes de vies et nos façons de voyager. Nous pouvons maintenant aller plus loin, plus vite, plus fréquemment, mais ce n'est malheureusement pas sans contrepartie pour le climat. 
+
+    La meilleure solution, c'est le train pour les trajets court-courrier. Mais celui-ci n'est pas toujours disponible, pratique ou abordable. 
+
+    Heureusement, depuis plusieurs années, une offre de cars permet également de se projeter sur des trajets de plusieurs centaines de kilomètres, à prix très abordable, et pour une facture allégée en termes de CO2.
+
+    [Comparez les modes de transport ici](https://monimpacttransport.fr)
+
+transport . avion court en car . compensation car:
+  formule: avion . court courrier . heures de vol * avion . court courrier . vitesse moyenne * ratio distance supplémentaire car * transport . transports commun . car . impact par km
+
+transport . avion court en car . ratio distance supplémentaire car:
+  formule: 1.5
   note: On fait l'hypothèse qu'un trajet en train est 50% plus long (en distance) qu'un trajet en avion.
 
 transport . prendre moins l'avion:
@@ -79,7 +107,8 @@ transport . prendre moins l'avion:
       - avion . usager
   action:
     dépasse:
-      - transport . arrêter l'avion court
+      - transport . avion court en train
+      - transport . avion court en car
   formule: transport . avion / 2
   description: |
     > 💡 Essayez de faire au moins l'un des trajets vers votre destination en train !
@@ -295,11 +324,11 @@ transport . boulot . commun . empreinte:
   formule:
     variations:
       - si: type = 'bus'
-        alors: bus . impact par km
+        alors: transports commun . bus . impact par km
       - si: type = 'TER'
         alors: train . TER
       - si: type = 'métro ou tramway'
-        alors: métro ou tram . impact par km
+        alors: transports commun . métro ou tram . impact par km
   unité: kgCO2e/km
   note: |
     On considère qu'un déplacement domicile travail effectué en voiture peut-être remplacé par un train régional et non par un TGV.
