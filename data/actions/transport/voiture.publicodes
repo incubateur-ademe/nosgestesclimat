@@ -1,0 +1,345 @@
+transport . éco-conduite:
+  titre: Adopter une éco-conduite
+  applicable si: voiture . km > 0
+  icônes: 🚗☮
+  formule: voiture . km * gain empreinte au km / voiture . voyageurs
+  unité: kgCO2e
+  description: |
+    L’éco-conduite est une action simple et efficace qui se tient à la portée de tous.  
+
+    Elle permet notamment d'économiser en moyenne 15 % de carburant, de réduire les coûts d’entretien du véhicule, 
+    de réduire le risque d’accident de 10 à 15 % en moyenne et de réaliser des économies substantielles pouvant 
+    s’élever à plusieurs centaines d’euros. 
+
+    L’application de l’éco-conduite est d’autant plus pertinente en ville et en zone urbaine ou les arrêts et 
+    le redémarrage sont fréquents.
+  note: |
+    Voir le [Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter)
+
+transport . éco-conduite . gain empreinte au km:
+  formule: voiture . empreinte usage au kilomètre * 0.15
+  unité: kgCO2e/km
+  note: Hypothèse de réduction de 15% ([Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter))
+
+transport . limitation autoroute:
+  titre: Passer de 130 à 110km/h
+  icônes: 🚗🛣️
+  applicable si: voiture . km > 0
+  formule: empreinte autoroute - empreinte autoroute réduit
+  description: |
+    La convention citoyenne pour le climat a proposé en 2020 une réduction de la limitation de vitesse sur les autoroutes de 130km/h à 110km/h. 
+    La proposition est détaillée [ici](https://propositions.conventioncitoyennepourleclimat.fr/objectif/reduire-les-emissions-des-gaz-a-effet-de-serre-sur-les-autoroutes-et-les-voies-rapides/#elementor-tab-title-1681). 
+
+    Suite à l'invasion de l'Ukraine par la Russie, l'Agence Internationale de l'Énergie en a fait [sa 1ère recommandation](https://www.iea.org/reports/a-10-point-plan-to-cut-oil-use) pour réduire nos achats de pétrole russe.
+
+    Nous proposons ici une évalution de cette mesure basée sur votre situation précise.
+
+transport . limitation autoroute . empreinte autoroute:
+  formule:
+    recalcul:
+      règle: transport . voiture
+      avec:
+        transport . voiture . km: voiture . km * ratio autoroute
+  unité: kgCO2e
+
+transport . limitation autoroute . empreinte autoroute réduit:
+  formule:
+    recalcul:
+      règle: transport . voiture
+      avec:
+        transport . voiture . km: voiture . km * ratio autoroute
+        transport . voiture . usage: transport . voiture . usage * (1 - réduction)
+  unité: kgCO2e
+
+transport . limitation autoroute . réduction:
+  titre: Gain de consommation 130 -> 110
+  formule: 25%
+  description: |
+    ![](https://imgur.com/NB9CUUt.jpg)
+    D'après ce graphique, par déduction graphique (nous n'avons pas encore remonté aux données [de l'étude](http://theses.univ-lyon2.fr/documents/getpart.php?id=1026&action=pdf), page 151 figure 26), on trouve les données ci-dessous.
+
+    Diesel : 6.5 l/100 à 130km/h -> 4.75 à 110km/h 
+
+    Essence : 11.75 l/100 à 130km/h -> 8.65 à 110km/h
+
+    Donc -27% en diesel et - 26% en essence en passant de 130 à 110. Nous retenons l'ordre de grandeur de 25%.
+  note: |
+    Il faudrait affiner ce calcul.
+    Quelques sources à investiguer pour le calcul.
+    - un citoyen qui fait son test pour une clio. Il trouve une réduction entre -20% et -50% !
+       https://twitter.com/CptQwark_/status/1289499582871658499 
+       Un autre citoyen trouve plutôt -10% avec une plus grosse voiture. 
+    - [Rapport du CGDD](<https://www.ecologie.gouv.fr/sites/default/files/Théma - Réduction des vitesses sur les routes.pdf>), où nous n'avons pas trouvé pour l'instant l'explication du calcul de l'économie de CO₂
+    - Aurélien Bigo qui critique le rapport du CGDD https://twitter.com/AurelienBigo/status/1276459283291439114, mais qui ne nous donne pas d'infos sur le calcul du CO₂ lui même.
+    - une autre évaluation, qui elle nous donne le calcul :)  : https://twitter.com/Tomsawy22670318/status/1274257122373570565
+      Attention, pour être rigoureux, comme évoqué dans ce dernier fil, il faut prendre en compte la distribution de la vitesse et la catégorie de voiture (présence d'une 6ème vitesse par exemple). On ne roule évidement pas tout le temps à 130.
+
+transport . limitation autoroute . km autoroute:
+  question: Combien de km à l'année faites-vous sur autoroute (à peu près) ?
+  unité: km
+  description: |
+    On parcourt environ 80 milliards de km / an sur autoroute (voiture).
+  suggestions:
+    Paris ⇄ Athènes: 6000
+    Brest ⇄ Nice: 3000
+    Paris ⇄ Marseille: 1600
+    Bordeaux ⇄ Lyon: 1100
+  par défaut: 1200
+  note: |
+    Fil twitter intéressant sur le sujet: https://twitter.com/Tomsawy22670318/status/1274257124701462528.
+
+transport . limitation autoroute . ratio autoroute:
+  formule: km autoroute / voiture . km
+  par défaut: 0.1
+
+transport . covoiturage:
+  titre: Privilégier le covoiturage
+  applicable si:
+    toutes ces conditions:
+      - est défini: voiture . utilisateur régulier
+      - voiture . utilisateur régulier
+  action:
+    dépasse:
+      - transport . boulot . covoiturage
+  icônes: 🚗👥
+  formule: transport . voiture * réduction covoiturage
+  description: |
+    Cette action concerne l'ensemble de ses trajets en voiture.
+
+    Si le covoiturage longue distance est bien connu en France, celui des courtes distances est presque inexistant : aujourd’hui seuls 3 % des déplacements domicile-travail sont réalisés en covoiturage.
+
+    Dans tous les cas, pensez à adapter votre mode de transport à la distance et à privilégier les modes doux ou transports en commun (bus, métro, vélo, marche, etc.) le plus possible. Le calculateur [Mon Impact Transport](https://monimpacttransport.fr/) vous permet de visualiser et comparer l'impact des différents modes de déplacement.
+  note: |
+    Voir l'article The Conversation [À quelles conditions le covoiturage sera-t-il un mode de transport durable ?](https://theconversation.com/a-quelles-conditions-le-covoiturage-sera-t-il-un-mode-de-transport-durable-124122)
+
+transport . réduction covoiturage:
+  formule: 20%
+  description: |
+    On pourrait naïvement penser que le covoiturage divise par 2 l'empreinte par personne. Mais en réalité, [une étude menée en Île-de-France](https://www.sciencedirect.com/science/article/pii/S1361920918303201) 
+    montre que les réductions sont plutôt de l'ordre de 20%... avant les effets rebonds, qui réduisent le gain final du covoiturage à seulement 6%.
+
+    ![](https://images.theconversation.com/files/297327/original/file-20191016-98644-c9y1zz.png?ixlib=rb-1.1.0&q=30&auto=format&w=754&h=588&fit=crop&dpr=2)
+  note: |
+    Voir l'article The Conversation [À quelles conditions le covoiturage sera-t-il un mode de transport durable ?](https://theconversation.com/a-quelles-conditions-le-covoiturage-sera-t-il-un-mode-de-transport-durable-124122).
+
+transport . autopartage:
+  titre: Se mettre à l'autopartage
+  icônes: 🚗🤝
+  formule: transport . voiture - recalcul
+  applicable si:
+    toutes ces conditions:
+      - est défini: voiture . utilisateur régulier
+      - voiture . utilisateur régulier
+      - voiture . km < plafond activation autopartage
+  description: |
+    Nous faisons l'hypothèse qu'une personne qui parcourt beaucoup de kilomètres chaque année en voiture aura du mal à se projeter dans une offre d'auto-partage. Ce sera bien plus évident pour quelqu'un qui en fait peu.
+
+    L'impact de l'autopartage sur la réduction de l'usage de la voiture individuelle n'est plus à prouver. 
+    Cette pratique conduit à une double baisse : baisse du nombre de kilomètres parcourus (en moyenne de 41%), et baisse de la motorisation des ménages. En moyenne, on estime qu'une voiture en autopartage peut remplacer jusqu'à 9 voitures individuelles.
+  unité: kgCO2e
+
+transport . autopartage . plafond activation autopartage:
+  formule: 7200
+  note: Nous supposons qu'au-delà de 600 km par mois en moyenne, il est difficile de se projeter dans un usage d'autopartage.
+  unité: km
+
+transport . autopartage . recalcul:
+  formule:
+    recalcul:
+      règle: transport . voiture
+      avec:
+        voiture . utilisateur régulier: non
+        voiture . km: voiture . km * (1 - 0.41)
+  unité: kgCO2e
+  note: |
+    L'auto-partage permet de réduire le nombre de km parcourus dans l'année (l'usage de la voiture est moins systématique).
+    En moyenne, on compte une baisse de 41% des kilomètres par an d'après [cette étude ADEME](https://presse.ademe.fr/wp-content/uploads/2013/03/ena_4pages_presse_130306.pdf).
+
+transport . voiture 5km:
+  titre: Se passer de voiture pour moins de 5 km
+  icônes: 🚗🚲
+  formule: transport . voiture - recalcul
+  applicable si:
+    toutes ces conditions:
+      - est défini: voiture . utilisateur régulier
+      - voiture . utilisateur régulier
+  non applicable si: voiture . km < seuil d'activation 5km
+  note: |
+    On fait l'hypothèse qu'une personne qui n'est pas propriétaire de voiture se passe *déjà* d'une voiture pour de courts trajets.
+  description: |
+    En France, 4 trajets en voiture sur 10 font moins de 3 km et ce n’est pas moins de 177 millions de trajets de moins de 5km qui sont réalisés seuls en voiture chaque semaine (hors trajets domicile-travail). 
+
+    L’ensemble de ces trajets « courts » mis bout à bout présentent, à l’échelle de la France, près de 10% de la distance totale parcourue en voiture chaque année. 
+
+    Ainsi, se tourner vers les mobilités actives (vélo, trottinette...) pour ces trajets « courts » permet de réduire de manière significative, nos émissions de GES
+    tout en décongestionnant les voies urbaines et en améliorant la qualité de l’air de nos villes polluées.
+
+    > 💡 Le saviez-vous ? L'État et beaucoup de régions ou villes subventionnent les vélos mécaniques, électriques, cargo, pliants, etc. [Calculez votre aide 🚲️ en 3 clics](https://mesaidesvelo.fr).
+
+transport . seuil d'activation 5km:
+  titre: Seuil d'activation actions liées aux courts trajets
+  description: |
+    Distance minimale pour déclencher cette action. 
+
+    > Si quelqu'un nous dit qu'il ne fait que 200km de voiture dans l'année, il y a peu de chances 
+    > qu'il s'agisse de trajets de 5km.
+
+    On définit cette valeur comme étant équivalente à 2 trajets de 5 km A/R par semaine.
+  formule: commun . semaines par an * 2 trajet/semaine * distance moyenne aller-retour trajet court
+  unité: km
+
+transport . distance moyenne aller-retour trajet court:
+  formule: distance moyenne trajet court
+  unité: km/trajet
+
+transport . distance moyenne trajet court:
+  formule: 2.5
+  unité: km/trajet
+  description: Nous estimons simplement à 2,5km la moyenne de distance des trajets inférieurs à 5km.
+
+transport . voiture 5km . recalcul:
+  formule:
+    recalcul:
+      règle: transport . voiture
+      avec:
+        transport . voiture . usage: transport . voiture 5km . usage réduit
+
+transport . voiture 5km . usage réduit:
+  formule: (transport . voiture . km - distance totale) * transport . voiture . empreinte au kilomètre
+  unité: kgCO2e
+
+transport . voiture 5km . distance totale:
+  formule:
+    variations:
+      - si: distance totale renseignée > transport . voiture . km
+        alors: transport . voiture . km
+      - sinon: distance totale renseignée
+
+transport . voiture 5km . distance totale renseignée:
+  formule: fréquence * distance moyenne aller-retour trajet court * commun . semaines par an
+
+transport . voiture 5km . fréquence:
+  question: Combien de fois par semaine prenez-vous la voiture pour moins de 5km ?
+  description: |
+    Je vais chercher mon pain à 2km en voiture, cela représente un trajet.
+    Je vais au travail tous les jours du lundi au vendredi à 4km, c'est 5 trajets.
+  par défaut: 10
+  unité: trajet/semaine
+  suggestions:
+    jamais: 0
+    seulement le weekend: 2
+    dans la semaine: 5
+    chaque jour: 7
+    deux trajets par jour: 14
+
+transport . voiture électrique:
+  titre: Rouler en voiture électrique
+  icônes: 🔌🚗
+  applicable si:
+    toutes ces conditions:
+      - est défini: voiture . utilisateur régulier
+      - voiture . utilisateur régulier
+  non applicable si: transport . voiture . motorisation = 'électrique'
+  formule: transport . voiture - recalcul
+  description: |
+    La voiture électrique n'est pas la solution miracle mais pour certains usages elle peut s'avérer (très) utile pour réduire notre empreinte.
+
+    Attention toutefois à ne pas arriver à la conclusion simpliste qu'il suffirait de passer à un parc automobile électrique pour décarboner les déplacements des français. 
+
+    La priorité doit être, quand c'est possible (55% de nos trajets [font moins de 5km](https://twitter.com/GlmMrt/status/1481986507179274248)), l'essor des mobilités actives (telles que le vélo) et des transports en commun.
+
+    Néanmoins le chiffre que l'on vous présente correspond bien à la différence d'émissions de gaz à effet de serre qui aurait eu lieu si vous aviez parcouru vos km avec 
+    un véhicule électrique et non thermique.
+
+    Une voiture électrique d'occasion coûte moins cher, évidemment. Elle vous permet ausi d'obtenir une [aide à l'achat](https://www.service-public.fr/particuliers/vosdroits/F34014).
+
+    L'autonomie de la batterie peut avoir baissé légèrement, mais rappelez-vous que l'immense majorité de nos trajets [font moins de 50km](https://twitter.com/GlmMrt/status/1481986507179274248) !
+  note: |
+    Envisager de ne proposer cette action que si elle > 0 voire > à plusieurs centaines de kgCO2eq. 
+    L'action peut-être négative si le véhicule initial est relativement vieux et que l'on fait peu de kilomètres.
+
+transport . voiture électrique . recalcul:
+  formule:
+    recalcul:
+      règle: transport . voiture
+      avec:
+        transport . voiture . motorisation: "'électrique'"
+        transport . voiture . véhicule récent: oui
+
+transport . réduire taille:
+  titre: Choisir une petite voiture
+  description: |
+    Le gabarit de la voiture influe fortement sur l'empreinte carbone de vos déplacements : les voitures plus grosses ont à la fois une empreinte de construction plus importante, et elles consomment également plus d'énergie pour se déplacer.
+    Trop souvent aujourd'hui, on choisit son véhicule en fonction de ce qu'on "pourrait" faire avec.
+    Un bon calcul écologique serait de choisir sa voiture pour qu'elle convienne à une utilisation quotidienne, et si nécessaire louer un véhicule plus gros lorsque ponctuellement le besoin s'en fait ressentir (déplacer des objets lourds, partir en vacanecs à plusieurs...).
+  applicable si:
+    toutes ces conditions:
+      - est défini: voiture . utilisateur régulier
+      - voiture . utilisateur régulier
+  non applicable si: transport . voiture . gabarit = "'petite'"
+  formule: transport . voiture - recalcul
+
+transport . réduire taille . recalcul:
+  formule:
+    recalcul:
+      règle: transport . voiture
+      avec:
+        transport . voiture . gabarit: "'petite'"
+
+transport . faire durer:
+  titre: Faire durer son véhicule
+  applicable si:
+    toutes ces conditions:
+      - est défini: voiture . utilisateur régulier
+      - voiture . utilisateur régulier
+  non applicable si: transport . voiture . véhicule récent = non
+  description: |
+    Il est très difficile, à ce jour, de donner un chiffre sur la durée de vie d'un véhicule, que ce soit en kilomètres parcourus comme en année. 
+    Le fait est que cela dépend de beaucoup de paramètres : l'entretien du véhicule, l'accidentologie, la manière de conduire, le type de moteur, la dépendance à l'électronique...
+    Certains véhicules sont bons pour la casse au bout de 150 000 km quand d'autres roulent toujours des mécaniques à 400 000 km. 
+
+    Or, une part importante de l'empreinte d'un véhicule réside dans sa construction. Le faire durer est donc primordial et a une incidence importante sur l'empreinte carbone.
+
+    Nous avons considéré qu'un véhicule bien entretenu pouvait augmenter sa durée de vie de 30%.
+  formule: transport . voiture . empreinte calculée - recalcul
+
+transport . faire durer . recalcul:
+  formule:
+    recalcul:
+      règle: transport . voiture . empreinte calculée
+      avec:
+        transport . voiture . durée de vie: 13
+#
+#
+# Cette action est inactive. Au vu des problématiques liées au changement d'affectation des sols et autres impacts environnementaux
+# liés à la culture du maïs par exemple, les **biocarburants** ne sont pas pris en compte (le facteur d'émission de la base carbone
+# étant particulièrement incertain). Voir discussions [ici](https://github.com/datagir/nosgestesclimat/pull/1324)
+#
+# transport . super ethanol:
+#   inactive: oui
+#   titre: Passer du sans-plomb au super éthanol
+#   icônes: ⛽️🚗
+#   applicable si: transport . voiture . thermique . carburant = 'essence E5 et E10'
+#   formule: transport . voiture . empreinte calculée - transport . super ethanol . recalcul avec surconsommation
+#   description: |
+#     Le Superéthanol E85 est le carburant essence sans plomb pouvant contenir entre 65% et 85% de bioéthanol, le complément étant de l’essence Sans Plomb 95.
+#     Il est produit à partir de cultures de canne à sucre, de céréales (blé, maïs) et de betterave sucrière.
+
+#     L’E85 est un carburant compétitif : même en tenant compte de la surconsommation qu’il engendre, il permet une économie de 30 à 40 centimes par litre de SP95 remplacé.
+#     Pour l'utliser, il est possible de faire modifier votre véhicule essence en faisant poser un boîtier de conversion homologué, pour environ 1000€, amortis après 20 000 à 25 000 kilomètres.
+#     ![](https://www.francetvinfo.fr/pictures/KlhzqieXAJSG5N_Reou0UdhPLKM/0x667:800x2147/fit-in/720x/filters:format(webp)/2018/10/12/php6RnMqG.png)
+#   note: Cette action est inactive. Au vu des problématiques liées au changement d'affectation des sols et autres impacts environnementaux liés à la culture du maïs par exemple, les **biocarburants** ne sont pas pris en compte (le facteur d'émission de la base carbone étant particulièrement incertain). Voir discussions [ici](https://github.com/datagir/nosgestesclimat/pull/1324)
+
+# transport . super ethanol . recalcul:
+#   formule:
+#     recalcul:
+#       règle: transport . voiture . empreinte calculée
+#       avec:
+#         transport . voiture . thermique . carburant: "'essence E85'"
+
+# transport . super ethanol . taux surconsommation:
+#   formule: 125%
+#   note: Le superéthanol E85 est moins énergétique, donc fait grimper les litres consommés [de 15 à 25%](https://www.ledauphine.com/magazine-lifestyle/2020/02/02/ce-que-vous-devez-savoir-sur-le-superethanol-e85-avant-de-vous-lancer).
+
+# transport . super ethanol . recalcul avec surconsommation:
+#   formule: recalcul * taux surconsommation
