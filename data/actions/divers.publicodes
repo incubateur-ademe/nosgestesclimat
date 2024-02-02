@@ -17,19 +17,6 @@ divers . aider les autres:
 
     Comment ? En diffusant ce simulateur, en discutant de ces sujets avec vos proches, en animant des ateliers en entreprise ou association, ou même en aidant de façon pratique quelqu'un à changer l'une de ses consommations polluantes.
 
-divers . avoir un stop pub:
-  titre: Avoir un stop pub
-  icônes: 📬
-  non applicable si:
-    une de ces conditions:
-      - alimentation . déchets . quantité jetée = 'zéro déchet'
-      - alimentation . déchets . gestes . stop pub . présent
-  formule: alimentation . déchets . bonus stop pub
-  description: |
-    C'est un autocollant à placer sur votre boîte aux lettres qui informe les distributeurs de pub que vous refusez de recevoir des catalogues, des promotions, menus de restaurant et publicités en tout genre.
-
-    Cela n'empêche pas toute publicité, mais envoie un signal fort et réduit en général considérablement la quantité de déchets papiers reçus.
-
 divers . publicité:
   titre: Ignorer les pubs et soldes
   icônes: 🏬🛒
@@ -73,11 +60,6 @@ divers . électroménager . appareils préservation allongée:
     avec:
       coefficient préservation: 4 / 3
 
-divers . électroménager . seconde main:
-  titre: Acheter d'occasion mon électroménager
-  icônes: 🤝🔌
-  inactive: oui
-
 divers . ameublement . allongement:
   titre: Allonger la vie de mes meubles
   icônes: 💪🪑
@@ -102,27 +84,6 @@ divers . tabac . arrêter:
   icônes: ❌🚬
   non applicable si: divers . tabac . consommation = 0
   formule: divers . tabac
-
-divers . ameublement . seconde main:
-  titre: Acheter mes meubles d'occasion
-  icônes: 🤝🛋️
-  inactive: oui
-
-divers . textile . seconde main:
-  titre: Acheter mes vêtements d'occasion
-  icônes: 🤝👚
-  inactive: oui
-
-divers . déchets:
-divers . déchets . recyclage:
-  titre: Recycler mes biens
-  icônes: 🗑️♻️
-  inactive: oui
-
-divers . consommation responsable:
-  titre: Consommer durable
-  icônes: ♻️
-  inactive: oui
 
 divers . numérique . internet . diminuer:
   titre: Réduire mon temps de streaming
@@ -165,3 +126,74 @@ divers . numérique . appareils préservation allongée:
     règle: divers . numérique . appareils
     avec:
       coefficient préservation: 4 / 3
+
+divers . textile . réduire neuf:
+
+divers . textile . réduire neuf . acheter d'occasion:
+  inactive: oui
+  applicable si: divers . textile . nombre de textiles achetés > 2
+  icônes: 👖🔁
+  formule: divers . textile
+  unité: kgCO2e
+  description: |
+    L'achat de vêtements neufs pèse très lourd dans notre empreinte carbone. Au niveau mondial, on estime que c'est 10% des émissions mondiales de gaz à effet de serre qui sont à attribuer à l'industrie textile.
+
+    Il est temps de revoir notre rapport à notre garde-robe ! Posséder moins, choisir des vêtements de qualité que l'on peut réparer, se fournir en seconde-main.
+
+divers . textile . réduire neuf . diviser par deux achats:
+  applicable si: divers . textile . nombre de textiles achetés > 10
+  titre: Acheter deux fois moins de vêtements
+  icônes: 👖📉
+  formule: divers . textile / 2
+  unité: kgCO2e
+  description: |
+    Le saviez-vous ? Une étude a montré qu'en moyenne, les français ne touchaient pas, chaque année, à 68% de leur garde-robe. Nous possédons trop de vêtements ! Achetons moins, et pensons à donner une nouvelle vie à ce qui traîne dans nos placards.
+
+divers . produits consommables . réduire:
+  non applicable si: produits consommables . consommation = "'faible'"
+  titre: Réduire sa consommation de produits d'hygiène
+  icônes: 🪥🧴
+  formule: divers . produits consommables - recalcul
+  unité: kgCO2e
+  description: |
+    Il existe de nombreuses alternatives écologiques aux produits d'hygiène industriels. Outre d'être moins nocifs pour vous comme pour l'environnement, ils permettent également de réduire la quantité de ressources utilisée pour l'hygiène corporelle ou de la maison.
+
+divers . produits consommables . réduire . recalcul:
+  formule:
+    recalcul:
+      règle: produits consommables
+      avec:
+        produits consommables . consommation: "'faible'"
+
+divers . autres produits . réduire:
+  non applicable si: autres produits . niveau de dépenses = "'faible'"
+  titre: Privilégiez les achats d'occasion plutôt que du neuf
+  icônes: 📦️💶
+  formule: divers . autres produits - recalcul
+  unité: kgCO2e
+  description: |
+    Favoriser l'occasion en toutes circonstances permet d'éviter l'émission de beaucoup de CO2.
+
+divers . autres produits . réduire . recalcul:
+  formule:
+    recalcul:
+      règle: autres produits
+      avec:
+        autres produits . niveau de dépenses: "'faible'"
+
+divers . arrêter sport motorisé:
+  inactive: oui
+  applicable si: divers . loisirs . sports . sports énergivores . présent
+  titre: Arrêter la pratique d'un sport motorisé
+  formule: divers . loisirs . sports - recalcul
+  icônes: 🏎️🪂
+  description: |
+    À ce jour, l'empreinte des sports motorisés via des hypothèses très forte qui ne reflètent pas la pratique régulière d'un sport motirisé.
+    Mais bien évidemment, elle est importante ! Le gain est donc supérieur à ce qui est affiché ici.
+
+divers . arrêter sport motorisé . recalcul:
+  formule:
+    recalcul:
+      règle: divers . loisirs . sports
+      avec:
+        divers . loisirs . sports . sports énergivores . présent: non
