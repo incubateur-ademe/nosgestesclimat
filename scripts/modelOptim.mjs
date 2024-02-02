@@ -40,8 +40,6 @@ export function compressRules(engine, jsonPathWithoutExtension) {
   }
   const foldedRules = serializeParsedRules(constantFolding(engine, toKeep))
 
-  writeFileSync(destPath, JSON.stringify(foldedRules, null, 2))
-  return Object.keys(foldedRules).length
 }
 
 /**
@@ -75,4 +73,6 @@ export function constantFoldingFromJSONFile(
   } catch (error) {
     return { err }
   }
+  writeFileSync(destPath, JSON.stringify(foldedRules))
+  return Object.keys(foldedRules).length
 }
