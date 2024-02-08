@@ -195,7 +195,7 @@ alimentation . devenir végétarien . différence par semaine:
   unité: kgCO2e/semaine
 
 alimentation . devenir végétarien . différence par semaine repas:
-  formule: plats - une semaine plats végétarien
+  formule: plats - recalcul
   unité: kgCO2e/semaine
 
 alimentation . devenir végétarien . différence par semaine petits déjeuners:
@@ -203,8 +203,19 @@ alimentation . devenir végétarien . différence par semaine petits déjeuners:
   formule: alimentation . petit déjeuner . par semaine - une semaine petit déjeuner végétalien
   unité: kgCO2e/semaine
 
-alimentation . une semaine plats végétarien:
-  formule: 14 repas/semaine * plats . végétarien . empreinte
+alimentation . devenir végétarien . recalcul:
+  formule:
+    recalcul:
+      règle: plats
+      avec:
+        plats . viande 1: 0
+        plats . viande 2: 0
+        plats . végétarien: somme des plats non végé * plats . végétarien . empreinte
+        plats . poisson 1: 0
+        plats . poisson 2: 0
+
+alimentation . devenir végétarien . somme des plats non végé: 
+  formule: nombre de plats viande + nombre de plats poisson
 
 alimentation . devenir végétalien:
   applicable si:
