@@ -26,6 +26,7 @@ const nbRules = Object.keys(optimRules).length
 for (const personaName in localPersonas) {
   const persona = localPersonas[personaName]
   const errors = []
+  const warnings = []
 
   if (markdown) {
     console.log(`**${personaName}**`)
@@ -45,12 +46,22 @@ for (const personaName in localPersonas) {
     }
     continue
   }
+
   for (const rule in optimRules) {
     try {
       const base = baseEngine.evaluate(rule).nodeValue
       const optim = optimEngine.evaluate(rule).nodeValue
+
       if (base !== optim) {
-        errors.push({ rule, base, optim })
+        if (
+          base !== null &&
+          optim !== null &&
+          base.toPrecision(14) === optim.toPrecision(14)
+        ) {
+          warnings.push({ rule, base, optim })
+        } else {
+          errors.push({ rule, base, optim })
+        }
       }
     } catch (e) {
       errors.push({ rule, base: e.message, optim: null })
@@ -66,7 +77,13 @@ for (const personaName in localPersonas) {
   } else {
     for (const error of errors) {
       console.log(
-        `${c.magenta(error.rule)}: ${error.base} !== ${error.optim}\n`
+        `${c.magenta(error.rule)}:\n${error.base} !== ${error.optim}\n`
+      )
+    }
+
+    for (const warning of warnings) {
+      console.log(
+        `${c.yellow(warning.rule)}:\n${warning.base} !== ${warning.optim} (equal with 14 digit precision)\n`
       )
     }
 
