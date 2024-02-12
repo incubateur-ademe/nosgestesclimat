@@ -27,6 +27,8 @@ const rulesToKeep = [
   'transport . ferry . surface'
 ]
 
+const attributesToRemove = ['optimized', 'note']
+
 export function compressRules(engine, jsonPathWithoutExtension) {
   const destPath = `${jsonPathWithoutExtension}-opti.json`
   const toKeep = ([ruleName, ruleNode]) => {
@@ -37,6 +39,17 @@ export function compressRules(engine, jsonPathWithoutExtension) {
     )
   }
   const foldedRules = serializeParsedRules(constantFolding(engine, toKeep))
+
+  for (const ruleName in foldedRules) {
+    const rule = foldedRules[ruleName]
+    if (rule) {
+      attributesToRemove.forEach((attribute) => {
+        delete foldedRules[ruleName][attribute]
+      })
+    }
+  }
+
   writeFileSync(destPath, JSON.stringify(foldedRules))
+
   return Object.keys(foldedRules).length
 }
