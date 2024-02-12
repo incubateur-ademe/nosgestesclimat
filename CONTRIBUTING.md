@@ -116,8 +116,6 @@ prix . avocat:
 
 #### Sans rien installer sur votre machine [⌛ < 15 minutes de mise en place]
 
-Grâce à Gitpod, vous aurez en quelques minutes un environnement de travail dans votre navigateur qui vous permet de modifier les modèles carbone et de voir en un rafraichissement de page comment ils impactent l'interface de NGC. C'est parti !
-
 - Cliquez sur le bouton suivant (**à ne faire qu'une fois, ensuite vous le réutiliserez puisqu'il sera ajouter à votre dashboard [Gitpod](https://gitpod.io/workspaces)**) : [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/datagir/nosgestesclimat-site/)
 - Un nouvel onglet s'ouvre, vous avez accès à tout un environnement de développement, appelé Visual Studio Code, qui est un standard aujourd'hui parmi les développeurs Web. Pour afficher l'ensemble des fichiers du workspace, cliquez sur le menu en haut à gauche, puis File, Open folder... et sélectionnez /workspace/. Vous pouvez ensuite naviguer dans les fichiers, les modifier, puis envoyer vos changements sur git via l'onglet (vertical) "Source control".
 - Vous verrez dans ces onglets la liste des fichiers modifiés, appellée "Changes". Pour faire votre 1er commit, vous devez ajouter des fichiers en cliquant sur "+" à droite du fichier. Vous avez alors des "stages changes". Écrivez un message de commit, puis validez !
