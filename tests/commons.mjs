@@ -145,11 +145,14 @@ export function printResults({ markdownHeader, results, nbTests, markdown }) {
 An error occured while testing the model:
 ${results[0].message}
 `)
+      console.log(`\n</details>`)
     } else {
       console.log(`${c.red('(err)')} An error occured while testing the model:`)
       console.log(`${results[0].message}\n`)
     }
-    process.exit(1)
+    // TODO: remove this when the production use the latest version
+    // process.exit(1)
+    return
   }
 
   if (markdown) {
@@ -208,7 +211,9 @@ ${results[0].message}
     }
   }
 
-  if (!markdown) {
+  if (markdown) {
+    console.log(`\n</details>`)
+  } else {
     const nbFails = fails.length
     fails.forEach((fail) => console.log(fail))
     console.log(`\n${c.green('OK')} ${nbTests - nbFails}/${nbTests}`)

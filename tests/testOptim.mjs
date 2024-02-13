@@ -68,8 +68,4 @@ for (const personaName in localPersonas) {
     nbTests: nbRules,
     markdown
   })
-
-  if (markdown) {
-    console.log(`\n</details>`)
-  }
 }

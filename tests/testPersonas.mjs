@@ -79,13 +79,9 @@ for (const personaName in localPersonas) {
   }
 
   printResults({
-    markdownHeader: '| Règle | PR | ${version} | Δ (%) | Message |',
+    markdownHeader: `| Règle | PR | ${version} | Δ (%) | Message |`,
     results,
     nbTests: nbRules,
     markdown
   })
-
-  if (markdown) {
-    console.log(`\n</details>`)
-  }
 }
