@@ -38,6 +38,7 @@ transport . voiture . km:
     Par exemple, si vous êtes en mission professionnelle dans un autre département ou un autre pays, cela rentre dans la comptabilité de votre entreprise : ne le comptez pas ici.
   par défaut: km annuels moyen
   unité: km
+  plancher: 0
   suggestions:
     zéro: 0
     vacances: 2000
@@ -113,7 +114,8 @@ transport . voiture . empreinte calculée:
   formule: (usage + construction amortie) / voyageurs
   unité: kgCO2e
 
-transport . voiture . saisie voyageurs:
+transport . voiture . voyageurs:
+  titre: Nombre de voyageurs moyen dans la voiture
   question: Quel est le nombre moyen de voyageurs dans la voiture ?
   description: |
     Une voiture consomme à peu près autant qu'elle ait 1, 2 ou 5 voyageurs à bord. Voyager à plusieurs, c'est donc potentiellement diviser par 5 l'empreinte individuelle !
@@ -126,27 +128,14 @@ transport . voiture . saisie voyageurs:
     > Dans une prochaine évolution du simulateur, nous pourrons séparer les questions par type de trajets : vacances, domicile-travail, quotidiens avec un nombre de voyageurs personnalisable.
 
     Bien sûr, si vous vous faites conduire ou si vous prenez le taxi, le chauffeur ne compte pas, car il est au service de votre déplacement.
-
+  plancher: 1
+  avertissement: |
+    Le nombre de voyageurs ne peut pas être nul. Au volant de votre voiture, vous en êtes le premier voyageur.
   par défaut: 1.2
   suggestions:
     je suis seul: 1
     deux: 2
     cinq: 5
-
-transport . voiture . voyageurs:
-  titre: Nombre de voyageurs moyen dans la voiture
-  formule:
-    variations:
-      - si: saisie voyageurs < 1
-        alors: 1
-      - sinon: saisie voyageurs
-
-transport . voiture . notif minimum voyageurs:
-  type: notification
-  sévérité: invalide
-  formule: saisie voyageurs < 1
-  description: |
-    Le nombre de voyageurs ne peut pas être nul. Au volant de votre voiture, vous en êtes le premier voyageur.
 
 transport . voiture . usage:
   formule: km * empreinte usage au kilomètre
