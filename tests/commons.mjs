@@ -59,7 +59,7 @@ export function getLocalRules(region, lang, optim = false) {
     .catch((e) => {
       console.error(`No local rules found for ${region} and ${lang}`)
       console.error(e.message)
-      process.exit(-1)
+      process.exit(1)
     })
 }
 
@@ -71,7 +71,7 @@ export function getLocalPersonas(region, lang) {
     .catch((e) => {
       console.error(`No local personas found for ${region} and ${lang}:`)
       console.error(e.message)
-      process.exit(-1)
+      process.exit(1)
     })
 }
 
@@ -83,7 +83,7 @@ export function getRulesFromAPI(version, region, lang) {
         `No prod rules found for ${region} and ${lang} (${version}):`
       )
       console.error(e.message)
-      process.exit(-1)
+      process.exit(1)
     })
 }
 
@@ -95,7 +95,7 @@ export function getPersonasFromAPI(version, region, lang) {
         `No prod personas found for ${region} and ${lang} (${version}):`
       )
       console.error(e.message)
-      process.exit(-1)
+      process.exit(1)
     })
 }
 
@@ -143,19 +143,18 @@ export function printResults({ markdownHeader, results, nbTests, markdown }) {
     if (markdown) {
       console.log(`
 An error occured while testing the model:
-\`\`\`${results[0].message}
-\`\`\`
+${results[0].message}
 `)
     } else {
       console.log(`${c.red('(err)')} An error occured while testing the model:`)
       console.log(`${results[0].message}\n`)
     }
-    return
+    process.exit(1)
   }
 
   if (markdown) {
     console.log(markdownHeader)
-    console.log('|-----:|:------|:------:|:------:|:----:|')
+    console.log('|:-----|:------|:------|:------:|:-----|')
   }
 
   const fails = []
@@ -167,12 +166,12 @@ An error occured while testing the model:
           `${c.yellow('(warn)')} ${c.magenta(result.rule)}: ${result.msg}`
         )
       } else {
-        console.log(
-          `| ${c.magenta(result.rule)} | | | | (warning) ${result.msg} |`
-        )
+        // NOTE: for now we don't need to print the warning in the markdown
+        // console.log(
+        //   `| ${c.magenta(result.rule)} | | | | (warning) ${result.msg} |`
+        // )
       }
 
-      // TODO: handle warnings in markdown?
       continue
     }
     const actualRounded = Math.fround(result.actual)
@@ -231,17 +230,10 @@ function fmtCLIErr(actual, expected, diff, diffPercent, rule, message) {
 }
 
 function fmtGHActionErr(expected, actual, diff, diffPercent, name, message) {
-  const color =
-    diffPercent <= 1 ? 'sucess' : diffPercent > 5 ? 'critical' : 'important'
-  const sign = diff > 0 ? '%2B' : '-'
-  return `|![](https://img.shields.io/badge/${name.replaceAll(
-    ' ',
-    '%20'
-  )}-${sign}${Math.round(diff).toLocaleString(
-    'en-us'
-  )}%20kgCO2e-${color}?style=flat-square) | ${expected.toLocaleString(
-    'en-us'
-  )} | ${actual.toLocaleString('en-us')} | ${
+  // const color =
+  //   diffPercent <= 1 ? 'sucess' : diffPercent > 5 ? 'critical' : 'important'
+  // const sign = diff > 0 ? '%2B' : '-'
+  return `| ${name} | ${actual.toLocaleString('en-us')} | ${expected.toLocaleString('en-us')} | ${
     diff > 0 ? '+' : '-'
   }${diffPercent}% | ${message ?? ''} |`
 }

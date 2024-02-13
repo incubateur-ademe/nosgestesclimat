@@ -40,7 +40,8 @@ for (const personaName in localPersonas) {
   const results = []
 
   if (markdown) {
-    console.log(`**${personaName}**`)
+    console.log(`<details>`)
+    console.log(`<summary><code>${personaName}</code></summary>\n`)
   } else {
     console.log(
       `[ Test model optimisation for persona ${c.magenta(personaName)} ]\n`
@@ -67,4 +68,8 @@ for (const personaName in localPersonas) {
     nbTests: nbRules,
     markdown
   })
+
+  if (markdown) {
+    console.log(`\n</details>`)
+  }
 }
