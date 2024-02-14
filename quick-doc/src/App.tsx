@@ -1,6 +1,6 @@
 import Engine from 'publicodes'
 import './App.css'
-import { RulePage } from 'publicodes-react'
+import { RulePage } from '@publicodes/react-ui'
 import {
   Link,
   Route,

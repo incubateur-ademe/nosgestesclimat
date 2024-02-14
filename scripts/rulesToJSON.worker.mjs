@@ -18,7 +18,7 @@ function getStyledReportString(name, verb, nbRules, duration) {
 function writeRules(rules, path, destLang, regionCode, markdown) {
   try {
     const start = Date.now()
-    fs.writeFileSync(path, JSON.stringify(rules, null, 2))
+    fs.writeFileSync(path, JSON.stringify(rules))
     const timeElapsed = Date.now() - start
     if (!markdown) {
       console.log(

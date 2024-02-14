@@ -3,7 +3,8 @@ import {
   defaultLang,
   availableLanguages
 } from '@incubateur-ademe/nosgestesclimat-scripts/utils'
-import Engine from 'publicodes'
+import Engine, { serializeUnit } from 'publicodes'
+import Engine77 from 'publicodes-beta-77'
 import c from 'ansi-colors'
 import yargs from 'yargs'
 import { readFile } from 'fs/promises'
@@ -35,10 +36,14 @@ export function getArgs() {
     .option('version', {
       alias: 'v',
       type: 'string',
-      description: 'The version of the model to test agains (default: nightly)',
+      description: 'The version of the model to test agains',
       default: 'nightly'
     })
-
+    .option('persona', {
+      alias: 'p',
+      type: 'string',
+      description: 'Test only one persona'
+    })
     .help('h')
     .alias('h', 'help').argv
 }
@@ -54,7 +59,7 @@ export function getLocalRules(region, lang, optim = false) {
     .catch((e) => {
       console.error(`No local rules found for ${region} and ${lang}`)
       console.error(e.message)
-      process.exit(-1)
+      process.exit(1)
     })
 }
 
@@ -66,7 +71,7 @@ export function getLocalPersonas(region, lang) {
     .catch((e) => {
       console.error(`No local personas found for ${region} and ${lang}:`)
       console.error(e.message)
-      process.exit(-1)
+      process.exit(1)
     })
 }
 
@@ -78,7 +83,7 @@ export function getRulesFromAPI(version, region, lang) {
         `No prod rules found for ${region} and ${lang} (${version}):`
       )
       console.error(e.message)
-      process.exit(-1)
+      process.exit(1)
     })
 }
 
@@ -90,12 +95,25 @@ export function getPersonasFromAPI(version, region, lang) {
         `No prod personas found for ${region} and ${lang} (${version}):`
       )
       console.error(e.message)
-      process.exit(-1)
+      process.exit(1)
     })
 }
 
-export function testPersonas(rules, personas) {
-  const engine = new Engine(rules, { logger: disabledLogger })
+export function testPersonas(
+  rules,
+  personas,
+  markdown,
+  rulesToTest = ['bilan'],
+  beta77 = false
+) {
+  console.log(`Testing personas (engine: ${beta77 ? 'beta77' : 'v1'})`)
+  console.log(`(It may take a while)`)
+  const engine = beta77
+    ? new Engine77(rules, { logger: disabledLogger })
+    : new Engine(rules, {
+        logger: disabledLogger,
+        allowOrphanRules: true
+      })
   const personasRules = Object.values(personas)
   const results = {}
 
@@ -103,69 +121,102 @@ export function testPersonas(rules, personas) {
     let personaData = persona.situation || {}
     for (const ruleName in personaData) {
       if (!(ruleName in rules)) {
+        if (!markdown) {
+          console.log(`Rule '${ruleName}' not found in the model`)
+        }
         delete personaData[ruleName]
       }
     }
     engine.setSituation(personaData)
-    results[persona.nom] = engine.evaluate('bilan').nodeValue
+    results[persona.nom] = {}
+    for (const rule of rulesToTest) {
+      results[persona.nom][rule] = engine.evaluate(rule).nodeValue
+    }
   }
 
   return results
 }
 
-const kgCO2Str = c.dim('(kg CO2e)')
+export function printResults({ markdownHeader, results, nbTests, markdown }) {
+  if (results.length === 1 && results[0].type === 'error') {
+    // An error occured while trying to set the situation
+    if (markdown) {
+      console.log(`
+An error occured while testing the model:
 
-// TODO: could be improved by using a more generic way to compare results.
-export function printResults(
-  localResults,
-  prodResults,
-  markdown,
-  version,
-  withOptim = false
-) {
-  if (markdown) {
-    console.log(
-      `| Persona | Total PR ${
-        withOptim ? 'with optim.' : ''
-      } (kg CO2e) | Total ${
-        withOptim ? 'PR without optim.' : 'in prod.'
-      } (kg CO2e) | Δ (%) |`
-    )
-    console.log('|-----:|:------:|:------:|:----:|')
-  } else {
-    const title = withOptim
-      ? 'Test model optimisation'
-      : `Test personas regression against ${c.green(version)}`
-    console.log(`[ ${title} ]\n`)
+~~~${results[0].message}
+~~~
+`)
+    } else {
+      console.log(`${c.red('(err)')} An error occured while testing the model:`)
+      console.log(`${results[0].message}\n`)
+    }
+    // TODO: remove this when the production use the latest version
+    // process.exit(1)
+    return
   }
+
+  if (markdown) {
+    console.log(markdownHeader)
+    console.log('|:-----|:------|:------|:-------|')
+  }
+
   const fails = []
-  const nbTests = Object.keys(localResults).length
-  for (let name in localResults) {
-    const localResult = Math.fround(localResults[name])
-    const prodResult = Math.fround(prodResults[name])
-    const diff = localResult - prodResult
+
+  for (const result of results) {
+    if (result.type === 'warning') {
+      if (!markdown) {
+        console.log(
+          `${c.yellow('(warn)')} ${c.magenta(result.rule)}: ${result.msg}`
+        )
+      } else {
+        // NOTE: for now we don't need to print the warning in the markdown
+        // console.log(
+        //   `| ${c.magenta(result.rule)} | | | | (warning) ${result.msg} |`
+        // )
+      }
+
+      continue
+    }
+    const actualRounded = Math.fround(result.actual.nodeValue)
+    const actualUnit = serializeUnit(result.actual.unit)
+    const expectedRounded = Math.fround(result.expected.nodeValue)
+    const expectedUnit = serializeUnit(result.expected.unit)
+    const diff =
+      actualRounded && expectedRounded ? actualRounded - expectedRounded : 0
+
     if (diff !== 0) {
-      const diffPercent = Math.abs(Math.round((diff / prodResult) * 100))
-      const color = diffPercent <= 1 ? c.yellow : c.red
+      const diffPercent = Math.abs(Math.round((diff / expectedRounded) * 100))
 
       if (markdown) {
         console.log(
           fmtGHActionErr(
-            localResult,
-            prodResult,
+            actualRounded,
+            actualUnit,
+            expectedRounded,
+            expectedUnit,
             diff,
             diffPercent,
-            name,
-            color
+            result.rule
           )
         )
       } else {
         fails.push(
-          fmtCLIErr(localResult, prodResult, diff, diffPercent, name, color)
+          fmtCLIErr(
+            actualRounded,
+            actualUnit,
+            expectedRounded,
+            expectedUnit,
+            diff,
+            diffPercent,
+            result.rule,
+            result.message
+          )
         )
       }
     }
   }
+
   if (!markdown) {
     const nbFails = fails.length
     fails.forEach((fail) => console.log(fail))
@@ -177,31 +228,38 @@ export function printResults(
 }
 
 function formatValueInKgCO2e(value) {
-  return c.yellow(Math.fround(value).toLocaleString('en-us')) + ' ' + kgCO2Str
+  return Math.fround(value).toLocaleString('en-us')
 }
 
-function fmtCLIErr(localResult, prodResult, diff, diffPercent, name, color) {
+function fmtCLIErr(
+  actual,
+  actualUnit,
+  expected,
+  expectedUnit,
+  diff,
+  diffPercent,
+  rule,
+  message
+) {
+  const color = diffPercent <= 1 ? c.yellow : c.red
   const sign = diff > 0 ? '+' : diff < 0 ? '-' : ''
-  const hd = color(diffPercent <= 1 ? '[WARN]' : '[FAIL]')
-  return `${hd} ${name} [${color(sign + Math.abs(diff))} ${kgCO2Str}, ${color(
-    sign + diffPercent
-  )}%]: ${formatValueInKgCO2e(localResult)} != ${formatValueInKgCO2e(
-    prodResult
-  )}`
+  const hd = color(diffPercent <= 1 ? '(warn)' : '(err)')
+  return `${color(hd)} ${c.magenta(rule)}:${message ? `\n${message}` : ''} ${formatValueInKgCO2e(actual)} ${c.dim.italic(actualUnit ?? '')} != ${formatValueInKgCO2e(expected)} ${c.dim.italic(expectedUnit ?? '')} (${color(sign + diffPercent)}%)`
 }
 
-function fmtGHActionErr(localResult, prodResult, diff, diffPercent, name) {
-  const color =
-    diffPercent <= 1 ? 'sucess' : diffPercent > 5 ? 'critical' : 'important'
-  const sign = diff > 0 ? '%2B' : '-'
-  return `|![](https://img.shields.io/badge/${name.replaceAll(
-    ' ',
-    '%20'
-  )}-${sign}${Math.round(diff).toLocaleString(
-    'en-us'
-  )}%20kgCO2e-${color}?style=flat-square) | **${localResult.toLocaleString(
-    'en-us'
-  )}** | ${prodResult.toLocaleString('en-us')} | ${
+function fmtGHActionErr(
+  actual,
+  actualUnit,
+  expected,
+  expectedUnit,
+  diff,
+  diffPercent,
+  name
+) {
+  // const color =
+  //   diffPercent <= 1 ? 'sucess' : diffPercent > 5 ? 'critical' : 'important'
+  // const sign = diff > 0 ? '%2B' : '-'
+  return `| <code>${name}</code> | ${actual.toLocaleString('en-us')} ${actualUnit ? `_${actualUnit}_` : ''} | ${expected.toLocaleString('en-us')} ${expectedUnit ? `_${expectedUnit}_` : ''} | **${
     diff > 0 ? '+' : '-'
-  }${diffPercent}% |`
+  }${diffPercent}%** |`
 }
