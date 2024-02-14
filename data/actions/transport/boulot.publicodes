@@ -1,0 +1,245 @@
+transport . boulot:
+  icônes: 🏢
+
+transport . boulot . seuil activation:
+  titre: Seuil d'activation actions liées aux trajets "Boulot"
+  description: |
+    Distance minimale pour déclencher cette action. 
+
+    > Si quelqu'un nous dit qu'il ne fait que 500km de voiture dans l'année, il y a peu de chances 
+    > qu'il aille en voiture au boulot.
+
+    Nous définitions la distance du seuil à 2km (trajet aller), pour 5 jours par semaine.
+  formule: transport . boulot . distance
+  unité: km
+
+transport . boulot . distance:
+  formule: semaines * hebdomadaire
+  unité: km
+
+transport . boulot . semaines:
+  formule: 47
+  unité: semaine
+  description: 47 semaines, plutôt que 52 pour prendre en compte les 5 semaines de congés. C'est une approxiomation importante.
+
+transport . boulot . distance . hebdomadaire:
+  formule: km par jour * jours travaillés en voiture
+  unité: km/semaine
+
+transport . boulot . jours travaillés en voiture:
+  question: Combien de jours par semaine prenez-vous votre voiture pour aller au travail ?
+  par défaut: 4
+  unité: jour/semaine
+  suggestions:
+    0: 0
+    1: 1
+    2: 2
+    3: 3
+    4: 4
+    5: 5
+
+transport . boulot . distance . km par jour:
+  titre: Distance aller-retour trajet domicile travail
+  formule: 2 trajet/jour * km aller
+  unité: km/jour
+
+transport . boulot . distance . km aller:
+  titre: Distance aller trajet domicile travail
+  question: A quelle distance de chez vous se situe votre travail ?
+  unité: km/trajet
+  description: |
+    Nous parlons ici de la distance *aller*, avec le mode de transport que vous privilégiez.
+
+    70% des travailleurs en France travaillent à moins de 15km de chez eux.
+
+    57% travaillent à moins de 10km et 78% à moins de 20km. 
+
+    Source : études INSEE 2004 et 2013, chiffres stables.
+  note: Mettre un lien vers l'étude et mettre à jour avec les statistiques de l'enquête déplacement 2020 si disponible.
+  par défaut: 10
+
+transport . boulot . covoiturage:
+  question: Vous rendez-vous au travail seul ?
+  par défaut: oui
+
+transport . boulot . covoiturage . nombre de voyageurs:
+  formule: 1 + nombre de covoitureurs
+
+transport . boulot . covoiturage . nombre de covoitureurs:
+  question: Combien de personnes pourraient covoiturer avec vous ?
+  par défaut: 1
+
+transport . boulot . sans voiture:
+  action:
+    dépasse:
+      - transport . boulot . covoiturage
+      - transport . boulot . télétravail
+  titre: Aller au travail autrement qu'en voiture
+  icônes: 🚌🚲
+  description: |
+    Quand c'est possible, prendre les transports en commun ou des véhicules légers (marche à pied, vélo, trottinette personnelle, ...) pour aller au travail réduit notre empreinte climat, mais améliore aussi notre qualité de vie.
+
+    [70%](https://www.ecologie-solidaire.gouv.fr/covoiturage-en-france-avantages-et-reglementationen-vigueur) des déplacements domicile-travail sont réalisés avec des véhicules individuels, la plupart seul dans sa voiture. C'est ce qu'on appelle l'auto-solisme.
+
+    En plus d'émettre beaucoup de gaz à effet de serre cet auto-solisme déteriore la qualité de l'air de nos villes et donc notre santé, et encombre les voies urbaines.
+
+    > A titre d'exemple les bouchons représentent en Île-de-France par an et par personne [163 heures perdues](https://www.tomtom.com/en_gb/traffic-index/paris-traffic) soit environ 6 jours.
+
+    >💡 Le saviez-vous ? L'État et beaucoup de régions ou villes subventionnent les vélos mécaniques, électriques, cargo, pliants, etc. [Calculez votre aide 🚲️ en 3 clics](https://mesaidesvelo.fr).
+  non applicable si: seuil activation = 0
+  applicable si: voiture . km > seuil activation
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - type = 'bus'
+            - type = 'TER'
+            - type = 'métro ou tramway'
+        alors: boulot . distance * gain empreinte au km
+      - si: type = 'vélo classique'
+        alors: recalcul vélo
+      - si: type = 'vélo électrique'
+        alors: recalcul vae
+      - si: type = 'trotinette électrique'
+        alors: recalcul autres véhicules à moteur
+  unité: kgCO2e
+
+transport . boulot . sans voiture . gain empreinte au km:
+  formule: voiture . empreinte au kilomètre - empreinte
+
+transport . boulot . sans voiture . empreinte:
+  titre: Empreinte transport en commun choisi
+  formule:
+    variations:
+      - si: type = 'bus'
+        alors: bus . impact par km
+      - si: type = 'TER'
+        alors: train . TER
+      - si: type = 'métro ou tramway'
+        alors: métro ou tram . impact par km
+  unité: kgCO2e/km
+  note: |
+    On considère qu'un déplacement domicile travail effectué en voiture peut-être remplacé par un train régional et non par un TGV.
+
+transport . boulot . sans voiture . type:
+  avec:
+    bus:
+    métro ou tramway:
+    TER:
+    vélo classique:
+    vélo électrique:
+    trotinette électrique:
+  question: Si vous deviez ne plus prendre votre voiture pour vous rendre au travail quel autre moyen de transport pourriez-vous utiliser ?
+  par défaut: "'bus'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - bus
+        - métro ou tramway
+        - TER
+        - vélo classique
+        - vélo électrique
+        - trotinette électrique
+
+transport . boulot . recalcul vélo:
+  formule:
+    recalcul:
+      règle: transport . mobilité douce . vélo
+      avec:
+        transport . mobilité douce . vélo . présent: oui
+
+transport . boulot . recalcul vae:
+  formule:
+    recalcul:
+      règle: transport . mobilité douce . vae
+      avec:
+        transport . mobilité douce . vae . présent: oui
+        transport . mobilité douce . vae . km: transport . boulot . distance
+
+transport . boulot . recalcul autres véhicules à moteur:
+  formule:
+    recalcul:
+      règle: transport . mobilité douce . autres véhicules à moteur
+      avec:
+        transport . mobilité douce . autres véhicules à moteur . présent: oui
+        transport . mobilité douce . autres véhicules à moteur . km: transport . boulot . distance
+
+transport . boulot . télétravail:
+  titre: Faire du télétravail
+  icônes: 🏠💻
+  description: |
+    Le télétravail permet d'éviter des déplacements journaliers pour se rendre au boulot.
+
+    Il n'est évidemment pas possible pour de nombreux salariés, mais la crise sanitaire de 2020 a montré que beaucoup de métiers sont effectivement télétravaillables.
+
+    Dans ce calcul, nous ne prenons en compte que les jours télétravaillés qui évitent un déplacement en voiture individuelle, pas les effets rebonds.
+  non applicable si: seuil activation = 0
+  applicable si:
+    toutes ces conditions:
+      - compatible
+      - voiture . km > seuil activation
+      - jours travaillés en voiture > 0
+  formule: empreinte jour voiture * jours gagnés * transport . boulot . semaines
+
+transport . boulot . télétravail . jours gagnés:
+  valeur: jours télétravaillés
+  plafond: jours travaillés en voiture
+
+transport . boulot . télétravail . empreinte jour voiture:
+  formule: distance . km par jour * voiture . empreinte au kilomètre
+  unité: kgCO2e/jour
+
+transport . boulot . télétravail . jours télétravaillés:
+  question: Combien de jours de télétravail par semaine pourriez-vous faire ?
+  applicable si: compatible
+  par défaut: 4
+  unité: jour/semaine
+  suggestions:
+    1: 1
+    2: 2
+    3: 3
+    4: 4
+    5: 5
+  plancher: 1
+  plafond: 5
+
+transport . boulot . télétravail . compatible:
+  question: Votre travail est-il totalement ou en partie compatible avec le télétravail ?
+  par défaut: oui
+
+transport . boulot . faire du covoiturage:
+  titre: Aller au travail en covoiturage
+  applicable si:
+    toutes ces conditions:
+      - est défini: voiture . utilisateur régulier
+      - voiture . utilisateur régulier
+      - voiture . km > seuil activation
+      - covoiturage
+  icônes: 🚗👥
+  formule: empreinte boulot seul - empreinte boulot covoiturage
+  unité: kgCO2e
+  description: |
+    Si le covoiturage longue distance est bien connu en France, celui des courtes distances est presque inexistant : aujourd’hui seuls 3 % des déplacements domicile-travail sont réalisés en covoiturage.
+
+    Sachez que depuis 2020, vous pouvez demander à votre employeur le [forfait mobilité durable](https://www.service-public.fr/particuliers/actualites/A14046), pour que votre covoiturage soit rémunéré jusqu'à 400€/an, exonérés d'impôt et de cotisations sociales !
+
+    Dans tous les cas, pensez à adapter votre mode de transport à la distance et à privilégier les modes doux ou transports en commun (bus, métro, vélo, marche, etc.) le plus possible. Le calculateur [Mon Impact Transport](https://monimpacttransport.fr/) vous permet de visualiser et comparer l'impact des différents modes de déplacement.
+  note: |
+    Voir l'article The Conversation [À quelles conditions le covoiturage sera-t-il un mode de transport durable ?](https://theconversation.com/a-quelles-conditions-le-covoiturage-sera-t-il-un-mode-de-transport-durable-124122)
+
+transport . boulot . faire du covoiturage . empreinte boulot seul:
+  formule:
+    recalcul:
+      règle: transport . voiture
+      avec:
+        transport . voiture . voyageurs: 1
+        transport . voiture . km: boulot . distance
+
+transport . boulot . faire du covoiturage . empreinte boulot covoiturage:
+  formule:
+    recalcul:
+      règle: transport . voiture
+      avec:
+        transport . voiture . voyageurs: boulot . covoiturage . nombre de voyageurs
+        transport . voiture . km: boulot . distance

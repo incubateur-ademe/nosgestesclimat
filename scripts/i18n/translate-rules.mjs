@@ -174,7 +174,7 @@ const translateTo = async (
       try {
         const translatedValue = onlyNeedToUpdateLocks
           ? undefined
-          : 'description' === attr || 'note' === attr
+          : 'description' === attr || 'note' === attr || 'avertissement' === attr
             ? await translateMarkdown(refVal)
             : await translate(refVal)
 
