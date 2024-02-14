@@ -72,7 +72,7 @@ export default ({ regionCode, destLang, translatedBaseRules, opts }) => {
     markdown
   )
 
-  if (false) {
+  if (!optimDisabled) {
     const start = Date.now()
     const nbRules = compressRules(engine, destPathWithoutExtension)
     const optimDuration = Date.now() - start

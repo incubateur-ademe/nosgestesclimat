@@ -27,18 +27,29 @@ const rulesToKeep = [
   'transport . ferry . surface'
 ]
 
+// Rule names which should be avoided in the optimized model.
+// We don't want to have to replace the rule refs in the sum of the rules
+// by their value to be able to use them in the UI.
+const rulesToAvoid = ['services sociétaux']
+
 const attributesToRemove = ['optimized', 'note']
 
 export function compressRules(engine, jsonPathWithoutExtension) {
   const destPath = `${jsonPathWithoutExtension}-opti.json`
-  const toKeep = ([ruleName, ruleNode]) => {
+  const toKeep = (ruleNode) => {
     return (
-      rulesToKeep.includes(ruleName) ||
+      rulesToKeep.includes(ruleNode.dottedName) ||
       'icônes' in ruleNode.rawNode ||
       ruleNode.rawNode.type === 'notification'
     )
   }
-  const foldedRules = serializeParsedRules(constantFolding(engine, toKeep))
+  const toAvoid = (ruleNode) => {
+    return rulesToAvoid.includes(ruleNode.dottedName)
+  }
+
+  const foldedRules = serializeParsedRules(
+    constantFolding(engine, { toKeep, toAvoid })
+  )
 
   for (const ruleName in foldedRules) {
     const rule = foldedRules[ruleName]
