@@ -3,7 +3,7 @@ import {
   defaultLang,
   availableLanguages
 } from '@incubateur-ademe/nosgestesclimat-scripts/utils'
-import Engine from 'publicodes'
+import Engine, { serializeUnit } from 'publicodes'
 import Engine77 from 'publicodes-beta-77'
 import c from 'ansi-colors'
 import yargs from 'yargs'
@@ -145,7 +145,6 @@ export function printResults({ markdownHeader, results, nbTests, markdown }) {
 An error occured while testing the model:
 ${results[0].message}
 `)
-      console.log(`\n</details>`)
     } else {
       console.log(`${c.red('(err)')} An error occured while testing the model:`)
       console.log(`${results[0].message}\n`)
@@ -157,7 +156,7 @@ ${results[0].message}
 
   if (markdown) {
     console.log(markdownHeader)
-    console.log('|:-----|:------|:------|:------:|:-----|')
+    console.log('|:-----|:------|:------|:------:|')
   }
 
   const fails = []
@@ -177,8 +176,10 @@ ${results[0].message}
 
       continue
     }
-    const actualRounded = Math.fround(result.actual)
-    const expectedRounded = Math.fround(result.expected)
+    const actualRounded = Math.fround(result.actual.nodeValue)
+    const actualUnit = serializeUnit(result.actual.unit)
+    const expectedRounded = Math.fround(result.expected.nodeValue)
+    const expectedUnit = serializeUnit(result.expected.unit)
     const diff =
       actualRounded && expectedRounded ? actualRounded - expectedRounded : 0
 
@@ -189,18 +190,21 @@ ${results[0].message}
         console.log(
           fmtGHActionErr(
             actualRounded,
+            actualUnit,
             expectedRounded,
+            expectedUnit,
             diff,
             diffPercent,
-            result.rule,
-            result.message
+            result.rule
           )
         )
       } else {
         fails.push(
           fmtCLIErr(
             actualRounded,
+            actualUnit,
             expectedRounded,
+            expectedUnit,
             diff,
             diffPercent,
             result.rule,
@@ -211,9 +215,7 @@ ${results[0].message}
     }
   }
 
-  if (markdown) {
-    console.log(`\n</details>`)
-  } else {
+  if (!markdown) {
     const nbFails = fails.length
     fails.forEach((fail) => console.log(fail))
     console.log(`\n${c.green('OK')} ${nbTests - nbFails}/${nbTests}`)
@@ -227,18 +229,35 @@ function formatValueInKgCO2e(value) {
   return Math.fround(value).toLocaleString('en-us')
 }
 
-function fmtCLIErr(actual, expected, diff, diffPercent, rule, message) {
+function fmtCLIErr(
+  actual,
+  actualUnit,
+  expected,
+  expectedUnit,
+  diff,
+  diffPercent,
+  rule,
+  message
+) {
   const color = diffPercent <= 1 ? c.yellow : c.red
   const sign = diff > 0 ? '+' : diff < 0 ? '-' : ''
   const hd = color(diffPercent <= 1 ? '(warn)' : '(err)')
-  return `${color(hd)} ${c.magenta(rule)}:${message ? `\n${message}` : ''} ${formatValueInKgCO2e(actual)} ${c.dim.italic('actual')} != ${formatValueInKgCO2e(expected)} ${c.dim.italic('expected')} (${color(sign + diffPercent)}%)`
+  return `${color(hd)} ${c.magenta(rule)}:${message ? `\n${message}` : ''} ${formatValueInKgCO2e(actual)} ${c.dim.italic(actualUnit ?? '')} != ${formatValueInKgCO2e(expected)} ${c.dim.italic(expectedUnit ?? '')} (${color(sign + diffPercent)}%)`
 }
 
-function fmtGHActionErr(expected, actual, diff, diffPercent, name, message) {
+function fmtGHActionErr(
+  actual,
+  actualUnit,
+  expected,
+  expectedUnit,
+  diff,
+  diffPercent,
+  name
+) {
   // const color =
   //   diffPercent <= 1 ? 'sucess' : diffPercent > 5 ? 'critical' : 'important'
   // const sign = diff > 0 ? '%2B' : '-'
-  return `| ${name} | ${actual.toLocaleString('en-us')} | ${expected.toLocaleString('en-us')} | ${
+  return `| ${name} | ${actual.toLocaleString('en-us')} ${actualUnit ? `_${actualUnit}_` : ''} | ${expected.toLocaleString('en-us')} ${expectedUnit ? `_${expectedUnit}_` : ''} | **${
     diff > 0 ? '+' : '-'
-  }${diffPercent}% | ${message ?? ''} |`
+  }${diffPercent}%** |`
 }

@@ -57,8 +57,8 @@ for (const personaName in localPersonas) {
   }
 
   for (const rule in optimRules) {
-    const actual = baseEngine.evaluate(rule).nodeValue
-    const expected = optimEngine.evaluate(rule).nodeValue
+    const actual = baseEngine.evaluate(rule)
+    const expected = optimEngine.evaluate(rule)
     results.push({ type: 'result', rule, actual, expected })
   }
 

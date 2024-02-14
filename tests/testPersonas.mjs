@@ -47,8 +47,7 @@ for (const personaName in localPersonas) {
   const results = []
 
   if (markdown) {
-    console.log(`<details>`)
-    console.log(`<summary><code>${personaName}</code></summary>\n`)
+    console.log(`#### ${personaName}\n`)
   } else {
     console.log(
       `[ Test persona ${c.magenta(personaName)} regression against ${c.green(version)} ]\n`
@@ -73,13 +72,13 @@ for (const personaName in localPersonas) {
       continue
     }
 
-    const local = localEngine.evaluate(rule).nodeValue
-    const prod = prodEngine.evaluate(rule).nodeValue
+    const local = localEngine.evaluate(rule)
+    const prod = prodEngine.evaluate(rule)
     results.push({ type: 'result', rule, actual: local, expected: prod })
   }
 
   printResults({
-    markdownHeader: `| Règle | PR | ${version} | Δ (%) | Message |`,
+    markdownHeader: `| Règle | PR | ${version} | Δ (%) |`,
     results,
     nbTests: nbRules,
     markdown
