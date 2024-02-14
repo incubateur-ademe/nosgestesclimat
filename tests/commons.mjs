@@ -143,7 +143,9 @@ export function printResults({ markdownHeader, results, nbTests, markdown }) {
     if (markdown) {
       console.log(`
 An error occured while testing the model:
-${results[0].message}
+
+~~~${results[0].message}
+~~~
 `)
     } else {
       console.log(`${c.red('(err)')} An error occured while testing the model:`)
@@ -156,7 +158,7 @@ ${results[0].message}
 
   if (markdown) {
     console.log(markdownHeader)
-    console.log('|:-----|:------|:------|:------:|')
+    console.log('|:-----|:------|:------|:-------|')
   }
 
   const fails = []
@@ -257,7 +259,7 @@ function fmtGHActionErr(
   // const color =
   //   diffPercent <= 1 ? 'sucess' : diffPercent > 5 ? 'critical' : 'important'
   // const sign = diff > 0 ? '%2B' : '-'
-  return `| ${name} | ${actual.toLocaleString('en-us')} ${actualUnit ? `_${actualUnit}_` : ''} | ${expected.toLocaleString('en-us')} ${expectedUnit ? `_${expectedUnit}_` : ''} | **${
+  return `| <code>${name}</code> | ${actual.toLocaleString('en-us')} ${actualUnit ? `_${actualUnit}_` : ''} | ${expected.toLocaleString('en-us')} ${expectedUnit ? `_${expectedUnit}_` : ''} | **${
     diff > 0 ? '+' : '-'
   }${diffPercent}%** |`
 }
