@@ -220,9 +220,10 @@ An error occured while testing the model:
   if (!markdown) {
     const nbFails = fails.length
     fails.forEach((fail) => console.log(fail))
-    console.log(`\n${c.green('OK')} ${nbTests - nbFails}/${nbTests}`)
     if (nbFails > 0) {
-      console.log(`${c.red('FAIL')} ${nbFails}/${nbTests}`)
+      console.log(`\n${c.red('DIFF')} ${nbFails}/${nbTests}`)
+    } else {
+      console.log(`\n${c.green('OK')} ${nbTests}/${nbTests}`)
     }
   }
 }
@@ -243,8 +244,7 @@ function fmtCLIErr(
 ) {
   const color = diffPercent <= 1 ? c.yellow : c.red
   const sign = diff > 0 ? '+' : diff < 0 ? '-' : ''
-  const hd = color(diffPercent <= 1 ? '(warn)' : '(err)')
-  return `${color(hd)} ${c.magenta(rule)}:${message ? `\n${message}` : ''} ${formatValueInKgCO2e(actual)} ${c.dim.italic(actualUnit ?? '')} != ${formatValueInKgCO2e(expected)} ${c.dim.italic(expectedUnit ?? '')} (${color(sign + diffPercent)}%)`
+  return `${c.magenta(rule)}: ${color('(' + c.bold(sign + diffPercent) + '%)')} ${message ? `\n${message}` : ''}\n  ${c.dim('actual: ') + formatValueInKgCO2e(actual)} ${c.dim.italic(actualUnit ?? '')}\n  ${c.dim('expected: ') + formatValueInKgCO2e(expected)} ${c.dim.italic(expectedUnit ?? '')}`
 }
 
 function fmtGHActionErr(
