@@ -60,7 +60,7 @@ export function compressRules(engine, jsonPathWithoutExtension) {
     }
   }
 
-  writeFileSync(destPath, JSON.stringify(foldedRules, null, 2))
+  writeFileSync(destPath, JSON.stringify(foldedRules))
 
   return Object.keys(foldedRules).length
 }
