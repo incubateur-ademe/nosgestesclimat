@@ -173,13 +173,11 @@ logement . se chauffer au bois:
     Nous pourrons par la suite l'adapter en fonction du rendement des installations résidentielles.
 
 logement . se chauffer au bois . recalcul:
-  formule:
-    recalcul:
-      règle: logement . chauffage . bois . empreinte
-      avec:
-        logement . chauffage . bois . présent: oui
-        logement . chauffage . bois . type: "'granulés'"
-        logement . chauffage . bois . type . granulés . consommation: recalcul . consommation
+  valeur: logement . chauffage . bois . empreinte
+  contexte:
+    logement . chauffage . bois . présent: oui
+    logement . chauffage . bois . type: "'granulés'"
+    logement . chauffage . bois . type . granulés . consommation: recalcul . consommation
   note: On considère un chauffage via granulés.
 
 logement . se chauffer au bois . recalcul . consommation:
@@ -501,34 +499,26 @@ logement . mutualiser son logement . empreinte partagée:
       - divers . ameublement
 
 logement . mutualiser son logement . empreinte partagée . logement:
-  formule:
-    recalcul:
-      règle: logement
-      avec:
-        logement . habitants: logement . habitants + nombre colocataires
-        logement . vacances: 0
+  valeur: logement
+  contexte:
+    logement . habitants: logement . habitants + nombre colocataires
+    logement . vacances: 0
   note: On fait l'hypothèse que les vacances ne seront pas partagées avec le nouveau colocataire.
 
 logement . mutualiser son logement . empreinte partagée . divers:
 logement . mutualiser son logement . empreinte partagée . divers . numérique:
-  formule:
-    recalcul:
-      règle: divers . numérique . appareils
-      avec:
-        logement . habitants: logement . habitants + nombre colocataires
+  valeur: divers . numérique . appareils
+  contexte:
+    logement . habitants: logement . habitants + nombre colocataires
 
 logement . mutualiser son logement . empreinte partagée . divers . électroménager:
-  formule:
-    recalcul:
-      règle: divers . électroménager . appareils
-      avec:
-        logement . habitants: logement . habitants + nombre colocataires
+  valeur: divers . électroménager . appareils
+  contexte:
+    logement . habitants: logement . habitants + nombre colocataires
 
 logement . mutualiser son logement . empreinte partagée . divers . ameublement:
-  formule:
-    recalcul:
-      règle: divers . ameublement
-      avec:
-        logement . habitants: logement . habitants + nombre colocataires
-        divers . ameublement . meubles . matelas: 0
-        divers . ameublement . meubles . lit: 0
+  valeur: divers . ameublement
+  contexte:
+    logement . habitants: logement . habitants + nombre colocataires
+    divers . ameublement . meubles . matelas: 0
+    divers . ameublement . meubles . lit: 0
