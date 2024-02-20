@@ -26,7 +26,7 @@ export function AppContextProvider({
   children: React.ReactNode
 }) {
   const [appContext, dispatch] = useReducer(appContextReducer, {
-    engine: new Engine(rules),
+    engine: initialEngine,
     currentPersona: defaultPersona
   })
 
