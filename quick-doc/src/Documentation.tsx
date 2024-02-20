@@ -19,12 +19,16 @@ export default function Documentation({ baseUrl }: DocumentationProps) {
 
   const { current: renderers } = useRef({
     Link,
-    Text: ({ children }) => <ReactMardown children={children} />
+    Text: ({ children }) => (
+      <div className="markdown">
+        <ReactMardown children={children} />
+      </div>
+    )
   } as ComponentProps<typeof RulePage>['renderers'])
 
   return (
-    <div>
-      <header className="border-primary-200 align-center flex items-center justify-between gap-1 border-b p-4">
+    <div className="min-h-100">
+      <header className="align-center flex items-center justify-between gap-1 border-b border-gray-300 px-8 py-4">
         <h2 className="font-semibold">⚡️ QuickDoc</h2>
         <PersonasHeader />
       </header>
@@ -43,21 +47,24 @@ export default function Documentation({ baseUrl }: DocumentationProps) {
 function PersonasHeader() {
   const { currentPersona } = useContext(AppContext)
   const dispatch = useContext(AppDispatchContext)
+  const personasEntries = Object.entries(personas)
 
   return (
     <div className="">
-      {Object.entries(personas).map(([key, persona]) => {
-        return key === currentPersona ? (
+      {personasEntries.map(([key, persona], i) => {
+        const btnClass =
+          'border-b border-t border-gray-300 hover:bg-primary-200 px-3 py-1 ' +
+          (i === 0
+            ? 'rounded-l-md border-l'
+            : i === personasEntries.length - 1
+              ? 'rounded-r-md border-r border-l'
+              : 'border-l') +
+          (key === currentPersona ? ' text-primary-500 bg-primary-200' : '')
+
+        return (
           <button
             key={key}
-            className="bg-primary-200 border-primary-200 hover:bg-primary-200 mx-2 rounded-md border px-2 py-1"
-          >
-            {persona.nom}
-          </button>
-        ) : (
-          <button
-            key={key}
-            className="border-primary-200 hover:bg-primary-200 mx-2 rounded-md border px-2 py-1"
+            className={btnClass}
             onClick={() => {
               dispatch({
                 type: 'setCurrentPersona',

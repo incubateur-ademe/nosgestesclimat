@@ -40,8 +40,31 @@ export default {
           100: '#F8F8F7',
           200: '#E3E3DB'
         }
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            blockquote: {
+              'font-style': 'normal',
+              'border-left': 'none',
+              'padding-left': '0',
+              'border-radius': '1rem',
+              padding: '0.5rem',
+              'background-color': 'grey',
+              p: {
+                margin: '0.5rem'
+              },
+              'p:first-of-type::before': {
+                content: 'none'
+              },
+              'p:first-of-type::after': {
+                content: 'none'
+              }
+            }
+          }
+        }
       }
     }
   },
-  plugins: []
+  plugins: [require('@tailwindcss/typography')]
 }
