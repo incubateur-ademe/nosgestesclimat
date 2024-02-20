@@ -163,6 +163,7 @@ An error occured while testing the model:
 
   const fails = []
 
+  results.sort((a, b) => a.rule.localeCompare(b.rule))
   for (const result of results) {
     if (result.type === 'warning') {
       if (!markdown) {
@@ -178,12 +179,21 @@ An error occured while testing the model:
 
       continue
     }
-    const actualRounded = Math.fround(result.actual.nodeValue)
+    const actualRounded =
+      result.actual.nodeValue == null
+        ? result.actual.nodeValue
+        : Math.fround(result.actual.nodeValue)
     const actualUnit = serializeUnit(result.actual.unit)
-    const expectedRounded = Math.fround(result.expected.nodeValue)
+    const expectedRounded =
+      result.expected.nodeValue == null
+        ? result.expected.nodeValue
+        : Math.fround(result.expected.nodeValue)
     const expectedUnit = serializeUnit(result.expected.unit)
+
     const diff =
-      actualRounded && expectedRounded ? actualRounded - expectedRounded : 0
+      isFinite(actualRounded) && isFinite(expectedRounded)
+        ? actualRounded - expectedRounded
+        : 0
 
     if (diff !== 0) {
       const diffPercent = Math.abs(Math.round((diff / expectedRounded) * 100))
@@ -220,15 +230,16 @@ An error occured while testing the model:
   if (!markdown) {
     const nbFails = fails.length
     fails.forEach((fail) => console.log(fail))
-    console.log(`\n${c.green('OK')} ${nbTests - nbFails}/${nbTests}`)
     if (nbFails > 0) {
-      console.log(`${c.red('FAIL')} ${nbFails}/${nbTests}`)
+      console.log(`\n${c.red('DIFF')} ${nbFails}/${nbTests}`)
+    } else {
+      console.log(`\n${c.green('OK')} ${nbTests}/${nbTests}`)
     }
   }
 }
 
-function formatValueInKgCO2e(value) {
-  return Math.fround(value).toLocaleString('en-us')
+function formatValue(value) {
+  return value === null ? 'null' : Math.fround(value).toLocaleString('en-us')
 }
 
 function fmtCLIErr(
@@ -243,8 +254,7 @@ function fmtCLIErr(
 ) {
   const color = diffPercent <= 1 ? c.yellow : c.red
   const sign = diff > 0 ? '+' : diff < 0 ? '-' : ''
-  const hd = color(diffPercent <= 1 ? '(warn)' : '(err)')
-  return `${color(hd)} ${c.magenta(rule)}:${message ? `\n${message}` : ''} ${formatValueInKgCO2e(actual)} ${c.dim.italic(actualUnit ?? '')} != ${formatValueInKgCO2e(expected)} ${c.dim.italic(expectedUnit ?? '')} (${color(sign + diffPercent)}%)`
+  return `${c.magenta(rule)}: ${color('(' + c.bold(sign + diffPercent) + '%)')} ${message ? `\n${message}` : ''}\n  ${c.dim('actual: ') + formatValue(actual)} ${c.dim.italic(actualUnit ?? '')}\n  ${c.dim('expected: ') + formatValue(expected)} ${c.dim.italic(expectedUnit ?? '')}`
 }
 
 function fmtGHActionErr(
@@ -259,7 +269,7 @@ function fmtGHActionErr(
   // const color =
   //   diffPercent <= 1 ? 'sucess' : diffPercent > 5 ? 'critical' : 'important'
   // const sign = diff > 0 ? '%2B' : '-'
-  return `| <code>${name}</code> | ${actual.toLocaleString('en-us')} ${actualUnit ? `_${actualUnit}_` : ''} | ${expected.toLocaleString('en-us')} ${expectedUnit ? `_${expectedUnit}_` : ''} | **${
+  return `| <code>${name}</code> | ${formatValue(actual)} ${actualUnit ? `_${actualUnit}_` : ''} | ${formatValue(expected)} ${expectedUnit ? `_${expectedUnit}_` : ''} | **${
     diff > 0 ? '+' : '-'
   }${diffPercent}%** |`
 }

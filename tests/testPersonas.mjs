@@ -37,7 +37,9 @@ const localEngine = new Engine(localRules, { logger: disabledLogger })
 const prodEngine =
   // TODO: remove this when the production use the latest version
   // of publicodes.
-  new Engine77(prodRules, { logger: disabledLogger })
+  version === 'latest'
+    ? new Engine77(prodRules, { logger: disabledLogger })
+    : new Engine(prodRules, { logger: disabledLogger })
 
 const nbRules = Object.keys(localRules).length
 
