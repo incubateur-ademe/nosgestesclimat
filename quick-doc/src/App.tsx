@@ -1,31 +1,56 @@
-import {
-  Route,
-  createBrowserRouter,
-  createRoutesFromElements,
-  RouterProvider
-} from 'react-router-dom'
-import Documentation from './Documentation'
-import { AppContextProvider } from './AppContext'
+'use client'
 
-const baseUrl = process.env.NODE_ENV === 'development' ? '' : '/nosgestesclimat'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { AppContextProvider } from './AppContext'
+import { pathTo } from './Nav'
+import { lazy, Suspense } from 'react'
+import Layout from './Layout'
+import Loader from './Loader'
+import { ErrorBoundary } from 'react-error-boundary'
+import errorRender from './Errors'
+
+const DocumentationPage = lazy(() => import('./DocumentationPage'))
+const PersonasReportsPage = lazy(() => import('./PersonasReportsPage'))
+
+function RouteWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <ErrorBoundary fallbackRender={errorRender}>
+      <Suspense fallback={<Loader />}>{children}</Suspense>
+    </ErrorBoundary>
+  )
+}
+
+const router = createBrowserRouter([
+  {
+    path: pathTo('home'),
+    element: <Layout />,
+    children: [
+      {
+        path: 'doc/*',
+        element: (
+          <RouteWrapper>
+            <DocumentationPage />
+          </RouteWrapper>
+        )
+      },
+      {
+        path: 'personas/*',
+        element: (
+          <RouteWrapper>
+            <PersonasReportsPage />
+          </RouteWrapper>
+        )
+      }
+    ]
+  }
+])
 
 export default function App() {
   return (
     <div className="App">
-      <RouterProvider
-        router={createBrowserRouter(
-          createRoutesFromElements([
-            <Route
-              path={`${baseUrl}/*`}
-              element={
-                <AppContextProvider>
-                  <Documentation baseUrl={baseUrl} />
-                </AppContextProvider>
-              }
-            />
-          ])
-        )}
-      />
+      <AppContextProvider>
+        <RouterProvider router={router} />
+      </AppContextProvider>
     </div>
   )
 }
