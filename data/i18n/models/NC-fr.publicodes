@@ -153,3 +153,73 @@ transport . voiture . climatisation:
   note: |
     L'idée ici est de prendre en compte une part des émissions liées aux gaz fluorés issus des climatisations des véhicules en France via le total des émissions dues à ces gaz sur le secteur du transport (voitures et VUL diesel, essence, GNV, GPL, électrique).
     Sachant que la distance moyenne par véhicule a été adaptée à la Nouvelle-Calédonie, les 12200 km/voitures ont directement été rentrés dans le calcul ici. Ainsi les calculs se basent uniquement sur les données de métropole. Aucune donnée similaire pour la Nouvelle-Calédonie a été trouvée. 
+
+
+transport . voiture . construction:
+  note: |
+    Nous utilisons l'étude [FNH-Carbone4](https://github.com/betagouv/ecolab-data/files/5945898/vehicule_electrique_rapport.pdf).
+
+    Pour l'instant, nous n'avons que deux gabarits, la citadine et la berline. Dès lors, en ce qui concerne les véhicules "moyen", VUL, SUV,  nous avons fait le choix de faire une approximation de l'empreinte via le poids en considérant, d'un côté les citadines et véhicules moyens, de l'autre les berlines, VUL et SUV.
+
+    |                              | Poids thermique (kg) | Poids électrique (kg) | Source               |
+    |------------------------------|----------------------|-----------------------|----------------------|
+    | Citadine                     | 1200                 | 1500                  | Etude Carbone 4      |
+    | Véhicule moyen (type Mégane) | 1250                 | 1600                  | Données constructeur |
+    | Berline                      | 1500                 | 2000                  | Etude Carbone 4      |
+    | VUL & Pickup*                | 1800                 | 1800                  | Données constructeur |
+    | SUV (type Audi Q3)           | 1500                 | 1800                  | Données constructeur |
+
+    *Pour le VUL & Pickup, la masse thermique est basée sur une estimation entre les camionettes type  kangoo (1400kg), et les pickups type Toyota Hilux ou Ford Ranger (2200kg). Sachant qu’il n’y a pas de Pickups électriques en Nouvelle-Calédonie, la valeur des VUL électrique initialement choisi par NGC a été conservée. 
+
+    p. 12 de l'étude de Carbone 4:
+    ![](https://user-images.githubusercontent.com/1177762/107264406-3afdd980-6a43-11eb-87ad-a09681240949.png)
+
+    Nous prenons uniquement en compte la "production et fin de vie" ainsi que les données de 2016 plutôt que le scénario prospectif 2030.
+
+    p. 57 et 58.
+
+    ![](https://user-images.githubusercontent.com/1177762/107265071-1eae6c80-6a44-11eb-9b51-c2aee3bfcf3c.png)
+    ![](https://user-images.githubusercontent.com/1177762/107265098-2706a780-6a44-11eb-8681-7901f00e057b.png)
+
+    Nous avons choisi de ne pas retrancher les "crédits de recyclage" correspondant à des émissions évitées via l'utilisation de matériaux recyclés issus du démantèlement d'une voiture, pour le production de nouveaux produits manufacturés.
+    Nous prenons l'hypothèse que l'empreinte réduite bénéficie à celui qui achète le produit issu du recyclage et non pas à celui qui achète un produit amené à être recyclé.
+
+
+transport . voiture . construction . barème thermique:
+  formule:
+    variations:
+      - si:
+        une de ces conditions:
+          - gabarit = 'petite'
+          - gabarit = 'moyenne'
+        alors: 6700+1051*1.225
+      - si:
+        une de ces conditions:
+          - gabarit = 'berline'
+          - gabarit = 'SUV'
+          - gabarit = 'VUL'
+        alors: 7600*1.1+1051*1.650
+  unité: kgCO2e
+  note : |
+    En Nouvelle-Calédonie, Il y a plus de SUV, VUL et Pickup que de berline. Ainsi, la masse moyenne entre le SUV et VUL & pickup a été estimé à 10% plus importante que la masse d’une berline (à partir de masse dans le tableau). Les émissions du groupe regroupant : berline, SUV, VUL et pickup est augmenté de 10% (7600+10%)
+    La Nouvelle-Calédonie importe aussi ses véhicules d’Asie ou d’Europe. Les distances parcourues en transport routier sont négligées, les distances parcourues en fret sont estimées à 23 000km. (https://www.searates.com/fr/services/distances-time/). Le facteur d’émission de fret Ro-Ro chargement moyen est de 0.0457 kgCO2e/t.km (https://base-empreinte.ademe.fr/donnees/jeu-donnees). Il faut donc ajouter 1051kgCO2e/ton (pour petites et moyennes voitures nous considérons 1 225 kg, pour SUV et VUL et pickups, nous considérons 1 650 kg.
+
+
+transport . voiture . construction . barème électrique:
+  formule:
+    variations:
+      - si:
+        une de ces conditions:
+          - gabarit = 'petite'
+          - gabarit = 'moyenne'
+        alors: 10200+151*1.550
+      - si:
+        une de ces conditions:
+          - gabarit = 'berline'
+          - gabarit = 'SUV'
+          - gabarit = 'VUL'
+        alors: 20200+1051*2.000
+  unité: kgCO2e
+  note : |
+    En Nouvelle-Calédonie, les véhicules électriques sont encore très peu développés. Les estimations d’émissions faite pour la construction de la berline comme référence de « grand » véhicule électrique sont conservées
+    La Nouvelle-Calédonie importe aussi ses véhicules d’Asie ou d’Europe. Les distances parcourues en transport routier sont négligées, les distances parcourues en fret sont estimées à 23 000km. (https://www.searates.com/fr/services/distances-time/). Le facteur d’émission de fret Ro-Ro chargement moyen est de 0.0457 kgCO2e/t.km (https://base-empreinte.ademe.fr/donnees/jeu-donnees). Il faut donc ajouter 1051kgCO2e/ton (pour petites et moyennes voitures électriques nous considérons 1 550 kg, pour les berlines, nous considérons 2 000 kg.
