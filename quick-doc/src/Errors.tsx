@@ -4,6 +4,7 @@ export default function errorRender({
   error,
   resetErrorBoundary
 }: FallbackProps) {
+  console.error(error)
   return (
     <div role="alert" className="bg-red-100 p-4">
       <p className="font-bold">Une erreur est survenue:</p>

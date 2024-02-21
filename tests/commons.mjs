@@ -269,7 +269,7 @@ function fmtGHActionErr(
   // const color =
   //   diffPercent <= 1 ? 'sucess' : diffPercent > 5 ? 'critical' : 'important'
   // const sign = diff > 0 ? '%2B' : '-'
-  return `| <code>${name}</code> | ${formatValue(actual)} ${actualUnit ? `_${actualUnit}_` : ''} | ${formatValue(expected)} ${expectedUnit ? `_${expectedUnit}_` : ''} | **${
+  return `| \`${name}\` | ${formatValue(actual)} ${actualUnit ? `_${actualUnit}_` : ''} | ${formatValue(expected)} ${expectedUnit ? `_${expectedUnit}_` : ''} | **${
     diff > 0 ? '+' : '-'
   }${diffPercent}%** |`
 }

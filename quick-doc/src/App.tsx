@@ -23,7 +23,11 @@ function RouteWrapper({ children }: { children: React.ReactNode }) {
 const router = createBrowserRouter([
   {
     path: pathTo('home'),
-    element: <Layout />,
+    element: (
+      <ErrorBoundary fallbackRender={errorRender}>
+        <Layout />
+      </ErrorBoundary>
+    ),
     children: [
       {
         path: 'doc/*',

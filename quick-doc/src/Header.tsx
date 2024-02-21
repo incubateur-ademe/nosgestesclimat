@@ -12,8 +12,12 @@ export default function Header() {
           <Link to={pathTo('home')}>⚡️ QuickDoc</Link>
         </h2>
         <div className="ml-4 flex gap-2">
-          <Link to={pathTo('doc')}>Documentation</Link>
-          <Link to={pathTo('personas')}>Personas</Link>
+          <Link className="hover:text-primary-400" to={pathTo('doc')}>
+            Documentation
+          </Link>
+          <Link className="hover:text-primary-400" to={pathTo('personas')}>
+            Tests
+          </Link>
         </div>
       </div>
       <PersonasHeader />

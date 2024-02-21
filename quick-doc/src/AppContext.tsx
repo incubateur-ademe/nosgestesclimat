@@ -1,4 +1,4 @@
-import { Context, Dispatch, createContext, useReducer } from 'react'
+import { Context, Dispatch, createContext, useEffect, useReducer } from 'react'
 import Engine from 'publicodes'
 
 import rules from '../../public/co2-model.FR-lang.fr.json'
@@ -29,6 +29,12 @@ export function AppContextProvider({
     engine: initialEngine,
     currentPersona: defaultPersona
   })
+
+  // NOTE(@EmileRolley): this is needed to rerender the engine when the compiled rules change.
+  // Could we find a better way to do this?
+  useEffect(() => {
+    dispatch({ type: 'setEngine', engine: initialEngine })
+  }, [initialEngine])
 
   return (
     <AppContext.Provider value={appContext}>

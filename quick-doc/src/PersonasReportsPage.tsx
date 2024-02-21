@@ -3,15 +3,19 @@ import remarkGfm from 'remark-gfm'
 import Loader from './Loader'
 import { useContext, useEffect, useState } from 'react'
 import { AppContext } from './AppContext'
-import res from '../reports/res.md?raw'
+import axios from 'axios'
 
 export default function PersonasReportsPage() {
   const { currentPersona } = useContext(AppContext)
   const [report, setReport] = useState<string | null>(null)
 
+  // TODO: cache the reports
   useEffect(() => {
-    setReport(res)
-  }, [currentPersona, res])
+    setReport(null)
+    axios.get(`http://localhost:4000/${currentPersona}`).then((response) => {
+      setReport(response.data)
+    })
+  }, [currentPersona])
 
   if (report == null || report === '') {
     return <Loader />
