@@ -411,3 +411,37 @@ transport . deux roues . km annuels moyen:
   unité: km
   note: |
     Source pour les km journalier utilisé par 2tonnes (environ 0.6km/jour)
+
+
+transport . deux roues . empreinte au km:
+  unité: kgCO2e/km
+  formule:
+    variations:
+      - si: type = 'scooter thermique'
+        alors: 0.0763 + 0.003
+      - si: type = 'scooter électrique'
+        alors: 0.030 – 0.05*(0.052-0.628) + 0.004
+      - si: type = 'moto inf 250'
+        alors: 0.0763 + 0.004
+      - si: type = 'moto sup 250'
+        alors: 0.191 + 0.007
+
+  note: |
+    Cyclomoteur - Mixte - 2018 ; 76,3 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
+
+    Scooter électrique : 30 gCO2e/km/personne ; étude "Assessing the Environmental Performance of New Mobility" de l'International Transport Forum. [Excel disponible ici](https://www.itf-oecd.org/good-to-go-environmental-performance-new-mobility)
+
+    Moto =< 250 cm3 - Mixte - 2018 ; 76,3 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
+
+    Moto > 250 cm3 - Mixte - 2018 ; 191 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
+
+    Les chiffres ci-dessus incluent la fabrication du véhicule, contrairement aux données précédentes (2021).
+    
+    Pour le calcul de l’électrique adapté à la NC :  
+        --> j'ai pris la valeur utilisée pour la France, j'ai retiré la partie due à la production de l'électricité française : -[conssomation (kWh/km) * FE réseau France (kgCO2e/kWh)] et j'y ai ajouté la partie due à la production de l'électricité en NC +[conssomation (kWh/km) * FE réseau NC (kgCO2e/kWh)]
+
+    La Nouvelle-Calédonie importe aussi ses véhicules d’Asie ou d’Europe. Les voitures sont supposées importées de France à un distance de. 
+      --> Les distances parcourues en transport routier sont négligées, les distance parcourue en fret sont estimées à 23 000km. (https://www.searates.com/fr/services/distances-time/). 
+      --> Le facteur d’émission de fret Ro-Ro chargement moyen est de 0.0457 kgCO2e/t.km (https://base-empreinte.ademe.fr/donnees/jeu-donnees). 
+      Donc, il faut donc ajouter 1051kgCO2e/ton * masse. 
+      --> Les masses indiquée par l’ademe sont 0.09t pour le scooter, 0.12t pour le moto <250cm3, et 0.2 pour les moto > 250cm3. Le nombre moyen de passager est 1.1 et la durée de vie en km est 28 800 (https://base-empreinte.ademe.fr/documentation/base-carbone?docLink=Routier2) .  Pour le scooter électrique, nous considérons une batterie d’environ 0.02t soit un scooter d’environ 0.11t. Le calcul est le suivant : 1051*masse/(nombre de passager * durée de vie en km). Nous trouvons que 0.003kgCO2e/km pour le scooter, 0.004kgCO2e/km pour le escooter et la moto moins de 250cm3 et 0.007kgCO2e/km pour les moto de plus de 250cm3
