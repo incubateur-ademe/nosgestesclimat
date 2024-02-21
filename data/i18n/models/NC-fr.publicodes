@@ -71,3 +71,22 @@ transport . voiture . notif carburant:
     C'est ce qu'on appelle le "changement d'affectation des sols" ici à des fins de production de biocarburant. Malheureusement, l'impact sur le climat de ce changement d'affectation est difficile à quantifier et particulièrement incertain.
 
     Nous avons fait le choix d'ajouter cette option dans le test, mais il faut savoir que ce résultat **n'est pas représentatif des conséquences environnementales probables liées à l'utilisation de biocarburants.**
+
+
+transport . voiture . électrique . empreinte au kilomètre:
+  formule:
+    variations:
+      - si: gabarit = 'petite'
+          alors: 0.0159*commun . intensité électricité/0.108
+      - si: gabarit = 'moyenne'
+          alors: 0.0273*commun . intensité électricité/0.108
+      - sinon: 0.0273*commun . intensité électricité/0.108
+  note: |
+    Nous faisons la correspondance suivante entre notre gabarit et les données de la base bilan-GES (au regard des poids des véhicules):
+      - petite -> moyenne entre "entrée de gamme - véhicule léger" 
+      - moyenne -> « cœur de gamme – véhicule compact »
+      - Berline, SUV et VUL et Pickup-> à partir de : "haut de gamme - berline"
+    628 (gCO2E/kWh) correspond au facteur d’émission de la Nouvelle-Calédonie en 2022 (d’après l’observatoire de l’énergie), et 108 (gCO2E/kWh) est le facteur d’émission du réseau utilisé  dans le papier dont sont tirées les facteurs d’émission des véhicules électrique (https://librairie.ademe.fr/cadic/7509/etude-energetique-economique-environnemental-transport-routier-horizon-2040.pdf)
+    Cela ne sert à rien d’adapter pour les pickups électriques car ceux-ci n’existent pas en Nouvelle-Calédonie pour le moment. 
+    Une tentative d’estimation a été faite à partir du document « LES AVIS DE L’ADEME Voitures électriques et bornes de recharge » en comparant la différence entre la courbe de consommation des SUV avec celle des citadines. Le FE trouvé pour les SUV est inférieur au FE des berlines de la base carbone. Ce FE a donc été conservé.
+
