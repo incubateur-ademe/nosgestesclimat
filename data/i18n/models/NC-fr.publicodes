@@ -505,3 +505,54 @@ transport . mobilité douce . autres véhicules à moteur . construction:
     -->Poids autre véhicule estimé à 10kg
     -->FE du porte conteneur: 12gCO2e/tonne.km (donnée par le tableaur de l'ABC)
     -->Distance traversée par le porte-conteneur estimée à 23 000 km (https://www.searates.com/fr/services/distances-time/)
+
+
+transport . vacances . caravane . distance:
+  question: Quelle distance parcourez-vous à l'année en caravane ?
+  par défaut: 0
+  note : |
+    Les caravanes ne sont presque pas (si ce n’est pas du tout utilisée en Nouvelle-Calédonie). Cependant elles sont plus utilisées en Nouvelle-Zélande. Il est probables qu’uniquement les personnes qui y sont allées récemment aient des km.
+    De même les véhicules de ces régions ne sont probablement pas importés depuis la France. Nous n’avons donc pas ajouté les émissions dues au transport de ces véhicules dans le calcul.
+
+
+transport . vacances . camping car . km:
+  titre: km en camping car
+  applicable si: propriétaire
+  question: Quelle distance parcourez-vous à l'année en camping-car ?
+  description: |
+    Attention, ces km de camping-car ne doivent pas être renseignés dans les km voiture (une question à laquelle vous avez probablement déjà répondu), ce sont deux questions différentes.
+  par défaut: 0
+  plancher: 0
+  unité: km
+  note: |
+    Les caravanes ne sont presque pas (si ce n’est pas du tout utilisée en Nouvelle-Calédonie). Cependant elles sont plus utilisées en Nouvelle-Zélande. Il est probable qu’uniquement les personnes qui y sont allées récemment aient des km.
+    De même les véhicules de ces régions ne sont probablement pas importés depuis la France. Nous n’avons donc pas ajouté les émissions dues au transport de ces véhicules dans le calcul.
+
+
+transport . vacances . camping car . empreinte au litre:
+  formule: 2.93
+  unité: kgCO2e/l
+  note: |
+    Source : [Base Carbone]
+
+
+transport . vacances . van . empreinte au litre:
+  formule: 2.93
+  unité: kgCO2e/l
+  note: |
+    Source : [Base Carbone]
+
+
+transport . vacances . van . construction:
+  formule: voiture . gabarit . berline . empreinte * (van . poids / voiture . gabarit . berline . poids) + (1051 *van . poids)
+  unité: kgCO2e
+  note: |
+    On extrapole l'impact de la fabrication d'une caravane car à partir d'un ratio sur le poids et en considérant les données de construction "Berline" (6300 kgCO2e et 1500 kg)
+    Source Figure 6 et tableau 1 [FNH-Carbone4](https://europeanclimate.org/wp-content/uploads/2019/11/quelle-contribution-du-vehicule-electrique-a-la-transition-ecologique-en-france.pdf)
+    On considère un poids de 3t pour le van la limite roulante (avec permis B) est à 3,5t (ce qui laisse 500 kg pour l'aménagement intérieur).
+    
+    Contrairement au caravane et au camping car, les vans sont déjà plus présent en Nouvelle-Calédonie et sont aussi importé d’Europe ou d’Asie. Les distances parcourues en transport routier sont négligées, les distances parcourues en fret sont estimées à 23 000km. (https://www.searates.com/fr/services/distances-time/). Le facteur d’émission de fret Ro-Ro chargement moyen est de 0.0457 kgCO2e/t.km (https://base-empreinte.ademe.fr/donnees/jeu-donnees). Il faut donc ajouter 1051kgCO2e/ton * 3ton
+
+
+transport . vacances . van . km :
+  par défaut: 0
