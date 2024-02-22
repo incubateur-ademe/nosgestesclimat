@@ -141,7 +141,7 @@ function VersionSelector({
   const options = (
     <>
       <option
-        className={version === 'nightly' ? 'selected' : ''}
+        className={version === 'nightly' ? ' selected' : ''}
         value="nightly"
       >
         Nightly (preprod)
@@ -161,9 +161,8 @@ function VersionSelector({
     </select>
   ) : (
     <select
-      className="cursor-pointer rounded border border-gray-200 bg-white px-4 py-2 hover:border-gray-300"
+      className="cursor-pointer rounded border border-gray-300 bg-white px-4 py-2 hover:border-gray-300"
       onChange={(e) => setVersion(versionFromString(e.target.value))}
-      disabled={isDisabled}
     >
       {options}
     </select>

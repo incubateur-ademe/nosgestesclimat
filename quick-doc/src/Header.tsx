@@ -6,8 +6,8 @@ import { Link } from 'react-router-dom'
 
 export default function Header() {
   return (
-    <header className="align-center flex items-center justify-between gap-1 border-b border-gray-300 px-8 py-4">
-      <div className="flex">
+    <header className="align-center flex items-center justify-between gap-1 border-b border-gray-300 bg-white">
+      <div className="mx-8 my-4 flex flex-wrap">
         <h2 className="font-semibold">
           <Link to={pathTo('home')}>⚡️ QuickDoc</Link>
         </h2>
@@ -30,16 +30,11 @@ function PersonasHeader() {
   const dispatch = useContext(AppDispatchContext)
 
   return (
-    <div className="">
-      {personasEntries.map(([key, persona], i) => {
+    <div className="flex h-full flex-wrap gap-1 border-l border-gray-300 px-8 py-4">
+      {personasEntries.map(([key, persona]) => {
         const btnClass =
-          'border-b border-t border-gray-300 hover:bg-primary-200 px-3 py-1 ' +
-          (i === 0
-            ? 'rounded-l-md border-l'
-            : i === personasEntries.length - 1
-              ? 'rounded-r-md border-r border-l'
-              : 'border-l') +
-          (key === currentPersona ? ' text-primary-500 bg-primary-200' : '')
+          'rounded hover:bg-primary-100 px-3 py-1 ' +
+          (key === currentPersona ? ' bg-primary-100 text-primary-500' : '')
 
         return (
           <button
