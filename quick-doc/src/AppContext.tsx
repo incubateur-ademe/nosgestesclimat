@@ -3,12 +3,14 @@ import Engine from 'publicodes'
 
 import rules from '../../public/co2-model.FR-lang.fr.json'
 import { PersonaKey, defaultPersona, personas } from './Personas'
+import ReportManager from './ReportManager'
 
 const initialEngine = new Engine(rules)
 
 export type AppContextType = {
   engine?: typeof initialEngine
   currentPersona?: PersonaKey
+  reportManager?: ReportManager
 }
 
 export const AppContext: Context<AppContextType> = createContext({})
@@ -27,7 +29,8 @@ export function AppContextProvider({
 }) {
   const [appContext, dispatch] = useReducer(appContextReducer, {
     engine: initialEngine,
-    currentPersona: defaultPersona
+    currentPersona: defaultPersona,
+    reportManager: new ReportManager()
   })
 
   // NOTE(@EmileRolley): this is needed to rerender the engine when the compiled rules change.
@@ -57,6 +60,7 @@ export function appContextReducer(
         return state
       }
       return {
+        ...state,
         engine: state.engine.setSituation(
           personas[action.currentPersona].situation
         ),
