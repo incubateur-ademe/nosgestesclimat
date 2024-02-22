@@ -66,11 +66,17 @@ export default function PersonasReportsPage() {
           isDisabled={syncStatus !== 'none'}
         />
       </div>
-      <Markdown
-        remarkPlugins={[remarkGfm]}
-        className="prose prose-lg min-w-full"
-        children={report}
-      />
+      <div className="mt-8 min-w-full rounded border border-gray-200 bg-white px-8 py-4">
+        {report !== null ? (
+          <Markdown
+            remarkPlugins={[remarkGfm]}
+            className="prose prose-lg min-w-full"
+            children={report}
+          />
+        ) : (
+          <TableSkeleton />
+        )}
+      </div>
     </div>
   )
 }
@@ -166,5 +172,47 @@ function VersionSelector({
     >
       {options}
     </select>
+  )
+}
+
+function TableSkeleton() {
+  return (
+    <div class="flex animate-pulse space-x-4">
+      <div class="flex-1 space-y-8 py-1">
+        <div class="h-4 w-36 rounded bg-gray-600"></div>
+        <div class="space-y-6">
+          <div class="grid grid-cols-11 gap-8">
+            <div class="col-span-6 h-4 rounded bg-gray-500"></div>
+            <div class="col-span-2 h-4 rounded bg-gray-500"></div>
+            <div class="col-span-2 h-4 rounded bg-gray-500"></div>
+            <div class="col-span-1 h-4 rounded bg-gray-500"></div>
+          </div>
+          <div class="grid grid-cols-11 gap-8">
+            <div class="col-span-6 h-2 rounded bg-gray-300"></div>
+            <div class="col-span-2 h-2 rounded bg-gray-300"></div>
+            <div class="col-span-2 h-2 rounded bg-gray-300"></div>
+            <div class="col-span-1 h-2 rounded bg-gray-300"></div>
+          </div>
+          <div class="grid grid-cols-11 gap-8">
+            <div class="col-span-6 h-2 rounded bg-gray-300"></div>
+            <div class="col-span-2 h-2 rounded bg-gray-300"></div>
+            <div class="col-span-2 h-2 rounded bg-gray-300"></div>
+            <div class="col-span-1 h-2 rounded bg-gray-300"></div>
+          </div>
+          <div class="grid grid-cols-11 gap-8">
+            <div class="col-span-6 h-2 rounded bg-gray-300"></div>
+            <div class="col-span-2 h-2 rounded bg-gray-300"></div>
+            <div class="col-span-2 h-2 rounded bg-gray-300"></div>
+            <div class="col-span-1 h-2 rounded bg-gray-300"></div>
+          </div>
+          <div class="grid grid-cols-11 gap-8">
+            <div class="col-span-6 h-2 rounded bg-gray-300"></div>
+            <div class="col-span-2 h-2 rounded bg-gray-300"></div>
+            <div class="col-span-2 h-2 rounded bg-gray-300"></div>
+            <div class="col-span-1 h-2 rounded bg-gray-300"></div>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
