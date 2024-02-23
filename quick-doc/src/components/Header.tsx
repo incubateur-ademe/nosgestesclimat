@@ -14,7 +14,7 @@ export default function Header() {
       <Link
         className={
           'hover:test-primary-400 border-b-2' +
-          (location.pathname === path
+          (location.pathname.startsWith(path)
             ? ' border-primary-400 text-primary-500'
             : ' border-transparent')
         }

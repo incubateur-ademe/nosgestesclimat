@@ -10,6 +10,7 @@ import {
 import { AppContext } from '../AppContext'
 import { CheckCircle2, Loader2, Play, XCircle } from 'lucide-react'
 import { Version, versionFromString } from '../Versions'
+import { defaultPersona, personas } from '../Personas'
 
 type SyncStatus = 'none' | 'loading' | 'requested' | 'done' | 'error'
 
@@ -21,6 +22,7 @@ export default function PersonasReportsPage() {
   const [timeElapsed, setTimeElapsed] = useState<number | 'cached' | 'none'>(
     'none'
   )
+  const persona = personas[currentPersona ?? defaultPersona]
 
   const setSyncedReport = (r: string, cached: boolean) => {
     setReport(r)
@@ -74,7 +76,11 @@ export default function PersonasReportsPage() {
   }, [syncStatus])
 
   return (
-    <div className="flex flex-col items-start p-8">
+    <div className="align-center flex flex-col items-start p-8">
+      <h2 className="mb-6 text-4xl font-bold">
+        <span className="mr-2 text-3xl">{persona.icônes}</span> {persona.nom}
+      </h2>
+      <p className="prose mb-6 max-w-7xl">{persona.description}</p>
       <h3 className="mb-8 text-2xl font-bold">Rapport de test</h3>
       <div className="flex items-center gap-2">
         <VersionSelector
