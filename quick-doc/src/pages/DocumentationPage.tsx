@@ -3,9 +3,9 @@ import ReactMardown from 'react-markdown'
 import { ComponentProps, useContext, useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
-import { AppContext } from './AppContext'
-import { pathTo } from './Nav'
-import Loader from './Loader'
+import { AppContext } from '../AppContext'
+import { pathTo } from '../Nav'
+import Loader from '../components/Loader'
 
 const defaultRule = 'bilan'
 

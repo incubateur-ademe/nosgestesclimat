@@ -1,7 +1,7 @@
 import { useContext } from 'react'
-import { AppContext, AppDispatchContext } from './AppContext'
-import { PersonaKey, personasEntries } from './Personas'
-import { Page, pathTo } from './Nav'
+import { AppContext, AppDispatchContext } from '../AppContext'
+import { PersonaKey, personasEntries } from '../Personas'
+import { Page, pathTo } from '../Nav'
 import { Link, useLocation } from 'react-router-dom'
 // import CompilePersonasButton from './CompilePersonasButton'
 
@@ -13,10 +13,10 @@ export default function Header() {
     return (
       <Link
         className={
-          'hover:test-primary-400' +
+          'hover:test-primary-400 border-b-2' +
           (location.pathname === path
-            ? ' border-primary-400 text-primary-500 border-b-2'
-            : '')
+            ? ' border-primary-400 text-primary-500'
+            : ' border-transparent')
         }
         to={path}
       >

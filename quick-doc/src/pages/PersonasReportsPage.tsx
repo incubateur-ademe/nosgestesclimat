@@ -7,9 +7,9 @@ import {
   useEffect,
   useState
 } from 'react'
-import { AppContext } from './AppContext'
+import { AppContext } from '../AppContext'
 import { CheckCircle2, Loader2, Play, XCircle } from 'lucide-react'
-import { Version, versionFromString } from './Versions'
+import { Version, versionFromString } from '../Versions'
 
 type SyncStatus = 'none' | 'loading' | 'requested' | 'done' | 'error'
 

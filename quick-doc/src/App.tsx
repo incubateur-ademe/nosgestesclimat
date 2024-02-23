@@ -1,18 +1,18 @@
 'use client'
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { AppContextProvider } from './AppContext'
+import AppContextProvider from './AppContextProvider'
 import { pathTo } from './Nav'
 import { lazy, Suspense } from 'react'
-import Layout from './Layout'
-import Loader from './Loader'
+import Layout from './components/Layout'
+import Loader from './components/Loader'
 import { ErrorBoundary } from 'react-error-boundary'
-import errorRender from './Errors'
-import SituationCoveragePage from './SituationCoveragePage'
+import errorRender from './components/Errors.tsx'
+import SituationCoveragePage from './pages/SituationCoveragePage'
 
-const DocumentationPage = lazy(() => import('./DocumentationPage'))
-const PersonasReportsPage = lazy(() => import('./PersonasReportsPage'))
-const HomePage = lazy(() => import('./HomePage'))
+const DocumentationPage = lazy(() => import('./pages/DocumentationPage'))
+const PersonasReportsPage = lazy(() => import('./pages/PersonasReportsPage'))
+const HomePage = lazy(() => import('./pages/HomePage'))
 
 function RouteWrapper({ children }: { children: React.ReactNode }) {
   return (
