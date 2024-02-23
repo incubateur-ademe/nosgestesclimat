@@ -1,15 +1,17 @@
 import { Context, Dispatch, createContext, useEffect, useReducer } from 'react'
 import Engine from 'publicodes'
 
-import rules from '../../public/co2-model.FR-lang.fr.json'
 import { PersonaKey, defaultPersona, personas } from './Personas'
 import ReportManager from './ReportManager'
+
+import rules from '../../public/co2-model.FR-lang.fr.json'
 
 const initialEngine = new Engine(rules)
 
 export type AppContextType = {
   engine?: typeof initialEngine
   currentPersona?: PersonaKey
+  // personas?: typeof personas
   reportManager?: ReportManager
 }
 
@@ -38,6 +40,13 @@ export function AppContextProvider({
   useEffect(() => {
     dispatch({ type: 'setEngine', engine: initialEngine })
   }, [initialEngine])
+
+  useEffect(() => {
+    dispatch({
+      type: 'setCurrentPersona',
+      currentPersona: appContext.currentPersona
+    })
+  }, [personas])
 
   return (
     <AppContext.Provider value={appContext}>

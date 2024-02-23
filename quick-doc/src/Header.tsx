@@ -3,6 +3,7 @@ import { AppContext, AppDispatchContext } from './AppContext'
 import { PersonaKey, personasEntries } from './Personas'
 import { pathTo } from './Nav'
 import { Link } from 'react-router-dom'
+import CompilePersonasButton from './CompilePersonasButton'
 
 export default function Header() {
   return (
@@ -30,27 +31,30 @@ function PersonasHeader() {
   const dispatch = useContext(AppDispatchContext)
 
   return (
-    <div className="flex h-full flex-wrap gap-1 border-l border-gray-300 px-8 py-4">
-      {personasEntries.map(([key, persona]) => {
-        const btnClass =
-          'rounded hover:bg-primary-100 px-3 py-1 ' +
-          (key === currentPersona ? ' bg-primary-100 text-primary-500' : '')
+    <div>
+      <div className="flex h-full flex-wrap gap-1 border-l border-gray-300 px-8 py-4">
+        {personasEntries.map(([key, persona]) => {
+          const btnClass =
+            'rounded hover:bg-primary-100 px-3 py-1 ' +
+            (key === currentPersona ? ' bg-primary-100 text-primary-500' : '')
 
-        return (
-          <button
-            key={key}
-            className={btnClass}
-            onClick={() => {
-              dispatch({
-                type: 'setCurrentPersona',
-                currentPersona: key as PersonaKey
-              })
-            }}
-          >
-            {persona.nom}
-          </button>
-        )
-      })}
+          return (
+            <button
+              key={key}
+              className={btnClass}
+              onClick={() => {
+                dispatch({
+                  type: 'setCurrentPersona',
+                  currentPersona: key as PersonaKey
+                })
+              }}
+            >
+              {persona.nom}
+            </button>
+          )
+        })}
+        <CompilePersonasButton />
+      </div>
     </div>
   )
 }

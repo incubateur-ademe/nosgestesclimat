@@ -8,7 +8,7 @@ import {
   useState
 } from 'react'
 import { AppContext } from './AppContext'
-import { CheckCircle2, Loader2, RefreshCw, XCircle } from 'lucide-react'
+import { CheckCircle2, Loader2, Play, XCircle } from 'lucide-react'
 import { Version, versionFromString } from './Versions'
 
 type SyncStatus = 'none' | 'loading' | 'requested' | 'done' | 'error'
@@ -18,35 +18,54 @@ export default function PersonasReportsPage() {
   const [report, setReport] = useState<string | null>(null)
   const [syncStatus, setSyncStatus] = useState<SyncStatus>('none')
   const [version, setVersion] = useState<Version>('nightly')
+  const [timeElapsed, setTimeElapsed] = useState<number | 'cached' | 'none'>(
+    'none'
+  )
 
-  const setSyncedReport = (r: string, _cacheHit: boolean) => {
+  const setSyncedReport = (r: string, cached: boolean) => {
     setReport(r)
+    if (cached) {
+      setTimeElapsed('cached')
+    }
     setSyncStatus('done')
   }
+
   const onError = () => {
     setSyncStatus('error')
   }
 
   useEffect(() => {
-    setReport(null)
-    setSyncStatus('loading')
-    reportManager?.fetchReport(
-      currentPersona,
-      version,
-      setSyncedReport,
-      onError
-    )
+    const cachedReport = reportManager?.getCachedReport(currentPersona, version)
+
+    if (cachedReport) {
+      setReport(cachedReport)
+      setTimeElapsed('cached')
+      setSyncStatus('none')
+    } else {
+      setReport(null)
+      setSyncStatus('none')
+      setTimeElapsed('none')
+    }
+    // reportManager?.fetchReport(
+    //   currentPersona,
+    //   version,
+    //   setSyncedReport,
+    //   setTimeElapsed,
+    //   onError
+    // )
   }, [currentPersona, version])
 
   useEffect(() => {
     if (syncStatus === 'requested') {
       setSyncStatus('loading')
+      setTimeElapsed('none')
       reportManager?.fetchReport(
         currentPersona,
         version,
         setSyncedReport,
+        setTimeElapsed,
         onError,
-        true
+        report !== null
       )
     }
     if (syncStatus === 'done') {
@@ -57,14 +76,20 @@ export default function PersonasReportsPage() {
   }, [syncStatus])
 
   return (
-    <div className="flex flex-col items-end p-8">
-      <div className="flex gap-2">
-        <SyncButton syncStatus={syncStatus} setSyncStatus={setSyncStatus} />
+    <div className="flex flex-col items-start p-8">
+      <h3 className="mb-8 text-2xl font-bold">Rapport de test</h3>
+      <div className="flex items-center gap-2">
         <VersionSelector
           version={version}
           setVersion={setVersion}
           isDisabled={syncStatus !== 'none'}
         />
+        <SyncButton syncStatus={syncStatus} setSyncStatus={setSyncStatus} />
+        {timeElapsed === 'none' ? null : (
+          <span className="text-sm text-gray-500">
+            {timeElapsed === 'cached' ? 'Rapport en cache' : `${timeElapsed}ms`}
+          </span>
+        )}
       </div>
       <div className="mt-8 min-w-full rounded border border-gray-200 bg-white px-8 py-4">
         {report !== null ? (
@@ -74,13 +99,14 @@ export default function PersonasReportsPage() {
             children={report}
           />
         ) : (
-          <TableSkeleton />
+          <TableSkeleton loading={syncStatus === 'loading'} />
         )}
       </div>
     </div>
   )
 }
 
+// TODO: factorize with CompilePersonasButton
 function SyncButton({
   syncStatus,
   setSyncStatus
@@ -92,10 +118,11 @@ function SyncButton({
     case 'none': {
       return (
         <button
-          className="bg-secondary hover:bg-primary-300 flex items-center gap-2 rounded px-4 py-2 text-white"
+          className="bg-primary-500 hover:bg-primary-300 flex items-center gap-2 rounded px-4 py-2 text-white"
           onClick={() => setSyncStatus('requested')}
         >
-          <RefreshCw size={16} />
+          Tester
+          <Play size={16} />
         </button>
       )
     }
@@ -106,6 +133,7 @@ function SyncButton({
           className="flex items-center gap-2 rounded bg-orange-400 px-4 py-2 text-white"
           disabled
         >
+          Chargement
           <Loader2 className="animate-spin" size={16} />
         </button>
       )
@@ -117,10 +145,12 @@ function SyncButton({
           className="flex items-center gap-2 rounded bg-green-500 px-4 py-2 text-white"
           disabled
         >
+          Fait
           <CheckCircle2 size={16} />
         </button>
       )
     }
+
     case 'error': {
       return (
         <button
@@ -132,6 +162,8 @@ function SyncButton({
         </button>
       )
     }
+    default:
+      return null
   }
 }
 
@@ -175,41 +207,41 @@ function VersionSelector({
   )
 }
 
-function TableSkeleton() {
+function TableSkeleton({ loading }: { loading: boolean }) {
   return (
-    <div class="flex animate-pulse space-x-4">
-      <div class="flex-1 space-y-8 py-1">
-        <div class="h-4 w-36 rounded bg-gray-600"></div>
-        <div class="space-y-6">
-          <div class="grid grid-cols-11 gap-8">
-            <div class="col-span-6 h-4 rounded bg-gray-500"></div>
-            <div class="col-span-2 h-4 rounded bg-gray-500"></div>
-            <div class="col-span-2 h-4 rounded bg-gray-500"></div>
-            <div class="col-span-1 h-4 rounded bg-gray-500"></div>
+    <div className={'flex space-x-4' + (loading ? ' animate-pulse' : '')}>
+      <div className="flex-1 space-y-8 py-1">
+        <div className="h-4 w-36 rounded bg-gray-600"></div>
+        <div className="space-y-6">
+          <div className="grid grid-cols-11 gap-8">
+            <div className="col-span-6 h-4 rounded bg-gray-500"></div>
+            <div className="col-span-2 h-4 rounded bg-gray-500"></div>
+            <div className="col-span-2 h-4 rounded bg-gray-500"></div>
+            <div className="col-span-1 h-4 rounded bg-gray-500"></div>
           </div>
-          <div class="grid grid-cols-11 gap-8">
-            <div class="col-span-6 h-2 rounded bg-gray-300"></div>
-            <div class="col-span-2 h-2 rounded bg-gray-300"></div>
-            <div class="col-span-2 h-2 rounded bg-gray-300"></div>
-            <div class="col-span-1 h-2 rounded bg-gray-300"></div>
+          <div className="grid grid-cols-11 gap-8">
+            <div className="col-span-6 h-2 rounded bg-gray-300"></div>
+            <div className="col-span-2 h-2 rounded bg-gray-300"></div>
+            <div className="col-span-2 h-2 rounded bg-gray-300"></div>
+            <div className="col-span-1 h-2 rounded bg-gray-300"></div>
           </div>
-          <div class="grid grid-cols-11 gap-8">
-            <div class="col-span-6 h-2 rounded bg-gray-300"></div>
-            <div class="col-span-2 h-2 rounded bg-gray-300"></div>
-            <div class="col-span-2 h-2 rounded bg-gray-300"></div>
-            <div class="col-span-1 h-2 rounded bg-gray-300"></div>
+          <div className="grid grid-cols-11 gap-8">
+            <div className="col-span-6 h-2 rounded bg-gray-300"></div>
+            <div className="col-span-2 h-2 rounded bg-gray-300"></div>
+            <div className="col-span-2 h-2 rounded bg-gray-300"></div>
+            <div className="col-span-1 h-2 rounded bg-gray-300"></div>
           </div>
-          <div class="grid grid-cols-11 gap-8">
-            <div class="col-span-6 h-2 rounded bg-gray-300"></div>
-            <div class="col-span-2 h-2 rounded bg-gray-300"></div>
-            <div class="col-span-2 h-2 rounded bg-gray-300"></div>
-            <div class="col-span-1 h-2 rounded bg-gray-300"></div>
+          <div className="grid grid-cols-11 gap-8">
+            <div className="col-span-6 h-2 rounded bg-gray-300"></div>
+            <div className="col-span-2 h-2 rounded bg-gray-300"></div>
+            <div className="col-span-2 h-2 rounded bg-gray-300"></div>
+            <div className="col-span-1 h-2 rounded bg-gray-300"></div>
           </div>
-          <div class="grid grid-cols-11 gap-8">
-            <div class="col-span-6 h-2 rounded bg-gray-300"></div>
-            <div class="col-span-2 h-2 rounded bg-gray-300"></div>
-            <div class="col-span-2 h-2 rounded bg-gray-300"></div>
-            <div class="col-span-1 h-2 rounded bg-gray-300"></div>
+          <div className="grid grid-cols-11 gap-8">
+            <div className="col-span-6 h-2 rounded bg-gray-300"></div>
+            <div className="col-span-2 h-2 rounded bg-gray-300"></div>
+            <div className="col-span-2 h-2 rounded bg-gray-300"></div>
+            <div className="col-span-1 h-2 rounded bg-gray-300"></div>
           </div>
         </div>
       </div>

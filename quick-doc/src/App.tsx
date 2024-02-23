@@ -11,6 +11,7 @@ import errorRender from './Errors'
 
 const DocumentationPage = lazy(() => import('./DocumentationPage'))
 const PersonasReportsPage = lazy(() => import('./PersonasReportsPage'))
+const HomePage = lazy(() => import('./HomePage'))
 
 function RouteWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -30,7 +31,15 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: 'doc/*',
+        path: '/',
+        element: (
+          <RouteWrapper>
+            <HomePage />
+          </RouteWrapper>
+        )
+      },
+      {
+        path: pathTo('doc') + '/*',
         element: (
           <RouteWrapper>
             <DocumentationPage />
@@ -38,7 +47,7 @@ const router = createBrowserRouter([
         )
       },
       {
-        path: 'personas/*',
+        path: pathTo('personas') + '/*',
         element: (
           <RouteWrapper>
             <PersonasReportsPage />

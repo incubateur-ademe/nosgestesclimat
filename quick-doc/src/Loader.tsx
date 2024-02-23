@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 
-export default function Loader() {
+export default function Loader({ delay = 500 }: { delay?: number }) {
   const [waiting, setWaiting] = useState(true)
 
   useEffect(() => {
     setTimeout(() => {
       setWaiting(false)
-    }, 500)
+    }, delay)
   }, [])
 
   return waiting ? null : (

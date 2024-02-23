@@ -5,6 +5,7 @@ import { Link, useParams } from 'react-router-dom'
 
 import { AppContext } from './AppContext'
 import { pathTo } from './Nav'
+import Loader from './Loader'
 
 const defaultRule = 'bilan'
 
@@ -25,18 +26,12 @@ export default function DocumentationPage() {
   } as ComponentProps<typeof RulePage>['renderers'])
 
   useEffect(() => {
-    console.log(
-      'new engine:',
-      engine?.getParsedRules()['bilan'].rawNode.formule
-    )
-    console.log(
-      'currentEngine:',
-      currentEngine?.getParsedRules()['bilan'].rawNode.formule
-    )
     setCurrentEngine(engine)
   }, [engine])
 
-  return (
+  return !currentEngine ? (
+    <Loader delay={0} />
+  ) : (
     <div>
       <RulePage
         documentationPath={pathTo('doc')}
