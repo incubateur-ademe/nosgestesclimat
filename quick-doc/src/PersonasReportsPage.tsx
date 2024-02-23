@@ -35,7 +35,12 @@ export default function PersonasReportsPage() {
   }
 
   useEffect(() => {
-    const cachedReport = reportManager?.getCachedReport(currentPersona, version)
+    console.log('currentPersona', currentPersona)
+    if (!currentPersona || !reportManager) {
+      return
+    }
+
+    const cachedReport = reportManager.getCachedReport(currentPersona, version)
 
     if (cachedReport) {
       setReport(cachedReport)
@@ -46,13 +51,6 @@ export default function PersonasReportsPage() {
       setSyncStatus('none')
       setTimeElapsed('none')
     }
-    // reportManager?.fetchReport(
-    //   currentPersona,
-    //   version,
-    //   setSyncedReport,
-    //   setTimeElapsed,
-    //   onError
-    // )
   }, [currentPersona, version])
 
   useEffect(() => {

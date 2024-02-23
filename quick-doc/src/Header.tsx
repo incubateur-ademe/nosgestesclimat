@@ -53,7 +53,6 @@ function PersonasHeader() {
             </button>
           )
         })}
-        <CompilePersonasButton />
       </div>
     </div>
   )

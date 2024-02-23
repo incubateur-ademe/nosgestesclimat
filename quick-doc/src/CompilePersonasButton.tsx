@@ -67,6 +67,9 @@ export default function CompilePersonasButton() {
         </button>
       )
     }
+    default: {
+      return null
+    }
   }
 }
 
