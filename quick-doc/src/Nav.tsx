@@ -1,4 +1,4 @@
-export type Page = 'home' | 'doc' | 'personas'
+export type Page = 'home' | 'doc' | 'personas' | 'situations'
 
 export const baseUrl =
   process.env.NODE_ENV === 'development' ? '' : '/nosgestesclimat'
@@ -11,5 +11,7 @@ export function pathTo(page: Page): string {
       return baseUrl + '/doc'
     case 'personas':
       return baseUrl + '/personas'
+    case 'situations':
+      return baseUrl + '/situations'
   }
 }

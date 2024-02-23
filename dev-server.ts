@@ -3,7 +3,7 @@ import fs from 'fs'
 
 ///------------------ Compiles rules on change ---------------------
 // TODO:
-// - [ ] Add a headless flag: only watch and compile but don't start the server
+// - [ ] Add a flag to only watch and compile but don't start the server
 
 // TODO:
 // - [ ] could be faster if we track the rules in memory and only compile the ones that changed
@@ -22,6 +22,7 @@ const compilationWatcher = fs.watch(
           console.error(`[rules:watcher] received error:\n${err}`)
         })
     }
+    generateSituationCoverage()
   }
 )
 
@@ -36,8 +37,15 @@ const personaWatcher = fs.watch('./personas/', (evt, name) => {
       .catch((err) => {
         console.error(`[personas:watcher] received error:\n${err}`)
       })
+    generateSituationCoverage()
   }
 })
+
+function generateSituationCoverage() {
+  Bun.spawn(['bun', './tests/testSituationCoverage.mjs', '-m'], {
+    stdout: Bun.file('./quick-doc/situation-coverage.md')
+  })
+}
 
 process.on('SIGINT', () => {
   console.log('Caught interrupt signal, closing watchers...')

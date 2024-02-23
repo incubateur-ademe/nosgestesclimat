@@ -49,7 +49,7 @@ for (const personaName in localPersonas) {
   const results = []
 
   if (markdown) {
-    console.log(`#### ${personaName}\n`)
+    console.log(`#### ${localPersonas[personaName].nom}\n`)
   } else {
     console.log(
       `[ Test persona ${c.magenta(personaName)} regression against ${c.green(version)} ]\n`

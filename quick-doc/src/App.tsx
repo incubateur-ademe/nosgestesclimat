@@ -8,6 +8,7 @@ import Layout from './Layout'
 import Loader from './Loader'
 import { ErrorBoundary } from 'react-error-boundary'
 import errorRender from './Errors'
+import SituationCoveragePage from './SituationCoveragePage'
 
 const DocumentationPage = lazy(() => import('./DocumentationPage'))
 const PersonasReportsPage = lazy(() => import('./PersonasReportsPage'))
@@ -51,6 +52,14 @@ const router = createBrowserRouter([
         element: (
           <RouteWrapper>
             <PersonasReportsPage />
+          </RouteWrapper>
+        )
+      },
+      {
+        path: pathTo('situations') + '/*',
+        element: (
+          <RouteWrapper>
+            <SituationCoveragePage />
           </RouteWrapper>
         )
       }

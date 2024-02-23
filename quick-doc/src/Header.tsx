@@ -1,24 +1,40 @@
 import { useContext } from 'react'
 import { AppContext, AppDispatchContext } from './AppContext'
 import { PersonaKey, personasEntries } from './Personas'
-import { pathTo } from './Nav'
-import { Link } from 'react-router-dom'
-import CompilePersonasButton from './CompilePersonasButton'
+import { Page, pathTo } from './Nav'
+import { Link, useLocation } from 'react-router-dom'
+// import CompilePersonasButton from './CompilePersonasButton'
 
 export default function Header() {
+  const location = useLocation()
+  const link = (page: Page, label: string) => {
+    const path = pathTo(page)
+
+    return (
+      <Link
+        className={
+          'hover:test-primary-400' +
+          (location.pathname === path
+            ? ' border-primary-400 text-primary-500 border-b-2'
+            : '')
+        }
+        to={path}
+      >
+        {label}
+      </Link>
+    )
+  }
+
   return (
     <header className="align-center flex items-center justify-between gap-1 border-b border-gray-300 bg-white">
       <div className="mx-8 my-4 flex flex-wrap">
         <h2 className="font-semibold">
           <Link to={pathTo('home')}>⚡️ QuickDoc</Link>
         </h2>
-        <div className="ml-4 flex gap-2">
-          <Link className="hover:text-primary-400" to={pathTo('doc')}>
-            Documentation
-          </Link>
-          <Link className="hover:text-primary-400" to={pathTo('personas')}>
-            Tests
-          </Link>
+        <div className="ml-4 flex gap-4">
+          {link('doc', 'Documentation')}
+          {link('personas', 'Tests')}
+          {link('situations', 'Situations')}
         </div>
       </div>
       <PersonasHeader />

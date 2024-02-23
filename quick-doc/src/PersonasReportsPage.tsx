@@ -119,7 +119,7 @@ function SyncButton({
           className="bg-primary-500 hover:bg-primary-300 flex items-center gap-2 rounded px-4 py-2 text-white"
           onClick={() => setSyncStatus('requested')}
         >
-          Tester
+          Lancer
           <Play size={16} />
         </button>
       )
