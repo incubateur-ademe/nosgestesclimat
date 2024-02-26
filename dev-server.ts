@@ -157,7 +157,7 @@ function compilePersonas() {
     }
   })
   new Response(proc.stdout).text().then((stdout) => {
-    console.log(`[rules:watcher] done:\n${stdout}`)
+    console.log(`[personas:watcher] done:\n${stdout}`)
     io.emit('compilation-status', {
       type: 'ok',
       message: 'Personas mis à jour'
