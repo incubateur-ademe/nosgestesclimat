@@ -1,4 +1,9 @@
-import { getArgs, getLocalRules, getRulesFromAPI } from './commons.mjs'
+import {
+  getArgs,
+  getLocalRules,
+  getRulesFromAPI,
+  getLocalMigrationTable
+} from './commons.mjs'
 import c from 'ansi-colors'
 
 /*
@@ -17,6 +22,8 @@ const prodRules = await getRulesFromAPI(version, country, language)
 const missingMigrationsKeys = []
 const missingMigrationsValues = []
 
+const migrationTable = await getLocalMigrationTable()
+
 let nbMissingMigrations = 0
 for (const ruleName in prodRules) {
   const rule = prodRules[ruleName]
@@ -27,9 +34,11 @@ for (const ruleName in prodRules) {
 
   if ((rule['question'] || rule['par défaut']) && !rule['mosaique']) {
     if (!localRules[ruleName]) {
+      if (Object.keys(migrationTable['keysToMigrate']).includes(ruleName)) {
+        continue
+      }
       nbMissingMigrations++
       missingMigrationsKeys.push(ruleName)
-      continue
     }
 
     if (rule.formule?.['une possibilité']) {
@@ -37,11 +46,26 @@ for (const ruleName in prodRules) {
       const localPossibilities =
         localRules[ruleName].formule['une possibilité']['possibilités']
       const missingProdPossibilities = prodPossibilities.filter(
-        (elt) => !localPossibilities.includes(elt)
+        (elt) =>
+          !localPossibilities.includes(elt) &&
+          !(
+            Object.keys(migrationTable['valuesToMigrate']).includes(ruleName) &&
+            Object.keys(migrationTable['valuesToMigrate'][ruleName]).includes(
+              elt
+            )
+          )
       )
       const missingLocalPossibilities = localPossibilities.filter(
-        (elt) => !prodPossibilities.includes(elt)
+        (elt) =>
+          !prodPossibilities.includes(elt) &&
+          !(
+            Object.keys(migrationTable['valuesToMigrate']).includes(ruleName) &&
+            Object.values(migrationTable['valuesToMigrate'][ruleName]).includes(
+              elt
+            )
+          )
       )
+
       if (
         missingProdPossibilities.length > 0 ||
         missingLocalPossibilities.length > 0
@@ -51,9 +75,7 @@ for (const ruleName in prodRules) {
           ruleName,
           [missingProdPossibilities, missingLocalPossibilities]
         ])
-        continue
       }
-      continue
     }
   }
 }

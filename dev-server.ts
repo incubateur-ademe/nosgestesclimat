@@ -18,6 +18,7 @@ const io = new Server(server, {
 console.log('Initializing server...')
 compileRules()
 compilePersonas()
+compileMigrationTable()
 generateSituationCoverage()
 generateMigrationReport()
 
@@ -54,10 +55,18 @@ const personaWatcher = fs.watch('./personas/', (evt, name) => {
   }
 })
 
+const migrationWatcher = fs.watch('./migration/migration.yaml', (evt, name) => {
+  console.log(`[migration:watcher] ${evt} ${name}`)
+  console.log(`[migration:watcher] compiling migration...`)
+  compileMigrationTable()
+  generateMigrationReport()
+})
+
 process.on('SIGINT', () => {
   console.log('Caught interrupt signal, closing watchers...')
   compilationWatcher.close()
   personaWatcher.close()
+  migrationWatcher.close()
   process.exit(0)
 })
 
@@ -152,6 +161,31 @@ function compilePersonas() {
     io.emit('compilation-status', {
       type: 'ok',
       message: 'Personas mis à jour'
+    })
+  })
+}
+
+function compileMigrationTable() {
+  io.emit('compilation-status', {
+    type: 'compiling',
+    message: 'Fichier de migration en cours de compilation'
+  })
+  const proc = Bun.spawn(['bun', './scripts/migrationToJSON.js'], {
+    onExit: async ({ exitCode }) => {
+      // TODO: find a way to send the error message to the client
+      if (exitCode !== 0) {
+        io.emit('compilation-status', {
+          type: 'error',
+          message: 'Impossible de compiler le fichier de migration'
+        })
+      }
+    }
+  })
+  new Response(proc.stdout).text().then((stdout) => {
+    console.log(`[migration:watcher] done:\n${stdout}`)
+    io.emit('compilation-status', {
+      type: 'ok',
+      message: 'Table de migration mise à jour'
     })
   })
 }

@@ -75,7 +75,7 @@ export function getLocalPersonas(region, lang) {
     })
 }
 
-export function getLocalMigrationFile() {
+export function getLocalMigrationTable() {
   return readFile(`./public/migration.json`, {
     encoding: 'utf8'
   })
