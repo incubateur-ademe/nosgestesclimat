@@ -19,6 +19,7 @@ console.log('Initializing server...')
 compileRules()
 compilePersonas()
 generateSituationCoverage()
+generateMigrationReport()
 
 io.on('connection', (_socket) => {
   console.log('a user connected')
@@ -39,6 +40,7 @@ const compilationWatcher = fs.watch(
       console.log(`[rules:watcher] compiling rules...`)
       compileRules()
       generateSituationCoverage()
+      generateMigrationReport()
     }
   }
 )
@@ -157,5 +159,11 @@ function compilePersonas() {
 function generateSituationCoverage() {
   Bun.spawn(['bun', './tests/testSituationCoverage.mjs', '-m'], {
     stdout: Bun.file('./quick-doc/situation-coverage.md')
+  })
+}
+
+function generateMigrationReport() {
+  Bun.spawn(['bun', './tests/testMigration.mjs', '-m'], {
+    stdout: Bun.file('./quick-doc/migration-report.md')
   })
 }

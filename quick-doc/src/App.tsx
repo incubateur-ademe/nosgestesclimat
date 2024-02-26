@@ -9,6 +9,7 @@ import Loader from './components/Loader'
 import { ErrorBoundary } from 'react-error-boundary'
 import errorRender from './components/Errors.tsx'
 import SituationCoveragePage from './pages/SituationCoveragePage'
+import MigrationReportPage from './pages/MigrationReportPage.tsx'
 
 const DocumentationPage = lazy(() => import('./pages/DocumentationPage'))
 const PersonasReportsPage = lazy(() => import('./pages/PersonasReportsPage'))
@@ -60,6 +61,14 @@ const router = createBrowserRouter([
         element: (
           <RouteWrapper>
             <SituationCoveragePage />
+          </RouteWrapper>
+        )
+      },
+      {
+        path: pathTo('migration') + '/*',
+        element: (
+          <RouteWrapper>
+            <MigrationReportPage />
           </RouteWrapper>
         )
       }

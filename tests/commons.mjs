@@ -75,6 +75,18 @@ export function getLocalPersonas(region, lang) {
     })
 }
 
+export function getLocalMigrationFile() {
+  return readFile(`./public/migration.json`, {
+    encoding: 'utf8'
+  })
+    .then((res) => JSON.parse(res))
+    .catch((e) => {
+      console.error(`No migration file found:`)
+      console.error(e.message)
+      process.exit(1)
+    })
+}
+
 export function getRulesFromAPI(version, region, lang) {
   return fetch(`${API_URL}/${version}/${lang}/${region}/rules`)
     .then((res) => res.json())

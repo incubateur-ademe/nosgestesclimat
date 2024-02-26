@@ -35,6 +35,7 @@ export default function Header() {
           {link('doc', 'Documentation')}
           {link('personas', 'Tests')}
           {link('situations', 'Situations')}
+          {link('migration', 'Migration')}
         </div>
       </div>
       <PersonasHeader />
