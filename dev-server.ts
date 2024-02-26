@@ -1,12 +1,19 @@
 import express from 'express'
+import cors from 'cors'
 import fs from 'fs'
 import { Server } from 'socket.io'
 import { createServer } from 'http'
 
 const app = express()
+app.use(cors())
+
 const server = createServer(app)
 const port = 4000
-const io = new Server(server)
+const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:5173'
+  }
+})
 
 console.log('Initializing server...')
 compileRules()
