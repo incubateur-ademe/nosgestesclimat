@@ -11,6 +11,7 @@ import c from 'ansi-colors'
 export default function safeGetSituation({
   situation,
   everyRules,
+  version = 'current',
   markdown = false
 }) {
   const unsupportedDottedNamesFromSituation = Object.keys(situation).filter(
@@ -18,10 +19,12 @@ export default function safeGetSituation({
       // We check if the dotteName is a rule of the model
       if (!everyRules.includes(ruleName)) {
         if (markdown) {
-          console.log(`>- **${ruleName}** n'existe pas dans le modèle\n>`)
+          console.log(
+            `- **${ruleName}** n'existe pas dans le modèle (_**${version}**_)`
+          )
         } else {
           console.warn(
-            `${c.yellow('(warning:safeGetSituation)')} trying to use ${c.magenta(ruleName)} from the user situation: the rule doesn't exist in the model`
+            `${c.yellow('(warning:safeGetSituation)')} the rule ${c.magenta(ruleName)} doesn't exist in the model (${c.green(version)})`
           )
         }
         return true
@@ -39,11 +42,11 @@ export default function safeGetSituation({
       ) {
         if (markdown) {
           console.log(
-            `>- la réponse **${situation[ruleName]}** de **${ruleName}** n'existe pas dans le modèle\n>`
+            `- la réponse **${situation[ruleName]}** de **${ruleName}** n'existe pas dans le modèle (_**${version}**_)`
           )
         } else {
           console.warn(
-            `${c.yellow('(warning:safeGetSituation)')} error trying to use ${c.magenta(ruleName)} answer from the user situation: ${c.magenta(situation[ruleName])} doesn't exist in the model`
+            `${c.yellow('(warning:safeGetSituation)')} the value ${c.magenta(situation[ruleName])} for the rule ${c.magenta(ruleName)} doesn't exist in the model (${c.green(version)})`
           )
         }
         return false

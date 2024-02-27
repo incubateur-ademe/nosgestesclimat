@@ -42,7 +42,8 @@ export function appContextReducer(
         engine: state.engine.setSituation(
           safeGetSituation({
             situation: personas[action.currentPersona].situation,
-            everyRules: Object.keys(rules)
+            everyRules: Object.keys(rules),
+            version: 'locale'
           })
         ),
         currentPersona: action.currentPersona

@@ -112,39 +112,6 @@ export function getPersonasFromAPI(version, region, lang) {
     })
 }
 
-export function testPersonas(
-  rules,
-  personas,
-  markdown,
-  rulesToTest = ['bilan'],
-  beta77 = false
-) {
-  console.log(`Testing personas (engine: ${beta77 ? 'beta77' : 'v1'})`)
-  console.log(`(It may take a while)`)
-  const engine = beta77
-    ? new Engine77(rules, { logger: disabledLogger })
-    : new Engine(rules, {
-        logger: disabledLogger,
-        allowOrphanRules: true
-      })
-  const personasRules = Object.values(personas)
-  const results = {}
-
-  for (const persona of personasRules) {
-    const safeSituation = safeGetSituation({
-      situation: persona.situation || {},
-      everyRules: Object.keys(rules)
-    })
-    engine.setSituation(safeSituation)
-    results[persona.nom] = {}
-    for (const rule of rulesToTest) {
-      results[persona.nom][rule] = engine.evaluate(rule).nodeValue
-    }
-  }
-
-  return results
-}
-
 export function printResults({ markdownHeader, results, nbTests, markdown }) {
   if (results.length === 1 && results[0].type === 'error') {
     // An error occured while trying to set the situation
@@ -165,6 +132,7 @@ An error occured while testing the model:
   }
 
   if (markdown) {
+    console.log()
     console.log(markdownHeader)
     console.log('|:-----|:------|:------|:-------|')
   }
@@ -240,7 +208,7 @@ An error occured while testing the model:
 
   if (markdown) {
     if (nbDiff === 0) {
-      console.log(`> Aucune différence détectée`)
+      console.log(`✅ _Aucune différence détectée sur **${nbTests}** tests_`)
     }
   }
 
@@ -286,7 +254,7 @@ function fmtGHActionErr(
   // const color =
   //   diffPercent <= 1 ? 'sucess' : diffPercent > 5 ? 'critical' : 'important'
   // const sign = diff > 0 ? '%2B' : '-'
-  return `| \`${name}\` | ${formatValue(actual)} ${actualUnit ? `_${actualUnit}_` : ''} | ${formatValue(expected)} ${expectedUnit ? `_${expectedUnit}_` : ''} | **${
+  return `| ${name} | ${formatValue(actual)} ${actualUnit ? `_${actualUnit}_` : ''} | ${formatValue(expected)} ${expectedUnit ? `_${expectedUnit}_` : ''} | **${
     diff > 0 ? '+' : '-'
   }${diffPercent}%** |`
 }

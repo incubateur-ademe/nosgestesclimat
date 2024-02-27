@@ -61,11 +61,13 @@ for (const personaName in localPersonas) {
     const safeSituation = safeGetSituation({
       situation: localSituation || {},
       everyRules: Object.keys(localRules),
+      version,
       markdown: version === 'nightly' ? markdown : false
     })
     const safeProdSituation = safeGetSituation({
       situation: prodSituation || {},
       everyRules: Object.keys(prodRules),
+      version,
       markdown: version === 'latest' ? markdown : false
     })
     localEngine.setSituation(safeSituation)
