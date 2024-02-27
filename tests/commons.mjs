@@ -8,6 +8,7 @@ import Engine77 from 'publicodes-beta-77'
 import c from 'ansi-colors'
 import yargs from 'yargs'
 import { readFile } from 'fs/promises'
+import safeGetSituation from './helpers/safeGetSituation.mjs'
 
 const API_URL = 'https://nosgestesclimat-api.osc-fr1.scalingo.io'
 
@@ -75,6 +76,18 @@ export function getLocalPersonas(region, lang) {
     })
 }
 
+export function getLocalMigrationTable() {
+  return readFile(`./public/migration.json`, {
+    encoding: 'utf8'
+  })
+    .then((res) => JSON.parse(res))
+    .catch((e) => {
+      console.error(`No migration file found:`)
+      console.error(e.message)
+      process.exit(1)
+    })
+}
+
 export function getRulesFromAPI(version, region, lang) {
   return fetch(`${API_URL}/${version}/${lang}/${region}/rules`)
     .then((res) => res.json())
@@ -99,44 +112,6 @@ export function getPersonasFromAPI(version, region, lang) {
     })
 }
 
-export function testPersonas(
-  rules,
-  personas,
-  markdown,
-  rulesToTest = ['bilan'],
-  beta77 = false
-) {
-  console.log(`Testing personas (engine: ${beta77 ? 'beta77' : 'v1'})`)
-  console.log(`(It may take a while)`)
-  const engine = beta77
-    ? new Engine77(rules, { logger: disabledLogger })
-    : new Engine(rules, {
-        logger: disabledLogger,
-        allowOrphanRules: true
-      })
-  const personasRules = Object.values(personas)
-  const results = {}
-
-  for (const persona of personasRules) {
-    let personaData = persona.situation || {}
-    for (const ruleName in personaData) {
-      if (!(ruleName in rules)) {
-        if (!markdown) {
-          console.log(`Rule '${ruleName}' not found in the model`)
-        }
-        delete personaData[ruleName]
-      }
-    }
-    engine.setSituation(personaData)
-    results[persona.nom] = {}
-    for (const rule of rulesToTest) {
-      results[persona.nom][rule] = engine.evaluate(rule).nodeValue
-    }
-  }
-
-  return results
-}
-
 export function printResults({ markdownHeader, results, nbTests, markdown }) {
   if (results.length === 1 && results[0].type === 'error') {
     // An error occured while trying to set the situation
@@ -157,6 +132,7 @@ An error occured while testing the model:
   }
 
   if (markdown) {
+    console.log()
     console.log(markdownHeader)
     console.log('|:-----|:------|:------|:-------|')
   }
@@ -164,6 +140,8 @@ An error occured while testing the model:
   const fails = []
 
   results.sort((a, b) => a.rule.localeCompare(b.rule))
+  let nbDiff = 0
+
   for (const result of results) {
     if (result.type === 'warning') {
       if (!markdown) {
@@ -196,6 +174,7 @@ An error occured while testing the model:
         : 0
 
     if (diff !== 0) {
+      nbDiff++
       const diffPercent = Math.abs(Math.round((diff / expectedRounded) * 100))
 
       if (markdown) {
@@ -227,13 +206,19 @@ An error occured while testing the model:
     }
   }
 
+  if (markdown) {
+    if (nbDiff === 0) {
+      console.log(`✅ _Aucune différence détectée sur **${nbTests}** tests_`)
+    }
+  }
+
   if (!markdown) {
     const nbFails = fails.length
     fails.forEach((fail) => console.log(fail))
     if (nbFails > 0) {
       console.log(`\n${c.red('DIFF')} ${nbFails}/${nbTests}`)
     } else {
-      console.log(`\n${c.green('OK')} ${nbTests}/${nbTests}`)
+      console.log(`\n${c.green('OK')} ${nbTests}/${nbTests}\n`)
     }
   }
 }
@@ -269,7 +254,7 @@ function fmtGHActionErr(
   // const color =
   //   diffPercent <= 1 ? 'sucess' : diffPercent > 5 ? 'critical' : 'important'
   // const sign = diff > 0 ? '%2B' : '-'
-  return `| <code>${name}</code> | ${formatValue(actual)} ${actualUnit ? `_${actualUnit}_` : ''} | ${formatValue(expected)} ${expectedUnit ? `_${expectedUnit}_` : ''} | **${
+  return `| ${name} | ${formatValue(actual)} ${actualUnit ? `_${actualUnit}_` : ''} | ${formatValue(expected)} ${expectedUnit ? `_${expectedUnit}_` : ''} | **${
     diff > 0 ? '+' : '-'
   }${diffPercent}%** |`
 }

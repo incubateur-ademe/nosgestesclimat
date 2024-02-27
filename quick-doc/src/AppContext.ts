@@ -1,14 +1,20 @@
-import { Context, Dispatch, createContext, useReducer } from 'react'
+import { Context, Dispatch, createContext } from 'react'
 import Engine from 'publicodes'
+import { PersonaKey, personas } from './Personas'
+import ReportManager from './ReportManager'
+
+// @ts-ignore
+import safeGetSituation from './../../tests/helpers/safeGetSituation.mjs'
 
 import rules from '../../public/co2-model.FR-lang.fr.json'
-import { PersonaKey, defaultPersona, personas } from './Personas'
 
-const initialEngine = new Engine(rules)
+export const initialEngine = new Engine(rules)
 
 export type AppContextType = {
   engine?: typeof initialEngine
   currentPersona?: PersonaKey
+  // personas?: typeof personas
+  reportManager?: ReportManager
 }
 
 export const AppContext: Context<AppContextType> = createContext({})
@@ -19,25 +25,6 @@ export type AppContextAction = {
 
 export const AppDispatchContext: Context<Dispatch<AppContextAction>> =
   createContext({} as any)
-
-export function AppContextProvider({
-  children
-}: {
-  children: React.ReactNode
-}) {
-  const [appContext, dispatch] = useReducer(appContextReducer, {
-    engine: initialEngine,
-    currentPersona: defaultPersona
-  })
-
-  return (
-    <AppContext.Provider value={appContext}>
-      <AppDispatchContext.Provider value={dispatch}>
-        {children}
-      </AppDispatchContext.Provider>
-    </AppContext.Provider>
-  )
-}
 
 export function appContextReducer(
   state: AppContextType,
@@ -51,8 +38,13 @@ export function appContextReducer(
         return state
       }
       return {
+        ...state,
         engine: state.engine.setSituation(
-          personas[action.currentPersona].situation
+          safeGetSituation({
+            situation: personas[action.currentPersona].situation,
+            everyRules: Object.keys(rules),
+            version: 'locale'
+          })
         ),
         currentPersona: action.currentPersona
       }
