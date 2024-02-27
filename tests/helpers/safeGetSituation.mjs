@@ -1,3 +1,5 @@
+import c from 'ansi-colors'
+
 /**
  * This function is used to filter the situation from the user.
  *
@@ -11,10 +13,9 @@ export default function safeGetSituation({ situation, everyRules }) {
     (ruleName) => {
       // We check if the dotteName is a rule of the model
       if (!everyRules.includes(ruleName)) {
-        const error = new Error(
-          `error trying to use "${ruleName}" from the user situation: the rule doesn't exist in the model`
+        console.warn(
+          `${c.yellow('(warning:safeGetSituation)')} trying to use ${c.magenta(ruleName)} from the user situation: the rule doesn't exist in the model`
         )
-        console.warn(error)
         return true
       }
       // We check if the value from a mutliple choices question `dottedName`
@@ -28,10 +29,9 @@ export default function safeGetSituation({ situation, everyRules }) {
           `${ruleName} . ${situation[ruleName]?.replaceAll(/^'|'$/g, '')}`
         )
       ) {
-        const error = new Error(
-          `error trying to use "${ruleName}" answer from the user situation: "${situation[ruleName]}" doesn't exist in the model`
+        console.warn(
+          `${c.yellow('(warning:safeGetSituation)')} error trying to use ${c.magenta(ruleName)} answer from the user situation: ${c.magenta(situation[ruleName])} doesn't exist in the model`
         )
-        console.warn(error)
         return false
       }
       return false
