@@ -1,10 +1,12 @@
-export const safeGetSituation = ({
-  situation,
-  everyRules
-}: {
-  situation: Record<string, string | number>
-  everyRules: string[]
-}): any => {
+/**
+ * This function is used to filter the situation from the user.
+ *
+ * @param {Record<string, string | number} situation - The situation from the user.
+ * @param {string[]} everyRules - The list of all the rules in the model.
+ *
+ * @returns {Record<string, string | number} - The filtered situation.
+ */
+export default function safeGetSituation({ situation, everyRules }) {
   const unsupportedDottedNamesFromSituation = Object.keys(situation).filter(
     (ruleName) => {
       // We check if the dotteName is a rule of the model
@@ -23,10 +25,7 @@ export const safeGetSituation = ({
         situation[ruleName] !== 'oui' &&
         situation[ruleName] !== 'non' &&
         !everyRules.includes(
-          `${ruleName} . ${(situation[ruleName] as string)?.replaceAll(
-            /^'|'$/g,
-            ''
-          )}`
+          `${ruleName} . ${situation[ruleName]?.replaceAll(/^'|'$/g, '')}`
         )
       ) {
         const error = new Error(
@@ -41,7 +40,7 @@ export const safeGetSituation = ({
 
   const filteredSituation = { ...situation }
 
-  unsupportedDottedNamesFromSituation.map((ruleName: string) => {
+  unsupportedDottedNamesFromSituation.map((ruleName) => {
     // If a dottedName is not supported in the model, it is dropped from the situation.
     delete filteredSituation[ruleName]
   })

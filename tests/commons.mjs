@@ -8,7 +8,7 @@ import Engine77 from 'publicodes-beta-77'
 import c from 'ansi-colors'
 import yargs from 'yargs'
 import { readFile } from 'fs/promises'
-import { safeGetSituation } from './helpers/safeGetSituation'
+import safeGetSituation from './helpers/safeGetSituation.mjs'
 
 const API_URL = 'https://nosgestesclimat-api.osc-fr1.scalingo.io'
 

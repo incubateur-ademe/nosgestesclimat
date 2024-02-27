@@ -1,7 +1,7 @@
 import { disabledLogger } from '@publicodes/tools'
 import c from 'ansi-colors'
 import Engine from 'publicodes'
-import { safeGetSituation } from './helpers/safeGetSituation'
+import safeGetSituation from './helpers/safeGetSituation.mjs'
 
 import {
   getArgs,

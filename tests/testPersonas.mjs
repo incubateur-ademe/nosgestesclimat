@@ -2,7 +2,6 @@ import c from 'ansi-colors'
 import Engine from 'publicodes'
 import Engine77 from 'publicodes-beta-77'
 import { disabledLogger } from '@publicodes/tools'
-import { safeGetSituation } from './helpers/safeGetSituation'
 
 import {
   getArgs,
@@ -12,6 +11,7 @@ import {
   getPersonasFromAPI,
   printResults
 } from './commons.mjs'
+import safeGetSituation from './helpers/safeGetSituation.mjs'
 
 /**
  * Compares the value of all the rules between the local and the prod (or specified) version
