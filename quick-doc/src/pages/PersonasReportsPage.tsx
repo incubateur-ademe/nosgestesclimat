@@ -99,7 +99,7 @@ export default function PersonasReportsPage() {
         {report !== null ? (
           <Markdown
             remarkPlugins={[remarkGfm]}
-            className="prose prose-lg min-w-full"
+            className="prose prose-lg prose-blockquote:bg-grey-200 min-w-full"
             children={report}
           />
         ) : (

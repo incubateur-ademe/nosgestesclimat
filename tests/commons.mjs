@@ -172,6 +172,8 @@ An error occured while testing the model:
   const fails = []
 
   results.sort((a, b) => a.rule.localeCompare(b.rule))
+  let nbDiff = 0
+
   for (const result of results) {
     if (result.type === 'warning') {
       if (!markdown) {
@@ -204,6 +206,7 @@ An error occured while testing the model:
         : 0
 
     if (diff !== 0) {
+      nbDiff++
       const diffPercent = Math.abs(Math.round((diff / expectedRounded) * 100))
 
       if (markdown) {
@@ -235,13 +238,19 @@ An error occured while testing the model:
     }
   }
 
+  if (markdown) {
+    if (nbDiff === 0) {
+      console.log(`> Aucune différence détectée`)
+    }
+  }
+
   if (!markdown) {
     const nbFails = fails.length
     fails.forEach((fail) => console.log(fail))
     if (nbFails > 0) {
       console.log(`\n${c.red('DIFF')} ${nbFails}/${nbTests}`)
     } else {
-      console.log(`\n${c.green('OK')} ${nbTests}/${nbTests}`)
+      console.log(`\n${c.green('OK')} ${nbTests}/${nbTests}\n`)
     }
   }
 }
