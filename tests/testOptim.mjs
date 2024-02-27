@@ -53,14 +53,14 @@ for (const personaName in localPersonas) {
     baseEngine.setSituation(
       safeGetSituation({
         situation: persona.situation || {},
-        everyRules: Object.keys(baseRules),
+        parsedRulesNames: Object.keys(baseEngine.getParsedRules()),
         version: 'base'
       })
     )
     optimEngine.setSituation(
       safeGetSituation({
         situation: persona.situation || {},
-        everyRules: Object.keys(optimRules),
+        parsedRulesNames: Object.keys(optimEngine.getParsedRules()),
         version: 'optim'
       })
     )

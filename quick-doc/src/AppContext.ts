@@ -42,7 +42,7 @@ export function appContextReducer(
         engine: state.engine.setSituation(
           safeGetSituation({
             situation: personas[action.currentPersona].situation,
-            everyRules: Object.keys(rules),
+            parsedRulesNames: Object.keys(state.engine.getParsedRules()),
             version: 'locale'
           })
         ),

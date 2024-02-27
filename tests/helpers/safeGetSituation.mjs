@@ -4,20 +4,21 @@ import c from 'ansi-colors'
  * This function is used to filter the situation from the user.
  *
  * @param {Record<string, string | number} situation - The situation from the user.
- * @param {string[]} everyRules - The list of all the rules in the model.
+ * @param {string[]} parsedRulesNames - The list of all the rules in the model.
  *
  * @returns {Record<string, string | number} - The filtered situation.
+ *
  */
 export default function safeGetSituation({
   situation,
-  everyRules,
+  parsedRulesNames,
   version = 'current',
   markdown = false
 }) {
   const unsupportedDottedNamesFromSituation = Object.keys(situation).filter(
     (ruleName) => {
       // We check if the dotteName is a rule of the model
-      if (!everyRules.includes(ruleName)) {
+      if (!parsedRulesNames.includes(ruleName)) {
         if (markdown) {
           console.log(
             `- **${ruleName}** n'existe pas dans le modèle (_**${version}**_)`
@@ -36,7 +37,7 @@ export default function safeGetSituation({
         typeof situation[ruleName] === 'string' &&
         situation[ruleName] !== 'oui' &&
         situation[ruleName] !== 'non' &&
-        !everyRules.includes(
+        !parsedRulesNames.includes(
           `${ruleName} . ${situation[ruleName]?.replaceAll(/^'|'$/g, '')}`
         )
       ) {

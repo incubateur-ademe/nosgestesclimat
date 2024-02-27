@@ -60,14 +60,14 @@ for (const personaName in localPersonas) {
   try {
     const safeSituation = safeGetSituation({
       situation: localSituation || {},
-      everyRules: Object.keys(localRules),
-      version,
+      parsedRulesNames: Object.keys(localEngine.getParsedRules()),
+      version: 'local',
       markdown: version === 'nightly' ? markdown : false
     })
     const safeProdSituation = safeGetSituation({
       situation: prodSituation || {},
-      everyRules: Object.keys(prodRules),
-      version,
+      parsedRulesNames: Object.keys(prodEngine.getParsedRules()),
+      version: 'prod',
       markdown: version === 'latest' ? markdown : false
     })
     localEngine.setSituation(safeSituation)
