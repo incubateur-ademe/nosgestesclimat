@@ -58,18 +58,18 @@ for (const personaName in localPersonas) {
   }
 
   try {
-    localEngine.setSituation(
-      safeGetSituation({
-        situation: localSituation || {},
-        everyRules: Object.keys(localRules)
-      })
-    )
-    prodEngine.setSituation(
-      safeGetSituation({
-        situation: prodSituation || {},
-        everyRules: Object.keys(prodRules)
-      })
-    )
+    const safeSituation = safeGetSituation({
+      situation: localSituation || {},
+      everyRules: Object.keys(localRules),
+      markdown: version === 'nightly' ? markdown : false
+    })
+    const safeProdSituation = safeGetSituation({
+      situation: prodSituation || {},
+      everyRules: Object.keys(prodRules),
+      markdown: version === 'latest' ? markdown : false
+    })
+    localEngine.setSituation(safeSituation)
+    prodEngine.setSituation(safeProdSituation)
   } catch (e) {
     printResults({ results: [{ type: 'error', message: e.message }], markdown })
     continue

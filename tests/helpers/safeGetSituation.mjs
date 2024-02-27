@@ -8,14 +8,22 @@ import c from 'ansi-colors'
  *
  * @returns {Record<string, string | number} - The filtered situation.
  */
-export default function safeGetSituation({ situation, everyRules }) {
+export default function safeGetSituation({
+  situation,
+  everyRules,
+  markdown = false
+}) {
   const unsupportedDottedNamesFromSituation = Object.keys(situation).filter(
     (ruleName) => {
       // We check if the dotteName is a rule of the model
       if (!everyRules.includes(ruleName)) {
-        console.warn(
-          `${c.yellow('(warning:safeGetSituation)')} trying to use ${c.magenta(ruleName)} from the user situation: the rule doesn't exist in the model`
-        )
+        if (markdown) {
+          console.log(`>- **${ruleName}** n'existe pas dans le modèle\n>`)
+        } else {
+          console.warn(
+            `${c.yellow('(warning:safeGetSituation)')} trying to use ${c.magenta(ruleName)} from the user situation: the rule doesn't exist in the model`
+          )
+        }
         return true
       }
       // We check if the value from a mutliple choices question `dottedName`
@@ -29,15 +37,20 @@ export default function safeGetSituation({ situation, everyRules }) {
           `${ruleName} . ${situation[ruleName]?.replaceAll(/^'|'$/g, '')}`
         )
       ) {
-        console.warn(
-          `${c.yellow('(warning:safeGetSituation)')} error trying to use ${c.magenta(ruleName)} answer from the user situation: ${c.magenta(situation[ruleName])} doesn't exist in the model`
-        )
+        if (markdown) {
+          console.log(
+            `>- la réponse **${situation[ruleName]}** de **${ruleName}** n'existe pas dans le modèle\n>`
+          )
+        } else {
+          console.warn(
+            `${c.yellow('(warning:safeGetSituation)')} error trying to use ${c.magenta(ruleName)} answer from the user situation: ${c.magenta(situation[ruleName])} doesn't exist in the model`
+          )
+        }
         return false
       }
       return false
     }
   )
-
   const filteredSituation = { ...situation }
 
   unsupportedDottedNamesFromSituation.map((ruleName) => {
