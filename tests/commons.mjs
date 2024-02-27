@@ -8,6 +8,7 @@ import Engine77 from 'publicodes-beta-77'
 import c from 'ansi-colors'
 import yargs from 'yargs'
 import { readFile } from 'fs/promises'
+import { safeGetSituation } from './helpers/safeGetSituation'
 
 const API_URL = 'https://nosgestesclimat-api.osc-fr1.scalingo.io'
 
@@ -130,16 +131,11 @@ export function testPersonas(
   const results = {}
 
   for (const persona of personasRules) {
-    let personaData = persona.situation || {}
-    for (const ruleName in personaData) {
-      if (!(ruleName in rules)) {
-        if (!markdown) {
-          console.log(`Rule '${ruleName}' not found in the model`)
-        }
-        delete personaData[ruleName]
-      }
-    }
-    engine.setSituation(personaData)
+    const safeSituation = safeGetSituation({
+      situation: persona.situation || {},
+      everyRules: Object.keys(rules)
+    })
+    engine.setSituation(safeSituation)
     results[persona.nom] = {}
     for (const rule of rulesToTest) {
       results[persona.nom][rule] = engine.evaluate(rule).nodeValue

@@ -1,6 +1,7 @@
 import { disabledLogger } from '@publicodes/tools'
 import c from 'ansi-colors'
 import Engine from 'publicodes'
+import { safeGetSituation } from './helpers/safeGetSituation'
 
 import {
   getArgs,
@@ -49,8 +50,18 @@ for (const personaName in localPersonas) {
   }
 
   try {
-    baseEngine.setSituation(persona.situation || {})
-    optimEngine.setSituation(persona.situation || {})
+    baseEngine.setSituation(
+      safeGetSituation({
+        situation: persona.situation || {},
+        everyRules: Object.keys(baseRules)
+      })
+    )
+    optimEngine.setSituation(
+      safeGetSituation({
+        situation: persona.situation || {},
+        everyRules: Object.keys(optimRules)
+      })
+    )
   } catch (e) {
     printResults({ results: [{ type: 'error', message: e.message }], markdown })
     continue

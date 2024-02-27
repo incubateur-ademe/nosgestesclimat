@@ -1,3 +1,4 @@
+import { safeGetSituation } from './../../tests/helpers/safeGetSituation'
 import { Context, Dispatch, createContext } from 'react'
 import Engine from 'publicodes'
 import { PersonaKey, personas } from './Personas'
@@ -37,7 +38,10 @@ export function appContextReducer(
       return {
         ...state,
         engine: state.engine.setSituation(
-          personas[action.currentPersona].situation
+          safeGetSituation({
+            situation: personas[action.currentPersona].situation,
+            everyRules: Object.keys(rules)
+          })
         ),
         currentPersona: action.currentPersona
       }
