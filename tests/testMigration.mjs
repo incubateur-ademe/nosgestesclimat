@@ -110,7 +110,7 @@ if (nbMissingMigrations > 0) {
     if (markdown) {
       console.log('#### `Possibilités` à supprimer ou renommer\n')
       console.log(
-        '| Règle | Anciennes `possibilités` | Nouvelles `possibilités` |'
+        '| Règle | Anciennes _possibilités_ | Nouvelles _possibilités_ |'
       )
       console.log('| --- | --- | --- |')
     } else {
@@ -122,7 +122,7 @@ if (nbMissingMigrations > 0) {
     missingMigrationsValues.forEach(([rule, valuesToMigrate]) => {
       if (markdown) {
         console.log(
-          `| \`${rule}\` | ${valuesToMigrate[0]} | ${valuesToMigrate[1]} |`
+          `| ${rule} | ${valuesToMigrate[0]} | ${valuesToMigrate[1]} |`
         )
       } else {
         console.log(
@@ -130,6 +130,11 @@ if (nbMissingMigrations > 0) {
         )
       }
     })
+  }
+
+  // If markdown activated, we want to show the result in the quickdoc.
+  if (!markdown) {
+    process.exit(1)
   }
 } else {
   if (markdown) {
