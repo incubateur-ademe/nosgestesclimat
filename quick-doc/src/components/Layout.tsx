@@ -27,6 +27,14 @@ export default function Layout() {
     })
   }, [])
 
+  useEffect(() => {
+    if (compilationStatus.type === 'ok') {
+      setTimeout(() => {
+        setCompilationStatus({ type: 'none' })
+      }, 1000)
+    }
+  }, [compilationStatus])
+
   return (
     <div className="min-h-100">
       <Header />
@@ -39,7 +47,6 @@ export default function Layout() {
 }
 
 function CompilationStatusAlert({ status }: { status: CompilationStatus }) {
-  console.log('status', status)
   switch (status.type) {
     case 'compiling': {
       return (
