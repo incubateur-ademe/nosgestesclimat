@@ -15,8 +15,8 @@ export default function safeGetSituation({
   version = 'current',
   markdown = false
 }) {
-  const unsupportedDottedNamesFromSituation = Object.keys(situation).filter(
-    (ruleName) => {
+  return Object.fromEntries(
+    Object.entries(situation).filter(([ruleName, value]) => {
       // We check if the dotteName is a rule of the model
       if (!parsedRulesNames.includes(ruleName)) {
         if (markdown) {
@@ -28,39 +28,32 @@ export default function safeGetSituation({
             `${c.yellow('(warning:safeGetSituation)')} the rule ${c.magenta(ruleName)} doesn't exist in the model (${c.green(version)})`
           )
         }
-        return true
+        return false
       }
       // We check if the value from a mutliple choices question `dottedName`
       // is defined as a rule `dottedName . value` in the model.
       // If not, the value in the situation is an old option, that is not an option anymore.
       if (
-        typeof situation[ruleName] === 'string' &&
-        situation[ruleName] !== 'oui' &&
-        situation[ruleName] !== 'non' &&
+        value &&
+        typeof value === 'string' &&
+        value !== 'oui' &&
+        value !== 'non' &&
         !parsedRulesNames.includes(
-          `${ruleName} . ${situation[ruleName]?.replaceAll(/^'|'$/g, '')}`
+          `${ruleName} . ${value.replaceAll(/^'|'$/g, '')}`
         )
       ) {
         if (markdown) {
           console.log(
-            `- la réponse **${situation[ruleName]}** de **${ruleName}** n'existe pas dans le modèle (_**${version}**_)`
+            `- la réponse **${value}** de **${ruleName}** n'existe pas dans le modèle (_**${version}**_)`
           )
         } else {
           console.warn(
-            `${c.yellow('(warning:safeGetSituation)')} the value ${c.magenta(situation[ruleName])} for the rule ${c.magenta(ruleName)} doesn't exist in the model (${c.green(version)})`
+            `${c.yellow('(warning:safeGetSituation)')} the value ${c.magenta(value)} for the rule ${c.magenta(ruleName)} doesn't exist in the model (${c.green(version)})`
           )
         }
         return false
       }
-      return false
-    }
+      return true
+    })
   )
-  const filteredSituation = { ...situation }
-
-  unsupportedDottedNamesFromSituation.map((ruleName) => {
-    // If a dottedName is not supported in the model, it is dropped from the situation.
-    delete filteredSituation[ruleName]
-  })
-
-  return filteredSituation
 }
