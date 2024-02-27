@@ -77,11 +77,6 @@ for (const personaName in localPersonas) {
 
   for (const rule in localRules) {
     if (!(rule in prodRules)) {
-      results.push({
-        type: 'warning',
-        rule,
-        msg: `Rule not found in ${c.green(version)}`
-      })
       continue
     }
 
