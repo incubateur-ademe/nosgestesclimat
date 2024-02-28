@@ -41,6 +41,7 @@ const compilationWatcher = fs.watch(
       console.log(`[rules:watcher] compiling rules...`)
       compileRules()
       generateSituationCoverage()
+      compileMigrationTable()
       generateMigrationReport()
     }
   }
@@ -170,7 +171,7 @@ function compileMigrationTable() {
     type: 'compiling',
     message: 'Fichier de migration en cours de compilation'
   })
-  const proc = Bun.spawn(['bun', './scripts/migrationToJSON.js'], {
+  const proc = Bun.spawn(['bun', './scripts/migrationToJSON.mjs'], {
     onExit: async ({ exitCode }) => {
       // TODO: find a way to send the error message to the client
       if (exitCode !== 0) {
