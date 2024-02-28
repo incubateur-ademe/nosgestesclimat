@@ -55,8 +55,8 @@ const checkMigrationFile = (migration, parsedRules) => {
       }
     })
 
-  Object.keys(migration.valuesToMigrate).map((ruleName) => {
-    Object.values(migration.valuesToMigrate[ruleName])
+  Object.entries(migration.valuesToMigrate).map(([ruleName, values]) => {
+    Object.values(values)
       .filter((value) => value !== '')
       .map((value) => {
         const ruleNameToCheck =
