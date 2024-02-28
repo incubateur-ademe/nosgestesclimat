@@ -38,6 +38,7 @@ export default function DocumentationPage() {
         rulePath={rulePath}
         engine={currentEngine as any}
         renderers={renderers}
+        searchBar={true}
         language={'fr'}
         npmPackage="nosgestesclimat"
       />
