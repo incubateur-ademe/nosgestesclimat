@@ -1,14 +1,11 @@
-import { disabledLogger } from '@publicodes/tools'
 import {
   defaultLang,
   availableLanguages
 } from '@incubateur-ademe/nosgestesclimat-scripts/utils'
-import Engine, { serializeUnit } from 'publicodes'
-import Engine77 from 'publicodes-beta-77'
 import c from 'ansi-colors'
 import yargs from 'yargs'
 import { readFile } from 'fs/promises'
-import safeGetSituation from './helpers/safeGetSituation.mjs'
+import { serializeUnit } from 'publicodes'
 
 const API_URL = 'https://nosgestesclimat-api.osc-fr1.scalingo.io'
 

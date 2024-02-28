@@ -219,10 +219,8 @@ function writeMigration() {
 
       return -1
     }
-    console.log(
-      markdown
-        ? `| Migration instructions compilation to JSON | :heavy_check_mark: | Ø |`
-        : `✅ Migration instructions compilation to JSON`
-    )
+    if (!markdown) {
+      console.log(c.green('✅ Migration instructions compilation to JSON'))
+    }
   })
 }
