@@ -1,25 +1,210 @@
 import fs from 'fs'
 import path from 'path'
 
-import cli from '@incubateur-ademe/nosgestesclimat-scripts/cli'
 import utils from '@incubateur-ademe/nosgestesclimat-scripts/utils'
 
 import Engine from 'publicodes'
-import rules from '../public/co2-model.FR-lang.fr.json' assert { type: 'json' }
+import c from 'ansi-colors'
 
-const outputJSONPath = './public'
+import { getLocalRules, getRulesFromAPI, getArgs } from '../tests/commons.mjs'
 
-const { markdown } = cli.getArgs(
-  `Combines migrations instructions into a JSON file.`,
-  {
-    source: true,
-    markdown: true,
-    target: true
+const outputJSONPath = path.join('./public', `migration.json`)
+
+const { country, version, language, markdown } = getArgs()
+
+const baseMigration = utils.readYAML(path.resolve(`migration/migration.yaml`))
+const localRules = await getLocalRules(country, language)
+const prodRules = await getRulesFromAPI(version, country, language)
+
+const localEngine = new Engine(localRules)
+const parsedRules = Object.keys(localEngine.getParsedRules())
+
+try {
+  checkMigrationFile()
+  checkMigrationCoverage()
+  writeMigration()
+} catch (e) {
+  if (!markdown) {
+    console.error(e)
+    process.exit(1)
   }
-)
+}
 
-const writeMigration = (migration, path) => {
-  fs.writeFile(path, JSON.stringify(migration), function (err) {
+function checkMigrationFile() {
+  let shouldTrhowError = false
+
+  Object.values(baseMigration.keysToMigrate)
+    .filter((ruleName) => ruleName !== '')
+    .forEach((ruleName) => {
+      if (!parsedRules.includes(ruleName)) {
+        shouldTrhowError = true
+        if (markdown) {
+          console.log(`> ❌ The rule ${ruleName} is not present in model`)
+        } else {
+          console.error(`❌ The rule ${ruleName} is not present in model`)
+        }
+      }
+    })
+
+  Object.entries(baseMigration.valuesToMigrate).forEach(
+    ([ruleName, values]) => {
+      Object.values(values)
+        .filter((value) => value !== '')
+        .forEach((value) => {
+          const ruleNameToCheck =
+            value === 'oui' || value === 'non'
+              ? ruleName
+              : `${ruleName} . ${value}`
+          if (!parsedRules.includes(ruleNameToCheck)) {
+            shouldTrhowError = true
+            if (markdown) {
+              console.log(
+                `> ❌ The rule ${ruleNameToCheck} is not present in model`
+              )
+            } else {
+              console.error(
+                `❌ The rule ${ruleNameToCheck} is not present in model`
+              )
+            }
+          }
+        })
+    }
+  )
+
+  if (shouldTrhowError) {
+    throw new Error('Migration file is not valid')
+  }
+}
+
+function checkMigrationCoverage() {
+  const missingMigrationsKeys = []
+  const missingMigrationsValues = []
+  let nbMissingMigrations = 0
+
+  for (const ruleName in prodRules) {
+    const rule = prodRules[ruleName]
+
+    if (!rule || ruleName.startsWith('futureco-data')) {
+      continue
+    }
+
+    if ((rule['question'] || rule['par défaut']) && !rule['mosaique']) {
+      if (!localRules[ruleName]) {
+        if (Object.keys(baseMigration['keysToMigrate']).includes(ruleName)) {
+          continue
+        }
+        nbMissingMigrations++
+        missingMigrationsKeys.push(ruleName)
+      }
+
+      if (rule.formule?.['une possibilité']) {
+        const prodPossibilities =
+          rule.formule['une possibilité']['possibilités']
+        const localPossibilities =
+          localRules[ruleName].formule['une possibilité']['possibilités']
+        const missingProdPossibilities = prodPossibilities.filter(
+          (elt) =>
+            !localPossibilities.includes(elt) &&
+            !(
+              Object.keys(baseMigration['valuesToMigrate']).includes(
+                ruleName
+              ) &&
+              Object.keys(baseMigration['valuesToMigrate'][ruleName]).includes(
+                elt
+              )
+            )
+        )
+        const missingLocalPossibilities = localPossibilities.filter(
+          (elt) =>
+            !prodPossibilities.includes(elt) &&
+            !(
+              Object.keys(baseMigration['valuesToMigrate']).includes(
+                ruleName
+              ) &&
+              Object.values(
+                baseMigration['valuesToMigrate'][ruleName]
+              ).includes(elt)
+            )
+        )
+
+        if (
+          missingProdPossibilities.length > 0 ||
+          missingLocalPossibilities.length > 0
+        ) {
+          nbMissingMigrations++
+          missingMigrationsValues.push([
+            ruleName,
+            [missingProdPossibilities, missingLocalPossibilities]
+          ])
+        }
+      }
+    }
+  }
+
+  if (nbMissingMigrations > 0) {
+    if (markdown) {
+      console.log('### Règles à ajouter à la table de migration\n')
+      console.log(
+        `> Il y a **${nbMissingMigrations}** cas non couverts par le fichier de migrations.\n`
+      )
+    } else {
+      console.log(`${c.red(nbMissingMigrations + ' règle(s) à migrer:')}\n`)
+    }
+
+    if (missingMigrationsKeys.length > 0) {
+      if (markdown) {
+        console.log('#### Règle à supprimer ou à renommer\n')
+      } else {
+        console.log('Règle à supprimer ou à renommer:')
+      }
+
+      missingMigrationsKeys.forEach((rule) => {
+        if (markdown) {
+          console.log(`- ${rule}\n`)
+        } else {
+          console.log(`  ${c.magenta(rule)}`)
+        }
+      })
+    }
+
+    if (missingMigrationsValues.length > 0) {
+      if (markdown) {
+        console.log('#### `Possibilités` à supprimer ou renommer\n')
+        console.log(
+          '| Règle | Anciennes _possibilités_ | Nouvelles _possibilités_ |'
+        )
+        console.log('| --- | --- | --- |')
+      } else {
+        console.log(
+          '`Possibilités` à supprimer ou renommer à supprimer ou renommer:'
+        )
+      }
+
+      missingMigrationsValues.forEach(([rule, valuesToMigrate]) => {
+        if (markdown) {
+          console.log(
+            `| ${rule} | ${valuesToMigrate[0]} | ${valuesToMigrate[1]} |`
+          )
+        } else {
+          console.log(
+            `  ${c.magenta(rule)}: ${valuesToMigrate[0]} -> ${valuesToMigrate[1]}`
+          )
+        }
+      })
+    }
+
+    throw new Error('Missing migrations')
+  } else {
+    if (markdown) {
+      console.log(`✅ Toutes les règles ont été migrées.`)
+    } else {
+      console.log(c.green('✅ Toutes les règles ont été migrées.'))
+    }
+  }
+}
+
+function writeMigration() {
+  fs.writeFile(outputJSONPath, JSON.stringify(baseMigration), function (err) {
     if (err) {
       if (markdown) {
         console.log(
@@ -41,47 +226,3 @@ const writeMigration = (migration, path) => {
     )
   })
 }
-
-const checkMigrationFile = (migration, parsedRules) => {
-  Object.values(migration.keysToMigrate)
-    .filter((ruleName) => ruleName !== '')
-    .map((ruleName) => {
-      if (!parsedRules.includes(ruleName)) {
-        if (markdown) {
-          console.log(`> ❌ The rule ${ruleName} is not present in model`)
-        } else {
-          console.error(`❌ The rule ${ruleName} is not present in model`)
-        }
-      }
-    })
-
-  Object.entries(migration.valuesToMigrate).map(([ruleName, values]) => {
-    Object.values(values)
-      .filter((value) => value !== '')
-      .map((value) => {
-        const ruleNameToCheck =
-          value === 'oui' || value === 'non'
-            ? ruleName
-            : `${ruleName} . ${value}`
-        if (!parsedRules.includes(ruleNameToCheck)) {
-          if (markdown) {
-            console.log(
-              `> ❌ The rule ${ruleNameToCheck} is not present in model`
-            )
-          } else {
-            console.error(
-              `❌ The rule ${ruleNameToCheck} is not present in model`
-            )
-          }
-        }
-      })
-  })
-}
-
-const baseMigration = utils.readYAML(path.resolve(`migration/migration.yaml`))
-
-const engine = new Engine(rules)
-
-checkMigrationFile(baseMigration, Object.keys(engine.getParsedRules()))
-
-writeMigration(baseMigration, path.join(outputJSONPath, `migration.json`))
