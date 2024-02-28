@@ -1,63 +1,87 @@
-import Engine from 'publicodes'
-import './App.css'
-import { RulePage } from '@publicodes/react-ui'
-import {
-  Link,
-  Route,
-  useParams,
-  createBrowserRouter,
-  createRoutesFromElements,
-  RouterProvider
-} from 'react-router-dom'
-import { ComponentProps, useRef } from 'react'
-import ReactMardown from 'react-markdown'
+'use client'
 
-import rules from '../../public/co2-model.FR-lang.fr.json'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import AppContextProvider from './AppContextProvider'
+import { pathTo } from './Nav'
+import { lazy, Suspense } from 'react'
+import Layout from './components/Layout'
+import Loader from './components/Loader'
+import { ErrorBoundary } from 'react-error-boundary'
+import errorRender from './components/Errors.tsx'
+import SituationCoveragePage from './pages/SituationCoveragePage'
+import MigrationReportPage from './pages/MigrationReportPage.tsx'
 
-let engine = new Engine()
+const DocumentationPage = lazy(() => import('./pages/DocumentationPage'))
+const PersonasReportsPage = lazy(() => import('./pages/PersonasReportsPage'))
+const HomePage = lazy(() => import('./pages/HomePage'))
 
-try {
-  engine = new Engine(rules as {})
-} catch (e) {
-  console.error('Error while loading model:')
-  console.error(e)
-}
-
-const baseUrl = process.env.NODE_ENV === 'development' ? '' : '/nosgestesclimat'
-
-const defaultRule = 'bilan'
-
-function Documentation() {
-  const url = useParams()['*']
-  const { current: renderers } = useRef({
-    Link,
-    Text: ({ children }) => <ReactMardown children={children} />
-  } as ComponentProps<typeof RulePage>['renderers'])
-
+function RouteWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div>
-      <RulePage
-        documentationPath={`${baseUrl}`}
-        rulePath={!url || url === '' ? defaultRule : url}
-        engine={engine}
-        renderers={renderers}
-        language={'fr'}
-        npmPackage="nosgestesclimat"
-      />
-    </div>
+    <ErrorBoundary fallbackRender={errorRender}>
+      <Suspense fallback={<Loader />}>{children}</Suspense>
+    </ErrorBoundary>
   )
 }
 
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route path={`${baseUrl}/*`} element={<Documentation />} />
-  )
-)
+const router = createBrowserRouter([
+  {
+    path: pathTo('home'),
+    element: (
+      <ErrorBoundary fallbackRender={errorRender}>
+        <Layout />
+      </ErrorBoundary>
+    ),
+    children: [
+      {
+        path: '/',
+        element: (
+          <RouteWrapper>
+            <HomePage />
+          </RouteWrapper>
+        )
+      },
+      {
+        path: pathTo('doc') + '/*',
+        element: (
+          <RouteWrapper>
+            <DocumentationPage />
+          </RouteWrapper>
+        )
+      },
+      {
+        path: pathTo('personas') + '/*',
+        element: (
+          <RouteWrapper>
+            <PersonasReportsPage />
+          </RouteWrapper>
+        )
+      },
+      {
+        path: pathTo('situations') + '/*',
+        element: (
+          <RouteWrapper>
+            <SituationCoveragePage />
+          </RouteWrapper>
+        )
+      },
+      {
+        path: pathTo('migration') + '/*',
+        element: (
+          <RouteWrapper>
+            <MigrationReportPage />
+          </RouteWrapper>
+        )
+      }
+    ]
+  }
+])
 
 export default function App() {
   return (
     <div className="App">
-      <RouterProvider router={router} />
+      <AppContextProvider>
+        <RouterProvider router={router} />
+      </AppContextProvider>
     </div>
   )
 }

@@ -83,23 +83,28 @@ https://beta.gouv.fr.
 
 ## Développement
 
-### Quick Doc
+### QuickDoc
 
-Pour faciliter le développement, nous avons mis en place une documentation
-minimale basée sur [`@publicodes/react-ui`](https://publi.codes/docs/api/react-ui)
-et [Vite](https://vitejs.dev/).
+Pour faciliter le développement, nous avons mis en place un outil de
+développement local. Cet outil permet de visualiser la documentation (basée sur
+[`@publicodes/react-ui`](https://publi.codes/docs/api/react-ui)) et les
+résultats de la compilation des modèles et des personas, ainsi que comparer les
+résultats avec les versions en production. 
 
 ```bash
-yarn --cwd quick-doc
+# installe les dépendances
+yarn && cd quick-doc && yarn
+
+# lance le serveur de développement en charge de compiler les modèles et les personas
+yarn dev
+
+# lance le client de la documentation 
 yarn doc
 ```
 
-> [!TIP]
-> Pour rapidement itérer sur le modèle, nous vous conseillons de lancer `yarn dev`.
-> Cela va lancer un serveur de développement qui va recompiler le modèle à
-> chaque modification ainsi que les personas. Puis avec `yarn doc`, vous pouvez
-> visualiser les résultats de la compilation dans votre navigateur, les
-> modifications seront automatiquement prises en compte.
+> [!IMPORTANT]
+> Pour utiliser la QuickDoc, vous devez avoir [`bun`](https://bun.sh)
+> d'installé sur votre machine.
 
 ### CI
 
