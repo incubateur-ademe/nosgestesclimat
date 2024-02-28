@@ -18,9 +18,8 @@ const io = new Server(server, {
 console.log('Initializing server...')
 compileRules()
 compilePersonas()
-compileMigrationTable()
-generateSituationCoverage()
 generateMigrationReport()
+generateSituationCoverage()
 
 io.on('connection', (_socket) => {
   console.log('a user connected')
@@ -41,7 +40,6 @@ const compilationWatcher = fs.watch(
       console.log(`[rules:watcher] compiling rules...`)
       compileRules()
       generateSituationCoverage()
-      compileMigrationTable()
       generateMigrationReport()
     }
   }
@@ -58,9 +56,9 @@ const personaWatcher = fs.watch('./personas/', (evt, name) => {
 
 const migrationWatcher = fs.watch('./migration/migration.yaml', (evt, name) => {
   console.log(`[migration:watcher] ${evt} ${name}`)
-  console.log(`[migration:watcher] compiling migration...`)
-  compileMigrationTable()
+  console.log(`[migration:watcher] report generation...`)
   generateMigrationReport()
+  console.log(`[migration:watcher] report generated`)
 })
 
 process.on('SIGINT', () => {
@@ -166,31 +164,6 @@ function compilePersonas() {
   })
 }
 
-function compileMigrationTable() {
-  io.emit('compilation-status', {
-    type: 'compiling',
-    message: 'Fichier de migration en cours de compilation'
-  })
-  const proc = Bun.spawn(['bun', './scripts/migrationToJSON.mjs'], {
-    onExit: async ({ exitCode }) => {
-      // TODO: find a way to send the error message to the client
-      if (exitCode !== 0) {
-        io.emit('compilation-status', {
-          type: 'error',
-          message: 'Impossible de compiler le fichier de migration'
-        })
-      }
-    }
-  })
-  new Response(proc.stdout).text().then((stdout) => {
-    console.log(`[migration:watcher] done:\n${stdout}`)
-    io.emit('compilation-status', {
-      type: 'ok',
-      message: 'Table de migration mise à jour'
-    })
-  })
-}
-
 function generateSituationCoverage() {
   Bun.spawn(['bun', './tests/testSituationCoverage.mjs', '-m'], {
     stdout: Bun.file('./quick-doc/situation-coverage.md')
@@ -198,7 +171,7 @@ function generateSituationCoverage() {
 }
 
 function generateMigrationReport() {
-  Bun.spawn(['bun', './tests/testMigration.mjs', '-m'], {
+  Bun.spawn(['bun', './scripts/migrationToJSON.mjs', '-m'], {
     stdout: Bun.file('./quick-doc/migration-report.md')
   })
 }

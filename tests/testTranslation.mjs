@@ -1,4 +1,4 @@
-import { getArgs, getLocalRules, getLocalPersonas } from './commons.mjs'
+import { getArgs, getLocalRules } from './commons.mjs'
 import c from 'ansi-colors'
 import { disabledLogger } from '@publicodes/tools'
 import Engine from 'publicodes'
