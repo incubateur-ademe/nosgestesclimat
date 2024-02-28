@@ -5,7 +5,6 @@ import cli from '@incubateur-ademe/nosgestesclimat-scripts/cli'
 import utils from '@incubateur-ademe/nosgestesclimat-scripts/utils'
 
 import Engine from 'publicodes'
-import { disabledLogger } from '@publicodes/tools'
 import rules from '../public/co2-model.FR-lang.fr.json' assert { type: 'json' }
 
 const outputJSONPath = './public'
@@ -81,9 +80,7 @@ const checkMigrationFile = (migration, parsedRules) => {
 
 const baseMigration = utils.readYAML(path.resolve(`migration/migration.yaml`))
 
-const engine = new Engine(rules, {
-  logger: disabledLogger
-})
+const engine = new Engine(rules)
 
 checkMigrationFile(baseMigration, Object.keys(engine.getParsedRules()))
 
