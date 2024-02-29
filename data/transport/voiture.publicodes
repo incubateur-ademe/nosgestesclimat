@@ -614,7 +614,7 @@ transport . voiture . barème construction:
       - si: motorisation = 'thermique'
         alors: barème thermique
       - si: motorisation = 'électrique'
-        alors: barème électrique
+        alors: électrique
       - si: motorisation = 'hybride'
         alors: barème hybride
   unité: kgCO2e
@@ -673,21 +673,61 @@ transport . voiture . barème construction . barème thermique:
         alors: 7600
   unité: kgCO2e
 
-transport . voiture . barème construction . barème électrique:
-  formule:
+transport . voiture . barème construction . électrique:
+  formule: barème thermique + batterie
+  unité: kgCO2e
+  note: |
+    La construction d'une voiture électrique émet plus de gaz à effet de serre qu'une voiture thermique de gamme équivalente.
+    Cela est dû à la production de la batterie, qui est très énergivore et à une empreinte carbone importante.
+
+    > Ce surplus d'émissions est d'environ +50% (mais varie d'environ +20% à plus d'une multiplication par 2 selon les études).
+    https://bonpote.com/la-voiture-electrique-solution-ideale-pour-le-climat/
+
+transport . voiture . construction . électrique . batterie:
+  formule: capacité * empreinte par kWh
+  unité: kgCO2e
+  note: |
+    L'empreinte carbone d'une batterie augmente avec sa capacité, car une capacité plus élevée nécessite l'utilisation d'un plus grand nombre de cellules lithium-ion.
+
+    La capacité de la batterie est exprimée en kWh, elle peut varier considérablement selon les modèles de voitures électriques.
+    Pour réduire l'impact de la voiture électrique il faut privilégier les modèles avec une batterie de petite capacité.
+
+transport . voiture . construction . électrique . batterie . empreinte par kWh:
+  formule: 100
+  unité: kgCO2e/kWh
+  note: |
+    Les études académiques sur l'empreinte carbone des batteries des véhicules électriques sont nombreuses, mais leurs résultats sont très variables.
+
+    Les valeurs varient de 60 kgCO2e/kWh à 150 kgCO2e/kWh. Une [méta-étude de l'IFPEN](https://www.sciencedirect.com/science/article/abs/pii/S0959652622006291)
+    (Institut Français du Pétrole et des Énergies Nouvelles) calcule une valeur médiane de 83 kgCO2e/kWh, en précisant que les résultats différent selons les chimies de batteries, 
+    les pays de productions, le pays des auteurs de l'étude, et que même ces facteurs intégrés il reste une grande variabilité des résultats.
+
+    Compte tenu de l'incertitude et des variations observées dans les études, nous adoptons une valeur prudente de 100 kgCO2e/kWh pour l'empreinte carbone des batteries.
+
+transport . voiture . construction . électrique . batterie . capacité:
+  question: Quelle est la capacité de la batterie de votre voiture électrique ?
+  description: |
+    La capacité de la batterie est exprimée en kWh, elle varie considérablement selon les modèles de véhicules.
+
+    Les constructeurs distinguent parfois une capacité brute et une capacité nette, réellement disponible. Si vous avez les deux valeurs, choisissez la capacité brute.
+  unité: kWh
+  par défaut:
     variations:
       - si:
           une de ces conditions:
             - gabarit = 'petite'
             - gabarit = 'moyenne'
-        alors: 10200
+        alors: 40 kWh
       - si:
           une de ces conditions:
             - gabarit = 'berline'
             - gabarit = 'SUV'
             - gabarit = 'VUL'
-        alors: 20200
-  unité: kgCO2e
+        alors: 65 kWh
+  suggestions:
+    Petite citadine: 30
+    Berline ou SUV: 65
+    Grande Autonomie: 100
 
 transport . voiture . barème construction . barème hybride:
   formule:
