@@ -10,11 +10,6 @@ transport . voiture:
             - est défini: utilisateur régulier
             - utilisateur régulier
         alors: empreinte calculée
-      - si:
-          toutes ces conditions:
-            - est défini: utilisateur régulier
-            - utilisateur régulier = non
-        alors: empreinte utilisateur irrégulier
       - sinon: empreinte moyenne
   unité: kgCO2e
   description: |
@@ -72,26 +67,6 @@ transport . voiture . notif utilsateur irrégulier:
   description: |
     Vous roulez avec des véhicules différents : nous vous avons donc attribué les caractéristiques d'une voiture "moyenne".
 
-transport . voiture . empreinte utilisateur irrégulier:
-  formule: (((construction * amortissement) * facteur location) + usage) / voyageurs
-  unité: kgCO2e
-
-transport . voiture . empreinte utilisateur irrégulier . construction:
-  valeur: voiture . construction
-  contexte:
-    voiture . utilisateur régulier: oui
-    voiture . gabarit: "'berline'"
-    voiture . motorisation: "'thermique'"
-
-transport . voiture . empreinte utilisateur irrégulier . usage:
-  valeur: voiture . usage
-  contexte:
-    voiture . utilisateur régulier: oui
-    voiture . gabarit: "'berline'"
-    voiture . motorisation: "'thermique'"
-    voiture . thermique . carburant: "'essence E5 ou E10'"
-    voiture . thermique . consommation aux 100: voiture . consommation estimée
-
 transport . voiture . empreinte moyenne:
   valeur: voiture . empreinte calculée
   contexte:
@@ -102,7 +77,7 @@ transport . voiture . empreinte moyenne:
     voiture . thermique . consommation aux 100: voiture . consommation estimée
 
 transport . voiture . empreinte calculée:
-  formule: (usage + construction amortie) / voyageurs
+  formule: (usage au kilomètre + construction au kilomètre) * km / voyageurs
   unité: kgCO2e
 
 transport . voiture . voyageurs:
@@ -128,11 +103,7 @@ transport . voiture . voyageurs:
     deux: 2
     cinq: 5
 
-transport . voiture . usage:
-  formule: km * empreinte usage au kilomètre
-  unité: kgCO2e
-
-transport . voiture . empreinte usage au kilomètre:
+transport . voiture . usage au kilomètre:
   formule: empreinte au kilomètre + base au kilomètre
   unité: kgCO2e/km
 
@@ -396,8 +367,8 @@ transport . voiture . nombre véhicules circulation:
     Ce chiffre concerne les véhicules particuliers (voitures et VUL).
     Il est issu des statistiques [INSEE](https://www.insee.fr/fr/statistiques/2045167#tableau-figure1_radio1).
 
-transport . voiture . par km personne:
-  formule: empreinte au kilomètre / voyageurs
+transport . voiture . empreinte calculée . construction au kilomètre:
+  formule: construction * amortissement
   unité: kgCO2e/km
 
 transport . voiture . construction:
@@ -508,10 +479,6 @@ transport . voiture . gabarit . berline . empreinte:
   unité: kgCO2e
   note: Règle utilisée pour le calcul de l'empreinte de la caravane et camping car.
 
-transport . voiture . empreinte calculée . construction amortie:
-  formule: construction * amortissement
-  unité: kgCO2e
-
 transport . voiture . amortissement:
   description: |
     Les discussions ont été animées sur l'amortissement de la voiture. Précédemment, dans le but de décourager l'achat neuf, un amortissement non linéaire avait été imaginé, fortement dégressif dans le temps, sur 10 ans.
@@ -527,7 +494,7 @@ transport . voiture . amortissement:
     Mais ce fonctionnement ne nous convenait toujours pas : en effet, elle pénalisait beaucoup les petits rouleurs, et ne paraissait pas très juste par rapport à la réalité d'un véhicule, dont la durée de vie s'exprime plutôt en km.
 
     C'est donc, finalement, ce choix-là que nous avons fait : l'amortissement du véhicule est fonction du nombre de km parcourus, au regard du nombre de km maximal correspondant au gabarit du véhicule.
-  formule: voiture . km / durée de vie en km
+  formule: 1 / durée de vie en km
 
 transport . voiture . durée de vie en km:
   formule:
@@ -544,22 +511,22 @@ transport . voiture . durée de vie en km:
   note: |
     Nous nous appuyons sur le référentiel (durée de vie, kilométrage) que reprend la [plateforme automobile de préconisations européennes](https://pfa-auto.fr/wp-content/uploads/2023/04/DT_Me%CC%81thodologie_2023_V15_FRANCAIS.pdf), avec les segments suivants :
 
-    - Gabarit "petit" : correspondant au segment A, soit 150 000 km
-    - Gabarit "moyen" : correspondant au segment B ou C, soit 225 000 km
-    - Gabarit "VUL" : correspondant au segment CDV (Car-Derived Vehicle), soit 270 000 km
-    - Gabarit "berline" : correspondant au segment B ou C, soit 225 000 km
-    - Gabarit "SUV" : correspondant au segment E ou F, soit 270 000 km
+    - Gabarit "petit" : correspondant au segment A, soit 150000 km
+    - Gabarit "moyen" : correspondant au segment B ou C, soit 225000 km
+    - Gabarit "VUL" : correspondant au segment CDV (Car-Derived Vehicle), soit 270000 km
+    - Gabarit "berline" : correspondant au segment B ou C, soit 225000 km
+    - Gabarit "SUV" : correspondant au segment E ou F, soit 270000 km
 
-transport . voiture . facteur location:
-  titre: Part d'utilisation annuelle d'une voiture de service
-  formule: km / km par an voiture partagée
-  note: On attribue à l'utilisateur l'impact de la construction au pro rata de son utilisation par rapport au km parcourus par la voiture sur une année.
+# transport . voiture . facteur location:
+#   titre: Part d'utilisation annuelle d'une voiture de service
+#   formule: km par an voiture partagée / durée de vie en km
+#   note: On attribue à l'utilisateur l'impact de la construction au pro rata de son utilisation par rapport au km parcourus par la voiture sur une année.
 
-transport . voiture . km par an voiture partagée:
-  titre: Kilomètres parcourus annuellement par une voiture en auto-partage
-  formule: 15130
-  unité: km
-  note: |
-    Page 80 de l'[Enquête Nationale Autopartage 2022](https://librairie.ademe.fr/cadic/7353/enquete-autopartage-2022-rapport.pdf):
+# transport . voiture . km par an voiture partagée:
+#   titre: Kilomètres parcourus annuellement par une voiture en auto-partage
+#   formule: 15130
+#   unité: km
+#   note: |
+#     Page 80 de l'[Enquête Nationale Autopartage 2022](https://librairie.ademe.fr/cadic/7353/enquete-autopartage-2022-rapport.pdf):
 
-    > "Les données communiquées par les opérateurs nous permettent de retenir l’hypothèse de 15130 kilomètres parcourus en moyenne par an par voiture en autopartage."
+#     > "Les données communiquées par les opérateurs nous permettent de retenir l’hypothèse de 15130 kilomètres parcourus en moyenne par an par voiture en autopartage."
