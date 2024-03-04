@@ -26,7 +26,7 @@ import rulesToJSONWorker from './rulesToJSON.worker.mjs'
 
 const t9nDir = 'data/i18n/t9n'
 
-const { srcLang, srcFile, destLangs, destRegions, markdown, optimDisabled } =
+const { srcLang, srcFile, destLangs, destRegions, markdown, noOptim } =
   cli.getArgs(`Aggregates the model to an unique JSON file.`, {
     source: true,
     target: true,
@@ -142,7 +142,7 @@ if (!markdown) {
     multiThread ? c.green('ON') : c.yellow('OFF')
   )
   console.log(
-    `ℹ️ Optimization mode: ${optimDisabled ? c.yellow('OFF') : c.green('ON')}`
+    `ℹ️ Optimization mode: ${noOptim ? c.yellow('OFF') : c.green('ON')}`
   )
 }
 
@@ -160,7 +160,8 @@ const printErrorAndExit = (err, regionCode, destLang) => {
   exit(-1)
 }
 
-const opts = { markdown, optimDisabled }
+const opts = { markdown, optimDisabled: noOptim }
+
 destLangs.unshift(srcLang)
 const resultOfCompilationAndOptim = await Promise.all(
   destLangs.flatMap((destLang) => {
