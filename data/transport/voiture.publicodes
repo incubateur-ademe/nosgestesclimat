@@ -274,7 +274,6 @@ transport . voiture . thermique . carburant . essence E85:
 transport . voiture . thermique . carburant . GPL:
   titre: GPL (Gaz de Pétrole Liquéfiés)
 
-
 transport . voiture . notif carburant:
   type: notification
   formule: thermique . carburant = 'essence E85'
@@ -346,76 +345,129 @@ transport . voiture . gabarit . SUV:
     "Sport utility vehicle", type 4x4 urbain
 
 transport . voiture . consommation estimée:
+  titre: Consommation estimée voiture
   note: |
     > Si nous avons travaillé les propositions de consommation moyenne, l'idéal au vu de l'impact de cette donnée est bien que l'utilisateur ou l'utilisatrice saisisse sa propre consommation réelle, moyennée sur son usage.
 
     Pour obtenir nos propositions, nous avons croisé plusieurs sources de données : 
 
     - Les données moyennes de consommation des véhicules essence et diesel, [fournies par l'ADEME](https://carlabelling.ademe.fr/chiffrescles/r/evolutionConsoMoyenne)
-    - Les données des "meilleures consommations" par gabarit et par carburant, fournies par [cet article de CAROOM](https://www.caroom.fr/guide/voiture-neuve/comment-choisir/carburant/faible-consommation) : vu qu'il s'agit des meilleures performances, et que nous avons les données de l'ADEME pour les moyennes globales, nous avons travaillé les chiffres en conservant les ratios de différences.
+    - Les données des "meilleures consommations" par gabarit et par carburant, fournies par [cet article de CAROOM](https://www.caroom.fr/guide/voiture-neuve/comment-choisir/carburant/faible-consommation): 
+      vu qu'il s'agit des meilleures performances, et que nous avons les données de l'ADEME pour les moyennes globales, 
+      nous avons travaillé les chiffres en conservant les ratios de différences.
     - Ces données en particulier sur [la consommation des véhicules utilitaires légers](https://www.webfleet.com/fr_fr/webfleet/blog/consommation-utilitaire/)
-    
-    Pour obtenir les consommations des véhicules roulant à l'essence E85, nous avons appliqué une surconsommation de 25% par rapport aux véhicules essence, chiffre qui semble faire consensus.
 
-    De même, pour obtenir les consommations des véhicules roulant au GPL, nous avons appliqué une surconsommation de 15% par rapport aux véhicules essence.
+    Pour obtenir les consommations des véhicules roulant à l'essence E85, nous avons appliqué une **surconsommation de 25%** par rapport aux véhicules essence, chiffre qui semble faire consensus.
+
+    De même, pour obtenir les consommations des véhicules roulant au GPL, nous avons appliqué une **surconsommation de 15%** par rapport aux véhicules essence.
+
+    Enfin, faute de données, nous avons considéré une consommation moyenne pour les berlines également.
+  unité: l/centkm
   formule:
     variations:
       - si: gabarit = 'petite'
-        alors: 
+        alors:
           variations:
             - si: thermique . carburant = 'gazole B7 ou B10'
-              alors: 4.7
+              alors: petite diesel
             - si: thermique . carburant = 'essence E5 ou E10'
-              alors: 6.6
+              alors: petite essence
             - si: thermique . carburant = 'essence E85'
-              alors: 6.6 * 1.25
+              alors: petite essence * 1.25
             - si: thermique . carburant = 'GPL'
-              alors: 6.6 * 1.15
+              alors: petite essence * 1.15
       - si: gabarit = 'moyenne'
-        alors: 
+        alors:
           variations:
             - si: thermique . carburant = 'gazole B7 ou B10'
-              alors: 4.8
+              alors: moyenne diesel
             - si: thermique . carburant = 'essence E5 ou E10'
-              alors: 6.3
+              alors: moyenne essence
             - si: thermique . carburant = 'essence E85'
-              alors: 6.3 * 1.25
+              alors: moyenne essence * 1.25
             - si: thermique . carburant = 'GPL'
-              alors: 6.3 * 1.15
+              alors: moyenne essence * 1.15
       - si: gabarit = 'VUL'
-        alors: 
+        alors:
           variations:
             - si: thermique . carburant = 'gazole B7 ou B10'
-              alors: 7.7
+              alors: VUL diesel
             - si: thermique . carburant = 'essence E5 ou E10'
-              alors: 9
+              alors: VUL essence
             - si: thermique . carburant = 'essence E85'
-              alors: 9 * 1.25
+              alors: VUL essence * 1.25
             - si: thermique . carburant = 'GPL'
               alors: 13
       - si: gabarit = 'berline'
-        alors: 
+        alors:
           variations:
             - si: thermique . carburant = 'gazole B7 ou B10'
-              alors: 4.8
+              alors: moyenne diesel
             - si: thermique . carburant = 'essence E5 ou E10'
-              alors: 6.3
+              alors: moyenne essence
             - si: thermique . carburant = 'essence E85'
-              alors: 6.3 * 1.25
+              alors: moyenne essence * 1.25
             - si: thermique . carburant = 'GPL'
-              alors: 6.3 * 1.15
+              alors: moyenne essence * 1.15
       - si: gabarit = 'SUV'
-        alors: 
+        alors:
           variations:
             - si: thermique . carburant = 'gazole B7 ou B10'
-              alors: 5.2
+              alors: SUV diesel
             - si: thermique . carburant = 'essence E5 ou E10'
-              alors: 6.7
+              alors: SUV essence
             - si: thermique . carburant = 'essence E85'
-              alors: 6.7 * 1.25
+              alors: SUV essence * 1.25
             - si: thermique . carburant = 'GPL'
-              alors: 6.7 * 1.15
+              alors: SUV essence * 1.15
+
+transport . voiture . consommation estimée . petite diesel:
+  titre: Consommation moyenne petite voiture essence
+  formule: 4.7
   unité: l/centkm
+  note: Consommation issue de ?
+
+transport . voiture . consommation estimée . petite essence:
+  titre: Consommation moyenne petite voiture essence
+  formule: 6.6
+  unité: l/centkm
+  note: Consommation issue de ?
+
+transport . voiture . consommation estimée . moyenne diesel:
+  titre: Consommation moyenne petite voiture essence
+  formule: 4.8
+  unité: l/centkm
+  note: Consommation issue de ?
+
+transport . voiture . consommation estimée . moyenne essence:
+  titre: Consommation moyenne petite voiture essence
+  formule: 6.3
+  unité: l/centkm
+  note: Consommation issue de ?
+
+transport . voiture . consommation estimée . VUL diesel:
+  titre: Consommation moyenne petite voiture essence
+  formule: 7.7
+  unité: l/centkm
+  note: Consommation issue de ?
+
+transport . voiture . consommation estimée . VUL essence:
+  titre: Consommation moyenne petite voiture essence
+  formule: 9
+  unité: l/centkm
+  note: Consommation issue de ?
+
+transport . voiture . consommation estimée . SUV diesel:
+  titre: Consommation moyenne petite voiture essence
+  formule: 4.8
+  unité: l/centkm
+  note: Consommation issue de ?
+
+transport . voiture . consommation estimée . SUV essence:
+  titre: Consommation moyenne petite voiture essence
+  formule: 6.3
+  unité: l/centkm
+  note: Consommation issue de ?
 
 transport . voiture . base au kilomètre:
   titre: Entretien et climatisation au kilomètre
