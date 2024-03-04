@@ -47,7 +47,7 @@ const addTranslationToBaseRules = (baseRules, translatedRules) => {
 
   Object.entries(translatedRules).forEach(([rule, attrs]) => {
     let baseRule = baseRules[rule]
-    if (baseRule) {
+    if (baseRule !== undefined) {
       Object.entries(attrs)
         .filter(([attr, _]) =>
           attrSuffixesToIgnore.every((s) => !attr.endsWith(s))

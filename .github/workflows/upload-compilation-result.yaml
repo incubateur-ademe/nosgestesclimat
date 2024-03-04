@@ -13,13 +13,10 @@ jobs:
   compile:
     runs-on: ubuntu-22.04
     outputs:
-      compilation-result: ${{ steps.compilation.outputs.result }}
       check-translation-result: ${{ steps.check-translation.outputs.result }}
       check-personas-result: ${{ steps.check-personas.outputs.result }}
-      test-translation-result: ${{ steps.test-translation.outputs.result }}
       test-personas-nightly-result: ${{ steps.test-personas-nightly.outputs.result }}
       test-personas-latest-result: ${{ steps.test-personas-latest.outputs.result }}
-      test-optim-result: ${{ steps.test-optim.outputs.result }}
       test-url: ${{ steps.set-test-url.outputs.fr }}
     steps:
       - uses: actions/checkout@v3
@@ -29,15 +26,11 @@ jobs:
           cache: 'yarn'
       - run: yarn install --immutable
       - run: git log | head && git status
+
       - id: compilation
-        name: Compiles the model and stores the result -- with escaped special characters.
-        run: |
-          yarn compile:md > compile.res
-          body="$(cat compile.res | tail --lines=+3 | head --lines=-1)"
-          body="${body//'%'/'%25'}"
-          body="${body//$'\n'/'%0A'}"
-          body="${body//$'\r'/'%0D'}"
-          echo "::set-output name=result::${body}"
+        name: Compile
+        run: yarn compile
+
       - id: check-translation
         name: Checks the rules translation
         run: |
@@ -56,15 +49,12 @@ jobs:
           body="${body//$'\n'/'%0A'}"
           body="${body//$'\r'/'%0D'}"
           echo "::set-output name=result::${body}"
+      - id: test-optim
+        name: Test the optimized rules against base rules
+        run: yarn test:optim
       - id: test-translation
         name: Test the translated rules against production
-        run: |
-          yarn test:translation --markdown > test-translation.res
-          body="$(cat test-translation.res | tail --lines=+3 | head --lines=-1)"
-          body="${body//'%'/'%25'}"
-          body="${body//$'\n'/'%0A'}"
-          body="${body//$'\r'/'%0D'}"
-          echo "::set-output name=result::${body}"
+        run: yarn test:translation
       - id: test-personas-latest
         name: Test the personas bilans against production
         run: |
@@ -79,15 +69,6 @@ jobs:
         run: |
           yarn test:personas --markdown -v nightly > test-personas-nightly.res
           body="$(cat test-personas-nightly.res | tail --lines=+3 | head --lines=-1)"
-          body="${body//'%'/'%25'}"
-          body="${body//$'\n'/'%0A'}"
-          body="${body//$'\r'/'%0D'}"
-          echo "::set-output name=result::${body}"
-      - id: test-optim
-        name: Test the optimized rules against base rules
-        run: |
-          yarn test:optim --markdown > test-optim.res
-          body="$(cat test-optim.res | tail --lines=+3 | head --lines=-1)"
           body="${body//'%'/'%25'}"
           body="${body//$'\n'/'%0A'}"
           body="${body//$'\r'/'%0D'}"
@@ -108,45 +89,37 @@ jobs:
 
           <p align="center">:rocket: Test the model from the website: <a href=\"${{ needs.compile.outputs.test-url }}\">${{ needs.compile.outputs.test-url }}</a></p>
 
-          ---
-
-          ### :wrench: Model compilation status
-
-          ${{ needs.compile.outputs.compilation-result }}
-
-          ---
-
-          ### :globe_with_meridians: Translation status
+          ## :globe_with_meridians: Translation status
 
           > _You will find more information about the translation in the [dedicated file](https:/github.com/datagir/nosgestesclimat/blob/master/docs/translation.md)._
 
-          #### Rules
+          ### Rules
 
           ${{ needs.compile.outputs.check-translation-result }}
 
-          #### Personas
+          ### Personas
 
           ${{ needs.compile.outputs.check-personas-result }}
 
-          #### Test translation (fr -> en)
+          ## :couple: Personas changes
 
-          ${{ needs.compile.outputs.test-translation-result }}
+          ### Test personas bilans against [preprod](https://nosgestesclimat-api.osc-fr1.scalingo.io/nightly/fr/FR/rules)
 
-          ---
-
-          ### :couple: Personas changes
-
-          #### Test personas bilans against [production](https://nosgestesclimat-api.osc-fr1.scalingo.io/latest/fr/FR/rules)
-
-          ${{ needs.compile.outputs.test-personas-latest-result }}
-
-          #### Test personas bilans against [preprod](https://nosgestesclimat-api.osc-fr1.scalingo.io/nightly/fr/FR/rules)
+          <details open=true>
+          <summary>In details</summary>
 
           ${{ needs.compile.outputs.test-personas-nightly-result }}
 
-          #### Test the model [optimisation](https://publicodes.github.io/tools/modules/optims.html)
+          </details>
 
-          ${{ needs.compile.outputs.test-optim-result }}
+          ### Test personas bilans against [production](https://nosgestesclimat-api.osc-fr1.scalingo.io/latest/fr/FR/rules)
+
+          <details>
+          <summary>Show</summary>
+
+          ${{ needs.compile.outputs.test-personas-latest-result }}
+
+          </details>
 
           " > artifacts/result.md
       - name: Upload artifact

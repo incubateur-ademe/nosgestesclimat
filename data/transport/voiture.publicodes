@@ -77,35 +77,29 @@ transport . voiture . empreinte utilisateur irrégulier:
   unité: kgCO2e
 
 transport . voiture . empreinte utilisateur irrégulier . construction:
-  formule:
-    recalcul:
-      règle: voiture . construction
-      avec:
-        voiture . utilisateur régulier: oui
-        voiture . gabarit: "'berline'"
-        voiture . motorisation: "'thermique'"
+  valeur: voiture . construction
+  contexte:
+    voiture . utilisateur régulier: oui
+    voiture . gabarit: "'berline'"
+    voiture . motorisation: "'thermique'"
 
 transport . voiture . empreinte utilisateur irrégulier . usage:
-  formule:
-    recalcul:
-      règle: voiture . usage
-      avec:
-        voiture . utilisateur régulier: oui
-        voiture . gabarit: "'berline'"
-        voiture . motorisation: "'thermique'"
-        voiture . thermique . carburant: "'essence E5 ou E10'"
-        voiture . thermique . consommation aux 100: voiture . consommation estimée
+  valeur: voiture . usage
+  contexte:
+    voiture . utilisateur régulier: oui
+    voiture . gabarit: "'berline'"
+    voiture . motorisation: "'thermique'"
+    voiture . thermique . carburant: "'essence E5 ou E10'"
+    voiture . thermique . consommation aux 100: voiture . consommation estimée
 
 transport . voiture . empreinte moyenne:
-  formule:
-    recalcul:
-      règle: voiture . empreinte calculée
-      avec:
-        voiture . utilisateur régulier: oui
-        voiture . gabarit: "'berline'"
-        voiture . motorisation: "'thermique'"
-        voiture . thermique . carburant: "'essence E5 ou E10'"
-        voiture . thermique . consommation aux 100: voiture . consommation estimée
+  valeur: voiture . empreinte calculée
+  contexte:
+    voiture . utilisateur régulier: oui
+    voiture . gabarit: "'berline'"
+    voiture . motorisation: "'thermique'"
+    voiture . thermique . carburant: "'essence E5 ou E10'"
+    voiture . thermique . consommation aux 100: voiture . consommation estimée
 
 transport . voiture . empreinte calculée:
   formule: (usage + construction amortie) / voyageurs
@@ -276,7 +270,6 @@ transport . voiture . thermique . carburant . essence E85:
   titre: Essence E85 (biocarburants)
 transport . voiture . thermique . carburant . GPL:
   titre: GPL (Gaz de Pétrole Liquéfiés)
-
 
 transport . voiture . notif carburant:
   type: notification
@@ -552,11 +545,11 @@ transport . voiture . amortissement:
   formule: voiture . km / durée de vie en km
 
 transport . voiture . durée de vie en km:
-  formule: 
+  formule:
     variations:
       - si: gabarit = 'petite'
         alors: 150000
-      - si:  
+      - si:
           une de ces conditions:
             - gabarit = 'moyenne'
             - gabarit = 'berline'
