@@ -7,7 +7,7 @@ import { AppContext } from '../AppContext'
 import { pathTo } from '../Nav'
 import Loader from '../components/Loader'
 
-const defaultRule = 'bilan'
+const defaultRule = 'bilan climat'
 
 export default function DocumentationPage() {
   const { engine } = useContext(AppContext)
