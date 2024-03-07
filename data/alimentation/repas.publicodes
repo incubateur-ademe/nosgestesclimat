@@ -1,10 +1,18 @@
 alimentation . repas:
   icônes: 🍽️
   formule:
-    somme:
-      - petit déjeuner annuel
-      - déjeuner et dîner
-      - bonus
+    variations:
+      - si: métrique = "carbone"
+        alors:
+          somme:
+            - petit déjeuner annuel
+            - déjeuner et dîner
+            - bonus
+      - si: métrique = "eau"
+        alors:
+          somme:
+            - petit déjeuner annuel
+            - déjeuner et dîner
 
 alimentation . bonus:
   formule:
@@ -16,12 +24,10 @@ alimentation . déjeuner et dîner:
   icônes: 🍽️
   titre: Déjeuners et dîners
   formule: par semaine * commun . semaines par an
-  unité: kgCO2e
 
 alimentation . déjeuner et dîner . par semaine:
   titre: Déjeuners et dîners par semaine
   formule: plats
-  unité: kgCO2e/semaine
 
 alimentation . plats:
   icônes: 🍽️
@@ -86,7 +92,6 @@ alimentation . plats:
       - viande 2
       - poisson 1
       - poisson 2
-  unité: kgCO2e/semaine
   note: |
     Pour le moment, nous proposons 6 repas types pour 6 régimes différents. Il a été choisi de limiter la granularité du modèle via 6 menus représentatifs des régimes associés pour simplifier l'estimation de l'empreinte du poste alimentation pour l'utilisateur (les spécificités de l'alimentation de chacun pourraient donner lieu à un simulateur complet dédié à l'alimentation).
     Ils sont basés sur les régimes représentatifs [documentés par l'ADEME](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm), actualisés avec les facteurs d'émission disponibles via Agribalyse.
@@ -108,11 +113,23 @@ alimentation . plats:
 alimentation . plats . végétalien:
   titre: Végétalien
   formule: empreinte * nombre
-  unité: kgCO2e/semaine
   icônes: 🌾🥜🥗
   description: |
     Repas sans produits animaux.
 
+alimentation . plats . végétalien . empreinte:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . plats . végétalien . empreinte carbone:
+  titre: Empreinte carbone d'un repas végétalien
+  formule: 0.785
+  unité: kgCO2e/repas
+  note: |
     Voici le menu type utilisé pour notre calcul.
 
     | Ingrédients                                                  | CIQUAL | Qte (g) | Kcal  | Protéines (g) | Lipides (g) | kgCO2e /kg | gCO2e  |
@@ -131,11 +148,6 @@ alimentation . plats . végétalien:
     | Pain                                                         | 7001   | 50      | 143,5 | 4,135         | 0,7         | 0,67       | 33,48  |
     | Total                                                        |        | 874     | 851,2 | 28,785        | 28,286      |            | 785,18 |
 
-alimentation . plats . végétalien . empreinte:
-  titre: Empreinte d'un repas végétalien
-  formule: 0.785
-  unité: kgCO2e/repas
-  note: |
     Pour l'instant, en l'absence de repas type végétalien dans la [base carbone](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm),
     nous prenons l'empreinte du repas végétarien, dans lequel nous substituons les 2 œufs par du tofu et des noix dans l'entrée qui devient alors une salade,
     en gardant approximativement les mêmes quantités de calories et de protéines.
@@ -145,6 +157,11 @@ alimentation . plats . végétalien . empreinte:
     Notons finalement que le tofu considéré ici pourrait être remplacé par du soja français et une fabrication du tofu française décarbonée, notamment pour éviter la déforestation et réduire encore plus les émissions, donnant lieu à un régime végétalien local. Voir [ce papier](https://www.nature.com/articles/s43016-020-0106-x) à ce propos du soja et de la déforestation.
 
     🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1SVYvBaaYDOUDcg5jX0eZFEColnWWIL8PCLMGrPR000o/edit#gid=1694091424) sous forme de tableur.
+
+alimentation . plats . végétalien . empreinte eau:
+  titre: Empreinte eau d'un repas végétalien
+  formule: 2879
+  unité: l/repas
 
 alimentation . plats . végétalien . nombre:
   question: Nombre de plats végétaliens par semaine
@@ -156,10 +173,22 @@ alimentation . plats . végétarien:
   titre: Végétarien
   formule: empreinte * nombre
   icônes: 🥗🍳🧀
-  unité: kgCO2e/semaine
   description: |
     Repas sans chair animale, avec des œufs ou un peu de fromage.
 
+alimentation . plats . végétarien . empreinte:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . plats . végétarien . empreinte carbone:
+  titre: Empreinte carbone d'un repas végétarien
+  formule: 1.115
+  unité: kgCO2e/repas
+  note: |
     Voici le menu type utilisé pour notre calcul:
 
     | Ingrédients                                                      | CIQUAL | Qte (g) | Kcal   | Protéines (g) | Lipides (g) | gCO2e /kg | gCO2e  |
@@ -178,16 +207,16 @@ alimentation . plats . végétarien:
     | Pain                                                             | 7001   | 50      | 143,5  | 4,135         | 0,7         | 0,67      | 33,5   |
     | Total                                                            |        | 842     | 732,35 | 29,491        | 28,238      |           | 1115,0 |
 
-alimentation . plats . végétarien . empreinte:
-  titre: Empreinte d'un repas végétarien
-  formule: 1.115
-  unité: kgCO2e/repas
-  note: |
     C'est le "Repas végétarien 1" [ici](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm), [actualisé avec les facteurs d'émission Agribalyse](https://docs.google.com/spreadsheets/d/1SVYvBaaYDOUDcg5jX0eZFEColnWWIL8PCLMGrPR000o/edit#gid=1694091424).
 
     > Note : on peut se demander pourquoi la recette fait mention d'une omelette aux oignons sans inclure les oignons. Négligeables ? Nous les avons ajouté.
 
     🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1SVYvBaaYDOUDcg5jX0eZFEColnWWIL8PCLMGrPR000o/edit#gid=1694091424) sous forme de tableur.
+
+alimentation . plats . végétarien . empreinte eau:
+  titre: Empreinte eau d'un repas végétarien
+  formule: 2676
+  unité: l/repas
 
 alimentation . plats . végétarien . nombre:
   question: Nombre de plats végétariens par semaine
@@ -198,10 +227,22 @@ alimentation . plats . viande 1:
   titre: Viande 1
   icônes: 🍗🥓🧀
   formule: empreinte * nombre
-  unité: kgCO2e/semaine
   description: |
     Repas contenant une pièce de poulet, porc, ou fromage.
 
+alimentation . plats . viande 1 . empreinte:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . plats . viande 1 . empreinte carbone:
+  titre: Empreinte carbone d'un repas de type viande 1 (poulet, porc, fromage)
+  formule: 2.098
+  unité: kgCO2e/repas
+  note: |
     Voici le menu type utilisé pour notre calcul:
 
     | Ingrédients                        | CIQUAL | Qte (g) | Kcal   | Protéines (g) | Lipides (g) | gCO2e /kg | gCO2e  |
@@ -218,17 +259,17 @@ alimentation . plats . viande 1:
     | Pain                               | 7001   | 50      | 143,5  | 4,135         | 0,7         | 0,67      | 33,5   |
     | Total                              |        | 517     | 881,55 | 48,389        | 38,878      |           | 2097,9 |
 
-alimentation . plats . viande 1 . empreinte:
-  titre: Empreinte d'un repas de type viande 1 (poulet, porc, fromage)
-  formule: 2.098
-  unité: kgCO2e/repas
-  note: |
     C'est le "Repas classique 1 (avec poulet)" [ici](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm), actualisé avec les facteurs d'émission Agribalyse.
 
     Le facteur d'émission associé à l'ingrédient principal (ici le la pièce de volaille ou porc) correspond à une moyenne de facteurs d'émissions associés au porc (pièce de viande et charcuterie), poulet, dinde, canard d'Agribalyse.
     Cette moyenne est pondérée selon les consommations réelles des Français par type de viande animale.
 
     🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1SVYvBaaYDOUDcg5jX0eZFEColnWWIL8PCLMGrPR000o/edit#gid=1200865486) sous forme de tableur.
+
+alimentation . plats . viande 1 . empreinte eau:
+  titre: Empreinte eau d'un repas de type viande 1 (poulet, porc, fromage)
+  formule: 6371
+  unité: l/repas
 
 alimentation . plats . viande 1 . nombre:
   question: Nombre de plats viande 1 par semaine
@@ -240,10 +281,22 @@ alimentation . plats . viande 2:
   titre: viande 2
   icônes: 🥩🍖
   formule: empreinte * nombre
-  unité: kgCO2e/semaine
   description: |
     Repas contenant une pièce de bœuf, veau, ou agneau.
 
+alimentation . plats . viande 2 . empreinte:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . plats . viande 2 . empreinte carbone:
+  titre: Empreinte carbone d'un repas de type viande 2 (bœuf, veau, agneau)
+  formule: 5.510
+  unité: kgCO2e/repas
+  note: |
     Voici le menu type utilisé pour notre calcul:
 
     | Ingrédients                           | CIQUAL | Qte (g) | Kcal   | Protéines (g) | Lipides (g) | gCO2e /kg | gCO2e  |
@@ -259,17 +312,17 @@ alimentation . plats . viande 2:
     | tarte aux poires                      | 24663  | 100     | 281,55 | 2,55          | 14,6        | 2,62      | 262    |
     | Total                                 |        | 657     | 926,55 | 40,775        | 50,8005     |           | 5510,0 |
 
-alimentation . plats . viande 2 . empreinte:
-  titre: Empreinte d'un repas de type viande 2 (bœuf, veau, agneau)
-  formule: 5.510
-  unité: kgCO2e/repas
-  note: |
     C'est le "Repas classique 2 (avec bœuf)" [ici](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm), actualisé avec les facteurs d'émission Agribalyse.
 
     Le facteur d'émission associé à l'ingrédient principal (ici le la pièce de viande rouge) correspond à une moyenne de facteurs d'émissions associés au bœuf, agneau, veau d'Agribalyse.
     Cette moyenne est pondérée selon les consommations réelles des Français par type de viande animale.
 
     🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1SVYvBaaYDOUDcg5jX0eZFEColnWWIL8PCLMGrPR000o/edit#gid=1200865486) sous forme de tableur.
+
+alimentation . plats . viande 2 . empreinte eau:
+  titre: Empreinte eau d'un repas de type viande 2 (bœuf, veau, agneau)
+  formule: 2037
+  unité: l/repas
 
 alimentation . plats . viande 2 . nombre:
   question: Nombre de plats viande 2 par semaine
@@ -280,10 +333,22 @@ alimentation . plats . viande 2 . nombre:
 alimentation . plats . poisson 1:
   formule: empreinte * nombre
   icônes: 🍣🥧
-  unité: kgCO2e/semaine
   description: |
     Repas contenant thon, saumon, sardine ou maquereau.
 
+alimentation . plats . poisson 1 . empreinte:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . plats . poisson 1 . empreinte carbone:
+  titre: Empreinte carbone d'un repas de type poisson 1 (thon, saumon, sardine, maquereau)
+  formule: 1.630
+  unité: kgCO2e/repas
+  note: |
     Voici le menu type utilisé pour notre calcul.
 
     | Ingrédients                                     | CIQUAL | Qte (g) | Kcal    | Protéines (g) | Lipides (g) | gCO2e /kg | gCO2e  |
@@ -301,11 +366,6 @@ alimentation . plats . poisson 1:
     | tarte aux poires                                | 24663  | 100     | 281,55  | 2,55          | 14,6        | 2,62      | 262    |
     | Total                                           |        | 514,5   | 885,275 | 33,3075       | 57,2025     |           | 1630,0 |
 
-alimentation . plats . poisson 1 . empreinte:
-  titre: Empreinte d'un repas de type poisson 1 (thon, saumon, sardine, maquereau)
-  formule: 1.630
-  unité: kgCO2e/repas
-  note: |
     Pour l'instant, en l'absence de repas type poisson dans la [base carbone](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm),
     nous proposons un menu poisson à partir des "repas classiques" de la base carbone.
 
@@ -314,6 +374,11 @@ alimentation . plats . poisson 1 . empreinte:
     Cette moyenne est pondérée selon les consommations réelles des Français par type de poisson et conditionnement.
 
     🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1SVYvBaaYDOUDcg5jX0eZFEColnWWIL8PCLMGrPR000o/edit#gid=731092178) sous forme de tableur.
+
+alimentation . plats . poisson 1 . empreinte eau:
+  titre: Empreinte eau d'un repas de type poisson 1 (thon, saumon, sardine, maquereau)
+  formule: 1929
+  unité: l/repas
 
 alimentation . plats . poisson 1 . nombre:
   question: Nombre de plats poisson 1 par semaine
@@ -324,11 +389,23 @@ alimentation . plats . poisson 1 . nombre:
 alimentation . plats . poisson 2:
   titre: Poisson 2
   formule: empreinte * nombre
-  unité: kgCO2e/semaine
   icônes: 🐟🍚
   description: |
     Repas avec un filet de poisson blanc.
 
+alimentation . plats . poisson 2 . empreinte:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . plats . poisson 2 . empreinte carbone:
+  titre: Empreinte carbone d'un repas de type poisson 2, blanc
+  formule: 2.368
+  unité: kgCO2e/repas
+  note: |
     Voici le menu type utilisé pour notre calcul.
 
     | Ingrédients                                     | CIQUAL | Qte (g) | Kcal   | Protéines (g) | Lipides (g) | gCO2e /kg | gCO2e  |
@@ -344,11 +421,6 @@ alimentation . plats . poisson 2:
     | tarte aux poires                                | 24663  | 100     | 281,55 | 2,55          | 14,6        | 2,62      | 262    |
     | Total                                           |        | 547     | 769,95 | 36,665        | 30,013      |           | 2367,9 |
 
-alimentation . plats . poisson 2 . empreinte:
-  titre: Empreinte d'un repas de type poisson blanc
-  formule: 2.368
-  unité: kgCO2e/repas
-  note: |
     Pour l'instant, en l'absence de repas type poisson dans la [base carbone](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm),
     nous proposons un menu poisson à partir des "repas classiques" de la base carbone.
 
@@ -358,22 +430,16 @@ alimentation . plats . poisson 2 . empreinte:
 
     🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1SVYvBaaYDOUDcg5jX0eZFEColnWWIL8PCLMGrPR000o/edit#gid=731092178) sous forme de tableur.
 
+alimentation . plats . poisson 2 . empreinte eau:
+  titre: Empreinte eau d'un repas de type poisson 2, blanc
+  formule: 6148
+  unité: l/repas
+
 alimentation . plats . poisson 2 . nombre:
   question: Nombre de plats poisson 2 par semaine
   par défaut: 0
   plancher: 0
   unité: repas/semaine
-
-alimentation . planétaire:
-  icônes: 🥗
-  description: |
-    Un régime décrit en 2019 pour concilier santé et environnement.
-
-    Énormément de légumes et de fruits, beaucoup de céréales complètes, protéines et huiles végétales, un peu de lait et fromage, un peu de viande et de poisson, et un peu de sucres ajoutés.
-
-    Contrairement au vague régime "flexitarien", le régime planétaire est [décrit très précisément](https://www.culture-nutrition.com/2019/01/28/modele-alimentaire-regime-planetaire/).
-
-    ![](https://eatforum.org/content/uploads/2019/02/EAT-Lancet_PHD_Plate_RGB-02.png)
 
 alimentation . petit déjeuner annuel:
   titre: Petit déjeuner
@@ -383,12 +449,10 @@ alimentation . petit déjeuner annuel:
 alimentation . petit déjeuner . par semaine:
   titre: Empreinte hebdo petit déjeuner
   formule: par jour * commun . jours par semaine
-  unité: kgCO2e/semaine
 
 alimentation . petit déjeuner . par jour:
   titre: Empreinte hebdo petit déjeuner
   formule: alimentation . petit déjeuner * 1 repas/jour
-  unité: kgCO2e/jour
 
 alimentation . petit déjeuner:
   formule:
@@ -402,7 +466,6 @@ alimentation . petit déjeuner:
       - si: type = 'végétalien'
         alors: végétalien
       - sinon: 0
-  unité: kgCO2e/repas
 
 alimentation . petit déjeuner . type:
   question: Quel petit déjeuner vous correspond le plus ?
@@ -426,6 +489,15 @@ alimentation . petit déjeuner . type:
 
 alimentation . petit déjeuner . continental:
   titre: Continental
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . petit déjeuner . continental . empreinte carbone:
+  titre: Empreinte carbone d'un petit déjeuner continental
   formule: 0.289
   unité: kgCO2e/repas
   description: |
@@ -442,6 +514,11 @@ alimentation . petit déjeuner . continental:
     | Orange          | 100     | 47    | 0,9           | 0,1         | 0,64     | 64    |
     | Total           | 230     | 482   | 9,53          | 20,31       |          | 289,1 |
 
+alimentation . petit déjeuner . continental . empreinte eau:
+  titre: Empreinte eau d'un petit déjeuner continental
+  formule: 1272
+  unité: l/repas
+
 alimentation . petit déjeuner . lait céréales:
   titre: Lait céréales
   formule:
@@ -455,6 +532,15 @@ alimentation . petit déjeuner . lait céréales:
 
 alimentation . petit déjeuner . lait vache céréales:
   titre: Céréales avec lait de vache
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . petit déjeuner . lait vache céréales . empreinte carbone:
+  titre: Empreinte carbone d'un petit déjeuner avec lait de vache et céréales
   formule: 0.468
   unité: kgCO2e/repas
   description: |
@@ -469,8 +555,22 @@ alimentation . petit déjeuner . lait vache céréales:
     | Produit laitier (lait ou yaourt)                                                                        | 200     | 84   | 6,8           | 2           | 1,32      | 264   |
     | Total                                                                                                   | 260     | 324  | 12,1          | 7           |           | 468   |
 
+alimentation . petit déjeuner . lait vache céréales . empreinte eau:
+  titre: Empreinte eau d'un petit déjeuner avec lait de vache et céréales
+  formule: 1796
+  unité: l/repas
+
 alimentation . petit déjeuner . lait soja céréales:
   titre: Céréales avec lait de soja
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . petit déjeuner . lait soja céréales . empreinte carbone:
+  titre: Empreinte carbone d'un petit déjeuner avec lait de soja et céréales
   formule: 0.292
   unité: kgCO2e/repas
   description: |
@@ -485,8 +585,22 @@ alimentation . petit déjeuner . lait soja céréales:
     | Produit laitier (lait ou yaourt)                                                                        | 200     | 80   | 7,6           | 4           | 0,44      | 88    |
     | Total                                                                                                   | 260     | 320  | 12,9          | 9           |           | 292   |
 
+alimentation . petit déjeuner . lait soja céréales . empreinte eau:
+  titre: Empreinte eau d'un petit déjeuner avec lait de soja et céréales
+  formule: 1734
+  unité: l/repas
+
 alimentation . petit déjeuner . lait avoine céréales:
   titre: Céréales avec lait d'avoine
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . petit déjeuner . lait avoine céréales . empreinte carbone:
+  titre: Empreinte carbone d'un petit déjeuner avec lait de avoine et céréales
   formule: 0.312
   unité: kgCO2e/repas
   description: |
@@ -501,8 +615,22 @@ alimentation . petit déjeuner . lait avoine céréales:
     | Produit laitier (lait ou yaourt)                                                                        | 200     | 80   | 7,6           | 4           | 0,54      | 108   |
     | Total                                                                                                   | 260     | 320  | 12,9          | 9           |           | 312   |
 
+alimentation . petit déjeuner . lait avoine céréales . empreinte eau:
+  titre: Empreinte eau d'un petit déjeuner avec lait de avoine et céréales
+  formule: 1778
+  unité: l/repas
+
 alimentation . petit déjeuner . britannique:
   titre: Britannique
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . petit déjeuner . britannique . empreinte carbone:
+  titre: Empreinte carbone d'un petit déjeuner britannique
   formule: 1.124
   unité: kgCO2e/repas
   description: |
@@ -518,8 +646,21 @@ alimentation . petit déjeuner . britannique:
     | Toasts (2 tranches - Pain de mie, courant) | 50      | 141  | 4,1           | 2,35        | 1,76      | 88    |
     | Total                                      | 257     | 470  | 38,2          | 22,71       |           | 1124  |
 
+alimentation . petit déjeuner . britannique . empreinte eau:
+  titre: Empreinte eau d'un petit déjeuner britannique
+  formule: 1149
+  unité: l/repas
+
 alimentation . petit déjeuner . végétalien:
   titre: Végétalien
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . petit déjeuner . végétalien . empreinte carbone:
   formule: 0.419
   unité: kgCO2e/repas
   description: |
@@ -533,6 +674,11 @@ alimentation . petit déjeuner . végétalien:
     | Kiwi         | 100     | 60,5  | 0,88          | 0,6         | 0,99      | 99    |
     | Pomme        | 150     | 73    | 0,4           | 0,4         | 0,4       | 60    |
     | Total        | 370     | 242,1 | 2,552         | 1,6         |           | 419,4 |
+
+alimentation . petit déjeuner . végétalien . empreinte eau:
+  titre: Empreinte eau d'un petit déjeuner végétalien
+  formule: 3630
+  unité: l/repas
 
 alimentation . petit déjeuner . type . continental:
   icônes: 🥐🥖
