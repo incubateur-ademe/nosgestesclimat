@@ -1,14 +1,16 @@
-import { disabledLogger } from '@publicodes/tools'
 import {
   defaultLang,
   availableLanguages
 } from '@incubateur-ademe/nosgestesclimat-scripts/utils'
-import Engine from 'publicodes'
 import c from 'ansi-colors'
 import yargs from 'yargs'
 import { readFile } from 'fs/promises'
+import { serializeUnit } from 'publicodes'
 
-const API_URL = 'https://nosgestesclimat-api.osc-fr1.scalingo.io'
+const PREPROD_PREVIEW_URL = 'https://preprod--ecolab-data.netlify.app/'
+
+// Same as site-nextjs, shouldn't it be https://data.nosgestesclimat.fr/ ?
+const LATEST_PREVIEW_URL = 'https://master--ecolab-data.netlify.app/'
 
 export function getArgs() {
   return yargs(process.argv.slice(2))
@@ -35,10 +37,14 @@ export function getArgs() {
     .option('version', {
       alias: 'v',
       type: 'string',
-      description: 'The version of the model to test agains (default: nightly)',
+      description: 'The version of the model to test agains',
       default: 'nightly'
     })
-
+    .option('persona', {
+      alias: 'p',
+      type: 'string',
+      description: 'Test only one persona'
+    })
     .help('h')
     .alias('h', 'help').argv
 }
@@ -54,7 +60,7 @@ export function getLocalRules(region, lang, optim = false) {
     .catch((e) => {
       console.error(`No local rules found for ${region} and ${lang}`)
       console.error(e.message)
-      process.exit(-1)
+      process.exit(1)
     })
 }
 
@@ -66,142 +72,193 @@ export function getLocalPersonas(region, lang) {
     .catch((e) => {
       console.error(`No local personas found for ${region} and ${lang}:`)
       console.error(e.message)
-      process.exit(-1)
+      process.exit(1)
+    })
+}
+
+export function getLocalMigrationTable() {
+  return readFile(`./public/migration.json`, {
+    encoding: 'utf8'
+  })
+    .then((res) => JSON.parse(res))
+    .catch((e) => {
+      console.error(`No migration file found:`)
+      console.error(e.message)
+      process.exit(1)
     })
 }
 
 export function getRulesFromAPI(version, region, lang) {
-  return fetch(`${API_URL}/${version}/${lang}/${region}/rules`)
+  const url = version === 'nightly' ? PREPROD_PREVIEW_URL : LATEST_PREVIEW_URL
+  const fileName = `co2-model.${region}-lang.${lang}.json`
+  return fetch(url + fileName)
     .then((res) => res.json())
     .catch((e) => {
       console.error(
         `No prod rules found for ${region} and ${lang} (${version}):`
       )
       console.error(e.message)
-      process.exit(-1)
+      process.exit(1)
     })
 }
 
 export function getPersonasFromAPI(version, region, lang) {
-  return fetch(`${API_URL}/${version}/${lang}/personas`)
+  const url = version === 'nightly' ? PREPROD_PREVIEW_URL : LATEST_PREVIEW_URL
+  const fileName = `personas-${lang}.json`
+  return fetch(url + fileName)
     .then((res) => res.json())
     .catch((e) => {
       console.error(
         `No prod personas found for ${region} and ${lang} (${version}):`
       )
       console.error(e.message)
-      process.exit(-1)
+      process.exit(1)
     })
 }
 
-export function testPersonas(rules, personas) {
-  const engine = new Engine(rules, { logger: disabledLogger })
-  const personasRules = Object.values(personas)
-  const results = {}
+export function printResults({ markdownHeader, results, nbTests, markdown }) {
+  if (results.length === 1 && results[0].type === 'error') {
+    // An error occured while trying to set the situation
+    if (markdown) {
+      console.log(`
+An error occured while testing the model:
 
-  for (const persona of personasRules) {
-    let personaData = persona.situation || {}
-    for (const ruleName in personaData) {
-      if (!(ruleName in rules)) {
-        delete personaData[ruleName]
-      }
+~~~${results[0].message}
+~~~
+`)
+    } else {
+      console.log(`${c.red('(err)')} An error occured while testing the model:`)
+      console.log(`${results[0].message}\n`)
     }
-    engine.setSituation(personaData)
-    results[persona.nom] = engine.evaluate('bilan').nodeValue
+    // TODO: remove this when the production use the latest version
+    // process.exit(1)
+    return
   }
 
-  return results
-}
-
-const kgCO2Str = c.dim('(kg CO2e)')
-
-// TODO: could be improved by using a more generic way to compare results.
-export function printResults(
-  localResults,
-  prodResults,
-  markdown,
-  version,
-  withOptim = false
-) {
   if (markdown) {
-    console.log(
-      `| Persona | Total PR ${
-        withOptim ? 'with optim.' : ''
-      } (kg CO2e) | Total ${
-        withOptim ? 'PR without optim.' : 'in prod.'
-      } (kg CO2e) | Δ (%) |`
-    )
-    console.log('|-----:|:------:|:------:|:----:|')
-  } else {
-    const title = withOptim
-      ? 'Test model optimisation'
-      : `Test personas regression against ${c.green(version)}`
-    console.log(`[ ${title} ]\n`)
+    console.log()
+    console.log(markdownHeader)
+    console.log('|:-----|:------|:------|:-------|')
   }
+
   const fails = []
-  const nbTests = Object.keys(localResults).length
-  for (let name in localResults) {
-    const localResult = Math.fround(localResults[name])
-    const prodResult = Math.fround(prodResults[name])
-    const diff = localResult - prodResult
+
+  results.sort((a, b) => a.rule.localeCompare(b.rule))
+  let nbDiff = 0
+
+  for (const result of results) {
+    if (result.type === 'warning') {
+      if (!markdown) {
+        console.log(
+          `${c.yellow('(warn)')} ${c.magenta(result.rule)}: ${result.msg}`
+        )
+      } else {
+        // NOTE: for now we don't need to print the warning in the markdown
+        // console.log(
+        //   `| ${c.magenta(result.rule)} | | | | (warning) ${result.msg} |`
+        // )
+      }
+
+      continue
+    }
+    const actualRounded =
+      result.actual.nodeValue == null
+        ? result.actual.nodeValue
+        : Math.fround(result.actual.nodeValue)
+    const actualUnit = serializeUnit(result.actual.unit)
+    const expectedRounded =
+      result.expected.nodeValue == null
+        ? result.expected.nodeValue
+        : Math.fround(result.expected.nodeValue)
+    const expectedUnit = serializeUnit(result.expected.unit)
+
+    const diff =
+      isFinite(actualRounded) && isFinite(expectedRounded)
+        ? actualRounded - expectedRounded
+        : 0
+
     if (diff !== 0) {
-      const diffPercent = Math.abs(Math.round((diff / prodResult) * 100))
-      const color = diffPercent <= 1 ? c.yellow : c.red
+      nbDiff++
+      const diffPercent = Math.abs(Math.round((diff / expectedRounded) * 100))
 
       if (markdown) {
         console.log(
           fmtGHActionErr(
-            localResult,
-            prodResult,
+            actualRounded,
+            actualUnit,
+            expectedRounded,
+            expectedUnit,
             diff,
             diffPercent,
-            name,
-            color
+            result.rule
           )
         )
       } else {
         fails.push(
-          fmtCLIErr(localResult, prodResult, diff, diffPercent, name, color)
+          fmtCLIErr(
+            actualRounded,
+            actualUnit,
+            expectedRounded,
+            expectedUnit,
+            diff,
+            diffPercent,
+            result.rule,
+            result.message
+          )
         )
       }
     }
   }
+
+  if (markdown) {
+    if (nbDiff === 0) {
+      console.log(`✅ _Aucune différence détectée sur **${nbTests}** tests_`)
+    }
+  }
+
   if (!markdown) {
     const nbFails = fails.length
     fails.forEach((fail) => console.log(fail))
-    console.log(`\n${c.green('OK')} ${nbTests - nbFails}/${nbTests}`)
     if (nbFails > 0) {
-      console.log(`${c.red('FAIL')} ${nbFails}/${nbTests}`)
+      console.log(`\n${c.red('DIFF')} ${nbFails}/${nbTests}`)
+    } else {
+      console.log(`\n${c.green('OK')} ${nbTests}/${nbTests}\n`)
     }
   }
 }
 
-function formatValueInKgCO2e(value) {
-  return c.yellow(Math.fround(value).toLocaleString('en-us')) + ' ' + kgCO2Str
+function formatValue(value) {
+  return value === null ? 'null' : Math.fround(value).toLocaleString('en-us')
 }
 
-function fmtCLIErr(localResult, prodResult, diff, diffPercent, name, color) {
+function fmtCLIErr(
+  actual,
+  actualUnit,
+  expected,
+  expectedUnit,
+  diff,
+  diffPercent,
+  rule,
+  message
+) {
+  const color = diffPercent <= 1 ? c.yellow : c.red
   const sign = diff > 0 ? '+' : diff < 0 ? '-' : ''
-  const hd = color(diffPercent <= 1 ? '[WARN]' : '[FAIL]')
-  return `${hd} ${name} [${color(sign + Math.abs(diff))} ${kgCO2Str}, ${color(
-    sign + diffPercent
-  )}%]: ${formatValueInKgCO2e(localResult)} != ${formatValueInKgCO2e(
-    prodResult
-  )}`
+  return `${c.magenta(rule)}: ${color('(' + c.bold(sign + diffPercent) + '%)')} ${message ? `\n${message}` : ''}\n  ${c.dim('actual: ') + formatValue(actual)} ${c.dim.italic(actualUnit ?? '')}\n  ${c.dim('expected: ') + formatValue(expected)} ${c.dim.italic(expectedUnit ?? '')}`
 }
 
-function fmtGHActionErr(localResult, prodResult, diff, diffPercent, name) {
-  const color =
-    diffPercent <= 1 ? 'sucess' : diffPercent > 5 ? 'critical' : 'important'
-  const sign = diff > 0 ? '%2B' : '-'
-  return `|![](https://img.shields.io/badge/${name.replaceAll(
-    ' ',
-    '%20'
-  )}-${sign}${Math.round(diff).toLocaleString(
-    'en-us'
-  )}%20kgCO2e-${color}?style=flat-square) | **${localResult.toLocaleString(
-    'en-us'
-  )}** | ${prodResult.toLocaleString('en-us')} | ${
+function fmtGHActionErr(
+  actual,
+  actualUnit,
+  expected,
+  expectedUnit,
+  diff,
+  diffPercent,
+  name
+) {
+  // const color =
+  //   diffPercent <= 1 ? 'sucess' : diffPercent > 5 ? 'critical' : 'important'
+  // const sign = diff > 0 ? '%2B' : '-'
+  return `| ${name} | ${formatValue(actual)} ${actualUnit ? `_${actualUnit}_` : ''} | ${formatValue(expected)} ${expectedUnit ? `_${expectedUnit}_` : ''} | **${
     diff > 0 ? '+' : '-'
-  }${diffPercent}% |`
+  }${diffPercent}%** |`
 }

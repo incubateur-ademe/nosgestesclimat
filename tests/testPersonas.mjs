@@ -1,25 +1,90 @@
+import c from 'ansi-colors'
+import Engine from 'publicodes'
+import { disabledLogger } from '@publicodes/tools'
+
 import {
-  testPersonas,
-  printResults,
   getArgs,
   getLocalRules,
   getLocalPersonas,
   getRulesFromAPI,
-  getPersonasFromAPI
+  getPersonasFromAPI,
+  printResults
 } from './commons.mjs'
+import safeGetSituation from './helpers/safeGetSituation.mjs'
 
-const { country, language, markdown, version } = getArgs()
+/**
+ * Compares the value of all the rules between the local and the prod (or specified) version
+ * with the situation of the specified persona (default: all personas).
+ *
+ * TODO: factorize the code with testOptim.mjs
+ * TODO: add the possibility to test only a subset of the rules
+ */
 
-const localRules = getLocalRules(country, language)
-const localPersonas = getLocalPersonas(country, language)
+const { country, language, markdown, version, persona } = getArgs()
 
-const prodRules = getRulesFromAPI(version, country, language)
-const prodPersonas = getPersonasFromAPI(version, country, language)
+const localRules = await getLocalRules(country, language)
+let localPersonas = await getLocalPersonas(country, language)
 
-Promise.all([localRules, localPersonas, prodRules, prodPersonas]).then(
-  (res) => {
-    const localResults = testPersonas(res[0], res[1])
-    const prodResults = testPersonas(res[2], res[3])
-    printResults(localResults, prodResults, markdown, version)
+const prodRules = await getRulesFromAPI(version, country, language)
+let prodPersonas = await getPersonasFromAPI(version, country, language)
+
+if (persona && persona in localPersonas && persona in prodPersonas) {
+  localPersonas = { [persona]: localPersonas[persona] }
+  prodPersonas = { [persona]: prodPersonas[persona] }
+}
+
+const localEngine = new Engine(localRules, { logger: disabledLogger })
+const prodEngine = new Engine(prodRules, { logger: disabledLogger })
+
+const nbRules = Object.keys(localRules).length
+
+for (const personaName in localPersonas) {
+  const { situation: localSituation } = localPersonas[personaName]
+  const { situation: prodSituation } = prodPersonas[personaName]
+  const results = []
+
+  if (markdown) {
+    console.log(`#### ${localPersonas[personaName].nom}\n`)
+  } else {
+    console.log(
+      `[ Test persona ${c.magenta(personaName)} regression against ${c.green(version)} ]\n`
+    )
   }
-)
+
+  try {
+    const safeSituation = safeGetSituation({
+      situation: localSituation || {},
+      parsedRulesNames: Object.keys(localEngine.getParsedRules()),
+      version: 'local',
+      markdown: version === 'nightly' ? markdown : false
+    })
+    const safeProdSituation = safeGetSituation({
+      situation: prodSituation || {},
+      parsedRulesNames: Object.keys(prodEngine.getParsedRules()),
+      version: 'prod',
+      markdown: version === 'latest' ? markdown : false
+    })
+    localEngine.setSituation(safeSituation)
+    prodEngine.setSituation(safeProdSituation)
+  } catch (e) {
+    printResults({ results: [{ type: 'error', message: e.message }], markdown })
+    continue
+  }
+
+  for (const rule in localRules) {
+    if (!(rule in prodRules)) {
+      continue
+    }
+
+    const local = localEngine.evaluate(rule)
+    const prod = prodEngine.evaluate(rule)
+    results.push({ type: 'result', rule, actual: local, expected: prod })
+  }
+
+  printResults({
+    markdownHeader: `| Règle | PR | ${version} | Δ (%) |`,
+    results,
+    nbTests: nbRules,
+    markdown
+  })
+}

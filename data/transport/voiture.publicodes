@@ -5,12 +5,12 @@ transport . voiture:
     variations:
       - si: km = 0
         alors: 0
-      - si: 
+      - si:
           toutes ces conditions:
             - est défini: utilisateur régulier
             - utilisateur régulier
         alors: empreinte calculée
-      - si: 
+      - si:
           toutes ces conditions:
             - est défini: utilisateur régulier
             - utilisateur régulier = non
@@ -38,6 +38,7 @@ transport . voiture . km:
     Par exemple, si vous êtes en mission professionnelle dans un autre département ou un autre pays, cela rentre dans la comptabilité de votre entreprise : ne le comptez pas ici.
   par défaut: km annuels moyen
   unité: km
+  plancher: 0
   suggestions:
     zéro: 0
     vacances: 2000
@@ -76,44 +77,39 @@ transport . voiture . empreinte utilisateur irrégulier:
   unité: kgCO2e
 
 transport . voiture . empreinte utilisateur irrégulier . construction:
-  formule:
-    recalcul:
-      règle: voiture . construction
-      avec:
-        voiture . utilisateur régulier: oui
-        voiture . gabarit: "'berline'"
-        voiture . motorisation: "'thermique'"
-        voiture . véhicule récent: oui
+  valeur: voiture . construction
+  contexte:
+    voiture . utilisateur régulier: oui
+    voiture . gabarit: "'berline'"
+    voiture . motorisation: "'thermique'"
+    voiture . véhicule récent: oui
 
 transport . voiture . empreinte utilisateur irrégulier . usage:
-  formule:
-    recalcul:
-      règle: voiture . usage
-      avec:
-        voiture . utilisateur régulier: oui
-        voiture . gabarit: "'berline'"
-        voiture . motorisation: "'thermique'"
-        voiture . thermique . carburant: "'essence E5 ou E10'"
-        voiture . thermique . consommation aux 100: voiture . consommation estimée
-        voiture . véhicule récent: oui
+  valeur: voiture . usage
+  contexte:
+    voiture . utilisateur régulier: oui
+    voiture . gabarit: "'berline'"
+    voiture . motorisation: "'thermique'"
+    voiture . thermique . carburant: "'essence E5 ou E10'"
+    voiture . thermique . consommation aux 100: voiture . consommation estimée
+    voiture . véhicule récent: oui
 
 transport . voiture . empreinte moyenne:
-  formule:
-    recalcul:
-      règle: voiture . empreinte calculée
-      avec:
-        voiture . utilisateur régulier: oui
-        voiture . gabarit: "'berline'"
-        voiture . motorisation: "'thermique'"
-        voiture . thermique . carburant: "'essence E5 ou E10'"
-        voiture . thermique . consommation aux 100: voiture . consommation estimée
-        voiture . véhicule récent: oui
+  valeur: voiture . empreinte calculée
+  contexte:
+    voiture . utilisateur régulier: oui
+    voiture . gabarit: "'berline'"
+    voiture . motorisation: "'thermique'"
+    voiture . thermique . carburant: "'essence E5 ou E10'"
+    voiture . thermique . consommation aux 100: voiture . consommation estimée
+    voiture . véhicule récent: oui
 
 transport . voiture . empreinte calculée:
   formule: (usage + construction amortie) / voyageurs
   unité: kgCO2e
 
-transport . voiture . saisie voyageurs:
+transport . voiture . voyageurs:
+  titre: Nombre de voyageurs moyen dans la voiture
   question: Quel est le nombre moyen de voyageurs dans la voiture ?
   description: |
     Une voiture consomme à peu près autant qu'elle ait 1, 2 ou 5 voyageurs à bord. Voyager à plusieurs, c'est donc potentiellement diviser par 5 l'empreinte individuelle !
@@ -126,31 +122,22 @@ transport . voiture . saisie voyageurs:
     > Dans une prochaine évolution du simulateur, nous pourrons séparer les questions par type de trajets : vacances, domicile-travail, quotidiens avec un nombre de voyageurs personnalisable.
 
     Bien sûr, si vous vous faites conduire ou si vous prenez le taxi, le chauffeur ne compte pas, car il est au service de votre déplacement.
-
+  plancher: 1
+  avertissement: |
+    Le nombre de voyageurs ne peut pas être nul. Au volant de votre voiture, vous en êtes le premier voyageur.
   par défaut: 1.2
   suggestions:
     je suis seul: 1
     deux: 2
     cinq: 5
 
-transport . voiture . voyageurs:
-  titre: Nombre de voyageurs moyen dans la voiture
-  formule:
-    variations:
-      - si: saisie voyageurs < 1
-        alors: 1
-      - sinon: saisie voyageurs
-
-transport . voiture . notif minimum voyageurs:
-  type: notification
-  sévérité: invalide
-  formule: saisie voyageurs < 1
-  description: |
-    Le nombre de voyageurs ne peut pas être nul. Au volant de votre voiture, vous en êtes le premier voyageur.
-
 transport . voiture . usage:
-  formule: km * (empreinte au kilomètre + base au kilomètre)
+  formule: km * empreinte usage au kilomètre
   unité: kgCO2e
+
+transport . voiture . empreinte usage au kilomètre:
+  formule: empreinte au kilomètre + base au kilomètre
+  unité: kgCO2e/km
 
 transport . voiture . empreinte au kilomètre:
   formule:
@@ -195,14 +182,13 @@ transport . voiture . motorisation:
         - hybride
         - électrique
 transport . voiture . motorisation . thermique:
-  titre: Thermique (diesel/essence)
+  titre: Thermique (diesel/essence/GPL)
 transport . voiture . motorisation . électrique:
   titre: Électrique
 transport . voiture . motorisation . hybride:
   titre: Hybride
 
-transport . voiture . thermique: oui # sans le 'oui', une question vide est posée
-
+transport . voiture . thermique:
 transport . voiture . thermique . empreinte au kilomètre:
   titre: empreinte au km thermique
   formule: consommation au kilomètre * empreinte au litre
@@ -239,6 +225,8 @@ transport . voiture . thermique . empreinte au litre:
         alors: 2.7
       - si: carburant = 'essence E85'
         alors: 1.11
+      - si: carburant = 'GPL'
+        alors: 1.86
   unité: kgCO2e/l
 
 transport . voiture . thermique . carburant:
@@ -263,6 +251,7 @@ transport . voiture . thermique . carburant:
         - gazole B7 ou B10
         - essence E5 ou E10
         - essence E85
+        - GPL
   note: |
     La domination du couple gazole-essence est écrasante [source](https://www.leprogres.fr/magazine-automobile/2021/03/27/quels-sont-les-carburants-les-plus-utilises-dans-votre-commune).
 
@@ -272,12 +261,19 @@ transport . voiture . thermique . carburant:
     En effet, au vu des problématiques liées au changement d'affectation des sols et autres impacts environnementaux liés à la culture du maïs par exemple, les **biocarburants** ne sont pas pris en compte
     (le facteur d'émission de la base carbone étant particulièrement incertain). Voir nos discussions [ici](https://github.com/datagir/nosgestesclimat/pull/1324).
 
+    Le GPL (Gaz de Pétrole Liquéfiés) est un [résidu de l'extraction du pétrole qui était autrefois brûlé](https://fr.wikipedia.org/wiki/Gaz_de_p%C3%A9trole_liqu%C3%A9fi%C3%A9). 
+    Il a une empreinte carbone par litre moins importante que les véhicules essence ou diesel, par contre sa consommation est légèrement supérieure, ce qui compense légèrement le gain.
+    Mais si les rejets de CO2e sont au final presque équivalents entre le GPL et les autres carburants, c'est [du côté de l'émission de particules nocives](https://agirpourlatransition.ademe.fr/particuliers/conso/conso-responsable/comment-choisir-voiture-deux-roues-moins-polluant) que le GPL est un bien meilleur élève que les autres carburants thermiques.
+
 transport . voiture . thermique . carburant . gazole B7 ou B10:
   titre: Gazole (B7 ou B10)
 transport . voiture . thermique . carburant . essence E5 ou E10:
   titre: Essence (E5 ou E10)
 transport . voiture . thermique . carburant . essence E85:
   titre: Essence E85 (biocarburants)
+transport . voiture . thermique . carburant . GPL:
+  titre: GPL (Gaz de Pétrole Liquéfiés)
+
 
 transport . voiture . notif carburant:
   type: notification

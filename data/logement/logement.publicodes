@@ -12,14 +12,16 @@ logement:
   formule:
     somme:
       - construction
-      - piscine
       - électricité
       - chauffage
       - climatisation
+      - piscine
+      - extérieur
       - vacances
   unité: kgCO2e
 
-logement . saisie habitants:
+logement . habitants:
+  titre: Nombre de personnes dans le logement
   question: Combien de personnes vivent chez vous ?
   description: |
     Il s'agit de savoir combien de personnes partagent votre logement et toutes les consommations qu'il entraîne (construction, chauffage, etc).
@@ -31,32 +33,24 @@ logement . saisie habitants:
     > Si vous êtes séparé avec un enfant qui alterne entre votre logement et un autre, vous pouvez saisir `1,5`.
 
   par défaut: 2.2
-  note: valeur par défaut d'après https://www.insee.fr/fr/statistiques/2381486.
-  suggestions:
-    j'habite seul: 1
-    deux personnes: 2
-
-logement . habitants:
-  formule:
-    variations:
-      - si: saisie habitants < 1
-        alors: 1
-      - sinon: saisie habitants
-
-logement . notif minimum habitants:
-  type: notification
-  sévérité: invalide
-  formule: saisie habitants < 1
-  description: |
+  plancher: 1
+  avertissement: |
     Le nombre d'habitants ne peut pas être nul ni inférieur à 1. Vous êtes le premier habitant de votre logement.
 
     En effet, l'empreinte du logement et d'autres postes comme l'électroménager étant divisées par le nombre d'habitants, il doit être supérieur à 1.
 
     Nous ne prenons donc pas aujourd'hui en compte les logements vides que vous possédez, ou un logement que vous louez dans lequel ni vous ni personne ne vivez.
+  note: valeur par défaut d'après https://www.insee.fr/fr/statistiques/2381486.
+  suggestions:
+    j'habite seul: 1
+    deux personnes: 2
 
 logement . surface:
   titre: Surface
   question: Quelle est la surface de votre logement ?
+  plancher: 1
+  avertissement: |
+    La surface de votre logement ne peut-être nulle.
   par défaut:
     variations:
       - si:
@@ -80,13 +74,6 @@ logement . surface:
     château 🏰: 1000
   unité: m2
 
-logement . notif minimum surface:
-  type: notification
-  sévérité: invalide
-  formule: surface = 0
-  description: |
-    La surface de votre logement ne peut-être nulle.
-
 logement . appartement:
   titre: Appartement
   question: Votre logement est-il un appartement ?
@@ -104,6 +91,7 @@ logement . appartement:
 
 logement . âge:
   question: Quel est l'âge de votre logement ?
+  plancher: 0
   par défaut: 45
   unité: an
   note: |

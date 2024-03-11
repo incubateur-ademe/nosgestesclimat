@@ -18,7 +18,7 @@ Modèle de calcul de l'empreinte climat personnelle.
 
 ## Utilisation
 
-Vous pouvez parcourir le modèle grâce à ça [documentation en
+Vous pouvez parcourir le modèle grâce à sa [documentation en
 ligne](https://nosgestesclimat.fr/documentation) ou bien utiliser le paquet npm
 `@incubateur-ademe/nosgestesclimat` :
 
@@ -26,8 +26,15 @@ ligne](https://nosgestesclimat.fr/documentation) ou bien utiliser le paquet npm
 yarn add @incubateur-ademe/nosgestesclimat
 ```
 
+Chaque modèle régional peut être importé séparément en anglais ou en français,
+optimisé ou non en suivant la structure suivante :
 ```ts
-import { rules } from '@incubateur-ademe/nosgestesclimat'
+import rules from '@incubateur-ademe/nosgestesclimat/<regionCode>/<locale>/["optim"]'
+```
+
+Exemple d'utilisation :
+```ts
+import rules from '@incubateur-ademe/nosgestesclimat/FR/fr/optim'
 import Engine from 'publicodes'
 
 const engine = new Engine(rules)
@@ -76,23 +83,28 @@ https://beta.gouv.fr.
 
 ## Développement
 
-### Quick Doc
+### QuickDoc
 
-Pour faciliter le développement, nous avons mis en place une documentation
-minimale basée sur [`@publicodes/react-ui`](https://publi.codes/docs/api/react-ui)
-et [Vite](https://vitejs.dev/).
+Pour faciliter le développement, nous avons mis en place un outil de
+développement local. Cet outil permet de visualiser la documentation (basée sur
+[`@publicodes/react-ui`](https://publi.codes/docs/api/react-ui)) et les
+résultats de la compilation des modèles et des personas, ainsi que comparer les
+résultats avec les versions en production. 
 
 ```bash
-yarn --cwd quick-doc
+# installe les dépendances
+yarn && cd quick-doc && yarn
+
+# lance le serveur de développement en charge de compiler les modèles et les personas
+yarn dev
+
+# lance le client de la documentation 
 yarn doc
 ```
 
-> [!TIP]
-> Pour rapidement itérer sur le modèle, nous vous conseillons de lancer `yarn dev`.
-> Cela va lancer un serveur de développement qui va recompiler le modèle à
-> chaque modification ainsi que les personas. Puis avec `yarn doc`, vous pouvez
-> visualiser les résultats de la compilation dans votre navigateur, les
-> modifications seront automatiquement prises en compte.
+> [!IMPORTANT]
+> Pour utiliser la QuickDoc, vous devez avoir [`bun`](https://bun.sh)
+> d'installé sur votre machine.
 
 ### CI
 
@@ -111,9 +123,6 @@ Pour chaque _push_ sur la branche `master`, le workflow `packaging.yaml` est ex�
 Si la version du paquet npm est incrémentée, alors :
 
 - une nouvelle _release_ GitHub est créée
-- la version française du modèle (le résultat de `yarn build`) est publiée dans
+- le modèle est publié dans
   une nouvelle version du paquet npm
   [`@incubateur-ademe/nosgestesclimat`](https://www.npmjs.com/package/@incubateur-ademe/nosgestesclimat)
-- toutes les versions ainsi que les personas (le résultat de `yarn compile`)
-  sont _push_ dans une nouvelle branche dans le dépôt
-  [`nosgestesclimat-api`](https://github.com/incubateur-ademe/nosgestesclimat-api)

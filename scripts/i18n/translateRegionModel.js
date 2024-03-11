@@ -56,7 +56,8 @@ const translateRule = async ([ruleName, ruleVal], destLang) => {
         break
       }
       case 'description':
-      case 'note': {
+      case 'note':
+      case 'avertissement': {
         val = translateMd(val)
         break
       }
