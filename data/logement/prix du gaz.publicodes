@@ -1,6 +1,10 @@
-gaz:
-  titre: Aide calcul consommation gaz
+logement . chauffage . gaz . prix:
+  titre: Coût du kWh de gaz
+  unité: €/kWh
+  formule: prix total / consommation par défaut
   description: |
+    C'est le facteur qui nous permet de passer du prix payé par le ménage à la consommation en kWh.
+
     Nous calculons ici le prix du gaz à partir de la consommation d'un foyer. 
 
     Il s'agit donc d'inclure les différents prélèvements obligatoires, ainsi que l'abonnement vraiment significatif dans le cas du gaz. 
@@ -14,59 +18,53 @@ gaz:
     Source pour [la liste des taxes](https://www.energie-info.fr/fiche_pratique/cspe-ticgn-cta-tva-toutes-les-taxes-sur-ma-facture/).
 
     Voir également: https://tarifgaz.com/tarifs
-
-gaz . marginal HT:
-  formule: 0.0785
-  unité: €/kWh
-  description: |
-    Prix marginal du kWh hors taxe pour un forfait B1 (cuisine, chauffage air et eau : 6000kWh à 30 000kWh/an).·
-
-    Nous choissons la zone 2 car elle semble la plus représentative (la zone 1 a plus de villes, l'essentiel des métropoles, mais reste une extrêmité et Paris est en 2). [Comprendre les zon  es](https://selectra.info/energie/guides/demarches/zone-tarifaire-gaz).
-
-    Le barème de janvier 2023 est disponible sur [le site du CRE](https://www.cre.fr/Actualites/publication-des-baremes-applicables-pour-les-tarifs-reglementes-de-vente-de-gaz-naturel-d-engie-janvier-2023).
-
-gaz . marginal avec TVA: marginal HT * 1.2
-
-gaz . TICGN:
-  formule: 0.00837
-  unité: €/kWh
-  description: valeur de la TICGN 2023 repris depuis ce [site](https://www.capitole-energie.com/la-ticgn-en-2022/)
-
-gaz . TICGN avec TVA: TICGN * 1.2
-
-gaz . marginal taxé: TICGN avec TVA + marginal avec TVA
-
-gaz . abonnement: 203.76 €
-gaz . abonnement avec TVA: abonnement * 1.055
-
-gaz . abonnement ATRD fixe:
-  formule: 133.56 €
-  description: |
-    Partie fixe du tarif d’acheminement appliqué par les gestionnaires des réseaux de distribution gaz naturel pour calcul de la CTA, [source 2023](https://opera-energie.com/atrd-tarif-distribution-gaz-naturel/).
-    L'option tarifaire B1 (côté client) que nous considérons correspond à l'option tarifaire T2 (côté fournisseur)
-
-gaz . CTA: abonnement ATRD fixe * 0.208
-gaz . CTA avec TVA: CTA * 1.055
-
-gaz . consommation par défaut:
-  description: Pour calculer une estimation du prix réel payé par les ménages et en déduire les kWh, on part sur une consommation moyenne calculée via les chiffres MTE du parc français.
-  formule: parc français . chauffage . consommation gaz moyenne
-  unité: kWh
-
-gaz . part variable: consommation par défaut * marginal taxé
-
-gaz . prix total:
-  formule: part variable + abonnement avec TVA + CTA avec TVA
-  unité: €
-
-gaz . prix:
-  titre: Coût du kWh de gaz
-  unité: €/kWh
-  formule: prix total / consommation par défaut
-  description: C'est le facteur qui nous permet de passer du prix payé par le ménage à la consommation en kWh.
   note: |
     On remarquera que la formule de calcul est de type p = c * a + b, où p=prix, c=coût, a=coût marginal TTC, b = coût fixe. 
 
     Ainsi, nous pourrions avoir une estimation bien plus fiable de la conso à partir du prix en inversant cette équation. 
 
     Mais malheureusement notre formulaire d'estimation ne fonctionne aujourd'hui qu'avec un facteur de multiplication.
+
+logement . chauffage . gaz . prix . consommation par défaut:
+  description: Pour calculer une estimation du prix réel payé par les ménages et en déduire les kWh, on part sur une consommation moyenne calculée via les chiffres MTE du parc français.
+  formule: parc français . chauffage . consommation gaz moyenne
+  unité: kWh
+
+logement . chauffage . gaz . prix . part variable: consommation par défaut * marginal taxé
+
+logement . chauffage . gaz . prix . prix total:
+  formule: part variable + abonnement avec TVA + CTA avec TVA
+  unité: €
+
+logement . chauffage . gaz . prix . marginal HT:
+  formule: 0.0785
+  unité: €/kWh
+  description: |
+    Prix marginal du kWh hors taxe pour un forfait B1 (cuisine, chauffage air et eau : 6000kWh à 30 000kWh/an).·
+
+    Nous choissons la zone 2 car elle semble la plus représentative (la zone 1 a plus de villes, l'essentiel des métropoles, mais reste une extrêmité et Paris est en 2). [Comprendre les zones](https://selectra.info/energie/guides/demarches/zone-tarifaire-gaz).
+
+    Le barème de janvier 2023 est disponible sur [le site du CRE](https://www.cre.fr/Actualites/publication-des-baremes-applicables-pour-les-tarifs-reglementes-de-vente-de-gaz-naturel-d-engie-janvier-2023).
+
+logement . chauffage . gaz . prix . marginal avec TVA: marginal HT * 1.2
+
+logement . chauffage . gaz . prix . TICGN:
+  formule: 0.00837
+  unité: €/kWh
+  description: valeur de la TICGN 2023 repris depuis ce [site](https://www.capitole-energie.com/la-ticgn-en-2022/)
+
+logement . chauffage . gaz . prix . TICGN avec TVA: TICGN * 1.2
+
+logement . chauffage . gaz . prix . marginal taxé: TICGN avec TVA + marginal avec TVA
+
+logement . chauffage . gaz . prix . abonnement: 203.76 €
+logement . chauffage . gaz . prix . abonnement avec TVA: abonnement * 1.055
+
+logement . chauffage . gaz . prix . abonnement ATRD fixe:
+  formule: 133.56 €
+  description: |
+    Partie fixe du tarif d’acheminement appliqué par les gestionnaires des réseaux de distribution gaz naturel pour calcul de la CTA, [source 2023](https://opera-energie.com/atrd-tarif-distribution-gaz-naturel/).
+    L'option tarifaire B1 (côté client) que nous considérons correspond à l'option tarifaire T2 (côté fournisseur)
+
+logement . chauffage . gaz . prix . CTA: abonnement ATRD fixe * 0.208
+logement . chauffage . gaz . prix . CTA avec TVA: CTA * 1.055
