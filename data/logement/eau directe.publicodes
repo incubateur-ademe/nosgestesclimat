@@ -11,7 +11,7 @@ eau directe:
       - hydratation
       - logement . piscine
       - voiture
-      # - jardin
+      - jardin
   descrption: |
     L'eau "directe" correspond à l'eau qui sort de votre robinet au quotidien. 
     Il n'est donc pas question ici de l'eau "virtuelle" qui se cache derrière votre alimentation ou vos biens de consommation.
@@ -224,3 +224,39 @@ eau directe . voiture:
   unité: l
   note: |
     Hypothèse de 300L par lavage à raison à raison de 6 fois par an.
+
+eau directe . jardin:
+  applicable si: surface > 0
+  non applicable si:
+    toutes ces conditions:
+      - est défini: logement . appartement
+      - logement . appartement
+  formule: foyer / logement . habitants
+
+eau directe . jardin . foyer:
+  formule: par semaine * commun . semaines par an * (8 mois / commun . mois par an)
+  note: On considère 2 arrosages par semaine sur les mois d'octobre à mars.
+
+eau directe . jardin . par semaine:
+  formule: surface * quantité * fréquence
+
+eau directe . jardin . surface:
+  question: Quelle surface de jardin arrosez-vous régulièrement (potager, fleurs) ?
+  suggestions:
+    ❌ je n'arrose pas: 0
+    quelques fleurs: 5
+    petit potager: 30
+    grand potager: 80
+  par défaut: 5
+  unité: m2
+
+eau directe . jardin . quantité:
+  titre: Quantité d'eau par m2
+  formule: 15
+  unité: l/arrosage/m2
+  note: On considère qu'un m2 de jardin consomme en moyenne 15 litres d'eau par arrosage.
+
+eau directe . jardin . fréquence:
+  titre: Fréquence d'arrosage
+  formule: 2
+  unité: arrosage/semaine
