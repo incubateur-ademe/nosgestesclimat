@@ -1,5 +1,5 @@
 import { RulePage } from '@publicodes/react-ui'
-import ReactMardown from 'react-markdown'
+import MarkdownToJsx from 'markdown-to-jsx'
 import { ComponentProps, useContext, useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
@@ -20,7 +20,7 @@ export default function DocumentationPage() {
     Link,
     Text: ({ children }) => (
       <div className="markdown">
-        <ReactMardown children={children} />
+        <MarkdownToJsx children={children} />
       </div>
     )
   } as ComponentProps<typeof RulePage>['renderers'])
