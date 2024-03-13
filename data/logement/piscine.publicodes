@@ -17,6 +17,7 @@ importer!:
           3 x 5 mètres: 15
           5 x 5 mètres: 20
           5 x 8 mètres: 40
+    - piscine . volume
     # Non nécessaire ici mais il faut y penser si on importe "chauffage" par exemple.
     # - piscine . empreinte électricité:
     #     formule: logement . électricité . empreinte
@@ -36,7 +37,6 @@ logement . piscine:
         alors: empreinte / habitants
       - sinon: 0
   # @Clément: Pour le moment, pas de valeur par défaut représentative pour la piscine.
-  unité: kgCO2e
   description: |
     L'installation de piscines privées **enterrées** dans les jardins français s'est accélérée ces dernières années. On en compte aujourd'hui plus de [3 millions](https://bonpote.com/impact-ecologique-dune-piscine-individuelle/).
     C'est donc un équipement loin d'être anecdotique, qui pèse dans l'empreinte climat de la France. 
@@ -53,6 +53,16 @@ logement . piscine . présent:
     on pourrait filtrer l'affichage de la question selon la surface de la maison par exemple.
 
 logement . piscine . empreinte:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: volume
+  note: |
+    Pour l'empreinte eau, on considère que la piscine est re-remplie chaque année : c'est une hypothèse forte mais acceptable dans le sens ou les personnes qui conservent l'eau de leur piscine l'hiver consommeront davantage de produits chimiques.
+
+logement . piscine . empreinte carbone:
   formule:
     somme:
       - piscine . empreinte eau froide
