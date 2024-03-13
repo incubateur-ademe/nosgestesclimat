@@ -6,6 +6,7 @@ import { Link, useParams } from 'react-router-dom'
 import { AppContext } from '../AppContext'
 import { pathTo } from '../Nav'
 import Loader from '../components/Loader'
+import remarkGfm from 'remark-gfm'
 
 const defaultRule = 'bilan'
 
@@ -20,7 +21,7 @@ export default function DocumentationPage() {
     Link,
     Text: ({ children }) => (
       <div className="markdown">
-        <ReactMardown children={children} />
+        <ReactMardown remarkPlugins={[remarkGfm]} children={children} />
       </div>
     )
   } as ComponentProps<typeof RulePage>['renderers'])
