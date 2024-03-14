@@ -338,12 +338,9 @@ transport . voiture . consommation estimée:
 
     - Les données moyennes de consommation des véhicules essence et diesel, [fournies par l'ADEME](https://carlabelling.ademe.fr/chiffrescles/r/evolutionConsoMoyenne)
     - Les données des "meilleures consommations" par gabarit et par carburant, fournies par [cet article de CAROOM](https://www.caroom.fr/guide/voiture-neuve/comment-choisir/carburant/faible-consommation): 
-      vu qu'il s'agit des meilleures performances, et que nous avons les données de l'ADEME pour les moyennes globales, 
-      nous avons travaillé les chiffres en conservant les ratios de différences.
 
-    Voici les calculs ayant mené à nos facteurs :
+    Nous n'avons pas trouvé d'autre source pour obtenir la consommation moyenne par type de véhicule. Dans l'article de CAROOM, sont donnés les chiffres des meilleures performances par véhicule:
 
-    - Moyenne des minimas, fournis par Caroom :  
       |                  | E5 ou E10 | Diesel | % circulation |
       |------------------|-----------|--------|---------------|
       | Petite           | 5,07      | 3,65   | 25,29%        |
@@ -351,8 +348,16 @@ transport . voiture . consommation estimée:
       | Berline          | 4,70      | 3,75   | 49,81%        |
       | SUV              | 5,08      | 4,14   | 14,60%        |
       | Moyenne pondérée | 4,85      | 3,78   |               |
-    - Moyennes réelles, fournies par l'ADEME : 6,8 L/100 pour une essence, 5 L/100 pour un diesel.
-    - Moyennes corrigées :
+
+    D'un autre côté, nous avons les données fournies par l'ADEME qui donnent des consommations moyennes de 6,8 L/100km pour une essence, 5 L/100km pour un diesel.
+    On remarque bien que les consommations moyennes calculées via les données de CAROOM (4,85 L/100km et 3,78 L/100km) sont bien plus basses que celles 
+    de l'ADEME, ce sont les voitures les plus performantes. 
+      
+    Nous avons donc retravaillé les chiffres via un ratio (conso moyenne / conso moyenne performante) pour mettre à jour les consommations moyennes par véhicules :
+    A titre d'exemple, pour une citadine essence, on obtient le chiffre de 7,11 L/100km via la formule suivante : 5,07 / 4,85 * 6,8.
+
+    - Moyennes corrigées (et utilisées dans NGC):
+
       |                  | E5 ou E10 | Diesel | % circulation |  
       |------------------|-----------|--------|---------------|
       | Petite           | 7,11      | 4,83   | 25,29%        |
@@ -364,11 +369,11 @@ transport . voiture . consommation estimée:
     Pour les véhicules utilitaires légers, nous avons utilisé cette source :
     - [Consommation des véhicules utilitaires légers](https://www.webfleet.com/fr_fr/webfleet/blog/consommation-utilitaire/)
 
-    Pour obtenir les consommations des véhicules roulant à l'essence E85, nous avons appliqué une **surconsommation de 25%** par rapport aux véhicules essence, chiffre qui semble faire consensus.
+    > Nous avons bien noté que la consomation d'une citadine essence est plus élevée que celle d'une berline, ce qui semble contre-intuitif mais nous n'avons pas d'autres sources pour l'instant.
+
+    Enfin, pour obtenir les consommations des véhicules roulant à l'essence E85, nous avons appliqué une **surconsommation de 25%** par rapport aux véhicules essence, chiffre qui semble faire consensus.
 
     De même, pour obtenir les consommations des véhicules roulant au GPL, nous avons appliqué une **surconsommation de 15%** par rapport aux véhicules essence.
-
-    Enfin, faute de données, nous avons considéré une consommation moyenne pour les berlines également.
   unité: l/centkm
   formule:
     variations:
