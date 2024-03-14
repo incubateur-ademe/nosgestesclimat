@@ -290,18 +290,35 @@ transport . voiture . électrique:
 transport . voiture . électrique . empreinte au kilomètre:
   titre: empreinte au km électrique
   unité: kgCO2e/km
-  formule:
-    variations:
-      - si: gabarit = 'petite'
-        alors: 0.0159
-      - si: gabarit = 'moyenne'
-        alors: 0.0198
-      - sinon: 0.0273
+  formule: (consommation électrique au km + pertes de charge) * empreinte électrique
   note: |
-    Nous faisons la correspondance suivante entre notre gabarit et les données de la base bilan-GES (au regard des poids des véhicules):
-      - petite -> "entrée de gamme - véhicule léger"
-      - moyenne -> "coeur de gamme - véhicule compact"
-      - berline, SUV et VUL -> "haut de gamme - berline"
+    L'empreinte électrique utilise la moyenne du mix électrique français. La majorité des possesseurs de voitures électriques rechargent leur véhicule chez eux avec une tarification heure creuses, qui est plus avantageuse financièrement et correspond aussi aux moment où la demande en électrique est moins forte et le mix électrique moins carboné.
+
+transport . voiture . électrique . consommation électrique au km:
+  titre: Consommation électrique au km
+  variations:
+    - si: gabarit = 'petite'
+      alors: 0.15
+    - si: gabarit = 'moyenne'
+      alors: 0.18
+    - si: gabarit = 'berline'
+      alors: 0.20
+    - si: gabarit = 'SUV'
+      alors: 0.22
+    - si: gabarit = 'VUL'
+      alors: 0.25
+  unité: kWh/km
+
+transport . voiture . électrique . empreinte au kilomètre . pertes de charge:
+  titre: Pertes de charge
+  formule: pertes de charge réseau + pertes de charge recharge
+  avec:
+    pertes de charge réseau: 5%
+    pertes de charge recharge: 10%
+  note: |
+    Le facteur de pertes de charge est un coefficient qui permet de prendre en compte les pertes d'énergie qui se produisent lors de la transmission et de la distribution de l'électricité depuis le point de production jusqu'à leur utilisation finale dans le moteur électrique.
+    En particulier la batterie ne restitue pas 100% de l'énergie consommée lors de la charge.
+    
 
 transport . voiture . gabarit:
   applicable si:
