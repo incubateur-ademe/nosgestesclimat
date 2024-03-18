@@ -17,7 +17,7 @@ transport . éco-conduite:
     Voir le [Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter)
 
 transport . éco-conduite . gain empreinte au km:
-  formule: voiture . empreinte usage au kilomètre * 0.15
+  formule: voiture . empreinte au kilomètre * 0.15
   unité: kgCO2e/km
   note: Hypothèse de réduction de 15% ([Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter))
 
@@ -44,7 +44,7 @@ transport . limitation autoroute . empreinte autoroute réduit:
   valeur: transport . voiture
   contexte:
     transport . voiture . km: voiture . km * ratio autoroute
-    transport . voiture . usage: transport . voiture . usage * (1 - réduction)
+    transport . voiture . empreinte au kilomètre: transport . voiture . empreinte au kilomètre * (1 - réduction)
   unité: kgCO2e
 
 transport . limitation autoroute . réduction:
@@ -194,11 +194,7 @@ transport . distance moyenne trajet court:
 transport . voiture 5km . recalcul:
   valeur: transport . voiture
   contexte:
-    transport . voiture . usage: transport . voiture 5km . usage réduit
-
-transport . voiture 5km . usage réduit:
-  formule: (transport . voiture . km - distance totale) * transport . voiture . empreinte au kilomètre
-  unité: kgCO2e
+    transport . voiture . km: transport . voiture . km - distance totale
 
 transport . voiture 5km . distance totale:
   formule:
@@ -254,7 +250,6 @@ transport . voiture électrique . recalcul:
   valeur: transport . voiture
   contexte:
     transport . voiture . motorisation: "'électrique'"
-    transport . voiture . véhicule récent: oui
 
 transport . réduire taille:
   titre: Choisir une petite voiture
@@ -280,7 +275,6 @@ transport . faire durer:
     toutes ces conditions:
       - est défini: voiture . utilisateur régulier
       - voiture . utilisateur régulier
-  non applicable si: transport . voiture . véhicule récent = non
   description: |
     Il est très difficile, à ce jour, de donner un chiffre sur la durée de vie d'un véhicule, que ce soit en kilomètres parcourus comme en année. 
     Le fait est que cela dépend de beaucoup de paramètres : l'entretien du véhicule, l'accidentologie, la manière de conduire, le type de moteur, la dépendance à l'électronique...
@@ -294,7 +288,7 @@ transport . faire durer:
 transport . faire durer . recalcul:
   valeur: transport . voiture . empreinte calculée
   contexte:
-    transport . voiture . durée de vie: 13
+    transport . voiture . durée de vie en km: transport . voiture . durée de vie en km * 1.2
 #
 #
 # Cette action est inactive. Au vu des problématiques liées au changement d'affectation des sols et autres impacts environnementaux
