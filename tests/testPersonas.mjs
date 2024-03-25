@@ -36,7 +36,10 @@ if (persona && persona in localPersonas && persona in prodPersonas) {
 
 const localEngine = new Engine(localRules, { logger: disabledLogger })
 // TODO: remove this when the prod version is updated
-const prodEngine = new Engine110(prodRules, { logger: disabledLogger })
+const prodEngine =
+  version === 'latest'
+    ? new Engine110(prodRules, { logger: disabledLogger })
+    : new Engine(prodRules, { logger: disabledLogger })
 
 const nbRules = Object.keys(localRules).length
 
