@@ -1,6 +1,31 @@
+métrique:
+  avec:
+    carbone:
+    eau:
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - carbone
+        - eau
+  par défaut: "'carbone'"
+
 bilan:
+  titre: Bilan
+  description: |
+    Cette règle est la base de nos calculs : pour chaque métrique, nous recalculons ce bilan en adaptant 
+    les données dans le contexte du carbone ou l'eau (pour le moment).
+  formule:
+    somme:
+      - logement
+      - transport
+      - alimentation
+      - divers
+      - services sociétaux
+
+bilan climat:
   titre: Votre bilan climat personnel
-  icônes: 👤
+  icônes: 👤⚫️
   description: |
     Voici une estimation de votre empreinte climat à l'année. Elle évolue en fonction de vos réponses.
 
@@ -14,11 +39,25 @@ bilan:
 
     Mais qu'est-ce qu'elle signifie, cette dizaine de tonnes d'équivalent CO₂ ? Pourquoi c'est important ? **On vous dit tout sur l'empreinte climat** et comment situer cette empreinte (faible, élevée ?) [➡ dans cet article](https://datagir.ademe.fr/blog/budget-empreinte-carbone-c-est-quoi/).
     <RavijenChart/>
+  valeur: bilan
+  contexte:
+    métrique: "'carbone'"
+  untité: kgCO2e
 
-  formule:
-    somme:
-      - logement
-      - transport
-      - alimentation
-      - divers
-      - services sociétaux
+bilan eau:
+  titre: Votre empreinte eau personnelle annuelle
+  icônes: 👤🔵
+  description: |
+    A compléter
+  valeur: bilan
+  contexte:
+    métrique: "'eau'"
+  unité: l
+
+bilan eau . par jour:
+  titre: Votre empreinte eau personnelle journalière
+  formule: bilan eau / commun . jours par an
+
+bilan eau . eau directe par jour:
+  titre: Votre consommation d'eau directe journalière
+  formule: eau directe / commun . jours par an
