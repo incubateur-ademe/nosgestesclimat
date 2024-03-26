@@ -104,6 +104,12 @@ const dataSDES = readSDES
   .flat()
 
 // console.log(dataSDES)
+
+// utils.writeJSON(
+//   'scripts/services-societaux/input/SDES_groups.json',
+//   SDES_groups
+// )
+
 utils.writeJSON(
   `scripts/services-societaux/output/${year}/liste_SDES_traitée.json`,
   dataSDES
