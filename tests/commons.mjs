@@ -147,6 +147,10 @@ An error occured while testing the model:
   let nbDiff = 0
 
   for (const result of results) {
+    // created json report is too large if "empreinte branche" displayed
+    if (result.rule.startsWith('empreinte branche')) {
+      continue
+    }
     if (result.type === 'warning') {
       if (!markdown) {
         console.log(
