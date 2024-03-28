@@ -1,9 +1,9 @@
 alimentation . nombre de plats viande:
-  formule: plats . viande 1 . nombre + plats . viande 2 . nombre
+  formule: plats . viande blanche . nombre + plats . viande rouge . nombre
   unité: repas/semaine
 
 alimentation . nombre de plats poisson:
-  formule: plats . poisson 1 . nombre + plats . poisson 2 . nombre
+  formule: plats . poisson gras . nombre + plats . poisson blanc . nombre
   unité: repas/semaine
 
 alimentation . réduire viande:
@@ -22,12 +22,12 @@ alimentation . réduire viande . max 1 par jour . différence par semaine:
 alimentation . réduire viande . max 1 par jour . nouveau régime:
   formule:
     somme:
-      - (plats . viande 1 / nombre de plats viande) * 7 repas/semaine
-      - (plats . viande 2 / nombre de plats viande) * 7 repas/semaine
+      - (plats . viande blanche / nombre de plats viande) * 7 repas/semaine
+      - (plats . viande rouge / nombre de plats viande) * 7 repas/semaine
       - plats . végétalien
       - plats . végétarien
-      - plats . poisson 1
-      - plats . poisson 2
+      - plats . poisson gras
+      - plats . poisson blanc
       - compensation végétarienne
   unité: kgCO2e/semaine
 
@@ -54,12 +54,12 @@ alimentation . réduire viande . max 2 par semaine . différence par semaine:
 alimentation . réduire viande . max 2 par semaine . nouveau régime:
   formule:
     somme:
-      - (plats . viande 1 / nombre de plats viande) * 2 repas/semaine
-      - (plats . viande 2 / nombre de plats viande) * 2 repas/semaine
+      - (plats . viande blanche / nombre de plats viande) * 2 repas/semaine
+      - (plats . viande rouge / nombre de plats viande) * 2 repas/semaine
       - plats . végétalien
       - plats . végétarien
-      - plats . poisson 1
-      - plats . poisson 2
+      - plats . poisson gras
+      - plats . poisson blanc
       - compensation végétarienne
   unité: kgCO2e/semaine
 
@@ -68,7 +68,7 @@ alimentation . réduire viande . max 2 par semaine . nouveau régime . compensat
   unité: kgCO2e/semaine
 
 alimentation . viande faible empreinte:
-  applicable si: plats . viande 2 . nombre > 0
+  applicable si: plats . viande rouge . nombre > 0
   action:
     dépasse:
       - alimentation . réduire viande . max 1 par jour
@@ -90,18 +90,18 @@ alimentation . viande faible empreinte . différence par semaine:
 alimentation . viande faible empreinte . différence par semaine . nouveau régime:
   formule:
     somme:
-      - plats . viande 1
-      - compensation viande 1
+      - plats . viande blanche
+      - compensation viande blanche
       - plats . végétalien
       - plats . végétarien
-      - plats . poisson 1
-      - plats . poisson 2
+      - plats . poisson gras
+      - plats . poisson blanc
   unité: kgCO2e/semaine
 
-alimentation . viande faible empreinte . différence par semaine . nouveau régime . compensation viande 1:
-  formule: plats . viande 1 . empreinte * plats . viande 2 . nombre
+alimentation . viande faible empreinte . différence par semaine . nouveau régime . compensation viande blanche:
+  formule: plats . viande blanche . empreinte * plats . viande rouge . nombre
   unité: kgCO2e/semaine
-  note: On compense la suppression des plat viande 2 en plat viande 1.
+  note: On compense la suppression des plat viande rouge en plat viande blanche.
 
 alimentation . réduire poisson:
 
@@ -123,12 +123,12 @@ alimentation . réduire poisson . max 2 par semaine . différence par semaine:
 alimentation . réduire poisson . max 2 par semaine . nouveau régime:
   formule:
     somme:
-      - plats . viande 1
-      - plats . viande 2
+      - plats . viande blanche
+      - plats . viande rouge
       - plats . végétalien
       - plats . végétarien
-      - plats . poisson 1 / nombre de plats poisson * 2 repas/semaine
-      - plats . poisson 2 / nombre de plats poisson * 2 repas/semaine
+      - plats . poisson gras / nombre de plats poisson * 2 repas/semaine
+      - plats . poisson blanc / nombre de plats poisson * 2 repas/semaine
       - compensation végétarienne
   unité: kgCO2e/semaine
 
@@ -137,7 +137,7 @@ alimentation . réduire poisson . max 2 par semaine . nouveau régime . compensa
   unité: kgCO2e/semaine
 
 alimentation . poisson faible empreinte:
-  applicable si: plats . poisson 2 . nombre > 0
+  applicable si: plats . poisson blanc . nombre > 0
   titre: Privilégier les poissons gras (thon, saumon, maquereau...)
   formule: différence par semaine * commun . semaines par an
   unité: kgCO2e
@@ -154,18 +154,18 @@ alimentation . poisson faible empreinte . différence par semaine:
 alimentation . poisson faible empreinte . différence par semaine . nouveau régime:
   formule:
     somme:
-      - plats . viande 1
-      - plats . viande 2
+      - plats . viande blanche
+      - plats . viande rouge
       - plats . végétalien
       - plats . végétarien
-      - plats . poisson 1
-      - compensation poisson 1
+      - plats . poisson gras
+      - compensation poisson gras
   unité: kgCO2e/semaine
 
-alimentation . poisson faible empreinte . différence par semaine . nouveau régime . compensation poisson 1:
-  formule: plats . poisson 1 . empreinte * plats . poisson 2 . nombre
+alimentation . poisson faible empreinte . différence par semaine . nouveau régime . compensation poisson gras:
+  formule: plats . poisson gras . empreinte * plats . poisson blanc . nombre
   unité: kgCO2e/semaine
-  description: On compense la suppression des plats poisson 2 en plat poisson 1.
+  description: On compense la suppression des plats poisson blanc en plat poisson gras.
 
 alimentation . devenir végétarien:
   titre: Devenir végétarien
@@ -209,10 +209,10 @@ alimentation . devenir végétarien . différence par semaine repas . recalcul:
   valeur: plats
   contexte:
     plats . végétarien . nombre: nouveau nombre plats végé
-    plats . viande 1: 0
-    plats . viande 2: 0
-    plats . poisson 1: 0
-    plats . poisson 2: 0
+    plats . viande blanche: 0
+    plats . viande rouge: 0
+    plats . poisson gras: 0
+    plats . poisson blanc: 0
 
 alimentation . devenir végétarien . différence par semaine repas . nouveau nombre plats végé:
   formule: plats . végétarien . nombre + nombre plats non végé
