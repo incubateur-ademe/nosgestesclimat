@@ -1,5 +1,6 @@
 import c from 'ansi-colors'
 import Engine from 'publicodes'
+import Engine110 from 'publicodes-110'
 import { disabledLogger } from '@publicodes/tools'
 
 import {
@@ -34,7 +35,11 @@ if (persona && persona in localPersonas && persona in prodPersonas) {
 }
 
 const localEngine = new Engine(localRules, { logger: disabledLogger })
-const prodEngine = new Engine(prodRules, { logger: disabledLogger })
+// TODO: remove this when the prod version is updated
+const prodEngine =
+  version === 'latest'
+    ? new Engine110(prodRules, { logger: disabledLogger })
+    : new Engine(prodRules, { logger: disabledLogger })
 
 const nbRules = Object.keys(localRules).length
 

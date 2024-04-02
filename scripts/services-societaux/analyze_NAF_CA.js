@@ -1,6 +1,6 @@
 const utils = require('./utils')
 
-const year = 2018
+const year = 2019
 
 const ca_branches = utils.readJSON(
   `scripts/services-societaux/input/${year}/ca_branches.json`
