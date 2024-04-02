@@ -6,8 +6,8 @@ import {
   getArgs,
   getLocalRules,
   getLocalPersonas,
-  getRulesFromAPI,
-  getPersonasFromAPI,
+  getRulesFromDist,
+  getPersonasFromDist,
   printResults
 } from './commons.mjs'
 import safeGetSituation from './helpers/safeGetSituation.mjs'
@@ -25,8 +25,8 @@ const { country, language, markdown, version, persona } = getArgs()
 const localRules = await getLocalRules(country, language)
 let localPersonas = await getLocalPersonas(country, language)
 
-const prodRules = await getRulesFromAPI(version, country, language)
-let prodPersonas = await getPersonasFromAPI(version, country, language)
+const prodRules = await getRulesFromDist(version, country, language)
+let prodPersonas = await getPersonasFromDist(version, country, language)
 
 if (persona && persona in localPersonas && persona in prodPersonas) {
   localPersonas = { [persona]: localPersonas[persona] }
