@@ -1,14 +1,13 @@
 import c from 'ansi-colors'
 import Engine from 'publicodes'
-import Engine110 from 'publicodes-110'
 import { disabledLogger } from '@publicodes/tools'
 
 import {
   getArgs,
   getLocalRules,
   getLocalPersonas,
-  getRulesFromAPI,
-  getPersonasFromAPI,
+  getRulesFromDist,
+  getPersonasFromDist,
   printResults
 } from './commons.mjs'
 import safeGetSituation from './helpers/safeGetSituation.mjs'
@@ -26,8 +25,8 @@ const { country, language, markdown, version, persona } = getArgs()
 const localRules = await getLocalRules(country, language)
 let localPersonas = await getLocalPersonas(country, language)
 
-const prodRules = await getRulesFromAPI(version, country, language)
-let prodPersonas = await getPersonasFromAPI(version, country, language)
+const prodRules = await getRulesFromDist(version, country, language)
+let prodPersonas = await getPersonasFromDist(version, country, language)
 
 if (persona && persona in localPersonas && persona in prodPersonas) {
   localPersonas = { [persona]: localPersonas[persona] }
@@ -35,11 +34,7 @@ if (persona && persona in localPersonas && persona in prodPersonas) {
 }
 
 const localEngine = new Engine(localRules, { logger: disabledLogger })
-// TODO: remove this when the prod version is updated
-const prodEngine =
-  version === 'latest'
-    ? new Engine110(prodRules, { logger: disabledLogger })
-    : new Engine(prodRules, { logger: disabledLogger })
+const prodEngine = new Engine(prodRules, { logger: disabledLogger })
 
 const nbRules = Object.keys(localRules).length
 
