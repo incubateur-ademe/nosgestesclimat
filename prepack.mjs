@@ -107,9 +107,9 @@ export type SupportedRegionType = {
   [currentLang: string]: RegionParams
 }
 
-export type SuppportedRegions = { [key: string]: SupportedRegionType }
+export type SupportedRegions = { [key: string]: SupportedRegionType }
 
-export const supportedRegions: SuppportedRegions`
+export const supportedRegions: SupportedRegions`
 )
 console.log(`✅ main index and types generated`)
 
