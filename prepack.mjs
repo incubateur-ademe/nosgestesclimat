@@ -93,14 +93,18 @@ export type RegionAuthor = {
   url?: string
 }
 
+export type RegionCode = string
+
+export type RegionParams = {
+  code: RegionCode
+  nom: string
+  gentilé: string
+  authors?: RegionAuthor[]
+  drapeau?: string
+}
+
 export type SupportedRegionType = {
-  [currentLang: string]: {
-    code: string
-    nom: string
-    gentilé: string
-    authors: RegionAuthor[]
-    drapeau?: string
-  }
+  [currentLang: string]: RegionParams
 }
 
 export type SuppportedRegions = { [key: string]: SupportedRegionType }
