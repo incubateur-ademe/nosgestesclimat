@@ -77,7 +77,7 @@ transport . voiture . empreinte moyenne:
     voiture . thermique . consommation aux 100: voiture . consommation estimée
 
 transport . voiture . empreinte calculée:
-  formule: (usage au kilomètre + construction au kilomètre) * km / voyageurs
+  formule: (usage + construction) / voyageurs
   unité: kgCO2e
 
 transport . voiture . voyageurs:
@@ -102,6 +102,11 @@ transport . voiture . voyageurs:
     je suis seul: 1
     deux: 2
     cinq: 5
+
+transport . voiture . usage:
+  titre: Usage de la voiture
+  formule: usage au kilomètre * km
+  unité: kgCO2e
 
 transport . voiture . usage au kilomètre:
   formule: empreinte au kilomètre + base au kilomètre
@@ -491,11 +496,38 @@ transport . voiture . nombre véhicules circulation:
     Ce chiffre concerne les véhicules particuliers (voitures et VUL).
     Il est issu des statistiques [INSEE](https://www.insee.fr/fr/statistiques/2045167#tableau-figure1_radio1).
 
-transport . voiture . empreinte calculée . construction au kilomètre:
-  formule: construction * amortissement
+transport . voiture . construction:
+  titre: Construction de la voiture
+  formule:
+    variations:
+      - si: km < seuil km
+        alors: construction au kilomètre * seuil km
+      - sinon: construction au kilomètre * km
+  unité: kgCO2e
+  note: |
+    Pour le moment, nous ne considérons pas l'amortissement complet d'une voiture (i.e. nous n'avons pas l'info de l'âge 
+    ou le kilométrage complet de la voiture donc sa contruction ne sera jamais nulle).
+  # Nous pourrions utiliser ici le mécanisme `plancher` avec pour valeur "construction au kilomètre * seuil km"
+  # mais il est plus simple ici de comprendre la méhotodo avec `variations`.
+
+transport . voiture . construction . seuil km:
+  formule: voiture . durée de vie en km / durée de vie moyenne
+  unité: km
+
+transport . voiture . durée de vie moyenne:
+  formule:
+    variations:
+      - si: motorisation = 'électrique'
+        alors: 30
+      - sinon: 20
+  note: |
+    On considère que l'âge moyen d'une voiture qui part à la casse est de 20 ans pour une voiture thermique / hybride, 30 ans pour une voiture électrique.
+
+transport . voiture . construction au kilomètre:
+  formule: barème construction * amortissement
   unité: kgCO2e/km
 
-transport . voiture . construction:
+transport . voiture . barème construction:
   formule:
     variations:
       - si: motorisation = 'thermique'
@@ -544,7 +576,7 @@ transport . voiture . construction:
     Nous avons choisi de ne pas retrancher les "crédits de recyclage" correspondant à des émissions évitées via l'utilisation de matériaux recyclés issus du démantèlement d'une voiture, pour le production de nouveaux produits manufacturés.
     Nous prenons l'hypothèse que l'empreinte réduite bénéficie à celui qui achète le produit issu du recyclage et non pas à celui qui achète un produit amené à être recyclé.
 
-transport . voiture . construction . barème thermique:
+transport . voiture . barème construction . barème thermique:
   formule:
     variations:
       - si:
@@ -560,7 +592,7 @@ transport . voiture . construction . barème thermique:
         alors: 7600
   unité: kgCO2e
 
-transport . voiture . construction . barème électrique:
+transport . voiture . barème construction . barème électrique:
   formule:
     variations:
       - si:
@@ -576,7 +608,7 @@ transport . voiture . construction . barème électrique:
         alors: 20200
   unité: kgCO2e
 
-transport . voiture . construction . barème hybride:
+transport . voiture . barème construction . barème hybride:
   formule:
     variations:
       - si:
@@ -640,6 +672,8 @@ transport . voiture . durée de vie en km:
     - Gabarit "VUL" : correspondant au segment CDV (Car-Derived Vehicle), soit 270000 km
     - Gabarit "berline" : correspondant au segment B ou C, soit 225000 km
     - Gabarit "SUV" : correspondant au segment E ou F, soit 270000 km
+
+    Pour le moment, nous ne faisons pas la différence entre thermique et électrique. C'est une hypothèse très forte.
 
 # transport . voiture . facteur location:
 #   titre: Part d'utilisation annuelle d'une voiture de service
