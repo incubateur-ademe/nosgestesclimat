@@ -10,12 +10,18 @@ const questions = []
 const emptyQuestions = []
 const nbPersonas = Object.keys(localPersonas).length
 
+const ruleNamePrefixToIgrnore = ['futureco-data']
+
 let nbQuestions = 0
 for (const ruleName in localRules) {
   const rule = localRules[ruleName]
   const ruleEntry = []
 
   if (!rule) {
+    continue
+  }
+
+  if (ruleName.match(`(${ruleNamePrefixToIgrnore.join('|')}).*`)) {
     continue
   }
 
