@@ -274,7 +274,6 @@ transport . voiture . thermique . carburant . essence E85:
 transport . voiture . thermique . carburant . GPL:
   titre: GPL (Gaz de Pétrole Liquéfiés)
 
-
 transport . voiture . notif carburant:
   type: notification
   formule: thermique . carburant = 'essence E85'
@@ -290,11 +289,13 @@ transport . voiture . électrique:
 transport . voiture . électrique . empreinte au kilomètre:
   titre: empreinte au km électrique
   unité: kgCO2e/km
-  formule: (consommation électrique au km + pertes de charge) * empreinte électrique
+  formule: consommation électrique au km * facteur pertes de charge * logement . électricité . intensité carbone
   note: |
-    L'empreinte électrique utilise la moyenne du mix électrique français. La majorité des possesseurs de voitures électriques rechargent leur véhicule chez eux avec une tarification heure creuses, qui est plus avantageuse financièrement et correspond aussi aux moment où la demande en électrique est moins forte et le mix électrique moins carboné.
+    Nous considérons ici le mix électrique moyen français. La majorité des possesseurs de voitures électriques rechargent leur 
+    véhicule chez eux avec une tarification heure creuses, qui est plus avantageuse financièrement et correspond d'ailleurs 
+    aux moments où la demande en électricité est moins forte et le mix électrique moins carboné (les centrales gaz ne sont pas sollicitées).
 
-transport . voiture . électrique . consommation électrique au km:
+transport . voiture . électrique . empreinte au kilomètre . consommation électrique au km:
   titre: Consommation électrique au km
   variations:
     - si: gabarit = 'petite'
@@ -309,16 +310,13 @@ transport . voiture . électrique . consommation électrique au km:
       alors: 0.25
   unité: kWh/km
 
-transport . voiture . électrique . empreinte au kilomètre . pertes de charge:
+transport . voiture . électrique . empreinte au kilomètre . facteur pertes de charge:
   titre: Pertes de charge
-  formule: pertes de charge réseau + pertes de charge recharge
-  avec:
-    pertes de charge réseau: 5%
-    pertes de charge recharge: 10%
+  formule: 110%
   note: |
-    Le facteur de pertes de charge est un coefficient qui permet de prendre en compte les pertes d'énergie qui se produisent lors de la transmission et de la distribution de l'électricité depuis le point de production jusqu'à leur utilisation finale dans le moteur électrique.
+    Le facteur de pertes de charge est un coefficient qui permet de prendre en compte les pertes d'énergie qui se produisent entre le point de 
+    recharge du véhicule jusqu'à l'utilisation finale dans le moteur électrique.
     En particulier la batterie ne restitue pas 100% de l'énergie consommée lors de la charge.
-    
 
 transport . voiture . gabarit:
   applicable si:
