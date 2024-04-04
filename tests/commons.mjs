@@ -7,7 +7,10 @@ import yargs from 'yargs'
 import { readFile } from 'fs/promises'
 import { serializeUnit } from 'publicodes'
 
-const API_URL = 'https://nosgestesclimat-api.osc-fr1.scalingo.io'
+const PREPROD_PREVIEW_URL = 'https://preprod--ecolab-data.netlify.app/'
+
+// Same as site-nextjs, shouldn't it be https://data.nosgestesclimat.fr/ ?
+const LATEST_PREVIEW_URL = 'https://master--ecolab-data.netlify.app/'
 
 export function getArgs() {
   return yargs(process.argv.slice(2))
@@ -85,8 +88,10 @@ export function getLocalMigrationTable() {
     })
 }
 
-export function getRulesFromAPI(version, region, lang) {
-  return fetch(`${API_URL}/${version}/${lang}/${region}/rules`)
+export function getRulesFromDist(version, region, lang) {
+  const url = version === 'nightly' ? PREPROD_PREVIEW_URL : LATEST_PREVIEW_URL
+  const fileName = `co2-model.${region}-lang.${lang}.json`
+  return fetch(url + fileName)
     .then((res) => res.json())
     .catch((e) => {
       console.error(
@@ -97,8 +102,10 @@ export function getRulesFromAPI(version, region, lang) {
     })
 }
 
-export function getPersonasFromAPI(version, region, lang) {
-  return fetch(`${API_URL}/${version}/${lang}/personas`)
+export function getPersonasFromDist(version, region, lang) {
+  const url = version === 'nightly' ? PREPROD_PREVIEW_URL : LATEST_PREVIEW_URL
+  const fileName = `personas-${lang}.json`
+  return fetch(url + fileName)
     .then((res) => res.json())
     .catch((e) => {
       console.error(
@@ -140,6 +147,10 @@ An error occured while testing the model:
   let nbDiff = 0
 
   for (const result of results) {
+    // created json report is too large if "empreinte branche" displayed
+    if (result.rule.startsWith('empreinte branche')) {
+      continue
+    }
     if (result.type === 'warning') {
       if (!markdown) {
         console.log(

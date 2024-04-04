@@ -6,7 +6,7 @@ import utils from '@incubateur-ademe/nosgestesclimat-scripts/utils'
 import Engine from 'publicodes'
 import c from 'ansi-colors'
 
-import { getLocalRules, getRulesFromAPI, getArgs } from '../tests/commons.mjs'
+import { getLocalRules, getRulesFromDist, getArgs } from '../tests/commons.mjs'
 
 const outputJSONPath = path.join('./public', `migration.json`)
 
@@ -14,7 +14,7 @@ const { country, version, language, markdown } = getArgs()
 
 const baseMigration = utils.readYAML(path.resolve(`migration/migration.yaml`))
 const localRules = await getLocalRules(country, language)
-const prodRules = await getRulesFromAPI(version, country, language)
+const prodRules = await getRulesFromDist(version, country, language)
 
 const localEngine = new Engine(localRules)
 const parsedRules = Object.keys(localEngine.getParsedRules())

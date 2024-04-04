@@ -44,7 +44,11 @@ transport . limitation autoroute . empreinte autoroute réduit:
   valeur: transport . voiture
   contexte:
     transport . voiture . km: voiture . km * ratio autoroute
-    transport . voiture . usage: transport . voiture . usage * (1 - réduction)
+    transport . voiture . usage:
+      valeur: transport . voiture . usage * (1 - réduction)
+      contexte:
+        transport . voiture . km: voiture . km * ratio autoroute
+
   unité: kgCO2e
 
 transport . limitation autoroute . réduction:
@@ -80,7 +84,6 @@ transport . limitation autoroute . km autoroute:
     Brest ⇄ Nice: 3000
     Paris ⇄ Marseille: 1600
     Bordeaux ⇄ Lyon: 1100
-  par défaut: 1200
   note: |
     Fil twitter intéressant sur le sujet: https://twitter.com/Tomsawy22670318/status/1274257124701462528.
 
@@ -142,8 +145,9 @@ transport . autopartage . plafond activation autopartage:
 transport . autopartage . recalcul:
   valeur: transport . voiture
   contexte:
-    voiture . utilisateur régulier: non
     voiture . km: voiture . km * (1 - 0.41)
+  # TODO: Le contexte devrait inclure `voiture . utilisateur régulier: non` mais le recalcul de recalcul ne semble pas fonctionner ici.
+  # La valeur en km n'est pas propagée dans le second recalcul.
   unité: kgCO2e
   note: |
     L'auto-partage permet de réduire le nombre de km parcourus dans l'année (l'usage de la voiture est moins systématique).

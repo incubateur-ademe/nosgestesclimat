@@ -1,6 +1,6 @@
 const utils = require('./utils')
 
-const year = 2018
+const year = 2019
 
 const SDES_data = utils.readJSON(
   `scripts/services-societaux/output/${year}/liste_SDES_traitée.json`
