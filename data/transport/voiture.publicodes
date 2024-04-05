@@ -74,7 +74,13 @@ transport . voiture . empreinte moyenne:
     voiture . gabarit: "'berline'"
     voiture . motorisation: "'thermique'"
     voiture . thermique . carburant: "'essence E5 ou E10'"
-    voiture . thermique . consommation aux 100: voiture . consommation estimée
+    voiture . thermique . consommation aux 100:
+      valeur: voiture . thermique . consommation estimée
+      contexte:
+        voiture . utilisateur régulier: oui
+        voiture . gabarit: "'berline'"
+        voiture . motorisation: "'thermique'"
+        voiture . thermique . carburant: "'essence E5 ou E10'"
 
 transport . voiture . empreinte calculée:
   formule: (usage + construction) / voyageurs
@@ -140,6 +146,7 @@ transport . voiture . empreinte au kilomètre:
 
 transport . voiture . motorisation:
   question: Quel type de voiture utilisez-vous ?
+  non applicable si: utilisateur régulier = non
   description: 💡 **Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
   par défaut: "'thermique'"
   formule:
@@ -169,9 +176,9 @@ transport . voiture . thermique . consommation au kilomètre:
 
 transport . voiture . thermique . consommation aux 100:
   question: Connaissez-vous la consommation moyenne de la voiture ?
+  non applicable si: utilisateur régulier = non
   description: |
     **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
-
   par défaut: consommation estimée
   unité: l/centkm
   note: Les suggestions de réponse sont à la louche, à préciser et sourcer.
@@ -199,6 +206,7 @@ transport . voiture . thermique . empreinte au litre:
 
 transport . voiture . thermique . carburant:
   question: Quel type de carburant votre voiture consomme-t-elle ?
+  non applicable si: utilisateur régulier = non
   description: |
     Pour comprendre les différents types de carburants, [cet article pédagogique](https://www.francetvinfo.fr/economie/automobile/essence/les-carburants-changent-de-nom-a-la-pompe-voici-comment-vous-y-retrouver_2967013.html) est très utile.
 
@@ -267,6 +275,7 @@ transport . voiture . électrique . empreinte au kilomètre:
 
 transport . voiture . gabarit:
   question: Quel est le gabarit de la voiture ?
+  non applicable si: utilisateur régulier = non
   description: |
     **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
 
@@ -302,7 +311,7 @@ transport . voiture . gabarit . SUV:
   description: |
     "Sport utility vehicle", type 4x4 urbain
 
-transport . voiture . consommation estimée:
+transport . voiture . thermique . consommation estimée:
   titre: Consommation estimée voiture
   note: |
     > Si nous avons travaillé les propositions de consommation moyenne, l'idéal au vu de l'impact de cette donnée est bien que l'utilisateur ou l'utilisatrice saisisse sa propre consommation réelle, moyennée sur son usage.
@@ -406,42 +415,42 @@ transport . voiture . consommation estimée:
             - si: thermique . carburant = 'GPL'
               alors: SUV essence * 1.15
 
-transport . voiture . consommation estimée . petite diesel:
+transport . voiture . thermique . consommation estimée . petite diesel:
   titre: Consommation moyenne petite voiture diesel
   formule: 4.83
   unité: l/centkm
 
-transport . voiture . consommation estimée . petite essence:
+transport . voiture . thermique . consommation estimée . petite essence:
   titre: Consommation moyenne petite voiture essence
   formule: 7.11
   unité: l/centkm
 
-transport . voiture . consommation estimée . moyenne diesel:
+transport . voiture . thermique . consommation estimée . moyenne diesel:
   titre: Consommation moyenne voiture "moyenne" diesel
   formule: 4.96
   unité: l/centkm
 
-transport . voiture . consommation estimée . moyenne essence:
+transport . voiture . thermique . consommation estimée . moyenne essence:
   titre: Consommation moyenne voiture "moyenne" essence
   formule: 6.59
   unité: l/centkm
 
-transport . voiture . consommation estimée . VUL diesel:
+transport . voiture . thermique . consommation estimée . VUL diesel:
   titre: Consommation moyenne VUL diesel
   formule: 7.7
   unité: l/centkm
 
-transport . voiture . consommation estimée . VUL essence:
+transport . voiture . thermique . consommation estimée . VUL essence:
   titre: Consommation moyenne VUL essence
   formule: 9
   unité: l/centkm
 
-transport . voiture . consommation estimée . SUV diesel:
+transport . voiture . thermique . consommation estimée . SUV diesel:
   titre: Consommation moyenne SUV diesel
   formule: 5.48
   unité: l/centkm
 
-transport . voiture . consommation estimée . SUV essence:
+transport . voiture . thermique . consommation estimée . SUV essence:
   titre: Consommation moyenne SUV essence
   formule: 7.13
   unité: l/centkm
