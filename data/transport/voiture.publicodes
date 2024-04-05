@@ -7,8 +7,10 @@ transport . voiture:
         alors: 0
       - si:
           toutes ces conditions:
-            - est défini: utilisateur régulier
-            - utilisateur régulier
+            - est défini: utilisateur
+            - une de ces conditions:
+                - utilisateur = 'propriétaire'
+                - utilisateur = 'régulier non propriétaire'
         alors: empreinte calculée
       - sinon: empreinte moyenne
   unité: kgCO2e
@@ -46,9 +48,18 @@ transport . voiture . km annuels moyen:
   unité: km
   note: Chiffre issu de [datalab ministère écologie 2019](https://www.statistiques.developpement-durable.gouv.fr/bilan-annuel-des-transports-en-2019-0), page 3 G1.
 
-transport . voiture . utilisateur régulier:
+transport . voiture . utilisateur:
   question: Utilisez-vous majoritairement la même voiture pour vous déplacer ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - propriétaire
+        - régulier non propriétaire
+        - non régulier
   description: |
+    A MODIFIER
+
     Par opposition à l'utilisation exclusive de voitures de location partagées par d'autres personnes le reste du temps, ou l'utilisation ponctuelle de la voiture d'un ami, de la famille.
 
     Vous n'êtes pas propriétaire d'une voiture, mais vous faites quand même des kilomètres.
@@ -57,12 +68,16 @@ transport . voiture . utilisateur régulier:
 
     Cela peut-être le cas s'il s'agit d'un véhicule appartenant à quelqu'un de votre famille, ou à des amis proches. Ou si vous louez systématiquement le même type de véhicule, comme dans le cas d'un abonnement à un service d'autopartage.
 
+transport . voiture . utilisateur . propriétaire:
+transport . voiture . utilisateur . régulier non propriétaire:
+transport . voiture . utilisateur . non régulier:
+
 transport . voiture . notif utilsateur irrégulier:
   type: notification
   formule:
     toutes ces conditions:
-      - est défini: voiture . utilisateur régulier
-      - utilisateur régulier = non
+      - est défini: voiture . utilisateur
+      - utilisateur = 'non régulier'
       - km > 0
   description: |
     Vous roulez avec des véhicules différents : nous vous avons donc attribué les caractéristiques d'une voiture "moyenne".
@@ -70,14 +85,14 @@ transport . voiture . notif utilsateur irrégulier:
 transport . voiture . empreinte moyenne:
   valeur: voiture . empreinte calculée
   contexte:
-    voiture . utilisateur régulier: oui
+    voiture . utilisateur: "'régulier non propriétaire'"
     voiture . gabarit: "'berline'"
     voiture . motorisation: "'thermique'"
     voiture . thermique . carburant: "'essence E5 ou E10'"
     voiture . thermique . consommation aux 100:
       valeur: voiture . thermique . consommation estimée
       contexte:
-        voiture . utilisateur régulier: oui
+        voiture . utilisateur: "'régulier non propriétaire'"
         voiture . gabarit: "'berline'"
         voiture . motorisation: "'thermique'"
         voiture . thermique . carburant: "'essence E5 ou E10'"
@@ -146,7 +161,12 @@ transport . voiture . empreinte au kilomètre:
 
 transport . voiture . motorisation:
   question: Quel type de voiture utilisez-vous ?
-  non applicable si: utilisateur régulier = non
+  applicable si:
+    toutes ces conditions:
+      - est défini: utilisateur
+      - une de ces conditions:
+          - utilisateur = 'propriétaire'
+          - utilisateur = 'régulier non propriétaire'
   description: 💡 **Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
   par défaut: "'thermique'"
   formule:
@@ -176,7 +196,12 @@ transport . voiture . thermique . consommation au kilomètre:
 
 transport . voiture . thermique . consommation aux 100:
   question: Connaissez-vous la consommation moyenne de la voiture ?
-  non applicable si: utilisateur régulier = non
+  applicable si:
+    toutes ces conditions:
+      - est défini: utilisateur
+      - une de ces conditions:
+          - utilisateur = 'propriétaire'
+          - utilisateur = 'régulier non propriétaire'
   description: |
     **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
   par défaut: consommation estimée
@@ -206,7 +231,12 @@ transport . voiture . thermique . empreinte au litre:
 
 transport . voiture . thermique . carburant:
   question: Quel type de carburant votre voiture consomme-t-elle ?
-  non applicable si: utilisateur régulier = non
+  applicable si:
+    toutes ces conditions:
+      - est défini: utilisateur
+      - une de ces conditions:
+          - utilisateur = 'propriétaire'
+          - utilisateur = 'régulier non propriétaire'
   description: |
     Pour comprendre les différents types de carburants, [cet article pédagogique](https://www.francetvinfo.fr/economie/automobile/essence/les-carburants-changent-de-nom-a-la-pompe-voici-comment-vous-y-retrouver_2967013.html) est très utile.
 
@@ -275,7 +305,12 @@ transport . voiture . électrique . empreinte au kilomètre:
 
 transport . voiture . gabarit:
   question: Quel est le gabarit de la voiture ?
-  non applicable si: utilisateur régulier = non
+  applicable si:
+    toutes ces conditions:
+      - est défini: utilisateur
+      - une de ces conditions:
+          - utilisateur = 'propriétaire'
+          - utilisateur = 'régulier non propriétaire'
   description: |
     **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
 
@@ -509,7 +544,10 @@ transport . voiture . construction:
   titre: Construction de la voiture
   formule:
     variations:
-      - si: km < seuil km
+      - si:
+          toutes ces conditions:
+            - voiture . utilisateur = 'propriétaire'
+            - km < seuil km
         alors: construction au kilomètre * seuil km
       - sinon: construction au kilomètre * km
   unité: kgCO2e
