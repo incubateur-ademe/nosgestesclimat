@@ -43,6 +43,25 @@ function getLocalizedRules(translatedBaseRules, regionCode, destLang) {
     const localizedAttrs = utils.readYAML(
       path.join(regionModelsPath, `${regionCode}-${destLang}.publicodes`)
     )
+
+    // Minimal check to ensure that the translation is up-to-date. It should be more precise as we only check the keys and not the translations.
+    if (destLang !== 'fr') {
+      const frAttrs = utils.readYAML(
+        path.join(regionModelsPath, `${regionCode}-fr.publicodes`)
+      )
+      const frKeys = Object.keys(frAttrs)
+      const destLangKeys = Object.keys(localizedAttrs)
+
+      const FRdiff = frKeys.filter((key) => !destLangKeys.includes(key))
+      const destLangDiff = destLangKeys.filter((key) => !frKeys.includes(key))
+      const diff = FRdiff.concat(destLangDiff)
+      if (diff.length > 0) {
+        throw new Error(
+          `❌  ${c.bold(`[${regionCode}-${destLang}]`)} keys missing in the localized model: ${diff}. ${c.italic('Make sure the translation is up-to-date')}.'`
+        )
+      }
+    }
+
     return addRegionToBaseRules(
       translatedBaseRules,
       localizedAttrs,
@@ -63,6 +82,7 @@ export default ({ regionCode, destLang, translatedBaseRules, opts }) => {
     regionCode,
     destLang
   )
+
   const destPathWithoutExtension = path.resolve(
     `public/co2-model.${regionCode}-lang.${destLang}`
   )
