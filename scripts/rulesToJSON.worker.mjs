@@ -43,7 +43,12 @@ function getLocalizedRules(translatedBaseRules, regionCode, destLang) {
     const localizedAttrs = utils.readYAML(
       path.join(regionModelsPath, `${regionCode}-${destLang}.publicodes`)
     )
-    return addRegionToBaseRules(translatedBaseRules, localizedAttrs)
+    return addRegionToBaseRules(
+      translatedBaseRules,
+      localizedAttrs,
+      regionCode,
+      destLang
+    )
   } catch (err) {
     cli.printWarn(`[SKIPPED] - ${regionCode}-${destLang} (${err.message})`)
     return addRegionToBaseRules(translatedBaseRules, {})
