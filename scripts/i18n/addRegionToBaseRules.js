@@ -37,12 +37,13 @@ const addRegionToBaseRules = (
           `⚠️  ${c.bold(`[${regionCode}-${destLang}]`)} ${c.yellow(rule)} is present in region model but not in base rules. 
 ${c.italic('(it might be a typo error in the rule name or a renamed rule in the base rules).')}`
         )
-        return baseRules
       }
-      Object.entries(attrs).forEach(([attr, transVal]) => {
-        updateBaseRules([rule, attr], transVal)
-      })
+      return baseRules
     }
+
+    Object.entries(attrs).forEach(([attr, transVal]) => {
+      updateBaseRules([rule, attr], transVal)
+    })
   })
   return baseRules
 }
