@@ -33,7 +33,7 @@ const addRegionToBaseRules = (
   Object.entries(newRegionalRules).forEach(([rule, attrs]) => {
     if (!Object.keys(baseRules).includes(rule)) {
       if (!ruleNamesToIgnore.includes(rule)) {
-        console.warn(
+        throw new Error(
           `⚠️  ${c.bold(`[${regionCode}-${destLang}]`)} ${c.yellow(rule)} is present in region model but not in base rules. 
 ${c.italic('(it might be a typo error in the rule name or a renamed rule in the base rules).')}`
         )

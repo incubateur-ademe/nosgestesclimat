@@ -69,8 +69,7 @@ function getLocalizedRules(translatedBaseRules, regionCode, destLang) {
       destLang
     )
   } catch (err) {
-    cli.printWarn(`[SKIPPED] - ${regionCode}-${destLang} (${err.message})`)
-    return addRegionToBaseRules(translatedBaseRules, {})
+    throw err
   }
 }
 
