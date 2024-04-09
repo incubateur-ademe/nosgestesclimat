@@ -93,19 +93,23 @@ export type RegionAuthor = {
   url?: string
 }
 
-export type SupportedRegionType = {
-  [currentLang: string]: {
-    code: string
-    nom: string
-    gentilé: string
-    authors: RegionAuthor[]
-    drapeau?: string
-  }
+export type RegionCode = string
+
+export type RegionParams = {
+  code: RegionCode
+  nom: string
+  gentilé: string
+  authors?: RegionAuthor[]
+  drapeau?: string
 }
 
-export type SuppportedRegions = { [key: string]: SupportedRegionType }
+export type SupportedRegionType = {
+  [currentLang: string]: RegionParams
+}
 
-export const supportedRegions: SuppportedRegions`
+export type SupportedRegions = { [key: string]: SupportedRegionType }
+
+export const supportedRegions: SupportedRegions`
 )
 console.log(`✅ main index and types generated`)
 

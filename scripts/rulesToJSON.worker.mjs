@@ -51,7 +51,7 @@ function getLocalizedRules(translatedBaseRules, regionCode, destLang) {
 }
 
 export default ({ regionCode, destLang, translatedBaseRules, opts }) => {
-  const { markdown, optimDisabled } = opts
+  const { markdown, optimDisabled, forceOptim } = opts
 
   const localizedTranslatedBaseRules = getLocalizedRules(
     translatedBaseRules,
@@ -73,6 +73,10 @@ export default ({ regionCode, destLang, translatedBaseRules, opts }) => {
   )
 
   if (!optimDisabled) {
+    // By default, we disable optim for all regions except the FR model if the forceOptim flag is not set
+    if (regionCode !== defaultModelCode && !forceOptim) {
+      return
+    }
     const start = Date.now()
     const nbRules = compressRules(engine, destPathWithoutExtension)
     const optimDuration = Date.now() - start
