@@ -55,12 +55,14 @@ import supportedRegions from './public/supportedRegions.json' assert { type: 'js
 
 import personasFr from './public/personas-fr.json' assert { type: 'json' }
 import personasEn from './public/personas-en.json' assert { type: 'json' }
+import personasEs from './public/personas-es.json' assert { type: 'json' }
 
 import migration from './public/migration.json' assert { type: 'json' }
 
 const personas = {
   fr: personasFr,
-  en: personasEn
+  en: personasEn,
+  es: personasEs
 }
 
 export { supportedRegions, personas, migration }`
