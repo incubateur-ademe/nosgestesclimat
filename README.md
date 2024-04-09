@@ -5,7 +5,7 @@
   <p align="center">
    <a href="https://github.com/incubateur-ademe/nosgestesclimat/issues">Report Bug</a>
    •
-   <a href="https://nogestesclimat.fr">nosgestesclimat.fr</a>
+   <a href="https://nosgestesclimat.fr">nosgestesclimat.fr</a>
    •
    <a href="https://github.com/incubateur-ademe/nosgestesclimat-site-nextjs">Code du site</a>
   </p>
