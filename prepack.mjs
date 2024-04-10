@@ -55,12 +55,14 @@ import supportedRegions from './public/supportedRegions.json' assert { type: 'js
 
 import personasFr from './public/personas-fr.json' assert { type: 'json' }
 import personasEn from './public/personas-en.json' assert { type: 'json' }
+import personasEs from './public/personas-es.json' assert { type: 'json' }
 
 import migration from './public/migration.json' assert { type: 'json' }
 
 const personas = {
   fr: personasFr,
-  en: personasEn
+  en: personasEn,
+  es: personasEs
 }
 
 export { supportedRegions, personas, migration }`
@@ -93,19 +95,23 @@ export type RegionAuthor = {
   url?: string
 }
 
-export type SupportedRegionType = {
-  [currentLang: string]: {
-    code: string
-    nom: string
-    gentilé: string
-    authors: RegionAuthor[]
-    drapeau?: string
-  }
+export type RegionCode = string
+
+export type RegionParams = {
+  code: RegionCode
+  nom: string
+  gentilé: string
+  authors?: RegionAuthor[]
+  drapeau?: string
 }
 
-export type SuppportedRegions = { [key: string]: SupportedRegionType }
+export type SupportedRegionType = {
+  [currentLang: string]: RegionParams
+}
 
-export const supportedRegions: SuppportedRegions`
+export type SupportedRegions = { [key: string]: SupportedRegionType }
+
+export const supportedRegions: SupportedRegions`
 )
 console.log(`✅ main index and types generated`)
 
