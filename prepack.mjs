@@ -89,10 +89,7 @@ export type Persona = {
 
 export const models: Record<string, Rules>
 
-export const personas: {
-  fr: Record<string, Persona>
-  en: Record<string, Persona>
-}
+export const personas: Record<string, Persona>
 
 export type migrationType = {
   keysToMigrate: Record<DottedName, DottedName>
