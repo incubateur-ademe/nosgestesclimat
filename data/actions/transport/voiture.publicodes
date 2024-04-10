@@ -17,7 +17,7 @@ transport . éco-conduite:
     Voir le [Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter)
 
 transport . éco-conduite . gain empreinte au km:
-  formule: voiture . empreinte usage au kilomètre * 0.15
+  formule: voiture . empreinte au kilomètre * 0.15
   unité: kgCO2e/km
   note: Hypothèse de réduction de 15% ([Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter))
 
@@ -44,11 +44,7 @@ transport . limitation autoroute . empreinte autoroute réduit:
   valeur: transport . voiture
   contexte:
     transport . voiture . km: voiture . km * ratio autoroute
-    transport . voiture . usage:
-      valeur: transport . voiture . usage * (1 - réduction)
-      contexte:
-        transport . voiture . km: voiture . km * ratio autoroute
-
+    transport . voiture . usage au kilomètre: transport . voiture . usage au kilomètre * (1 - réduction)
   unité: kgCO2e
 
 transport . limitation autoroute . réduction:
@@ -93,10 +89,10 @@ transport . limitation autoroute . ratio autoroute:
 
 transport . covoiturage:
   titre: Privilégier le covoiturage
-  applicable si:
+  non applicable si:
     toutes ces conditions:
-      - est défini: voiture . utilisateur régulier
-      - voiture . utilisateur régulier
+      - est défini: voiture . utilisateur
+      - voiture . utilisateur = 'non régulier'
   action:
     dépasse:
       - transport . boulot . covoiturage
@@ -125,11 +121,11 @@ transport . autopartage:
   titre: Se mettre à l'autopartage
   icônes: 🚗🤝
   formule: transport . voiture - recalcul
-  applicable si:
+  applicable si: voiture . km < plafond activation autopartage
+  non applicable si:
     toutes ces conditions:
-      - est défini: voiture . utilisateur régulier
-      - voiture . utilisateur régulier
-      - voiture . km < plafond activation autopartage
+      - est défini: voiture . utilisateur
+      - voiture . utilisateur = 'non régulier'
   description: |
     Nous faisons l'hypothèse qu'une personne qui parcourt beaucoup de kilomètres chaque année en voiture aura du mal à se projeter dans une offre d'auto-partage. Ce sera bien plus évident pour quelqu'un qui en fait peu.
 
@@ -157,11 +153,13 @@ transport . voiture 5km:
   titre: Se passer de voiture pour moins de 5 km
   icônes: 🚗🚲
   formule: transport . voiture - recalcul
-  applicable si:
+  non applicable si:
     toutes ces conditions:
-      - est défini: voiture . utilisateur régulier
-      - voiture . utilisateur régulier
-  non applicable si: voiture . km < seuil d'activation 5km
+      - est défini: voiture . utilisateur
+      - une de ces conditions:
+          - voiture . utilisateur = 'non régulier'
+          - voiture . utilisateur = 'régulier non propriétaire'
+  applicable si: voiture . km > seuil d'activation 5km
   note: |
     On fait l'hypothèse qu'une personne qui n'est pas propriétaire de voiture se passe *déjà* d'une voiture pour de courts trajets.
   description: |
@@ -198,11 +196,7 @@ transport . distance moyenne trajet court:
 transport . voiture 5km . recalcul:
   valeur: transport . voiture
   contexte:
-    transport . voiture . usage: transport . voiture 5km . usage réduit
-
-transport . voiture 5km . usage réduit:
-  formule: (transport . voiture . km - distance totale) * transport . voiture . empreinte au kilomètre
-  unité: kgCO2e
+    transport . voiture . km: transport . voiture . km - distance totale
 
 transport . voiture 5km . distance totale:
   formule:
@@ -231,11 +225,14 @@ transport . voiture 5km . fréquence:
 transport . voiture électrique:
   titre: Rouler en voiture électrique
   icônes: 🔌🚗
-  applicable si:
-    toutes ces conditions:
-      - est défini: voiture . utilisateur régulier
-      - voiture . utilisateur régulier
-  non applicable si: transport . voiture . motorisation = 'électrique'
+  non applicable si:
+    une de ces conditions:
+      - transport . voiture . motorisation = 'électrique'
+      - toutes ces conditions:
+          - est défini: voiture . utilisateur
+          - une de ces conditions:
+              - voiture . utilisateur = 'non régulier'
+              - voiture . utilisateur = 'régulier non propriétaire'
   formule: transport . voiture - recalcul
   description: |
     La voiture électrique n'est pas la solution miracle mais pour certains usages elle peut s'avérer (très) utile pour réduire notre empreinte.
@@ -258,7 +255,6 @@ transport . voiture électrique . recalcul:
   valeur: transport . voiture
   contexte:
     transport . voiture . motorisation: "'électrique'"
-    transport . voiture . véhicule récent: oui
 
 transport . réduire taille:
   titre: Choisir une petite voiture
@@ -266,11 +262,14 @@ transport . réduire taille:
     Le gabarit de la voiture influe fortement sur l'empreinte carbone de vos déplacements : les voitures plus grosses ont à la fois une empreinte de construction plus importante, et elles consomment également plus d'énergie pour se déplacer.
     Trop souvent aujourd'hui, on choisit son véhicule en fonction de ce qu'on "pourrait" faire avec.
     Un bon calcul écologique serait de choisir sa voiture pour qu'elle convienne à une utilisation quotidienne, et si nécessaire louer un véhicule plus gros lorsque ponctuellement le besoin s'en fait ressentir (déplacer des objets lourds, partir en vacanecs à plusieurs...).
-  applicable si:
-    toutes ces conditions:
-      - est défini: voiture . utilisateur régulier
-      - voiture . utilisateur régulier
-  non applicable si: transport . voiture . gabarit = "'petite'"
+  non applicable si:
+    une de ces conditions:
+      - transport . voiture . motorisation = 'petite'
+      - toutes ces conditions:
+          - est défini: voiture . utilisateur
+          - une de ces conditions:
+              - voiture . utilisateur = 'non régulier'
+              - voiture . utilisateur = 'régulier non propriétaire'
   formule: transport . voiture - recalcul
 
 transport . réduire taille . recalcul:
@@ -282,9 +281,8 @@ transport . faire durer:
   titre: Faire durer son véhicule
   applicable si:
     toutes ces conditions:
-      - est défini: voiture . utilisateur régulier
-      - voiture . utilisateur régulier
-  non applicable si: transport . voiture . véhicule récent = non
+      - est défini: voiture . utilisateur
+      - voiture . utilisateur = 'propriétaire'
   description: |
     Il est très difficile, à ce jour, de donner un chiffre sur la durée de vie d'un véhicule, que ce soit en kilomètres parcourus comme en année. 
     Le fait est que cela dépend de beaucoup de paramètres : l'entretien du véhicule, l'accidentologie, la manière de conduire, le type de moteur, la dépendance à l'électronique...
@@ -298,7 +296,7 @@ transport . faire durer:
 transport . faire durer . recalcul:
   valeur: transport . voiture . empreinte calculée
   contexte:
-    transport . voiture . durée de vie: 13
+    transport . voiture . durée de vie en km: transport . voiture . durée de vie en km * 1.2
 #
 #
 # Cette action est inactive. Au vu des problématiques liées au changement d'affectation des sols et autres impacts environnementaux

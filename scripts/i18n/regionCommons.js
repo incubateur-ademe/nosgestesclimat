@@ -25,8 +25,8 @@ const regionModelsPath = path.resolve('data/i18n/models')
 const defaultModelCode = 'FR'
 const defaultRegionModelParam = {
   FR: {
-    fr: { nom: 'France métropolitaine', gentilé: 'française' },
-    en: { nom: 'metropolitan France', gentilé: 'french' }
+    fr: { code: 'FR', nom: 'France métropolitaine', gentilé: 'française' },
+    en: { code: 'FR', nom: 'metropolitan France', gentilé: 'french' }
   }
 }
 const supportedRegionPath = 'public/supportedRegions.json'
