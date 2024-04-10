@@ -21,7 +21,8 @@ fs.copyFileSync(
   destPath
 )
 
-// Generating index and types for each model
+// We loop on everyModel files to import it in the main index file and then export it in an object with the region code as key
+let everyModelImports = ''
 everyModel.forEach((model) => {
   const splitName = model.split('-')
 
@@ -29,41 +30,48 @@ everyModel.forEach((model) => {
   const locale = splitName[2].split('.')[1]
   const isOptim = splitName[3] ? true : false
 
-  const destPath = `versions/${regionCode}/${locale}${isOptim ? '/optim' : ''}`
-
-  fs.mkdirSync(destPath, { recursive: true })
-
-  fs.writeFileSync(
-    destPath + '/index.js',
-    generateIndex(
-      `../../../${isOptim ? '../' : ''}${everyModelFolder}/${model}`
-    )
-  )
-  fs.writeFileSync(
-    destPath + '/index.d.ts',
-    generateTypes(`${everyModelFolder}/${model}`)
-  )
-  console.log(`✅ index and types generated for ${regionCode} - ${locale}`)
+  everyModelImports += `import ${regionCode}_${locale}${isOptim ? '_optim' : ''} from './public/${model}';\n`
 })
+
+console.log(`✅ every model imported`, everyModelImports)
+
+let everyModelObjectExport = 'const models = {\n'
+everyModel.forEach((model) => {
+  const splitName = model.split('-')
+
+  const regionCode = splitName[1].split('.')[1]
+  const locale = splitName[2].split('.')[1]
+  const isOptim = splitName[3] ? true : false
+
+  everyModelObjectExport += `  '${model}': ${regionCode}_${locale}${isOptim ? '_optim' : ''},\n`
+})
+everyModelObjectExport += '}'
+
+console.log(everyModelObjectExport)
 
 // Generating main index and types
 fs.writeFileSync(
   'index.js',
   generateIndex(`./${destPath}`) +
     `
-import supportedRegions from './public/supportedRegions.json' assert { type: 'json' }
 
-import personasFr from './public/personas-fr.json' assert { type: 'json' }
-import personasEn from './public/personas-en.json' assert { type: 'json' }
+${everyModelImports}
 
-import migration from './public/migration.json' assert { type: 'json' }
+import supportedRegions from './public/supportedRegions.json' 
+
+import personasFr from './public/personas-fr.json' 
+import personasEn from './public/personas-en.json' 
+
+import migration from './public/migration.json'
 
 const personas = {
   fr: personasFr,
   en: personasEn
 }
 
-export { supportedRegions, personas, migration }`
+${everyModelObjectExport}
+
+export { supportedRegions, personas, migration, models }`
 )
 
 fs.writeFileSync(
@@ -78,6 +86,8 @@ export type Persona = {
   situation: Partial<Record<DottedName, string | number>>
 }
 
+export const models: Record<string, Rules>
+
 export const personas: {
   fr: Record<string, Persona>
   en: Record<string, Persona>
@@ -87,6 +97,9 @@ export type migrationType = {
   keysToMigrate: Record<DottedName, DottedName>
   valuesToMigrate: Record<DottedName, Record<string, NodeValue>>
 }
+
+export const migration: migrationType
+
 
 export type RegionAuthor = {
   nom: string
@@ -114,7 +127,7 @@ export const supportedRegions: SupportedRegions`
 console.log(`✅ main index and types generated`)
 
 function generateIndex(pathToModel) {
-  return `import rules from "${pathToModel}" assert { type: "json" };
+  return `import rules from "${pathToModel}";
       
 export default rules;`
 }
@@ -136,3 +149,28 @@ export default rules;`
 
   return dFile
 }
+
+// Generating index and types for each model
+// everyModel.forEach((model) => {
+//   const splitName = model.split('-')
+
+//   const regionCode = splitName[1].split('.')[1]
+//   const locale = splitName[2].split('.')[1]
+//   const isOptim = splitName[3] ? true : false
+
+//   const destPath = `versions/${regionCode}/${locale}${isOptim ? '/optim' : ''}`
+
+//   fs.mkdirSync(destPath, { recursive: true })
+
+//   fs.writeFileSync(
+//     destPath + '/index.js',
+//     generateIndex(
+//       `../../../${isOptim ? '../' : ''}${everyModelFolder}/${model}`
+//     )
+//   )
+//   fs.writeFileSync(
+//     destPath + '/index.d.ts',
+//     generateTypes(`${everyModelFolder}/${model}`)
+//   )
+//   console.log(`✅ index and types generated for ${regionCode} - ${locale}`)
+// })
