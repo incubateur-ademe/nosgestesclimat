@@ -8,16 +8,6 @@ Ce dépôt contient un modèle d'empreinte carbone personnelle annuelle, écrit 
 
 Ce modèle pose des questions sur les aspects de la vie d'un individu et ses choix de consommation qui conduisent à émettre des gaz à effet de serre (GES) mesurés en CO2e. L'objectif n'est pas d'en faire une comptabilité parfaite, mais la plus représentative en posant un nombre de questions qui reste acceptable pour tous, à hauteur de l'engagement personnel moyen aujourd'hui dans les années 2020.
 
-## ✒️ Les textes
-
-Sans rentrer dans le calcul, il y a plein de textes à améliorer ! Un exemple facile pour commencer : voici [le texte de la question sur la surface du logement](https://github.com/datagir/nosgestesclimat/blob/master/data/logement/logement.publicodes#L49). Autre exemple : [le texte d'aide de la question "Votre logement est-il un appartement ?" ](https://github.com/datagir/nosgestesclimat/blob/master/data/logement/logement.publicodes#L82).
-
-Mais ce n'est pas tout ! Il y a aussi des articles de textes entiers, comme [l'action "éco-conduite"](https://github.com/datagir/nosgestesclimat/blob/master/documentation/actions-plus/transport%20.%20%C3%A9co-conduite.md).
-
-Du côté du site (le dépôt "nosgestesclimat-site"), il y a aussi la [FAQ](https://github.com/datagir/nosgestesclimat-site/blob/master/source/sites/publicodes/FAQ.yaml) par exemple.
-
-Comment modifier ces textes ? Rendez-vous dans la section ["🏗️ En pratique" ci-dessous](https://github.com/datagir/nosgestesclimat/blob/master/CONTRIBUTING.md#%EF%B8%8F-en-pratique).
-
 </div>
 
 ---
@@ -33,12 +23,17 @@ Comment modifier ces textes ? Rendez-vous dans la section ["🏗️ En pratique"
   - [Si vous voulez participer à l'amélioration du modèle \[⌛ 20 minutes\]](#si-vous-voulez-participer-à-lamélioration-du-modèle--20-minutes)
   - [Si vous voulez construire vous-même de nouveaux modèles \[⌛ 1 heure ou 2\]](#si-vous-voulez-construire-vous-même-de-nouveaux-modèles--1-heure-ou-2)
   - [Vous voulez contribuer comme un pro](#vous-voulez-contribuer-comme-un-pro)
-    - [Sans rien installer sur votre machine \[⌛ \< 15 minutes de mise en place\]](#sans-rien-installer-sur-votre-machine---15-minutes-de-mise-en-place)
     - [En adoptant les outils et pratiques des développeurs](#en-adoptant-les-outils-et-pratiques-des-développeurs)
 
 <!-- vim-markdown-toc -->
 
 ---
+
+## ✒️ Les textes
+
+Sans rentrer dans le calcul, il y a plein de textes à améliorer ! Un exemple facile pour commencer : voici [le texte de la question sur la surface du logement](https://github.com/datagir/nosgestesclimat/blob/master/data/logement/logement.publicodes#L49). Autre exemple : [le texte d'aide de la question "Votre logement est-il un appartement ?" ](https://github.com/datagir/nosgestesclimat/blob/master/data/logement/logement.publicodes#L82).
+
+Comment modifier ces textes ? Rendez-vous dans la section ["🏗️ En pratique" ci-dessous](https://github.com/datagir/nosgestesclimat/blob/master/CONTRIBUTING.md#%EF%B8%8F-en-pratique).
 
 ## 💾 Les modèles carbone
 
@@ -66,6 +61,8 @@ N'hésitez pas à poser des questions sur le langage ou la contribution en créa
 ### Avant tout : vérifier que votre question n'est pas déjà posée
 
 Il y a de grandes chances que ce soit déjà le cas : direction [l'onglet _issues_](https://github.com/datagir/nosgestesclimat/issues), et son moteur de recherche. La pile est déjà bien remplie !
+
+Vous pouvez également consulté [notre FAQ](https://nosgestesclimat.fr/questions-frequentes).
 
 ### Si vous n'avez que ⌛ 2 minutes pour faire une remarque
 
@@ -118,4 +115,4 @@ prix . avocat:
 
 Rien ne remplace l'outillage complet : pour travailler sur ces modèles YAML et voir vos changements mettre à jour l'interface de simulation (sans F5, c'est magique), il faut adopter la méthode de travail d'un développeur Web.
 
-Il va falloir se documenter pour comprendre ce qu'est [_git_](https://openclassrooms.com/fr/courses/1233741-gerez-vos-codes-source-avec-git), clôner ce dépôt vers un dossier nommé "nosgestesclimat", puis clôner [nosgestesclimat-site](https://github.com/datagir/nosgestesclimat-site) à la même racine, entrer dans ecolab-climat et faire `yarn && yarn start`. Vous pourrez alors modifier les fichiers .publicodes et voir en temps réel les résultats des calculs et simulations changer et poser de nouvelles questions :sparkles: .
+Il va falloir se documenter pour comprendre ce qu'est [_git_](https://openclassrooms.com/fr/courses/1233741-gerez-vos-codes-source-avec-git), clôner ce dépôt vers un dossier nommé "nosgestesclimat", puis clôner [nosgestesclimat-site-nextjs](https://github.com/incubateur-ademe/nosgestesclimat-site-nextjs) à la même racine, entrer dans ecolab-climat et faire `yarn && yarn start`. Vous pourrez alors modifier les fichiers .publicodes et voir en temps réel les résultats des calculs et simulations changer et poser de nouvelles questions :sparkles: .
