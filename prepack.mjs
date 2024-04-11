@@ -10,6 +10,8 @@ const originModelFile = 'co2-model.FR-lang.fr.json'
 
 const destPath = 'nosgestesclimat.model.json'
 
+console.log('➡️ Preparing package ...')
+
 const everyModelPath = path.join(process.cwd(), everyModelFolder)
 const everyModel = fs
   .readdirSync(everyModelPath)
@@ -33,7 +35,7 @@ everyModel.forEach((model) => {
   everyModelImports += `import ${regionCode}_${locale}${isOptim ? '_optim' : ''} from './public/${model}';\n`
 })
 
-console.log(`✅ every model imported`, everyModelImports)
+console.log(`✅ every model imported`)
 
 let everyModelObjectExport = 'const models = {\n'
 everyModel.forEach((model) => {
@@ -47,8 +49,6 @@ everyModel.forEach((model) => {
 })
 everyModelObjectExport += '}'
 
-console.log(everyModelObjectExport)
-
 // Generating main index and types
 fs.writeFileSync(
   'index.js',
@@ -61,6 +61,7 @@ import supportedRegions from './public/supportedRegions.json'
 
 import personasFr from './public/personas-fr.json' 
 import personasEn from './public/personas-en.json' 
+import personasEs from './public/personas-es.json' 
 
 import migration from './public/migration.json'
 
@@ -123,6 +124,7 @@ export type SupportedRegions = { [key: string]: SupportedRegionType }
 export const supportedRegions: SupportedRegions`
 )
 console.log(`✅ main index and types generated`)
+console.log('➡️ Packaging done')
 
 function generateIndex(pathToModel) {
   return `import rules from "${pathToModel}";
