@@ -88,7 +88,7 @@ export function getLocalMigrationTable() {
     })
 }
 
-export function getRulesFromAPI(version, region, lang) {
+export function getRulesFromDist(version, region, lang) {
   const url = version === 'nightly' ? PREPROD_PREVIEW_URL : LATEST_PREVIEW_URL
   const fileName = `co2-model.${region}-lang.${lang}.json`
   return fetch(url + fileName)
@@ -102,7 +102,7 @@ export function getRulesFromAPI(version, region, lang) {
     })
 }
 
-export function getPersonasFromAPI(version, region, lang) {
+export function getPersonasFromDist(version, region, lang) {
   const url = version === 'nightly' ? PREPROD_PREVIEW_URL : LATEST_PREVIEW_URL
   const fileName = `personas-${lang}.json`
   return fetch(url + fileName)
@@ -147,6 +147,10 @@ An error occured while testing the model:
   let nbDiff = 0
 
   for (const result of results) {
+    // created json report is too large if "empreinte branche" displayed
+    if (result.rule.startsWith('empreinte branche')) {
+      continue
+    }
     if (result.type === 'warning') {
       if (!markdown) {
         console.log(
