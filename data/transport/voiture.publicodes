@@ -212,159 +212,13 @@ transport . voiture . thermique . consommation aux 100:
           - utilisateur = 'régulier non propriétaire'
   description: |
     **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
+  suggestions:
+    5 l/100km: 5
+    7 l/100km: 7
+    9 l/100km: 9
   par défaut: consommation estimée
   unité: l/centkm
   note: Les suggestions de réponse sont à la louche, à préciser et sourcer.
-
-transport . voiture . thermique . empreinte au litre:
-  description: |
-    Les empreintes sont disponibles de façon assez détaillée sur [la base carbone](https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=diesel), ici par exemple pour le "diesel". Idem pour "essence".
-    Pour les retrouver facilement, filtrez par unité "kgCO2e/litre" et par géographie "France continentale".
-
-    À noter que pour le gazole, le FE choisi est la moyenne entre le gazole B7 et le gazole B10.
-  formule:
-    variations:
-      - si: carburant = 'gazole B7 ou B10'
-        alors:
-          moyenne:
-            - 3.1 kgCO2e/l
-            - 3.04 kgCO2e/l
-      - si: carburant = 'essence E5 ou E10'
-        alors: 2.7
-      - si: carburant = 'essence E85'
-        alors: 1.11
-      - si: carburant = 'GPL'
-        alors: 1.86
-  unité: kgCO2e/l
-
-transport . voiture . thermique . carburant:
-  question: Quel type de carburant votre voiture consomme-t-elle ?
-  applicable si:
-    toutes ces conditions:
-      - est défini: utilisateur
-      - une de ces conditions:
-          - utilisateur = 'propriétaire'
-          - utilisateur = 'régulier non propriétaire'
-  description: |
-    Pour comprendre les différents types de carburants, [cet article pédagogique](https://www.francetvinfo.fr/economie/automobile/essence/les-carburants-changent-de-nom-a-la-pompe-voici-comment-vous-y-retrouver_2967013.html) est très utile.
-
-    [Cet article](https://www.ecologie.gouv.fr/carburants-et-combustibles-autorises-en-france) du ministère de l'Écologie explique plus en détail les carburants légaux en France.
-
-    > Attention, si le type de carburant fait varier de façon significative l'empreinte climat au litre, la consommation en litre par 100km elle aussi varie. Veillez à saisir une consommation au litre basée sur votre moyenne réelle.
-
-  par défaut: "'essence E5 ou E10'"
-  formule:
-    une possibilité:
-      choix obligatoire: oui
-      possibilités:
-        - gazole B7 ou B10
-        - essence E5 ou E10
-        - essence E85
-        - GPL
-  note: |
-    La domination du couple gazole-essence est écrasante [source](https://www.leprogres.fr/magazine-automobile/2021/03/27/quels-sont-les-carburants-les-plus-utilises-dans-votre-commune).
-
-    Par contre, parmi les véhicules neufs, l'essence domine aujourd'hui.
-
-    Le facteur d'émission associé au biocarburant E85 n'est pas représentatif des conséquences environnementales liées à l'utilisation des biocarburants.
-    En effet, au vu des problématiques liées au changement d'affectation des sols et autres impacts environnementaux liés à la culture du maïs par exemple, les **biocarburants** ne sont pas pris en compte
-    (le facteur d'émission de la base carbone étant particulièrement incertain). Voir nos discussions [ici](https://github.com/datagir/nosgestesclimat/pull/1324).
-
-    Le GPL (Gaz de Pétrole Liquéfiés) est un [résidu de l'extraction du pétrole qui était autrefois brûlé](https://fr.wikipedia.org/wiki/Gaz_de_p%C3%A9trole_liqu%C3%A9fi%C3%A9). 
-    Il a une empreinte carbone par litre moins importante que les véhicules essence ou diesel, par contre sa consommation est légèrement supérieure, ce qui compense légèrement le gain.
-    Mais si les rejets de CO2e sont au final presque équivalents entre le GPL et les autres carburants, c'est [du côté de l'émission de particules nocives](https://agirpourlatransition.ademe.fr/particuliers/conso/conso-responsable/comment-choisir-voiture-deux-roues-moins-polluant) que le GPL est un bien meilleur élève que les autres carburants thermiques.
-
-transport . voiture . thermique . carburant . gazole B7 ou B10:
-  titre: Gazole (B7 ou B10)
-transport . voiture . thermique . carburant . essence E5 ou E10:
-  titre: Essence (E5 ou E10)
-transport . voiture . thermique . carburant . essence E85:
-  titre: Essence E85 (biocarburants)
-transport . voiture . thermique . carburant . GPL:
-  titre: GPL (Gaz de Pétrole Liquéfiés)
-
-transport . voiture . notif carburant:
-  type: notification
-  formule: thermique . carburant = 'essence E85'
-  description: |
-    Votre véhicule roule au biocarburant : au-delà de l'empreinte carbone des biocarburants, il faut bien avoir conscience qu'ils ont une empreinte au sol : ce sol pourrait être utilisé pour faire pousser des céréales pour nous nourrir ou servir de refuges de biodiversité.
-    C'est ce qu'on appelle le "changement d'affectation des sols" ici à des fins de production de biocarburants. Malheureusement, l'impact sur le climat de ce changement d'affectation est difficile à quantifier et particulièrement incertain.
-
-    Nous avons fait le choix d'ajouter cette option dans le test, mais il faut savoir que ce résultat **n'est pas représentatif des conséquences environnementales probables liées à l'utilisation de biocarburants.**
-
-transport . voiture . électrique:
-  titre: Voiture électrique
-
-transport . voiture . électrique . empreinte au kilomètre:
-  titre: empreinte au km électrique
-  unité: kgCO2e/km
-  formule: consommation électrique au km * logement . électricité . intensité carbone
-  note: |
-    Nous considérons ici le mix électrique moyen français. La majorité des possesseurs de voitures électriques rechargent leur véhicule chez eux avec une tarification heure creuses, qui est plus avantageuse financièrement et correspond d'ailleurs aux moments où la demande en électricité est moins forte et le mix électrique moins carboné (les centrales gaz ne sont pas sollicitées).
-
-transport . voiture . électrique . empreinte au kilomètre . consommation électrique au km:
-  titre: Consommation électrique au km
-  question: Quelle est la consommation électrique au kilomètre de votre véhicule ?
-  par défaut: consommation estimée
-  unité: kWh/km
-
-transport . voiture . électrique . empreinte au kilomètre . consommation estimée:
-  variations:
-    - si: gabarit = 'petite'
-      alors: 0.15
-    - si: gabarit = 'moyenne'
-      alors: 0.17
-    - si: gabarit = 'berline'
-      alors: 0.20
-    - si: gabarit = 'SUV'
-      alors: 0.25
-    - si: gabarit = 'VUL'
-      alors: 0.25
-  unité: kWh/km
-  note: Données moyennes fournies par le service Transport et Mobilité de l'ADEME.
-
-transport . voiture . gabarit:
-  question: Quel est le gabarit de la voiture ?
-  applicable si:
-    toutes ces conditions:
-      - est défini: utilisateur
-      - une de ces conditions:
-          - utilisateur = 'propriétaire'
-          - utilisateur = 'régulier non propriétaire'
-  description: |
-    **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
-
-    Plus une voiture est lourde et haute donc avec une forte prise au vent, plus elle consomme donc plus elle pollue !
-  par défaut: "'berline'"
-  note: |
-    Nous considérons que la voiture par défaut est une "Berline", en témoigne [une étude menée par AAA Data](https://www.alphabet.com/fr-fr/parc-automobile-roulant-les-donnees-cles)
-    qui indique que "Si les SUV ont représenté 38 % des ventes de véhicules en 2019, ils ne représentent que 16 % de la totalité des véhicules en circulation, loin derrière les berlines qui comptent pour 58 %, soit 23 millions de véhicules."
-  formule:
-    une possibilité:
-      choix obligatoire: oui
-      possibilités:
-        - petite
-        - moyenne
-        - VUL
-        - berline
-        - SUV
-
-transport . voiture . gabarit . petite:
-  titre: Petite
-  description: Citadine type Zoé, Fiat 500
-transport . voiture . gabarit . moyenne:
-  titre: Moyenne
-  description: Modèle au dessus de la petite citadine, type Mégane, Golf
-transport . voiture . gabarit . VUL:
-  titre: Véhicule utilitaire
-  description: Camionette de type Kangoo ou Partner jusqu'au Trafic et Vito
-transport . voiture . gabarit . berline:
-  titre: Berline
-  description: Une voiture longue, type 308, Tesla Model 3, Audi A3
-transport . voiture . gabarit . SUV:
-  titre: SUV
-  description: |
-    "Sport utility vehicle", type 4x4 urbain
 
 transport . voiture . thermique . consommation estimée:
   titre: Consommation estimée voiture
@@ -509,6 +363,170 @@ transport . voiture . thermique . consommation estimée . SUV essence:
   titre: Consommation moyenne SUV essence
   formule: 7.13
   unité: l/centkm
+
+transport . voiture . thermique . empreinte au litre:
+  description: |
+    Les empreintes sont disponibles de façon assez détaillée sur [la base carbone](https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=diesel), ici par exemple pour le "diesel". Idem pour "essence".
+    Pour les retrouver facilement, filtrez par unité "kgCO2e/litre" et par géographie "France continentale".
+
+    À noter que pour le gazole, le FE choisi est la moyenne entre le gazole B7 et le gazole B10.
+  formule:
+    variations:
+      - si: carburant = 'gazole B7 ou B10'
+        alors:
+          moyenne:
+            - 3.1 kgCO2e/l
+            - 3.04 kgCO2e/l
+      - si: carburant = 'essence E5 ou E10'
+        alors: 2.7
+      - si: carburant = 'essence E85'
+        alors: 1.11
+      - si: carburant = 'GPL'
+        alors: 1.86
+  unité: kgCO2e/l
+
+transport . voiture . thermique . carburant:
+  question: Quel type de carburant votre voiture consomme-t-elle ?
+  applicable si:
+    toutes ces conditions:
+      - est défini: utilisateur
+      - une de ces conditions:
+          - utilisateur = 'propriétaire'
+          - utilisateur = 'régulier non propriétaire'
+  description: |
+    Pour comprendre les différents types de carburants, [cet article pédagogique](https://www.francetvinfo.fr/economie/automobile/essence/les-carburants-changent-de-nom-a-la-pompe-voici-comment-vous-y-retrouver_2967013.html) est très utile.
+
+    [Cet article](https://www.ecologie.gouv.fr/carburants-et-combustibles-autorises-en-france) du ministère de l'Écologie explique plus en détail les carburants légaux en France.
+
+    > Attention, si le type de carburant fait varier de façon significative l'empreinte climat au litre, la consommation en litre par 100km elle aussi varie. Veillez à saisir une consommation au litre basée sur votre moyenne réelle.
+
+  par défaut: "'essence E5 ou E10'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - gazole B7 ou B10
+        - essence E5 ou E10
+        - essence E85
+        - GPL
+  note: |
+    La domination du couple gazole-essence est écrasante [source](https://www.leprogres.fr/magazine-automobile/2021/03/27/quels-sont-les-carburants-les-plus-utilises-dans-votre-commune).
+
+    Par contre, parmi les véhicules neufs, l'essence domine aujourd'hui.
+
+    Le facteur d'émission associé au biocarburant E85 n'est pas représentatif des conséquences environnementales liées à l'utilisation des biocarburants.
+    En effet, au vu des problématiques liées au changement d'affectation des sols et autres impacts environnementaux liés à la culture du maïs par exemple, les **biocarburants** ne sont pas pris en compte
+    (le facteur d'émission de la base carbone étant particulièrement incertain). Voir nos discussions [ici](https://github.com/datagir/nosgestesclimat/pull/1324).
+
+    Le GPL (Gaz de Pétrole Liquéfiés) est un [résidu de l'extraction du pétrole qui était autrefois brûlé](https://fr.wikipedia.org/wiki/Gaz_de_p%C3%A9trole_liqu%C3%A9fi%C3%A9). 
+    Il a une empreinte carbone par litre moins importante que les véhicules essence ou diesel, par contre sa consommation est légèrement supérieure, ce qui compense légèrement le gain.
+    Mais si les rejets de CO2e sont au final presque équivalents entre le GPL et les autres carburants, c'est [du côté de l'émission de particules nocives](https://agirpourlatransition.ademe.fr/particuliers/conso/conso-responsable/comment-choisir-voiture-deux-roues-moins-polluant) que le GPL est un bien meilleur élève que les autres carburants thermiques.
+
+transport . voiture . thermique . carburant . gazole B7 ou B10:
+  titre: Gazole (B7 ou B10)
+transport . voiture . thermique . carburant . essence E5 ou E10:
+  titre: Essence (E5 ou E10)
+transport . voiture . thermique . carburant . essence E85:
+  titre: Essence E85 (biocarburants)
+transport . voiture . thermique . carburant . GPL:
+  titre: GPL (Gaz de Pétrole Liquéfiés)
+
+transport . voiture . notif carburant:
+  type: notification
+  formule: thermique . carburant = 'essence E85'
+  description: |
+    Votre véhicule roule au biocarburant : au-delà de l'empreinte carbone des biocarburants, il faut bien avoir conscience qu'ils ont une empreinte au sol : ce sol pourrait être utilisé pour faire pousser des céréales pour nous nourrir ou servir de refuges de biodiversité.
+    C'est ce qu'on appelle le "changement d'affectation des sols" ici à des fins de production de biocarburants. Malheureusement, l'impact sur le climat de ce changement d'affectation est difficile à quantifier et particulièrement incertain.
+
+    Nous avons fait le choix d'ajouter cette option dans le test, mais il faut savoir que ce résultat **n'est pas représentatif des conséquences environnementales probables liées à l'utilisation de biocarburants.**
+
+transport . voiture . électrique:
+  titre: Voiture électrique
+
+transport . voiture . électrique . empreinte au kilomètre:
+  titre: empreinte au km électrique
+  unité: kgCO2e/km
+  formule: consommation au kilomètre * logement . électricité . intensité carbone
+  note: |
+    Nous considérons ici le mix électrique moyen français. La majorité des possesseurs de voitures électriques rechargent leur véhicule chez eux avec une tarification heure creuses, qui est plus avantageuse financièrement et correspond d'ailleurs aux moments où la demande en électricité est moins forte et le mix électrique moins carboné (les centrales gaz ne sont pas sollicitées).
+
+transport . voiture . électrique . consommation au kilomètre:
+  formule: consommation aux 100 / 100 km/centkm
+  unité: kWh/km
+
+transport . voiture . électrique . consommation aux 100:
+  titre: Consommation électrique au km
+  applicable si:
+    toutes ces conditions:
+      - est défini: utilisateur
+      - une de ces conditions:
+          - utilisateur = 'propriétaire'
+          - utilisateur = 'régulier non propriétaire'
+  question: Connaissez-vous la consommation moyenne de la voiture ?
+  suggestions:
+    15 kWh/100km: 15
+    20 kWh/100km: 20
+    25 kWh/100km: 25
+  par défaut: consommation estimée
+  unité: kWh/centkm
+
+transport . voiture . électrique . consommation estimée:
+  variations:
+    - si: gabarit = 'petite'
+      alors: 15
+    - si: gabarit = 'moyenne'
+      alors: 17
+    - si: gabarit = 'berline'
+      alors: 20
+    - si: gabarit = 'SUV'
+      alors: 25
+    - si: gabarit = 'VUL'
+      alors: 25
+  unité: kWh/centkm
+  note: Données moyennes fournies par le service Transport et Mobilité de l'ADEME.
+
+transport . voiture . gabarit:
+  question: Quel est le gabarit de la voiture ?
+  applicable si:
+    toutes ces conditions:
+      - est défini: utilisateur
+      - une de ces conditions:
+          - utilisateur = 'propriétaire'
+          - utilisateur = 'régulier non propriétaire'
+  description: |
+    **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
+
+    Plus une voiture est lourde et haute donc avec une forte prise au vent, plus elle consomme donc plus elle pollue !
+  par défaut: "'berline'"
+  note: |
+    Nous considérons que la voiture par défaut est une "Berline", en témoigne [une étude menée par AAA Data](https://www.alphabet.com/fr-fr/parc-automobile-roulant-les-donnees-cles)
+    qui indique que "Si les SUV ont représenté 38 % des ventes de véhicules en 2019, ils ne représentent que 16 % de la totalité des véhicules en circulation, loin derrière les berlines qui comptent pour 58 %, soit 23 millions de véhicules."
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - petite
+        - moyenne
+        - VUL
+        - berline
+        - SUV
+
+transport . voiture . gabarit . petite:
+  titre: Petite
+  description: Citadine type Zoé, Fiat 500
+transport . voiture . gabarit . moyenne:
+  titre: Moyenne
+  description: Modèle au dessus de la petite citadine, type Mégane, Golf
+transport . voiture . gabarit . VUL:
+  titre: Véhicule utilitaire
+  description: Camionette de type Kangoo ou Partner jusqu'au Trafic et Vito
+transport . voiture . gabarit . berline:
+  titre: Berline
+  description: Une voiture longue, type 308, Tesla Model 3, Audi A3
+transport . voiture . gabarit . SUV:
+  titre: SUV
+  description: |
+    "Sport utility vehicle", type 4x4 urbain
 
 transport . voiture . base au kilomètre:
   titre: Entretien et climatisation au kilomètre
