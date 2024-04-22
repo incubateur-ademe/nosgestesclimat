@@ -8,6 +8,8 @@ Ce dépôt contient un modèle d'empreinte carbone personnelle annuelle, écrit 
 
 Ce modèle pose des questions sur les aspects de la vie d'un individu et ses choix de consommation qui conduisent à émettre des gaz à effet de serre (GES) mesurés en CO2e. L'objectif n'est pas d'en faire une comptabilité parfaite, mais la plus représentative en posant un nombre de questions qui reste acceptable pour tous, à hauteur de l'engagement personnel moyen aujourd'hui dans les années 2020.
 
+Ce guide vous donnera les bases pour contribuer sur le projet. Vous pouvez également visitez [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/c57ea7dfc6214660a2d6a6a3addb88bd?v=d60b4b87e8ea4bee8e3c501bea75afc9) pour davantage de ressources.
+
 </div>
 
 ---
@@ -22,8 +24,7 @@ Ce modèle pose des questions sur les aspects de la vie d'un individu et ses cho
   - [Si vous n'avez que ⌛ 2 minutes pour faire une remarque](#si-vous-navez-que--2-minutes-pour-faire-une-remarque)
   - [Si vous voulez participer à l'amélioration du modèle \[⌛ 20 minutes\]](#si-vous-voulez-participer-à-lamélioration-du-modèle--20-minutes)
   - [Si vous voulez construire vous-même de nouveaux modèles \[⌛ 1 heure ou 2\]](#si-vous-voulez-construire-vous-même-de-nouveaux-modèles--1-heure-ou-2)
-  - [Vous voulez contribuer comme un pro](#vous-voulez-contribuer-comme-un-pro)
-    - [En adoptant les outils et pratiques des développeurs](#en-adoptant-les-outils-et-pratiques-des-développeurs)
+  - [Si vous voulez contribuer comme un pro](#si-vous-voulez-contribuer-comme-un-pro)
 
 <!-- vim-markdown-toc -->
 
@@ -109,10 +110,24 @@ prix . avocat:
 
 > 💡 Pour faciliter la relecture par les autres contributeurs et l'équipe, la discussion et les itérations, mieux vaut faire une PR (_Pull request_, proposition de changements) par sujet. Par exemple, faite une PR pour votre proposition "ajouter la moto au simulateur". Faites-en une autre pour votre proposition "amélioration des données d'empreinte de construction des véhicules électriques".
 
-### Vous voulez contribuer comme un pro
-
-#### En adoptant les outils et pratiques des développeurs
+### Si vous voulez contribuer comme un pro
 
 Rien ne remplace l'outillage complet : pour travailler sur ces modèles YAML et voir vos changements mettre à jour l'interface de simulation (sans F5, c'est magique), il faut adopter la méthode de travail d'un développeur Web.
 
-Il va falloir se documenter pour comprendre ce qu'est [_git_](https://openclassrooms.com/fr/courses/1233741-gerez-vos-codes-source-avec-git), clôner ce dépôt vers un dossier nommé "nosgestesclimat", puis clôner [nosgestesclimat-site-nextjs](https://github.com/incubateur-ademe/nosgestesclimat-site-nextjs) à la même racine, entrer dans ecolab-climat et faire `yarn && yarn start`. Vous pourrez alors modifier les fichiers .publicodes et voir en temps réel les résultats des calculs et simulations changer et poser de nouvelles questions :sparkles: .
+Vous pouvez dans un premier temps, lancer la "quick doc", [directement dans ce dépôt](https://github.com/incubateur-ademe/nosgestesclimat/blob/cd8329dda8659658142114ccb3d29437e7ea2933/quick-doc/README.md).
+
+Pour faire tourner le site complet en local, il va falloir se documenter pour comprendre ce qu'est [_git_](https://openclassrooms.com/fr/courses/1233741-gerez-vos-codes-source-avec-git), clôner ce dépôt sur votre machine, puis clôner [nosgestesclimat-site-nextjs](https://github.com/incubateur-ademe/nosgestesclimat-site-nextjs).
+
+Le site utlise le modèle sous forme d'un paquet. Vous pouvez donc utilisez [`yarn link`](https://classic.yarnpkg.com/lang/en/docs/cli/link/) afin d'utiliser le paquet du modèle en local depuis le site. Vous pourrez alors modifier les fichiers `.publicodes` et voir en temps réel les résultats des calculs et simulations changer et poser de nouvelles questions :sparkles:.
+
+Il faut lancer, côté modèle:
+
+```bash
+yarn compile
+```
+
+Puis, côté site:
+
+```bash
+yarn dev
+```
