@@ -118,7 +118,21 @@ Vous pouvez dans un premier temps, lancer la "quick doc", [directement dans ce d
 
 Pour faire tourner le site complet en local, il va falloir se documenter pour comprendre ce qu'est [_git_](https://openclassrooms.com/fr/courses/1233741-gerez-vos-codes-source-avec-git), clôner ce dépôt sur votre machine, puis clôner [nosgestesclimat-site-nextjs](https://github.com/incubateur-ademe/nosgestesclimat-site-nextjs).
 
-Le site utlise le modèle sous forme d'un paquet. Vous pouvez donc utilisez [`yarn link`](https://classic.yarnpkg.com/lang/en/docs/cli/link/) afin d'utiliser le paquet du modèle en local depuis le site. Vous pourrez alors modifier les fichiers `.publicodes` et voir en temps réel les résultats des calculs et simulations changer et poser de nouvelles questions :sparkles:.
+Le site utlise le modèle sous forme d'un paquet. Vous pouvez donc utilisez [`yarn link`](https://classic.yarnpkg.com/lang/en/docs/cli/link/) afin d'utiliser le paquet du modèle en local depuis le site.
+
+A utiliser, de cette manière, côté modèle:
+
+```bash
+yarn link
+```
+
+Puis, côté site:
+
+```bash
+yarn link @incubateur-ademe/nosgestesclimat
+```
+
+Vous pourrez alors modifier les fichiers `.publicodes` et voir en temps réel les résultats des calculs et simulations changer et poser de nouvelles questions :sparkles:.
 
 Il faut lancer, côté modèle:
 
