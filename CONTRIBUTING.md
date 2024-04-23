@@ -56,7 +56,7 @@ N'hésitez pas à poser des questions sur le langage ou la contribution en créa
 
 Il y a de grandes chances que ce soit déjà le cas : direction [l'onglet _issues_](https://github.com/incubateur-ademe/nosgestesclimat/issues), et son moteur de recherche. La pile est déjà bien remplie !
 
-Vous pouvez également consulté [notre FAQ](https://nosgestesclimat.fr/questions-frequentes).
+Vous pouvez également consulter [notre FAQ](https://nosgestesclimat.fr/questions-frequentes).
 
 ### Si vous n'avez que ⌛ 2 minutes pour faire une remarque
 
