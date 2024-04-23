@@ -16,7 +16,6 @@ Ce guide vous donnera les bases pour contribuer sur le projet. Vous pouvez égal
 
 <!-- vim-markdown-toc GitLab -->
 
-- [✒️ Les textes](#️-les-textes)
 - [💾 Les modèles carbone](#-les-modèles-carbone)
 - [🔣 Le langage d'écriture des modèles](#-le-langage-décriture-des-modèles)
 - [🏗️ En pratique](#️-en-pratique)
@@ -29,12 +28,6 @@ Ce guide vous donnera les bases pour contribuer sur le projet. Vous pouvez égal
 <!-- vim-markdown-toc -->
 
 ---
-
-## ✒️ Les textes
-
-Sans rentrer dans le calcul, il y a plein de textes à améliorer ! Un exemple facile pour commencer : voici [le texte de la question sur la surface du logement](https://github.com/incubateur-ademe/nosgestesclimat/blob/master/data/logement/logement.publicodes#L49). Autre exemple : [le texte d'aide de la question "Votre logement est-il un appartement ?" ](https://github.com/incubateur-ademe/nosgestesclimat/blob/master/data/logement/logement.publicodes#L81).
-
-Comment modifier ces textes ? Rendez-vous dans la section ["🏗️ En pratique" ci-dessous](https://github.com/incubateur-ademe/nosgestesclimat/blob/master/CONTRIBUTING.md#%EF%B8%8F-en-pratique).
 
 ## 💾 Les modèles carbone
 
