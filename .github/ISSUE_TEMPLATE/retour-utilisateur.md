@@ -14,6 +14,6 @@ _Décrivez ici le problème que vous avez eu, l'amélioration que vous souhaitez
 
 ## Proposer une amélioration
 
-_Si vous avez une idée précise de votre amélioration, vous pouvez directement suivre [ce guide de contribution](https://github.com/datagir/nosgestesclimat/blob/master/CONTRIBUTING.md)_
+_Si vous avez une idée précise de votre amélioration, vous pouvez directement suivre [ce guide de contribution](https://github.com/incubateur-ademe/nosgestesclimat/blob/master/CONTRIBUTING.md)_
 
 N'hésitez pas à inclure des chiffres, des sources, des articles de presse, une ébauche de calcul par vos soins etc.
