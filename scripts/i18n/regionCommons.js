@@ -26,7 +26,8 @@ const defaultModelCode = 'FR'
 const defaultRegionModelParam = {
   FR: {
     fr: { code: 'FR', nom: 'France métropolitaine', gentilé: 'française' },
-    en: { code: 'FR', nom: 'metropolitan France', gentilé: 'french' }
+    en: { code: 'FR', nom: 'metropolitan France', gentilé: 'french' },
+    es: { code: 'FR', nom: 'Francia metropolitana', gentilé: 'francesa' }
   }
 }
 const supportedRegionPath = 'public/supportedRegions.json'
