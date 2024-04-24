@@ -554,6 +554,12 @@ transport . voiture . gabarit . SUV . poids:
   note: Les valeurs de poids sont tirées du simulateur [carculator](https://carculator.readthedocs.io/en/latest/modeling.html#size-classes) qui utilise le papier [Cost and well-to-wheel implications of the vehicle fleet CO2 emission regulation in the European Union, Christian and others, 2014](https://www.sciencedirect.com/science/article/abs/pii/S0965856414000494?via%3Dihub)
 
 transport . voiture . base au kilomètre:
+  applicable si:
+    toutes ces conditions:
+      - est défini: utilisateur
+      - une de ces conditions:
+          - utilisateur = 'propriétaire'
+          - utilisateur = 'régulier non propriétaire'
   titre: Entretien et climatisation au kilomètre
   formule: entretien pondéré + climatisation
   unité: kgCO2e/km
@@ -565,7 +571,8 @@ transport . voiture . entretien pondéré:
         alors: entretien
       - si: motorisation = 'hybride'
         alors: entretien * 0.90
-      - sinon: entretien * 0.75
+      - si: motorisation = 'électrique'
+        alors: entretien * 0.75
   unité: kgCO2e/km
   note: |
     Plusieurs sources s'accordent pour dire que l'entretien d'un véhicule électrique est inférieur à celui d'un véhicule thermique de 25%. Comme [celle-ci](https://izi-by-edf.fr/blog/voiture-hybride-entretien/).
