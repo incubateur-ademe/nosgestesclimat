@@ -24,7 +24,15 @@ const rulesToKeep = [
   'logement . chauffage . gaz',
   'logement . chauffage . biogaz',
   'transport . voiture . thermique',
-  'transport . ferry . surface'
+  'transport . ferry . surface',
+  'logement . chauffage . gaz . consommation estimée via le coût',
+  'logement . chauffage . bouteille gaz . consommation estimée via le poids',
+  'logement . chauffage . citerne propane . consommation estimée via le coût',
+  'logement . chauffage . fioul . consommation estimée via le coût',
+  'logement . chauffage . bois . type . granulés . consommation estimée via le coût',
+  'logement . chauffage . bois . type . bûches . consommation estimée via le coût',
+  'logement . chauffage . réseau de chaleur . consommation estimée via le coût',
+  'logement . électricité . consommation estimée via le coût'
 ]
 
 // Rule names which should be avoided in the optimized model.
