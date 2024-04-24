@@ -8,6 +8,12 @@ feedback.
 ## To start
 
 ```bash
-yarn
+# install dependencies
+yarn && cd quick-doc && yarn
+
+# start the development server
 yarn dev
+
+# start the client
+yarn doc
 ```

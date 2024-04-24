@@ -5,7 +5,7 @@
   <p align="center">
    <a href="https://github.com/incubateur-ademe/nosgestesclimat/issues">Report Bug</a>
    •
-   <a href="https://nogestesclimat.fr">nosgestesclimat.fr</a>
+   <a href="https://nosgestesclimat.fr">nosgestesclimat.fr</a>
    •
    <a href="https://github.com/incubateur-ademe/nosgestesclimat-site-nextjs">Code du site</a>
   </p>
@@ -28,11 +28,13 @@ yarn add @incubateur-ademe/nosgestesclimat
 
 Chaque modèle régional peut être importé séparément en anglais ou en français,
 optimisé ou non en suivant la structure suivante :
+
 ```ts
 import rules from '@incubateur-ademe/nosgestesclimat/<regionCode>/<locale>/["optim"]'
 ```
 
 Exemple d'utilisation :
+
 ```ts
 import rules from '@incubateur-ademe/nosgestesclimat/FR/fr/optim'
 import Engine from 'publicodes'
@@ -41,7 +43,7 @@ const engine = new Engine(rules)
 console.log(engine.evaluate('bilan'))
 ```
 
-## Écriture des modèles du simulateur
+## Écriture des modèles du simulateur en bref
 
 Le modèle d'empreinte climat personnelle est écrit dans un français le plus
 lisible possible :
@@ -83,13 +85,17 @@ https://beta.gouv.fr.
 
 ## Développement
 
+La branche par défaut du dépôt est `preprod`, notre branche de développement.
+
+`master` est la branche depuis laquelle code est versionné et publié sur NPM.
+
 ### QuickDoc
 
 Pour faciliter le développement, nous avons mis en place un outil de
 développement local. Cet outil permet de visualiser la documentation (basée sur
 [`@publicodes/react-ui`](https://publi.codes/docs/api/react-ui)) et les
 résultats de la compilation des modèles et des personas, ainsi que comparer les
-résultats avec les versions en production. 
+résultats avec les versions en production.
 
 ```bash
 # installe les dépendances
@@ -98,13 +104,9 @@ yarn && cd quick-doc && yarn
 # lance le serveur de développement en charge de compiler les modèles et les personas
 yarn dev
 
-# lance le client de la documentation 
+# lance le client de la documentation
 yarn doc
 ```
-
-> [!IMPORTANT]
-> Pour utiliser la QuickDoc, vous devez avoir [`bun`](https://bun.sh)
-> d'installé sur votre machine.
 
 ### CI
 
@@ -126,3 +128,9 @@ Si la version du paquet npm est incrémentée, alors :
 - le modèle est publié dans
   une nouvelle version du paquet npm
   [`@incubateur-ademe/nosgestesclimat`](https://www.npmjs.com/package/@incubateur-ademe/nosgestesclimat)
+
+### Site
+
+Pour lancer l'app en local, rendez-vous [côté site](https://github.com/incubateur-ademe/nosgestesclimat-site-nextjs) !
+
+A noter que le dépôt [nosgestesclimat-site](https://github.com/incubateur-ademe/nosgestesclimat-site-nextjs) était utilisé avant la refonte Next et n'est aujourd'hui plus maintenu. Néanmoins, nous le gardons pour la richesse de ses issues.

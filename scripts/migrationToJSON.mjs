@@ -6,7 +6,7 @@ import utils from '@incubateur-ademe/nosgestesclimat-scripts/utils'
 import Engine from 'publicodes'
 import c from 'ansi-colors'
 
-import { getLocalRules, getRulesFromAPI, getArgs } from '../tests/commons.mjs'
+import { getLocalRules, getRulesFromDist, getArgs } from '../tests/commons.mjs'
 
 const outputJSONPath = path.join('./public', `migration.json`)
 
@@ -14,7 +14,7 @@ const { country, version, language, markdown } = getArgs()
 
 const baseMigration = utils.readYAML(path.resolve(`migration/migration.yaml`))
 const localRules = await getLocalRules(country, language)
-const prodRules = await getRulesFromAPI(version, country, language)
+const prodRules = await getRulesFromDist(version, country, language)
 
 const localEngine = new Engine(localRules)
 const parsedRules = Object.keys(localEngine.getParsedRules())
@@ -196,9 +196,9 @@ function checkMigrationCoverage() {
     throw new Error('Missing migrations')
   } else {
     if (markdown) {
-      console.log(`✅ Toutes les règles ont été migrées.`)
+      console.log(`✅ Pas de migration manquante.`)
     } else {
-      console.log(c.green('✅ Toutes les règles ont été migrées.'))
+      console.log(c.green('✅ Pas de migration manquante.'))
     }
   }
 }
@@ -220,7 +220,7 @@ function writeMigration() {
       return -1
     }
     if (!markdown) {
-      console.log(c.green('✅ Migration instructions compilation to JSON'))
+      console.log('✅ Migration file written')
     }
   })
 }

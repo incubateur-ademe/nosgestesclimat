@@ -26,16 +26,24 @@ import rulesToJSONWorker from './rulesToJSON.worker.mjs'
 
 const t9nDir = 'data/i18n/t9n'
 
-const { srcLang, srcFile, destLangs, destRegions, markdown, noOptim } =
-  cli.getArgs(`Aggregates the model to an unique JSON file.`, {
-    source: true,
-    target: true,
-    model: { supportedRegionCodes },
-    file: true,
-    defaultSrcFile: 'data',
-    markdown: true,
-    optimCanBeDisabled: true
-  })
+const {
+  srcLang,
+  srcFile,
+  destLangs,
+  destRegions,
+  markdown,
+  noOptim,
+  forceOptim
+} = cli.getArgs(`Aggregates the model to an unique JSON file.`, {
+  source: true,
+  target: true,
+  model: { supportedRegionCodes },
+  file: true,
+  defaultSrcFile: 'data',
+  markdown: true,
+  optimCanBeDisabled: true,
+  optimCanBeForced: true
+})
 
 /// ---------------------- Helper functions ----------------------
 
@@ -84,6 +92,10 @@ function logPublicodesError(err) {
 }
 
 /// ---------------------- Main ----------------------
+
+if (!markdown) {
+  console.log('➡️ Compiling rules...')
+}
 
 if (markdown) {
   console.log('| Task | Status | Message |')
@@ -160,7 +172,7 @@ const printErrorAndExit = (err, regionCode, destLang) => {
   exit(-1)
 }
 
-const opts = { markdown, optimDisabled: noOptim }
+const opts = { markdown, optimDisabled: noOptim, forceOptim }
 
 destLangs.unshift(srcLang)
 const resultOfCompilationAndOptim = await Promise.all(
@@ -198,4 +210,6 @@ if (markdown) {
       .map((ok) => ok)
       .join(' ')}</ul></details> | :heavy_check_mark: | Ø |`
   )
+} else {
+  console.log(`${c.green('✅ Successfully compiled and optimized rules')}`)
 }
