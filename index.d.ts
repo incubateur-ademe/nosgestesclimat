@@ -80,7 +80,7 @@ type NGCRule = Rule & {
   type?: string
   action?: { dépasse: string[] }
   icônes?: string
-  sévérité?: 'avertissement' | 'information' | 'invalide'
+  sévérité?: string
   dottedName?: DottedName
   question?: string
   plus?: boolean
