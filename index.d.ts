@@ -1,4 +1,41 @@
-import { Rule } from 'publicodes'
+import { Rule, RuleNode, Evaluation } from 'publicodes'
+// This file is generated on package build
+import DottedName from './dottedName.d.ts'
+
+export type NGCRuleNode = RuleNode & {
+  rawNode: NGCRule
+}
+
+export type NGCRulesNodes = Record<DottedName, NGCRuleNode>
+
+type Color = `#${string}`
+
+export type NodeValue = Evaluation
+
+type SuggestionsNode = Record<
+  string,
+  string | number | Record<string, string | number>
+>
+
+type MosaiqueNode = {
+  type: 'selection' | 'nombre'
+  options: DottedName[]
+  total?: number
+  suggestions?: SuggestionsNode
+}
+
+type MosaicInfos = {
+  mosaicRule: RuleNode
+  mosaicParams: MosaiqueNode
+  mosaicDottedNames: [DottedName, NGCRuleNode][]
+}
+
+type Formule = any
+
+export type MigrationType = {
+  keysToMigrate: Record<DottedName, DottedName>
+  valuesToMigrate: Record<DottedName, Record<string, NodeValue>>
+}
 
 export type Persona = {
   nom: string
@@ -41,7 +78,6 @@ type NGCRule = Rule & {
   couleur?: Color
   mosaique?: MosaiqueNode
   type?: string
-  sévérité?: string
   action?: { dépasse: string[] }
   icônes?: string
   sévérité?: 'avertissement' | 'information' | 'invalide'
