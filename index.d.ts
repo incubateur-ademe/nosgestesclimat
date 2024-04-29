@@ -1,6 +1,6 @@
 import { Rule, RuleNode, Evaluation } from 'publicodes'
 // This file is generated on package build
-import DottedName from './dottedName.d.ts'
+import { DottedName } from './dottedName.d.ts'
 
 export type NGCRuleNode = RuleNode & {
   rawNode: NGCRule
