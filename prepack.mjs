@@ -21,11 +21,7 @@ fs.copyFileSync(
 )
 
 // Generating main index file (it only export types)
-fs.writeFileSync(
-  'index.js',
-  `export * from './index.d.ts';
-export * from './dottedNames.d.ts';`
-)
+fs.writeFileSync('index.js', `export * from './index.d.ts';`)
 
 // Generate the DottedName type
 fs.writeFileSync('./dottedNames.d.ts', generateTypes(destPath))
