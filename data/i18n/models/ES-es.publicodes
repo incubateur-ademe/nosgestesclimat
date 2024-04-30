@@ -1,0 +1,87 @@
+params:
+  code: ES
+  nom: España
+  gentilé: español
+  drapeau: ES
+  authors:
+    - nom: Jean-Charles Prabonneau
+      url: https://github.com/jc-prabonneau
+commun . intensité électricité:
+  titre: Intensidad de carbono del mix eléctrico en la España peninsular
+  formule: 0.206
+  note: |
+    Fuente: <a href="https://app.electricitymaps.com/map">Mapa de la electricidad</a>, 2022
+transport . avion . court courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Madrid ⇄ Barcelona: 2.27
+    Madrid ⇄ Palma de Mallorca: 2.37
+    Barcelona ⇄ Palma de Mallorca: 1.5
+    Barcelona ⇄ Sevilla: 3
+transport . avion . moyen courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Madrid ⇄ Gran Canaria: 6
+    Madrid ⇄ París: 3.7
+    Madrid ⇄ Amsterdam: 4.7
+    Barcelona ⇄ Londres: 4
+transport . avion . long courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Madrid ⇄ Nueva York: 15.4
+    Madrid ⇄ Ciudad de México: 22
+    Madrid ⇄ Tokio: 28
+    Barcelona ⇄ Sydney: 44
+transport . train . impact par km:
+  formule: (TGV * proportion passagers km AVE) + (TER * (1 - proportion passagers km AVE))
+  avec:
+    proportion passagers km AVE: 0.523
+  unité: kgCO2e/km
+  note: |
+    Hemos optado por no diferenciar entre trenes de alta velocidad y convencionales por el momento (para evitar hacer dos preguntas).
+    Aplicamos el factor de emisión del AVE al 52,3% de los viajes realizados en alta velocidad (AVE, Euromed, Avant) y el factor de emisión del tren regional de Cercanías al resto.
+    Fuente: <a href="https://cdn.mitma.gob.es/portal-web-drupal/ferroviario/observatorio/ofe_2021_feb2023_v2.pdf">Observatorio Español del Ferrocarril</a>, 2021
+transport . train . TGV:
+  titre: AVE
+  formule: (intensité GHG TGV France / 1000 gCO2e/kgCO2e) * intensité mix électrique Espagne continentale / intensité mix électrique France métropolitaine
+  avec:
+    intensité mix électrique France métropolitaine: 90 gCO2e/kWh
+    intensité mix électrique Espagne continentale: 206 gCO2e/kWh
+    intensité GHG TGV France: 2.93 gCO2e/km
+  unité: kgCO2e/km
+  note: |
+    El impacto del tren de alta velocidad español se calcula sobre la base del TGV francés, aplicando la intensidad de carbono del mix eléctrico español.
+    Fuente:
+    - Intensidades de carbono de los mix eléctricos de los dos países: <a href="https://app.electricitymaps.com/map">Mapa eléctrico</a>, 2022
+    - Impacto TGV Francia: 2,93 gCO2e/km/persona; Base Carbone consultada el 19/11/2023 (datos SNCF)
+transport . train . TER:
+  titre: Cercanías regionales
+  formule: 0.0328
+  unité: kgCO2e/km
+  note: |
+    Trenes regionales de Cercanías - 32,8 gCO2e/pasajero-km; <a href="https://sede.idae.gob.es/lang/extras/tramites-servicios/2021/MOVES_Proyectos_Singulares_II/Factores_de_conversion_ahorros_y_emisiones_de_CO2.pdf">datos IDAE</a>, 2021
+transport . train . km:
+  suggestions:
+    atravesar una región: 300
+    Madrid ⇄ Barcelona: 1100
+    Barcelona ⇄ París: 2000
+    💳 Renfe Más Plata: 10000
+    💳 Renfe Más Oro: 20000
+services publics:
+  description: |
+    > El cálculo de las emisiones de los servicios públicos españoles se basa en la estimación francesa, ajustada al gasto público español, de la intensidad en carbono de la economía española y de su población. 
+    > Se trata de una primera estimación macroscópica que podrá revisarse en el futuro.
+  formule: poids des services publics espagnols
+  avec:
+    poids des services publics espagnols: 1142.5
+  note: |
+    Fuente: <a href="https://docs.google.com/spreadsheets/d/1zJ-CkVQ8W_HdFVvNyaN4xlRsyoZPzRef4rpiCqyowG4/edit?usp=sharing">Estimación detallada</a>
+services marchands:
+  description: |
+    > El cálculo de las emisiones de los servicios de mercado españoles se basa en la estimación francesa, ajustada a las emisiones territoriales y a la población de España. 
+    > Se trata de una primera estimación macroscópica que podrá revisarse en el futuro.
+  formule: poids des services marchands espagnols
+  avec:
+    poids des services marchands espagnols: 195.06
+  note: |
+    Fuente: <a href="https://docs.google.com/spreadsheets/d/1zJ-CkVQ8W_HdFVvNyaN4xlRsyoZPzRef4rpiCqyowG4/edit?usp=sharing">Estimación detallada</a>

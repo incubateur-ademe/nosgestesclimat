@@ -196,9 +196,9 @@ function checkMigrationCoverage() {
     throw new Error('Missing migrations')
   } else {
     if (markdown) {
-      console.log(`✅ Toutes les règles ont été migrées.`)
+      console.log(`✅ Pas de migration manquante.`)
     } else {
-      console.log(c.green('✅ Toutes les règles ont été migrées.'))
+      console.log(c.green('✅ Pas de migration manquante.'))
     }
   }
 }
@@ -220,7 +220,7 @@ function writeMigration() {
       return -1
     }
     if (!markdown) {
-      console.log(c.green('✅ Migration instructions compilation to JSON'))
+      console.log('✅ Migration file written')
     }
   })
 }

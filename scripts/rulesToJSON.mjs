@@ -93,6 +93,10 @@ function logPublicodesError(err) {
 
 /// ---------------------- Main ----------------------
 
+if (!markdown) {
+  console.log('➡️ Compiling rules...')
+}
+
 if (markdown) {
   console.log('| Task | Status | Message |')
   console.log('|:-----|:------:|:--------|')
@@ -206,4 +210,6 @@ if (markdown) {
       .map((ok) => ok)
       .join(' ')}</ul></details> | :heavy_check_mark: | Ø |`
   )
+} else {
+  console.log(`${c.green('✅ Successfully compiled and optimized rules')}`)
 }
