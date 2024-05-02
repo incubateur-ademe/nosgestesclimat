@@ -18,12 +18,15 @@ import { constantFolding } from '@publicodes/tools/optims'
 // but important for thee UI.
 //
 // @Clément: Do we still need those rules ? 'logement . chauffage . gaz' ? 'logement . chauffage . biogaz' ?
+
+// @Clément: `transport . voiture . électrique` and `transport . voiture . thermique` need to be kept as they are empty rules and their children are used for calculations.
 const rulesToKeep = [
   'actions',
   'bilan',
   'logement . chauffage . gaz',
   'logement . chauffage . biogaz',
   'transport . voiture . thermique',
+  'transport . voiture . électrique',
   'transport . ferry . surface',
   'logement . chauffage . gaz . consommation estimée via le coût',
   'logement . chauffage . bouteille gaz . consommation estimée via le poids',
