@@ -1,6 +1,6 @@
 const utils = require('./utils')
 
-const year = 2018
+const year = 2019
 
 // read files
 const readSDES = utils.readJSON(
@@ -104,6 +104,12 @@ const dataSDES = readSDES
   .flat()
 
 // console.log(dataSDES)
+
+utils.writeJSON(
+  'scripts/services-societaux/input/SDES_groups.json',
+  SDES_groups
+)
+
 utils.writeJSON(
   `scripts/services-societaux/output/${year}/liste_SDES_traitée.json`,
   dataSDES
