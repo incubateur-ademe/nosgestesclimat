@@ -96,3 +96,26 @@ export type NGCRule = Rule & {
 
 // TODO: Should remove "| string" when frontend migrates to model DottedName type
 export type NGCRules = Record<DottedName | string, NGCRule>
+
+export type FunFacts = {
+  percentageOfBicycleUsers: number
+  percentageOfVegetarians: number
+  percentageOfCarOwners: number
+  percentageOfPlaneUsers: number
+  percentageOfLongPlaneUsers: number
+  averageOfCarKilometers: number
+  averageOfTravelers: number
+  percentageOfElectricHeating: number
+  percentageOfGasHeating: number
+  percentageOfFuelHeating: number
+  percentageOfWoodHeating: number
+  averageOfElectricityConsumption: number
+  percentageOfCoolingSystem: number
+  percentageOfVegan: number
+  percentageOfRedMeat: number
+  percentageOfLocalAndSeasonal: number
+  percentageOfBottledWater: number
+  percentageOfZeroWaste: number
+  amountOfClothing: number
+  percentageOfStreaming: number
+}
