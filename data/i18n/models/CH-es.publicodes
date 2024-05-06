@@ -203,9 +203,6 @@ transport . voiture . barème construction . barème hybride:
       - si: gabarit = 'SUV'
         alors: 13616
   note: Utilizamos el factor de emisión de la plataforma Mobitool ((fabricación + mantenimiento + fin de vida útil) * km * número de pasajeros) - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
-# transport . voiture . durée de vie:
-#   formule: 17
-#   note: Utilizamos el factor de emisión de la plataforma Mobitool - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
 transport . ferry . usager:
   par défaut: non
 transport . ferry . heures:
@@ -225,7 +222,7 @@ transport . mobilité douce . vae . empreinte:
   note: Mobitool e-bike mediana 25 km/h, 45 km/h y bicicleta de carga (suministro de energía)
 transport . mobilité douce . vae . construction:
   formule: 198
-  note: Mobitool e-bike media 25 km/h, 45 km/h y bicicleta de carga ((fabricación + mantenimiento + fin de vida útil) * km
+  note: Mobitool bicicleta eléctrica media 25 km/h, 45 km/h y bicicleta de carga ((fabricación + mantenimiento + fin de vida útil) * km
 transport . mobilité douce . vae . durée de vie:
   formule: 10
   note: Mobitool bicicleta eléctrica media 25 km/h, 45 km/h y bicicleta de carga
@@ -326,29 +323,28 @@ parc français . consommation électricité autre par m2:
   note: |
     Fuente (extrapolación) - Eficiencia energética en los hogares, Suissenergie, noviembre de 2021; OCSTAT; OFS
     Basado en un hogar plano medio
-logement . électricité . estimation via le coût:
+logement . électricité . consommation estimée via le coût . facteur:
   unité: CHF/kWh
   formule: 0.28
 logement . chauffage . réseau de chaleur . intensité carbone:
   formule: 0.067
-logement . chauffage . citerne propane . estimation via le coût:
+logement . chauffage . citerne propane . consommation estimée via le coût . facteur:
   unité: CHF/kg
-logement . chauffage . bois . type . granulés . estimation via le coût:
-  unité: CHF/kWh
-logement . chauffage . bois . type . bûches . estimation via le coût:
+logement . chauffage . bois . type . bûches . consommation estimée via le coût . facteur:
   unité: CHF/stère
-logement . chauffage . bois . type . bûches . prix stère 2023:
+logement . chauffage . bois . type . bûches . prix stère 2024:
   formule: 180
   unité: CHF/stère
   note: Unión Suiza de Agricultores, leña 2023, venta directa, especies medianas https://www.sbv-usp.ch/fr/prix/vente-directe/bois-de-cheminee
+logement . chauffage . bois . type . granulés . consommation estimée via le coût . facteur:
+  unité: CHF/kWh
 logement . chauffage . bois . type . granulés vrac . prix 100 kWh:
   formule: 11
   note: Precios medios de la energía FSO su-f-05.02.91, media 2022 (4,8 kWh/kg) https://www.bfs.admin.ch/bfs/fr/home/statistiques/prix/indice-prix-consommation/resultats-detailles.assetdetail.25245904.html
 logement . chauffage . bois . type . granulés sac . prix 100 kWh:
   formule: 11
   note: Precios medios de la energía FSO su-f-05.02.91, media 2022 (4,8 kWh/kg) https://www.bfs.admin.ch/bfs/fr/home/statistiques/prix/indice-prix-consommation/resultats-detailles.assetdetail.25245904.html
-logement . chauffage . fioul . estimation via le prix:
-  question: ¿No tiene factura? Introduzca sus gastos mensuales aproximados de gasóleo de calefacción
+logement . chauffage . fioul . consommation estimée via le coût . facteur:
   unité: CHF/litre
   formule: 1.397
 logement . appartement:
@@ -388,7 +384,7 @@ logement . chauffage . gaz . consommation:
     Consejo: Puedes conocer tu consumo anual de energía en tus facturas de gas.
 
     > En el caso de la calefacción, es posible que su compañía de calefacción no le facilite el consumo en kWh de su vivienda cuando la caldera está centralizada. Puede introducir el importe de su factura en CHF para estimar sus kWh. Si tiene dos facturas de gas de cocina y gas de calefacción (gastos), sume los dos importes.
-logement . chauffage . gaz . estimation via le coût:
+logement . chauffage . gaz . consommation estimée via le coût . facteur:
   unité: CHF/kWh
   formule: 0.143
   note: Precios medios de la energía FSO su-f-05.02.91, media 2022 - https://www.bfs.admin.ch/bfs/fr/home/statistiques/prix/indice-prix-consommation/resultats-detailles.assetdetail.25245904.html
@@ -401,9 +397,8 @@ logement . chauffage . fioul . consommation:
     Consejo: Puede consultar su consumo anual de energía en la factura del gasóleo de calefacción o en el extracto anual de gastos por servicios que le envía la empresa de gestión de su propiedad.
 logement . chauffage . gaz . intensité carbone gaz utilisateur:
   formule: gaz . facteur d'émission base carbone
-logement . chauffage . réseau de chaleur . consommation:
+logement . chauffage . réseau de chaleur . consommation estimée via le coût:
   aide: null
-  par défaut: parc français . chauffage . consommation réseau de chaleur par m2 * surface
 services sociétaux . question rhétorique:
   question: Asignamos la huella de los servicios públicos (educación, sanidad, etc.) por igual a cada ginebrino.
   description: |
@@ -454,7 +449,7 @@ divers . électroménager . allongement:
 
     Encontrará muchos consejos sobre el uso de sus electrodomésticos en https://www.energie-environnement.ch/appareils-electromenagers
 
-    Para alargar la vida de tus electrodomésticos, no dudes en llevarlos a reparar. El sitio https://www.ge-repare.ch ofrece una lista de direcciones de reparación.
+    Para prolongar la vida útil de tus electrodomésticos, no dudes en llevarlos a reparar. El sitio https://www.ge-repare.ch ofrece una lista de direcciones de reparación.
 
     Si realmente quiere deshacerse de un electrodoméstico, piense en las ressourceries o reciclerías, que son lugares dedicados a la reutilización
 divers . ameublement . allongement:
@@ -643,7 +638,7 @@ logement . baisse température . nombre degrés:
 
     Por supuesto, las ventanas deben permanecer cerradas. Para ventilar tu casa, y si no tienes ventilación mecánica, abre las ventanas de par en par 1 vez al día durante 5 o 10 minutos diarios.
 
-    Una buena gestión de persianas y contraventanas aumentará tu confort y reducirá aún más las emisiones de tu hogar: abrirlas durante el día te permitirá beneficiarte de la energía del sol, mientras que cerrarlas por la noche aumentará tu confort y reducirá la pérdida de calor.
+    Una buena gestión de persianas y contraventanas aumentará tu confort y reducirá aún más las emisiones de tu vivienda: abrirlas durante el día te permitirá beneficiarte de la energía del sol, mientras que cerrarlas por la noche aumentará tu confort y reducirá las pérdidas de calor.
 logement . baisse température . gains 1 degré:
   formule: 0.1
   description: |
@@ -693,7 +688,7 @@ logement . raccordement réseau de chaleur:
 
     En primer lugar, la conexión es para todo un edificio: no es posible conectar sólo su piso. En segundo lugar, hay que comprobar que hay una red de calefacción cerca del edificio y, a continuación, estudiar la infraestructura de calefacción dentro del edificio (un edificio con un sistema de calefacción colectivo le permitirá conectarse a un coste menor)
 
-    En cuanto al impacto sobre el clima, una red de calefacción se alimenta generalmente de fuentes de energía locales renovables o recuperadas (al menos el 50% en Ginebra, con el objetivo del 80% para 2030), es decir, mediante la incineración de residuos domésticos, la combustión de biomasa o la utilización de energía geotérmica, lo que reduce considerablemente el impacto en CO2 del kWh de energía consumida en comparación con el gas o el petróleo.
+    En cuanto al impacto sobre el clima, una red de calefacción se alimenta generalmente de fuentes de energía locales renovables o recuperadas (al menos el 50% en Ginebra, con un objetivo del 80% para 2030), es decir, mediante la incineración de residuos domésticos, la combustión de biomasa o la utilización de energía geotérmica, lo que reduce considerablemente el impacto en CO2 del kWh de energía consumida en comparación con el gas o el petróleo.
   description: |
     Alimentadas al menos en un 50% por energías locales renovables y recuperadas (calor procedente de la incineración de residuos, biomasa, geotermia, etc.), las redes de calefacción urbana son una forma de calefacción con bajas emisiones de carbono. 
 
@@ -720,7 +715,7 @@ alimentation . déchets . réduire gaspillage:
   description: |
     En Suiza, la cantidad media de alimentos desperdiciados se estima en 90 kg por persona y año. 
 
-    Si tenemos en cuenta toda la cadena de valor (del campo al plato), cada año se desperdician unos 2,8 millones de toneladas de alimentos, es decir, 330 kg por habitante. Para producir estos alimentos se han necesitado recursos energéticos, hídricos, financieros y humanos, por lo que estos recursos también se desperdician. Además, también repercuten en el medio ambiente. 
+    Si tenemos en cuenta toda la cadena de valor (del campo al plato), cada año se desperdician unos 2,8 millones de toneladas de alimentos, es decir, 330 kg por habitante. Para producir estos alimentos se necesitaron recursos energéticos, hídricos, financieros y humanos, por lo que estos recursos también se desperdician. Además, también repercuten en el medio ambiente. 
 
     Reducir el desperdicio de alimentos es, por tanto, esencial si queremos evitar producir para tirar, ahorrar recursos y reducir nuestro impacto en el medio ambiente
 

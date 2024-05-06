@@ -26,17 +26,16 @@ ligne](https://nosgestesclimat.fr/documentation) ou bien utiliser le paquet npm
 yarn add @incubateur-ademe/nosgestesclimat
 ```
 
-Chaque modèle régional peut être importé séparément en anglais ou en français,
-optimisé ou non en suivant la structure suivante :
+Chaque modèle régional peut être importé séparément en anglais ou en français en suivant la structure suivante :
 
 ```ts
-import rules from '@incubateur-ademe/nosgestesclimat/<regionCode>/<locale>/["optim"]'
+import rules from '@incubateur-ademe/nosgestesclimat/co2-model.<REGION>-lang.<LOCALE>.json'
 ```
 
 Exemple d'utilisation :
 
 ```ts
-import rules from '@incubateur-ademe/nosgestesclimat/FR/fr/optim'
+import rules from '@incubateur-ademe/nosgestesclimat/public/co2-model.FR-lang.fr.json'
 import Engine from 'publicodes'
 
 const engine = new Engine(rules)
