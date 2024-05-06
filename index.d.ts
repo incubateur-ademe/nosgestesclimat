@@ -75,7 +75,7 @@ export type SupportedRegionType = {
 
 export type SupportedRegions = { [key: string]: SupportedRegionType }
 
-type NGCRule = Rule & {
+export type NGCRule = Rule & {
   abréviation?: string
   couleur?: Color
   mosaique?: MosaiqueNode
