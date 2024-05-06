@@ -14,19 +14,19 @@ type Color = `#${string}`
 
 export type NodeValue = Evaluation
 
-type SuggestionsNode = Record<
+export type SuggestionsNode = Record<
   string,
   string | number | Record<string, string | number>
 >
 
-type MosaiqueNode = {
+export type MosaiqueNode = {
   type: 'selection' | 'nombre'
   options: DottedName[]
   total?: number
   suggestions?: SuggestionsNode
 }
 
-type MosaicInfos = {
+export type MosaicInfos = {
   mosaicRule: RuleNode
   mosaicParams: MosaiqueNode
   mosaicDottedNames: [DottedName, NGCRuleNode][]
