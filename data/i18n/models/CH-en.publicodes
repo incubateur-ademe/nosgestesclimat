@@ -203,9 +203,6 @@ transport . voiture . barème construction . barème hybride:
       - si: gabarit = 'SUV'
         alors: 13616
   note: We use the emission factor from the Mobitool platform ((manufacture + maintenance + end of life) * km * number of passengers) - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
-# transport . voiture . durée de vie:
-#   formule: 17
-#   note: We use the emission factor from the Mobitool platform - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
 transport . ferry . usager:
   par défaut: non
 transport . ferry . heures:
@@ -245,7 +242,7 @@ divers . animaux domestiques . empreinte . chien moyen . nombre:
 divers . autres produits . niveau de dépenses:
   question: The test does not yet capture all your consumption. How much do you estimate you spend per year on new products (decoration, DIY, games, hobbies, tools, etc.)?
   description: |
-    To keep the interface simple, we offer an estimate, via your expenditure, of the footprint of consumer goods that you own and that you think you have not included in the previous questions
+    To keep the interface simple, we propose an estimate, via your expenditure, of the footprint of consumer goods
     that you own and that you don't think you included in the previous questions.
 
     This concerns: **games, decoration, kitchen equipment, household linen, materials for creative hobbies or DIY, plants, etc.**
@@ -326,29 +323,28 @@ parc français . consommation électricité autre par m2:
   note: |
     Source (extrapolation) - Energy efficiency in households, Suissenergie, November 2021; OCSTAT; OFS
     Based on an average flat household
-logement . énergie . électricité du réseau . estimation via le coût:
+logement . énergie . électricité du réseau . consommation estimée via le coût . facteur:
   unité: CHF/kWh
   formule: 0.28
 logement . énergie . réseau de chaleur . intensité carbone:
   formule: 0.067
-logement . énergie . citerne propane . estimation via le coût:
+logement . énergie . citerne propane . consommation estimée via le coût . facteur:
   unité: CHF/kg
-logement . énergie . bois . type . granulés . estimation via le coût:
-  unité: CHF/kWh
-logement . énergie . bois . type . bûches . estimation via le coût:
+logement . énergie . bois . type . bûches . consommation estimée via le coût . facteur:
   unité: CHF/stère
-logement . énergie . bois . type . bûches . prix stère 2023:
+logement . énergie . bois . type . bûches . prix stère 2024:
   formule: 180
   unité: CHF/stère
   note: Swiss Farmers' Union, firewood 2023, direct sales, medium species https://www.sbv-usp.ch/fr/prix/vente-directe/bois-de-cheminee
+logement . énergie . bois . type . granulés . consommation estimée via le coût . facteur:
+  unité: CHF/kWh
 logement . énergie . bois . type . granulés vrac . prix 100 kWh:
   formule: 11
   note: FSO average energy prices su-f-05.02.91, average 2022 (4.8 kWh/kg) https://www.bfs.admin.ch/bfs/fr/home/statistiques/prix/indice-prix-consommation/resultats-detailles.assetdetail.25245904.html
 logement . énergie . bois . type . granulés sac . prix 100 kWh:
   formule: 11
   note: FSO average energy prices su-f-05.02.91, average 2022 (4.8 kWh/kg) https://www.bfs.admin.ch/bfs/fr/home/statistiques/prix/indice-prix-consommation/resultats-detailles.assetdetail.25245904.html
-logement . énergie . fioul . estimation via le prix:
-  question: No bill? Enter your approximate monthly heating oil costs
+logement . énergie . fioul . consommation estimée via le coût . facteur:
   unité: CHF/litre
   formule: 1.397
 logement . appartement:
@@ -388,7 +384,7 @@ logement . énergie . gaz . consommation:
     Tip: You can find your annual energy consumption on your gas bills.
 
     > For heating, your heating company may not give you the consumption in kWh for your home when the boiler is centralised. You can enter the amount of your bill in CHF to estimate your kWh. If you have two bills for cooking gas and heating gas (charges), add the two amounts together.
-logement . énergie . gaz . estimation via le coût:
+logement . énergie . gaz . consommation estimée via le coût . facteur:
   unité: CHF/kWh
   formule: 0.143
   note: FSO average energy prices su-f-05.02.91, average 2022 - https://www.bfs.admin.ch/bfs/fr/home/statistiques/prix/indice-prix-consommation/resultats-detailles.assetdetail.25245904.html
@@ -403,7 +399,6 @@ logement . énergie . gaz . intensité carbone gaz utilisateur:
   formule: gaz . facteur d'émission base carbone
 logement . énergie . réseau de chaleur . consommation:
   aide: null
-  par défaut: parc français . chauffage . consommation réseau de chaleur par m2 * surface
 services sociétaux . question rhétorique:
   question: We allocate the footprint of public services (education, health, etc.) equally to each Geneva resident.
   description: |
@@ -456,7 +451,7 @@ divers . électroménager . allongement:
 
     To extend the life of your household appliances, don't hesitate to have them repaired. The https://www.ge-repare.ch website provides a list of repair addresses.
 
-    If you really want to get rid of a piece of household electrical equipment, think of the ressourceries or recycleries, which are places dedicated to re-use!
+    If you really want to get rid of a piece of household electrical equipment, think about the ressourceries or recycleries, which are places dedicated to re-use!
 divers . ameublement . allongement:
   description: |
     Increasing the lifespan of your furniture (by taking care of it or repairing it) helps to limit its impact on the climate. 
@@ -488,11 +483,11 @@ transport . prendre moins l'avion:
   description: |
     > 💡 Try to make at least one of the journeys to your destination by train!
 
-    Find out which destinations are accessible by train from your home: <a href="https://www.chronotrains.com/fr">Chronotrains</a>; <a href="https://www.sbb.ch/fr/">CFF (sbb.ch)</a>; <a href="https://www.sbb.ch/fr/loisirs-et-vacances/trains-excursions/interrail.html">Interrail</a> 
+    Find out which destinations are accessible by train from your home: <a href="https://www.chronotrains.com/fr">Chronotrains</a>; <a href="https://www.sbb.ch/fr/">SBB (sbb.ch)</a>; <a href="https://www.sbb.ch/fr/loisirs-et-vacances/trains-excursions/interrail.html">Interrail</a> 
 
     Flying has a major impact on the climate. 
 
-    It is not limited to CO₂ emissions alone. The aircraft's actual footprint is estimated to be at least 2x that of the CO₂ emitted by burning paraffin, due to a radiative forcing effect. For more details, you can refer to myclimate's explanations.
+    It is not limited to CO₂ emissions alone. The actual footprint of the aircraft is estimated to be at least 2x that of the CO₂ emitted by burning paraffin, due to a radiative forcing effect. For more details, you can refer to myclimate's explanations.
 
     The actual footprint of the aircraft is estimated to be at least 2x that of the CO₂ emitted by burning paraffin, due to a radiative forcing effect. 
 
@@ -554,7 +549,7 @@ transport . boulot:
   description: |
     While long-distance car-sharing is well known in Switzerland, short-distance car-sharing is almost non-existent: today, only 4% of home-to-work journeys are made by car-sharing.
 
-    Numerous websites offer free platforms for bringing together people who make the same journey, whether regularly, for example to go to work, or occasionally, for example on a ski trip.
+    Numerous websites offer free platforms for bringing together people who make the same journey, whether on a regular basis, for example to go to work, or on a one-off basis, for example for a ski outing.
 
     -<a href="http://www.e-covoiturage.ch/index.php/fr/">e-carpooling website</a>: Swiss carpooling platform;
 
@@ -641,7 +636,7 @@ logement . baisse température . nombre degrés:
 
     Lowering the heating temperature by 1°C represents <a href="https://www.ge.ch/document/30986/annexe/0">energy savings of 7% to 10%</a>. This may not seem much on an individual scale, but if everyone takes this action, it is a powerful lever for reducing CO2 emissions.
 
-    Windows should of course be kept closed. To air your home, and if you don't have mechanical ventilation, open the windows wide 1x a day for 5 to 10 minutes a day.
+    Windows should of course be kept closed. To ventilate your home, and if you don't have mechanical ventilation, open the windows wide 1x a day for 5 to 10 minutes a day.
 
     Good management of blinds and shutters will increase your comfort and further reduce emissions from your home: opening them during the day will allow you to benefit from the sun's energy, while closing them at night will increase your comfort and reduce heat loss.
 logement . baisse température . gains 1 degré:

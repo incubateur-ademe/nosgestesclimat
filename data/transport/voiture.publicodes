@@ -15,7 +15,7 @@ transport . voiture:
       - sinon: empreinte moyenne
   unité: kgCO2e
   description: |
-    ![](https://images.unsplash.com/photo-1572312284222-ecf6d70f1907?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=80)
+    ![](https://upload.wikimedia.org/wikipedia/commons/9/9a/Congestion_caused_by_a_road_accident%2C_Algarve%2C_Portugal.jpg)
 
     La voiture est aujourd'hui en France essentiellement thermique (essence, diesel), bien que l'électrique progresse lentement.
 
@@ -478,7 +478,7 @@ transport . voiture . électrique . consommation estimée:
     - si: gabarit = 'moyenne'
       alors: 17
     - si: gabarit = 'berline'
-      alors: 20
+      alors: 25
     - si: gabarit = 'SUV'
       alors: 25
     - si: gabarit = 'VUL'
@@ -529,7 +529,38 @@ transport . voiture . gabarit . SUV:
   description: |
     "Sport utility vehicle", type 4x4 urbain
 
+transport . voiture . gabarit . petite . poids:
+  formule: 1000
+  unité: kg
+  note: Les valeurs de poids sont tirées du simulateur [carculator](https://carculator.readthedocs.io/en/latest/modeling.html#size-classes) qui utilise le papier [Cost and well-to-wheel implications of the vehicle fleet CO2 emission regulation in the European Union, Christian and others, 2014](https://www.sciencedirect.com/science/article/abs/pii/S0965856414000494?via%3Dihub)
+
+transport . voiture . gabarit . moyenne . poids:
+  formule: 1500
+  unité: kg
+  note: Les valeurs de poids sont tirées du simulateur [carculator](https://carculator.readthedocs.io/en/latest/modeling.html#size-classes) qui utilise le papier [Cost and well-to-wheel implications of the vehicle fleet CO2 emission regulation in the European Union, Christian and others, 2014](https://www.sciencedirect.com/science/article/abs/pii/S0965856414000494?via%3Dihub)
+
+transport . voiture . gabarit . VUL . poids:
+  formule: 1750
+  unité: kg
+  note: Les valeurs de poids sont tirées du simulateur [carculator](https://carculator.readthedocs.io/en/latest/modeling.html#size-classes) qui utilise le papier [Cost and well-to-wheel implications of the vehicle fleet CO2 emission regulation in the European Union, Christian and others, 2014](https://www.sciencedirect.com/science/article/abs/pii/S0965856414000494?via%3Dihub)
+
+transport . voiture . gabarit . berline . poids:
+  formule: 1750
+  unité: kg
+  note: Les valeurs de poids sont tirées du simulateur [carculator](https://carculator.readthedocs.io/en/latest/modeling.html#size-classes) qui utilise le papier [Cost and well-to-wheel implications of the vehicle fleet CO2 emission regulation in the European Union, Christian and others, 2014](https://www.sciencedirect.com/science/article/abs/pii/S0965856414000494?via%3Dihub)
+
+transport . voiture . gabarit . SUV . poids:
+  formule: 2000
+  unité: kg
+  note: Les valeurs de poids sont tirées du simulateur [carculator](https://carculator.readthedocs.io/en/latest/modeling.html#size-classes) qui utilise le papier [Cost and well-to-wheel implications of the vehicle fleet CO2 emission regulation in the European Union, Christian and others, 2014](https://www.sciencedirect.com/science/article/abs/pii/S0965856414000494?via%3Dihub)
+
 transport . voiture . base au kilomètre:
+  applicable si:
+    toutes ces conditions:
+      - est défini: utilisateur
+      - une de ces conditions:
+          - utilisateur = 'propriétaire'
+          - utilisateur = 'régulier non propriétaire'
   titre: Entretien et climatisation au kilomètre
   formule: entretien pondéré + climatisation
   unité: kgCO2e/km
@@ -541,7 +572,8 @@ transport . voiture . entretien pondéré:
         alors: entretien
       - si: motorisation = 'hybride'
         alors: entretien * 0.90
-      - sinon: entretien * 0.75
+      - si: motorisation = 'électrique'
+        alors: entretien * 0.75
   unité: kgCO2e/km
   note: |
     Plusieurs sources s'accordent pour dire que l'entretien d'un véhicule électrique est inférieur à celui d'un véhicule thermique de 25%. Comme [celle-ci](https://izi-by-edf.fr/blog/voiture-hybride-entretien/).
@@ -628,94 +660,102 @@ transport . voiture . barème construction:
 
     Malgré cela, en France, sur la durée de vie de la voiture et donc les km parcourus, le choix de la voiture électrique est nettement mieux pour le climat.
 
-    Mieux, mais loin d'être faible ! En 2020, il ne s'agit plus seulement de comparer des solutions techniques entre elles, il s'agit d'évaluer ses achats par rapport aux objectifs climat.
+    Mieux, mais loin d'être faible ! Aujourd'hui, il ne s'agit plus seulement de comparer des solutions techniques entre elles, il s'agit d'évaluer ses achats par rapport aux objectifs climat.
 
   note: |
-    Nous utilisons l'étude [FNH-Carbone4](https://github.com/betagouv/ecolab-data/files/5945898/vehicule_electrique_rapport.pdf).
+    Les données autour des émissions liées à la fabrication de véhicules sont nombreuses et variées. La première approche utilisait l'étude [FNH-Carbone4](https://github.com/betagouv/ecolab-data/files/5945898/vehicule_electrique_rapport.pdf) qui propose des facteurs d'émissions pour la construction pour 2 gabarits, en distinguant les véhicules thermiques, électriques et hybrides. Certaines données pour le véhicules paraissaient incohérentes, et nous avions besoin, d'un point de vue méthodologique, de plus de finesse dans le calcul de l'empreinte des véhicules électriques.
 
-    Pour l'instant, nous n'avons que deux gabarits, la citadine et la berline. Dès lors, en ce qui concerne les véhicules "moyen", VUL, SUV, 
-    nous avons fait le choix de faire une approximation de l'empreinte via le poids en considérant, d'un côté les citadines et véhicules moyens, de l'autre
-    les berlines, VUL et SUV.
+    C'est pouquoi, désormais, nous adoptons l'approche suivante:
 
-    |                              | Poids thermique (kg) | Poids électrique (kg) | Source               |
-    |------------------------------|----------------------|-----------------------|----------------------|
-    | Citadine                     | 1200                 | 1500                  | Etude Carbone 4      |
-    | Véhicule moyen (type Mégane) | 1250                 | 1600                  | Données constructeur |
-    | Berline                      | 1500                 | 2000                  | Etude Carbone 4      |
-    | VUL (type Kangoo)            | 1400                 | 1800                  | Données constructeur |
-    | SUV (type Audi Q3)           | 1500                 | 1800                  | Données constructeur |
-
-    p. 12 de l'étude de Carbone 4:
-    ![](https://user-images.githubusercontent.com/1177762/107264406-3afdd980-6a43-11eb-87ad-a09681240949.png)
-
-    Nous prenons uniquement en compte la "production et fin de vie" ainsi que les données de 2016 plutôt que le scénario prospectif 2030.
-
-    p. 57 et 58.
-
-    ![](https://user-images.githubusercontent.com/1177762/107265071-1eae6c80-6a44-11eb-9b51-c2aee3bfcf3c.png)
-    ![](https://user-images.githubusercontent.com/1177762/107265098-2706a780-6a44-11eb-8681-7901f00e057b.png)
-
-    Nous avons choisi de ne pas retrancher les "crédits de recyclage" correspondant à des émissions évitées via l'utilisation de matériaux recyclés issus du démantèlement d'une voiture, pour le production de nouveaux produits manufacturés.
-    Nous prenons l'hypothèse que l'empreinte réduite bénéficie à celui qui achète le produit issu du recyclage et non pas à celui qui achète un produit amené à être recyclé.
+    - Pour les véhicules thermiques, nous utilisons les données de la Base Empreinte de l'ADEME donnant une valeur de 4,5 kgCO2e/kg pour la construction d'une voiture. Nous appliquons ce facteur à la masse de la voiture pour obtenir l'empreinte de la construction, masse étant déterminée par le gabarit du véhicule.
+    - Pour les véhicules électriques, nous calculons l'empreinte de la batterie en fonction de sa capacité, puis nous ajoutons l'empreinte de la construction d'une voiture thermique de gamme équivalente.
+    - Pour les véhicules hybrides, nous utilisons les mêmes données que pour les véhicules électriques (hypothèse forte, voir note sur le barème hybride).
 
 transport . voiture . barème construction . barème thermique:
   formule:
     variations:
-      - si:
-          une de ces conditions:
-            - gabarit = 'petite'
-            - gabarit = 'moyenne'
-        alors: 6700
-      - si:
-          une de ces conditions:
-            - gabarit = 'berline'
-            - gabarit = 'SUV'
-            - gabarit = 'VUL'
-        alors: 7600
+      - si: gabarit = 'petite'
+        alors: empreinte par kg * gabarit . petite . poids
+      - si: gabarit = 'moyenne'
+        alors: empreinte par kg * gabarit . moyenne . poids
+      - si: gabarit = 'VUL'
+        alors: empreinte par kg * gabarit . VUL . poids
+      - si: gabarit = 'berline'
+        alors: empreinte par kg * gabarit . berline . poids
+      - si: gabarit = 'SUV'
+        alors: empreinte par kg * gabarit . SUV . poids
   unité: kgCO2e
+
+transport . voiture . barème construction . barème thermique . empreinte par kg:
+  formule: 4.5
+  unité: kgCO2e/kg
+  note: Facteur d'émission issu de la Base Empreinte.
 
 transport . voiture . barème construction . barème électrique:
-  formule:
+  formule: barème thermique + batterie
+  unité: kgCO2e
+  note: |
+    La construction d'une voiture électrique émet plus de gaz à effet de serre qu'une voiture thermique de gamme équivalente.
+    Cela est dû à la production de la batterie, qui est très énergivore et à une empreinte carbone importante.
+
+    > Ce surplus d'émissions est d'environ +50% (mais varie d'environ +20% à plus d'une multiplication par 2 selon les études).
+    https://bonpote.com/la-voiture-electrique-solution-ideale-pour-le-climat/
+
+transport . voiture . barème construction . barème électrique . batterie:
+  formule: capacité * empreinte par kWh
+  unité: kgCO2e
+  note: |
+    L'empreinte carbone d'une batterie augmente avec sa capacité, car une capacité plus élevée nécessite l'utilisation d'un plus grand nombre de cellules lithium-ion.
+
+    La capacité de la batterie est exprimée en kWh, elle peut varier considérablement selon les modèles de voitures électriques.
+    Pour réduire l'impact de la voiture électrique il faut privilégier les modèles avec une batterie de petite capacité.
+
+transport . voiture . barème construction . barème électrique . batterie . empreinte par kWh:
+  formule: 100
+  unité: kgCO2e/kWh
+  note: |
+    Les études académiques sur l'empreinte carbone des batteries des véhicules électriques sont nombreuses, mais leurs résultats sont très variables.
+
+    Les valeurs varient de 60 kgCO2e/kWh à 150 kgCO2e/kWh. Une [méta-étude de l'IFPEN](https://www.sciencedirect.com/science/article/abs/pii/S0959652622006291)
+    (Institut Français du Pétrole et des Énergies Nouvelles) calcule une valeur médiane de 83 kgCO2e/kWh, en précisant que les résultats différent selons les chimies de batteries, 
+    les pays de productions, le pays des auteurs de l'étude, et que même ces facteurs intégrés il reste une grande variabilité des résultats.
+
+    Compte tenu de l'incertitude et des variations observées dans les études, nous adoptons une valeur prudente de 100 kgCO2e/kWh pour l'empreinte carbone des batteries.
+
+    [Étude Carbone 4 sur l'empreinte des batteries (en)](https://www.carbone4.com/publication-liion-battery-carbon-footprint)
+
+transport . voiture . barème construction . barème électrique . batterie . capacité:
+  question: Quelle est la capacité de la batterie de votre voiture électrique ?
+  description: |
+    La capacité de la batterie est exprimée en kWh, elle varie considérablement selon les modèles de véhicules.
+
+    Les constructeurs distinguent parfois une capacité brute et une capacité nette, réellement disponible. Si vous avez les deux valeurs, choisissez la capacité brute.
+  unité: kWh
+  par défaut:
     variations:
       - si:
           une de ces conditions:
             - gabarit = 'petite'
             - gabarit = 'moyenne'
-        alors: 10200
+        alors: 40
       - si:
           une de ces conditions:
             - gabarit = 'berline'
             - gabarit = 'SUV'
             - gabarit = 'VUL'
-        alors: 20200
-  unité: kgCO2e
+        alors: 65
+  suggestions:
+    Petite autonomie: 40
+    Autonomie moyenne: 65
+    Grande autonomie: 100
 
 transport . voiture . barème construction . barème hybride:
-  formule:
-    variations:
-      - si:
-          une de ces conditions:
-            - gabarit = 'petite'
-            - gabarit = 'moyenne'
-        alors: 9600
-      - si:
-          une de ces conditions:
-            - gabarit = 'berline'
-            - gabarit = 'SUV'
-            - gabarit = 'VUL'
-        alors: 6900
+  valeur: barème électrique
+  contexte:
+    barème électrique . batterie . capacité: 40
   unité: kgCO2e
-  note: Ètonnamment, la berline a moins d'empreinte construction que la citadine... A voir si l'étude relève ce mystère.
-
-transport . voiture . gabarit . berline . poids:
-  formule: 1500
-  unité: kg
-  note: Règle utilisée pour le calcul de l'empreinte de la caravane et camping, car.
-
-transport . voiture . gabarit . berline . empreinte:
-  formule: 7600
-  unité: kgCO2e
-  note: Règle utilisée pour le calcul de l'empreinte de la caravane et camping car.
+  note: |
+    On fait l'hypothèse forte que la construction d'un véhicule hybride correspond à l'empreinte d'un véhicule électrique équipé d'une petite batterie. Néanmoins, le calcul est plus complexe, notamment car le type de véhicule hybride (rechargeable ou non) sur la composition de la voiture. On a également 2 moteurs...
 
 transport . voiture . amortissement:
   description: |
