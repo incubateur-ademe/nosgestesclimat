@@ -62,6 +62,7 @@ logement . énergie . choix utilisateur:
     une de ces conditions:
       - est défini: électricité du réseau . présent
       - est défini: photovoltaique . présent
+      - est défini: PAC . présent
       - est défini: gaz . présent
       - est défini: réseau de chaleur . présent
       - est défini: bouteille gaz . présent
@@ -83,6 +84,10 @@ logement . énergie . électricité du réseau:
   formule: électricité du réseau . empreinte
 
 logement . énergie . électricité du réseau . empreinte:
+  applicable si:
+    toutes ces conditions:
+      - est défini: électricité du réseau . présent
+      - électricité du réseau . présent
   formule: consommation * intensité carbone
 
 logement . énergie . électricité du réseau . présent:
@@ -93,23 +98,65 @@ logement . énergie . électricité du réseau . consommation:
   question: Quelle est la consommation annuelle d'électricité de votre foyer ?
   plancher: 0
   unité: kWh
-  par défaut: surface * (parc français . consommation électricité autre par m2 + parc français . surface . part électricité * parc français . chauffage . consommation électricité par m2)
-  aide: estimation via le coût
+  par défaut: par défaut
+  aide: logement . électricité . consommation estimée via le coût . saisie
   description: |
     Astuce : vous trouverez la consommation annuelle d'électricité sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
 
     Pour rappel, si vous vivez dans plusieurs logements (par exemple, si vous avez une résidence secondaire), essayez de "ramener" ces consommations dans celles du logement principal afin d'avoir l'estimation la plus juste possible.
 
-logement . énergie . électricité du réseau . estimation via le coût:
+logement . énergie . électricité du réseau . consommation . par défaut:
+  titre: Consommation par défaut électricité
+  formule:
+    variations:
+      - si: logement . énergie . choix utilisateur = non
+        alors: surface * (parc français . consommation électricité autre par m2 + parc français . surface . part électricité * parc français . chauffage . consommation électricité par m2)
+      - si:
+          toutes ces conditions:
+            - logement . énergie . choix utilisateur = oui
+            - est défini: logement . énergie . électricité du réseau . présent
+            - est défini: logement . énergie . PAC . présent
+            - logement . énergie . électricité du réseau . présent
+            - logement . énergie . PAC . présent
+        alors: surface * (parc français . consommation électricité autre par m2 + parc français . chauffage . consommation électricité par m2)
+      - si:
+          toutes ces conditions:
+            - logement . énergie . choix utilisateur = oui
+            - est défini: logement . énergie . électricité du réseau . présent
+            - est défini: logement . énergie . PAC . présent
+            - logement . énergie . électricité du réseau . présent
+            - logement . énergie . PAC . présent = non
+        alors: surface * (parc français . consommation électricité autre par m2 + parc français . chauffage . consommation électricité hors PAC par m2)
+      - si:
+          toutes ces conditions:
+            - logement . énergie . choix utilisateur = oui
+            - est défini: logement . énergie . électricité du réseau . présent
+            - est défini: logement . énergie . PAC . présent
+            - logement . énergie . électricité du réseau . présent = non
+            - logement . énergie . PAC . présent
+        alors: surface * (parc français . consommation électricité autre par m2 + parc français . chauffage . consommation électricité PAC par m2)
+      - sinon: surface * parc français . consommation électricité autre par m2
+
+logement . énergie . électricité du réseau . consommation estimée via le coût:
+  titre: Consommation estimée via le coût
+  formule: saisie * commun . mois par an / facteur
+  arrondi: oui
+  unité: kWh
+  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
+
+logement . énergie . électricité du réseau . consommation estimée via le coût . saisie:
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  unité: €/mois
+
+logement . énergie . électricité du réseau . consommation estimée via le coût . facteur:
+  formule: 0.2317
   unité: €/kWh
-  formule: 0.2022
   note: |
     Cette formule nous permet de passer des €/mois aux kWh/an.
 
     Le chiffre inclut un coût de l'abonnement, et représente donc une moyenne. Ce n'est pas le prix du kWh marginal. Il inclut les taxes.
 
-    Chiffre issu de [Eurostat, household, second half 2021](https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Electricity_price_statistics).
+    Chiffre issu de [Eurostat, household, first half 2023](https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Electricity_price_statistics).
 
 logement . énergie . électricité du réseau . intensité carbone:
   formule: commun . intensité électricité
@@ -161,6 +208,25 @@ logement . énergie . photovoltaique . intensité carbone photovoltaique:
   formule: 0.0291
   unité: kgCO2e/kWh
   note: D'après l'ADEME, nous considérons que la zone H1C est représentative d'un logement moyen standard en France, ce qui correspond à une empreinte moyenne de 29,1 gCO2e / kWh produit.
+
+logement . énergie . PAC:
+  titre: Pompe à chaleur
+  icônes: 🌡️
+
+logement . énergie . PAC . présent:
+  question: Votre logement est-il chauffé via une pompe à chaleur ?
+
+logement . énergie . notif électrique:
+  type: notification
+  formule:
+    toutes ces conditions:
+      - est défini: PAC . présent
+      - est défini: électricité du réseau . présent
+      - une de ces conditions:
+          - PAC . présent = oui
+          - électricité du réseau . présent = oui
+  description: |
+    Vous avez renseigné une pompe à chaleur ou un chauffage électrique : leur consommation est prise en compte via votre facture globale d'électricité.
 
 logement . énergie . gaz:
   titre: Réseau de gaz

@@ -49,13 +49,25 @@ logement . baisse température . gains 1 degré:
     Où est la source pour ces 7% ? Peut-on décliner ce chiffre pour chaque type d'énergie (bois, gaz, etc.) ? Quelle est la sensibilité de ce chiffre au type de logement, son isolation, etc. ?
 
 logement . empreinte chauffage air:
-  formule: parc français . chauffage . empreinte moyenne chauffage air par m2 * logement . surface
+  formule:
+    variations:
+      - si: énergie . choix utilisateur
+        alors: empreinte chauffage air utilisateur
+      - sinon: parc français . chauffage . empreinte moyenne chauffage air par m2 * logement . surface
   description: |
     Pour chaque kWh de chaque type d'énergie, quelle est la part utilisée pour le chauffage de l'air d'un foyer ?
 
     > Nous utilions ici [les données du CEREN](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel) 
     via le travail réalisé dans le fichier [chiffres parc logements français.publicodes](https://github.com/incubateur-ademe/nosgestesclimat/blob/master/data/logement/chiffres%20parc%20logements%20fran%C3%A7ais.publicodes).
-  unité: kgCO2e
+
+logement . empreinte chauffage air utilisateur:
+  formule:
+    somme:
+      - énergie . électricité du réseau . empreinte * parc français . chauffage . part chauffage air électricité
+      - (énergie . gaz . empreinte + énergie . citerne propane . empreinte) * parc français . chauffage . part chauffage air gaz
+      - énergie . bois . empreinte * parc français . chauffage . part chauffage air bois
+      - énergie . fioul . empreinte * parc français . chauffage . part chauffage air fioul
+      - énergie . réseau de chaleur . empreinte * parc français . chauffage . part chauffage air réseau de chaleur
 
 logement . installer thermostat:
   titre: Installer un thermostat
@@ -76,13 +88,26 @@ logement . installer chauffe-eau solaire:
   formule: empreinte eau chaude sanitaire * 0.65 / habitants
 
 logement . empreinte eau chaude sanitaire:
-  formule: parc français . chauffage . empreinte moyenne ecs par m2 * logement . surface
+  formule:
+    variations:
+      - si: énergie . choix utilisateur
+        alors: empreinte eau chaude sanitaire utilisateur
+      - sinon: parc français . chauffage . empreinte moyenne ecs par m2 * logement . surface
   unité: kgCO2e
   description: |
     Pour chaque kWh de chaque type d'énergie, quelle est la part utilisée pour l'eau chaude sanitaire (ECS) d'un foyer ?
 
     > Nous utilions ici [les données du CEREN](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel) 
     via le travail réalisé dans le fichier [chiffres parc logements français.publicodes](https://github.com/incubateur-ademe/nosgestesclimat/blob/master/data/logement/chiffres%20parc%20logements%20fran%C3%A7ais.publicodes).
+
+logement . empreinte eau chaude sanitaire utilisateur:
+  formule:
+    somme:
+      - énergie . électricité du réseau . empreinte * parc français . chauffage . part ecs électricité
+      - (énergie . gaz . empreinte + énergie . citerne propane . empreinte) * parc français . chauffage . part ecs gaz
+      - énergie . bois . empreinte * parc français . chauffage . part ecs bois
+      - énergie . fioul . empreinte * parc français . chauffage . part ecs fioul
+      - énergie . réseau de chaleur . empreinte * parc français . chauffage . part ecs réseau de chaleur
 
 logement . éteindre appareils:
   formule: empreinte du foyer / habitants
@@ -204,50 +229,50 @@ logement . remplacer gaz par PAC . PAC . coefficient COP:
     Voir le [Guide EDF](https://particulier.edf.fr/fr/accueil/guide-energie/electricite/pompe-a-chaleur.html).
     Plus d'informations également sur l'article [Pompe à chaleur ou radiateurs électriques ?](https://conseils-thermiques.org/contenu/pompe-a-chaleur-ou-radiateur-electrique.php)
 
-# logement . remplacer chauffage électrique par PAC:
-#   titre: Passer du chauffage électrique à une pompe à chaleur
-#   action:
-#     dépasse:
-#       - logement . rénovation énergétique
-#       - logement . rénovation énergétique BBC
-#   applicable si:
-#     toutes ces conditions:
-#       - propriétaire
-#       - est défini: chauffage . électricité . présent
-#       - chauffage . électricité . présent
-#   icônes: 🔥🔄
-#   formule: (électricité . consommation * part consommation remplacable - consommation via PAC) * électricité . intensité carbone / habitants
-#   unité: kgCO2e
-#   description: |
-#     Les chaudières au gaz sont parmi les plus émissives de CO₂. Les remplacer par des alternatives moins carbonnées comme des pompes à chaleur est un geste fort pour réduire votre empreinte carbone.
+logement . remplacer chauffage électrique par PAC:
+  titre: Passer du chauffage électrique à une pompe à chaleur
+  action:
+    dépasse:
+      - logement . rénovation énergétique
+      - logement . rénovation énergétique BBC
+  applicable si:
+    toutes ces conditions:
+      - propriétaire
+      - est défini: énergie . électricité du réseau . présent
+      - énergie . électricité du réseau . présent
+  icônes: 🔥🔄
+  formule: (énergie . électricité du réseau . consommation * part consommation remplacable - consommation via PAC) * énergie . électricité du réseau . intensité carbone / habitants
+  unité: kgCO2e
+  description: |
+    Les chaudières au gaz sont parmi les plus émissives de CO₂. Les remplacer par des alternatives moins carbonnées comme des pompes à chaleur est un geste fort pour réduire votre empreinte carbone.
 
-#     > Les pompes à chaleur sont souvent appelées *PAC*.
+    > Les pompes à chaleur sont souvent appelées *PAC*.
 
-#     💡 Leur principe est ingénieux : c'est un frigo inversé ! Votre frigo, grâce à un peu d'électricité, refroidit son intérieur et rejette la chaleur dans la pièce. La PAC refroidit l'air extérieur pour chauffer votre logement.
+    💡 Leur principe est ingénieux : c'est un frigo inversé ! Votre frigo, grâce à un peu d'électricité, refroidit son intérieur et rejette la chaleur dans la pièce. La PAC refroidit l'air extérieur pour chauffer votre logement.
 
-#     > Bonus : s'il fait trop chaud chez vous l'été, certaines PAC peuvent inverser leur fonctionnement et faire office de climatisation l'été.
+    > Bonus : s'il fait trop chaud chez vous l'été, certaines PAC peuvent inverser leur fonctionnement et faire office de climatisation l'été.
 
-#   note: |
-#     Nous considérons pour l'instant que le remplacement des kWh de gaz par la même quantité de kWh électrique est une bonne approximation de premier ordre. Nous pourrons par la suite l'adapter en fonction du rendement des installations résidentielles.
+  note: |
+    Nous considérons pour l'instant que le remplacement des kWh de gaz par la même quantité de kWh électrique est une bonne approximation de premier ordre. Nous pourrons par la suite l'adapter en fonction du rendement des installations résidentielles.
 
-#     Cette action chiffre le remplacement de la chaudière électrique, si vous chauffez aussi votre eau via un chauffe-eau il faudra choisir une PAC qui peut aussi chauffer l'eau.
+    Cette action chiffre le remplacement de la chaudière électrique, si vous chauffez aussi votre eau via un chauffe-eau il faudra choisir une PAC qui peut aussi chauffer l'eau.
 
-#     Voir [Guide ADEME PAC](https://www.ademe.fr/sites/default/files/assets/documents/guide-pratique-installer-une-pompe-a-chaleur.pdf)
+    Voir [Guide ADEME PAC](https://www.ademe.fr/sites/default/files/assets/documents/guide-pratique-installer-une-pompe-a-chaleur.pdf)
 
-# logement . remplacer chauffage électrique par PAC . part consommation remplacable:
-#   formule: parc français . chauffage . part chauffage air électricité + parc français . chauffage . part ecs électricité
+logement . remplacer chauffage électrique par PAC . part consommation remplacable:
+  formule: parc français . chauffage . part chauffage air électricité + parc français . chauffage . part ecs électricité
 
-# logement . remplacer chauffage électrique par PAC . consommation via PAC:
-#   formule: (électricité . consommation * part consommation remplacable / coefficient COP)
+logement . remplacer chauffage électrique par PAC . consommation via PAC:
+  formule: (énergie . électricité du réseau . consommation * part consommation remplacable / coefficient COP)
 
-# logement . remplacer chauffage électrique par PAC . consommation via PAC . coefficient COP:
-#   titre: Coefficient de performance réel
-#   formule: 2
-#   description: Pour 1kWh d'électricité consommée, combien de kWh de chaleur fournis ?
-#   note: |
-#     Nous choississons un coefficient conservateur (l'ADEME conseille un COP > 3).
-#     Voir le [Guide EDF](https://particulier.edf.fr/fr/accueil/guide-energie/electricite/pompe-a-chaleur.html).
-#     Plus d'informations également sur l'article [Pompe à chaleur ou radiateurs électriques ?](https://conseils-thermiques.org/contenu/pompe-a-chaleur-ou-radiateur-electrique.php)
+logement . remplacer chauffage électrique par PAC . consommation via PAC . coefficient COP:
+  titre: Coefficient de performance réel
+  formule: 2
+  description: Pour 1kWh d'électricité consommée, combien de kWh de chaleur fournis ?
+  note: |
+    Nous choississons un coefficient conservateur (l'ADEME conseille un COP > 3).
+    Voir le [Guide EDF](https://particulier.edf.fr/fr/accueil/guide-energie/electricite/pompe-a-chaleur.html).
+    Plus d'informations également sur l'article [Pompe à chaleur ou radiateurs électriques ?](https://conseils-thermiques.org/contenu/pompe-a-chaleur-ou-radiateur-electrique.php)
 
 logement . séchage air libre:
   titre: Privilégier l'étendoir au sèche-linge
