@@ -1,33 +1,32 @@
 logement . électricité:
   icônes: ⚡
+  formule: empreinte logement / habitants
+
+logement . électricité . empreinte logement:
   formule:
     variations:
-      - si:
-          toutes ces conditions:
-            - est défini: photovoltaique . présent
-            - photovoltaique . présent
-        alors: photovoltaique . empreinte / habitants
-      - sinon: consommation * intensité carbone / habitants
+      - si: photovoltaique . présent
+        alors: photovoltaique . empreinte
+      - sinon: consommation * intensité carbone
 
 logement . électricité . consommation:
   icônes: ⚡
-  non applicable si:
-    toutes ces conditions:
-      - est défini: photovoltaique . présent
-      - photovoltaique . présent
-      - photovoltaique . part autoconsommation = 100
+  applicable si:
+    une de ces conditions:
+      - photovoltaique . présent = non
+      - photovoltaique . part autoconsommation < 100
   question: Quelle est la consommation annuelle d'électricité de votre foyer ?
   aide: logement . électricité . consommation estimée via le coût . saisie
   plancher: 0
   unité: kWh
-  par défaut: par défaut
+  par défaut: consommation par défaut
   note: on considère que seule la consommation d'électricité liée au chauffage est dépendante de la surface du logement
   description: |
     Astuce : vous trouverez la consommation annuelle d'électricité sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
 
     Pour rappel, si vous vivez dans plusieurs logements (par exemple, si vous avez une résidence secondaire), essayez de "ramener" ces consommations dans celles du logement principal afin d'avoir l'estimation la plus juste possible.
 
-logement . électricité . consommation . par défaut:
+logement . électricité . consommation par défaut:
   titre: Consommation par défaut électricité
   formule:
     variations:
@@ -100,12 +99,10 @@ logement . électricité . photovoltaique . présent:
       - est défini: logement . appartement
       - appartement
   question: Votre logement dispose-t-il de panneaux photovoltaïques ?
+  par défaut: non
 
 logement . électricité . photovoltaique . empreinte:
-  applicable si:
-    toutes ces conditions:
-      - est défini: photovoltaique . présent
-      - photovoltaique . présent
+  applicable si: photovoltaique . présent
   formule:
     variations:
       - si: photovoltaique . part autoconsommation = 100
@@ -114,10 +111,10 @@ logement . électricité . photovoltaique . empreinte:
         alors: photovoltaique . production * intensité carbone photovoltaique + (électricité . consommation - photovoltaique . production) * intensité carbone
       - si: photovoltaique . production > électricité . consommation
         alors: électricité . consommation * intensité carbone photovoltaique
-
   unité: kgCO2e
 
 logement . électricité . photovoltaique . production:
+  applicable si: photovoltaique . présent
   icônes: 🌞⚡️
   question: Quelle est la production annuelle d'électricité de vos panneaux photovoltaïques, qu'elle soit autoconsommée ou réinjectée dans le réseau ?
   plancher: 0
@@ -148,8 +145,11 @@ logement . électricité . photovoltaique . autoconsommation:
   formule: production * part autoconsommation
 
 logement . électricité . photovoltaique . part autoconsommation:
+  applicable si: photovoltaique . présent
   question: Quelle part de cette électricité produite consommez-vous ?
   par défaut: 30
+  plancher: 0
+  plafond: 100
   unité: '%'
   suggestions:
     je revends toute ma production: 0
