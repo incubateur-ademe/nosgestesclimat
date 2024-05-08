@@ -1,9 +1,21 @@
 logement . électricité:
   icônes: ⚡
-  formule: consommation * intensité carbone / habitants
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: photovoltaique . présent
+            - photovoltaique . présent
+        alors: photovoltaique . empreinte / habitants
+      - sinon: consommation * intensité carbone / habitants
 
 logement . électricité . consommation:
   icônes: ⚡
+  non applicable si:
+    toutes ces conditions:
+      - est défini: photovoltaique . présent
+      - photovoltaique . présent
+      - photovoltaique . part autoconsommation = 100
   question: Quelle est la consommation annuelle d'électricité de votre foyer ?
   aide: logement . électricité . consommation estimée via le coût . saisie
   plancher: 0
@@ -77,3 +89,75 @@ logement . électricité . intensité carbone:
     Nous pourrions faire mieux, en séparant la partie chauffage de l'air et le reste de la consommation du logement, car le chauffage est utilisé principalement l'hiver, au moment où les centrales à charbon et gaz tournent davantage et empirent l'empreinte du mix. Mais cela demanderait pour les foyers chauffés à l'électricité de trouver ces deux valeurs et les renseigner, chose peu évidente.
 
     > L'intensité du chauffage résidentiel est ainsi définie à 80gCO2e/kWh en France par la RE2020, [source](https://www.batiactu.com/edito/facteur-energie-primaire-contenu-carbone-electricite-58485.php).
+
+logement . électricité . photovoltaique:
+  titre: Panneaux photovoltaïques
+  icônes: 🌞⚡️
+
+logement . électricité . photovoltaique . présent:
+  non applicable si:
+    toutes ces conditions:
+      - est défini: logement . appartement
+      - appartement
+  question: Votre logement dispose-t-il de panneaux photovoltaïques ?
+
+logement . électricité . photovoltaique . empreinte:
+  applicable si:
+    toutes ces conditions:
+      - est défini: photovoltaique . présent
+      - photovoltaique . présent
+  formule:
+    variations:
+      - si: photovoltaique . part autoconsommation = 100
+        alors: autoconsommation * intensité carbone photovoltaique
+      - si: photovoltaique . production < électricité . consommation
+        alors: photovoltaique . production * intensité carbone photovoltaique + (électricité . consommation - photovoltaique . production) * intensité carbone
+      - si: photovoltaique . production > électricité . consommation
+        alors: électricité . consommation * intensité carbone photovoltaique
+
+  unité: kgCO2e
+
+logement . électricité . photovoltaique . production:
+  icônes: 🌞⚡️
+  question: Quelle est la production annuelle d'électricité de vos panneaux photovoltaïques, qu'elle soit autoconsommée ou réinjectée dans le réseau ?
+  plancher: 0
+  par défaut: 3200
+  unité: kWh
+  aide: logement . électricité . photovoltaique . production estimée via la puissance installée . saisie
+  description: |
+    Nous parlons bien ici de toute l'énergie produite par vos panneaux, que vous la consommiez ou non.
+    La façon de disposer de ce chiffre varie selon votre installation. La plupart des installations présentes disposent d'une application de suivi de production qui devrait vous fournir cette donnée. 
+    Par défaut, en l'absence de données sourcées mais en faisant une moyenne des ressources trouvées en ligne, nous partons du principe qu'une installation standard de panneaux photovoltaïque fait 3 kWc, et qu'elle produit 3200 kWh / an.
+
+logement . électricité . photovoltaique . production estimée via la puissance installée:
+  titre: Production estimée via la puissance installée
+  formule: saisie * facteur
+  arrondi: oui
+  unité: kWh
+  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
+
+logement . électricité . photovoltaique . production estimée via la puissance installée . saisie:
+  question: Pas de relevé ? Entrez votre puissance installée en kW-crête
+  unité: kWc
+
+logement . électricité . photovoltaique . production estimée via la puissance installée . facteur:
+  formule: 1300
+  unité: kWh/kWc
+
+logement . électricité . photovoltaique . autoconsommation:
+  formule: production * part autoconsommation
+
+logement . électricité . photovoltaique . part autoconsommation:
+  question: Quelle part de cette électricité produite consommez-vous ?
+  par défaut: 30
+  unité: '%'
+  suggestions:
+    je revends toute ma production: 0
+    1/4 de ma production: 25
+    la moitié de ma production: 50
+    je suis en autoconsommation: 100
+
+logement . électricité . photovoltaique . intensité carbone photovoltaique:
+  formule: 0.0291
+  unité: kgCO2e/kWh
+  note: D'après l'ADEME, nous considérons que la zone H1C (est de la France) est représentative d'un logement moyen standard en France, ce qui correspond à une empreinte moyenne de 29,1 gCO2e / kWh produit.
