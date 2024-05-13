@@ -4,7 +4,7 @@ import path from 'path'
 import fs from 'fs'
 import { format, resolveConfig } from 'prettier'
 
-Object.entries(personas).map(([_, persona]) => {
+Object.values(personas).map((persona) => {
   persona['surveyVariables'] = convertTo2Tonnes(persona.situation)
 })
 

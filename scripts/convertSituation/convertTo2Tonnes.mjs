@@ -4,7 +4,7 @@ import Engine from 'publicodes'
 import utils from '@incubateur-ademe/nosgestesclimat-scripts/utils'
 
 export default function convertTo2Tonnes(personaSituation) {
-  const conversionRulesFile = path.join('./2Tonnes', `conversion.publicodes`)
+  const conversionRulesFile = path.join('./2Tonnes', 'conversion.publicodes')
   const conversionRules = utils.readYAML(conversionRulesFile)
 
   const rules = { ...NGCRules, ...conversionRules }
@@ -19,7 +19,7 @@ export default function convertTo2Tonnes(personaSituation) {
       return
     }
 
-    const nodeValue = engine.evaluate(key).nodeValue
+    const { nodeValue } = engine.evaluate(key)
 
     const formattedKey = key.replace(/-/g, '_')
 
