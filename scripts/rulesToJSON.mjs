@@ -22,6 +22,7 @@ import {
   supportedRegions,
   supportedRegionCodes
 } from './i18n/regionCommons.js'
+
 import rulesToJSONWorker from './rulesToJSON.worker.mjs'
 
 const t9nDir = 'data/i18n/t9n'
