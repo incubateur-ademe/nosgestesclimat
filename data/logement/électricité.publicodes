@@ -5,9 +5,19 @@ logement . électricité:
 logement . électricité . consommation:
   icônes: ⚡
   question: Quelle est la consommation annuelle d'électricité de votre foyer ?
+  aide: logement . électricité . consommation estimée via le coût . saisie
   plancher: 0
   unité: kWh
-  par défaut:
+  par défaut: par défaut
+  note: on considère que seule la consommation d'électricité liée au chauffage est dépendante de la surface du logement
+  description: |
+    Astuce : vous trouverez la consommation annuelle d'électricité sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
+
+    Pour rappel, si vous vivez dans plusieurs logements (par exemple, si vous avez une résidence secondaire), essayez de "ramener" ces consommations dans celles du logement principal afin d'avoir l'estimation la plus juste possible.
+
+logement . électricité . consommation . par défaut:
+  titre: Consommation par défaut électricité
+  formule:
     variations:
       - si: logement . chauffage . choix utilisateur = non
         alors: surface * (parc français . consommation électricité autre par m2 + parc français . surface . part électricité * parc français . chauffage . consommation électricité par m2)
@@ -36,23 +46,27 @@ logement . électricité . consommation:
             - logement . chauffage . PAC . présent
         alors: surface * (parc français . consommation électricité autre par m2 + parc français . chauffage . consommation électricité PAC par m2)
       - sinon: surface * parc français . consommation électricité autre par m2
-  note: on considère que seule la consommation d'électricité liée au chauffage est dépendante de la surface du logement
-  aide: estimation via le coût
-  description: |
-    Astuce : vous trouverez la consommation annuelle d'électricité sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
 
-    Pour rappel, si vous vivez dans plusieurs logements (par exemple, si vous avez une résidence secondaire), essayez de "ramener" ces consommations dans celles du logement principal afin d'avoir l'estimation la plus juste possible.
+logement . électricité . consommation estimée via le coût:
+  titre: Consommation estimée via le coût
+  formule: saisie * commun . mois par an / facteur
+  arrondi: oui
+  unité: kWh
+  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
 
-logement . électricité . estimation via le coût:
+logement . électricité . consommation estimée via le coût . saisie:
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  unité: €/mois
+
+logement . électricité . consommation estimée via le coût . facteur:
+  formule: 0.2317
   unité: €/kWh
-  formule: 0.2022
   note: |
     Cette formule nous permet de passer des €/mois aux kWh/an.
 
     Le chiffre inclut un coût de l'abonnement, et représente donc une moyenne. Ce n'est pas le prix du kWh marginal. Il inclut les taxes.
 
-    Chiffre issu de [Eurostat, household, second half 2021](https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Electricity_price_statistics).
+    Chiffre issu de [Eurostat, household, first half 2023](https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Electricity_price_statistics).
 
 logement . électricité . intensité carbone:
   formule: commun . intensité électricité
