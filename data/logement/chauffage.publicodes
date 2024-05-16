@@ -113,28 +113,39 @@ logement . chauffage . gaz . présent:
 
     On touche aux limites actuelles de ce système de situation par défaut.
 
-logement . chauffage . gaz . estimation via le coût:
+logement . chauffage . gaz . consommation:
+  icônes: 🔥
+  question: Quelle est la consommation annuelle de gaz de votre foyer ?
+  aide: logement . chauffage . gaz . consommation estimée via le coût . saisie
+  par défaut: parc français . chauffage . consommation gaz par m2 * surface
+  plancher: 0
+  unité: kWh
+  description: |
+    Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
+
+    > Il se peut que votre copropriété ne vous communique pas la consommation en kWh de votre logement, quand la chaudière est centralisée. Cela dit, elle doit vous fournir le montant en €, que vous pourrez saisir ci-dessous pour estimer vos kWh.
+
+logement . chauffage . gaz . consommation estimée via le coût:
+  titre: Consommation estimée via le coût
+  formule: saisie * commun . mois par an / facteur
+  arrondi: oui
+  unité: kWh
+  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
+
+logement . chauffage . gaz . consommation estimée via le coût . saisie:
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
-  unité: €/kWh
+  plancher: 0
+  unité: €/mois
+
+logement . chauffage . gaz . consommation estimée via le coût . facteur:
   formule: gaz . prix
+  unité: €/kWh
   note: |
     Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois.
 
     Voir l'onglet "Calcul consommation Energie" du [tableur MicMac](https://avenirclimatique.org/wp-content/uploads/2020/04/2020-04-12_MicMac_V2.6.xlsx)
     Mis à jour via un petit algorithme de calcul en janvier 2022, suite aux hausses historiques du prix en 2021.
     La valeur pour 2022 est approximativement de 0.104 €/kWh.
-
-logement . chauffage . gaz . consommation:
-  icônes: 🔥
-  question: Quelle est la consommation annuelle de gaz de votre foyer ?
-  plancher: 0
-  par défaut: parc français . chauffage . consommation gaz par m2 * surface
-  unité: kWh
-  aide: estimation via le coût
-  description: |
-    Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
-
-    > Il se peut que votre copropriété ne vous communique pas la consommation en kWh de votre logement, quand la chaudière est centralisée. Cela dit, elle doit vous fournir le montant en €, que vous pourrez saisir ci-dessous pour estimer vos kWh.
 
 logement . chauffage . gaz . biogaz:
   question: Avez-vous souscrit à un contrat gaz incluant du biogaz (ou biométhane) ?
@@ -164,7 +175,7 @@ logement . chauffage . gaz . intensité carbone gaz utilisateur:
 
 logement . chauffage . gaz . facteur d'émission base carbone:
   titre: Intensité carbone gaz naturel
-  valeur: 0.221
+  formule: 0.221
   unité: kgCO2e/kWh
   note: |
     Il s'agit de kgCO2e/kWh *PCS*.
@@ -193,7 +204,7 @@ logement . chauffage . biogaz:
 
     ## Au sujet de l'utilisation des terres
 
-    Le lien de la base carbone vers l'étude de GRDF n'est plus en ligne. [La voici en PDF](https://github.com/datagir/nosgestesclimat/files/9542516/evaluation-des-impacts-ges-biomethane-_synthese-quantis_2017.pdf). On peut y voir : 
+    Le lien de la base carbone vers l'étude de GRDF n'est plus en ligne. [La voici en PDF](https://github.com/incubateur-ademe/nosgestesclimat/files/9542516/evaluation-des-impacts-ges-biomethane-_synthese-quantis_2017.pdf). On peut y voir : 
 
     ![image](https://user-images.githubusercontent.com/1177762/189527416-4e8a3725-ef5a-448e-8557-0ad0007e0720.png)
 
@@ -265,10 +276,10 @@ logement . chauffage . bouteille gaz . présent:
 
 logement . chauffage . bouteille gaz . consommation:
   question: Quelle est votre consommation annuelle en bouteilles de gaz (13 kg) ?
+  aide: logement . chauffage . bouteille gaz . consommation estimée via le poids . saisie
   plancher: 0
   par défaut: parc français . chauffage . consommation moyenne gaz cuisson / énergie par bouteille
   unité: bouteille
-  aide: estimation via le poids
   description: |
     Pour simplifier la réponse à cette question, nous vous proposons de rentrer directement le nombre de bouteilles de gaz que vous consommez.
     On considère ici une capacité de 13kg, modèle le plus répandu et généralement utilisé pour le gaz de cuisson.
@@ -286,10 +297,21 @@ logement . chauffage . bouteille gaz . consommation:
 
     Étant donné que les bouteilles elles-mêmes sont consignées, nous prenons en compte uniquement les émissions liées au gaz seul.
 
-logement . chauffage . bouteille gaz . estimation via le poids:
+logement . chauffage . bouteille gaz . consommation estimée via le poids:
+  titre: Consommation estimée via le poids
+  formule: saisie / facteur
+  arrondi: 1 décimale
+  unité: bouteille
+  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
+
+logement . chauffage . bouteille gaz . consommation estimée via le poids . saisie:
   question: Vous utilisez un format de bonbonne différent ? Entrez votre consommation annuelle en kg.
+  plancher: 0
+  unité: kg
+
+logement . chauffage . bouteille gaz . consommation estimée via le poids . facteur:
+  formule: 13
   unité: kg/bouteille
-  formule: 13 * 12
   note: |
     Cette aide permet de simplifier la conversion des kg de gaz consommés en bouteille de gaz au format 13kg.
 
@@ -351,19 +373,30 @@ logement . chauffage . citerne propane . présent:
 
 logement . chauffage . citerne propane . consommation:
   question: Quelle est la consommation annuelle de gaz propane en citerne de votre foyer ?
+  aide: logement . chauffage . citerne propane . consommation estimée via le coût . saisie
   plancher: 0
   par défaut: parc français . chauffage . consommation gaz par m2 * surface / énergie par kg
   unité: kg
-  aide: estimation via le coût
   description: |
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
   note: |
     Certains logements ne peuvent être raccordés au réseau de gaz et disposent d'une citerne propane, à l'image d'une citerne fioul.
 
-logement . chauffage . citerne propane . estimation via le coût:
+logement . chauffage . citerne propane . consommation estimée via le coût:
+  titre: Consommation estimée via le coût
+  formule: saisie * commun . mois par an / facteur
+  arrondi: oui
+  unité: kg
+  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
+
+logement . chauffage . citerne propane . consommation estimée via le coût . saisie:
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
-  unité: €/kg
+  plancher: 0
+  unité: €/mois
+
+logement . chauffage . citerne propane . consommation estimée via le coût . facteur:
   formule: 1.8
+  unité: €/kg
   note: |
     Selon les informations agrégées par le site [HelloWatt](https://www.hellowatt.fr/gaz-propane-citerne/comparatif-prix), 
     le prix du propane en citerne oscille autour de 1800€ par tonne (selon le fournisseur).
@@ -404,26 +437,36 @@ logement . chauffage . fioul . empreinte:
 logement . chauffage . fioul . présent:
   question: Votre logement est-il chauffé au fioul ?
 
-logement . chauffage . fioul . estimation via le prix:
-  question: Pas de facture ? Entrez vos dépenses approximatives en fioul par mois
-  unité: €/l
-  formule: 1.5199
-  note: |
-    Cette formule nous permet de passer des €/mois aux litres/an.
-
-    Source : Fioul domestique 2000 à 4999 litres, 2ème semestre 2022.
-    Donnée issue de l'excel [Prix HTT et TTC depuis janvier 2020.xlsx](https://github.com/datagir/nosgestesclimat/files/11029116/Prix.HTT.et.TTC.depuis.janvier.2020.xlsx)
-    téléchargeable sur la page [Prix des produits pétroliers](https://www.ecologie.gouv.fr/prix-des-produits-petroliers#scroll-nav__4) du ministère de la Transition Écologique.
-
 logement . chauffage . fioul . consommation:
   question: Quelle est la consommation annuelle de fioul domestique de votre foyer ?
+  aide: logement . chauffage . fioul . consommation estimée via le coût . saisie
   plancher: 0
   unité: l
   description: |
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur votre facture de fioul ou sur votre compte en ligne sur le site de votre fournisseur.
-
   par défaut: parc français . chauffage . consommation fioul par m2 * fioul kWh au litre * surface
-  aide: estimation via le prix
+
+logement . chauffage . fioul . consommation estimée via le coût:
+  titre: Consommation estimée via le coût
+  formule: saisie * commun . mois par an / facteur
+  arrondi: oui
+  unité: l
+  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
+
+logement . chauffage . fioul . consommation estimée via le coût . saisie:
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  plancher: 0
+  unité: €/mois
+
+logement . chauffage . fioul . consommation estimée via le coût . facteur:
+  formule: 1.2869
+  unité: €/l
+  note: |
+    Cette formule nous permet de passer des €/mois aux litres/an.
+
+    Source : Fioul domestique 2000 à 4999 litres, 2ème semestre 2023.
+    Donnée issue de l'excel `Prix HTT et TTC depuis janvier 2020.xlsx` téléchargeable sur la page 
+    [Prix des produits pétroliers](https://www.ecologie.gouv.fr/prix-des-produits-petroliers#scroll-nav__4) du ministère de la Transition Écologique.
 
 logement . chauffage . fioul kWh au litre:
   formule: 0.101436943
@@ -479,9 +522,9 @@ logement . chauffage . bois . type . granulés:
 
 logement . chauffage . bois . type . granulés . consommation:
   question: Quelle est la consommation annuelle de bois en granulés de votre foyer ?
+  aide: logement . chauffage . bois . type . granulés . consommation estimée via le coût . saisie
   plancher: 0
   unité: kWh
-  aide: estimation via le coût
   par défaut: parc français . chauffage . consommation bois par m2 * surface
   description: |
     > 💡 Astuce : en moyenne, 1kg de granulés produisent 4.6 kWh. Vous pouvez donc multiplier votre consommation annuelle (en tonnes) par 4600 kWh.
@@ -491,10 +534,21 @@ logement . chauffage . bois . type . granulés . consommation:
 
     Et donc probablement que si la discrimination par type de bois de chauffe était faite dans les données du CEREN (pour les kWh consommés et les surface chauffées) on aboutirait à une valeur en kWh/m2 beaucoup plus faible pour les granulés que pour le bois bûches.
 
-logement . chauffage . bois . type . granulés . estimation via le coût:
+logement . chauffage . bois . type . granulés . consommation estimée via le coût:
+  titre: Consommation estimée via le coût
+  formule: saisie * commun . mois par an / facteur
+  arrondi: oui
+  unité: kWh
+  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
+
+logement . chauffage . bois . type . granulés . consommation estimée via le coût . saisie:
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
-  unité: €/kWh
+  plancher: 0
+  unité: €/mois
+
+logement . chauffage . bois . type . granulés . consommation estimée via le coût . facteur:
   formule: granulés . prix kWh
+  unité: €/kWh
   note: |
     Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois.
 
@@ -505,8 +559,8 @@ logement . chauffage . bois . type . bûches . intensité énergétique:
 
 logement . chauffage . bois . type . bûches . consommation:
   question: Quelle la consommation annuelle de bois en bûches de votre foyer ?
+  aide: logement . chauffage . bois . type . bûches . consommation estimée via le coût . saisie
   plancher: 0
-  aide: estimation via le coût
   description: |
     La consommation de bois de chauffage se compte traditionnellement en stères, ce qui correspond approximativement à un mètre cube de bûches.
 
@@ -514,10 +568,21 @@ logement . chauffage . bois . type . bûches . consommation:
   unité: stère
   par défaut: parc français . chauffage . consommation bois par m2 * surface / intensité énergétique
 
-logement . chauffage . bois . type . bûches . estimation via le coût:
+logement . chauffage . bois . type . bûches . consommation estimée via le coût:
+  titre: Consommation estimée via le coût
+  formule: saisie * commun . mois par an / facteur
+  arrondi: oui
+  unité: stère
+  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
+
+logement . chauffage . bois . type . bûches . consommation estimée via le coût . saisie:
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
+  plancher: 0
+  unité: €/mois
+
+logement . chauffage . bois . type . bûches . consommation estimée via le coût . facteur:
+  formule: prix stère 2024
   unité: €/stère
-  formule: prix stère 2023
   note: |
     Cette formule nous permet de passer des €/mois au nombre de stères par an.
 
@@ -560,10 +625,36 @@ logement . chauffage . réseau de chaleur . empreinte:
 logement . chauffage . réseau de chaleur . présent:
   question: Votre logement est-il chauffé via un réseau de chaleur ?
 
-logement . chauffage . réseau de chaleur . estimation via le prix:
+logement . chauffage . réseau de chaleur . consommation:
+  icônes: 🔥
+  question: Quelle est votre consommation annuelle d'énergie via le réseau de chaleur raccordé à votre foyer ?
+  aide: logement . chauffage . réseau de chaleur . consommation estimée via le coût . saisie
+  plancher: 0
+  par défaut: parc français . chauffage . consommation réseau de chaleur par m2 * surface
+  unité: kWh
+  description: |
+    Le contenu carbone du kWh de chaleur issu d'un réseau de chaleur dépend fortement du réseau auquel vous êtes raccordé. 
+
+    Pour le moment, nous nous basons sur un facteur d'émission moyen : nous avons fait le choix de ne pas vous demander votre adresse.
+
+    Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
+
+    > Il se peut que votre copropriété ne vous communique pas la consommation en kWh de votre logement, quand la chaudière est centralisée. Cela dit, elle doit vous fournir le montant en €, que vous pourrez saisir ci-dessous pour estimer vos kWh.
+
+logement . chauffage . réseau de chaleur . consommation estimée via le coût:
+  titre: Consommation estimée via le coût
+  formule: saisie * commun . mois par an / facteur
+  arrondi: oui
+  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
+
+logement . chauffage . réseau de chaleur . consommation estimée via le coût . saisie:
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
-  unité: €/kWh
+  plancher: 0
+  unité: €/mois
+
+logement . chauffage . réseau de chaleur . consommation estimée via le coût . facteur:
   formule: 0.085
+  unité: €/kWh
   note: |
     Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois.
 
@@ -579,22 +670,6 @@ logement . chauffage . réseau de chaleur . estimation via le prix:
 
     C'est une valeur moyenne dont l'écart-type est relativement important.
     Néanmoins, on peut lire dans l'enquête que "les prix de vente moyens des réseaux de chaleur affichent une très grande disparité, 89% de la chaleur livrée est vendue à un prix compris entre -30 et +30% de la moyenne nationale".
-
-logement . chauffage . réseau de chaleur . consommation:
-  icônes: 🔥
-  question: Quelle est votre consommation annuelle d'énergie via le réseau de chaleur raccordé à votre foyer ?
-  plancher: 0
-  par défaut: parc français . chauffage . consommation réseau de chaleur par m2 * surface
-  aide: estimation via le prix
-  unité: kWh
-  description: |
-    Le contenu carbone du kWh de chaleur issu d'un réseau de chaleur dépend fortement du réseau auquel vous êtes raccordé. 
-
-    Pour le moment, nous nous basons sur un facteur d'émission moyen : nous avons fait le choix de ne pas vous demander votre adresse.
-
-    Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
-
-    > Il se peut que votre copropriété ne vous communique pas la consommation en kWh de votre logement, quand la chaudière est centralisée. Cela dit, elle doit vous fournir le montant en €, que vous pourrez saisir ci-dessous pour estimer vos kWh.
 
 logement . chauffage . réseau de chaleur . intensité carbone:
   titre: Empreinte carbone réseau de chaleur
