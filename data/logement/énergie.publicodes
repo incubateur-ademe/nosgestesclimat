@@ -116,28 +116,23 @@ logement . énergie . électricité du réseau . consommation . par défaut:
       - si:
           toutes ces conditions:
             - logement . énergie . choix utilisateur = oui
-            - est défini: logement . énergie . électricité du réseau . présent
-            - est défini: logement . énergie . PAC . présent
-            - logement . énergie . électricité du réseau . présent
-            - logement . énergie . PAC . présent
-        alors: surface * (parc français . consommation électricité autre par m2 + parc français . chauffage . consommation électricité par m2)
+            - est défini: PAC . présent
+            - PAC . présent = non
+            - une de ces conditions:
+              - gaz . présent
+              - réseau de chaleur . présent
+              - bouteille gaz . présent
+              - citerne propane . présent
+              - fioul . présent
+              - bois . présent
+        alors: surface * parc français . consommation électricité autre par m2
       - si:
           toutes ces conditions:
             - logement . énergie . choix utilisateur = oui
-            - est défini: logement . énergie . électricité du réseau . présent
-            - est défini: logement . énergie . PAC . présent
-            - logement . énergie . électricité du réseau . présent
-            - logement . énergie . PAC . présent = non
-        alors: surface * (parc français . consommation électricité autre par m2 + parc français . chauffage . consommation électricité hors PAC par m2)
-      - si:
-          toutes ces conditions:
-            - logement . énergie . choix utilisateur = oui
-            - est défini: logement . énergie . électricité du réseau . présent
-            - est défini: logement . énergie . PAC . présent
-            - logement . énergie . électricité du réseau . présent = non
-            - logement . énergie . PAC . présent
+            - est défini: PAC . présent
+            - PAC . présent = oui
         alors: surface * (parc français . consommation électricité autre par m2 + parc français . chauffage . consommation électricité PAC par m2)
-      - sinon: surface * parc français . consommation électricité autre par m2
+      - sinon:  surface * (parc français . consommation électricité autre par m2 + parc français . chauffage . consommation électricité hors PAC par m2)
 
 logement . énergie . électricité du réseau . consommation estimée via le coût:
   titre: Consommation estimée via le coût
