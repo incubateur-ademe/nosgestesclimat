@@ -1,8 +1,8 @@
 import { Rule, RuleNode, Evaluation } from 'publicodes'
 // This file is generated on package build
-import { DottedName } from './dottedNames.d.ts'
+import { DottedName } from './dottedNames'
 
-export { DottedName } from './dottedNames.d.ts'
+export { DottedName } from './dottedNames'
 
 export type NGCRuleNode = RuleNode & {
   rawNode: NGCRule
@@ -14,19 +14,19 @@ type Color = `#${string}`
 
 export type NodeValue = Evaluation
 
-type SuggestionsNode = Record<
+export type SuggestionsNode = Record<
   string,
   string | number | Record<string, string | number>
 >
 
-type MosaiqueNode = {
+export type MosaiqueNode = {
   type: 'selection' | 'nombre'
   options: DottedName[]
   total?: number
   suggestions?: SuggestionsNode
 }
 
-type MosaicInfos = {
+export type MosaicInfos = {
   mosaicRule: RuleNode
   mosaicParams: MosaiqueNode
   mosaicDottedNames: [DottedName, NGCRuleNode][]
@@ -75,7 +75,7 @@ export type SupportedRegionType = {
 
 export type SupportedRegions = { [key: string]: SupportedRegionType }
 
-type NGCRule = Rule & {
+export type NGCRule = Rule & {
   abréviation?: string
   couleur?: Color
   mosaique?: MosaiqueNode
@@ -96,3 +96,26 @@ type NGCRule = Rule & {
 
 // TODO: Should remove "| string" when frontend migrates to model DottedName type
 export type NGCRules = Record<DottedName | string, NGCRule>
+
+export type FunFacts = {
+  percentageOfBicycleUsers: number
+  percentageOfVegetarians: number
+  percentageOfCarOwners: number
+  percentageOfPlaneUsers: number
+  percentageOfLongPlaneUsers: number
+  averageOfCarKilometers: number
+  averageOfTravelers: number
+  percentageOfElectricHeating: number
+  percentageOfGasHeating: number
+  percentageOfFuelHeating: number
+  percentageOfWoodHeating: number
+  averageOfElectricityConsumption: number
+  percentageOfCoolingSystem: number
+  percentageOfVegan: number
+  percentageOfRedMeat: number
+  percentageOfLocalAndSeasonal: number
+  percentageOfBottledWater: number
+  percentageOfZeroWaste: number
+  amountOfClothing: number
+  percentageOfStreaming: number
+}
