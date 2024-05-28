@@ -11,8 +11,9 @@ export const handleInputExcel = async () => {
 
 export const initOutputExcel = async () => {
     const outputWorkbook = new ExcelJS.Workbook();
-    const outputSheet = outputWorkbook.addWorksheet("test");
-    outputSheet.columns = [{ header: "Nom" }, { header: "valeur" }];
+    await outputWorkbook.xlsx.readFile("survey/test-output.xlsx");
+    const outputWorksheet = outputWorkbook.getWorksheet();
+    const headerRow = outputWorksheet.getRow(2).values;
 
-    return { outputWorkbook, outputSheet };
+    return { outputWorkbook, outputWorksheet, headerRow };
 };
