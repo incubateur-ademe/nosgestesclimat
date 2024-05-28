@@ -7,34 +7,49 @@ logement . électricité . empreinte logement:
     somme:
       - photovoltaique . empreinte
       - réseau . empreinte
+  description: |
+    L'empreinte de l'électricité du logement est la somme des empreintes de l'électricité du réseau et de l'électricité produite par les panneaux photovoltaïques.
+
+    Si vous disposez de panneaux photovoltaïques. L'empreinte de l'électricité produite par ces panneaux peut être jusqu'à 2 fois plus faible que celle du réseau. 
+
+    Pour calculer votre empreinte, nous vous attribuons l'empreinte de l'électricité liée à la productuion de vos panneaux, **à hauteur maximum de ce que vous consommez comme énergie au total**.
+    Nous n'attachons pas d'importance au fait que cette électricité soit consommée, ou non, par vous ou réinjectée dans le réseau avant d'être retirée plus tard.
+
+    S'il avait fallu être exacts, nous nous serions restreints à la seule partie de la production auto-consommée. Nous ne vous aurions rien attribué pour les kWh réinjectés dans le réseau (car il est très difficile d'imaginer un calcul juste de leur contribution à la décarbonation du mix français), et vous aurions attribué l'empreinte du mix électrique français pour tout ce que vous tirez du réseau. Plus généralement, la notion de compensation n'est pas considérée dans la philosophie de ce calculateur.
+
+    Mais cela ne nous paraissait pas très juste, ni très incitatif à l'installation de panneaux photovoltaïque, alors que cette dernière contribue effectivement à l'amélioration de l'intensité carbone en France et est donc à valoriser.
+
+logement . électricité . intensité carbone équivalente:
+  formule:
+    variations:
+      - si: photovoltaique . production >= consommation totale
+        alors: photovoltaique . intensité carbone
+      - si: photovoltaique . production < consommation totale
+        alors:
+          somme:
+            - (photovoltaique . production / consommation totale) * photovoltaique . intensité carbone
+            - ((consommation totale - photovoltaique . production) / consommation totale) * réseau . intensité carbone
+      - sinon: réseau . intensité carbone
+
+logement . électricité . consommation totale:
+  formule:
+    somme:
+      - photovoltaique . autoconsommation
+      - réseau . consommation
 
 logement . électricité . réseau:
   titre: Électricité du réseau
   icônes: ⚡
-  non applicable si:
-    toutes ces conditions:
-      - photovoltaique . présent = oui
-      - photovoltaique . part autoconsommation = 100
 
 logement . électricité . réseau . empreinte:
-  non applicable si:
-    toutes ces conditions:
-      - photovoltaique . présent = oui
-      - photovoltaique . part autoconsommation = 100
   formule:
     variations:
-      - si:
-          toutes ces conditions:
-            - photovoltaique . part autoconsommation < 100
-            - photovoltaique . production < réseau . consommation
+      - si: photovoltaique . production < consommation totale
         alors:
           somme:
             - (photovoltaique . production - photovoltaique . autoconsommation) * photovoltaique . intensité carbone
-            - (réseau . consommation - photovoltaique . production) * réseau . intensité carbone
-      - si:
-          toutes ces conditions:
-            - photovoltaique . part autoconsommation < 100
-            - photovoltaique . production > réseau . consommation
+            - (réseau . consommation - photovoltaique . production + photovoltaique . autoconsommation) * réseau . intensité carbone
+      - si: photovoltaique . production >= consommation totale
         alors: réseau . consommation * photovoltaique . intensité carbone
       - sinon: réseau . consommation * réseau . intensité carbone
 
