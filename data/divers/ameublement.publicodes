@@ -64,47 +64,6 @@ divers . ameublement . meubles:
     - 3 petits meubles : 2 étagères, une table basse.
     - 5 grands meubles : 2 caissons hauts de cuisine, 3 meubles bas.
 
-divers . ameublement . préservation:
-  question: Quel effort faites-vous pour garder vos meubles le plus longtemps possible ?
-  description: |
-    Pour éviter de vous demander de renseigner l'âge précis de tous les biens d'ameublement que vous possédez, nous avons défini un âge moyen pour chacun des biens (généralement 10 ans).
-
-    > Nous cherchons ici à évaluer, non pas l'âge des meubles avant que ces derniers deviennent inutilisables, mais l'âge quand leurs propriétaires décident de les remplacer par du neuf.
-    A vous de vous placer par rapport à la moyenne.
-  par défaut: "'moyen'"
-  formule:
-    une possibilité:
-      choix obligatoire: oui
-      possibilités:
-        - achat neuf
-        - faible
-        - moyen
-        - maximum
-
-divers . ameublement . préservation . faible:
-  titre: Peu d'effort
-divers . ameublement . préservation . achat neuf:
-  titre: Je rachète souvent neuf
-divers . ameublement . préservation . moyen:
-  titre: Effort moyen
-divers . ameublement . préservation . maximum:
-  titre: Effort maximal
-
-divers . ameublement . coefficient préservation:
-  note: |
-    Nous définissons une grille de comportements de consommation, de l'acheteur neuf fréquent à celui qui fait un effort important pour garder ses meubles le plus longtemps possible.
-    Nous considérons que la personne qui déclare acheter souvent neuf garde ses meubles la moitié de leur durée de vie moyenne constatée, à l'inverse celui qui conserve ses meubles repousse leur durée de vie moyenne.
-    Cette grille pourra évoluer si de nouvelles sources ou études viennent compléter tout cela.
-  formule:
-    variations:
-      - si: préservation = 'achat neuf'
-        alors: 1 / 2
-      - si: préservation = 'faible'
-        alors: 2 / 3
-      - si: préservation = 'moyen'
-        alors: 1
-      - sinon: 4 / 3
-
 divers . ameublement . meubles . armoire . empreinte amortie:
   titre: Empreinte armoire amortie
   formule: armoire . empreinte / (durée * coefficient préservation)
@@ -440,3 +399,58 @@ divers . ameublement . meubles . grand meuble:
   icônes: 🛏️
   formule: empreinte amortie * nombre
   unité: kgCO2e
+
+divers . ameublement . meubles . nombre total:
+  titre: Nombre de meubles dans le logement
+  formule:
+    somme:
+      - armoire . nombre
+      - canapé . nombre
+      - matelas . nombre
+      - lit . nombre
+      - table . nombre
+      - chaise . nombre
+      - petit meuble . nombre
+      - grand meuble . nombre
+
+divers . ameublement . meubles . préservation:
+  non applicable si: meubles . nombre total = 0
+  question: Quel effort faites-vous pour garder vos meubles le plus longtemps possible ?
+  description: |
+    Pour éviter de vous demander de renseigner l'âge précis de tous les biens d'ameublement que vous possédez, nous avons défini un âge moyen pour chacun des biens (généralement 10 ans).
+
+    > Nous cherchons ici à évaluer, non pas l'âge des meubles avant que ces derniers deviennent inutilisables, mais l'âge quand leurs propriétaires décident de les remplacer par du neuf.
+    A vous de vous placer par rapport à la moyenne.
+  par défaut: "'moyen'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - achat neuf
+        - faible
+        - moyen
+        - maximum
+
+divers . ameublement . meubles . préservation . faible:
+  titre: Peu d'effort
+divers . ameublement . meubles . préservation . achat neuf:
+  titre: Je rachète souvent neuf
+divers . ameublement . meubles . préservation . moyen:
+  titre: Effort moyen
+divers . ameublement . meubles . préservation . maximum:
+  titre: Effort maximal
+
+divers . ameublement . meubles . coefficient préservation:
+  note: |
+    Nous définissons une grille de comportements de consommation, de l'acheteur neuf fréquent à celui qui fait un effort important pour garder ses meubles le plus longtemps possible.
+    Nous considérons que la personne qui déclare acheter souvent neuf garde ses meubles la moitié de leur durée de vie moyenne constatée, à l'inverse celui qui conserve ses meubles repousse leur durée de vie moyenne.
+    Cette grille pourra évoluer si de nouvelles sources ou études viennent compléter tout cela.
+  formule:
+    variations:
+      - si: préservation = 'achat neuf'
+        alors: 1 / 2
+      - si: préservation = 'faible'
+        alors: 2 / 3
+      - si: préservation = 'moyen'
+        alors: 1
+      - sinon: 4 / 3
