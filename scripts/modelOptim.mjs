@@ -37,7 +37,9 @@ const rulesToKeep = [
   'logement . chauffage . réseau de chaleur . consommation estimée via le coût',
   'logement . électricité . réseau . consommation estimée via le coût',
   'logement . électricité . photovoltaique . production estimée via la puissance installée',
-  'ui . pédagogie . empreinte faible'
+  'ui . pédagogie . empreinte faible',
+  'ui . liste blanche',
+  'ui . liste noire'
 ]
 
 // Rule names which should be avoided in the optimized model.
