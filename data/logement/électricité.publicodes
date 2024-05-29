@@ -1,8 +1,8 @@
 logement . électricité:
   icônes: ⚡
-  formule: empreinte logement / habitants
+  formule: empreinte / habitants
 
-logement . électricité . empreinte logement:
+logement . électricité . empreinte:
   formule: consommation totale * intensité carbone équivalente
   description: |
     L'empreinte de l'électricité du logement est la somme des empreintes de l'électricité du réseau et de l'électricité produite par les panneaux photovoltaïques.
@@ -19,13 +19,16 @@ logement . électricité . empreinte logement:
 logement . électricité . intensité carbone équivalente:
   formule:
     variations:
-      - si: photovoltaique . production >= consommation totale
-        alors: photovoltaique . intensité carbone
-      - si: photovoltaique . production < consommation totale
+      - si: photovoltaique . présent
         alors:
-          somme:
-            - (photovoltaique . production / consommation totale) * photovoltaique . intensité carbone
-            - ((consommation totale - photovoltaique . production) / consommation totale) * réseau . intensité carbone
+          variations:
+            - si: photovoltaique . production >= consommation totale
+              alors: photovoltaique . intensité carbone
+            - si: photovoltaique . production < consommation totale
+              alors:
+                somme:
+                  - (photovoltaique . production / consommation totale) * photovoltaique . intensité carbone
+                  - ((consommation totale - photovoltaique . production) / consommation totale) * réseau . intensité carbone
       - sinon: réseau . intensité carbone
 
 logement . électricité . consommation totale:
@@ -118,10 +121,10 @@ logement . électricité . photovoltaique:
   icônes: 🌞⚡️
 
 logement . électricité . photovoltaique . présent:
-  applicable si:
+  non applicable si:
     toutes ces conditions:
       - est défini: logement . appartement
-      - appartement = non
+      - appartement = oui
   question: Votre logement dispose-t-il de panneaux photovoltaïques ?
   par défaut: non
 
