@@ -1,8 +1,8 @@
 logement . électricité:
   icônes: ⚡
-  formule: empreinte logement / habitants
+  formule: empreinte / habitants
 
-logement . électricité . empreinte logement:
+logement . électricité . empreinte:
   formule: consommation totale * intensité carbone équivalente
   description: |
     L'empreinte de l'électricité du logement est la somme des empreintes de l'électricité du réseau et de l'électricité produite par les panneaux photovoltaïques.
@@ -19,13 +19,16 @@ logement . électricité . empreinte logement:
 logement . électricité . intensité carbone équivalente:
   formule:
     variations:
-      - si: photovoltaique . production >= consommation totale
-        alors: photovoltaique . intensité carbone
-      - si: photovoltaique . production < consommation totale
+      - si: photovoltaique . présent
         alors:
-          somme:
-            - (photovoltaique . production / consommation totale) * photovoltaique . intensité carbone
-            - ((consommation totale - photovoltaique . production) / consommation totale) * réseau . intensité carbone
+          variations:
+            - si: photovoltaique . production >= consommation totale
+              alors: photovoltaique . intensité carbone
+            - si: photovoltaique . production < consommation totale
+              alors:
+                somme:
+                  - (photovoltaique . production / consommation totale) * photovoltaique . intensité carbone
+                  - ((consommation totale - photovoltaique . production) / consommation totale) * réseau . intensité carbone
       - sinon: réseau . intensité carbone
 
 logement . électricité . consommation totale:
@@ -52,6 +55,8 @@ logement . électricité . réseau . consommation:
 
 logement . électricité . réseau . consommation par défaut:
   titre: Consommation par défaut électricité
+  note: |
+    Dans l'état actuel du test NGC, la question du chauffage est posée après la question de la consommation d'électricité. Or, la valeur par défaut de cette question dépend du mode de chauffage. Si l'utilisateur répond "Je ne sais pas" à cette question, il y a des chances que la valeur attribuée change après coup.
   formule:
     variations:
       - si: logement . chauffage . choix utilisateur = non
@@ -114,28 +119,29 @@ logement . électricité . réseau . intensité carbone:
     > L'intensité du chauffage résidentiel est ainsi définie à 80gCO2e/kWh en France par la RE2020, [source](https://www.batiactu.com/edito/facteur-energie-primaire-contenu-carbone-electricite-58485.php).
 
 logement . électricité . photovoltaique:
-  titre: Panneaux photovoltaïques
+  titre: Panneaux solaires photovoltaïques
   icônes: 🌞⚡️
 
 logement . électricité . photovoltaique . présent:
-  applicable si:
+  non applicable si:
     toutes ces conditions:
       - est défini: logement . appartement
-      - appartement = non
+      - appartement = oui
   question: Votre logement dispose-t-il de panneaux photovoltaïques ?
   par défaut: non
 
 logement . électricité . photovoltaique . production:
   applicable si: photovoltaique . présent
   icônes: 🌞⚡️
-  question: Quelle est la production annuelle d'électricité de vos panneaux photovoltaïques, qu'elle soit autoconsommée ou réinjectée dans le réseau ?
+  question: Quelle est la production annuelle d'électricité de vos panneaux solaires photovoltaïques, qu'elle soit autoconsommée ou réinjectée dans le réseau ?
   plancher: 0
   par défaut: logement . surface * 0.03 kWc/m2 * logement . électricité . photovoltaique . production estimée via la puissance installée . facteur
-  suggestions:
-    2 panneaux: 1000
-    4 panneaux: 2100
-    8 panneaux: 4200
   unité: kWh
+  suggestions:
+    1000 kWh: 1000
+    2000 kWh: 2000
+    4000 kWh: 4000
+    6000 kWh: 6000
   aide: logement . électricité . photovoltaique . production estimée via la puissance installée . saisie
   description: |
     Nous parlons bien ici de toute l'énergie produite par vos panneaux, que vous la consommiez ou non.
@@ -153,7 +159,10 @@ logement . électricité . photovoltaique . production estimée via la puissance
   note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
 
 logement . électricité . photovoltaique . production estimée via la puissance installée . saisie:
-  question: Pas de relevé ? Entrez votre puissance installée en kW-crête
+  question: |
+    Pas de relevé ? Entrez ici votre puissance installée.
+
+    _(Sachez qu'en moyenne, 1 panneau = 400 Wc)_
   unité: kWc
 
 logement . électricité . photovoltaique . production estimée via la puissance installée . facteur:
@@ -173,10 +182,10 @@ logement . électricité . photovoltaique . part autoconsommation:
   plafond: 100
   unité: '%'
   suggestions:
-    je revends toute ma production: 0
-    1/4 de ma production: 25
+    je réinjecte tout dans le réseau: 0
+    le quart de ma production: 25
     la moitié de ma production: 50
-    je suis en autoconsommation: 100
+    je consomme 100% de ce que je produis: 100
 
 logement . électricité . photovoltaique . intensité carbone:
   formule: 0.0291
