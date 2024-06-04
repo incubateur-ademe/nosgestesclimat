@@ -50,6 +50,7 @@ transport . voiture . km annuels moyen:
 
 transport . voiture . utilisateur:
   question: Utilisez-vous majoritairement la même voiture pour vous déplacer ?
+  non applicable si: km = 0
   formule:
     une possibilité:
       choix obligatoire: oui
@@ -93,6 +94,8 @@ transport . voiture . notif utilsateur irrégulier:
 transport . voiture . empreinte moyenne:
   valeur: voiture . empreinte calculée
   contexte:
+    voiture . km: km annuels moyen
+    voiture . voyageurs: 1.2
     voiture . utilisateur: "'régulier non propriétaire'"
     voiture . gabarit: "'berline'"
     voiture . motorisation: "'thermique'"
@@ -112,6 +115,7 @@ transport . voiture . empreinte calculée:
 transport . voiture . voyageurs:
   titre: Nombre de voyageurs moyen dans la voiture
   question: Quel est le nombre moyen de voyageurs dans la voiture ?
+  non applicable si: km = 0
   description: |
     Une voiture consomme à peu près autant qu'elle ait 1, 2 ou 5 voyageurs à bord. Voyager à plusieurs, c'est donc potentiellement diviser par 5 l'empreinte individuelle !
 
@@ -175,6 +179,7 @@ transport . voiture . motorisation:
       - une de ces conditions:
           - utilisateur = 'propriétaire'
           - utilisateur = 'régulier non propriétaire'
+      - km > 0
   description: 💡 **Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
   par défaut: "'thermique'"
   formule:
@@ -212,6 +217,7 @@ transport . voiture . thermique . consommation aux 100:
           - utilisateur = 'propriétaire'
           - utilisateur = 'régulier non propriétaire'
       - motorisation = 'thermique'
+      - km > 0
   description: |
     **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
   suggestions:
@@ -396,6 +402,7 @@ transport . voiture . thermique . carburant:
           - utilisateur = 'propriétaire'
           - utilisateur = 'régulier non propriétaire'
       - motorisation = 'thermique'
+      - km > 0
   description: |
     Pour comprendre les différents types de carburants, [cet article pédagogique](https://www.francetvinfo.fr/economie/automobile/essence/les-carburants-changent-de-nom-a-la-pompe-voici-comment-vous-y-retrouver_2967013.html) est très utile.
 
@@ -459,6 +466,7 @@ transport . voiture . électrique . consommation au kilomètre:
 
 transport . voiture . électrique . consommation aux 100:
   titre: Consommation électrique au km
+  question: Connaissez-vous la consommation moyenne de la voiture ?
   applicable si:
     toutes ces conditions:
       - est défini: utilisateur
@@ -466,7 +474,7 @@ transport . voiture . électrique . consommation aux 100:
           - utilisateur = 'propriétaire'
           - utilisateur = 'régulier non propriétaire'
       - motorisation = 'électrique'
-  question: Connaissez-vous la consommation moyenne de la voiture ?
+      - km > 0
   suggestions:
     15 kWh/100km: 15
     20 kWh/100km: 20
@@ -497,6 +505,7 @@ transport . voiture . gabarit:
       - une de ces conditions:
           - utilisateur = 'propriétaire'
           - utilisateur = 'régulier non propriétaire'
+      - km > 0
   description: |
     **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
 
