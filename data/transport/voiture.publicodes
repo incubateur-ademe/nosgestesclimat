@@ -5,14 +5,20 @@ transport . voiture:
     variations:
       - si: km = 0
         alors: 0
-      - si:
-          toutes ces conditions:
-            - est défini: utilisateur
-            - une de ces conditions:
-                - utilisateur = 'propriétaire'
-                - utilisateur = 'régulier non propriétaire'
-        alors: empreinte calculée
-      - sinon: empreinte moyenne
+      - sinon: 
+          variations:
+            - si: 
+                est défini: utilisateur
+              alors:
+                variations:
+                  - si:
+                      une de ces conditions:
+                      - utilisateur = 'propriétaire'
+                      - utilisateur = 'régulier non propriétaire'
+                    alors: empreinte calculée
+                  - si: utilisateur = 'non régulier'
+                    alors: empreinte moyenne non régulier
+            - sinon: empreinte moyenne
   unité: kgCO2e
   description: |
     ![](https://upload.wikimedia.org/wikipedia/commons/9/9a/Congestion_caused_by_a_road_accident%2C_Algarve%2C_Portugal.jpg)
@@ -50,7 +56,7 @@ transport . voiture . km annuels moyen:
 
 transport . voiture . utilisateur:
   question: Utilisez-vous majoritairement la même voiture pour vous déplacer ?
-  non applicable si: km = 0
+  applicable si: km > 0
   formule:
     une possibilité:
       choix obligatoire: oui
@@ -94,6 +100,25 @@ transport . voiture . notif utilsateur irrégulier:
 transport . voiture . empreinte moyenne:
   valeur: voiture . empreinte calculée
   contexte:
+    # Bug Publicodes: la variable est toujours manquante si le contexte contient une variable numérique identique à celle par défaut
+    voiture . voyageurs: "'1.2'"
+    voiture . utilisateur: "'propriétaire'"
+    voiture . gabarit: "'berline'"
+    voiture . motorisation: "'thermique'"
+    voiture . thermique . carburant: "'essence E5 ou E10'"
+    voiture . thermique . consommation aux 100:
+      valeur: voiture . thermique . consommation estimée
+      contexte:
+        voiture . voyageurs: "'1.2'"
+        voiture . utilisateur: "'propriétaire'"
+        voiture . gabarit: "'berline'"
+        voiture . motorisation: "'thermique'"
+        voiture . thermique . carburant: "'essence E5 ou E10'"
+
+
+transport . voiture . empreinte moyenne non régulier:
+  valeur: voiture . empreinte calculée
+  contexte:
     voiture . utilisateur: "'régulier non propriétaire'"
     voiture . gabarit: "'berline'"
     voiture . motorisation: "'thermique'"
@@ -111,9 +136,9 @@ transport . voiture . empreinte calculée:
   unité: kgCO2e
 
 transport . voiture . voyageurs:
-  titre: Nombre de voyageurs moyen dans la voiture
+  titre: Nombre de voyageurs
   question: Quel est le nombre moyen de voyageurs dans la voiture ?
-  non applicable si: km = 0
+  applicable si: km > 0
   description: |
     Une voiture consomme à peu près autant qu'elle ait 1, 2 ou 5 voyageurs à bord. Voyager à plusieurs, c'est donc potentiellement diviser par 5 l'empreinte individuelle !
 

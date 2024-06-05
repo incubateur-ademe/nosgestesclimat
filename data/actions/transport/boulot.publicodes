@@ -207,7 +207,7 @@ transport . boulot . faire du covoiturage:
       - est défini: voiture . utilisateur
       - voiture . utilisateur = 'non régulier'
   icônes: 🚗👥
-  formule: empreinte boulot seul - empreinte boulot covoiturage
+  formule: empreinte boulot * (1 - 1 / boulot . covoiturage . nombre de voyageurs)
   unité: kgCO2e
   description: |
     3 % seulement des déplacements quotidiens en France sont réalisés en covoiturage. C’est peu, surtout quand on sait que 70 % des déplacements domicile-travail sont réalisés au moyen de véhicules individuels.
@@ -224,14 +224,8 @@ transport . boulot . faire du covoiturage:
   note: |
     Voir l'article The Conversation [À quelles conditions le covoiturage sera-t-il un mode de transport durable ?](https://theconversation.com/a-quelles-conditions-le-covoiturage-sera-t-il-un-mode-de-transport-durable-124122)
 
-transport . boulot . faire du covoiturage . empreinte boulot seul:
+transport . boulot . faire du covoiturage . empreinte boulot:
   valeur: transport . voiture
   contexte:
+    transport . voiture . km: boulot . distance
     transport . voiture . voyageurs: 1
-    transport . voiture . km: boulot . distance
-
-transport . boulot . faire du covoiturage . empreinte boulot covoiturage:
-  valeur: transport . voiture
-  contexte:
-    transport . voiture . voyageurs: boulot . covoiturage . nombre de voyageurs
-    transport . voiture . km: boulot . distance
