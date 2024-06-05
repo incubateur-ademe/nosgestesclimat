@@ -22,24 +22,25 @@ transport . limitation autoroute:
   titre: Rouler à 110km/h sur l'autoroute
   icônes: 🚗🛣️
   applicable si: voiture . km > 0
-  formule: empreinte autoroute - empreinte autoroute réduit
+  formule: km autoroute * voiture . usage au kilomètre * réduction / voiture . voyageurs
   description: |
     Diminuer sa vitesse de 20 km/h sur l’autoroute permet de réduire sa consommation de carburant de l’ordre de 20 %. En ville, il est conseillé de rouler à 30 km/h pour moins consommer, fluidifier le trafic et mieux partager la route avec les vélos, les trottinettes et les piétons.
     
     > Pour découvrir tous les conseils pour économiser du carburant, [consultez notre fiche](https://librairie.ademe.fr/mobilite-et-transport/5886-10-gestes-pour-economiser-de-l-energie-lors-de-ses-deplacements.html).
 
-transport . limitation autoroute . empreinte autoroute:
-  valeur: transport . voiture
-  contexte:
-    transport . voiture . km: voiture . km * ratio autoroute
-  unité: kgCO2e
-
-transport . limitation autoroute . empreinte autoroute réduit:
-  valeur: transport . voiture
-  contexte:
-    transport . voiture . km: voiture . km * ratio autoroute
-    transport . voiture . usage au kilomètre: transport . voiture . usage au kilomètre * (1 - réduction)
-  unité: kgCO2e
+transport . limitation autoroute . km autoroute:
+  question: Combien de km à l'année faites-vous sur autoroute (à peu près) ?
+  unité: km
+  par défaut: voiture . km * 0.1
+  description: |
+    On parcourt environ 80 milliards de km / an sur autoroute (voiture).
+  suggestions:
+    Paris ⇄ Athènes: 6000
+    Brest ⇄ Nice: 3000
+    Paris ⇄ Marseille: 1600
+    Bordeaux ⇄ Lyon: 1100
+  note: |
+    Fil twitter intéressant sur le sujet: https://twitter.com/Tomsawy22670318/status/1274257124701462528.
 
 transport . limitation autoroute . réduction:
   titre: Gain de consommation 130 -> 110
@@ -64,25 +65,11 @@ transport . limitation autoroute . réduction:
     - une autre évaluation, qui elle nous donne le calcul :)  : https://twitter.com/Tomsawy22670318/status/1274257122373570565
       Attention, pour être rigoureux, comme évoqué dans ce dernier fil, il faut prendre en compte la distribution de la vitesse et la catégorie de voiture (présence d'une 6ème vitesse par exemple). On ne roule évidement pas tout le temps à 130.
 
-transport . limitation autoroute . km autoroute:
-  question: Combien de km à l'année faites-vous sur autoroute (à peu près) ?
-  unité: km
-  description: |
-    On parcourt environ 80 milliards de km / an sur autoroute (voiture).
-  suggestions:
-    Paris ⇄ Athènes: 6000
-    Brest ⇄ Nice: 3000
-    Paris ⇄ Marseille: 1600
-    Bordeaux ⇄ Lyon: 1100
-  note: |
-    Fil twitter intéressant sur le sujet: https://twitter.com/Tomsawy22670318/status/1274257124701462528.
 
-transport . limitation autoroute . ratio autoroute:
-  formule: km autoroute / voiture . km
-  par défaut: 0.1
 
 transport . covoiturage:
   titre: Covoiturer
+  applicable si: voiture . km > 0
   non applicable si:
     toutes ces conditions:
       - est défini: voiture . utilisateur
@@ -118,7 +105,10 @@ transport . autopartage:
   titre: Se mettre à l'autopartage
   icônes: 🚗🤝
   formule: transport . voiture - recalcul
-  applicable si: voiture . km < plafond activation autopartage
+  applicable si: 
+    toutes ces conditions:
+      - voiture . km > 0
+      - voiture . km < plafond activation autopartage
   non applicable si:
     toutes ces conditions:
       - est défini: voiture . utilisateur
@@ -149,13 +139,12 @@ transport . voiture 5km:
   titre: Se passer de voiture pour moins de 5 km
   icônes: 🚗🚲
   formule: transport . voiture - recalcul
-  non applicable si:
+  applicable si: 
     toutes ces conditions:
-      - est défini: voiture . utilisateur
-      - une de ces conditions:
-          - voiture . utilisateur = 'non régulier'
-          - voiture . utilisateur = 'régulier non propriétaire'
-  applicable si: voiture . km > seuil d'activation 5km
+        - voiture . km > seuil d'activation 5km
+        - est défini: voiture . utilisateur
+        - voiture . utilisateur = 'propriétaire'  
+
   note: |
     On fait l'hypothèse qu'une personne qui n'est pas propriétaire de voiture se passe *déjà* d'une voiture pour de courts trajets.
   description: |
@@ -218,6 +207,7 @@ transport . voiture 5km . fréquence:
 transport . voiture électrique:
   titre: Rouler en voiture électrique
   icônes: 🔌🚗
+  applicable si: voiture . km > 0
   non applicable si:
     une de ces conditions:
       - transport . voiture . motorisation = 'électrique'
@@ -248,6 +238,7 @@ transport . réduire taille:
     Le prix, la dimension, le confort, l’esthétisme, ça compte mais ce ne peut plus être les seuls critères de choix. La consommation de carburant et les faibles émissions de CO₂ sont tout aussi essentielles ! 
     
     Rendez-vous [sur le site Je Change ma Voiture](https://jechangemavoiture.gouv.fr/) pour une mobilité plus propre et plus économe.
+  applicable si: voiture . km > 0
   non applicable si:
     une de ces conditions:
       - transport . voiture . motorisation = 'petite'
@@ -267,6 +258,7 @@ transport . faire durer:
   titre: Faire durer son véhicule
   applicable si:
     toutes ces conditions:
+      - voiture . km > 0
       - est défini: voiture . utilisateur
       - voiture . utilisateur = 'propriétaire'
   description: |
