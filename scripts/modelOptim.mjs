@@ -35,7 +35,8 @@ const rulesToKeep = [
   'logement . chauffage . bois . type . granulés . consommation estimée via le coût',
   'logement . chauffage . bois . type . bûches . consommation estimée via le coût',
   'logement . chauffage . réseau de chaleur . consommation estimée via le coût',
-  'logement . électricité . consommation estimée via le coût',
+  'logement . électricité . réseau . consommation estimée via le coût',
+  'logement . électricité . photovoltaique . production estimée via la puissance installée',
   'ui . pédagogie . empreinte faible'
 ]
 

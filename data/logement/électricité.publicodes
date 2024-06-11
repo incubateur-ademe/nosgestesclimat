@@ -1,22 +1,70 @@
 logement . électricité:
   icônes: ⚡
-  formule: consommation * empreinte / habitants
+  formule: empreinte / habitants
 
-logement . électricité . consommation:
+logement . électricité . empreinte:
+  formule: consommation totale * empreinte au kWh
+  description: |
+    L'empreinte de l'électricité du logement est la somme des empreintes de l'électricité du réseau et de l'électricité produite par les panneaux photovoltaïques.
+
+    Si vous disposez de panneaux photovoltaïques. L'empreinte de l'électricité produite par ces panneaux peut être jusqu'à 2 fois plus faible que celle du réseau. 
+
+    Pour calculer votre empreinte, nous vous attribuons l'empreinte de l'électricité liée à la productuion de vos panneaux, **à hauteur maximum de ce que vous consommez comme énergie au total**.
+    Nous n'attachons pas d'importance au fait que cette électricité soit consommée, ou non, par vous ou réinjectée dans le réseau avant d'être retirée plus tard.
+
+    S'il avait fallu être exacts, nous nous serions restreints à la seule partie de la production auto-consommée. Nous ne vous aurions rien attribué pour les kWh réinjectés dans le réseau (car il est très difficile d'imaginer un calcul juste de leur contribution à la décarbonation du mix français), et vous aurions attribué l'empreinte du mix électrique français pour tout ce que vous tirez du réseau. Plus généralement, la notion de compensation n'est pas considérée dans la philosophie de ce calculateur.
+
+    Mais cela ne nous paraissait pas très juste, ni très incitatif à l'installation de panneaux photovoltaïque, alors que cette dernière contribue effectivement à l'amélioration de l'intensité carbone en France et est donc à valoriser.
+
+logement . électricité . empreinte au kWh:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: intensité carbone équivalente
+      - si: métrique = "eau"
+        alors: empreinte eau mix électrique
+
+logement . électricité . intensité carbone équivalente:
+  formule:
+    variations:
+      - si: photovoltaique . présent
+        alors:
+          variations:
+            - si: photovoltaique . production >= consommation totale
+              alors: photovoltaique . intensité carbone
+            - si: photovoltaique . production < consommation totale
+              alors:
+                somme:
+                  - (photovoltaique . production / consommation totale) * photovoltaique . intensité carbone
+                  - ((consommation totale - photovoltaique . production) / consommation totale) * réseau . intensité carbone
+      - sinon: réseau . intensité carbone
+
+logement . électricité . consommation totale:
+  formule:
+    somme:
+      - photovoltaique . autoconsommation
+      - réseau . consommation
+
+logement . électricité . réseau:
+  titre: Électricité du réseau
   icônes: ⚡
-  question: Quelle est la consommation annuelle d'électricité de votre foyer ?
-  aide: logement . électricité . consommation estimée via le coût . saisie
+
+logement . électricité . réseau . consommation:
+  question: Quelle est la consommation annuelle d'électricité (réseau) de votre foyer ?
+  aide: logement . électricité . réseau . consommation estimée via le coût . saisie
   plancher: 0
   unité: kWh
-  par défaut: par défaut
+  par défaut: consommation par défaut
   note: on considère que seule la consommation d'électricité liée au chauffage est dépendante de la surface du logement
   description: |
     Astuce : vous trouverez la consommation annuelle d'électricité sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
 
     Pour rappel, si vous vivez dans plusieurs logements (par exemple, si vous avez une résidence secondaire), essayez de "ramener" ces consommations dans celles du logement principal afin d'avoir l'estimation la plus juste possible.
 
-logement . électricité . consommation . par défaut:
+logement . électricité . réseau . consommation par défaut:
   titre: Consommation par défaut électricité
+  note: |
+    Dans l'état actuel du test NGC, la question du chauffage est posée après la question de la consommation d'électricité. Or, la valeur par défaut de cette question dépend du mode de chauffage. Si l'utilisateur répond "Je ne sais pas" à cette question, il y a des chances que la valeur attribuée change après coup.
   formule:
     variations:
       - si: logement . chauffage . choix utilisateur = non
@@ -47,18 +95,18 @@ logement . électricité . consommation . par défaut:
         alors: surface * (parc français . consommation électricité autre par m2 + parc français . chauffage . consommation électricité PAC par m2)
       - sinon: surface * parc français . consommation électricité autre par m2
 
-logement . électricité . consommation estimée via le coût:
+logement . électricité . réseau . consommation estimée via le coût:
   titre: Consommation estimée via le coût
   formule: saisie * commun . mois par an / facteur
   arrondi: oui
   unité: kWh
   note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
 
-logement . électricité . consommation estimée via le coût . saisie:
+logement . électricité . réseau . consommation estimée via le coût . saisie:
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
   unité: €/mois
 
-logement . électricité . consommation estimée via le coût . facteur:
+logement . électricité . réseau . consommation estimée via le coût . facteur:
   formule: 0.2317
   unité: €/kWh
   note: |
@@ -68,13 +116,10 @@ logement . électricité . consommation estimée via le coût . facteur:
 
     Chiffre issu de [Eurostat, household, first half 2023](https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Electricity_price_statistics).
 
-logement . électricité . empreinte:
-  formule:
-    variations:
-      - si: métrique = "carbone"
-        alors: commun . intensité électricité
-      - si: métrique = "eau"
-        alors: empreinte eau mix électrique
+        
+logement . électricité . réseau . intensité carbone:
+  formule: commun . intensité électricité
+  unité: kgCO2e/kWh
   description: |
     Nous utilisons ici l'empreinte moyenne du mix de la région de simulation.
 
@@ -102,3 +147,81 @@ logement . électricité . empreinte eau mix électrique:
     | Gaz       | 5,58%       | 0,109 | 0,39     |               |
     | Fioul     | 0,33%       | 1,058 | 3,81     |               |
     |           | **94,93%**  |       | **9,47** |               |
+    > L'intensité du chauffage résidentiel est ainsi définie à 80gCO2e/kWh en France par la RE2020, [source](https://www.batiactu.com/edito/facteur-energie-primaire-contenu-carbone-electricite-58485.php).
+
+logement . électricité . photovoltaique:
+  titre: Panneaux solaires photovoltaïques
+  icônes: 🌞⚡️
+
+logement . électricité . photovoltaique . présent:
+  non applicable si:
+    toutes ces conditions:
+      - est défini: logement . appartement
+      - appartement = oui
+  question: Votre logement dispose-t-il de panneaux photovoltaïques ?
+  par défaut: non
+
+logement . électricité . photovoltaique . production:
+  applicable si: photovoltaique . présent
+  icônes: 🌞⚡️
+  question: Quelle est la production annuelle d'électricité de vos panneaux solaires photovoltaïques, qu'elle soit autoconsommée ou réinjectée dans le réseau ?
+  plancher: 0
+  par défaut: logement . surface * 0.03 kWc/m2 * logement . électricité . photovoltaique . production estimée via la puissance installée . facteur
+  unité: kWh
+  suggestions:
+    1000 kWh: 1000
+    2000 kWh: 2000
+    4000 kWh: 4000
+    6000 kWh: 6000
+  aide: logement . électricité . photovoltaique . production estimée via la puissance installée . saisie
+  description: |
+    Nous parlons bien ici de toute l'énergie produite par vos panneaux, que vous la consommiez ou non.
+    La façon de disposer de ce chiffre varie selon votre installation. La plupart des installations présentes disposent d'une application de suivi de production qui devrait vous fournir cette donnée. 
+
+    > Nous proposons des suggestions via le nombre de panneaux en considérant que la puissance moyenne d'un panneau solaire est de 400 Wc environ, avec une production de 1300 kWh/kWc.
+  note: |
+    Par défaut, on propose une production qui varie selon la surface du logement en considèrant qu'un logement de 100 m² possède une installation de 3 kWc, soit une puissance installée de 0,03 kWc/m².
+
+logement . électricité . photovoltaique . production estimée via la puissance installée:
+  titre: Production estimée via la puissance installée
+  formule: saisie * facteur
+  arrondi: oui
+  unité: kWh
+  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
+
+logement . électricité . photovoltaique . production estimée via la puissance installée . saisie:
+  question: |
+    Pas de relevé ? Entrez ici votre puissance installée.
+
+    _(Sachez qu'en moyenne, 1 panneau = 400 Wc)_
+  unité: Wc
+
+logement . électricité . photovoltaique . production estimée via la puissance installée . facteur:
+  formule: 1.3
+  unité: kWh/Wc
+
+logement . électricité . photovoltaique . autoconsommation:
+  formule: production * part autoconsommation
+
+logement . électricité . photovoltaique . part autoconsommation:
+  applicable si:
+    toutes ces conditions:
+      - photovoltaique . présent
+      - photovoltaique . production > 0
+  question: Quelle part de cette électricité produite consommez-vous ?
+  description: |
+    Si vous consommez toute votre production, renseignez 100%. Si vous revendez toute votre production, vous pouvez mettre 0. Dans tous les cas, il vous sera demandé par la suite votre consommation d'électricité du réseau et votre production sera prise en compte indirectement dans le calcul de vos émissions.
+  par défaut: 30
+  plancher: 0
+  plafond: 100
+  unité: '%'
+  suggestions:
+    je réinjecte tout dans le réseau: 0
+    le quart de ma production: 25
+    la moitié de ma production: 50
+    je consomme 100% de ce que je produis: 100
+
+logement . électricité . photovoltaique . intensité carbone:
+  formule: 0.0291
+  unité: kgCO2e/kWh
+  note: D'après l'ADEME, nous considérons que la zone H1C (est de la France) est représentative d'un logement moyen standard en France, ce qui correspond à une empreinte moyenne de 29,1 gCO2e / kWh produit.
