@@ -100,7 +100,6 @@ transport . voiture . notif utilsateur irrégulier:
 transport . voiture . empreinte moyenne:
   valeur: voiture . empreinte calculée
   contexte:
-    # Bug Publicodes: la variable est toujours manquante si le contexte contient une variable numérique identique à celle par défaut
     voiture . utilisateur: "'propriétaire'"
     voiture . gabarit: "'berline'"
     voiture . motorisation: "'thermique'"
@@ -219,6 +218,7 @@ transport . voiture . motorisation . hybride:
 
 transport . voiture . thermique:
   titre: Voiture thermique
+
 transport . voiture . thermique . empreinte au kilomètre:
   titre: empreinte au km thermique
   formule: consommation au kilomètre * empreinte au litre
@@ -237,7 +237,9 @@ transport . voiture . thermique . consommation aux 100:
       - une de ces conditions:
           - utilisateur = 'propriétaire'
           - utilisateur = 'régulier non propriétaire'
-      - motorisation = 'thermique'
+      - une de ces conditions:
+        - motorisation = 'thermique'
+        - motorisation = 'hybride'
       - km > 0
   description: |
     **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
@@ -422,7 +424,9 @@ transport . voiture . thermique . carburant:
       - une de ces conditions:
           - utilisateur = 'propriétaire'
           - utilisateur = 'régulier non propriétaire'
-      - motorisation = 'thermique'
+      - une de ces conditions:
+        - motorisation = 'thermique'
+        - motorisation = 'hybride'
       - km > 0
   description: |
     Pour comprendre les différents types de carburants, [cet article pédagogique](https://www.francetvinfo.fr/economie/automobile/essence/les-carburants-changent-de-nom-a-la-pompe-voici-comment-vous-y-retrouver_2967013.html) est très utile.
