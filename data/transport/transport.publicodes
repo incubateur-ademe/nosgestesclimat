@@ -12,11 +12,70 @@ transport:
   formule:
     somme:
       - voiture
+      - moyens
+      - mobilité douce
+      - vacances
+
+transport . moyens:
+  question: Quels moyens de transport êtes-vous amené à utiliser au cours de l'année ?
+  mosaique:
+    type: selection
+    options:
+      - transport . avion . usager
+      - transport . deux roues . usager
+      - transport . bus . usager
+      - transport . train . usager
+      - transport . métro ou tram . usager
+      - transport . ferry . usager
+    suggestions:
+      aucun:
+        transport . avion . usager: non
+        transport . deux roues . usager: non
+        transport . bus . usager: non
+        transport . train . usager: non
+        transport . métro ou tram . usager: non
+        transport . ferry . usager: non
+  formule:
+    variations:
+      - si: choix utilisateur
+        alors: empreinte totale
+      - sinon: empreinte par défaut
+
+transport . moyens . empreinte totale:
+  formule:
+    somme:
       - avion
       - deux roues
-      - mobilité douce
       - bus
       - train
       - métro ou tram
-      - vacances
       - ferry
+  unité: kgCO2e
+
+transport . moyens . empreinte par défaut:
+  valeur: empreinte totale
+  contexte:
+      transport . avion . usager: oui
+      transport . avion . court courrier . heures de vol: transport . avion . court courrier . durée moyenne
+      transport . avion . moyen courrier . heures de vol: transport . avion . moyen courrier . durée moyenne
+      transport . avion . long courrier . heures de vol: transport . avion . long courrier . durée moyenne
+      transport . deux roues . usager: oui
+      deux roues . type: "'moto sup 250'"
+      deux roues . km: deux roues . km annuels moyen * deux roues . pourcentage motards
+      transport . bus . usager: oui
+      transport . train . usager: oui
+      transport . métro ou tram . usager: oui
+      transport . ferry . usager: oui
+      transport . ferry . heures: transport . ferry . empreinte moyenne . durée moyenne par français
+  unité: kgCO2e
+
+transport . moyens . choix utilisateur:
+  titre: Choix utilisateur pour les modes de transport
+  formule:
+    une de ces conditions:
+      - est défini: transport . avion . usager
+      - est défini: transport . deux roues . usager
+      - est défini: transport . bus . usager
+      - est défini: transport . train . usager
+      - est défini: transport . métro ou tram . usager
+      - est défini: transport . ferry . usager

@@ -2,7 +2,22 @@ transport . bus:
   titre: Bus
   icônes: 🚌
   description: |
+    coucoucou
+    
     ![](https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Alliance_Auch_ligne_6_Allées_Baylac.JPG/640px-Alliance_Auch_ligne_6_Allées_Baylac.JPG)
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: usager
+            - usager
+        alors: empreinte
+      - sinon: 0
+
+transport . bus . usager:
+  question: Êtes-vous un usager régulier du bus ?
+
+transport . bus . empreinte:
   formule: heures par semaine * impact par heure * commun . semaines par an
 
 transport . bus . impact par heure:
@@ -25,6 +40,7 @@ transport . bus . vitesse:
   note: Hypothèse de 12 km/h de vitesse moyenne d'après [cet article](https://www.lemonde.fr/blog/transports/2013/03/11/les-petits-secrets-de-la-ratp-reveles-au-public/) sur la RATP)
 
 transport . bus . heures par semaine:
+  applicable si: bus . usager
   question: Combien d'heures passez-vous dans un bus par semaine ?
   suggestions:
     zéro: 0
