@@ -1,3 +1,6 @@
+transport . voiture . empreinte au km:
+  formule: (transport . voiture . usage au kilomètre + transport . voiture . construction au kilomètre) / transport . voiture . voyageurs
+
 transport . éco-conduite:
   titre: Adopter une éco-conduite
   applicable si: voiture . km > 0
@@ -104,7 +107,7 @@ transport . réduction covoiturage:
 transport . autopartage:
   titre: Se mettre à l'autopartage
   icônes: 🚗🤝
-  formule: transport . voiture - recalcul
+  formule: voiture . empreinte au kilomètre * voiture . km * 0.41
   applicable si: 
     toutes ces conditions:
       - voiture . km > 0
@@ -117,6 +120,9 @@ transport . autopartage:
     On peut être un grand adepte de la marche, du vélo et des transports en communs et avoir parfois besoin d’une voiture ; pour les loisirs, les déplacements longs ou pour aller faire de grosses courses.
     
     L’autopartage est une solution, en particulier si vous ne voyez pas l’intérêt d’être propriétaire d’un véhicule qui passe le plus clair de son temps au parking. Dans le cadre de l’autopartage, vous utilisez un véhicule mutualisé. Ce sont des coûts en moins (assurance, charges d’entretien) mais aussi des tracas de stationnement qui disparaissent.
+  note: |
+    L'auto-partage permet de réduire le nombre de km parcourus dans l'année (l'usage de la voiture est moins systématique).
+    En moyenne, on compte une baisse de 41% des kilomètres par an d'après [cette étude ADEME](https://presse.ademe.fr/wp-content/uploads/2013/03/ena_4pages_presse_130306.pdf).
   unité: kgCO2e
 
 transport . autopartage . plafond activation autopartage:
@@ -124,27 +130,16 @@ transport . autopartage . plafond activation autopartage:
   note: Nous supposons qu'au-delà de 600 km par mois en moyenne, il est difficile de se projeter dans un usage d'autopartage.
   unité: km
 
-transport . autopartage . recalcul:
-  valeur: transport . voiture
-  contexte:
-    voiture . km: voiture . km * (1 - 0.41)
-  # TODO: Le contexte devrait inclure `voiture . utilisateur régulier: non` mais le recalcul de recalcul ne semble pas fonctionner ici.
-  # La valeur en km n'est pas propagée dans le second recalcul.
-  unité: kgCO2e
-  note: |
-    L'auto-partage permet de réduire le nombre de km parcourus dans l'année (l'usage de la voiture est moins systématique).
-    En moyenne, on compte une baisse de 41% des kilomètres par an d'après [cette étude ADEME](https://presse.ademe.fr/wp-content/uploads/2013/03/ena_4pages_presse_130306.pdf).
 
 transport . voiture 5km:
   titre: Se passer de voiture pour moins de 5 km
   icônes: 🚗🚲
-  formule: transport . voiture - recalcul
+  formule: distance totale * voiture . empreinte au kilomètre
   applicable si: 
     toutes ces conditions:
         - voiture . km > seuil d'activation 5km
         - est défini: voiture . utilisateur
-        - voiture . utilisateur = 'propriétaire'  
-
+        - voiture . utilisateur = 'propriétaire'
   note: |
     On fait l'hypothèse qu'une personne qui n'est pas propriétaire de voiture se passe *déjà* d'une voiture pour de courts trajets.
   description: |
@@ -175,12 +170,8 @@ transport . distance moyenne trajet court:
   unité: km/trajet
   description: Nous estimons simplement à 2,5km la moyenne de distance des trajets inférieurs à 5km.
 
-transport . voiture 5km . recalcul:
-  valeur: transport . voiture
-  contexte:
-    transport . voiture . km: transport . voiture . km - distance totale
-
 transport . voiture 5km . distance totale:
+  titre: Distance totale évitée
   formule:
     variations:
       - si: distance totale renseignée > transport . voiture . km
@@ -275,37 +266,3 @@ transport . faire durer . recalcul:
   valeur: transport . voiture . empreinte calculée
   contexte:
     transport . voiture . durée de vie en km: transport . voiture . durée de vie en km * 1.2
-#
-#
-# Cette action est inactive. Au vu des problématiques liées au changement d'affectation des sols et autres impacts environnementaux
-# liés à la culture du maïs par exemple, les **biocarburants** ne sont pas pris en compte (le facteur d'émission de la base carbone
-# étant particulièrement incertain). Voir discussions [ici](https://github.com/incubateur-ademe/nosgestesclimat/pull/1324)
-#
-# transport . super ethanol:
-#   inactive: oui
-#   titre: Passer du sans-plomb au super éthanol
-#   icônes: ⛽️🚗
-#   applicable si: transport . voiture . thermique . carburant = 'essence E5 et E10'
-#   formule: transport . voiture . empreinte calculée - transport . super ethanol . recalcul avec surconsommation
-#   description: |
-#     Le Superéthanol E85 est le carburant essence sans plomb pouvant contenir entre 65% et 85% de bioéthanol, le complément étant de l’essence Sans Plomb 95.
-#     Il est produit à partir de cultures de canne à sucre, de céréales (blé, maïs) et de betterave sucrière.
-
-#     L’E85 est un carburant compétitif : même en tenant compte de la surconsommation qu’il engendre, il permet une économie de 30 à 40 centimes par litre de SP95 remplacé.
-#     Pour l'utliser, il est possible de faire modifier votre véhicule essence en faisant poser un boîtier de conversion homologué, pour environ 1000€, amortis après 20 000 à 25 000 kilomètres.
-#     ![](https://www.francetvinfo.fr/pictures/KlhzqieXAJSG5N_Reou0UdhPLKM/0x667:800x2147/fit-in/720x/filters:format(webp)/2018/10/12/php6RnMqG.png)
-#   note: Cette action est inactive. Au vu des problématiques liées au changement d'affectation des sols et autres impacts environnementaux liés à la culture du maïs par exemple, les **biocarburants** ne sont pas pris en compte (le facteur d'émission de la base carbone étant particulièrement incertain). Voir discussions [ici](https://github.com/incubateur-ademe/nosgestesclimat/pull/1324)
-
-# transport . super ethanol . recalcul:
-#   formule:
-#     recalcul:
-#       règle: transport . voiture . empreinte calculée
-#       avec:
-#         transport . voiture . thermique . carburant: "'essence E85'"
-
-# transport . super ethanol . taux surconsommation:
-#   formule: 125%
-#   note: Le superéthanol E85 est moins énergétique, donc fait grimper les litres consommés [de 15 à 25%](https://www.ledauphine.com/magazine-lifestyle/2020/02/02/ce-que-vous-devez-savoir-sur-le-superethanol-e85-avant-de-vous-lancer).
-
-# transport . super ethanol . recalcul avec surconsommation:
-#   formule: recalcul * taux surconsommation
