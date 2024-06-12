@@ -2,7 +2,22 @@ transport . train:
   titre: Train
   icônes: 🚋
   description: |
+    
+
     ![](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/TER_Vesoul.jpg/640px-TER_Vesoul.jpg)
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: usager
+            - usager
+        alors: empreinte
+      - sinon: 0    
+
+transport . train . usager:
+  question: Êtes-vous un usager régulier du train ?
+
+transport . train . empreinte:
   formule: km * impact par km
 
 transport . train . impact par km:
@@ -81,6 +96,10 @@ transport . train . passagers km intercités:
     On omet ici les trajets en RER et transilien.
 
 transport . train . km:
+  applicable si:
+    toutes ces conditions:
+      - est défini: train . usager
+      - train . usager
   question: Combien de kilomètres parcourez-vous en train par an ?
   description: Les suggestions sont basées sur la distance à vol d'oiseau doublée pour considérer un aller-retour.
   suggestions:
