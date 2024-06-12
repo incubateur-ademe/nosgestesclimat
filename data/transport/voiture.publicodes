@@ -76,6 +76,7 @@ transport . voiture . utilisateur:
     - Elle ne permettait pas de valoriser l'engagement de ne pas disposer de son propre véhicule, et de pratiquer à la place l'autopartage, ou la location ponctuelle (car l'empreinte de construction était la même, que l'on soit propriétaire ou non).
 
     > Pour pallier ces deux problèmes, et mieux représenter qu'un véhicule possédé mais sous-utilisé s'use plus vite et mérite une empreinte de construction plus importante, **nous appliquons un seuil pour la partie construction de l'empreinte, pour les propriétaires**.
+    
 
 transport . voiture . utilisateur . propriétaire:
   titre: Oui et j'en suis propriétaire
@@ -111,7 +112,6 @@ transport . voiture . empreinte moyenne:
         voiture . gabarit: "'berline'"
         voiture . motorisation: "'thermique'"
         voiture . thermique . carburant: "'essence E5 ou E10'"
-
 
 transport . voiture . empreinte moyenne non régulier:
   valeur: voiture . empreinte calculée
@@ -166,6 +166,52 @@ transport . voiture . usage au kilomètre:
   unité: kgCO2e/km
 
 transport . voiture . empreinte au kilomètre:
+  formule:
+    variations:
+      - si: 
+          est défini: utilisateur
+        alors:
+          variations:
+            - si:
+                une de ces conditions:
+                - utilisateur = 'propriétaire'
+                - utilisateur = 'régulier non propriétaire'
+              alors: empreinte au kilomètre calculée
+            - si: utilisateur = 'non régulier'
+              alors: empreinte au kilomètre non régulier
+      - sinon: empreinte au kilomètre moyenne
+
+transport . voiture . empreinte au kilomètre moyenne:
+  valeur: voiture . empreinte au kilomètre calculée
+  contexte:
+    voiture . utilisateur: "'propriétaire'"
+    voiture . gabarit: "'berline'"
+    voiture . motorisation: "'thermique'"
+    voiture . thermique . carburant: "'essence E5 ou E10'"
+    voiture . thermique . consommation aux 100:
+      valeur: voiture . thermique . consommation estimée
+      contexte:
+        voiture . utilisateur: "'propriétaire'"
+        voiture . gabarit: "'berline'"
+        voiture . motorisation: "'thermique'"
+        voiture . thermique . carburant: "'essence E5 ou E10'"
+
+transport . voiture . empreinte au kilomètre non régulier:
+  valeur: voiture . empreinte au kilomètre calculée
+  contexte:
+    voiture . utilisateur: "'régulier non propriétaire'"
+    voiture . gabarit: "'berline'"
+    voiture . motorisation: "'thermique'"
+    voiture . thermique . carburant: "'essence E5 ou E10'"
+    voiture . thermique . consommation aux 100:
+      valeur: voiture . thermique . consommation estimée
+      contexte:
+        voiture . utilisateur: "'régulier non propriétaire'"
+        voiture . gabarit: "'berline'"
+        voiture . motorisation: "'thermique'"
+        voiture . thermique . carburant: "'essence E5 ou E10'"
+
+transport . voiture . empreinte au kilomètre calculée:
   formule:
     variations:
       - si: motorisation = 'thermique'
@@ -840,16 +886,3 @@ transport . voiture . durée de vie en km:
 
     Pour le moment, nous ne faisons pas la différence entre thermique et électrique. C'est une hypothèse très forte.
 
-# transport . voiture . facteur location:
-#   titre: Part d'utilisation annuelle d'une voiture de service
-#   formule: km par an voiture partagée / durée de vie en km
-#   note: On attribue à l'utilisateur l'impact de la construction au pro rata de son utilisation par rapport au km parcourus par la voiture sur une année.
-
-# transport . voiture . km par an voiture partagée:
-#   titre: Kilomètres parcourus annuellement par une voiture en auto-partage
-#   formule: 15130
-#   unité: km
-#   note: |
-#     Page 80 de l'[Enquête Nationale Autopartage 2022](https://librairie.ademe.fr/cadic/7353/enquete-autopartage-2022-rapport.pdf):
-
-#     > "Les données communiquées par les opérateurs nous permettent de retenir l’hypothèse de 15130 kilomètres parcourus en moyenne par an par voiture en autopartage."

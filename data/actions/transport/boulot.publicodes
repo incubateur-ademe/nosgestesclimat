@@ -58,12 +58,16 @@ transport . boulot . distance . km aller:
   note: Mettre un lien vers l'étude et mettre à jour avec les statistiques de l'enquête déplacement 2020 si disponible.
   par défaut: 10
 
+transport . boulot . voyageurs:
+  titre: Nombre de voyageurs sur le trajet domicile-travail
+  question: Combien êtes-vous dans la voiture pour vos trajets domicile-travail ?
+  par défaut: 1
+
 transport . boulot . covoiturage:
-  question: Vous rendez-vous au travail seul ?
-  par défaut: oui
+  formule: transport . boulot . voyageurs = 1
 
 transport . boulot . covoiturage . nombre de voyageurs:
-  formule: 1 + nombre de covoitureurs
+  formule: voyageurs + nombre de covoitureurs
 
 transport . boulot . covoiturage . nombre de covoitureurs:
   question: Combien de personnes pourraient covoiturer avec vous ?
@@ -100,7 +104,8 @@ transport . boulot . sans voiture:
   unité: kgCO2e
 
 transport . boulot . sans voiture . gain empreinte au km:
-  formule: voiture . empreinte totale au kilomètre - empreinte
+  formule: voiture . empreinte au kilomètre / transport . boulot . voyageurs - sans voiture . empreinte
+  note: On fait l'hypothèse que le trajet est effectué seul.
 
 transport . boulot . sans voiture . empreinte:
   titre: Empreinte transport en commun choisi
@@ -175,7 +180,7 @@ transport . boulot . télétravail . jours gagnés:
   plafond: jours travaillés en voiture
 
 transport . boulot . télétravail . empreinte jour voiture:
-  formule: distance . km par jour * voiture . empreinte totale au kilomètre
+  formule: distance . km par jour * voiture . empreinte au kilomètre / transport . boulot . voyageurs
   unité: kgCO2e/jour
 
 transport . boulot . télétravail . jours télétravaillés:
