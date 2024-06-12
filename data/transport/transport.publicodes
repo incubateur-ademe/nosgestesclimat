@@ -11,7 +11,6 @@ transport:
     Cette catégorie regroupe tout ce qui touche à nos déplacements. Nous y avons également mis des usages qui pourraient être considérés comme *loisirs*, ayant trait aux vacances, tels que la caravane et le camping-car
   formule:
     somme:
-      - voiture
       - moyens
       - mobilité douce
 
@@ -20,6 +19,7 @@ transport . moyens:
   mosaique:
     type: selection
     options:
+      - transport . voiture . usager
       - transport . avion . usager
       - transport . deux roues . usager
       - transport . bus . usager
@@ -31,6 +31,7 @@ transport . moyens:
       - van . propriétaire
     suggestions:
       aucun:
+        transport . voiture . usager: non
         transport . avion . usager: non
         transport . deux roues . usager: non
         transport . bus . usager: non
@@ -49,20 +50,35 @@ transport . moyens:
 transport . moyens . empreinte totale:
   formule:
     somme:
+      - voiture
       - avion
       - deux roues
       - bus
       - train
       - métro ou tram
       - ferry
-      - vacances . caravane
-      - vacances . camping car
-      - vacances . van
+      - vacances . caravane . empreinte
+      - vacances . camping car . empreinte
+      - vacances . van . empreinte
   unité: kgCO2e
 
 transport . moyens . empreinte par défaut:
   valeur: empreinte totale
   contexte:
+      transport . voiture . usager: oui
+      transport . voiture . km: transport . voiture . km annuels moyen
+      transport . voiture . voyageurs: "'1.2'"
+      voiture . utilisateur: "'régulier non propriétaire'"
+      voiture . gabarit: "'berline'"
+      voiture . motorisation: "'thermique'"
+      voiture . thermique . carburant: "'essence E5 ou E10'"
+      voiture . thermique . consommation aux 100:
+        valeur: voiture . thermique . consommation estimée
+        contexte:
+          voiture . utilisateur: "'régulier non propriétaire'"
+          voiture . gabarit: "'berline'"
+          voiture . motorisation: "'thermique'"
+          voiture . thermique . carburant: "'essence E5 ou E10'"
       transport . avion . usager: oui
       transport . avion . court courrier . heures de vol: transport . avion . court courrier . durée moyenne
       transport . avion . moyen courrier . heures de vol: transport . avion . moyen courrier . durée moyenne
@@ -71,8 +87,11 @@ transport . moyens . empreinte par défaut:
       deux roues . type: "'moto sup 250'"
       deux roues . km: deux roues . km annuels moyen * deux roues . pourcentage motards
       transport . bus . usager: oui
+      transport . bus . heures par semaine: 3
       transport . train . usager: oui
+      transport . train . km: 1000
       transport . métro ou tram . usager: oui
+      transport . métro ou tram . heures par semaine: 3
       transport . ferry . usager: oui
       transport . ferry . heures: transport . ferry . empreinte moyenne . durée moyenne par français
   unité: kgCO2e
@@ -81,6 +100,7 @@ transport . moyens . choix utilisateur:
   titre: Choix utilisateur pour les modes de transport
   formule:
     une de ces conditions:
+      - est défini: transport . voiture . usager
       - est défini: transport . avion . usager
       - est défini: transport . deux roues . usager
       - est défini: transport . bus . usager
