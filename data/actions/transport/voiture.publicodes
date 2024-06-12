@@ -1,11 +1,106 @@
 transport . voiture . empreinte totale au kilomètre:
+  formule:
+    variations:
+      - si: 
+          est défini: utilisateur
+        alors:
+          variations:
+            - si:
+                une de ces conditions:
+                - utilisateur = 'propriétaire'
+                - utilisateur = 'régulier non propriétaire'
+              alors:  empreinte totale au kilomètre calculée
+            - si: utilisateur = 'non régulier'
+              alors:  empreinte totale au kilomètre non régulier
+      - sinon: empreinte totale au kilomètre moyenne
+
+transport . voiture . empreinte totale au kilomètre calculée:
   formule: (transport . voiture . usage au kilomètre + transport . voiture . construction au kilomètre) / transport . voiture . voyageurs
+
+transport . voiture . empreinte totale au kilomètre moyenne:
+  valeur: voiture . empreinte totale au kilomètre calculée
+  contexte:
+    voiture . utilisateur: "'propriétaire'"
+    voiture . gabarit: "'berline'"
+    voiture . motorisation: "'thermique'"
+    voiture . thermique . carburant: "'essence E5 ou E10'"
+    voiture . thermique . consommation aux 100:
+      valeur: voiture . thermique . consommation estimée
+      contexte:
+        voiture . utilisateur: "'propriétaire'"
+        voiture . gabarit: "'berline'"
+        voiture . motorisation: "'thermique'"
+        voiture . thermique . carburant: "'essence E5 ou E10'"
+
+transport . voiture . empreinte totale au kilomètre non régulier:
+  valeur: voiture . empreinte totale au kilomètre calculée
+  contexte:
+    voiture . utilisateur: "'régulier non propriétaire'"
+    voiture . gabarit: "'berline'"
+    voiture . motorisation: "'thermique'"
+    voiture . thermique . carburant: "'essence E5 ou E10'"
+    voiture . thermique . consommation aux 100:
+      valeur: voiture . thermique . consommation estimée
+      contexte:
+        voiture . utilisateur: "'régulier non propriétaire'"
+        voiture . gabarit: "'berline'"
+        voiture . motorisation: "'thermique'"
+        voiture . thermique . carburant: "'essence E5 ou E10'"
+
+transport . voiture . empreinte usage au kilomètre:
+  formule:
+    variations:
+      - si: 
+          est défini: utilisateur
+        alors:
+          variations:
+            - si:
+                une de ces conditions:
+                - utilisateur = 'propriétaire'
+                - utilisateur = 'régulier non propriétaire'
+              alors:  empreinte usage au kilomètre calculée
+            - si: utilisateur = 'non régulier'
+              alors:  empreinte usage au kilomètre non régulier
+      - sinon: empreinte usage au kilomètre moyenne
+
+transport . voiture . empreinte usage au kilomètre calculée:
+  formule: transport . voiture . usage au kilomètre / transport . voiture . voyageurs
+
+transport . voiture . empreinte usage au kilomètre moyenne:
+  valeur: voiture . empreinte usage au kilomètre calculée
+  contexte:
+    voiture . utilisateur: "'propriétaire'"
+    voiture . gabarit: "'berline'"
+    voiture . motorisation: "'thermique'"
+    voiture . thermique . carburant: "'essence E5 ou E10'"
+    voiture . thermique . consommation aux 100:
+      valeur: voiture . thermique . consommation estimée
+      contexte:
+        voiture . utilisateur: "'propriétaire'"
+        voiture . gabarit: "'berline'"
+        voiture . motorisation: "'thermique'"
+        voiture . thermique . carburant: "'essence E5 ou E10'"
+
+transport . voiture . empreinte usage au kilomètre non régulier:
+  valeur: voiture . empreinte usage au kilomètre calculée
+  contexte:
+    voiture . utilisateur: "'régulier non propriétaire'"
+    voiture . gabarit: "'berline'"
+    voiture . motorisation: "'thermique'"
+    voiture . thermique . carburant: "'essence E5 ou E10'"
+    voiture . thermique . consommation aux 100:
+      valeur: voiture . thermique . consommation estimée
+      contexte:
+        voiture . utilisateur: "'régulier non propriétaire'"
+        voiture . gabarit: "'berline'"
+        voiture . motorisation: "'thermique'"
+        voiture . thermique . carburant: "'essence E5 ou E10'"
 
 transport . éco-conduite:
   titre: Adopter une éco-conduite
   applicable si: voiture . km > 0
   icônes: 🚗☮
-  formule: voiture . km * gain empreinte au km / voiture . voyageurs
+  formule: voiture . empreinte usage au kilomètre * voiture . km * réduction
   unité: kgCO2e
   description: |
     Sécurité, réduction des émissions de gaz à effet de serre, économies de carburant : l’écoconduite n’a que des avantages. 
@@ -16,16 +111,17 @@ transport . éco-conduite:
   note: |
     Voir le [Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter)
 
-transport . éco-conduite . gain empreinte au km:
-  formule: voiture . empreinte au kilomètre * 0.15
-  unité: kgCO2e/km
-  note: Hypothèse de réduction de 15% ([Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter))
+transport . éco-conduite . réduction:
+  titre: Gain de consommation transport . éco-conduite
+  formule: 15%
+  note: |
+    Hypothèse de réduction de 15% ([Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter))
 
 transport . limitation autoroute:
   titre: Rouler à 110km/h sur l'autoroute
   icônes: 🚗🛣️
   applicable si: voiture . km > 0
-  formule: km autoroute * voiture . usage au kilomètre * réduction / voiture . voyageurs
+  formule: transport . voiture . empreinte usage au kilomètre * km autoroute * réduction
   description: |
     Diminuer sa vitesse de 20 km/h sur l’autoroute permet de réduire sa consommation de carburant de l’ordre de 20 %. En ville, il est conseillé de rouler à 30 km/h pour moins consommer, fluidifier le trafic et mieux partager la route avec les vélos, les trottinettes et les piétons.
     
@@ -67,8 +163,6 @@ transport . limitation autoroute . réduction:
     - Aurélien Bigo qui critique le rapport du CGDD https://twitter.com/AurelienBigo/status/1276459283291439114, mais qui ne nous donne pas d'infos sur le calcul du CO₂ lui même.
     - une autre évaluation, qui elle nous donne le calcul :)  : https://twitter.com/Tomsawy22670318/status/1274257122373570565
       Attention, pour être rigoureux, comme évoqué dans ce dernier fil, il faut prendre en compte la distribution de la vitesse et la catégorie de voiture (présence d'une 6ème vitesse par exemple). On ne roule évidement pas tout le temps à 130.
-
-
 
 transport . covoiturage:
   titre: Covoiturer
@@ -130,11 +224,10 @@ transport . autopartage . plafond activation autopartage:
   note: Nous supposons qu'au-delà de 600 km par mois en moyenne, il est difficile de se projeter dans un usage d'autopartage.
   unité: km
 
-
 transport . voiture 5km:
   titre: Se passer de voiture pour moins de 5 km
   icônes: 🚗🚲
-  formule: distance totale * voiture . empreinte au kilomètre
+  formule: voiture 5km * distance totale * voiture . empreinte au kilomètre
   applicable si: 
     toutes ces conditions:
         - voiture . km > seuil d'activation 5km
