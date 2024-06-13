@@ -23,15 +23,29 @@ transport . transports commun:
 
 transport . transports commun . bus:
   titre: Bus
-  applicable si: bus . présent
   icônes: 🚌
   description: |
     Transport urbain.
+  formule:
+    variations:
+      - si:
+          est défini: bus . présent
+        alors: empreinte
+      - sinon: empreinte par défaut
+
+transport . transports commun . bus . empreinte:
+  applicable si: bus . présent
   formule: heures par semaine * impact par heure * commun . semaines par an
+  unité: kgCO2e
+
+transport . transports commun . bus . empreinte par défaut:
+  valeur: bus . empreinte
+  contexte:
+    bus . présent: oui
+    bus . heures par semaine: bus . temps moyen
 
 transport . transports commun . bus . présent:
   question: Vous arrive t-il de prendre le bus ?
-  par défaut: oui
 
 transport . transports commun . bus . impact par heure:
   formule: impact par km * vitesse
@@ -64,14 +78,28 @@ transport . transports commun . bus . temps moyen:
 
 transport . transports commun . car:
   titre: Autocar
-  applicable si: car . présent
   description: Transport interurbain.
   icônes: 🚌
+  formule:
+    variations:
+      - si:
+          est défini: car . présent
+        alors: empreinte
+      - sinon: empreinte par défaut
+
+transport . transports commun . car . empreinte:
+  applicable si: car . présent
   formule: km par semaine * impact par km * commun . semaines par an
+  unité: kgCO2e
+
+transport . transports commun . car . empreinte par défaut:
+  valeur: car . empreinte
+  contexte:
+    car . présent: oui
+    car . km par semaine: car . distance moyenne
 
 transport . transports commun . car . présent:
   question: Vous arrive t-il de prendre le car ?
-  par défaut: oui
 
 transport . transports commun . car . km par semaine:
   question: Combien de kilomètres parcourez-vous en car par semaine ?
@@ -94,12 +122,27 @@ transport . transports commun . car . impact par km:
     Autocar - Gazole ; 29,5 gCO2e/km.personne ; Base Empreinte consultée le 18/01/2024
 
 transport . transports commun . métro ou tram:
-  titre: Métro, tramway, RER
-  applicable si: métro ou tram . présent
+  titre: Métro, tramway, train de banlieue
   icônes: 🚊
   description: |
     Tous modes de transport urbains sur rails.
+  formule:
+    variations:
+      - si:
+          est défini: métro ou tram . présent
+        alors: empreinte
+      - sinon: empreinte par défaut
+
+transport . transports commun . métro ou tram . empreinte:
+  applicable si: métro ou tram . présent
   formule: heures par semaine * impact par heure * commun . semaines par an
+  unité: kgCO2e
+
+transport . transports commun . métro ou tram . empreinte par défaut:
+  valeur: métro ou tram . empreinte
+  contexte:
+    métro ou tram . présent: oui
+    métro ou tram . heures par semaine: métro ou tram . temps moyen
 
 transport . transports commun . métro ou tram . présent:
   question: Vous arrive t-il de prendre le métro ou tram ?
