@@ -6,17 +6,36 @@ alimentation . repas:
       - déjeuner et dîner
       - bonus
       - déforestation
+  note: |
+    Comme pour le textile et l'ameublement, est ajoutée ici une part de l'empreinte liée à la déforestation importée.
+    
+    La déforestation importée est l'empreinte carbone associée à la destruction de forêts ailleurs sur la planète. Elle est la combinaison de deux facteurs : 
+   
+    - Les émissions liées au brûlage de la forêt (instantanées)
+    - Les émissions liées à la suppression de puits de carbone (futures)
+    
+    L’étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41) est la plus complète sur les émissions liées à la déforestation importée. 
+
+    Une part de ces émissions est à faire varier en fonction du régime alimentaire. Elle concerne :
+
+    - les consommations de viande (en fonction du nombre de repas viande renseignés) : en moyenne 34 kgCO2e / français 
+    - les consommations de fruits, légumes, céréales et noix d'importation (à faire varier selon si l'on consomme local ou non) : en moyenne 86 kgCO2e / français, discriminées selon la part de local.
+    
+    Le reste des émissions liées à la déforestation importée liée à l'alimentation est attribué à chaque français de manière égale. Cela correspond à :
+
+    - la consommation d'huiles végétales : 5 kgCO2e / personne 
+    - la consommation d'autres produits non discriminables en fonction des régimes alimentaires : 76 kgCO2e / personne
 
 alimentation . déforestation:
   formule: 
     variations:
-      - si: bilan . déforestation = 'oui'
+      - si: déforestation
         alors: 
           variations:
             - si: alimentation . local . consommation = 'jamais'
               alors: forfait base + (forfait moyen fruits céréales * 1.5)
             - si: alimentation . local . consommation = 'parfois'
-              alors: forfait base + (forfait moyen fruits céréales * 1)
+              alors: forfait base + forfait moyen fruits céréales
             - si: alimentation . local . consommation = 'souvent'
               alors: forfait base + (forfait moyen fruits céréales * 0.6)
             - sinon: forfait base + (forfait moyen fruits céréales * 0.2)
@@ -51,12 +70,6 @@ alimentation . déforestation . forfait base:
   formule: 5 + 76
   unité: kgCO2e
   note: Forfait attribué à tous car non discriminable par régime alimentaire, correspondant aux catégories "huiles végétales" et "autres produits alimentaires".
-
-alimentation . bonus:
-  formule:
-    somme:
-      - de saison . empreinte
-      - local . empreinte
 
 alimentation . déjeuner et dîner:
   icônes: 🍽️
@@ -255,14 +268,17 @@ alimentation . plats . viande blanche . nombre:
 alimentation . plats . viande rouge:
   titre: Viande rouge
   icônes: 🥩🍖
-  formule: (empreinte + déforestation) * nombre
+  formule: empreinte * nombre
   unité: kgCO2e/semaine
   description: |
     Repas contenant une pièce de bœuf, veau, ou agneau.
 
 alimentation . plats . viande rouge . empreinte:
   titre: Empreinte d'un repas de type viande rouge (bœuf, veau, agneau)
-  formule: 4.79
+  formule: 
+    somme:
+      - 4.79
+      - déforestation
   unité: kgCO2e/repas
   note: |
     L'empreinte d'un repas à dominate "viande rouge" (boeuf, veau, agneau...) est donné par le tableau suivant :
@@ -283,7 +299,7 @@ alimentation . plats . viande rouge . empreinte:
 alimentation . plats . viande rouge . déforestation:
   formule: 
     variations:
-    - si: bilan . déforestation = 'oui'
+    - si: déforestation
       alors: 0.218
     - sinon: 0
   unité: kgCO2e/repas
@@ -577,6 +593,12 @@ alimentation . petit déjeuner . type . aucun:
   icônes: ❌
   description: |
     Vous ne mangez rien au petit déjeuner (mais vous pouvez boire un café, un thé ou un chocolat chaud pris en compte dans une autre question).
+
+alimentation . bonus:
+  formule:
+    somme:
+      - de saison . empreinte
+      - local . empreinte
 
 alimentation . local:
   icônes: 🍅🇫🇷

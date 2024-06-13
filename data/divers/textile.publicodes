@@ -1,4 +1,13 @@
 divers . textile:
+  icônes: 👚
+  formule:
+    somme:
+      - empreinte
+      - déforestation
+  unité: kgCO2e
+
+divers . textile . empreinte:
+  titre: Empreinte de sa garde-robe
   mosaique:
     type: nombre
     options:
@@ -41,7 +50,6 @@ divers . textile:
       - manteau
       - petit article
       - gros article
-      - facteur déforestation
   unité: kgCO2e
   description: |
     À vous de nous dire ce que vous avez mis dans vos sacs de shopping cette année, ou dans une année représentative si vous faites rarement les magasins.
@@ -60,7 +68,7 @@ divers . textile:
 
 divers . textile . notif débarras surplus:
   type: notification
-  formule: nombre de textiles achetés > 0
+  formule: textile . nombre total > 0
   description: |
     > Le saviez-vous ? 
     
@@ -69,21 +77,6 @@ divers . textile . notif débarras surplus:
     > Avant d'acheter une nouvelle pièce : et si vous faisiez un peu de tri ?
   note: |
     [Source](https://www.corsenetinfos.corsica/Halte-au-Gaspi-Les-Francais-ne-portent-pas-68-des-vetements-qu-ils-possedent-_a34819.html)
-
-divers . textile . nombre de textiles achetés: 
-  formule:
-    somme:
-      - t-shirt . nombre
-      - pantalon . nombre
-      - short . nombre
-      - sweat . nombre
-      - robe . nombre
-      - chemise . nombre
-      - pull . nombre
-      - chaussure . nombre
-      - manteau . nombre
-      - petit article . nombre
-      - gros article . nombre
 
 divers . textile . t-shirt . empreinte:
   formule: 5.35
@@ -259,21 +252,37 @@ divers . textile . gros article:
   unité: kgCO2e
   description: Vêtement plutôt lourd (veste imperméable, costume, etc., par opposition aux sous-vêtements).
 
-divers . textile . facteur déforestation:
+divers . textile . nombre total: 
+  formule:
+    somme:
+      - t-shirt . nombre
+      - pantalon . nombre
+      - short . nombre
+      - sweat . nombre
+      - robe . nombre
+      - chemise . nombre
+      - pull . nombre
+      - chaussure . nombre
+      - manteau . nombre
+      - petit article . nombre
+      - gros article . nombre
+
+divers . textile . déforestation:
   formule:
     variations:
-      - si: bilan . déforestation = 'oui'
+      - si: déforestation
         alors:
           variations:
-            - si: divers . textile . nombre de textiles achetés <= 5
+            - si: divers . textile . nombre total <= 5
               alors: facteur textile * 0.5
-            - si: divers . textile . nombre de textiles achetés >= 15
+            - si: divers . textile . nombre total > 15
               alors: facteur textile * 1.5
             - sinon: facteur textile
       - sinon: 0
+  unité: kgCO2e
   note: Nous considérons qu'un achat "moyen" de vêtements se situe entre 5 et 15 pièces par an.
 
-divers . textile . facteur textile:
+divers . textile . déforestation . facteur textile:
   formule: 24
   unité: kgCO2e
   note: L’étude Pendril & al. donne une empreinte moyenne de 24 kgCO2e par personne et par an liée à la déforestation importée de nos consommations de textiles.
