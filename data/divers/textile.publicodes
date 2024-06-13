@@ -29,20 +29,19 @@ divers . textile:
   question: Quels vêtements achetez-vous neufs en général dans une année ?
   icônes: 👚
   formule:
-    produit: 
-      - textile . facteur déforestation
-      - somme:
-        - t-shirt
-        - pantalon
-        - short
-        - sweat
-        - robe
-        - chemise
-        - pull
-        - chaussure
-        - manteau
-        - petit article
-        - gros article
+    somme:
+      - t-shirt
+      - pantalon
+      - short
+      - sweat
+      - robe
+      - chemise
+      - pull
+      - chaussure
+      - manteau
+      - petit article
+      - gros article
+      - facteur déforestation
   unité: kgCO2e
   description: |
     À vous de nous dire ce que vous avez mis dans vos sacs de shopping cette année, ou dans une année représentative si vous faites rarement les magasins.
@@ -261,7 +260,20 @@ divers . textile . gros article:
   description: Vêtement plutôt lourd (veste imperméable, costume, etc., par opposition aux sous-vêtements).
 
 divers . textile . facteur déforestation:
-  formule: 1 + 0.05
-  note: |
-    L’étude Pendril & al. donne une empreinte moyenne de 24 kgCO2e par personne et par an liée à la déforestation importée de nos consommations de textiles.
-    Or la consommation moyenne des français occasionne une empreinte carbone de 450 kgCO2e par an. Le surplus lié à la déforestation importée est donc d'à peu près 5%.
+  formule:
+    variations:
+      - si: bilan . déforestation = 'oui'
+        alors:
+          variations:
+            - si: divers . textile . nombre de textiles achetés <= 5
+              alors: facteur textile * 0.5
+            - si: divers . textile . nombre de textiles achetés >= 15
+              alors: facteur textile * 1.5
+            - sinon: facteur textile
+      - sinon: 0
+  note: Nous considérons qu'un achat "moyen" de vêtements se situe entre 5 et 15 pièces par an.
+
+divers . textile . facteur textile:
+  formule: 24
+  unité: kgCO2e
+  note: L’étude Pendril & al. donne une empreinte moyenne de 24 kgCO2e par personne et par an liée à la déforestation importée de nos consommations de textiles.
