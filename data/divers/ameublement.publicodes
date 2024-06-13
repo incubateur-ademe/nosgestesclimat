@@ -8,7 +8,7 @@ divers . ameublement:
     Ces FE ne considèrent donc pas la "fin de vie" qui est prise en compte via [le modèle déchets de NGC](https://nosgestesclimat.fr/documentation/alimentation/d%C3%A9chets) (qui prend en compte les quantités de déchets amenés en déchetterie, là ou sont (théoriquement) amenés les meubles en fin de vie).
 
     Nous considérons que tous les meubles sont utilisés par l'ensemble du foyer, même si potentiellement, certains ne le sont qu'à titre individuel, c'est une limitation du test.
-  formule: meubles * facteur déforestation / logement . habitants
+  formule: (meubles + facteur déforestation) / logement . habitants
   unité: kgCO2e
 
 divers . ameublement . meubles:
@@ -63,6 +63,18 @@ divers . ameublement . meubles:
 
     - 3 petits meubles : 2 étagères, une table basse.
     - 5 grands meubles : 2 caissons hauts de cuisine, 3 meubles bas.
+
+divers . ameublement . nombre:
+  formule:
+    somme:
+      - meubles . armoire . nombre
+      - meubles . canapé . nombre
+      - meubles . matelas . nombre
+      - meubles . lit . nombre
+      - meubles . table . nombre
+      - meubles . chaise . nombre
+      - meubles . petit meuble . nombre
+      - meubles . grand meuble . nombre
 
 divers . ameublement . meubles . armoire . empreinte amortie:
   titre: Empreinte armoire amortie
@@ -456,9 +468,23 @@ divers . ameublement . meubles . coefficient préservation:
       - sinon: 4 / 3
 
 divers . ameublement . facteur déforestation:
-  formule: 2
+  formule: 
+    variations:
+      - si: bilan . déforestation = 'oui'
+        alors: 
+          variations:
+            - si: divers . ameublement . nombre <= 5
+              alors: facteur meubles * 0.5
+            - si: divers . ameublement . nombre >= 15
+              alors: facteur meubles * 1.5
+            - sinon: 1
+      - sinon: 0
   note: |
-    L'étude Pendril & al. montre que l'empreinte de la déforestation importée est de 81 kgCO2e en moyenne par français. 
+    L'étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41) montre que l'empreinte de la déforestation importée est de 81 kgCO2e en moyenne par français. 
     Nous considérons qu'en moyenne, un foyer français possède l'intégralité de la liste de meubles ci-dessus (avec 4 chaises, 5 grands meubles et 3 petits meubles), ce qui fait une empreinte de 186 kgCO2e par foyer, soit 84 kg par habitant.
 
     Nous pouvons donc approximer qu'en moyenne, la prise en compte de la déforestation importée liée à l'ameublement double l'empreinte de ce dernier.
+
+divers . ameublement . facteur meubles:
+  formule: 81
+  unité: kgCO2e
