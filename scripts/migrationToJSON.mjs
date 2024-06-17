@@ -98,6 +98,9 @@ function checkMigrationCoverage() {
       }
 
       if (rule.formule?.['une possibilité']) {
+        if (!localRules[ruleName]) {
+          continue
+        }
         const prodPossibilities =
           rule.formule['une possibilité']['possibilités']
         const localPossibilities =
