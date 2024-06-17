@@ -5,12 +5,54 @@ alimentation . repas:
       - petit déjeuner annuel
       - déjeuner et dîner
       - bonus
+      - déforestation
+  note: |
+    Comme pour le textile et l'ameublement, est ajoutée ici une part de l'empreinte liée à la déforestation importée.
 
-alimentation . bonus:
-  formule:
-    somme:
-      - de saison . empreinte
-      - local . empreinte
+alimentation . déforestation:
+  formule: 
+    variations:
+      - si: déforestation
+        alors: 
+          variations:
+            - si: alimentation . local . consommation = 'jamais'
+              alors: forfait base + (forfait moyen fruits céréales * 1.5)
+            - si: alimentation . local . consommation = 'parfois'
+              alors: forfait base + forfait moyen fruits céréales
+            - si: alimentation . local . consommation = 'souvent'
+              alors: forfait base + (forfait moyen fruits céréales * 0.6)
+            - sinon: forfait base + (forfait moyen fruits céréales * 0.2)
+      - sinon: 0
+  unité: kgCO2e
+  note: |
+    La déforestation importée est l'empreinte carbone associée à la destruction de forêts ailleurs sur la planète. Elle est la combinaison de deux facteurs : 
+   
+    - Les émissions liées au brûlage de la forêt (instantanées)
+    - Les émissions liées à la suppression de puits de carbone (futures)
+    
+    L’étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41) est la plus complète sur les émissions liées à la déforestation importée. 
+
+    Une part de ces émissions est à faire varier en fonction du régime alimentaire. Elle concerne :
+
+    - les consommations de viande (en fonction du nombre de repas viande renseignés) : en moyenne 34 kgCO2e / français 
+    - les consommations de fruits, légumes, céréales et noix d'importation (à faire varier selon si l'on consomme local ou non) : en moyenne 86 kgCO2e / français, discriminées selon la part de local.
+    
+    Le reste des émissions liées à la déforestation importée liée à l'alimentation est attribué à chaque français de manière égale. Cela correspond à :
+
+    - la consommation d'huiles végétales : 5 kgCO2e / personne 
+    - la consommation d'autres produits non discriminables en fonction des régimes alimentaires : 76 kgCO2e / personne
+
+alimentation . déforestation . forfait moyen fruits céréales:
+  formule: 86
+  unité: kgCO2e
+  note: |
+    Nous partons du principe qu'en moyenne un français consomme "parfois" local. Aussi, c'est à cette mesure que s'applique l'empreinte moyenne de déforestation.
+    Sachant qu'une part des aliments concernés est **forcément** importée et que même une personne disant consommer local importe une partie de son alimentation, la pondération minimale est de 20% de l'empreinte moyenne.
+
+alimentation . déforestation . forfait base:
+  formule: 5 + 76
+  unité: kgCO2e
+  note: Forfait attribué à tous car non discriminable par régime alimentaire, correspondant aux catégories "huiles végétales" et "autres produits alimentaires".
 
 alimentation . déjeuner et dîner:
   icônes: 🍽️
@@ -216,7 +258,10 @@ alimentation . plats . viande rouge:
 
 alimentation . plats . viande rouge . empreinte:
   titre: Empreinte d'un repas de type viande rouge (bœuf, veau, agneau)
-  formule: 4.79
+  formule: 
+    somme:
+      - 4.79
+      - déforestation
   unité: kgCO2e/repas
   note: |
     L'empreinte d'un repas à dominate "viande rouge" (boeuf, veau, agneau...) est donné par le tableau suivant :
@@ -233,6 +278,24 @@ alimentation . plats . viande rouge . empreinte:
     | Total                       |        | 705     | 775,08 | 55,37         | 30,44       |           | **4,79** |
 
     💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    Pour la partie déforestation, notre alimentation est vectrice de déforestation à l'étranger, à l'impact carbone non négligeable. Cette empreinte n'est pas comprise dans les facteurs d'émission d'Agribalyse.
+    D'après l'étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41), une part de cette déforestation est spécifiquement associée à la consommation de viande d'élevage.
+    Nous considérons que cette part associée aux "viandes d'élevage" est majoritairement associée à la consommation de viande rouge, c'est pourquoi nous ajoutons cette part de déforestation aux repas de viande rouge.
+
+alimentation . plats . viande rouge . déforestation:
+  formule: 
+    variations:
+    - si: déforestation
+      alors: 0.218
+    - sinon: 0
+  unité: kgCO2e/repas
+  note: |
+    L’étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41) donne une empreinte moyenne de 34 kgCO2e / personne de déforestation importée liée à la consommation de viandes d'élevage.
+    Nous partons du principe que ces émissions liées à la production de viandes d'élevage appartiennent majoritairement à la catégorie "viande rouge" : c'est la catégorie la plus consommatrice de terres et de ressources. 
+    La consommation moyenne par français de viande rouge se situe autour de 3 repas par semaine, soit 156 repas par an.
+
+    En conséquence, nous ajoutons à l'empreinte des repas une empreinte moyenne de 0.218 kgCO2e / repas de viande rouge.
 
 alimentation . plats . viande rouge . nombre:
   question: Nombre de plats viande rouge par semaine
@@ -517,6 +580,12 @@ alimentation . petit déjeuner . type . aucun:
   icônes: ❌
   description: |
     Vous ne mangez rien au petit déjeuner (mais vous pouvez boire un café, un thé ou un chocolat chaud pris en compte dans une autre question).
+
+alimentation . bonus:
+  formule:
+    somme:
+      - de saison . empreinte
+      - local . empreinte
 
 alimentation . local:
   icônes: 🍅🇫🇷
