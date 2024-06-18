@@ -1,61 +1,160 @@
 logement . construction:
   icônes: 🧱
-  formule:
-    variations:
-      - si: âge < durée d'amortissement
-        alors: surface * annuelle et par surface / habitants
-      - sinon: 0
+  formule: surface * empreinte amortie / habitants
   note: |
-    Un logement va en moyenne durer au moins 50 ans. C'est une valeur conservative.
-
-    Nous considérons ici que l'empreinte de la construction d'un logement est attribuée chaque année au 50ième aux habitants des 50 premières années.
-
-    Par la suite, l'empreinte de construction du logement est mise à zéro.
-
-    Amélioration possible : nous manquons de données, mais il devrait être possible d'attribuer une empreinte annuelle d'entretien du logement (ravalement, isolation, travaux intérieurs, etc.).
+    Dans une première approche, Nos Gestes Climat considérait qu'un logement était amorti entièrement au bout de 50 ans, sans considérer les travaux de rafraîchissement et de rénovation. Nous avons décidé de revoir notre copie pour prendre en compte ces éléments.
   unité: kgCO2e
 
-logement . construction . annuelle et par surface:
-  formule: par surface / durée d'amortissement
+logement . construction . empreinte amortie:
+  formule:
+    somme:
+      - base
+      - rafraichissement
+      - rénovation
+      - déforestation
   unité: kgCO2e/m2
 
-logement . construction . par surface:
+logement . construction . base:
   formule:
     variations:
-      - si:
-          toutes ces conditions:
-            - est défini: logement . appartement
-            - logement . appartement
-        alors: par surface . appartement + déforestation construction
-      - sinon: par surface . maison + déforestation construction
+      - si: logement . type = 'appartement'
+        alors: base . appartement / durée d'amortissement
+      - si: logement . type = 'maison'
+        alors: base . maison / durée d'amortissement
+      - sinon:
+          moyenne:
+            - base . maison / durée d'amortissement
+            - base . appartement / durée d'amortissement
   unité: kgCO2e/m2
-  note: |
-    Nous avons décidé de supprimer la question liée à l'éco-constructin du logement, car l'empreinte associée faisait débat. Dès que nous retrouverons des données fiables, nous la remettrons en ligne !
 
-# logement . éco-construit:
-#   question: Votre logement est-il fait en bois, paille, pierre ou terre (éco-construit) ?
-#   par défaut: non
-
-logement . construction . déforestation construction: 
-  formule: 44.8
-  unité: kgCO2e/m2
-  note: |
-    L'étude Pendril & al. sur la déforestation importée compte une déforestation moyenne de 37 kgCO2e par habitant. 
-    Sur la base d'un logement moyen de 41,3 m² par habitant (statistiques INSEE - 90,9 m² par logement en moyenne pour un foyer de 2,2 personnes), et d'un amortissement de 50 ans, cela donne une empreinte de 44,8 kgCO2e / m².
-
-logement . construction . par surface . appartement:
+logement . construction . base . appartement:
   titre: Empreinte appartement par m2
-  formule: 525
+  formule: 740
   unité: kgCO2e/m2
-  note: Facteur d'émission issu de la Base Empreinte.
 
-logement . construction . par surface . maison:
+logement . construction . base . maison:
   titre: Empreinte maison par m2
-  formule: 425
+  formule: 640
   unité: kgCO2e/m2
-  note: Facteur d'émission issu de la Base Empreinte.
 
-logement . construction . durée d'amortissement:
+logement . construction . base . durée d'amortissement:
   formule: 50
   note: |
     La durée de vie d'un bâtiment est fixée à 50 ans (voir la [documentation de la base empreinte, onglet Achats de bien/ Bâtiments](https://prod-basecarbonesolo.ademe-dri.fr/documentation/UPLOAD_DOC_FR/)).
+
+logement . construction . rafraichissement:
+  titre: Travaux de rafraîchissement
+  icônes: 🎨
+  applicable si: logement . âge > seuil
+  formule: 40 kgCO2e/m2 / amortissement
+  unité: kgCO2e/m2
+  description: |
+    Au dessus de 10 ans, on considère _par défaut_ que des travaux de rafraîchissement sont réalisés. On parle de petits travaux pour le confort du logement (peintures, revêtement de sol, etc.).
+
+logement . construction . rafraichissement . seuil:
+  titre: Âge seuil pour le rafraîchissement
+  formule: 10
+
+logement . construction . rafraichissement . amortissement:
+  formule: 10
+
+logement . construction . rénovation:
+  applicable si: logement . âge > seuil
+  formule: travaux / amortissement
+  unité: kgCO2e/m2
+
+logement . construction . rénovation . seuil:
+  titre: Âge seuil pour la rénovation
+  formule: 25
+
+logement . construction . rénovation . amortissement:
+  formule: 25
+
+logement . construction . rénovation . travaux:
+  applicable si: logement . âge > seuil
+  question: Des travaux de rénovation ont-ils déjà été réalisés dans votre logement (hors rafraîchissement) ?
+  description: |
+    Votre logement fait désormais partie de l'ancien ! Vous avez sans doute déjà effectué des travaux d'entretien et rénovation, renseignez-les ici.
+  mosaique:
+    type: selection
+    options:
+      - rénovation . présent
+      - isolation . présent
+      - chauffage . présent
+      - extension . présent
+    suggestions:
+      aucun:
+        rénovation . présent: non
+        isolation . présent: non
+        chauffage . présent: non
+        extension . présent: non
+  formule:
+    somme:
+      - rénovation
+      - isolation
+      - chauffage
+      - extension
+  unité: kgCO2e/m2
+
+logement . construction . rénovation . travaux . rénovation:
+  titre: Rénovation du logement (agencement, sols, murs intérieurs…)
+  icônes: 🛠
+  applicable si: rénovation . présent
+  formule: 235
+  unité: kgCO2e/m2
+
+logement . construction . rénovation . travaux . rénovation . présent:
+  question: Avez-vous réalisé des travaux de rénovation (second d'oeuvre) ?
+  par défaut: non
+
+logement . construction . rénovation . travaux . isolation:
+  titre: Isolation du logement (par l’intérieur ou par l’extérieur, changement des huisseries)
+  icônes: ❄️
+  applicable si: isolation . présent
+  formule: 170
+  unité: kgCO2e/m2
+
+logement . construction . rénovation . travaux . isolation . présent:
+  question: Avez-vous réalisé des travaux d'isolation ?
+  par défaut: non
+
+logement . construction . rénovation . travaux . chauffage:
+  titre: Changement du système de chauffage
+  icônes: 🔥
+  applicable si: chauffage . présent
+  formule: 95
+  unité: kgCO2e/m2  
+
+logement . construction . rénovation . travaux . chauffage . présent:
+  question: Avez-vous changé de système de chauffage ?
+  par défaut: non
+
+logement . construction . rénovation . travaux . extension:
+  non applicable si: logement . type = 'appartement'
+  titre: Extension du logement
+  icônes: 🏡
+  applicable si: extension . présent
+  formule: ratio * logement . construction . base . maison
+  unité: kgCO2e/m2
+
+logement . construction . rénovation . travaux . extension . ratio:
+  formule: taille / logement . surface
+  note: |
+    Nous estimons qu'en moyenne une extension 
+
+logement . construction . rénovation . travaux . extension . taille:
+  question: Quelle est la taille de l'extension réalisée (en m²) ?
+  par défaut: 0.2 * logement . surface
+  unité: m2
+  note: En moyenne, on considère que l'extension représente 20% de la surface du logement (le max étant fixé à 30%).
+
+logement . construction . rénovation . travaux . extension . présent:
+  question: Avez-vous réalisé une extension de votre logement ?
+  par défaut: non
+
+logement . construction . déforestation: 
+  formule: 37 kgCO2e / parc français . surface moyenne / logement . habitants . moyen
+  unité: kgCO2e/m2
+  note: |
+    L'étude Pendril & al. sur la déforestation importée compte une déforestation moyenne de 37 kgCO2e par habitant. 
+    Pour ce facteur, nous nous basons sur la surface d'un logement moyen et un nombre d'habitants moyen.
