@@ -2,7 +2,7 @@ transport . éco-conduite:
   titre: Adopter une éco-conduite
   applicable si: voiture . km > 0
   icônes: 🚗☮
-  formule: voiture . km * gain empreinte au km / voiture . voyageurs
+  formule: voiture . empreinte au kilomètre * voiture . km * réduction / transport . voiture . voyageurs
   unité: kgCO2e
   description: |
     Sécurité, réduction des émissions de gaz à effet de serre, économies de carburant : l’écoconduite n’a que des avantages. 
@@ -13,33 +13,35 @@ transport . éco-conduite:
   note: |
     Voir le [Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter)
 
-transport . éco-conduite . gain empreinte au km:
-  formule: voiture . empreinte au kilomètre * 0.15
-  unité: kgCO2e/km
-  note: Hypothèse de réduction de 15% ([Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter))
+transport . éco-conduite . réduction:
+  titre: Gain de consommation éco-conduite
+  formule: 15%
+  note: |
+    Hypothèse de réduction de 15% ([Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter))
 
 transport . limitation autoroute:
   titre: Rouler à 110km/h sur l'autoroute
   icônes: 🚗🛣️
   applicable si: voiture . km > 0
-  formule: empreinte autoroute - empreinte autoroute réduit
+  formule: transport . voiture . empreinte au kilomètre * km autoroute * réduction / transport . voiture . voyageurs
   description: |
     Diminuer sa vitesse de 20 km/h sur l’autoroute permet de réduire sa consommation de carburant de l’ordre de 20 %. En ville, il est conseillé de rouler à 30 km/h pour moins consommer, fluidifier le trafic et mieux partager la route avec les vélos, les trottinettes et les piétons.
     
     > Pour découvrir tous les conseils pour économiser du carburant, [consultez notre fiche](https://librairie.ademe.fr/mobilite-et-transport/5886-10-gestes-pour-economiser-de-l-energie-lors-de-ses-deplacements.html).
 
-transport . limitation autoroute . empreinte autoroute:
-  valeur: transport . voiture
-  contexte:
-    transport . voiture . km: voiture . km * ratio autoroute
-  unité: kgCO2e
-
-transport . limitation autoroute . empreinte autoroute réduit:
-  valeur: transport . voiture
-  contexte:
-    transport . voiture . km: voiture . km * ratio autoroute
-    transport . voiture . usage au kilomètre: transport . voiture . usage au kilomètre * (1 - réduction)
-  unité: kgCO2e
+transport . limitation autoroute . km autoroute:
+  question: Combien de km à l'année faites-vous sur autoroute (à peu près) ?
+  unité: km
+  par défaut: voiture . km * 0.1
+  description: |
+    On parcourt environ 80 milliards de km / an sur autoroute (voiture).
+  suggestions:
+    Paris ⇄ Athènes: 6000
+    Brest ⇄ Nice: 3000
+    Paris ⇄ Marseille: 1600
+    Bordeaux ⇄ Lyon: 1100
+  note: |
+    Fil twitter intéressant sur le sujet: https://twitter.com/Tomsawy22670318/status/1274257124701462528.
 
 transport . limitation autoroute . réduction:
   titre: Gain de consommation 130 -> 110
@@ -64,25 +66,9 @@ transport . limitation autoroute . réduction:
     - une autre évaluation, qui elle nous donne le calcul :)  : https://twitter.com/Tomsawy22670318/status/1274257122373570565
       Attention, pour être rigoureux, comme évoqué dans ce dernier fil, il faut prendre en compte la distribution de la vitesse et la catégorie de voiture (présence d'une 6ème vitesse par exemple). On ne roule évidement pas tout le temps à 130.
 
-transport . limitation autoroute . km autoroute:
-  question: Combien de km à l'année faites-vous sur autoroute (à peu près) ?
-  unité: km
-  description: |
-    On parcourt environ 80 milliards de km / an sur autoroute (voiture).
-  suggestions:
-    Paris ⇄ Athènes: 6000
-    Brest ⇄ Nice: 3000
-    Paris ⇄ Marseille: 1600
-    Bordeaux ⇄ Lyon: 1100
-  note: |
-    Fil twitter intéressant sur le sujet: https://twitter.com/Tomsawy22670318/status/1274257124701462528.
-
-transport . limitation autoroute . ratio autoroute:
-  formule: km autoroute / voiture . km
-  par défaut: 0.1
-
 transport . covoiturage:
   titre: Covoiturer
+  applicable si: voiture . km > 0
   non applicable si:
     toutes ces conditions:
       - est défini: voiture . utilisateur
@@ -118,7 +104,10 @@ transport . autopartage:
   titre: Se mettre à l'autopartage
   icônes: 🚗🤝
   formule: transport . voiture - recalcul
-  applicable si: voiture . km < plafond activation autopartage
+  applicable si: 
+    toutes ces conditions:
+      - voiture . km > 0
+      - voiture . km < plafond activation autopartage
   non applicable si:
     toutes ces conditions:
       - est défini: voiture . utilisateur
@@ -129,33 +118,28 @@ transport . autopartage:
     L’autopartage est une solution, en particulier si vous ne voyez pas l’intérêt d’être propriétaire d’un véhicule qui passe le plus clair de son temps au parking. Dans le cadre de l’autopartage, vous utilisez un véhicule mutualisé. Ce sont des coûts en moins (assurance, charges d’entretien) mais aussi des tracas de stationnement qui disparaissent.
   unité: kgCO2e
 
-transport . autopartage . plafond activation autopartage:
-  formule: 7200
-  note: Nous supposons qu'au-delà de 600 km par mois en moyenne, il est difficile de se projeter dans un usage d'autopartage.
-  unité: km
-
 transport . autopartage . recalcul:
   valeur: transport . voiture
   contexte:
-    voiture . km: voiture . km * (1 - 0.41)
-  # TODO: Le contexte devrait inclure `voiture . utilisateur régulier: non` mais le recalcul de recalcul ne semble pas fonctionner ici.
-  # La valeur en km n'est pas propagée dans le second recalcul.
-  unité: kgCO2e
+    transport . voiture . km: transport . voiture . km * (1 - 0.41)
   note: |
     L'auto-partage permet de réduire le nombre de km parcourus dans l'année (l'usage de la voiture est moins systématique).
     En moyenne, on compte une baisse de 41% des kilomètres par an d'après [cette étude ADEME](https://presse.ademe.fr/wp-content/uploads/2013/03/ena_4pages_presse_130306.pdf).
+
+transport . plafond activation autopartage:
+  formule: 7200
+  note: Nous supposons qu'au-delà de 600 km par mois en moyenne, il est difficile de se projeter dans un usage d'autopartage.
+  unité: km
 
 transport . voiture 5km:
   titre: Se passer de voiture pour moins de 5 km
   icônes: 🚗🚲
   formule: transport . voiture - recalcul
-  non applicable si:
+  applicable si: 
     toutes ces conditions:
-      - est défini: voiture . utilisateur
-      - une de ces conditions:
-          - voiture . utilisateur = 'non régulier'
-          - voiture . utilisateur = 'régulier non propriétaire'
-  applicable si: voiture . km > seuil d'activation 5km
+        - voiture . km > seuil d'activation 5km
+        - est défini: voiture . utilisateur
+        - voiture . utilisateur = 'propriétaire'
   note: |
     On fait l'hypothèse qu'une personne qui n'est pas propriétaire de voiture se passe *déjà* d'une voiture pour de courts trajets.
   description: |
@@ -164,6 +148,11 @@ transport . voiture 5km:
     Le vélo est aussi rapide que la voiture sur les distances inférieures à 5 km. La marche est également une excellente solution. Elle représente le 2e mode de déplacement en France.
     
     > Pour encore plus de solutions et découvrir les aides disponibles, [consultez notre article](https://agirpourlatransition.ademe.fr/particuliers/bureau/deplacements/changons-air-changeons-mobilite).
+  
+transport . voiture 5km . recalcul:
+  valeur: transport . voiture
+  contexte:
+    transport . voiture . km: transport . voiture 5km . distance totale
 
 transport . seuil d'activation 5km:
   titre: Seuil d'activation actions liées aux courts trajets
@@ -178,7 +167,7 @@ transport . seuil d'activation 5km:
   unité: km
 
 transport . distance moyenne aller-retour trajet court:
-  formule: distance moyenne trajet court
+  formule: distance moyenne trajet court * 2
   unité: km/trajet
 
 transport . distance moyenne trajet court:
@@ -186,12 +175,8 @@ transport . distance moyenne trajet court:
   unité: km/trajet
   description: Nous estimons simplement à 2,5km la moyenne de distance des trajets inférieurs à 5km.
 
-transport . voiture 5km . recalcul:
-  valeur: transport . voiture
-  contexte:
-    transport . voiture . km: transport . voiture . km - distance totale
-
 transport . voiture 5km . distance totale:
+  titre: Distance totale évitée
   formule:
     variations:
       - si: distance totale renseignée > transport . voiture . km
@@ -218,6 +203,7 @@ transport . voiture 5km . fréquence:
 transport . voiture électrique:
   titre: Rouler en voiture électrique
   icônes: 🔌🚗
+  applicable si: voiture . km > 0
   non applicable si:
     une de ces conditions:
       - transport . voiture . motorisation = 'électrique'
@@ -248,6 +234,7 @@ transport . réduire taille:
     Le prix, la dimension, le confort, l’esthétisme, ça compte mais ce ne peut plus être les seuls critères de choix. La consommation de carburant et les faibles émissions de CO₂ sont tout aussi essentielles ! 
     
     Rendez-vous [sur le site Je Change ma Voiture](https://jechangemavoiture.gouv.fr/) pour une mobilité plus propre et plus économe.
+  applicable si: voiture . km > 0
   non applicable si:
     une de ces conditions:
       - transport . voiture . motorisation = 'petite'
@@ -267,6 +254,7 @@ transport . faire durer:
   titre: Faire durer son véhicule
   applicable si:
     toutes ces conditions:
+      - voiture . km > 0
       - est défini: voiture . utilisateur
       - voiture . utilisateur = 'propriétaire'
   description: |
@@ -283,37 +271,3 @@ transport . faire durer . recalcul:
   valeur: transport . voiture . empreinte calculée
   contexte:
     transport . voiture . durée de vie en km: transport . voiture . durée de vie en km * 1.2
-#
-#
-# Cette action est inactive. Au vu des problématiques liées au changement d'affectation des sols et autres impacts environnementaux
-# liés à la culture du maïs par exemple, les **biocarburants** ne sont pas pris en compte (le facteur d'émission de la base carbone
-# étant particulièrement incertain). Voir discussions [ici](https://github.com/incubateur-ademe/nosgestesclimat/pull/1324)
-#
-# transport . super ethanol:
-#   inactive: oui
-#   titre: Passer du sans-plomb au super éthanol
-#   icônes: ⛽️🚗
-#   applicable si: transport . voiture . thermique . carburant = 'essence E5 et E10'
-#   formule: transport . voiture . empreinte calculée - transport . super ethanol . recalcul avec surconsommation
-#   description: |
-#     Le Superéthanol E85 est le carburant essence sans plomb pouvant contenir entre 65% et 85% de bioéthanol, le complément étant de l’essence Sans Plomb 95.
-#     Il est produit à partir de cultures de canne à sucre, de céréales (blé, maïs) et de betterave sucrière.
-
-#     L’E85 est un carburant compétitif : même en tenant compte de la surconsommation qu’il engendre, il permet une économie de 30 à 40 centimes par litre de SP95 remplacé.
-#     Pour l'utliser, il est possible de faire modifier votre véhicule essence en faisant poser un boîtier de conversion homologué, pour environ 1000€, amortis après 20 000 à 25 000 kilomètres.
-#     ![](https://www.francetvinfo.fr/pictures/KlhzqieXAJSG5N_Reou0UdhPLKM/0x667:800x2147/fit-in/720x/filters:format(webp)/2018/10/12/php6RnMqG.png)
-#   note: Cette action est inactive. Au vu des problématiques liées au changement d'affectation des sols et autres impacts environnementaux liés à la culture du maïs par exemple, les **biocarburants** ne sont pas pris en compte (le facteur d'émission de la base carbone étant particulièrement incertain). Voir discussions [ici](https://github.com/incubateur-ademe/nosgestesclimat/pull/1324)
-
-# transport . super ethanol . recalcul:
-#   formule:
-#     recalcul:
-#       règle: transport . voiture . empreinte calculée
-#       avec:
-#         transport . voiture . thermique . carburant: "'essence E85'"
-
-# transport . super ethanol . taux surconsommation:
-#   formule: 125%
-#   note: Le superéthanol E85 est moins énergétique, donc fait grimper les litres consommés [de 15 à 25%](https://www.ledauphine.com/magazine-lifestyle/2020/02/02/ce-que-vous-devez-savoir-sur-le-superethanol-e85-avant-de-vous-lancer).
-
-# transport . super ethanol . recalcul avec surconsommation:
-#   formule: recalcul * taux surconsommation

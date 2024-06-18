@@ -1,3 +1,40 @@
+importer!:
+  depuis:
+    nom: '@incubateur-ademe/publicodes-negaoctet'
+    url: https://github.com/incubateur-ademe/publicodes-negaoctet
+  dans: negaoctet
+  les règles:
+    - acv . smartphone . carbone . fabrication
+    - acv . smartphone . carbone . distribution
+    - acv . smartphone . durée de vie théorique
+    - acv . tablette . carbone . fabrication
+    - acv . tablette . carbone . distribution
+    - acv . tablette . durée de vie théorique
+    - acv . ordinateur portable . carbone . fabrication
+    - acv . ordinateur portable . carbone . distribution
+    - acv . ordinateur portable . durée de vie théorique
+    - acv . TV . carbone . fabrication
+    - acv . TV . carbone . distribution
+    - acv . TV . durée de vie théorique
+    - acv . ordinateur fixe . carbone . fabrication
+    - acv . ordinateur fixe . carbone . distribution
+    - acv . ordinateur fixe . durée de vie théorique
+    - acv . écran . carbone . fabrication
+    - acv . écran . carbone . distribution
+    - acv . écran . durée de vie théorique
+    - acv . enceinte . carbone . fabrication
+    - acv . enceinte . carbone . distribution
+    - acv . enceinte . durée de vie théorique
+    - acv . console de salon . carbone . fabrication
+    - acv . console de salon . carbone . distribution
+    - acv . console de salon . durée de vie théorique
+    - acv . console portable . carbone . fabrication
+    - acv . console portable . carbone . distribution
+    - acv . console portable . durée de vie théorique
+    - acv . imprimante . carbone . fabrication
+    - acv . imprimante . carbone . distribution
+    - acv . imprimante . durée de vie théorique
+
 divers . numérique:
   titre: Numérique
   abréviation: num.
@@ -62,14 +99,10 @@ divers . numérique . appareils:
       - ordinateur portable . nombre
       - ordinateur fixe . nombre
       - tablette . nombre
-      - vidéoprojecteur . nombre
-      - appareil photo . nombre
-      - home cinéma . nombre
       - enceinte bluetooth . nombre
-      - enceinte vocale . nombre
-      - montre connectée . nombre
       - console de salon . nombre
       - console portable . nombre
+      - imprimante . nombre
     suggestions:
       aucun:
         téléphone . nombre: 0
@@ -77,15 +110,11 @@ divers . numérique . appareils:
         ordinateur portable . nombre: 0
         ordinateur fixe . nombre: 0
         tablette . nombre: 0
-        vidéoprojecteur . nombre: 0
-        appareil photo . nombre: 0
-        home cinéma . nombre: 0
         enceinte bluetooth . nombre: 0
-        enceinte vocale . nombre: 0
-        montre connectée . nombre: 0
         console de salon . nombre: 0
         console portable . nombre: 0
-  question: Quels appareils numériques de moins de 10 ans possédez-vous ?
+        imprimante . nombre: 0
+  question: Quels appareils numériques possédez-vous ?
   description: |
     Certains appareils sont partagés dans le foyer (TV, ordinateur fixe...), d'autres personnels (téléphone ...): c'est pris en compte dans le calcul !
 
@@ -99,6 +128,10 @@ divers . numérique . appareils:
 
     Ainsi nous avons défini arbitrairement les appareils individuels (téléphone, tablette, appareil photo)
     et collectifs (TV, ordinateur fixe, vidéoprojecteur, home cinéma, enceinte bluetooth, enceinte vocale, console de salon).
+
+    Pour le choix des facteurs d'émissions utilisés, nous nous appuyons sur les données Negaoctet issues d'une étude portées par l'ADEME, qui sont les plus récentes et les plus précises que nous ayons à disposition.
+
+    Pour le moment, nous ne considérons pas la fin de vie des appareils ici mais dans le poste "déchets".
   formule:
     somme:
       - téléphone
@@ -106,14 +139,10 @@ divers . numérique . appareils:
       - ordinateur portable
       - ordinateur fixe
       - tablette
-      - vidéoprojecteur
-      - appareil photo
-      - home cinéma
       - enceinte bluetooth
-      - enceinte vocale
-      - montre connectée
       - console de salon
       - console portable
+      - imprimante
 
 divers . numérique . appareils . téléphone:
   icônes: 📱
@@ -131,8 +160,7 @@ divers . numérique . appareils . téléphone . nombre:
   par défaut: 1
 divers . numérique . appareils . téléphone . durée:
   titre: Durée de vie d'un téléphone
-  formule: 2.5
-  note: La durée de vie est issue de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
+  formule: negaoctet . acv . smartphone . durée de vie théorique / 1 an
 divers . numérique . appareils . téléphone . empreinte:
   titre: Empreinte d'un téléphone
   icônes: 📱✨
@@ -144,63 +172,14 @@ divers . numérique . appareils . téléphone . empreinte:
     - Smartphone haut de gamme (la base bilan-GES n'inclut pas de catégories "téléphone haut de gamme" ou "écran > 6 pouces". De plus, l'empreinte d'un iPhone 11 estimée par Apple elle-même est de 72kg de CO₂, dont 79% donc ~57kg juste pour la production. 
       À moins que le périmètre des études ne soit pas le même, mais un périmètre plus important pris par l'entreprise que par l'autorité environnementale est pour le moins étonnant, nous retenons la valeur du fabricant.
 
-    Néanmoins, les dernières données NegaOctet (voir base Empreinte), à l'image des constructeurs semblent donner une valeur plus élevée que les chiffres de la base Carbone.
-
-    Afin de simplifier le questionnaire, permettre de compter plusieurs téléphones (plusieurs achats sur les dernières années), 
-    et au vu que les smartphones sont les téléphones majoritairement utilisés, nous avons fait l'hypothèse (plus conservatrice) 
-    que l'empreinte de la construction d'un smartphone est plus proche de celle communiquée par Apple notamment 
-    (voir point ci-dessus pour l'obtention du chiffre de 57kg par unité).
+    Néanmoins, les dernières données NegaOctet (voir base Empreinte), à l'image des constructeurs semblent donner une valeur plus élevée que les chiffres de la base Carbone. Nous considérons donc les dernières données NegaOctet.
 
     Voir :
       - https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=Smartphone
       - https://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/produits_informatiques__electr
       - https://www.apple.com/environment/pdf/products/iphone/iPhone_11_PER_sept2019.pdf
-  formule: 57
+  formule: (negaoctet . acv . smartphone . carbone . fabrication + negaoctet . acv . smartphone . carbone . distribution) / 1000 gCO2e/kgCO2e
   unité: kgCO2e
-
-divers . numérique . appareils . appareil photo:
-  icônes: 📷
-  formule: empreinte * nombre / (durée * coefficient préservation)
-  unité: kgCO2e
-divers . numérique . appareils . appareil photo . nombre:
-  titre: Nombre d'appareils photos
-  note: On range l'appareil photo dans la catégorie numérique vu la rareté des appareils argentiques aujourd'hui.
-  question: Utilisez-vous un appareil photo ?
-  plancher: 0
-  par défaut: 0
-divers . numérique . appareils . appareil photo . durée:
-  titre: Durée de vie d'un appareil photo
-  formule: 5
-  note: |
-    Les durées de vies des appareils évoluent en fonction du coefficient de préservation déterminé par la question portant sur les efforts pour préserver ses appareils.
-    Une réponse "effort moyen" ne fait pas varier la durée de vie. Seules les autres réponses font varier à la hause ou à la baisse la durée de vie des appareils et donc l'empreinte carbone estimée.
-
-    Aucune information sur la durée de vie n'est disponible que ce soit dans des études ADEME ou sur le web (ou la durée de vie d'un appareil photo s'approxime en millier de prises de vues).
-    On considère donc une durée de vie de 5 ans.
-divers . numérique . appareils . appareil photo . empreinte:
-  titre: Empreinte appareil photo
-  formule: 30
-  unité: kgCO2e
-  note: Facteur d'émissions issu de la Base Carbone
-
-divers . numérique . appareils . home cinéma:
-  icônes: 🔊🎬
-  formule: empreinte * nombre / (durée * coefficient préservation * logement . habitants)
-  unité: kgCO2e
-divers . numérique . appareils . home cinéma . nombre:
-  titre: Nombre de home cinéma
-  question: Utilisez-vous un home cinéma ?
-  plancher: 0
-  par défaut: 0
-divers . numérique . appareils . home cinéma . durée:
-  titre: Durée de vie d'un home cinéma
-  formule: 8
-  note: La durée de vie est issue de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
-divers . numérique . appareils . home cinéma . empreinte:
-  titre: Empreinte home cinéma
-  formule: 133
-  unité: kgCO2e
-  note: Facteur d'émissions issu de la Base Carbone
 
 divers . numérique . appareils . ordinateur portable:
   icônes: 💻
@@ -213,13 +192,11 @@ divers . numérique . appareils . ordinateur portable . nombre:
   par défaut: 1
 divers . numérique . appareils . ordinateur portable . durée:
   titre: Durée de vie d'un ordinateur portable
-  formule: 3
-  note: La durée de vie est issue de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
+  formule: negaoctet . acv . ordinateur portable . durée de vie théorique / 1 an
 divers . numérique . appareils . ordinateur portable . empreinte:
   titre: Empreinte ordinateur portable
-  formule: 156
+  formule: (negaoctet . acv . ordinateur portable . carbone . fabrication + negaoctet . acv . ordinateur portable . carbone . distribution) / 1000 gCO2e/kgCO2e
   unité: kgCO2e
-  note: Facteur d'émissions issu de la Base Carbone
 
 divers . numérique . appareils . ordinateur fixe:
   icônes: 🖥
@@ -227,7 +204,6 @@ divers . numérique . appareils . ordinateur fixe:
   unité: kgCO2e
   note: |
     Nous considérons qu'un ordinateur fixe c'est une tour et un écran détaché (même s'il existe des ordinateurs fixes où tout est "intégré" dans l'écran).
-    Nous considérons le facteur d'émissions "Ordinateur - fixe - haute performance " de la Base Carbone
 divers . numérique . appareils . ordinateur fixe . nombre:
   titre: Nombre d'ordinateurs fixes
   question: Utilisez-vous un ordinateur fixe ?
@@ -235,20 +211,20 @@ divers . numérique . appareils . ordinateur fixe . nombre:
   par défaut: 1
 divers . numérique . appareils . ordinateur fixe . durée:
   titre: Durée de vie d'un ordinateur fixe
-  formule: 6
-  note: Les durées de vie (que ce soit de l'écran ou de la tour fixe) sont issues de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
+  formule:
+    moyenne:
+      - negaoctet . acv . ordinateur fixe . durée de vie théorique / 1 an
+      - negaoctet . acv . écran . durée de vie théorique / 1 an
 divers . numérique . appareils . ordinateur fixe . empreinte:
   titre: Empreinte d'un ordinateur fixe
   formule: tour + écran
 divers . numérique . appareils . ordinateur fixe . tour:
   titre: Empreinte d'un écran
-  formule: 296
+  formule: (negaoctet . acv . ordinateur fixe . carbone . fabrication + negaoctet . acv . ordinateur fixe . carbone . distribution) / 1000 gCO2e/kgCO2e
   unité: kgCO2e
-  note: Facteur d'émissions issu de la Base Carbone
 divers . numérique . appareils . ordinateur fixe . écran:
   titre: Empreinte d'un écran
-  formule: 248
-  note: Valeur pour un écran de 23,8 pouces (Base Carbone)
+  formule: (negaoctet . acv . écran . carbone . fabrication + negaoctet . acv . écran . carbone . distribution) / 1000 gCO2e/kgCO2e
   unité: kgCO2e
 
 divers . numérique . appareils . tablette:
@@ -262,23 +238,17 @@ divers . numérique . appareils . tablette . nombre:
   par défaut: 0
 divers . numérique . appareils . tablette . durée:
   titre: Durée de vie d'une tablette
-  formule: 3
-  note: La durée de vie est issue de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
+  formule: negaoctet . acv . tablette . durée de vie théorique / 1 an
 divers . numérique . appareils . tablette . empreinte:
   titre: Empreinte tablette
-  formule: 63
+  formule: (negaoctet . acv . tablette . carbone . fabrication + negaoctet . acv . tablette . carbone . distribution) / 1000 gCO2e/kgCO2e
   unité: kgCO2e
-  note: Facteur d'émissions issu de la Base Carbone
 
 divers . numérique . appareils . TV:
   icônes: 📺
   formule: empreinte * nombre / (durée * coefficient préservation * logement . habitants)
   unité: kgCO2e
   note: |
-    Valeur pour 40-49 pouces de la base [bilan-GES](https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=télévision).
-
-    Nous estimons que l'appareil va durer un an de plus que l'âge renseigné au moment de l'estimation.
-
     La taille étant très variable, il serait mieux d'en faire des variations.
 
     Notons aussi :
@@ -291,32 +261,11 @@ divers . numérique . appareils . TV . nombre:
   par défaut: 1
 divers . numérique . appareils . TV . durée:
   titre: Durée de vie d'une TV
-  formule: 8
-  note: La durée de vie est issue de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
+  formule: negaoctet . acv . TV . durée de vie théorique / 1 an
 divers . numérique . appareils . TV . empreinte:
   titre: Empreinte TV
-  formule: 371
+  formule: (negaoctet . acv . TV . carbone . fabrication + negaoctet . acv . TV . carbone . distribution) / 1000 gCO2e/kgCO2e
   unité: kgCO2e
-  note: Facteur d'émissions issu de la Base Carbone
-
-divers . numérique . appareils . vidéoprojecteur:
-  icônes: 📽️
-  formule: empreinte * nombre / (durée * coefficient préservation * logement . habitants)
-  unité: kgCO2e
-divers . numérique . appareils . vidéoprojecteur . nombre:
-  titre: Nombre de vidéoprojecteurs
-  question: Utilisez-vous un vidéoprojecteur ?
-  plancher: 0
-  par défaut: 0
-divers . numérique . appareils . vidéoprojecteur . durée:
-  titre: Durée de vie d'un vidéoprojecteur
-  formule: 5
-  note: La durée de vie est issue de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
-divers . numérique . appareils . vidéoprojecteur . empreinte:
-  titre: Empreinte vidéoprojecteur
-  formule: 94
-  unité: kgCO2e
-  note: Facteur d'émissions issu de la Base Carbone
 
 divers . numérique . appareils . enceinte bluetooth:
   icônes: 🎵
@@ -329,54 +278,11 @@ divers . numérique . appareils . enceinte bluetooth . nombre:
   par défaut: 0
 divers . numérique . appareils . enceinte bluetooth . durée:
   titre: Durée de vie d'une enceinte bluetooth
-  formule: 5
-  note: La durée de vie est issue de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
+  formule: negaoctet . acv . enceinte . durée de vie théorique / 1 an
 divers . numérique . appareils . enceinte bluetooth . empreinte:
   titre: Empreinte enceinte bluetooth
-  formule: 8.98
+  formule: (negaoctet . acv . enceinte . carbone . fabrication + negaoctet . acv . enceinte . carbone . distribution) / 1000 gCO2e/kgCO2e
   unité: kgCO2e
-  note: Facteur d'émissions issu de la Base Carbone
-
-divers . numérique . appareils . enceinte vocale:
-  icônes: 🔊
-  formule: empreinte * nombre / (durée * coefficient préservation * logement . habitants)
-  unité: kgCO2e
-divers . numérique . appareils . enceinte vocale . nombre:
-  titre: Nombre d'enceinte vocale
-  question: Utilisez-vous une enceinte vocale ?
-  plancher: 0
-  par défaut: 0
-divers . numérique . appareils . enceinte vocale . durée:
-  titre: Durée de vie d'une enceinte vocale
-  formule: 5
-  note: La durée de vie est issue de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
-divers . numérique . appareils . enceinte vocale . empreinte:
-  titre: Empreinte enceinte vocale
-  formule: 30.7
-  unité: kgCO2e
-  note: Facteur d'émissions issu de la Base Carbone
-
-divers . numérique . appareils . montre connectée:
-  icônes: ⌚️
-  formule: empreinte * nombre / (durée * coefficient préservation)
-  unité: kgCO2e
-divers . numérique . appareils . montre connectée . nombre:
-  titre: Nombre de montres connectées
-  question: Utilisez-vous une montre connectée ?
-  plancher: 0
-  par défaut: 0
-divers . numérique . appareils . montre connectée . durée:
-  titre: Durée de vie d'une montre connectée
-  formule: 4
-  note: |
-    La durée de vie est issue de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
-    Nous considérons la plus faible durée de vie des objets compatibles avec internet (appareils IoT)
-    On prend ici 4 ans, le plus bas de IoT qui va de 4-12 ans (https://librairie.ademe.fr/cadic/6700/impact-environnemental-numerique-rapport2.pdf)
-divers . numérique . appareils . montre connectée . empreinte:
-  titre: Empreinte montre connectée
-  formule: 9.72
-  unité: kgCO2e
-  note: Facteur d'émissions issu de la Base Carbone
 
 divers . numérique . appareils . console de salon:
   icônes: 🕹
@@ -389,13 +295,11 @@ divers . numérique . appareils . console de salon . nombre:
   par défaut: 0
 divers . numérique . appareils . console de salon . durée:
   titre: Durée de vie d'une console de salon
-  formule: 6.5
-  note: La durée de vie est issue de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
+  formule: negaoctet . acv . console de salon . durée de vie théorique / 1 an
 divers . numérique . appareils . console de salon . empreinte:
   titre: Empreinte console de salon
-  formule: 73.7
+  formule: (negaoctet . acv . console de salon . carbone . fabrication + negaoctet . acv . console de salon . carbone . distribution) / 1000 gCO2e/kgCO2e
   unité: kgCO2e
-  note: Facteur d'émissions issu de la Base Carbone
 
 divers . numérique . appareils . console portable:
   icônes: 🎮
@@ -408,11 +312,27 @@ divers . numérique . appareils . console portable . nombre:
   par défaut: 0
 divers . numérique . appareils . console portable . durée:
   titre: Durée de vie d'une console portable
-  formule: 6.5
-  note: La durée de vie est issue de cette étude [ADEME](https://librairie.ademe.fr/consommer-autrement/5226-evaluation-de-l-impact-environnemental-du-numerique-en-france-et-analyse-prospective.html), Rapport 2 Tableau 48 page 71
+  formule: negaoctet . acv . console portable . durée de vie théorique / 1 an
 divers . numérique . appareils . console portable . empreinte:
   titre: Empreinte console portable
-  formule: 30.8
+  formule: (negaoctet . acv . console portable . carbone . fabrication + negaoctet . acv . console portable . carbone . distribution) / 1000 gCO2e/kgCO2e
+  unité: kgCO2e
+
+divers . numérique . appareils . imprimante:
+  icônes: 🖨
+  formule: empreinte * nombre / (durée * coefficient préservation)
+  unité: kgCO2e
+divers . numérique . appareils . imprimante . nombre:
+  titre: Nombre de consoles portables
+  question: Utilisez-vous un imprimante ?
+  plancher: 0
+  par défaut: 0
+divers . numérique . appareils . imprimante . durée:
+  titre: Durée de vie d'une imprimante
+  formule: negaoctet . acv . imprimante . durée de vie théorique / 1 an
+divers . numérique . appareils . imprimante . empreinte:
+  titre: Empreinte imprimante
+  formule: (negaoctet . acv . imprimante . carbone . fabrication + negaoctet . acv . imprimante . carbone . distribution) / 1000 gCO2e/kgCO2e
   unité: kgCO2e
   note: Facteur d'émissions issu de la Base Carbone
 
@@ -425,12 +345,7 @@ divers . numérique . appareils . nombre total:
       - ordinateur portable . nombre
       - ordinateur fixe . nombre
       - tablette . nombre
-      - vidéoprojecteur . nombre
-      - appareil photo . nombre
-      - home cinéma . nombre
       - enceinte bluetooth . nombre
-      - enceinte vocale . nombre
-      - montre connectée . nombre
       - console de salon . nombre
       - console portable . nombre
 
