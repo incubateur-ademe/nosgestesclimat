@@ -785,27 +785,13 @@ transport . voiture . barème construction . barème électrique:
     https://bonpote.com/la-voiture-electrique-solution-ideale-pour-le-climat/
 
 transport . voiture . barème construction . barème électrique . batterie:
-  formule: capacité * empreinte par kWh
+  formule: capacité * barème construction . batterie . empreinte par kWh
   unité: kgCO2e
   note: |
     L'empreinte carbone d'une batterie augmente avec sa capacité, car une capacité plus élevée nécessite l'utilisation d'un plus grand nombre de cellules lithium-ion.
 
     La capacité de la batterie est exprimée en kWh, elle peut varier considérablement selon les modèles de voitures électriques.
     Pour réduire l'impact de la voiture électrique il faut privilégier les modèles avec une batterie de petite capacité.
-
-transport . voiture . barème construction . barème électrique . batterie . empreinte par kWh:
-  formule: 100
-  unité: kgCO2e/kWh
-  note: |
-    Les études académiques sur l'empreinte carbone des batteries des véhicules électriques sont nombreuses, mais leurs résultats sont très variables.
-
-    Les valeurs varient de 60 kgCO2e/kWh à 150 kgCO2e/kWh. Une [méta-étude de l'IFPEN](https://www.sciencedirect.com/science/article/abs/pii/S0959652622006291)
-    (Institut Français du Pétrole et des Énergies Nouvelles) calcule une valeur médiane de 83 kgCO2e/kWh, en précisant que les résultats différent selons les chimies de batteries, 
-    les pays de productions, le pays des auteurs de l'étude, et que même ces facteurs intégrés il reste une grande variabilité des résultats.
-
-    Compte tenu de l'incertitude et des variations observées dans les études, nous adoptons une valeur prudente de 100 kgCO2e/kWh pour l'empreinte carbone des batteries.
-
-    [Étude Carbone 4 sur l'empreinte des batteries (en)](https://www.carbone4.com/publication-liion-battery-carbon-footprint)
 
 transport . voiture . barème construction . barème électrique . batterie . capacité:
   applicable si:
@@ -839,13 +825,33 @@ transport . voiture . barème construction . barème électrique . batterie . ca
     Grande autonomie: 100
 
 transport . voiture . barème construction . barème hybride:
-  valeur: barème électrique
-  contexte:
-    transport . voiture . motorisation: "'électrique'"
-    transport . voiture . barème construction . barème électrique . batterie . capacité: 40
+  formule: barème thermique + batterie
   unité: kgCO2e
   note: |
     On fait l'hypothèse forte que la construction d'un véhicule hybride correspond à l'empreinte d'un véhicule électrique équipé d'une petite batterie. Néanmoins, le calcul est plus complexe, notamment car le type de véhicule hybride (rechargeable ou non) sur la composition de la voiture. On a également 2 moteurs...
+
+transport . voiture . barème construction . barème hybride . batterie:
+  formule: capacité * barème construction . batterie . empreinte par kWh
+  unité: kgCO2e
+
+transport . voiture . barème construction . barème hybride . capacité:
+  valeur: 40
+  unité: kWh
+
+transport . voiture . barème construction . batterie:
+transport . voiture . barème construction . batterie . empreinte par kWh:
+  formule: 100
+  unité: kgCO2e/kWh
+  note: |
+    Les études académiques sur l'empreinte carbone des batteries des véhicules électriques sont nombreuses, mais leurs résultats sont très variables.
+
+    Les valeurs varient de 60 kgCO2e/kWh à 150 kgCO2e/kWh. Une [méta-étude de l'IFPEN](https://www.sciencedirect.com/science/article/abs/pii/S0959652622006291)
+    (Institut Français du Pétrole et des Énergies Nouvelles) calcule une valeur médiane de 83 kgCO2e/kWh, en précisant que les résultats différent selons les chimies de batteries, 
+    les pays de productions, le pays des auteurs de l'étude, et que même ces facteurs intégrés il reste une grande variabilité des résultats.
+
+    Compte tenu de l'incertitude et des variations observées dans les études, nous adoptons une valeur prudente de 100 kgCO2e/kWh pour l'empreinte carbone des batteries.
+
+    [Étude Carbone 4 sur l'empreinte des batteries (en)](https://www.carbone4.com/publication-liion-battery-carbon-footprint)
 
 transport . voiture . amortissement:
   description: |
