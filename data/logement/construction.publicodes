@@ -3,6 +3,13 @@ logement . construction:
   formule: surface * empreinte amortie / habitants
   note: |
     Dans une première approche, Nos Gestes Climat considérait qu'un logement était amorti entièrement au bout de 50 ans, sans considérer les travaux de rafraîchissement et de rénovation. Nous avons décidé de revoir notre copie pour prendre en compte ces éléments.
+
+    Désormais, nous prenons en compte les travaux de rafraîchissement du logement mais également les travaux de rénovation. Pour cela, nous nous basons sur une [étude l'Ordre des Architectes sur le poids carbone des logements](https://resources.taloen.fr/resources/documents/569_20210527_OIDxCS_poids_carbone_logements.pdf) en intégrant les estimations carbone intermédiaires pour les étapes de travaux, à savoir:
+
+    - Des travaux de rafraîchissement tous les 10 ans
+    - Des travaux de rénovation tous les 25 ans, avec distinction entre les travaux de second oeuvre, d'isolation, et de chauffage.
+
+    Cette étude proposait également de nouveaux facteurs d'émission pour la construction des logements. Néanmoins, ces données sourcées "ADEME" ne se rapportent à aucune étude permettant de les justifier et les utiliser avec confiance. Nous avons donc choisi de suivre les chiffres issues des recommandations de la [loi RE2020](https://www.ecologie.gouv.fr/politiques-publiques/reglementation-environnementale-re2020) même si elle concerne les nouveaux bâtiments, et que par nature, sous estiment à piori les émissions liées à la construction de bâtiments plus anciens.
   unité: kgCO2e
 
 logement . construction . empreinte amortie:
@@ -97,7 +104,7 @@ logement . construction . rénovation . travaux:
   unité: kgCO2e/m2
 
 logement . construction . rénovation . travaux . rénovation:
-  titre: Rénovation du logement (agencement, sols, murs intérieurs…)
+  titre: Rénovation du logement (agencement des pièces, sols…)
   icônes: 🛠
   applicable si: rénovation . présent
   formule: 235
@@ -108,7 +115,7 @@ logement . construction . rénovation . travaux . rénovation . présent:
   par défaut: non
 
 logement . construction . rénovation . travaux . isolation:
-  titre: Isolation du logement (par l’intérieur ou par l’extérieur, changement des huisseries)
+  titre: Isolation du logement (par l’intérieur ou par l’extérieur, huisseries)
   icônes: ❄️
   applicable si: isolation . présent
   formule: 170
@@ -123,14 +130,15 @@ logement . construction . rénovation . travaux . chauffage:
   icônes: 🔥
   applicable si: chauffage . présent
   formule: 95
-  unité: kgCO2e/m2  
+  unité: kgCO2e/m2
 
 logement . construction . rénovation . travaux . chauffage . présent:
   question: Avez-vous changé de système de chauffage ?
   par défaut: non
 
 logement . construction . rénovation . travaux . extension:
-  non applicable si: logement . type = 'appartement'
+  # Pour le moment, il n'est pas possible de désactiver une carte de la mosaique selon certaines conditions.
+  # non applicable si: logement . type = 'appartement'
   titre: Extension du logement
   icônes: 🏡
   applicable si: extension . présent
@@ -139,8 +147,6 @@ logement . construction . rénovation . travaux . extension:
 
 logement . construction . rénovation . travaux . extension . ratio:
   formule: taille / logement . surface
-  note: |
-    Nous estimons qu'en moyenne une extension 
 
 logement . construction . rénovation . travaux . extension . taille:
   question: Quelle est la taille de l'extension réalisée (en m²) ?
@@ -152,9 +158,9 @@ logement . construction . rénovation . travaux . extension . présent:
   question: Avez-vous réalisé une extension de votre logement ?
   par défaut: non
 
-logement . construction . déforestation: 
+logement . construction . déforestation:
   formule: 37 kgCO2e / parc français . surface moyenne / logement . habitants . moyen
   unité: kgCO2e/m2
   note: |
     L'étude Pendril & al. sur la déforestation importée compte une déforestation moyenne de 37 kgCO2e par habitant. 
-    Pour ce facteur, nous nous basons sur la surface d'un logement moyen et un nombre d'habitants moyen.
+    Pour appliquer ce facteur au m2, nous nous basons sur la surface d'un logement moyen et un nombre d'habitants moyen.
