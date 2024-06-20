@@ -24,15 +24,24 @@ logement . construction . empreinte amortie:
 logement . construction . base:
   formule:
     variations:
-      - si: logement . type = 'appartement'
-        alors: base . appartement / durée d'amortissement
-      - si: logement . type = 'maison'
-        alors: base . maison / durée d'amortissement
-      - sinon:
-          moyenne:
-            - base . maison / durée d'amortissement
-            - base . appartement / durée d'amortissement
+      - si: logement . âge < plafond
+        alors:
+          variations:
+            - si: logement . type = 'appartement'
+              alors: base . appartement / durée d'amortissement
+            - si: logement . type = 'maison'
+              alors: base . maison / durée d'amortissement
+            - sinon:
+                moyenne:
+                  - base . maison / durée d'amortissement
+                  - base . appartement / durée d'amortissement
+      - sinon: 0
   unité: kgCO2e/m2
+
+logement . construction . base . plafond:
+  formule: 50
+  note: |
+    On considère qu'au delà de 50 ans, l'empreinte de construction "de base" est amortie.
 
 logement . construction . base . appartement:
   titre: Empreinte appartement par m2
@@ -112,7 +121,7 @@ logement . construction . rénovation . travaux:
   unité: kgCO2e/m2
 
 logement . construction . rénovation . travaux . rénovation:
-  titre: Rénovation 
+  titre: Rénovation
   description: Agencement des pièces, sols…
   icônes: 🛠
   applicable si: rénovation . présent
@@ -161,6 +170,10 @@ logement . construction . rénovation . travaux . extension:
   formule: ratio * logement . construction . base . maison
   unité: kgCO2e/m2
 
+logement . construction . rénovation . travaux . extension . présent:
+  question: Avez-vous réalisé une extension de votre logement ?
+  par défaut: non
+
 logement . construction . rénovation . travaux . extension . ratio:
   formule: taille / logement . surface
 
@@ -169,10 +182,6 @@ logement . construction . rénovation . travaux . extension . taille:
   par défaut: 0.2 * logement . surface
   unité: m2
   note: En moyenne, on considère que l'extension représente 20% de la surface du logement (le max étant fixé à 30%).
-
-logement . construction . rénovation . travaux . extension . présent:
-  question: Avez-vous réalisé une extension de votre logement ?
-  par défaut: non
 
 logement . construction . déforestation:
   formule: 37 kgCO2e / parc français . surface moyenne / logement . habitants . moyen
