@@ -39,16 +39,20 @@ logement . construction . base:
   unité: kgCO2e/m2
 
 logement . construction . base . plafond:
-  formule: 50
+  formule:
+    variations:
+      - si: rénovation . travaux . choix utilisateur
+        alors: 75
+      - sinon: 50
   note: |
-    On considère qu'au delà de 50 ans, l'empreinte de construction "de base" est amortie.
+    On considère qu'un logement est amorti sur 50 ans. Si des travaux sont effectués dans le logement, cet amortissement est rallongé à 75 ans, car la durée de vie du logement est prolongée du fait des rénovations.
 
 logement . construction . base . appartement:
   titre: Empreinte appartement par m2
   formule: 740
   unité: kgCO2e/m2
   note: |
-    Ces facteurs d'émission sont en fait les seuils maximaux d'empreinte de construction des constructions neuves, [fixés par la RE2020](https://www.ecologie.gouv.fr/sites/default/files/2021.02.18_DP_RE2020_EcoConstruire_0.pdf). 
+    Ces facteurs d'émission sont en fait les seuils maximaux d'empreinte de construction des constructions neuves, [fixés par la RE2020](https://www.ecologie.gouv.fr/sites/default/files/2021.02.18_DP_RE2020_EcoConstruire_0.pdf).
     Bien que conscients qu'utiliser ces seuils max pour évaluer l'empreinte des constructions passées consiste très probablement à sous-évaluer l'empreinte de construction, nous ne disposons pas d'études chiffrées sur les logements plus anciens nous permettant d'avancer un chiffre plus fiable.
 
 logement . construction . base . maison:
@@ -56,13 +60,17 @@ logement . construction . base . maison:
   formule: 640
   unité: kgCO2e/m2
   note: |
-    Ces facteurs d'émission sont en fait les seuils maximaux d'empreinte de construction des constructions neuves, [fixés par la RE2020](https://www.ecologie.gouv.fr/sites/default/files/2021.02.18_DP_RE2020_EcoConstruire_0.pdf). 
+    Ces facteurs d'émission sont en fait les seuils maximaux d'empreinte de construction des constructions neuves, [fixés par la RE2020](https://www.ecologie.gouv.fr/sites/default/files/2021.02.18_DP_RE2020_EcoConstruire_0.pdf).
     Bien que conscients qu'utiliser ces seuils max pour évaluer l'empreinte des constructions passées consiste très probablement à sous-évaluer l'empreinte de construction, nous ne disposons pas d'études chiffrées sur les logements plus anciens nous permettant d'avancer un chiffre plus fiable.
 
 logement . construction . base . durée d'amortissement:
-  formule: 50
+  formule:
+    variations:
+      - si: rénovation . travaux . choix utilisateur
+        alors: 75
+      - sinon: 50
   note: |
-    La durée de vie d'un bâtiment est fixée à 50 ans (voir la [documentation de la base empreinte, onglet Achats de bien/ Bâtiments](https://prod-basecarbonesolo.ademe-dri.fr/documentation/UPLOAD_DOC_FR/)).
+    La durée de vie d'un bâtiment est fixée à 50 ans (voir la [documentation de la base empreinte, onglet Achats de bien/ Bâtiments](https://prod-basecarbonesolo.ademe-dri.fr/documentation/UPLOAD_DOC_FR/)). Si le logement est rénové, cette durée est rallongée de 25 ans.
 
 logement . construction . rafraichissement:
   titre: Travaux de rafraîchissement
@@ -120,11 +128,21 @@ logement . construction . rénovation . travaux:
       - extension
   unité: kgCO2e/m2
 
+logement . construction . rénovation . travaux . choix utilisateur:
+  titre: L'utilisateur a-t-il fait un choix de travaux ?
+  formule:
+    une de ces conditions:
+      - est défini: rénovation . présent
+      - est défini: isolation . présent
+      - est défini: chauffage . présent
+      - est défini: extension . présent
+
 logement . construction . rénovation . travaux . rénovation:
   titre: Rénovation
   description: Agencement des pièces, sols…
   icônes: 🛠
   applicable si: rénovation . présent
+  par défaut: oui
   formule: 235
   unité: kgCO2e/m2
   note: |
@@ -193,5 +211,5 @@ logement . construction . déforestation:
   formule: 37 kgCO2e / parc français . surface moyenne / logement . habitants . moyen
   unité: kgCO2e/m2
   note: |
-    L'étude Pendril & al. sur la déforestation importée compte une déforestation moyenne de 37 kgCO2e par habitant. 
+    L'étude Pendril & al. sur la déforestation importée compte une déforestation moyenne de 37 kgCO2e par habitant.
     Pour appliquer ce facteur au m2, nous nous basons sur la surface d'un logement moyen et un nombre d'habitants moyen.
