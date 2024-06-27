@@ -209,3 +209,26 @@ logement . construction . déforestation:
   note: |
     L'étude Pendril & al. sur la déforestation importée compte une déforestation moyenne de 37 kgCO2e par habitant.
     Pour appliquer ce facteur au m2, nous nous basons sur la surface d'un logement moyen et un nombre d'habitants moyen.
+
+logement . construction . artificialisation sols:
+  titre: Empreinte liée à l'artificialisation des sols des logements neufs
+  formule:
+    variations:
+      - si: logement . âge >= plafond
+        alors: 0
+      - sinon: empreinte / amortissement
+
+logement . construction . artificialisation sols . plafond:
+  titre: Âge plafond pour compter de l'artificialisation des sols
+  formule: 10
+
+logement . construction . artificialisation sols . empreinte:
+  formule: 190
+  unité: kgCO2e/m²
+  note: |
+    D'après [l'ADEME et le CITEPA](https://www.ecologie.gouv.fr/sites/default/files/sobriete_fonciere_-_vers_le_zero_artificialisation_nette_zan_des_sols_0.pdf), l'artificialisation d'un hectare de terrain agricole émet de 190 à 290 tonnes de CO2e selon le type de sol artificialisé. Nous partons du principe que la plus grande part des sols artificialisés pour la création de nouveaux logements est de la zone agricole.
+
+logement . construction . artificialisation sols . amortissement:
+  formule: 10
+  note: |
+    Nous faisons le choix d'amortir l'empreinte liée à l'artificialisation des sols d'une nouvelle construction sur les 10 premières années du logement, bien que l'émission associée soit bien faite au moment même de cette artificialisation.
