@@ -1,0 +1,381 @@
+### Version possession de bateaux ###
+### Limite 1 : on ne peut pas dire qu'on fait du bateau de temps en temps sans en posséder ###
+### Limite 2 : on ne peut pas posséder 2 fois le même type de bateau (est-ce que ça existe ?) ###
+### A faire : proposer deux aides à la question de la conso (une prix et une nombre de sortie)
+
+transport . bateau:
+  titre: bateau
+  icônes: ⛴
+  mosaique:
+    type: selection
+    clé: propriétaire
+    options:
+      - voilier . propriétaire
+      - bateau moteur . propriétaire
+      - annexe . propriétaire
+    suggestions:
+      aucun:
+        voilier . propriétaire: non
+        bateau moteur . propriétaire: non
+        annexe . propriétaire: non
+  question: Quel(s) type(s) de bateau(x) possédez-vous ?
+  description: |
+    > 💡 La catégorie "Voilier" inclut les monocoques, les catamarans, les trimarans et les multicoques. 
+
+    > 💡 La catégorie "Bateau moteur" inclut tous les autres bateau particuliers hors annexes tel que les runabouts, les day-cruisers, les vedettes, les yachts...
+
+    > 💡 La catégorie "Annexe" représente les petites embarcations à moteur (type zodiac)  utilisées comme servitude à partir d'un navire porteur.
+
+    > Les activités nautiques de loisir tel que jet-ski ne sont pas à prendre en compte ici. 
+  formule:
+    somme:
+      - voilier
+      - bateau moteur
+      - annexe
+  unité: kgCO2e
+
+transport . bateau . annexe:
+  applicable si: propriétaire
+  formule: (construction amortie + maintenance amortie + (consommation annuelle * bateau . empreinte au litre)) / voyageurs
+  unité: kgCO2e
+
+transport . bateau . annexe . propriétaire:
+  question: Possédez-vous une annexe ?
+  par défaut: oui
+  
+transport . bateau . annexe . taille: 
+  question: Quel est le gabarit de l'annexe ?
+  formule: 
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - petit
+        - moyen
+  par défaut: "'moyen'"
+  description: |
+    Le gabarit moyen correpond à une annexe de 5 mètres et les gabarits plus petits se trouvent donc en dessous de cette taille
+
+    **💡 Si vous utilisez plusieures annnexes (par exemple dans le cas où vous en possédez plusieurs), choisissez la plus représentative de votre usage.
+
+transport . bateau . annexe . taille . petit:
+  titre: petit
+  description: De longueur inférieure à 5 mètres
+transport . bateau . annexe . taille . moyen:
+  titre: moyen
+  description: De longueur égale à 5 mètres
+
+transport . bateau . annexe . facteur taille:
+  titre: Taille du voilier
+  formule:
+    variations:
+      - si: taille = 'petit'
+        alors: 0.5
+      - si: taille = 'moyen'
+        alors: 1
+
+transport . bateau . annexe . âge:
+  question: Quel est l'âge de votre annexe ?
+  description: Renseignez ici l'âge réel de votre annexe et non la durée depuis laquelle vous le possédez.
+  par défaut: 15
+  unité: an
+
+transport . bateau . annexe . voyageurs: 
+  question: Quel est le nombre moyen de personnes avec vous sur l'annexe lors de vos sorties ?
+  description: |
+    Essayez d'estimer une moyenne approximative. Si vous faites des sorties toujours entre amis ou en famile, le nombre moyen se situe probablement autour de 4.
+    Si vous êtes souvent seul ou en couple le nombre moyen se situe problement autour de 1.5.
+  par défaut: 4
+  suggestions:
+    je suis seul: 1
+    deux: 2
+    quatre: 4
+    six: 6
+
+transport . bateau . annexe . construction amortie:
+  titre: Empreinte amortie construction annexe
+  formule:
+    variations:
+      - si: âge < durée
+        alors: (construction * facteur taille) / durée
+      - sinon: 0
+  unité: kgCO2e
+
+transport . bateau . annexe . construction:
+  titre: Empreinte construction annexe
+  formule: 4280
+  unité: kgCO2e
+  note: |
+    Données issues du [LCA_Boatcycle_Summary](https://storage.googleapis.com/naked-sailor.appspot.com/public/blogs/lca_boatcycle_summary.pdf) dont l'étude source est introuvable
+    Avec 112 kgCO2e pour la fabrication ; 4044 kgCO2e pour l'extraction des matériaux ; 124 kgCO2e pour la distribution
+    La phase fin de vie n'est pas pris en compte pour rester sur un périmètre cradle to gate
+
+transport . bateau . annexe . maintenance amortie:
+  titre: Empreinte amortie réparation annexe
+  formule:
+    variations:
+      - si: âge < durée
+        alors: (maintenance * facteur taille) / durée
+      - sinon: 0
+  unité: kgCO2e
+
+transport . bateau . annexe . maintenance:
+  titre: Empreinte  réparation annexe
+  formule: 632
+  unité: kgCO2e
+  note: |
+    Données issues du [LCA_Boatcycle_Summary](https://storage.googleapis.com/naked-sailor.appspot.com/public/blogs/lca_boatcycle_summary.pdf) dont l'étude source est introuvable
+    Avec 625 kgCO2e pour la maintenance ; 7 kgCO2e pour l'ammarrage
+
+transport . bateau . annexe . durée:
+  titre: Durée de vie annexe
+  formule: 25
+  unité: an
+
+transport . bateau . annexe . consommation annuelle:
+  titre: Consommation annuelle annexe
+  question: En moyenne, combien de litres de carburant par an consommez-vous avec votre annexe ?
+  description: |
+    Si vous possédez plusieurs annexes faites une moyenne de leur consommation
+
+    💡 Vous pouvez aussi estimer votre consommation annuelle à partir de vos factures sur l'année.
+  par défaut: 500
+  unité: l
+
+################
+
+transport . bateau . bateau moteur:
+  applicable si: propriétaire
+  formule: (construction amortie + maintenance amortie + (consommation annuelle * bateau . empreinte au litre)) / voyageurs
+  unité: kgCO2e
+
+transport . bateau . bateau moteur . propriétaire:
+  question: Possédez-vous un bateau à moteur ?
+  par défaut: oui
+
+transport . bateau . bateau moteur . taille: 
+  question: Quel est le gabarit du bateau à moteur ?
+  formule: 
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - petit
+        - moyen
+        - grand
+  par défaut: "'moyen'"
+  description: |
+     Les petits bateaux à moteurs sont par exemple les semi-rigides, les runabouts et les petits day-cruisers. 
+     Dans les bateaux à moteurs de moyen gabarit, nous retrouvons plutôt les cabin-cruisers et les day-cruisers de grande taille. 
+     Enfin les bateaux à moteurs de grande taille sont les yachts. 
+     
+     **💡 Si vous utilisez plusieurs bateaux à moteurs (par exemple dans le cas où vous en possédez plusieurs), choisissez le plus représentatif de votre usage.
+
+transport . bateau . bateau moteur . taille . petit:
+  titre: petit
+  description: Semi-rigides, runabouts, petits day-cruisers...
+transport . bateau . bateau moteur . taille . moyen:
+  titre: moyen
+  description: Cabin-cruisers et Day-cruisers de grande taille...
+transport . bateau . bateau moteur . taille . grand:
+  titre: grand
+  description: Yachts...
+
+transport . bateau . bateau moteur . facteur taille:
+  titre: Taille du bateau moteur
+  formule:
+    variations:
+      - si: taille = 'petit'
+        alors: 0.5
+      - si: taille = 'moyen'
+        alors: 1
+      - sinon: 1.5
+
+transport . bateau . bateau moteur . âge:
+  question: Quel est l'âge de votre bateau à moteur ?
+  description: Renseignez ici l'âge réel de votre bateau à moteur et non la durée depuis laquelle vous le possédez.
+  par défaut: 15
+  unité: an
+
+transport . bateau . bateau moteur . voyageurs: 
+  question: Quel est le nombre moyen de personnes avec vous sur le bateau à moteur lors de vos sorties ?
+  description: |
+    Essayez d'estimer une moyenne approximative. Si vous faites des sorties toujours entre amis ou en famile, le nombre moyen se situe probablement autour de 4.
+    Si vous êtes souvent seul ou en couple le nombre moyen se situe problement autour de 1.5.
+  par défaut: 4
+  suggestions:
+    je suis seul: 1
+    deux: 2
+    quatre: 4
+    six: 6
+
+transport . bateau . bateau moteur . construction amortie:
+  titre: Empreinte amortie construction bateau moteur
+  formule:
+    variations:
+      - si: âge < durée
+        alors: (construction * facteur taille) / durée
+      - sinon: 0
+  unité: kgCO2e
+
+transport . bateau . bateau moteur . construction:
+  titre: Empreinte construction bateau moteur
+  formule: 8414
+  unité: kgCO2e
+  note: |
+    Données issues du [LCA_Boatcycle_Summary](https://storage.googleapis.com/naked-sailor.appspot.com/public/blogs/lca_boatcycle_summary.pdf) dont l'étude source est introuvable
+    Avec 246 kgCO2e pour la fabrication ; 8159 kgCO2e pour l'extraction des matériaux ; 9 kgCO2e pour la distribution
+    La phase fin de vie n'est pas pris en compte pour rester sur un périmètre cradle to gate
+    !!! Attention !!! sceptique sur le 9 kgCO2e de la phase de distribution
+
+transport . bateau . bateau moteur . maintenance amortie:
+  titre: Empreinte amortie réparation bateau moteur
+  formule:
+    variations:
+      - si: âge < durée
+        alors: (maintenance * facteur taille) / durée
+      - sinon: 0
+  unité: kgCO2e
+
+transport . bateau . bateau moteur . maintenance:
+  titre: Empreinte  réparation bateau moteur
+  formule: 9674
+  unité: kgCO2e
+  note: |
+    Données issues du [LCA_Boatcycle_Summary](https://storage.googleapis.com/naked-sailor.appspot.com/public/blogs/lca_boatcycle_summary.pdf) dont l'étude source est introuvable
+    Avec 9266 kgCO2e pour la maintenance ; 408 kgCO2e pour le mouillage à quai
+
+transport . bateau . bateau moteur . durée:
+  titre: Durée de vie bateau moteur
+  formule: 25
+  unité: an
+
+transport . bateau . bateau moteur . consommation annuelle:
+  titre: Consommation annuelle bateau moteur
+  question: En moyenne, combien de litres de carburant par an consommez-vous avec votre bateau à moteur ?
+  description: |
+    Si vous possédez plusieurs bâteaux à moteur faites une moyenne de leur consommation
+
+    💡 Vous pouvez aussi estimer votre consommation annuelle à partir de vos factures sur l'année.
+  par défaut: 1000
+  unité: l
+
+############################
+
+transport . bateau . voilier:
+  applicable si: propriétaire
+  formule: (construction amortie + maintenance amortie + (consommation annuelle * bateau . empreinte au litre)) / voyageurs
+  unité: kgCO2e
+
+transport . bateau . voilier . propriétaire:
+  question: Possédez-vous un voilier ?
+  par défaut: oui
+
+transport . bateau . voilier . taille: 
+  question: Quel est le gabarit du voilier ?
+  formule: 
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - petit
+        - moyen
+        - grand
+  par défaut: "'moyen'"
+  description: |
+    Les petits voiliers sont ceux inférieurs à 8 mètres de long. Les gabarits moyens sont ceux allant de 8 à 13 mètres. Et les grands gabarits sont les voiliers dépassant 13 mètres de long. 
+
+    **💡 Si vous utilisez plusieurs voiliers (par exemple dans le cas où vous en possédez plusieurs), choisissez le plus représentatif de votre usage.
+
+transport . bateau . voilier . taille . petit:
+  titre: petit
+  description: De longueur inférieure à 8 mètres
+transport . bateau . voilier . taille . moyen:
+  titre: moyen
+  description: De longueur comprise entre 8 et 13 mètres
+transport . bateau . voilier . taille . grand:
+  titre: grand
+  description: De longueur supérieure à 13 mètres
+
+transport . bateau . voilier . facteur taille:
+  titre: Taille du voilier
+  formule:
+    variations:
+      - si: taille = 'petit'
+        alors: 0.5
+      - si: taille = 'moyen'
+        alors: 1
+      - sinon: 1.5
+
+transport . bateau . voilier . âge:
+  question: Quel est l'âge de votre voilier ?
+  description: Renseignez ici l'âge réel de votre voilier et non la durée depuis laquelle vous le possédez.
+  par défaut: 15
+  unité: an
+
+transport . bateau . voilier . voyageurs: 
+  question: Quel est le nombre moyen de personnes avec vous sur le voilier lors de vos sorties ?
+  description: |
+    Essayez d'estimer une moyenne approximative. Si vous faites des sorties toujours entre amis ou en famile, le nombre moyen se situe probablement autour de 4.
+    Si vous êtes souvent seul ou en couple le nombre moyen se situe problement autour de 1.5.
+  par défaut: 4
+  suggestions:
+    je suis seul: 1
+    deux: 2
+    quatre: 4
+    six: 6
+
+transport . bateau . voilier . construction amortie:
+  titre: Empreinte amortie construction voilier
+  formule:
+    variations:
+      - si: âge < durée
+        alors: (construction * facteur taille) / durée
+      - sinon: 0
+  unité: kgCO2e
+
+transport . bateau . voilier . construction:
+  titre: Empreinte construction voilier
+  formule: 14687
+  unité: kgCO2e
+  note: |
+    Données issues du [LCA_Boatcycle_Summary](https://storage.googleapis.com/naked-sailor.appspot.com/public/blogs/lca_boatcycle_summary.pdf) dont l'étude source est introuvable
+    Avec 171 kgCO2e pour la fabrication ; 14288 kgCO2e pour l'extraction des matériaux ; 228 kgCO2e pour la distribution
+    La phase fin de vie n'est pas pris en compte pour rester sur un périmètre cradle to gate
+
+transport . bateau . voilier . maintenance amortie:
+  titre: Empreinte amortie réparation voilier
+  formule:
+    variations:
+      - si: âge < durée
+        alors: (maintenance * facteur taille) / durée
+      - sinon: 0
+  unité: kgCO2e
+
+transport . bateau . voilier . maintenance:
+  titre: Empreinte  réparation voilier
+  formule: 8858
+  unité: kgCO2e
+  note: |
+    Données issues du [LCA_Boatcycle_Summary](https://storage.googleapis.com/naked-sailor.appspot.com/public/blogs/lca_boatcycle_summary.pdf) dont l'étude source est introuvable
+    Avec 8815 kgCO2e pour la maintenance ; 43 kgCO2e pour le mouillage à quai
+
+transport . bateau . voilier . durée:
+  titre: Durée de vie voilier
+  formule: 25
+  unité: an
+
+transport . bateau . voilier . consommation annuelle:
+  titre: Consommation annuelle voilier
+  question: En moyenne, combien de litres de carburant par an consommez-vous avec votre voilier ?
+  description: |
+    Si vous possédez plusieurs voiliers faites une moyenne de leur consommation
+
+    💡 Vous pouvez aussi estimer votre consommation annuelle à partir de vos factures sur l'année.
+  par défaut: 100
+  unité: l
+
+transport . bateau . empreinte au litre:
+  formule: 
+    moyenne:
+      - 3.1 kgCO2e/l
+      - 2.7 kgCO2e/l
+  note: Nous faisons la moyenne des FE gazole (3,1 kgCO2e/l) et essence (2,7 kgCO2e/l) de la Base Empreinte
+  unité: kgCO2e/l
