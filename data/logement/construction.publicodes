@@ -28,20 +28,18 @@ logement . construction . base:
         alors:
           variations:
             - si: logement . type = 'appartement'
-              alors: base . appartement / durée d'amortissement
+              alors: base . appartement / amortissement
             - si: logement . type = 'maison'
-              alors: base . maison / durée d'amortissement
+              alors: base . maison / amortissement
             - sinon:
                 moyenne:
-                  - base . maison / durée d'amortissement
-                  - base . appartement / durée d'amortissement
+                  - base . maison / amortissement
+                  - base . appartement / amortissement
       - sinon: 0
   unité: kgCO2e/m2
 
 logement . construction . base . plafond:
-  formule: 50
-  note: |
-    On considère qu'un logement est amorti sur 50 ans.
+  formule: amortissement
 
 logement . construction . base . appartement:
   titre: Empreinte appartement par m2
@@ -59,10 +57,10 @@ logement . construction . base . maison:
     Ces facteurs d'émission sont en fait les seuils maximaux d'empreinte de construction des constructions neuves, [fixés par la RE2020](https://www.ecologie.gouv.fr/sites/default/files/2021.02.18_DP_RE2020_EcoConstruire_0.pdf).
     Bien que conscients qu'utiliser ces seuils max pour évaluer l'empreinte des constructions passées consiste très probablement à sous-évaluer l'empreinte de construction, nous ne disposons pas d'études chiffrées sur les logements plus anciens nous permettant d'avancer un chiffre plus fiable.
 
-logement . construction . base . durée d'amortissement:
+logement . construction . base . amortissement:
   formule:
     variations:
-      - si: rénovation . travaux . choix utilisateur
+      - si: rénovation . travaux . travaux réalisés
         alors: 75
       - sinon: 50
   note: |
@@ -125,14 +123,14 @@ logement . construction . rénovation . travaux:
       - artificialisation sols
   unité: kgCO2e/m2
 
-logement . construction . rénovation . travaux . choix utilisateur:
-  titre: L'utilisateur a-t-il fait un choix de travaux ?
+logement . construction . rénovation . travaux . travaux réalisés:
+  titre: L'utilisateur a-t-il réalisé des travaux ?
   formule:
     une de ces conditions:
-      - est défini: rénovation . présent
-      - est défini: isolation . présent
-      - est défini: chauffage . présent
-      - est défini: extension . présent
+      - rénovation . présent
+      - isolation . présent
+      - chauffage . présent
+      - extension . présent
 
 logement . construction . rénovation . travaux . rénovation:
   titre: Rénovation
@@ -221,7 +219,7 @@ logement . construction . artificialisation sols:
 
 logement . construction . artificialisation sols . plafond:
   titre: Âge plafond pour compter de l'artificialisation des sols
-  formule: 10
+  formule: amortissement
 
 logement . construction . artificialisation sols . empreinte:
   formule: 19
