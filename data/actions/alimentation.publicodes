@@ -430,7 +430,10 @@ alimentation . manger local:
   non applicable si: local . consommation = 'oui toujours'
   titre: Manger essentiellement des produits locaux
   icônes: 🍅🇫🇷
-  formule: alimentation . local . empreinte - recalcul
+  formule:
+    somme:
+      - alimentation . local . empreinte - recalcul empreinte local
+      - alimentation . déforestation - recalcul empreinte déforestation
   description: |
     Manger des aliments qui n’ont pas été produits à l’autre bout de la planète permet d’éviter des émissions de gaz à effet de serre.
 
@@ -438,8 +441,13 @@ alimentation . manger local:
 
     Avantage supplémentaire : acheter des produits locaux permet de soutenir les agriculteurs de nos régions !
 
-alimentation . manger local . recalcul:
+alimentation . manger local . recalcul empreinte local:
   valeur: alimentation . local . empreinte
+  contexte:
+    alimentation . local . consommation: "'oui toujours'"
+
+alimentation . manger local . recalcul empreinte déforestation:
+  valeur: alimentation . déforestation
   contexte:
     alimentation . local . consommation: "'oui toujours'"
 

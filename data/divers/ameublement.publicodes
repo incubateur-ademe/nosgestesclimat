@@ -8,7 +8,10 @@ divers . ameublement:
     Ces FE ne considèrent donc pas la "fin de vie" qui est prise en compte via [le modèle déchets de NGC](https://nosgestesclimat.fr/documentation/alimentation/d%C3%A9chets) (qui prend en compte les quantités de déchets amenés en déchetterie, là ou sont (théoriquement) amenés les meubles en fin de vie).
 
     Nous considérons que tous les meubles sont utilisés par l'ensemble du foyer, même si potentiellement, certains ne le sont qu'à titre individuel, c'est une limitation du test.
-  formule: meubles / logement . habitants
+  formule:
+    somme:
+      - meubles / logement . habitants
+      - déforestation / logement . habitants
   unité: kgCO2e
 
 divers . ameublement . meubles:
@@ -29,6 +32,24 @@ divers . ameublement . meubles:
         armoire . nombre: 0
         canapé . nombre: 0
         matelas . nombre: 0
+        lit . nombre: 0
+        table . nombre: 0
+        chaise . nombre: 0
+        petit meuble . nombre: 0
+        grand meuble . nombre: 0
+      équipé:
+        armoire . nombre: 2
+        canapé . nombre: 1
+        matelas . nombre: 2
+        lit . nombre: 2
+        table . nombre: 1
+        chaise . nombre: 6
+        petit meuble . nombre: 2
+        grand meuble . nombre: 1
+      remplacement minimal:
+        armoire . nombre: 0
+        canapé . nombre: 1
+        matelas . nombre: 2
         lit . nombre: 0
         table . nombre: 0
         chaise . nombre: 0
@@ -414,7 +435,7 @@ divers . ameublement . meubles . nombre total:
       - grand meuble . nombre
 
 divers . ameublement . meubles . préservation:
-  non applicable si: meubles . nombre total = 0
+  applicable si: meubles . nombre total > 0
   question: Quel effort faites-vous pour garder vos meubles le plus longtemps possible ?
   description: |
     Pour éviter de vous demander de renseigner l'âge précis de tous les biens d'ameublement que vous possédez, nous avons défini un âge moyen pour chacun des biens (généralement 10 ans).
@@ -454,3 +475,24 @@ divers . ameublement . meubles . coefficient préservation:
       - si: préservation = 'moyen'
         alors: 1
       - sinon: 4 / 3
+
+divers . ameublement . déforestation:
+  formule:
+    variations:
+      - si: déforestation
+        alors:
+          variations:
+            - si: divers . ameublement . meubles . nombre total <= 5
+              alors: facteur meubles * 0.5
+            - si: divers . ameublement . meubles . nombre total > 15
+              alors: facteur meubles * 1.5
+            - sinon: facteur meubles
+      - sinon: 0
+  unité: kgCO2e
+  note: |
+    L'étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41) montre que l'empreinte de la déforestation importée est de 81 kgCO2e en moyenne par français. 
+    Nous considérons qu'en moyenne, un foyer français possède de 5 à 15 meubles de moins de 10 ans. Si l'utilisateur en possède moins, nous réduisons la part de déforestation, et inversement s'il en possède plus.
+
+divers . ameublement . déforestation . facteur meubles:
+  formule: 81
+  unité: kgCO2e
