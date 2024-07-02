@@ -1,61 +1,241 @@
 logement . construction:
   icônes: 🧱
-  formule:
-    variations:
-      - si: âge < durée d'amortissement
-        alors: surface * annuelle et par surface / habitants
-      - sinon: 0
+  formule: surface * empreinte amortie / habitants
   note: |
-    Un logement va en moyenne durer au moins 50 ans. C'est une valeur conservative.
+    Dans une première approche, Nos Gestes Climat considérait qu'un logement était amorti entièrement au bout de 50 ans, sans considérer les travaux de rafraîchissement et de rénovation. Nous avons décidé de revoir notre copie pour prendre en compte ces éléments.
 
-    Nous considérons ici que l'empreinte de la construction d'un logement est attribuée chaque année au 50ième aux habitants des 50 premières années.
+    Désormais, nous prenons en compte les travaux de rafraîchissement du logement mais également les travaux de rénovation. Pour cela, nous nous basons sur une [étude l'Ordre des Architectes sur le poids carbone des logements](https://resources.taloen.fr/resources/documents/569_20210527_OIDxCS_poids_carbone_logements.pdf) en intégrant les estimations carbone intermédiaires pour les étapes de travaux, à savoir:
 
-    Par la suite, l'empreinte de construction du logement est mise à zéro.
+    - Des travaux de rafraîchissement tous les 10 ans
+    - Des travaux de rénovation tous les 25 ans, avec distinction entre les travaux de second oeuvre, d'isolation, et de chauffage.
 
-    Amélioration possible : nous manquons de données, mais il devrait être possible d'attribuer une empreinte annuelle d'entretien du logement (ravalement, isolation, travaux intérieurs, etc.).
+    Cette étude proposait également de nouveaux facteurs d'émission pour la construction des logements. Néanmoins, ces données sourcées "ADEME" ne se rapportent à aucune étude permettant de les justifier et les utiliser avec confiance. Nous avons donc choisi de suivre les chiffres issues des recommandations de la [loi RE2020](https://www.ecologie.gouv.fr/politiques-publiques/reglementation-environnementale-re2020) même si elle concerne les nouveaux bâtiments, et que par nature, sous estiment à piori les émissions liées à la construction de bâtiments plus anciens.
   unité: kgCO2e
 
-logement . construction . annuelle et par surface:
-  formule: par surface / durée d'amortissement
+logement . construction . empreinte amortie:
+  formule:
+    somme:
+      - base
+      - rafraichissement
+      - rénovation
+      - déforestation
+      - artificialisation sols
   unité: kgCO2e/m2
 
-logement . construction . par surface:
+logement . construction . base:
   formule:
     variations:
-      - si:
-          toutes ces conditions:
-            - est défini: logement . appartement
-            - logement . appartement
-        alors: par surface . appartement + déforestation construction
-      - sinon: par surface . maison + déforestation construction
+      - si: logement . âge < plafond
+        alors:
+          variations:
+            - si: logement . type = 'appartement'
+              alors: base . appartement / amortissement
+            - si: logement . type = 'maison'
+              alors: base . maison / amortissement
+            - sinon:
+                moyenne:
+                  - base . maison / amortissement
+                  - base . appartement / amortissement
+      - sinon: 0
   unité: kgCO2e/m2
-  note: |
-    Nous avons décidé de supprimer la question liée à l'éco-constructin du logement, car l'empreinte associée faisait débat. Dès que nous retrouverons des données fiables, nous la remettrons en ligne !
 
-# logement . éco-construit:
-#   question: Votre logement est-il fait en bois, paille, pierre ou terre (éco-construit) ?
-#   par défaut: non
+logement . construction . base . plafond:
+  formule: amortissement
 
-logement . construction . déforestation construction: 
-  formule: 44.8
-  unité: kgCO2e/m2
-  note: |
-    L'étude Pendril & al. sur la déforestation importée compte une déforestation moyenne de 37 kgCO2e par habitant. 
-    Sur la base d'un logement moyen de 41,3 m² par habitant (statistiques INSEE - 90,9 m² par logement en moyenne pour un foyer de 2,2 personnes), et d'un amortissement de 50 ans, cela donne une empreinte de 44,8 kgCO2e / m².
-
-logement . construction . par surface . appartement:
+logement . construction . base . appartement:
   titre: Empreinte appartement par m2
-  formule: 525
+  formule: 740
   unité: kgCO2e/m2
-  note: Facteur d'émission issu de la Base Empreinte.
+  note: |
+    Ces facteurs d'émission sont en fait les seuils maximaux d'empreinte de construction des constructions neuves, [fixés par la RE2020](https://www.ecologie.gouv.fr/sites/default/files/2021.02.18_DP_RE2020_EcoConstruire_0.pdf).
+    Bien que conscients qu'utiliser ces seuils max pour évaluer l'empreinte des constructions passées consiste très probablement à sous-évaluer l'empreinte de construction, nous ne disposons pas d'études chiffrées sur les logements plus anciens nous permettant d'avancer un chiffre plus fiable.
 
-logement . construction . par surface . maison:
+logement . construction . base . maison:
   titre: Empreinte maison par m2
-  formule: 425
+  formule: 640
   unité: kgCO2e/m2
-  note: Facteur d'émission issu de la Base Empreinte.
+  note: |
+    Ces facteurs d'émission sont en fait les seuils maximaux d'empreinte de construction des constructions neuves, [fixés par la RE2020](https://www.ecologie.gouv.fr/sites/default/files/2021.02.18_DP_RE2020_EcoConstruire_0.pdf).
+    Bien que conscients qu'utiliser ces seuils max pour évaluer l'empreinte des constructions passées consiste très probablement à sous-évaluer l'empreinte de construction, nous ne disposons pas d'études chiffrées sur les logements plus anciens nous permettant d'avancer un chiffre plus fiable.
 
-logement . construction . durée d'amortissement:
+logement . construction . base . amortissement:
+  formule:
+    variations:
+      - si: rénovation . travaux . travaux réalisés
+        alors: 75
+      - sinon: 50
+  note: |
+    La durée de vie d'un bâtiment est fixée à 50 ans (voir la [documentation de la base empreinte, onglet Achats de bien/ Bâtiments](https://prod-basecarbonesolo.ademe-dri.fr/documentation/UPLOAD_DOC_FR/)). Si le logement est rénové, cette durée est rallongée de 25 ans.
+
+logement . construction . rafraichissement:
+  titre: Travaux de rafraîchissement
+  icônes: 🎨
+  applicable si: logement . âge >= seuil
+  formule: 40 kgCO2e/m2 / amortissement
+  unité: kgCO2e/m2
+  description: |
+    Au dessus de 10 ans, on considère _par défaut_ que des travaux de rafraîchissement sont réalisés. On parle de petits travaux pour le confort du logement (peintures, revêtement de sol, etc.).
+  note: |
+    Ce facteur d'émission est issu d'une [étude croisée entre CentraleSupélec et l'Observatoire de l'Immobilier Durable (OID)](https://www.architectes.org/actualites/quel-est-le-poids-carbone-des-logements-avec-ou-sans-renovation-92667).
+
+logement . construction . rafraichissement . seuil:
+  titre: Âge seuil pour le rafraîchissement
+  formule: 10
+
+logement . construction . rafraichissement . amortissement:
+  formule: 10
+
+logement . construction . rénovation:
+  applicable si: logement . âge >= seuil
+  formule: travaux / amortissement
+  unité: kgCO2e/m2
+
+logement . construction . rénovation . seuil:
+  titre: Âge seuil pour la rénovation
+  formule: 25
+
+logement . construction . rénovation . amortissement:
+  formule: 25
+
+logement . construction . rénovation . travaux:
+  applicable si: logement . âge > seuil
+  question: Des travaux de rénovation ont-ils été réalisés dans votre logement (hors rafraîchissement) depuis 2000 ?
+  description: |
+    Votre logement n'est pas récent, il est donc fort possible qu'il ait subi des travaux d'entretien et rénovation, que vous pouvez renseigner ici si vous les connaissez.
+  mosaique:
+    type: selection
+    options:
+      - rénovation . présent
+      - isolation . présent
+      - chauffage . présent
+      - extension . présent
+    suggestions:
+      aucun:
+        rénovation . présent: non
+        isolation . présent: non
+        chauffage . présent: non
+        extension . présent: non
+  formule:
+    somme:
+      - rénovation
+      - isolation
+      - chauffage
+      - extension
+  unité: kgCO2e/m2
+
+logement . construction . rénovation . travaux . travaux réalisés:
+  titre: L'utilisateur a-t-il réalisé des travaux ?
+  formule:
+    une de ces conditions:
+      - rénovation . présent
+      - isolation . présent
+      - chauffage . présent
+      - extension . présent
+
+logement . construction . rénovation . travaux . rénovation:
+  titre: Rénovation
+  description: Agencement des pièces, sols…
+  icônes: 🛠
+  applicable si: rénovation . présent
+  formule: 235
+  unité: kgCO2e/m2
+  note: |
+    Ce facteur d'émission est issu d'une [étude croisée entre CentraleSupélec et l'Observatoire de l'Immobilier Durable (OID)](https://www.architectes.org/actualites/quel-est-le-poids-carbone-des-logements-avec-ou-sans-renovation-92667).
+
+logement . construction . rénovation . travaux . rénovation . présent:
+  question: Avez-vous réalisé des travaux de rénovation (second d'oeuvre) ?
+  par défaut: oui
+
+logement . construction . rénovation . travaux . isolation:
+  titre: Isolation
+  description: Par l’intérieur ou par l’extérieur, huisseries, combles...
+  icônes: ❄️
+  applicable si: isolation . présent
+  formule: 170
+  unité: kgCO2e/m2
+  note: |
+    Ce facteur d'émission est issu d'une [étude croisée entre CentraleSupélec et l'Observatoire de l'Immobilier Durable (OID)](https://www.architectes.org/actualites/quel-est-le-poids-carbone-des-logements-avec-ou-sans-renovation-92667).
+
+logement . construction . rénovation . travaux . isolation . présent:
+  question: Avez-vous réalisé des travaux d'isolation ?
+  par défaut: non
+
+logement . construction . rénovation . travaux . chauffage:
+  titre: Changement du système de chauffage
+  icônes: 🔥
+  applicable si: chauffage . présent
+  formule: 95
+  unité: kgCO2e/m2
+  note: |
+    Ce facteur d'émission est issu d'une [étude croisée entre CentraleSupélec et l'Observatoire de l'Immobilier Durable (OID)](https://www.architectes.org/actualites/quel-est-le-poids-carbone-des-logements-avec-ou-sans-renovation-92667).
+
+logement . construction . rénovation . travaux . chauffage . présent:
+  question: Avez-vous changé de système de chauffage ?
+  par défaut: non
+
+logement . construction . rénovation . travaux . extension:
+  # Pour le moment, il n'est pas possible de désactiver une carte de la mosaique selon certaines conditions.
+  # non applicable si: logement . type = 'appartement'
+  titre: Extension
+  icônes: 🏡
+  applicable si: extension . présent
+  formule:
+    variations:
+      - si: logement . âge > logement . construction . base . plafond
+        alors: ratio * logement . construction . base . maison
+      - sinon: 0
+  note: |
+    Si le logement n'est pas encore amorti, on considère que l'extension est comprise dans la construction de base.
+  unité: kgCO2e/m2
+
+logement . construction . rénovation . travaux . extension . présent:
+  question: Avez-vous réalisé une extension de votre logement ?
+  par défaut: non
+
+logement . construction . rénovation . travaux . extension . ratio:
+  formule: taille / logement . surface
+
+logement . construction . rénovation . travaux . extension . taille:
+  question: Quelle est la taille de l'extension réalisée (en m²) ?
+  par défaut: 0.2 * logement . surface
+  unité: m2
+  note: En moyenne, on considère que l'extension représente 20% de la surface du logement (le max étant fixé à 30%).
+
+logement . construction . déforestation:
+  applicable si: logement . âge < plafond
+  formule: 37 kgCO2e * logement . habitants . moyen / parc français . surface moyenne
+  unité: kgCO2e/m2
+  note: |
+    L'étude Pendril & al. sur la déforestation importée compte une déforestation moyenne de 37 kgCO2e par habitant et par an.
+
+    Pour appliquer ce facteur au m2, nous nous basons sur la surface d'un logement moyen et un nombre d'habitants moyen.
+
+logement . construction . déforestation . plafond:
   formule: 50
   note: |
-    La durée de vie d'un bâtiment est fixée à 50 ans (voir la [documentation de la base empreinte, onglet Achats de bien/ Bâtiments](https://prod-basecarbonesolo.ademe-dri.fr/documentation/UPLOAD_DOC_FR/)).
+    L'empreinte de la déforestation importée est amortie sur 50 ans.
+
+logement . construction . artificialisation sols:
+  titre: Artificialisation des sols des logements récents
+  applicable si: logement . type = 'maison'
+  formule:
+    variations:
+      - si: logement . âge < plafond
+        alors: empreinte / amortissement
+      - sinon: 0
+  unité: kgCO2e/m2
+
+logement . construction . artificialisation sols . plafond:
+  titre: Âge plafond pour compter de l'artificialisation des sols
+  formule: amortissement
+
+logement . construction . artificialisation sols . empreinte:
+  formule: 19
+  unité: kgCO2e/m2
+  note: |
+    D'après [l'ADEME et le CITEPA](https://www.ecologie.gouv.fr/sites/default/files/sobriete_fonciere_-_vers_le_zero_artificialisation_nette_zan_des_sols_0.pdf), l'artificialisation d'un hectare de terrain agricole émet de 190 à 290 tonnes de CO2e selon le type de sol artificialisé. Nous partons du principe que la plus grande part des sols artificialisés pour la création de nouveaux logements est de la zone agricole.
+
+logement . construction . artificialisation sols . amortissement:
+  formule: 10
+  note: |
+    Nous faisons le choix d'amortir l'empreinte liée à l'artificialisation des sols d'une nouvelle construction sur les 10 premières années du logement, bien que l'émission associée soit bien faite au moment même de cette artificialisation.
