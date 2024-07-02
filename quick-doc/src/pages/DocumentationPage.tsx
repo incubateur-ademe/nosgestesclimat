@@ -8,7 +8,7 @@ import { pathTo } from '../Nav'
 import Loader from '../components/Loader'
 import remarkGfm from 'remark-gfm'
 
-const defaultRule = 'bilan'
+const defaultRule = 'bilan climat'
 
 export default function DocumentationPage() {
   const { engine } = useContext(AppContext)

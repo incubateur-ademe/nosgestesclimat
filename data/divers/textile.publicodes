@@ -1,10 +1,14 @@
 divers . textile:
   icônes: 👚
   formule:
-    somme:
-      - empreinte
-      - déforestation
-  unité: kgCO2e
+    variations:
+      - si: métrique = "carbone"
+        alors:
+          somme:
+            - empreinte
+            - déforestation
+      - si: métrique = "eau"
+        alors: empreinte
 
 divers . textile . empreinte:
   titre: Empreinte de sa garde-robe
@@ -86,7 +90,6 @@ divers . textile . empreinte:
       - manteau
       - petit article
       - gros article
-  unité: kgCO2e
   description: |
     À vous de nous dire ce que vous avez mis dans vos sacs de shopping cette année, ou dans une année représentative si vous faites rarement les magasins.
 
@@ -95,8 +98,8 @@ divers . textile . empreinte:
     Ne renseignez que les produits neufs. Nous excluons du calcul l'achat en friperies, la récupération, l'occasion.
 
   note: |
-    Les données sont toutes issues de la Base Carbone sauf le short qui vient des données de Base Impact (textile, linge de maison, maroquinerie) 
-    et les deux articles génériques qui sont des estimations grossières basées sur la visualisation du graphe des données de la [documentation ADEME](https://prod-basecarbonesolo.ademe-dri.fr/documentation/UPLOAD_DOC_FR/) (Scope 3 / Textile / Coton, synthétique, autre). 
+    Les données sont toutes issues de la Base Carbone sauf le short qui vient des données de Base Impact (textile, linge de maison, maroquinerie)
+    et les deux articles génériques qui sont des estimations grossières basées sur la visualisation du graphe des données de la [documentation ADEME](https://prod-basecarbonesolo.ademe-dri.fr/documentation/UPLOAD_DOC_FR/) (Scope 3 / Textile / Coton, synthétique, autre).
 
     Nous n'avons pas utilisé les données de Base Impact (sauf dans le cas du short) car même si les données correspondent à la moyenne de plusieurs produits, beaucoup ne proviennent que d'une seule entreprise.
 
@@ -106,7 +109,7 @@ divers . textile . notif débarras surplus:
   type: notification
   formule: textile . nombre total > 0
   description: |
-    > Le saviez-vous ? 
+    > Le saviez-vous ?
 
     > D'après une étude commandée par l'entreprise de déménagement Movinga en 2018, les français ne porteraient pas 68% (!) de leur garde-robe. C'est donc plus des deux-tiers du contenu de nos placards qui n'en sort jamais.
 
@@ -114,179 +117,313 @@ divers . textile . notif débarras surplus:
   note: |
     [Source](https://www.corsenetinfos.corsica/Halte-au-Gaspi-Les-Francais-ne-portent-pas-68-des-vetements-qu-ils-possedent-_a34819.html)
 
-divers . textile . t-shirt . empreinte:
-  formule: 5.35
-  unité: kgCO2e
-  note: moyenne de l'empreinte des t-shirts en coton et en polyester de la Base Carbone
+divers . textile . t-shirt:
+  icônes: 👕
+  formule: empreinte * nombre
 
 divers . textile . t-shirt . nombre:
   question: Nombre de t-shirt achetés sur une année
   plancher: 0
   par défaut: 4
 
-divers . textile . t-shirt:
-  icônes: 👕
-  formule: empreinte * nombre
-  unité: kgCO2e
+divers . textile . t-shirt . empreinte:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
 
-divers . textile . pantalon . empreinte:
-  formule: 23.2
+divers . textile . t-shirt . empreinte carbone:
+  formule: 5.35
   unité: kgCO2e
-  note: empreinte d'un jean en coton de la Base Carbone
+  note: Moyenne de l'empreinte des t-shirts en coton et en polyester de la Base Empreinte.
+
+divers . textile . t-shirt . empreinte eau:
+  formule: 14720
+  unité: l
+  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le t-shirt en coton (majorant par défaut).
+
+divers . textile . pantalon:
+  icônes: 👖
+  formule: empreinte * nombre
 
 divers . textile . pantalon . nombre:
   question: Nombre de pantalons/jeans achetés sur une année
   plancher: 0
   par défaut: 2
 
-divers . textile . pantalon:
-  icônes: 👖
-  formule: empreinte * nombre
-  unité: kgCO2e
+divers . textile . pantalon . empreinte:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
 
-divers . textile . short . empreinte:
-  formule: 6.4
+divers . textile . pantalon . empreinte carbone:
+  formule: 23.2
   unité: kgCO2e
-  note: empreinte d'un short issu des données Base Impact (Textile, linge de maison, maroquinerie)
+  note: Empreinte d'un jean en coton de la Base Empreinte.
+
+divers . textile . pantalon . empreinte eau:
+  formule: 49160
+  unité: l
+  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le jean en coton (majorant par défaut).
+
+divers . textile . short:
+  titre: Shorts
+  icônes: 🩳
+  formule: empreinte * nombre
 
 divers . textile . short . nombre:
   question: Nombre de shorts achetés sur une année
   plancher: 0
   par défaut: 1
 
-divers . textile . short:
-  titre: Shorts
-  icônes: 🩳
-  formule: empreinte * nombre
-  unité: kgCO2e
+divers . textile . short . empreinte:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
 
-divers . textile . sweat . empreinte:
-  formule: 27.4
+divers . textile . short . empreinte carbone:
+  formule: 6.4
   unité: kgCO2e
-  note: empreinte d'un sweat de la Base Carbone
+  note: Empreinte d'un short issu des données Base Impact (Textile, linge de maison, maroquinerie)
+
+divers . textile . short . empreinte eau:
+  formule: 32850
+  unité: l
+  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le jean en coton (majorant par défaut) avec un poids de 300 grammes.
+
+divers . textile . sweat:
+  titre: Sweat (en coton)
+  icônes: 🧵
+  formule: empreinte * nombre
 
 divers . textile . sweat . nombre:
   question: Nombre de sweats achetés sur une année
   plancher: 0
   par défaut: 2
 
-divers . textile . sweat:
-  titre: Sweat (en coton)
-  note: La base carbone parle d'un "Sweat - (CO)", et la [documentation](https://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Coton_-synthetique_-autre) ne mentionne qu'un "sweat en coton" dont l'empreinte est proche.
-  icônes: 🧵
-  formule: empreinte * nombre
-  unité: kgCO2e
+divers . textile . sweat . empreinte:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
 
-divers . textile . robe . empreinte:
-  formule: 48.4
+divers . textile . sweat . empreinte carbone:
+  formule: 27.4
   unité: kgCO2e
-  note: moyenne de l'empreinte entre une robe en polyester et une en viscose de la Base Carbone
+  note: |
+    Empreinte d'un sweat de la Base Empreinte.
+
+    La base empreinte parle d'un "Sweat - (CO)", et la [documentation](https://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Coton_-synthetique_-autre) ne mentionne qu'un "sweat en coton" dont l'empreinte est proche.
+
+divers . textile . sweat . empreinte eau:
+  formule: 39070
+  unité: l
+  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le tee-shirt en coton (majorant par défaut) avec un poids de 400 grammes.
+
+divers . textile . robe:
+  icônes: 👗
+  formule: empreinte * nombre
 
 divers . textile . robe . nombre:
   question: Nombre de robes achetées sur une année
   plancher: 0
   par défaut: 2
 
-divers . textile . robe:
-  icônes: 👗
-  formule: empreinte * nombre
-  unité: kgCO2e
+divers . textile . robe . empreinte:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
 
-divers . textile . chemise . empreinte:
-  formule: 10.7
+divers . textile . robe . empreinte carbone:
+  formule: 48.4
   unité: kgCO2e
-  note: moyenne de l'empreinte entre une chemise coton et une en viscose de la Base Carbone
+  note: Moyenne de l'empreinte entre une robe en polyester et une en viscose de la Base Empreinte.
+
+divers . textile . robe . empreinte eau:
+  formule: 52700
+  unité: l
+  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant la jupe en coton (majorant par défaut) avec un poids majoré de deux tiers (67%).
+
+divers . textile . chemise:
+  icônes: 👔
+  formule: empreinte * nombre
 
 divers . textile . chemise . nombre:
   question: Nombre de chemises achetées sur une année
   plancher: 0
   par défaut: 2
 
-divers . textile . chemise:
-  icônes: 👔
-  formule: empreinte * nombre
-  unité: kgCO2e
+divers . textile . chemise . empreinte:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
 
-divers . textile . pull . empreinte:
-  formule: 39.2
+divers . textile . chemise . empreinte carbone:
+  formule: 10.7
   unité: kgCO2e
-  note: moyenne de l'empreinte entre un pull acrylique et un pull en laine de la Base Carbone (le pull recyclé n'est pas pris en compte)
+  note: Moyenne de l'empreinte entre une chemise coton et une en viscose de la Base Empreinte.
+
+divers . textile . chemise . empreinte eau:
+  formule: 26410
+  unité: l
+  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant la chemise en coton (majorant par défaut).
+
+divers . textile . pull:
+  titre: Pull (laine ou acrylique)
+  icônes: 🧶
+  formule: empreinte * nombre
 
 divers . textile . pull . nombre:
   question: Nombre de pulls achetés sur une année
   plancher: 0
   par défaut: 1
 
-divers . textile . pull:
-  titre: Pull (laine ou acrylique)
-  icônes: 🧶
-  formule: empreinte * nombre
-  unité: kgCO2e
+divers . textile . pull . empreinte:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
 
-divers . textile . chaussure . empreinte:
-  formule: 16.47
+divers . textile . pull . empreinte carbone:
+  formule: 39.2
   unité: kgCO2e
-  note: moyenne de l'empreinte entre des chaussures en cuir, en tissu et de sport de la Base Carbone
+  note: Moyenne de l'empreinte entre un pull acrylique et un pull en laine de la Base Empreinte (le pull recyclé n'est pas pris en compte).
+
+divers . textile . pull . empreinte eau:
+  formule: 56810
+  unité: l
+  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le pull en coton (majorant par défaut).
+
+divers . textile . chaussure:
+  titre: Paire de chaussures
+  icônes: 👟
+  formule: empreinte * nombre
 
 divers . textile . chaussure . nombre:
   question: Nombre de chaussures achetées sur une année
   plancher: 0
   par défaut: 2
 
-divers . textile . chaussure:
-  titre: Paire de chaussures
-  icônes: 👟
-  formule: empreinte * nombre
-  unité: kgCO2e
+divers . textile . chaussure . empreinte:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
 
-divers . textile . manteau . empreinte:
-  formule: 85.8
+divers . textile . chaussure . empreinte carbone:
+  formule: 16.47
   unité: kgCO2e
-  note: empreinte d'un manteau de la Base Carbone
+  note: Moyenne de l'empreinte entre des chaussures en cuir, en tissu et de sport de la Base Empreinte.
+
+divers . textile . chaussure . empreinte eau:
+  formule: 0
+  unité: l
+  note: Pour le moment, nous Ecobalyse ne fournit pas d'empreinte environnementale pour une paire de chaussures.
+
+divers . textile . manteau:
+  icônes: 🧥
+  formule: empreinte * nombre
 
 divers . textile . manteau . nombre:
   question: Nombre de manteaux achetés sur une année
   plancher: 0
   par défaut: 1
 
-divers . textile . manteau:
-  icônes: 🧥
-  formule: empreinte * nombre
-  unité: kgCO2e
+divers . textile . manteau . empreinte:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
 
-divers . textile . petit article . empreinte:
-  formule: 5
+divers . textile . manteau . empreinte carbone:
+  formule: 85.8
   unité: kgCO2e
-  note: Estimation grossière de l'empreinte d'un petit article générique.
+  note: Empreinte carbone d'un manteau de la Base Empreinte
+
+divers . textile . manteau . empreinte eau:
+  formule: 99530
+  unité: l
+  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le manteau en coton (majorant par défaut).
+
+divers . textile . petit article:
+  titre: Autre petit article
+  icônes: 🔹
+  formule: empreinte * nombre
+  description: Vêtement plutôt léger (chaussettes, sous-vêtements, etc., par opposition à un manteau ou un pull).
 
 divers . textile . petit article . nombre:
   question: Nombre de petits articles génériques achetés sur une année
   plancher: 0
   par défaut: 1
 
-divers . textile . petit article:
-  titre: Autre petit article
-  icônes: 🔹
-  formule: empreinte * nombre
-  unité: kgCO2e
-  description: Vêtement plutôt léger (chaussettes, sous-vêtements, etc., par opposition à un manteau).
+divers . textile . petit article . empreinte:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
 
-divers . textile . gros article . empreinte:
-  formule: 40
+divers . textile . petit article . empreinte carbone:
+  formule: 5
   unité: kgCO2e
-  note: Estimation grossière de l'empreinte d'un gros article générique.
+  note: Estimation grossière de l'empreinte d'un petit article générique.
+
+divers . textile . petit article . empreinte eau:
+  formule: 3230
+  unité: l
+  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant la paire de chaussettes en coton (majorant par défaut).
+
+divers . textile . gros article:
+  titre: Autre gros article
+  icônes: 🔷
+  formule: empreinte * nombre
+  description: Vêtement plutôt lourd (veste imperméable, costume, etc., par opposition aux sous-vêtements).
 
 divers . textile . gros article . nombre:
   question: Nombre de gros articles génériques achetés sur une année
   plancher: 0
   par défaut: 1
 
-divers . textile . gros article:
-  titre: Autre gros article
-  icônes: 🔷
-  formule: empreinte * nombre
+divers . textile . gros article . empreinte:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+divers . textile . gros article . empreinte carbone:
+  formule: 40
   unité: kgCO2e
-  description: Vêtement plutôt lourd (veste imperméable, costume, etc., par opposition aux sous-vêtements).
+  note: Estimation grossière de l'empreinte d'un gros article générique.
+
+divers . textile . gros article . empreinte eau:
+  formule: 99530
+  unité: l
+  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le manteau en coton (majorant par défaut).
 
 divers . textile . nombre total:
   formule:

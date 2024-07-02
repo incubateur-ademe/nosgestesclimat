@@ -131,7 +131,8 @@ try {
     }
   })
 
-  engine.evaluate('bilan')
+  engine.evaluate('bilan climat')
+  engine.evaluate('bilan eau')
   engine.evaluate('actions')
 
   if (!markdown) {

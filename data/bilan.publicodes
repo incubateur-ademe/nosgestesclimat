@@ -1,6 +1,31 @@
+métrique:
+  avec:
+    carbone:
+    eau:
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - carbone
+        - eau
+  par défaut: "'carbone'"
+
 bilan:
-  titre: Votre bilan climat personnel
-  icônes: 👤
+  titre: Bilan
+  description: |
+    Cette règle est la base de nos calculs : pour chaque métrique, nous recalculons ce bilan en adaptant 
+    les données dans le contexte du carbone ou l'eau (pour le moment).
+  formule:
+    somme:
+      - logement
+      - transport
+      - alimentation
+      - divers
+      - services sociétaux
+
+bilan climat:
+  titre: Votre empreinte climat personnelle
+  icônes: 👤⚫️
   description: |
     Voici une estimation de votre empreinte climat à l'année. Elle évolue en fonction de vos réponses.
 
@@ -14,14 +39,35 @@ bilan:
 
     Mais qu'est-ce qu'elle signifie, cette dizaine de tonnes d'équivalent CO₂ ? Pourquoi c'est important ? **On vous dit tout sur l'empreinte climat** et comment situer cette empreinte (faible, élevée ?) [➡ dans cet article](https://nosgestesclimat.fr/blog/budget).
     <RavijenChart/>
+  valeur: bilan
+  contexte:
+    métrique: "'carbone'"
+  untité: kgCO2e
 
-  formule:
-    somme:
-      - logement
-      - transport
-      - alimentation
-      - divers
-      - services sociétaux
+bilan eau:
+  titre: Votre empreinte eau personnelle
+  icônes: 👤🔵
+  description: |
+    Voici une estimation de votre empreinte "eau" à l'année. Elle évolue en fonction de vos réponses.
+
+    Pour le moment, cette empreinte comprend l'eau directe, celle qui sort de votre robinet pour boire, cuisiner, vous laver mais elle inclut aussi l'eau "virtuelle" ou indirecte : l'eau nécessaire pour produire les aliments que vous mangez, les vêtements que vous portez, les objets que vous utilisez. C'est une forme de "carbone équivalent" pour l'eau puisque nous calculons l'empreinte eau via des facteurs d'émissions qui prennent en compte les consommations d'eau sur tout le cycle de vie en tenant compte du stress hydrique des régions de production.
+
+    A noter : la consommation d'eau directe semble dérisoire comparée à la consommation indirecte mais ce n'est pas pour autant qu'il faut prendre des douches de 20 minutes... L'eau domestique impacte directement l'eau du bassin sur lequel vous vivez et les enjeux hydriques sont très localisés et temporels.
+
+    > C'est une version "bêta" du modèle avec, pour le moment, une estimation des principaux postes. Désormais, les analyses de cycle de vie ne portent plus seulement sur le cabone mais sont multi-critères. Nous attendons donc avec impatience de nouvelles données pour affiner ces calculs.
+
+  valeur: bilan
+  contexte:
+    métrique: "'eau'"
+  unité: l
+
+bilan eau . par jour:
+  titre: Votre empreinte eau personnelle journalière
+  formule: bilan eau / commun . jours par an
+
+bilan eau . eau directe par jour:
+  titre: Votre consommation d'eau directe journalière
+  formule: eau directe / commun . jours par an
 
 déforestation: 
   titre: Déforestation importée
