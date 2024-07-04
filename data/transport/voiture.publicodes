@@ -39,7 +39,8 @@ transport . voiture . km:
     Ne comptez que les kilomètres de déplacement personnel (courses, loisirs, famille, etc.) et de déplacement domicile travail pour rejoindre votre lieu de travail habituel.
 
     Par exemple, si vous êtes en mission professionnelle dans un autre département ou un autre pays, cela rentre dans la comptabilité de votre entreprise : ne le comptez pas ici.
-  par défaut: km annuels moyen
+  # It seems that there is a [publicodes bug](https://github.com/publicodes/publicodes/issues/517). For now, we can't use `km annuels moyen réel` directly here, until the problem is fixed.
+  par défaut: 8210
   unité: km
   plancher: 0
   suggestions:
@@ -49,10 +50,66 @@ transport . voiture . km:
     1000km / mois: 12000
     20 000km / an: 20000
 
+transport . voiture . km annuels moyen réel:
+  #8210
+  formule: km annuels moyen * nombre véhicules circulation / population
+
 transport . voiture . km annuels moyen:
-  formule: 12200
+  #12216
+  formule:
+    somme:
+      - km annuels moyen . véhicules légers * nombre véhicules circulation . véhicules légers / nombre véhicules circulation
+      - km annuels moyen . VUL * nombre véhicules circulation . VUL / nombre véhicules circulation
   unité: km
-  note: Chiffre issu de [datalab ministère écologie 2019](https://www.statistiques.developpement-durable.gouv.fr/bilan-annuel-des-transports-en-2019-0), page 3 G1.
+  note: |
+    Ce chiffre concerne les véhicules en circulation (voitures et VUL).
+    Il est issu des [Données sur le parc automobile français au 1er janvier 2023](https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2023?rubrique=&dossier=1348).
+
+    Nous considérons néanmoins les données pour l'année 2022 car la distance moyenne parcourue par véhicule n'est dispo que pour 2022.
+
+    Nous avons choisi de ne pas prendre en compte la catégorisation pro/perso dans de nombreux véhicules professionels sont utilisés également pour les trajets perso et domicile travail (que nous prenons en compte dans le calculateur).
+
+transport . voiture . km annuels moyen . véhicules légers:
+  formule: 11957
+  unité: km
+  note: |
+    Ce chiffre concerne les véhicules en circulation (voitures et VUL).
+    Il est issu des [Données sur le parc automobile français au 1er janvier 2023](https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2023?rubrique=&dossier=1348).
+
+    Nous considérons néanmoins les données pour l'année 2022 car la distance moyenne parcourue par véhicule n'est dispo que pour 2022.
+
+transport . voiture . km annuels moyen . VUL:
+  formule: 13793
+  unité: km
+  note: |
+    Ce chiffre concerne les véhicules en circulation (voitures et VUL).
+    Il est issu des [Données sur le parc automobile français au 1er janvier 2023](https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2023?rubrique=&dossier=1348).
+
+    Nous considérons néanmoins les données pour l'année 2022 car la distance moyenne parcourue par véhicule n'est dispo que pour 2022.
+
+transport . voiture . nombre véhicules circulation:
+  formule: véhicules légers + VUL
+  note: |
+    Ce chiffre concerne les véhicules en circulation (voitures et VUL).
+    Il est issu des [Données sur le parc automobile français au 1er janvier 2023](https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2023?rubrique=&dossier=1348).
+
+    Nous considérons néanmoins les données pour l'année 2022 car la distance moyenne parcourue par véhicule n'est dispo que pour 2022.
+
+    Nous avons choisi de ne pas prendre en compte la catégorisation pro/perso dans de nombreux véhicules professionels sont utilisés également pour les trajets perso et domicile travail (que nous prenons en compte dans le calculateur).
+
+transport . voiture . nombre véhicules circulation . véhicules légers:
+  formule: 38814659
+  note: |
+    Ce chiffre est issu des [Données sur le parc automobile français au 1er janvier 2023](https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2023?rubrique=&dossier=1348).
+
+    Nous considérons néanmoins les données pour l'année 2022 car la distance moyenne parcourue par véhicule n'est dispo que pour 2022.
+
+transport . voiture . nombre véhicules circulation . VUL:
+  formule: 6384963
+  note: |
+    Ce chiffre est issu des [Données sur le parc automobile français au 1er janvier 2023](https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2023?rubrique=&dossier=1348).
+
+    Nous considérons néanmoins les données pour l'année 2022 car la distance moyenne parcourue par véhicule n'est dispo que pour 2022.
 
 transport . voiture . utilisateur:
   question: Utilisez-vous majoritairement la même voiture pour vous déplacer ?
@@ -686,12 +743,6 @@ transport . voiture . climatisation . émissions gaz fluorés transport:
 
     D'après l'excel [Données par substance de gaz à effet de serre (GES) édition 2023, onglet "GF-UE_total"](https://www.citepa.org/wp-content/uploads/publications/secten/2023/Citepa_gaz_a_effet_de_serre_v2.zip), 
     les émissions de gaz fluorés pour le secteur du transport (provenant des équipements de réfrigération et d'air conditionné, utilisant des halocarbures ou du SF6), sont de 1374 ktCO₂e.
-
-transport . voiture . nombre véhicules circulation:
-  formule: 38700000 + 5977000
-  note: |
-    Ce chiffre concerne les véhicules particuliers (voitures et VUL).
-    Il est issu des statistiques [INSEE](https://www.insee.fr/fr/statistiques/2045167#tableau-figure1_radio1).
 
 transport . voiture . construction:
   titre: Construction de la voiture
