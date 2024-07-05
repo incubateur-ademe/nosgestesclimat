@@ -4,15 +4,15 @@ utils . twowheelersSplit: 0.5
 
 carcommute: transport . voiture . km > 0
 twowheelerscommute: transport . deux roues . usager
-buscommute: transport . bus . heures par semaine > 0
-traincommute: transport . métro ou tram . heures par semaine > 0
+buscommute: transport . transports commun . bus . heures par semaine > 0
+traincommute: transport . transports commun . métro ou tram . heures par semaine > 0
 boatcommute: non
 carcommute-kmperday: transport . voiture . km * utils . carSplit / commun . jours par an
 carcommute-occupancy: transport . voiture . voyageurs
 twowheelerscommute-kmperday: transport . deux roues . km * utils . twowheelersSplit / commun . jours par an
 twowheelerscommute-occupancy: 1
-buscommute-kmperday: transport . bus . heures par semaine * transport . bus . vitesse / commun . jours par semaine
-traincommute-kmperday: transport . métro ou tram . heures par semaine * transport . métro ou tram . vitesse / commun . jours par semaine
+buscommute-kmperday: transport . transports commun . bus . heures par semaine * transport . transports commun . bus . vitesse / commun . jours par semaine
+traincommute-kmperday: transport . transports commun . métro ou tram . heures par semaine * transport . transports commun . métro ou tram . vitesse / commun . jours par semaine
 boatcommute-kmperday: non
 commute-workdistances-ratio: "'default'"
 cartravel: transport . voiture . km > 0
@@ -182,9 +182,9 @@ household-occupancy: logement . habitants
 household-type:
   formule:
     variations:
-      - si: logement . appartement = oui
+      - si: logement . type = 'appartement'
         alors: "'FLAT'"
-      - si: logement . appartement = non
+      - si: logement . type = 'maison'
         alors: "'HOUSE'"
       - sinon: "'default'"
 HEAT-source:
@@ -251,7 +251,7 @@ BIOFUELSANDWASTES-kwh:
       - logement . chauffage . bois . type . bûches . consommation * logement . chauffage . bois . type . bûches . intensité énergétique
       - logement . chauffage . bois . type . granulés . consommation
 HEATLOWCARBONSYSTEM-kwh: non
-ELECTRICITYNETWORK-kwh: logement . électricité . consommation
+ELECTRICITYNETWORK-kwh: logement . électricité . consommation totale
 ELECLOWCARBONSYSTEM-kwh: non
 foodconsumptionknowledge: non
 breakfast-milkandcereals-timesperweek:
@@ -388,13 +388,13 @@ bigappliances-number:
 furnitures-coeff:
   formule:
     variations:
-      - si: divers . électroménager . préservation = 'achat neuf'
+      - si: divers . électroménager . appareils . préservation = 'achat neuf'
         alors: "'LESS_THAN_AVERAGE'"
-      - si: divers . électroménager . préservation = 'faible'
+      - si: divers . électroménager . appareils . préservation = 'faible'
         alors: "'LESS_THAN_AVERAGE'"
-      - si: divers . électroménager . préservation = 'moyen'
+      - si: divers . électroménager . appareils . préservation = 'moyen'
         alors: "'SAME_AS_AVERAGE'"
-      - si: divers . électroménager . préservation = 'maximum'
+      - si: divers . électroménager . appareils . préservation = 'maximum'
         alors: "'MORE_THAN_AVERAGE'"
       - sinon: "'default'"
 
@@ -402,21 +402,18 @@ smalldevices-number:
   formule:
     somme:
       - divers . numérique . appareils . téléphone . nombre
-      - divers . numérique . appareils . appareil photo . nombre
       - divers . numérique . appareils . tablette . nombre
       - divers . numérique . appareils . enceinte bluetooth . nombre
-      - divers . numérique . appareils . enceinte vocale . nombre
-      - divers . numérique . appareils . montre connectée . nombre
 bigdevices-number:
   formule:
     somme:
-      - divers . numérique . appareils . home cinéma . nombre
       - divers . numérique . appareils . ordinateur portable . nombre
       - divers . numérique . appareils . ordinateur fixe . nombre
       - divers . numérique . appareils . TV . nombre
-      - divers . numérique . appareils . vidéoprojecteur . nombre
       - divers . numérique . appareils . console de salon . nombre
       - divers . numérique . appareils . console portable . nombre
+      - divers . numérique . appareils . imprimante . nombre
+
 streaming-hoursperweek: divers . numérique . internet . durée journalière
 tobacco-coeff: divers . tabac . consommation par semaine > 0
 edition-coeff:

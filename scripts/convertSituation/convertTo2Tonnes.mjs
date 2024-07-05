@@ -1,10 +1,13 @@
-import NGCRules from '@incubateur-ademe/nosgestesclimat/public/co2-model.FR-lang.fr.json' assert { type: 'json' }
+import NGCRules from '../../public/co2-model.FR-lang.fr.json' assert { type: 'json' }
 import path from 'path'
 import Engine from 'publicodes'
 import utils from '@incubateur-ademe/nosgestesclimat-scripts/utils'
 
 export default function convertTo2Tonnes(personaSituation) {
-  const conversionRulesFile = path.join('./2Tonnes', 'conversion.publicodes')
+  const conversionRulesFile = path.join(
+    process.cwd(),
+    'scripts/convertSituation/2Tonnes/conversion.publicodes'
+  )
   const conversionRules = utils.readYAML(conversionRulesFile)
 
   const rules = { ...NGCRules, ...conversionRules }
