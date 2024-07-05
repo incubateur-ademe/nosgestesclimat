@@ -8,7 +8,10 @@ divers . ameublement:
     Ces FE ne considèrent donc pas la "fin de vie" qui est prise en compte via [le modèle déchets de NGC](https://nosgestesclimat.fr/documentation/alimentation/d%C3%A9chets) (qui prend en compte les quantités de déchets amenés en déchetterie, là ou sont (théoriquement) amenés les meubles en fin de vie).
 
     Nous considérons que tous les meubles sont utilisés par l'ensemble du foyer, même si potentiellement, certains ne le sont qu'à titre individuel, c'est une limitation du test.
-  formule: meubles / logement . habitants
+  formule:
+    somme:
+      - meubles / logement . habitants
+      - déforestation / logement . habitants
   unité: kgCO2e
 
 divers . ameublement . meubles:
@@ -29,6 +32,24 @@ divers . ameublement . meubles:
         armoire . nombre: 0
         canapé . nombre: 0
         matelas . nombre: 0
+        lit . nombre: 0
+        table . nombre: 0
+        chaise . nombre: 0
+        petit meuble . nombre: 0
+        grand meuble . nombre: 0
+      équipé:
+        armoire . nombre: 2
+        canapé . nombre: 1
+        matelas . nombre: 2
+        lit . nombre: 2
+        table . nombre: 1
+        chaise . nombre: 6
+        petit meuble . nombre: 2
+        grand meuble . nombre: 1
+      remplacement minimal:
+        armoire . nombre: 0
+        canapé . nombre: 1
+        matelas . nombre: 2
         lit . nombre: 0
         table . nombre: 0
         chaise . nombre: 0
@@ -63,47 +84,6 @@ divers . ameublement . meubles:
 
     - 3 petits meubles : 2 étagères, une table basse.
     - 5 grands meubles : 2 caissons hauts de cuisine, 3 meubles bas.
-
-divers . ameublement . préservation:
-  question: Quel effort faites-vous pour garder vos meubles le plus longtemps possible ?
-  description: |
-    Pour éviter de vous demander de renseigner l'âge précis de tous les biens d'ameublement que vous possédez, nous avons défini un âge moyen pour chacun des biens (généralement 10 ans).
-
-    > Nous cherchons ici à évaluer, non pas l'âge des meubles avant que ces derniers deviennent inutilisables, mais l'âge quand leurs propriétaires décident de les remplacer par du neuf.
-    A vous de vous placer par rapport à la moyenne.
-  par défaut: "'moyen'"
-  formule:
-    une possibilité:
-      choix obligatoire: oui
-      possibilités:
-        - achat neuf
-        - faible
-        - moyen
-        - maximum
-
-divers . ameublement . préservation . faible:
-  titre: Peu d'effort
-divers . ameublement . préservation . achat neuf:
-  titre: Je rachète souvent neuf
-divers . ameublement . préservation . moyen:
-  titre: Effort moyen
-divers . ameublement . préservation . maximum:
-  titre: Effort maximal
-
-divers . ameublement . coefficient préservation:
-  note: |
-    Nous définissons une grille de comportements de consommation, de l'acheteur neuf fréquent à celui qui fait un effort important pour garder ses meubles le plus longtemps possible.
-    Nous considérons que la personne qui déclare acheter souvent neuf garde ses meubles la moitié de leur durée de vie moyenne constatée, à l'inverse celui qui conserve ses meubles repousse leur durée de vie moyenne.
-    Cette grille pourra évoluer si de nouvelles sources ou études viennent compléter tout cela.
-  formule:
-    variations:
-      - si: préservation = 'achat neuf'
-        alors: 1 / 2
-      - si: préservation = 'faible'
-        alors: 2 / 3
-      - si: préservation = 'moyen'
-        alors: 1
-      - sinon: 4 / 3
 
 divers . ameublement . meubles . armoire . empreinte amortie:
   titre: Empreinte armoire amortie
@@ -439,4 +419,80 @@ divers . ameublement . meubles . grand meuble:
   description: Meuble de cuisine, grand bureau
   icônes: 🛏️
   formule: empreinte amortie * nombre
+  unité: kgCO2e
+
+divers . ameublement . meubles . nombre total:
+  titre: Nombre de meubles dans le logement
+  formule:
+    somme:
+      - armoire . nombre
+      - canapé . nombre
+      - matelas . nombre
+      - lit . nombre
+      - table . nombre
+      - chaise . nombre
+      - petit meuble . nombre
+      - grand meuble . nombre
+
+divers . ameublement . meubles . préservation:
+  applicable si: meubles . nombre total > 0
+  question: Quel effort faites-vous pour garder vos meubles le plus longtemps possible ?
+  description: |
+    Pour éviter de vous demander de renseigner l'âge précis de tous les biens d'ameublement que vous possédez, nous avons défini un âge moyen pour chacun des biens (généralement 10 ans).
+
+    > Nous cherchons ici à évaluer, non pas l'âge des meubles avant que ces derniers deviennent inutilisables, mais l'âge quand leurs propriétaires décident de les remplacer par du neuf.
+    A vous de vous placer par rapport à la moyenne.
+  par défaut: "'moyen'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - achat neuf
+        - faible
+        - moyen
+        - maximum
+
+divers . ameublement . meubles . préservation . faible:
+  titre: Peu d'effort
+divers . ameublement . meubles . préservation . achat neuf:
+  titre: Je rachète souvent neuf
+divers . ameublement . meubles . préservation . moyen:
+  titre: Effort moyen
+divers . ameublement . meubles . préservation . maximum:
+  titre: Effort maximal
+
+divers . ameublement . meubles . coefficient préservation:
+  note: |
+    Nous définissons une grille de comportements de consommation, de l'acheteur neuf fréquent à celui qui fait un effort important pour garder ses meubles le plus longtemps possible.
+    Nous considérons que la personne qui déclare acheter souvent neuf garde ses meubles la moitié de leur durée de vie moyenne constatée, à l'inverse celui qui conserve ses meubles repousse leur durée de vie moyenne.
+    Cette grille pourra évoluer si de nouvelles sources ou études viennent compléter tout cela.
+  formule:
+    variations:
+      - si: préservation = 'achat neuf'
+        alors: 1 / 2
+      - si: préservation = 'faible'
+        alors: 2 / 3
+      - si: préservation = 'moyen'
+        alors: 1
+      - sinon: 4 / 3
+
+divers . ameublement . déforestation:
+  formule:
+    variations:
+      - si: déforestation
+        alors:
+          variations:
+            - si: divers . ameublement . meubles . nombre total <= 5
+              alors: facteur meubles * 0.5
+            - si: divers . ameublement . meubles . nombre total > 15
+              alors: facteur meubles * 1.5
+            - sinon: facteur meubles
+      - sinon: 0
+  unité: kgCO2e
+  note: |
+    L'étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41) montre que l'empreinte de la déforestation importée est de 81 kgCO2e en moyenne par français. 
+    Nous considérons qu'en moyenne, un foyer français possède de 5 à 15 meubles de moins de 10 ans. Si l'utilisateur en possède moins, nous réduisons la part de déforestation, et inversement s'il en possède plus.
+
+divers . ameublement . déforestation . facteur meubles:
+  formule: 81
   unité: kgCO2e

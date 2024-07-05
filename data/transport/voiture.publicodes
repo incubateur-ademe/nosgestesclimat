@@ -1,18 +1,24 @@
 transport . voiture:
   titre: voiture
-  icônes: 🚘️
+  icônes: 🚘
   formule:
     variations:
       - si: km = 0
         alors: 0
-      - si:
-          toutes ces conditions:
-            - est défini: utilisateur
-            - une de ces conditions:
-                - utilisateur = 'propriétaire'
-                - utilisateur = 'régulier non propriétaire'
-        alors: empreinte calculée
-      - sinon: empreinte moyenne
+      - sinon:
+          variations:
+            - si:
+                est défini: utilisateur
+              alors:
+                variations:
+                  - si:
+                      une de ces conditions:
+                        - utilisateur = 'propriétaire'
+                        - utilisateur = 'régulier non propriétaire'
+                    alors: empreinte calculée
+                  - si: utilisateur = 'non régulier'
+                    alors: empreinte moyenne non régulier
+            - sinon: empreinte moyenne
   unité: kgCO2e
   description: |
     ![](https://upload.wikimedia.org/wikipedia/commons/9/9a/Congestion_caused_by_a_road_accident%2C_Algarve%2C_Portugal.jpg)
@@ -33,7 +39,8 @@ transport . voiture . km:
     Ne comptez que les kilomètres de déplacement personnel (courses, loisirs, famille, etc.) et de déplacement domicile travail pour rejoindre votre lieu de travail habituel.
 
     Par exemple, si vous êtes en mission professionnelle dans un autre département ou un autre pays, cela rentre dans la comptabilité de votre entreprise : ne le comptez pas ici.
-  par défaut: km annuels moyen
+  # It seems that there is a [publicodes bug](https://github.com/publicodes/publicodes/issues/517). For now, we can't use `km annuels moyen réel` directly here, until the problem is fixed.
+  par défaut: 8210
   unité: km
   plancher: 0
   suggestions:
@@ -43,13 +50,70 @@ transport . voiture . km:
     1000km / mois: 12000
     20 000km / an: 20000
 
+transport . voiture . km annuels moyen réel:
+  #8210
+  formule: km annuels moyen * nombre véhicules circulation / population
+
 transport . voiture . km annuels moyen:
-  formule: 12200
+  #12216
+  formule:
+    somme:
+      - km annuels moyen . véhicules légers * nombre véhicules circulation . véhicules légers / nombre véhicules circulation
+      - km annuels moyen . VUL * nombre véhicules circulation . VUL / nombre véhicules circulation
   unité: km
-  note: Chiffre issu de [datalab ministère écologie 2019](https://www.statistiques.developpement-durable.gouv.fr/bilan-annuel-des-transports-en-2019-0), page 3 G1.
+  note: |
+    Ce chiffre concerne les véhicules en circulation (voitures et VUL).
+    Il est issu des [Données sur le parc automobile français au 1er janvier 2023](https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2023?rubrique=&dossier=1348).
+
+    Nous considérons néanmoins les données pour l'année 2022 car la distance moyenne parcourue par véhicule n'est dispo que pour 2022.
+
+    Nous avons choisi de ne pas prendre en compte la catégorisation pro/perso dans de nombreux véhicules professionels sont utilisés également pour les trajets perso et domicile travail (que nous prenons en compte dans le calculateur).
+
+transport . voiture . km annuels moyen . véhicules légers:
+  formule: 11957
+  unité: km
+  note: |
+    Ce chiffre concerne les véhicules en circulation (voitures et VUL).
+    Il est issu des [Données sur le parc automobile français au 1er janvier 2023](https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2023?rubrique=&dossier=1348).
+
+    Nous considérons néanmoins les données pour l'année 2022 car la distance moyenne parcourue par véhicule n'est dispo que pour 2022.
+
+transport . voiture . km annuels moyen . VUL:
+  formule: 13793
+  unité: km
+  note: |
+    Ce chiffre concerne les véhicules en circulation (voitures et VUL).
+    Il est issu des [Données sur le parc automobile français au 1er janvier 2023](https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2023?rubrique=&dossier=1348).
+
+    Nous considérons néanmoins les données pour l'année 2022 car la distance moyenne parcourue par véhicule n'est dispo que pour 2022.
+
+transport . voiture . nombre véhicules circulation:
+  formule: véhicules légers + VUL
+  note: |
+    Ce chiffre concerne les véhicules en circulation (voitures et VUL).
+    Il est issu des [Données sur le parc automobile français au 1er janvier 2023](https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2023?rubrique=&dossier=1348).
+
+    Nous considérons néanmoins les données pour l'année 2022 car la distance moyenne parcourue par véhicule n'est dispo que pour 2022.
+
+    Nous avons choisi de ne pas prendre en compte la catégorisation pro/perso dans de nombreux véhicules professionels sont utilisés également pour les trajets perso et domicile travail (que nous prenons en compte dans le calculateur).
+
+transport . voiture . nombre véhicules circulation . véhicules légers:
+  formule: 38814659
+  note: |
+    Ce chiffre est issu des [Données sur le parc automobile français au 1er janvier 2023](https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2023?rubrique=&dossier=1348).
+
+    Nous considérons néanmoins les données pour l'année 2022 car la distance moyenne parcourue par véhicule n'est dispo que pour 2022.
+
+transport . voiture . nombre véhicules circulation . VUL:
+  formule: 6384963
+  note: |
+    Ce chiffre est issu des [Données sur le parc automobile français au 1er janvier 2023](https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2023?rubrique=&dossier=1348).
+
+    Nous considérons néanmoins les données pour l'année 2022 car la distance moyenne parcourue par véhicule n'est dispo que pour 2022.
 
 transport . voiture . utilisateur:
   question: Utilisez-vous majoritairement la même voiture pour vous déplacer ?
+  applicable si: km > 0
   formule:
     une possibilité:
       choix obligatoire: oui
@@ -93,6 +157,21 @@ transport . voiture . notif utilsateur irrégulier:
 transport . voiture . empreinte moyenne:
   valeur: voiture . empreinte calculée
   contexte:
+    voiture . utilisateur: "'propriétaire'"
+    voiture . gabarit: "'berline'"
+    voiture . motorisation: "'thermique'"
+    voiture . thermique . carburant: "'essence E5 ou E10'"
+    voiture . thermique . consommation aux 100:
+      valeur: voiture . thermique . consommation estimée
+      contexte:
+        voiture . utilisateur: "'propriétaire'"
+        voiture . gabarit: "'berline'"
+        voiture . motorisation: "'thermique'"
+        voiture . thermique . carburant: "'essence E5 ou E10'"
+
+transport . voiture . empreinte moyenne non régulier:
+  valeur: voiture . empreinte calculée
+  contexte:
     voiture . utilisateur: "'régulier non propriétaire'"
     voiture . gabarit: "'berline'"
     voiture . motorisation: "'thermique'"
@@ -110,8 +189,9 @@ transport . voiture . empreinte calculée:
   unité: kgCO2e
 
 transport . voiture . voyageurs:
-  titre: Nombre de voyageurs moyen dans la voiture
+  titre: Nombre de voyageurs
   question: Quel est le nombre moyen de voyageurs dans la voiture ?
+  applicable si: km > 0
   description: |
     Une voiture consomme à peu près autant qu'elle ait 1, 2 ou 5 voyageurs à bord. Voyager à plusieurs, c'est donc potentiellement diviser par 5 l'empreinte individuelle !
 
@@ -142,6 +222,52 @@ transport . voiture . usage au kilomètre:
   unité: kgCO2e/km
 
 transport . voiture . empreinte au kilomètre:
+  formule:
+    variations:
+      - si:
+          est défini: utilisateur
+        alors:
+          variations:
+            - si:
+                une de ces conditions:
+                  - utilisateur = 'propriétaire'
+                  - utilisateur = 'régulier non propriétaire'
+              alors: empreinte au kilomètre calculée
+            - si: utilisateur = 'non régulier'
+              alors: empreinte au kilomètre non régulier
+      - sinon: empreinte au kilomètre moyenne
+
+transport . voiture . empreinte au kilomètre moyenne:
+  valeur: voiture . empreinte au kilomètre calculée
+  contexte:
+    voiture . utilisateur: "'propriétaire'"
+    voiture . gabarit: "'berline'"
+    voiture . motorisation: "'thermique'"
+    voiture . thermique . carburant: "'essence E5 ou E10'"
+    voiture . thermique . consommation aux 100:
+      valeur: voiture . thermique . consommation estimée
+      contexte:
+        voiture . utilisateur: "'propriétaire'"
+        voiture . gabarit: "'berline'"
+        voiture . motorisation: "'thermique'"
+        voiture . thermique . carburant: "'essence E5 ou E10'"
+
+transport . voiture . empreinte au kilomètre non régulier:
+  valeur: voiture . empreinte au kilomètre calculée
+  contexte:
+    voiture . utilisateur: "'régulier non propriétaire'"
+    voiture . gabarit: "'berline'"
+    voiture . motorisation: "'thermique'"
+    voiture . thermique . carburant: "'essence E5 ou E10'"
+    voiture . thermique . consommation aux 100:
+      valeur: voiture . thermique . consommation estimée
+      contexte:
+        voiture . utilisateur: "'régulier non propriétaire'"
+        voiture . gabarit: "'berline'"
+        voiture . motorisation: "'thermique'"
+        voiture . thermique . carburant: "'essence E5 ou E10'"
+
+transport . voiture . empreinte au kilomètre calculée:
   formule:
     variations:
       - si: motorisation = 'thermique'
@@ -175,6 +301,7 @@ transport . voiture . motorisation:
       - une de ces conditions:
           - utilisateur = 'propriétaire'
           - utilisateur = 'régulier non propriétaire'
+      - km > 0
   description: 💡 **Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
   par défaut: "'thermique'"
   formule:
@@ -193,6 +320,7 @@ transport . voiture . motorisation . hybride:
 
 transport . voiture . thermique:
   titre: Voiture thermique
+
 transport . voiture . thermique . empreinte au kilomètre:
   titre: empreinte au km thermique
   formule: consommation au kilomètre * empreinte au litre
@@ -211,6 +339,10 @@ transport . voiture . thermique . consommation aux 100:
       - une de ces conditions:
           - utilisateur = 'propriétaire'
           - utilisateur = 'régulier non propriétaire'
+      - une de ces conditions:
+          - motorisation = 'thermique'
+          - motorisation = 'hybride'
+      - km > 0
   description: |
     **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
   suggestions:
@@ -394,6 +526,10 @@ transport . voiture . thermique . carburant:
       - une de ces conditions:
           - utilisateur = 'propriétaire'
           - utilisateur = 'régulier non propriétaire'
+      - une de ces conditions:
+          - motorisation = 'thermique'
+          - motorisation = 'hybride'
+      - km > 0
   description: |
     Pour comprendre les différents types de carburants, [cet article pédagogique](https://www.francetvinfo.fr/economie/automobile/essence/les-carburants-changent-de-nom-a-la-pompe-voici-comment-vous-y-retrouver_2967013.html) est très utile.
 
@@ -447,7 +583,7 @@ transport . voiture . électrique:
 transport . voiture . électrique . empreinte au kilomètre:
   titre: empreinte au km électrique
   unité: kgCO2e/km
-  formule: consommation au kilomètre * logement . électricité . intensité carbone
+  formule: consommation au kilomètre * logement . électricité . intensité carbone équivalente
   note: |
     Nous considérons ici le mix électrique moyen français. La majorité des possesseurs de voitures électriques rechargent leur véhicule chez eux avec une tarification heure creuses, qui est plus avantageuse financièrement et correspond d'ailleurs aux moments où la demande en électricité est moins forte et le mix électrique moins carboné (les centrales gaz ne sont pas sollicitées).
 
@@ -457,13 +593,15 @@ transport . voiture . électrique . consommation au kilomètre:
 
 transport . voiture . électrique . consommation aux 100:
   titre: Consommation électrique au km
+  question: Connaissez-vous la consommation moyenne de la voiture ?
   applicable si:
     toutes ces conditions:
       - est défini: utilisateur
       - une de ces conditions:
           - utilisateur = 'propriétaire'
           - utilisateur = 'régulier non propriétaire'
-  question: Connaissez-vous la consommation moyenne de la voiture ?
+      - motorisation = 'électrique'
+      - km > 0
   suggestions:
     15 kWh/100km: 15
     20 kWh/100km: 20
@@ -494,6 +632,7 @@ transport . voiture . gabarit:
       - une de ces conditions:
           - utilisateur = 'propriétaire'
           - utilisateur = 'régulier non propriétaire'
+      - km > 0
   description: |
     **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
 
@@ -605,12 +744,6 @@ transport . voiture . climatisation . émissions gaz fluorés transport:
     D'après l'excel [Données par substance de gaz à effet de serre (GES) édition 2023, onglet "GF-UE_total"](https://www.citepa.org/wp-content/uploads/publications/secten/2023/Citepa_gaz_a_effet_de_serre_v2.zip), 
     les émissions de gaz fluorés pour le secteur du transport (provenant des équipements de réfrigération et d'air conditionné, utilisant des halocarbures ou du SF6), sont de 1374 ktCO₂e.
 
-transport . voiture . nombre véhicules circulation:
-  formule: 38700000 + 5977000
-  note: |
-    Ce chiffre concerne les véhicules particuliers (voitures et VUL).
-    Il est issu des statistiques [INSEE](https://www.insee.fr/fr/statistiques/2045167#tableau-figure1_radio1).
-
 transport . voiture . construction:
   titre: Construction de la voiture
   formule:
@@ -702,7 +835,7 @@ transport . voiture . barème construction . barème électrique:
     https://bonpote.com/la-voiture-electrique-solution-ideale-pour-le-climat/
 
 transport . voiture . barème construction . barème électrique . batterie:
-  formule: capacité * empreinte par kWh
+  formule: capacité * barème construction . batterie . empreinte par kWh
   unité: kgCO2e
   note: |
     L'empreinte carbone d'une batterie augmente avec sa capacité, car une capacité plus élevée nécessite l'utilisation d'un plus grand nombre de cellules lithium-ion.
@@ -710,22 +843,14 @@ transport . voiture . barème construction . barème électrique . batterie:
     La capacité de la batterie est exprimée en kWh, elle peut varier considérablement selon les modèles de voitures électriques.
     Pour réduire l'impact de la voiture électrique il faut privilégier les modèles avec une batterie de petite capacité.
 
-transport . voiture . barème construction . barème électrique . batterie . empreinte par kWh:
-  formule: 100
-  unité: kgCO2e/kWh
-  note: |
-    Les études académiques sur l'empreinte carbone des batteries des véhicules électriques sont nombreuses, mais leurs résultats sont très variables.
-
-    Les valeurs varient de 60 kgCO2e/kWh à 150 kgCO2e/kWh. Une [méta-étude de l'IFPEN](https://www.sciencedirect.com/science/article/abs/pii/S0959652622006291)
-    (Institut Français du Pétrole et des Énergies Nouvelles) calcule une valeur médiane de 83 kgCO2e/kWh, en précisant que les résultats différent selons les chimies de batteries, 
-    les pays de productions, le pays des auteurs de l'étude, et que même ces facteurs intégrés il reste une grande variabilité des résultats.
-
-    Compte tenu de l'incertitude et des variations observées dans les études, nous adoptons une valeur prudente de 100 kgCO2e/kWh pour l'empreinte carbone des batteries.
-
-    [Étude Carbone 4 sur l'empreinte des batteries (en)](https://www.carbone4.com/publication-liion-battery-carbon-footprint)
-
 transport . voiture . barème construction . barème électrique . batterie . capacité:
-  question: Quelle est la capacité de la batterie de votre voiture électrique ?
+  applicable si:
+    toutes ces conditions:
+      - est défini: utilisateur
+      - une de ces conditions:
+          - utilisateur = 'propriétaire'
+          - utilisateur = 'régulier non propriétaire'
+      - motorisation = 'électrique'
   description: |
     La capacité de la batterie est exprimée en kWh, elle varie considérablement selon les modèles de véhicules.
 
@@ -745,17 +870,38 @@ transport . voiture . barème construction . barème électrique . batterie . ca
             - gabarit = 'VUL'
         alors: 65
   suggestions:
-    Petite autonomie: 40
-    Autonomie moyenne: 65
-    Grande autonomie: 100
+    petite autonomie: 40
+    autonomie moyenne: 65
+    grande autonomie: 100
 
 transport . voiture . barème construction . barème hybride:
-  valeur: barème électrique
-  contexte:
-    barème électrique . batterie . capacité: 40
+  formule: barème thermique + batterie
   unité: kgCO2e
   note: |
     On fait l'hypothèse forte que la construction d'un véhicule hybride correspond à l'empreinte d'un véhicule électrique équipé d'une petite batterie. Néanmoins, le calcul est plus complexe, notamment car le type de véhicule hybride (rechargeable ou non) sur la composition de la voiture. On a également 2 moteurs...
+
+transport . voiture . barème construction . barème hybride . batterie:
+  formule: capacité * barème construction . batterie . empreinte par kWh
+  unité: kgCO2e
+
+transport . voiture . barème construction . barème hybride . capacité:
+  valeur: 40
+  unité: kWh
+
+transport . voiture . barème construction . batterie:
+transport . voiture . barème construction . batterie . empreinte par kWh:
+  formule: 100
+  unité: kgCO2e/kWh
+  note: |
+    Les études académiques sur l'empreinte carbone des batteries des véhicules électriques sont nombreuses, mais leurs résultats sont très variables.
+
+    Les valeurs varient de 60 kgCO2e/kWh à 150 kgCO2e/kWh. Une [méta-étude de l'IFPEN](https://www.sciencedirect.com/science/article/abs/pii/S0959652622006291)
+    (Institut Français du Pétrole et des Énergies Nouvelles) calcule une valeur médiane de 83 kgCO2e/kWh, en précisant que les résultats différent selons les chimies de batteries, 
+    les pays de productions, le pays des auteurs de l'étude, et que même ces facteurs intégrés il reste une grande variabilité des résultats.
+
+    Compte tenu de l'incertitude et des variations observées dans les études, nous adoptons une valeur prudente de 100 kgCO2e/kWh pour l'empreinte carbone des batteries.
+
+    [Étude Carbone 4 sur l'empreinte des batteries (en)](https://www.carbone4.com/publication-liion-battery-carbon-footprint)
 
 transport . voiture . amortissement:
   description: |
@@ -796,17 +942,3 @@ transport . voiture . durée de vie en km:
     - Gabarit "SUV" : correspondant au segment E ou F, soit 270000 km
 
     Pour le moment, nous ne faisons pas la différence entre thermique et électrique. C'est une hypothèse très forte.
-
-# transport . voiture . facteur location:
-#   titre: Part d'utilisation annuelle d'une voiture de service
-#   formule: km par an voiture partagée / durée de vie en km
-#   note: On attribue à l'utilisateur l'impact de la construction au pro rata de son utilisation par rapport au km parcourus par la voiture sur une année.
-
-# transport . voiture . km par an voiture partagée:
-#   titre: Kilomètres parcourus annuellement par une voiture en auto-partage
-#   formule: 15130
-#   unité: km
-#   note: |
-#     Page 80 de l'[Enquête Nationale Autopartage 2022](https://librairie.ademe.fr/cadic/7353/enquete-autopartage-2022-rapport.pdf):
-
-#     > "Les données communiquées par les opérateurs nous permettent de retenir l’hypothèse de 15130 kilomètres parcourus en moyenne par an par voiture en autopartage."

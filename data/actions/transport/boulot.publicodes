@@ -58,12 +58,16 @@ transport . boulot . distance . km aller:
   note: Mettre un lien vers l'étude et mettre à jour avec les statistiques de l'enquête déplacement 2020 si disponible.
   par défaut: 10
 
+transport . boulot . voyageurs:
+  titre: Nombre de voyageurs sur le trajet domicile-travail
+  question: Combien êtes-vous dans la voiture pour vos trajets domicile-travail ?
+  par défaut: 1
+
 transport . boulot . covoiturage:
-  question: Vous rendez-vous au travail seul ?
-  par défaut: oui
+  formule: transport . boulot . voyageurs = 1
 
 transport . boulot . covoiturage . nombre de voyageurs:
-  formule: 1 + nombre de covoitureurs
+  formule: voyageurs + nombre de covoitureurs
 
 transport . boulot . covoiturage . nombre de covoitureurs:
   question: Combien de personnes pourraient covoiturer avec vous ?
@@ -77,15 +81,10 @@ transport . boulot . sans voiture:
   titre: Aller au travail autrement qu'en voiture
   icônes: 🚌🚲
   description: |
-    Quand c'est possible, prendre les transports en commun ou des véhicules légers (marche à pied, vélo, trottinette personnelle, ...) pour aller au travail réduit notre empreinte climat, mais améliore aussi notre qualité de vie.
+    Les trajets domicile-travail et professionnels sont le premier poste d’émission de gaz à effet de serre des activités de bureau ! Et pour cause : les ¾ de ces déplacements se font seul en voiture, avec de gros impacts environnementaux. Repenser ses trajets, on a peut-être à y gagner plus que ce que l’on croit.
+    
+    > Découvrez toutes les solutions, les aides disponibles et des témoignages de salariés qui ont changé leur mobilité [en consultant notre article](https://agirpourlatransition.ademe.fr/particuliers/bureau/deplacements/boulot-auto-perso).
 
-    [70%](https://www.ecologie-solidaire.gouv.fr/covoiturage-en-france-avantages-et-reglementationen-vigueur) des déplacements domicile-travail sont réalisés avec des véhicules individuels, la plupart seul dans sa voiture. C'est ce qu'on appelle l'auto-solisme.
-
-    En plus d'émettre beaucoup de gaz à effet de serre cet auto-solisme déteriore la qualité de l'air de nos villes et donc notre santé, et encombre les voies urbaines.
-
-    > A titre d'exemple les bouchons représentent en Île-de-France par an et par personne [163 heures perdues](https://www.tomtom.com/en_gb/traffic-index/paris-traffic) soit environ 6 jours.
-
-    >💡 Le saviez-vous ? L'État et beaucoup de régions ou villes subventionnent les vélos mécaniques, électriques, cargo, pliants, etc. [Calculez votre aide 🚲️ en 3 clics](https://mesaidesvelo.fr).
   non applicable si: seuil activation = 0
   applicable si: voiture . km > seuil activation
   formule:
@@ -105,18 +104,19 @@ transport . boulot . sans voiture:
   unité: kgCO2e
 
 transport . boulot . sans voiture . gain empreinte au km:
-  formule: voiture . empreinte au kilomètre - empreinte
+  formule: (voiture . empreinte au kilomètre / transport . boulot . voyageurs) - sans voiture . empreinte
+  note: On fait l'hypothèse que le trajet est effectué seul.
 
 transport . boulot . sans voiture . empreinte:
   titre: Empreinte transport en commun choisi
   formule:
     variations:
       - si: type = 'bus'
-        alors: bus . impact par km
+        alors: transports commun . bus . impact par km
       - si: type = 'TER'
         alors: train . TER
       - si: type = 'métro ou tramway'
-        alors: métro ou tram . impact par km
+        alors: transports commun . métro ou tram . impact par km
   unité: kgCO2e/km
   note: |
     On considère qu'un déplacement domicile travail effectué en voiture peut-être remplacé par un train régional et non par un TGV.
@@ -163,11 +163,10 @@ transport . boulot . télétravail:
   titre: Faire du télétravail
   icônes: 🏠💻
   description: |
-    Le télétravail permet d'éviter des déplacements journaliers pour se rendre au boulot.
+    En travaillant depuis la maison, nous contribuons à économiser de l’énergie et à réduire en effet de 69 % le volume des déplacements par rapport à un jour passé sur le lieu de travail. Un constat loin d’être neutre quand on sait l’impact de nos déplacements domicile-travail sur l’environnement, que ce soit en matière d’émissions de gaz à effet de serre ou de qualité de l’air.
+    
+    > Pour en savoir plus sur l’intérêt environnemental du télétravail, [consultez notre article](https://agirpourlatransition.ademe.fr/particuliers/maison/numerique/teletravail-ca-change-quoi-planete).
 
-    Il n'est évidemment pas possible pour de nombreux salariés, mais la crise sanitaire de 2020 a montré que beaucoup de métiers sont effectivement télétravaillables.
-
-    Dans ce calcul, nous ne prenons en compte que les jours télétravaillés qui évitent un déplacement en voiture individuelle, pas les effets rebonds.
   non applicable si: seuil activation = 0
   applicable si:
     toutes ces conditions:
@@ -181,7 +180,7 @@ transport . boulot . télétravail . jours gagnés:
   plafond: jours travaillés en voiture
 
 transport . boulot . télétravail . empreinte jour voiture:
-  formule: distance . km par jour * voiture . empreinte au kilomètre
+  formule: distance . km par jour * voiture . empreinte au kilomètre / transport . boulot . voyageurs
   unité: kgCO2e/jour
 
 transport . boulot . télétravail . jours télétravaillés:
@@ -213,25 +212,25 @@ transport . boulot . faire du covoiturage:
       - est défini: voiture . utilisateur
       - voiture . utilisateur = 'non régulier'
   icônes: 🚗👥
-  formule: empreinte boulot seul - empreinte boulot covoiturage
+  formule: empreinte boulot * (1 - 1 / boulot . covoiturage . nombre de voyageurs)
   unité: kgCO2e
   description: |
-    Si le covoiturage longue distance est bien connu en France, celui des courtes distances est presque inexistant : aujourd’hui seuls 3 % des déplacements domicile-travail sont réalisés en covoiturage.
+    3 % seulement des déplacements quotidiens en France sont réalisés en covoiturage. C’est peu, surtout quand on sait que 70 % des déplacements domicile-travail sont réalisés au moyen de véhicules individuels.
+    
+    5 bonnes raisons de tenter le covoiturage
+      - C’est économique : à deux, à trois voire à quatre, entre voisins ou entre collègues, c’est une opportunité de diviser ses frais de carburant par le nombre de passagers ;
+      - C’est écologique : la voiture individuelle représente à elle seule plus de 15 % des émissions de gaz à effet de serre en France. Or, le covoiturage permet de diviser le nombre des émissions de CO2 par le nombre de voyageurs. Il réduit aussi les émissions de polluants et donc les impacts sur la qualité de l’air ;
+      - C’est solidaire : le covoiturage est une solution pleine de potentiel, en particulier dans les zones aujourd’hui peu desservies par les transports en commun ;
+      - C’est convivial : entre collègues, entre amis, entre voisins, et même entre inconnus (grâce aux plateformes de covoiturage existantes), la route est moins longue…
+      - Dernier atout : le covoiturage constitue une solution pour réduire le trafic (et votre stress).
+    
+    > Pour en savoir plus sur les aides disponibles pour vous lancer, [consultez notre article](https://agirpourlatransition.ademe.fr/particuliers/bureau/deplacements/covoiturage-bonnes-raisons-de-se-lancer)
 
-    Sachez que depuis 2020, vous pouvez demander à votre employeur le [forfait mobilité durable](https://www.service-public.fr/particuliers/actualites/A14046), pour que votre covoiturage soit rémunéré jusqu'à 400€/an, exonérés d'impôt et de cotisations sociales !
-
-    Dans tous les cas, pensez à adapter votre mode de transport à la distance et à privilégier les modes doux ou transports en commun (bus, métro, vélo, marche, etc.) le plus possible. Le calculateur [Mon Impact Transport](https://monimpacttransport.fr/) vous permet de visualiser et comparer l'impact des différents modes de déplacement.
   note: |
     Voir l'article The Conversation [À quelles conditions le covoiturage sera-t-il un mode de transport durable ?](https://theconversation.com/a-quelles-conditions-le-covoiturage-sera-t-il-un-mode-de-transport-durable-124122)
 
-transport . boulot . faire du covoiturage . empreinte boulot seul:
+transport . boulot . faire du covoiturage . empreinte boulot:
   valeur: transport . voiture
   contexte:
+    transport . voiture . km: boulot . distance
     transport . voiture . voyageurs: 1
-    transport . voiture . km: boulot . distance
-
-transport . boulot . faire du covoiturage . empreinte boulot covoiturage:
-  valeur: transport . voiture
-  contexte:
-    transport . voiture . voyageurs: boulot . covoiturage . nombre de voyageurs
-    transport . voiture . km: boulot . distance
