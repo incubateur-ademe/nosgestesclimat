@@ -39,7 +39,7 @@ logement . habitants:
 
     > Si vous êtes séparé avec un enfant qui alterne entre votre logement et un autre, vous pouvez saisir `1,5`.
 
-  par défaut: 2.2
+  par défaut: habitants . moyen
   plancher: 1
   avertissement: |
     Le nombre d'habitants ne peut pas être nul ni inférieur à 1. Vous êtes le premier habitant de votre logement.
@@ -47,10 +47,15 @@ logement . habitants:
     En effet, l'empreinte du logement et d'autres postes comme l'électroménager étant divisées par le nombre d'habitants, il doit être supérieur à 1.
 
     Nous ne prenons donc pas aujourd'hui en compte les logements vides que vous possédez, ou un logement que vous louez dans lequel ni vous ni personne ne vivez.
-  note: valeur par défaut d'après https://www.insee.fr/fr/statistiques/2381486.
   suggestions:
     j'habite seul: 1
     deux personnes: 2
+    parents et 2 enfants: 4
+    famille nombreuse: 6
+
+logement . habitants . moyen:
+  formule: 2.2
+  note: D'après les chiffres [INSEE](https://www.insee.fr/fr/statistiques/2381486)
 
 logement . surface:
   titre: Surface
@@ -60,13 +65,10 @@ logement . surface:
     La surface de votre logement ne peut-être nulle.
   par défaut:
     variations:
-      - si:
-          est défini: appartement
-        alors:
-          variations:
-            - si: appartement
-              alors: parc français . surface moyenne appartement
-            - sinon: parc français . surface moyenne maison
+      - si: logement . type = 'appartement'
+        alors: parc français . surface moyenne appartement
+      - si: logement . type = 'maison'
+        alors: parc français . surface moyenne maison
       - sinon: parc français . surface moyenne
   note: |
     Valeur par défaut obtenue dans [ce jeu de données du Ceren et SDES](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel).
@@ -77,16 +79,20 @@ logement . surface:
   suggestions:
     studio: 25
     3 pièces: 70
-    maison: 120
+    6 pièces: 130
     château 🏰: 1000
   unité: m2
 
-logement . appartement:
-  titre: Appartement
-  question: Votre logement est-il un appartement ?
+logement . type:
+  question: Dans quel type de logement vivez-vous ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - maison
+        - appartement
+  par défaut: "'moyen'"
   description: |
-    Par opposition à une maison individuelle.
-
     L'augmentation de l'habitat en appartements peut nous faire oublier que la maison reste le logement majoritaire des foyers français en 2018.
 
     Cette information influence notamment l'empreinte de construction, mais aussi les possibilités de travaux d'isolation par exemple.
@@ -95,6 +101,9 @@ logement . appartement:
   note: |
     En 2018, l’habitat individuel représente 56 % des logements ([Source INSEE](https://www.insee.fr/fr/statistiques/3676693?sommaire=3696937)) : il est majoritaire parmi les résidences principales comme parmi les résidences secondaires et logements occasionnels. Après avoir progressé entre 1999 et 2008 sa part recule légèrement, car le nombre de logements collectifs augmente plus vite que celui des logements individuels du fait des évolutions récentes de la construction neuve.
     Notons qu'il s'agit d'une proportion de logements ; or on peut s'attendre (à vérifier) à ce que les maisons contiennent davantage de gens en moyenne que les appartements, ce qui renforce le choix de la valeur par défaut.
+
+logement . type . maison:
+logement . type . appartement:
 
 logement . âge:
   question: Quel est l'âge de votre logement ?
@@ -111,10 +120,3 @@ logement . âge:
     années 70: 50
     années 50: 70
     un siècle: 100
-
-logement . notif amortissement:
-  type: notification
-  formule: âge > construction . durée d'amortissement
-  description: |
-    Si votre logement a moins de **50 ans**, nous vous attribuons un cinquantième de l'empreinte de sa construction. **Sinon, zéro : le logement est amorti.**
-    Les questions sur les caractéristiques de votre logement ne vous seront pas posées ; car l'empreinte annuelle de sa contruction est considérée comme nulle.
