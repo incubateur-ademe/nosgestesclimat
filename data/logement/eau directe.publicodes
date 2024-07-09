@@ -1,5 +1,4 @@
-# Ajouter la répartition dans les notes
-eau directe:
+logement . eau directe:
   titre: Consommation d'eau directe
   icônes: 🚰
   formule:
@@ -16,119 +15,168 @@ eau directe:
   description: |
     L'eau "directe" correspond à l'eau qui sort de votre robinet au quotidien. 
     Il n'est donc pas question ici de l'eau "virtuelle" qui se cache derrière votre alimentation ou vos biens de consommation.
+
+    Selon de nombreux site d'information (mais non sourcés malheureusement), la répartition théorique de la consommation d'eau est la suivante :
+
+    |      Usage       |   Part   |
+    | ---------------- | -------- |
+    | Bains et douches | 39%      |
+    | Toilettes        | 20%      |
+    | Linge            | 12%      |
+    | Vaisselle        | 10%      |
+    | Voiture / jardin | 6%       |
+    | Cuisine          | 6%       |
+    | Boisson          | 1%       |
+    | Autres           | 6%       |
+
   note: |
     Les valeurs associées à ce calcul sont tirées de sources diverses et du [simulateur du CIEAU](https://www.cieau.com/le-metier-de-leau/usages-consommation-conseils/calculateur-consommation-eau-annuelle/) (Centre d'Information sur l'EAU).
   unité: l
 
-# Ajouter une question sur la facture d'eau ? -> Si consommation d'eau connue directement, pas vraiment besoin de répondre à toutes ces questions.
-# TODO: Comparer la consommation d'eau directe issue des différentes questions avec celle réelle, au moins pour les membres de l'équipe.
-
-eau directe . bains et douches:
+logement . eau directe . bains et douches:
   icônes: 🚿🛀
   formule:
     somme:
       - douches
       - bains
 
-eau directe . bains et douches . douches:
+logement . eau directe . bains et douches . habitude:
+  question: Vous êtes plutôt ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - douche express
+        - douche longue
+        - bain parfois
+        - bain souvent
+  par défaut: "'bain parfois'"
+
+logement . eau directe . bains et douches . douche express:
+logement . eau directe . bains et douches . douche longue:
+logement . eau directe . bains et douches . bain parfois:
+logement . eau directe . bains et douches . bain souvent:
+
+logement . eau directe . bains et douches . douches:
   formule: par semaine * commun . semaines par an
 
-eau directe . bains et douches . douches . par semaine:
+logement . eau directe . bains et douches . douches . par semaine:
   formule: nombre * quantité
 
-# Une seule question : vous êtes plutôt ?
-# Bain ? Douche express ? Douche longue ?
-eau directe . bains et douches . douches . nombre:
+logement . eau directe . bains et douches . douches . nombre:
   titre: Nombre de douches par semaine
-  question: Combien de douches prenez-vous par semaine ?
-  suggestions:
-    une par jour: 7
-    une tous les 2 jours: 3.5
+  formule:
+    variations:
+      - si: habitude = 'douche express'
+        alors: 4
+      - si: habitude = 'douche longue'
+        alors: 7
+      - si: habitude = 'bain parfois'
+        alors: 6
+      - si: habitude = 'bain souvent'
+        alors: 3
   par défaut: 5.5
   unité: douche/semaine
 
-eau directe . bains et douches . douches . quantité:
+logement . eau directe . bains et douches . douches . quantité:
   titre: Quantité d'eau par douche
   formule: 72
   unité: l/douche
   note: On considère qu'une douche dure en moyenne 6 minutes avec un débit de 12 litres par minute.
 
-eau directe . bains et douches . bains:
+logement . eau directe . bains et douches . bains:
   formule: par semaine * commun . semaines par an
 
-eau directe . bains et douches . bains . par semaine:
+logement . eau directe . bains et douches . bains . par semaine:
   formule: nombre * quantité
 
-eau directe . bains et douches . bains . nombre:
+logement . eau directe . bains et douches . bains . nombre:
   titre: Nombre de bains par semaine
-  question: Combien de bains prenez-vous par semaine ?
-  suggestions:
-    un par semaine: 1
-    un par mois: 0.25
+  formule:
+    variations:
+      - si: habitude = 'douche express'
+        alors: 0
+      - si: habitude = 'douche longue'
+        alors: 0
+      - si: habitude = 'bain parfois'
+        alors: 1
+      - si: habitude = 'bain souvent'
+        alors: 3
   par défaut: 0.3
   unité: bain/semaine
 
-eau directe . bains et douches . bains . quantité:
+logement . eau directe . bains et douches . bains . quantité:
   titre: Quantité d'eau par bain
   formule: 150
   unité: l/bain
   note: On considère qu'un bain consomme en moyenne 150 litres d'eau.
 
-# Vos toilettes favorites ?
-# Toilettes sèches ?
-# Système de double-chasse ?
-# Toilettes classiques ?
-eau directe . toilettes:
+logement . eau directe . toilettes:
   icônes: 🚽
   formule: par jour * commun . jours par an
 
-eau directe . toilettes . par jour:
+logement . eau directe . toilettes . par jour:
   formule: nombre * quantité
 
-eau directe . toilettes . nombre:
+logement . eau directe . toilettes . nombre:
   titre: Nombre de chasses d'eau par jour
-  question: Combien de fois tirez-vous la chasse d'eau par jour ?
-  suggestions:
-    1 fois: 1
-    3 fois: 3
-    5 fois: 5
   par défaut: 3
   unité: chasse/jour
 
-eau directe . toilettes . quantité:
+logement . eau directe . toilettes . type:
+  question: Quel type de toilettes équipent votre logement ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - sèches
+        - double chasse
+        - classiques
+
+logement . eau directe . toilettes . type . sèches:
+  titre: Toilettes sèches
+logement . eau directe . toilettes . type . double chasse:
+  titre: Système de double-chasse
+logement . eau directe . toilettes . type . classiques:
+  titre: Toilettes classiques
+
+logement . eau directe . toilettes . quantité:
   titre: Quantité d'eau par chasse
-  formule: 9
+  formule:
+    variations:
+      - si: type = 'sèches'
+        alors: 0
+      - si: type = 'double chasse'
+        alors: 6
+      - si: type = 'classiques'
+        alors: 12
+  par défaut: 9
   unité: l/chasse
   note: On considère qu'une chasse d'eau consomme en moyenne 9 litres d'eau même si c'est valeur paut varier si la chasse d'eau est à double commande.
 
-# Pas de question supplémentaire tout en fonction du foyer + après question électroménager
-# Environ 1 tous les 10 jours pour une personne
-eau directe . linge:
+logement . eau directe . linge:
   icônes: 🧺
   formule: foyer / logement . habitants
 
-eau directe . linge . foyer:
+logement . eau directe . linge . foyer:
   formule: par semaine * commun . semaines par an
 
-eau directe . linge . par semaine:
+logement . eau directe . linge . par semaine:
   formule: nombre * quantité
 
-eau directe . linge . nombre:
-  titre: Nombre de lessives par semaine
-  question: Combien de lessives faites-vous par semaine pour votre foyer ?
-  suggestions:
-    une par semaine: 1
-    deux par semaine: 2
-  par défaut: 3
+logement . eau directe . linge . nombre:
+  titre: Nombre de lessives par semaine pour le foyer
+  formule: logement . habitants * 0.7
+  note: On considère une lessive par personne pour 10 jours.
   unité: lessive/semaine
 
-eau directe . linge . quantité:
+logement . eau directe . linge . quantité:
   titre: Quantité d'eau par lessive
   formule: 80
   unité: l/lessive
   note: On considère qu'un lave-linge consomme en moyenne 80 litres d'eau par cycle
 
-eau directe . vaisselle:
+logement . eau directe . vaisselle:
   icônes: 🧽
   formule: foyer / logement . habitants
   note: |
@@ -136,35 +184,26 @@ eau directe . vaisselle:
     Si le foyer ne possède pas de lave-vaisselle, on peut simplement considérer que la vaiselle est faite à la main en considérant 
     une quantité d'eau moyenne consommée par membre du foyer.
 
-eau directe . vaisselle . foyer:
+logement . eau directe . vaisselle . foyer:
   formule:
     somme:
       - lave vaisselle
       - à la main
 
-eau directe . vaisselle . lave vaisselle:
+logement . eau directe . vaisselle . lave vaisselle:
   formule: par semaine * commun . semaines par an
 
-eau directe . vaisselle . lave vaisselle . par semaine:
+logement . eau directe . vaisselle . lave vaisselle . par semaine:
   formule: nombre * quantité
 
-eau directe . vaisselle . lave vaisselle . nombre:
+logement . eau directe . vaisselle . lave vaisselle . nombre:
   titre: Nombre de lavages par semaine
-  applicable si:
-    toutes ces conditions:
-      - est défini: présent
-      - présent
-  question: Combien de fois utilisez-vous votre lave-vaisselle par semaine pour votre foyer ?
-  suggestions:
-    1 fois: 1
-    3 fois: 3
-  par défaut: 3
+  applicable si: divers . électroménager . appareils . lave-vaisselle . nombre > 0
+  valeur: logement . habitants * 1
+  note: On considère 1 lavages par personne pour une semaine.
   unité: lavage/semaine
 
-eau directe . vaisselle . lave vaisselle . présent:
-  question: Possédez-vous un lave-vaisselle ?
-
-eau directe . vaisselle . lave vaisselle . quantité:
+logement . eau directe . vaisselle . lave vaisselle . quantité:
   titre: Quantité d'eau par lavage
   formule: 15
   unité: l/lavage
@@ -173,59 +212,50 @@ eau directe . vaisselle . lave vaisselle . quantité:
     Néanmoins, pour des modèles plus anciens, la consommation peut atteindre plus de 30 litres par cycle.
     On considère qu'un lavage de lave-vaisselle consomme en moyenne 15 litres d'eau.
 
-eau directe . vaisselle . à la main:
+logement . eau directe . vaisselle . à la main:
   formule: par jour * commun . jours par an
 
-eau directe . vaisselle . à la main . par jour:
+logement . eau directe . vaisselle . à la main . par jour:
   formule: nombre * quantité
 
-eau directe . vaisselle . à la main . nombre:
+logement . eau directe . vaisselle . à la main . nombre:
   titre: Nombre de lavages par jour
-  # question: Combien de fois faites-vous la vaisselle à la main par jour ?
-  par défaut: 1
+  valeur: 1
   unité: lavage/jour
   note: On considère un lavage par jour.
 
-eau directe . vaisselle . à la main . quantité:
+logement . eau directe . vaisselle . à la main . quantité:
   titre: Quantité d'eau par lavage
   formule:
     variations:
-      - si:
-          toutes ces conditions:
-            - est défini: lave vaisselle . présent
-            - lave vaisselle . présent
+      - si: divers . électroménager . appareils . lave-vaisselle . nombre > 0
         alors: 4 * logement . habitants
       - sinon: 12 * logement . habitants
   unité: l/lavage
   note: On considère que faire la vaiselle à la main consomme 12 litres par membre du foyer.
 
-eau directe . cuisine:
+logement . eau directe . cuisine:
   icônes: 🥔🚰
   formule: foyer / logement . habitants
 
-eau directe . cuisine . foyer:
+logement . eau directe . cuisine . foyer:
   formule: par jour * commun . jours par an
 
-eau directe . cuisine . par jour:
+logement . eau directe . cuisine . par jour:
   formule: 3
   unité: l/jour
   note: On considère une consommation moyenne de 2 litres d'eau par jour pour la cuisine pour le foyer.
 
-# Pas de question en plus / attention à l'eau en bouteille
-eau directe . hydratation:
-  non applicable si:
-    toutes ces conditions:
-      - est défini: alimentation . boisson . eau en bouteille . consommateur
-      - alimentation . boisson . eau en bouteille . consommateur
+logement . eau directe . hydratation:
   formule: par jour * commun . jours par an
+  note: Eau en bouteille ou non, on confond la comptabilité de la consommation d'eau ici.
 
-eau directe . hydratation . par jour:
+logement . eau directe . hydratation . par jour:
   formule: 1.5
   unité: l/jour
   note: On considère une consommation moyenne de 1.5 litres d'eau par jour pour l'hydratation.
 
-# Pas de question mais revoir la valeur renseignée pour être assez représentatif
-eau directe . voiture:
+logement . eau directe . voiture:
   applicable si:
     toutes ces conditions:
       - transport . voiture . km > 0
@@ -233,48 +263,55 @@ eau directe . voiture:
       - une de ces conditions:
           - transport . voiture . utilisateur = 'propriétaire'
           - transport . voiture . utilisateur = 'régulier non propriétaire'
-  formule: 300 * 6
+  formule: 150 * 6
   unité: l
   note: |
-    Hypothèse de 300L par lavage à raison à raison de 6 fois par an.
+    Hypothèse de 150L par lavage à raison à raison de 6 fois par an.
+    Néanmoins, la valeur varie selon le type de lavage (moins important pour le jet, plus important pour le rouleau).
 
-# Récupérateur d'eau de pluie -> mosaïque jardin
+# Récupérateur d'eau de pluie -> mosaïque jardin -> logement . extérieur . récupérateur eau de pluie . présent
 # Un petit module arrosage de jardin / potager avec la taille du jardin + le système d'arrosage (goutte à goutte, arrosoir, jet, eau de pluie, etc.)
 # Variation très importante selon :
 #  - La taille du jardin
 #  - La part arrosée
 #  - La fréquence d'arrosage
 #  - La nature du jardin (potager, fleurs, pelouse) ?
-eau directe . jardin:
-  applicable si: surface > 0
-  non applicable si: logement . type = 'appartement'
+logement . eau directe . jardin:
+  applicable si: jardin . surface > 0
   formule: foyer / logement . habitants
   note: Il sera nécessaire de demander si un récuparateur d'eau de pluie est installée.
 
-eau directe . jardin . foyer:
+logement . eau directe . jardin . foyer:
   formule: par semaine * commun . semaines par an * (8 mois / commun . mois par an)
   note: On considère 2 arrosages par semaine sur les mois d'octobre à mars.
 
-eau directe . jardin . par semaine:
+logement . eau directe . jardin . par semaine:
   formule: surface * quantité * fréquence
 
-eau directe . jardin . surface:
-  question: Quelle surface de jardin arrosez-vous régulièrement (potager, fleurs) ?
+logement . eau directe . jardin . surface:
+  question: Quelle surface de jardin arrosez-vous régulièrement (potager, fleurs, balcon) ?
   suggestions:
     ❌ je n'arrose pas: 0
-    quelques fleurs: 5
+    quelques fleurs: 3
     petit potager: 30
     grand potager: 80
   par défaut: 5
   unité: m2
 
-eau directe . jardin . quantité:
+logement . eau directe . jardin . quantité:
   titre: Quantité d'eau par m2
-  formule: 15
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: logement . extérieur . récupérateur eau de pluie . présent
+            - logement . extérieur . récupérateur eau de pluie . présent
+        alors: 3
+      - sinon: 15
   unité: l/arrosage/m2
-  note: On considère qu'un m2 de jardin consomme en moyenne 15 litres d'eau par arrosage.
+  note: On considère qu'un m2 de jardin consomme en moyenne 15 litres d'eau par arrosage. Si un récupérateur d'eau de pluie, la consommation d'eau est bien moindre mais on ne la considère pas nulle pour autant.
 
-eau directe . jardin . fréquence:
+logement . eau directe . jardin . fréquence:
   titre: Fréquence d'arrosage
   formule: 2
   unité: arrosage/semaine
