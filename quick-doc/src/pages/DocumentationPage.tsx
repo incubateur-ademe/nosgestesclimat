@@ -10,7 +10,7 @@ import remarkGfm from 'remark-gfm'
 import Engine from 'publicodes'
 import MetricToggle from '../components/MetricToggle'
 
-const defaultRule = 'bilan climat'
+const defaultRule = 'bilan'
 
 export default function DocumentationPage() {
   const { engine } = useContext(AppContext)
