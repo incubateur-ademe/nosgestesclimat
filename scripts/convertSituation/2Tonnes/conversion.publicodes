@@ -1,41 +1,128 @@
 utils:
-utils . carSplit: 0.5
-utils . twowheelersSplit: 0.5
+utils . carSplit: 0.6
+utils . twowheelersSplit: 0.7
 
 carcommute: transport . voiture . km > 0
-twowheelerscommute: transport . deux roues . usager
-buscommute: transport . transports commun . bus . heures par semaine > 0
-traincommute: transport . transports commun . métro ou tram . heures par semaine > 0
+twowheelerscommute:
+  formule:
+    variations:
+      - si:
+          est défini: transport . deux roues . usager
+        alors: transport . deux roues . usager
+      - sinon: oui
+buscommute:
+  formule:
+    variations:
+      - si:
+          est défini: transport . transports commun . bus . présent
+        alors: transport . transports commun . bus . présent
+      - sinon: oui
+traincommute:
+  formule:
+    variations:
+      - si:
+          est défini: transport . transports commun . métro ou tram . présent
+        alors: transport . transports commun . métro ou tram . présent
+      - sinon: oui
 boatcommute: non
 carcommute-kmperday: transport . voiture . km * utils . carSplit / commun . jours par an
 carcommute-occupancy: transport . voiture . voyageurs
-twowheelerscommute-kmperday: transport . deux roues . km * utils . twowheelersSplit / commun . jours par an
+twowheelerscommute-kmperday:
+  formule:
+    variations:
+      - si:
+          est défini: transport . deux roues . usager
+        alors: transport . deux roues . km * utils . twowheelersSplit / commun . jours par an
+      - sinon: transport . deux roues . km annuels moyen * transport . deux roues . pourcentage motards * utils . twowheelersSplit / commun . jours par an
 twowheelerscommute-occupancy: 1
-buscommute-kmperday: transport . transports commun . bus . heures par semaine * transport . transports commun . bus . vitesse / commun . jours par semaine
-traincommute-kmperday: transport . transports commun . métro ou tram . heures par semaine * transport . transports commun . métro ou tram . vitesse / commun . jours par semaine
+buscommute-kmperday:
+  formule:
+    variations:
+      - si:
+          est défini: transport . transports commun . bus . présent
+        alors: transport . transports commun . bus . heures par semaine * transport . transports commun . bus . vitesse / commun . jours par semaine
+      - sinon: transport . transports commun . bus . temps moyen * transport . transports commun . bus . vitesse / commun . jours par semaine
+traincommute-kmperday:
+  formule:
+    variations:
+      - si:
+          est défini: transport . transports commun . métro ou tram . présent
+        alors: transport . transports commun . métro ou tram . heures par semaine * transport . transports commun . métro ou tram . vitesse / commun . jours par semaine
+      - sinon: transport . transports commun . métro ou tram . temps moyen * transport . transports commun . métro ou tram . vitesse / commun . jours par semaine
 boatcommute-kmperday: non
 commute-workdistances-ratio: "'default'"
 cartravel: transport . voiture . km > 0
-twowheelerstravel: transport . deux roues . usager
-bustravel: non
+twowheelerstravel:
+  formule:
+    variations:
+      - si:
+          est défini: transport . deux roues . usager
+        alors: transport . deux roues . usager
+      - sinon: oui
+bustravel:
+  formule:
+    variations:
+      - si:
+          est défini: transport . transports commun . car . présent
+        alors: transport . transports commun . car . présent
+      - sinon: oui
 traintravel: transport . train . km > 0
-plane: transport . avion . usager
-boattravel: transport . ferry . usager
-cartravel-km: transport . voiture . km * utils . carSplit
+plane:
+  formule:
+    variations:
+      - si:
+          est défini: transport . avion . usager
+        alors: transport . avion . usager
+      - sinon: oui
+boattravel:
+  formule:
+    variations:
+      - si:
+          est défini: transport . ferry . usager
+        alors: transport . ferry . usager
+      - sinon: oui
+cartravel-km: transport . voiture . km * (1 - utils . carSplit)
 cartravel-occupancy: transport . voiture . voyageurs
-twowheelerstravel-km: transport . deux roues . km * utils . twowheelersSplit
+twowheelerstravel-km:
+  formule:
+    variations:
+      - si:
+          est défini: transport . deux roues . usager
+        alors: transport . deux roues . km * (1 - utils . twowheelersSplit) / commun . jours par an
+      - sinon: transport . deux roues . km annuels moyen * transport . deux roues . pourcentage motards * (1 - utils . twowheelersSplit) / commun . jours par an
 twowheelerstravel-occupancy: 1
-bustravel-km: non
+bustravel-km:
+  formule:
+    variations:
+      - si:
+          est défini: transport . transports commun . car . présent
+        alors: transport . transports commun . car . km par semaine * commun . semaines par an
+      - sinon: transport . transports commun . car . distance moyenne hebdo * commun . semaines par an
 traintravel-km: transport . train . km
-boattravel-km: transport . ferry . heures * futureco-data . transport . ferry . vitesse
+boattravel-km:
+  formule:
+    variations:
+      - si:
+          est défini: transport . ferry . usager
+        alors: transport . ferry . heures * futureco-data . transport . ferry . vitesse
+      - sinon: transport . ferry . empreinte moyenne . durée moyenne par français * futureco-data . transport . ferry . vitesse
 boattravel-ticket: "'default'"
 boattravel-parking: "'default'"
 planetravel-km:
   formule:
-    somme:
-      - transport . avion . court courrier . heures de vol * transport . avion . court courrier . vitesse moyenne
-      - transport . avion . moyen courrier . heures de vol * transport . avion . moyen courrier . vitesse moyenne
-      - transport . avion . long courrier . heures de vol * transport . avion . long courrier . vitesse moyenne
+    variations:
+      - si:
+          est défini: transport . avion . usager
+        alors:
+          somme:
+            - transport . avion . court courrier . heures de vol * transport . avion . court courrier . vitesse moyenne
+            - transport . avion . moyen courrier . heures de vol * transport . avion . moyen courrier . vitesse moyenne
+            - transport . avion . long courrier . heures de vol * transport . avion . long courrier . vitesse moyenne
+      - sinon:
+          somme:
+            - transport . avion . court courrier . durée moyenne * transport . avion . court courrier . vitesse moyenne
+            - transport . avion . moyen courrier . durée moyenne * transport . avion . moyen courrier . vitesse moyenne
+            - transport . avion . long courrier . durée moyenne * transport . avion . long courrier . vitesse moyenne
 planeprofessional-km: non
 carcommute-category:
   formule:
@@ -239,7 +326,19 @@ COOKING-source:
       - sinon: "'default'"
   note: Pour le moment pas de correspondance pour HEATLOWCARBONSYSTEM et COAL
 AC-source: logement . climatisation . présent
-ELECTRICITY-source: "'ELECTRICITYNETWORK'"
+ELECTRICITY-source:
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - logement . électricité . photovoltaique . présent
+            - logement . électricité . photovoltaique . production > 0
+        alors:
+          variations:
+            - si: logement . électricité . photovoltaique . part autoconsommation = 100
+              alors: "'ELECLOWCARBONSYSTEM'"
+            - sinon: "'BOTH'"
+      - sinon: "'ELECTRICITYNETWORK'"
 consumptionknowledge: oui
 GASNETWORK-kwh: logement . chauffage . gaz . consommation
 HEATNETWORK-kwh: logement . chauffage . réseau de chaleur . consommation
@@ -251,8 +350,8 @@ BIOFUELSANDWASTES-kwh:
       - logement . chauffage . bois . type . bûches . consommation * logement . chauffage . bois . type . bûches . intensité énergétique
       - logement . chauffage . bois . type . granulés . consommation
 HEATLOWCARBONSYSTEM-kwh: non
-ELECTRICITYNETWORK-kwh: logement . électricité . consommation totale
-ELECLOWCARBONSYSTEM-kwh: non
+ELECTRICITYNETWORK-kwh: logement . électricité . réseau . consommation
+ELECLOWCARBONSYSTEM-kwh: logement . électricité . photovoltaique . autoconsommation
 foodconsumptionknowledge: non
 breakfast-milkandcereals-timesperweek:
   formule:
