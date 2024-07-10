@@ -131,8 +131,8 @@ try {
     }
   })
 
-  engine.evaluate('bilan climat')
-  engine.evaluate('bilan eau')
+  engine.evaluate({ valeur: 'bilan', contexte: { métrique: "'carbone'" } })
+  engine.evaluate({ valeur: 'bilan', contexte: { métrique: "'eau'" } })
   engine.evaluate('actions')
 
   if (!markdown) {
