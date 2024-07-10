@@ -10,8 +10,7 @@ commun . intensité électricité:
   titre: Intensité carbone du mix électrique suisse
   formule: 0.091
   note: |
-    OCEN - SCDD pour l'électricité GE, moyenne 2017-2021 (5 ans).
-  # @Clement: à détailler
+    Calcul réalisé par l'Etat de Genève (OCEN – DDC) en prenant en compte l'électricité renouvelable produite localement qui représente environ 1/3 de la consommation d'électricité du canton, et le mix moyen consommateur Suisse (KBOB) pour l'électricité importée du réseau, moyenne 2017-2021 (5 ans).
 
 # TRANSPORT
 transport . voiture . limitation autoroute:
@@ -27,11 +26,10 @@ transport . voiture . km:
     Ne comptez que les kilomètres de déplacement personnel (courses, loisirs, famille, etc.) et de déplacement domicile travail pour rejoindre votre lieu de travail habituel.
 
     Par exemple, si vous êtes en mission professionnelle dans un autre canton ou un autre pays, cela rentre dans la comptabilité de votre entreprise : ne le comptez pas ici.
-
+  par défaut: 6000
 
 transport . voiture . km annuels moyen:
-  formule: 7000
-  unité: km
+  formule: 6000
   note: |
     Source : [Office fédéral de la statistique](https://www.bfs.admin.ch/bfs/fr/home/statistiques/mobilite-transports/transport-personnes/comportements-transports/distance-duree-jour-deplacements.html).
 
@@ -65,13 +63,17 @@ transport . voiture . thermique . carburant . essence E5 ou E10:
 transport . voiture . thermique . carburant . essence E85:
   titre: Essence E85
 
+transport . deux roues . km annuels moyen:
+  formule: 320
+
+
 transport . deux roues . empreinte moyenne:
   valeur: deux roues . empreinte
   contexte:
     deux roues . usager: oui
     deux roues . type: "'moto sup 250'"
     deux roues . km: 400
-# @Clement: note: Source manquante ?
+  note: MRMT 2021, valeurs ajustées à partir des comptages 2022 pour corriger l'effet COVID observé en 2021.
 
 transport . avion . usager:
   description: |
@@ -329,7 +331,7 @@ divers . autres produits . niveau de dépenses:
 
     Elle concerne : **les jeux, la décoration, le matériel de cuisine, le linge de maison, les matériaux pour les loisirs créatifs ou bricolage, les plantes, etc.**
   par défaut: "'important'"
-# @Clément: Source pour cette valeur par défaut ?
+  note: Le pouvoir d'achat est significativement plus élevé en Suisse qu'en France, il est plus représentatif pour une valeur moyenne de se baser sur un niveau de dépenses important. 
 
 divers . autres produits . niveau de dépenses . faible:
   titre: Moins de 50CHF / mois
@@ -342,7 +344,7 @@ divers . autres produits . niveau de dépenses . important:
 
 divers . loisirs . culture . édition . fréquence:
   par défaut: "'élevée'"
-# @Clément: Source pour cette valeur par défaut ?
+  note: Le pouvoir d'achat est significativement plus élevé en Suisse qu'en France, il est plus représentatif pour une valeur moyenne de se baser sur un niveau de dépenses important. 
 
 divers . loisirs . culture . édition . fréquence . faible:
   titre: Moins de 5 CHF par mois
@@ -356,9 +358,10 @@ divers . loisirs . culture . édition . fréquence . élevée:
 divers . loisirs . culture . édition . fréquence . très élevée:
   titre: Plus de 30 CHF par mois
 
-# divers . numérique . internet . empreinte horaire:
-#   formule: 0.02
+divers . numérique . internet . empreinte horaire:
+  formule: 0.02
 # @Clément: Sans source, non validé car sujet complexe.
+# @JPhilippe: Nous nous sommes basés sur le modèle du calculateur FR de NGC, mais simplement nous avons corrigé pour utiliser le facteur d'émissions de l'électricité GE plutôt que FR.
 
 divers . textile . notif débarras surplus:
   description: |
@@ -432,6 +435,7 @@ parc français . chauffage . consommation réseau de chaleur par m2:
 
 # @Clément On a besoin des parts de chaque type d'énergie dans le parc genevois. Il semble y avoir un pb avec ceux relevés dans le fichier.
 # On distingue parts des énergies dans le parc genevois et part dédiée au chauffage pour chaque type d'énergie (cf plus bas).
+# @JPhilippe Ici ce sont bien les parts de chaque combustibles pour le chauffage. Je n'ai pas compris comment nous devons ajuster ces chiffres pour que le modèle fonctionne ?
 parc français . surface . part électricité:
   formule: 3.3%
   note: Pas de chauffage électrique, on prend en compte ici la part liée à la consommation des pompes à chaleur
@@ -539,7 +543,8 @@ logement . type:
     Cette information influence notamment l'empreinte de construction, mais aussi les possibilités de travaux d'isolation par exemple.
 
     > Si vous vivez dans un habitat original, par exemple un camping car, pas de problème : choisissez "appartement" et saisissez les m² de ce qui constitue quand même votre logement.
-# @Clément note: Source manquante ?
+  note: OCSTAT
+
 logement . construction . empreinte amortie:
   formule: 696 / 60
   note: Rapport haute école fribourg 2021 (amortissement 60 ans)
@@ -555,7 +560,7 @@ logement . construction . base . amortissement:
 
 logement . habitants:
   par défaut: 2.1
-  # @Clément note: Source manquante ?
+  note: OCSTAT
 
 logement . électricité . réseau . consommation estimée via le coût . saisie:
   unité: CHF/mois
@@ -567,6 +572,7 @@ logement . électricité . réseau . consommation:
     > Si vous vivez dans plusieurs logements (par exemple, si vous avez une residence secondaire), essayez de "ramener" ces consommations dans celles du logement principal afin d'avoir l'estimation la plus juste possible.
 
 # @Clément note: pour le moment, on garde la valeur par défaut française.
+# @JPhilippe Pour quelle raison ? Attention à GE les climatisations sont soumises à autorisation (pas les petites climatisations portables) et interdites sauf exception justifiée… Du coup c'est peut être contradictoire comme question ici.
 # logement . climatisation . nombre par défaut:
 #   formule: 0
 
@@ -653,8 +659,7 @@ services sociétaux:
       - services publics
   description: |
     Ce poste inclus l'empreinte des services publics suisses.
-
-  # @Clément note: Source manquante ?
+  note: bilans carbone territoriaux de la Ville de Genève et du canton de Genève
 
 services sociétaux . services publics:
   formule: 1583
@@ -916,7 +921,7 @@ logement . chauffage . baisse température . gains 1 degré:
     C'est la baisse estimée de dépense d'énergie quand on baisse la température de notre foyer chauffé de 1°C dans la gamme de température usuelle (autour de 20°).
 
     Nous retenons l'estimation donnée dans le [guide du Canton "Des gestes pour économiser notre énergie"](https://www.ge.ch/document/30986/annexe/0).
-  # @Clément: quelle est la source ?
+  note: La source est le document mentionné dans la description (guide du Canton "Des gestes pour économiser notre énergie")
 
 logement . électricité . éteindre appareils:
   description: |
@@ -950,8 +955,7 @@ logement . chauffage . rénovation énergétique:
 logement . gain rénovation:
   formule: 20%
   note: |
-    Le gain énergétique moyen après rénovation est très variable, en fonction du type de rénovation, du réglage des installations etc. Entre un bâtiment peu isolé et un bâtiment bien isolé, la différence de consommation est de l'ordre de 1.2 à 2.5.
-  # @Clément: Source ?
+    Le gain énergétique moyen après rénovation est très variable, en fonction du type de rénovation, du réglage des installations etc. Entre un bâtiment peu isolé et un bâtiment bien isolé, la différence de consommation est de l'ordre de 1.2 à 2.5. (OCEN)
 
 logement . propriétaire:
   description: |
