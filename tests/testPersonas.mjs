@@ -1,5 +1,6 @@
 import c from 'ansi-colors'
 import Engine from 'publicodes'
+import Engine140 from 'publicodes-140'
 import { disabledLogger } from '@publicodes/tools'
 
 import {
@@ -32,7 +33,7 @@ if (persona && persona in localPersonas && persona in prodPersonas) {
   prodPersonas = { [persona]: prodPersonas[persona] }
 }
 
-const localEngine = new Engine(localRules, {
+const localEngine = new Engine140(localRules, {
   logger: disabledLogger,
   strict: { situation: false }
 })
