@@ -23,7 +23,9 @@ import { constantFolding } from '@publicodes/tools/optims'
 const rulesToKeep = [
   'actions',
   'bilan',
+  'bilan . par jour',
   'métrique',
+  'logement . eau directe . par jour',
   'logement . chauffage . gaz',
   'logement . chauffage . biogaz',
   'transport . voiture . thermique',
