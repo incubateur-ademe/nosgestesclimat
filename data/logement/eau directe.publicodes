@@ -58,7 +58,7 @@ logement . eau directe . bains et douches . habitude:
         - douche longue
         - bain parfois
         - bain souvent
-  par défaut: "'bain parfois'"
+  par défaut: "'bain souvent'"
 
 logement . eau directe . bains et douches . douche express:
 logement . eau directe . bains et douches . douche longue:
@@ -75,20 +75,22 @@ logement . eau directe . bains et douches . douches . nombre:
   titre: Nombre de douches par semaine
   formule:
     variations:
-      - si: habitude = 'douche express'
-        alors: 4
-      - si: habitude = 'douche longue'
-        alors: 7
       - si: habitude = 'bain parfois'
-        alors: 6
+        alors: 5
       - si: habitude = 'bain souvent'
-        alors: 3
+        alors: 5
+      - sinon: 6
   par défaut: 5.5
   unité: douche/semaine
 
 logement . eau directe . bains et douches . douches . quantité:
   titre: Quantité d'eau par douche
-  formule: 72
+  formule:
+    variations:
+      - si: habitude = 'douche express'
+        alors: 36
+      - sinon: 72
+  par défaut: 72
   unité: l/douche
   note: On considère qu'une douche dure en moyenne 6 minutes avec un débit de 12 litres par minute.
 
@@ -107,9 +109,9 @@ logement . eau directe . bains et douches . bains . nombre:
       - si: habitude = 'douche longue'
         alors: 0
       - si: habitude = 'bain parfois'
-        alors: 1
+        alors: 0.5
       - si: habitude = 'bain souvent'
-        alors: 3
+        alors: 1
   par défaut: 0.3
   unité: bain/semaine
 
