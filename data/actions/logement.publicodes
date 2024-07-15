@@ -532,7 +532,14 @@ logement . installer photovoltaique:
       - est défini: électricité . photovoltaique . présent
       - électricité . photovoltaique . présent = non
       - logement . type = 'maison'
-  formule: puissance installée * productible * facteur émission
+  formule:
+    variations:
+      - si: énergie produite < logement . électricité . consommation totale
+        alors: énergie produite * facteur émission
+      - sinon: logement . électricité . consommation totale * facteur émission
+
+logement . installer photovoltaique . énergie produite:
+  formule: puissance installée * productible
 
 logement . installer photovoltaique . puissance installée:
   formule: nombre panneaux * puissance moyenne panneau
