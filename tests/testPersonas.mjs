@@ -10,7 +10,6 @@ import {
   getPersonasFromDist,
   printResults
 } from './commons.mjs'
-import safeGetSituation from './helpers/safeGetSituation.mjs'
 
 /**
  * Compares the value of all the rules between the local and the prod (or specified) version
@@ -33,8 +32,14 @@ if (persona && persona in localPersonas && persona in prodPersonas) {
   prodPersonas = { [persona]: prodPersonas[persona] }
 }
 
-const localEngine = new Engine(localRules, { logger: disabledLogger })
-const prodEngine = new Engine(prodRules, { logger: disabledLogger })
+const localEngine = new Engine(localRules, {
+  logger: disabledLogger,
+  strict: { situation: false }
+})
+const prodEngine = new Engine(prodRules, {
+  logger: disabledLogger,
+  strict: { situation: false }
+})
 
 const nbRules = Object.keys(localRules).length
 
@@ -52,20 +57,45 @@ for (const personaName in localPersonas) {
   }
 
   try {
-    const safeSituation = safeGetSituation({
-      situation: localSituation || {},
-      parsedRulesNames: Object.keys(localEngine.getParsedRules()),
-      version: 'local',
-      markdown: version === 'nightly' ? markdown : false
-    })
-    const safeProdSituation = safeGetSituation({
-      situation: prodSituation || {},
-      parsedRulesNames: Object.keys(prodEngine.getParsedRules()),
-      version: 'prod',
-      markdown: version === 'latest' ? markdown : false
-    })
-    localEngine.setSituation(safeSituation)
-    prodEngine.setSituation(safeProdSituation)
+    localEngine.setSituation(localSituation || {})
+    const safeSituation = localEngine.getSituation()
+
+    const wrongLocalKeys = Object.keys(localSituation).filter(
+      (key) => !(key in safeSituation)
+    )
+
+    if (wrongLocalKeys.length > 0) {
+      if (version === 'nightly') {
+        console.log(
+          `Les règles suivantes n'existent pas dans le modèle ou leur valeur est impossible (_**${version}**_):`
+        )
+        wrongLocalKeys.forEach((key) => console.log(`- ${key}`))
+      } else {
+        console.warn(
+          `${c.yellow('(warning:safeGetSituation)')} following rules doesn't exist in the model (${c.green(version)}) : ${c.magenta(wrongLocalKeys)}`
+        )
+      }
+    }
+
+    prodEngine.setSituation(prodSituation || {})
+    const safeProdSituation = prodEngine.getSituation()
+
+    const wrongProdKeys = Object.keys(prodSituation).filter(
+      (key) => !(key in safeProdSituation)
+    )
+
+    if (wrongProdKeys.length > 0) {
+      if (version === 'latest') {
+        console.log(
+          `Les règles suivantes n'existent pas dans le modèle ou leur valeur est impossible (_**${version}**_):`
+        )
+        wrongProdKeys.forEach((key) => console.log(`- ${key}`))
+      } else {
+        console.warn(
+          `${c.yellow('(warning:safeGetSituation)')} following rules doesn't exist in the model (${c.green(version)}) : ${c.magenta(wrongProdKeys)}`
+        )
+      }
+    }
   } catch (e) {
     printResults({ results: [{ type: 'error', message: e.message }], markdown })
     continue

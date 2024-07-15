@@ -3,12 +3,13 @@ import Engine from 'publicodes'
 import { PersonaKey, personas } from './Personas'
 import ReportManager from './ReportManager'
 
-// @ts-ignore
-import safeGetSituation from './../../tests/helpers/safeGetSituation.mjs'
-
 import rules from '../../public/co2-model.FR-lang.fr.json'
 
-export const initialEngine = new Engine(rules)
+export const initialEngine = new Engine(rules, {
+  strict: {
+    situation: false
+  }
+})
 
 export type AppContextType = {
   engine?: typeof initialEngine
@@ -40,11 +41,7 @@ export function appContextReducer(
       return {
         ...state,
         engine: state.engine.setSituation(
-          safeGetSituation({
-            situation: personas[action.currentPersona].situation,
-            parsedRulesNames: Object.keys(state.engine.getParsedRules()),
-            version: 'locale'
-          })
+          personas[action.currentPersona].situation
         ),
         currentPersona: action.currentPersona
       }
