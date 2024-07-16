@@ -58,7 +58,7 @@ logement . eau directe . bains et douches . habitude:
         - douche longue
         - bain parfois
         - bain souvent
-  par défaut: "'bain souvent'"
+  par défaut: "'bain parfois'"
 
 logement . eau directe . bains et douches . douche express:
 logement . eau directe . bains et douches . douche longue:
@@ -80,7 +80,6 @@ logement . eau directe . bains et douches . douches . nombre:
       - si: habitude = 'bain souvent'
         alors: 5
       - sinon: 6
-  par défaut: 5.5
   unité: douche/semaine
 
 logement . eau directe . bains et douches . douches . quantité:
@@ -90,7 +89,6 @@ logement . eau directe . bains et douches . douches . quantité:
       - si: habitude = 'douche express'
         alors: 36
       - sinon: 72
-  par défaut: 72
   unité: l/douche
   note: On considère qu'une douche dure en moyenne 6 minutes avec un débit de 12 litres par minute.
 
@@ -112,7 +110,6 @@ logement . eau directe . bains et douches . bains . nombre:
         alors: 0.5
       - si: habitude = 'bain souvent'
         alors: 1
-  par défaut: 0.3
   unité: bain/semaine
 
 logement . eau directe . bains et douches . bains . quantité:
@@ -142,6 +139,7 @@ logement . eau directe . toilettes . type:
         - sèches
         - double chasse
         - classiques
+  par défaut: "'classiques'"
 
 logement . eau directe . toilettes . type . sèches:
   titre: Toilettes sèches
@@ -160,7 +158,6 @@ logement . eau directe . toilettes . quantité:
         alors: 6
       - si: type = 'classiques'
         alors: 12
-  par défaut: 9
   unité: l/chasse
   note: On considère qu'une chasse d'eau consomme en moyenne 9 litres d'eau même si c'est valeur paut varier si la chasse d'eau est à double commande.
 
@@ -288,11 +285,12 @@ logement . eau directe . voiture:
 #  - La nature du jardin (potager, fleurs, pelouse) ?
 logement . eau directe . jardin:
   applicable si: jardin . surface > 0
+  non applicable si: logement . type = 'appartement'
   formule: foyer / logement . habitants
   note: Il sera nécessaire de demander si un récuparateur d'eau de pluie est installée.
 
 logement . eau directe . jardin . foyer:
-  formule: par semaine * commun . semaines par an * (8 mois / commun . mois par an)
+  formule: par semaine * commun . semaines par an * (4 mois / commun . mois par an)
   note: On considère 2 arrosages par semaine sur les mois d'octobre à mars.
 
 logement . eau directe . jardin . par semaine:
@@ -312,12 +310,14 @@ logement . eau directe . jardin . quantité:
   titre: Quantité d'eau par m2
   formule:
     variations:
-      - si:
-          toutes ces conditions:
-            - est défini: logement . extérieur . récupérateur eau de pluie . présent
-            - logement . extérieur . récupérateur eau de pluie . présent
+      - si: type arrosage = 'arrosoir'
+        alors: 15
+      - si: type arrosage = 'goutte à goutte'
+        alors: 7
+      - si: type arrosage = 'récupérateur eau de pluie'
         alors: 3
-      - sinon: 15
+      - si: type arrosage = 'tuyau d'arrosage'
+        alors: 25
   unité: l/arrosage/m2
   note: On considère qu'un m2 de jardin consomme en moyenne 15 litres d'eau par arrosage. Si un récupérateur d'eau de pluie, la consommation d'eau est bien moindre mais on ne la considère pas nulle pour autant.
 
@@ -325,3 +325,25 @@ logement . eau directe . jardin . fréquence:
   titre: Fréquence d'arrosage
   formule: 2
   unité: arrosage/semaine
+
+logement . eau directe . jardin . type arrosage:
+  applicable si: logement . eau directe . jardin . surface > 0
+  question: En général, comment arrosez-vous votre jardin ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - arrosoir
+        - goutte à goutte
+        - récupérateur eau de pluie
+        - tuyau d'arrosage
+  par défaut: "'arrosoir'"
+
+logement . eau directe . jardin . type arrosage . arrosoir:
+  titre: Arrosoir
+logement . eau directe . jardin . type arrosage . goutte à goutte:
+  titre: Goutte à goutte
+logement . eau directe . jardin . type arrosage . récupérateur eau de pluie:
+  titre: Récupérateur d'eau de pluie
+logement . eau directe . jardin . type arrosage . tuyau d'arrosage:
+  titre: Tuyau d'arrosage
