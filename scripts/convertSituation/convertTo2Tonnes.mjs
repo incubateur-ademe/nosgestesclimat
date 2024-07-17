@@ -27,11 +27,17 @@ export default function convertTo2Tonnes(personaSituation) {
     const formattedKey = key.replace(/-/g, '_')
 
     switch (nodeValue) {
+      case 'NO':
+        NGCSituationAs2T[formattedKey] = 'NO'
+        break
+      case 'YES':
+        NGCSituationAs2T[formattedKey] = 'YES'
+        break
       case true:
         NGCSituationAs2T[formattedKey] = 'YES'
         break
       case false: {
-        if (conversionRules[formattedKey] === 'non') {
+        if (conversionRules[key] === 'non') {
           NGCSituationAs2T[formattedKey] = false
         } else {
           NGCSituationAs2T[formattedKey] = 'NO'
@@ -39,10 +45,8 @@ export default function convertTo2Tonnes(personaSituation) {
         break
       }
       case undefined:
-        NGCSituationAs2T[formattedKey] = 'default'
-        break
       case null:
-        NGCSituationAs2T[formattedKey] = 'default'
+        NGCSituationAs2T[formattedKey] = 'NO'
         break
       default:
         NGCSituationAs2T[formattedKey] = nodeValue

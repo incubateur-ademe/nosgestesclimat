@@ -9,21 +9,21 @@ twowheelerscommute:
       - si:
           est défini: transport . deux roues . usager
         alors: transport . deux roues . usager
-      - sinon: oui
+      - sinon: "'YES'"
 buscommute:
   formule:
     variations:
       - si:
           est défini: transport . transports commun . bus . présent
         alors: transport . transports commun . bus . présent
-      - sinon: oui
+      - sinon: "'YES'"
 traincommute:
   formule:
     variations:
       - si:
           est défini: transport . transports commun . métro ou tram . présent
         alors: transport . transports commun . métro ou tram . présent
-      - sinon: oui
+      - sinon: "'YES'"
 boatcommute: non
 carcommute-kmperday: transport . voiture . km * utils . carSplit / commun . jours par an
 carcommute-occupancy: transport . voiture . voyageurs
@@ -58,14 +58,14 @@ twowheelerstravel:
       - si:
           est défini: transport . deux roues . usager
         alors: transport . deux roues . usager
-      - sinon: oui
+      - sinon: "'YES'"
 bustravel:
   formule:
     variations:
       - si:
           est défini: transport . transports commun . car . présent
         alors: transport . transports commun . car . présent
-      - sinon: oui
+      - sinon: "'YES'"
 traintravel: transport . train . km > 0
 plane:
   formule:
@@ -73,14 +73,14 @@ plane:
       - si:
           est défini: transport . avion . usager
         alors: transport . avion . usager
-      - sinon: oui
+      - sinon: "'YES'"
 boattravel:
   formule:
     variations:
       - si:
           est défini: transport . ferry . usager
         alors: transport . ferry . usager
-      - sinon: oui
+      - sinon: "'YES'"
 cartravel-km: transport . voiture . km * (1 - utils . carSplit)
 cartravel-occupancy: transport . voiture . voyageurs
 twowheelerstravel-km:
@@ -137,7 +137,7 @@ carcommute-category:
         alors: "'MEDIUM'"
       - si: transport . voiture . gabarit = 'SUV'
         alors: "'HEAVY'"
-      - sinon: "'default'"
+      - sinon: "'MEDIUM'"
 carcommute-motor:
   formule:
     variations:
@@ -147,7 +147,7 @@ carcommute-motor:
         alors: "'HYBRID'"
       - si: transport . voiture . motorisation = 'électrique'
         alors: "'ELECTRIC'"
-      - sinon: "'default'"
+      - sinon: "'FUEL'"
 carcommute-fossilfueltype:
   formule:
     variations:
@@ -157,14 +157,20 @@ carcommute-fossilfueltype:
         alors: "'GASOLINE'"
       - si: transport . voiture . thermique . carburant = 'essence E85'
         alors: "'GASOLINE'"
-      - sinon: "'default'"
-carcommute-fuelconsumptionknowledge: oui
+      - sinon: "'GASOLINE'"
+carcommute-fuelconsumptionknowledge: "'YES'"
 carcommute-use-lper100km:
   formule:
     variations:
       - si: transport . voiture . motorisation = 'thermique'
         alors: transport . voiture . thermique . consommation aux 100
-      - sinon: "'default'"
+      - sinon:
+          valeur: transport . voiture . thermique . consommation estimée
+          contexte:
+            transport . voiture . utilisateur: "'propriétaire'"
+            transport . voiture . gabarit: "'berline'"
+            transport . voiture . motorisation: "'thermique'"
+            transport . voiture . thermique . carburant: "'essence E5 ou E10'"
 carcommute-age:
   formule: "'default'"
   note: Nous n'avons plus l'info de l'âge du véhicule car amortissement par km.
@@ -179,7 +185,7 @@ twowheelerscommute-category:
         alors: "'MEDIUM'"
       - si: transport . deux roues . type = 'moto sup 250'
         alors: "'HEAVY'"
-      - sinon: "'default'"
+  par défaut: "'HEAVY'"
 twowheelerscommute-motor:
   formule:
     variations:
@@ -191,10 +197,10 @@ twowheelerscommute-motor:
         alors: "'FUEL'"
       - si: transport . deux roues . type = 'moto sup 250'
         alors: "'FUEL'"
-      - sinon: "'default'"
-twowheelerscommute-fuelconsumptionknowledge: oui
-twowheelerscommute-fossilfueltype: "'default'"
-twowheelerscommute-use-lper100km: "'default'"
+    par défaut: "'FUEL'"
+twowheelerscommute-fuelconsumptionknowledge: "'NO'"
+twowheelerscommute-fossilfueltype: non
+twowheelerscommute-use-lper100km: non
 cartravel-category:
   formule:
     variations:
@@ -208,7 +214,7 @@ cartravel-category:
         alors: "'MEDIUM'"
       - si: transport . voiture . gabarit = 'SUV'
         alors: "'HEAVY'"
-      - sinon: "'default'"
+      - sinon: "'MEDIUM'"
 cartravel-motor:
   formule:
     variations:
@@ -218,7 +224,8 @@ cartravel-motor:
         alors: "'HYBRID'"
       - si: transport . voiture . motorisation = 'électrique'
         alors: "'ELECTRIC'"
-      - sinon: "'default'"
+      - sinon: "'FUEL'"
+  par défaut: "'FUEL'"
 cartravel-fossilfueltype:
   formule:
     variations:
@@ -228,15 +235,23 @@ cartravel-fossilfueltype:
         alors: "'GASOLINE'"
       - si: transport . voiture . thermique . carburant = 'essence E85'
         alors: "'GASOLINE'"
-      - sinon: "'default'"
-cartravel-fuelconsumptionknowledge: oui
+      - sinon: "'GASOLINE'"
+cartravel-fuelconsumptionknowledge: "'YES'"
 cartravel-use-lper100km:
   formule:
     variations:
       - si: transport . voiture . motorisation = 'thermique'
         alors: transport . voiture . thermique . consommation aux 100
-      - sinon: "'default'"
-cartravel-age: "'default'"
+      - sinon:
+          valeur: transport . voiture . thermique . consommation estimée
+          contexte:
+            transport . voiture . utilisateur: "'propriétaire'"
+            transport . voiture . gabarit: "'berline'"
+            transport . voiture . motorisation: "'thermique'"
+            transport . voiture . thermique . carburant: "'essence E5 ou E10'"
+cartravel-age:
+  formule: "'default'"
+  note: Nous n'avons plus l'info de l'âge du véhicule car amortissement par km.
 twowheelerstravel-category:
   formule:
     variations:
@@ -248,7 +263,7 @@ twowheelerstravel-category:
         alors: "'MEDIUM'"
       - si: transport . deux roues . type = 'moto sup 250'
         alors: "'HEAVY'"
-      - sinon: "'default'"
+  par défaut: "'HEAVY'"
 twowheelerstravel-motor:
   formule:
     variations:
@@ -260,10 +275,10 @@ twowheelerstravel-motor:
         alors: "'FUEL'"
       - si: transport . deux roues . type = 'moto sup 250'
         alors: "'FUEL'"
-      - sinon: "'default'"
-twowheelerstravel-fuelconsumptionknowledge: oui
-twowheelerstravel-fossilfueltype: "'default'"
-twowheelerstravel-use-lper100km: "'default'"
+  par défaut: "'FUEL'"
+twowheelerstravel-fuelconsumptionknowledge: "'NO'"
+twowheelerstravel-fossilfueltype: non
+twowheelerstravel-use-lper100km: non
 household-m2: logement . surface
 household-occupancy: logement . habitants
 household-type:
@@ -274,6 +289,7 @@ household-type:
       - si: logement . type = 'maison'
         alors: "'HOUSE'"
       - sinon: "'default'"
+  note: Nous avons une pseudo catégorie "ni l'un ni l'autre = moyen"
 HEAT-source:
   formule:
     variations:
@@ -290,7 +306,7 @@ HEAT-source:
       - si: logement . chauffage . PAC . présent
         alors: "'HEAT_PUMP'"
       - sinon: "'default'"
-  note: Pour le moment pas de correspondance pour HEATLOWCARBONSYSTEM et COAL
+  note: Pour le moment pas de correspondance pour HEATLOWCARBONSYSTEM et COAL et pas de possiblité de sélectionner plusieurs modes de chauffages.
 HOTWATER-source:
   formule:
     variations:
@@ -311,21 +327,17 @@ HOTWATER-source:
 COOKING-source:
   formule:
     variations:
-      - si: logement . chauffage . électricité . présent
-        alors: "'ELECTRICITY'"
       - si: logement . chauffage . gaz . présent
         alors: "'GASNETWORK'"
-      - si: logement . chauffage . fioul . présent
-        alors: "'OIL'"
-      - si: logement . chauffage . bois . présent
-        alors: "'BIOFUELSANDWASTES'"
-      - si: logement . chauffage . réseau de chaleur . présent
-        alors: "'HEATNETWORK'"
-      - si: logement . chauffage . PAC . présent
-        alors: "'HEAT_PUMP'"
-      - sinon: "'default'"
-  note: Pour le moment pas de correspondance pour HEATLOWCARBONSYSTEM et COAL
-AC-source: logement . climatisation . présent
+      - sinon: "'ELECTRICITY'"
+  note: Pour le moment, électricité par défaut sauf si gaz.
+AC-source:
+  formule:
+    variations:
+      - si:
+          est défini: logement . climatisation . présent
+        alors: logement . climatisation . présent
+      - sinon: "'YES'"
 ELECTRICITY-source:
   formule:
     variations:
@@ -339,51 +351,43 @@ ELECTRICITY-source:
               alors: "'ELECLOWCARBONSYSTEM'"
             - sinon: "'BOTH'"
       - sinon: "'ELECTRICITYNETWORK'"
-consumptionknowledge: oui
+consumptionknowledge: "'YES'"
 GASNETWORK-kwh: logement . chauffage . gaz . consommation
 HEATNETWORK-kwh: logement . chauffage . réseau de chaleur . consommation
-COAL-kwh: non
+COAL-kwh: "'false'"
 OIL-kwh: logement . chauffage . fioul . consommation
 BIOFUELSANDWASTES-kwh:
   formule:
     somme:
       - logement . chauffage . bois . type . bûches . consommation * logement . chauffage . bois . type . bûches . intensité énergétique
       - logement . chauffage . bois . type . granulés . consommation
-HEATLOWCARBONSYSTEM-kwh: non
+HEATLOWCARBONSYSTEM-kwh: 0
 ELECTRICITYNETWORK-kwh: logement . électricité . réseau . consommation
 ELECLOWCARBONSYSTEM-kwh: logement . électricité . photovoltaique . autoconsommation
-foodconsumptionknowledge: non
+foodconsumptionknowledge: "'NO'"
 breakfast-milkandcereals-timesperweek:
   formule:
     variations:
       - si: alimentation . petit déjeuner . type = 'lait céréales'
         alors: 7
-      - si: alimentation . petit déjeuner . type = 'aucun'
-        alors: "'default'"
       - sinon: 0
 breakfast-fruit-timesperweek:
   formule:
     variations:
       - si: alimentation . petit déjeuner . type = 'végétalien'
         alors: 7
-      - si: alimentation . petit déjeuner . type = 'aucun'
-        alors: "'default'"
       - sinon: 0
 breakfast-bread-timesperweek:
   formule:
     variations:
       - si: alimentation . petit déjeuner . type = 'continental'
         alors: 7
-      - si: alimentation . petit déjeuner . type = 'aucun'
-        alors: "'default'"
       - sinon: 0
 breakfast-english-timesperweek:
   formule:
     variations:
       - si: alimentation . petit déjeuner . type = 'britannique'
         alors: 7
-      - si: alimentation . petit déjeuner . type = 'aucun'
-        alors: "'default'"
       - sinon: 0
 meal-redmeat-timesperweek:
   formule: alimentation . plats . viande rouge . nombre
@@ -424,7 +428,7 @@ food-localpurchases:
         alors: "'SOMETIMES'"
       - si: alimentation . local . consommation = 'jamais'
         alors: "'NEVER'"
-      - sinon: "'default'"
+      - sinon: "'NEVER'"
 food-nowastepurchases:
   formule:
     variations:
@@ -434,7 +438,7 @@ food-nowastepurchases:
         alors: "'SOMETIMES'"
       - si: alimentation . local . consommation = 'zéro déchet'
         alors: "'ALWAYS'"
-      - sinon: "'default'"
+      - sinon: "'NEVER'"
 food-transformedpurchases: "'default'"
 food-organicpurchases: "'default'"
 smallclothes-number-newperyear:
@@ -462,7 +466,6 @@ smallappliances-number:
       - divers . électroménager . appareils . cafetière . nombre
       - divers . électroménager . appareils . aspirateur . nombre
       - divers . électroménager . appareils . robot cuisine . nombre
-
 bigappliances-number:
   formule:
     somme:
@@ -495,7 +498,7 @@ furnitures-coeff:
         alors: "'SAME_AS_AVERAGE'"
       - si: divers . électroménager . appareils . préservation = 'maximum'
         alors: "'MORE_THAN_AVERAGE'"
-      - sinon: "'default'"
+      - sinon: "'SAME_AS_AVERAGE'"
 
 smalldevices-number:
   formule:
@@ -521,8 +524,8 @@ edition-coeff:
       - si: divers . loisirs . culture . édition . présent = non
         alors: "'NO'"
       - si: divers . loisirs . culture . édition . présent = oui
-        alors: "'AVERAGE'"
-      - sinon: "'default'"
+        alors: "'OFTEN'"
+      - sinon: "'AVERAGE'"
 restaurants-numberperweek: "'default'"
 otherhangouts-numberperweek: "'default'"
 clothes-responsiblepurchases: "'default'"
