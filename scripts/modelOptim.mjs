@@ -25,7 +25,7 @@ const rulesToKeep = [
   'bilan',
   'bilan . par jour',
   'métrique',
-  'logement . eau directe . par jour',
+  'logement . eau domestique . par jour',
   'logement . chauffage . gaz',
   'logement . chauffage . biogaz',
   'transport . voiture . thermique',
