@@ -1,23 +1,16 @@
 alimentation . repas:
   icônes: 🍽️
   formule:
-    variations:
-      - si: métrique = "carbone"
-        alors:
-          somme:
-            - petit déjeuner annuel
-            - déjeuner et dîner
-            - bonus
-            - déforestation
-      - si: métrique = "eau"
-        alors:
-          somme:
-            - petit déjeuner annuel
-            - déjeuner et dîner
+    somme:
+      - petit déjeuner annuel
+      - déjeuner et dîner
+      - bonus
+      - déforestation
   note: |
     Comme pour le textile et l'ameublement, est ajoutée ici une part de l'empreinte liée à la déforestation importée.
 
 alimentation . déforestation:
+  non applicable si: métrique != "carbone"
   formule:
     variations:
       - si: déforestation
@@ -31,7 +24,6 @@ alimentation . déforestation:
               alors: forfait base + (forfait moyen fruits céréales * 0.6)
             - sinon: forfait base + (forfait moyen fruits céréales * 0.2)
       - sinon: 0
-  unité: kgCO2e
   note: |
     La déforestation importée est l'empreinte carbone associée à la destruction de forêts ailleurs sur la planète. Elle est la combinaison de deux facteurs : 
 
@@ -825,12 +817,14 @@ alimentation . petit déjeuner . type . aucun:
     Vous ne mangez rien au petit déjeuner (mais vous pouvez boire un café, un thé ou un chocolat chaud pris en compte dans une autre question).
 
 alimentation . bonus:
+  non applicable si: métrique != "carbone"
   formule:
     somme:
       - de saison . empreinte
       - local . empreinte
 
 alimentation . local:
+  non applicable si: métrique != "carbone"
   icônes: 🍅🇫🇷
 
 alimentation . local . empreinte:
@@ -912,6 +906,7 @@ alimentation . local . part locale:
     🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1SVYvBaaYDOUDcg5jX0eZFEColnWWIL8PCLMGrPR000o/edit#gid=1694091424) sous forme de tableur.
 
 alimentation . de saison:
+  non applicable si: métrique != "carbone"
   icônes: 🍅🌞
 
 alimentation . de saison . empreinte:
