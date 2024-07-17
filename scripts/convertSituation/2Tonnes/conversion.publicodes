@@ -293,36 +293,88 @@ household-type:
 HEAT-source:
   formule:
     variations:
-      - si: logement . chauffage . électricité . présent
-        alors: "'ELECTRICITY'"
-      - si: logement . chauffage . gaz . présent
-        alors: "'GASNETWORK'"
-      - si: logement . chauffage . fioul . présent
-        alors: "'OIL'"
-      - si: logement . chauffage . bois . présent
-        alors: "'BIOFUELSANDWASTES'"
-      - si: logement . chauffage . réseau de chaleur . présent
-        alors: "'HEATNETWORK'"
       - si: logement . chauffage . PAC . présent
         alors: "'HEAT_PUMP'"
-      - sinon: "'default'"
+      - si:
+          toutes ces conditions:
+            - logement . chauffage . PAC . présent = non
+            - logement . chauffage . gaz . présent
+        alors: "'GASNETWORK'"
+      - si:
+          toutes ces conditions:
+            - logement . chauffage . PAC . présent = non
+            - logement . chauffage . gaz . présent = non
+            - logement . chauffage . réseau de chaleur . présent
+        alors: "'HEATNETWORK'"
+      - si:
+          toutes ces conditions:
+            - logement . chauffage . PAC . présent = non
+            - logement . chauffage . gaz . présent = non
+            - logement . chauffage . réseau de chaleur . présent = non
+            - logement . chauffage . fioul . présent
+        alors: "'OIL'"
+      - si:
+          toutes ces conditions:
+            - logement . chauffage . PAC . présent = non
+            - logement . chauffage . gaz . présent = non
+            - logement . chauffage . réseau de chaleur . présent = non
+            - logement . chauffage . fioul . présent = non
+            - logement . chauffage . électricité . présent
+        alors: "'ELECTRICITY'"
+      - si:
+          toutes ces conditions:
+            - logement . chauffage . PAC . présent = non
+            - logement . chauffage . gaz . présent = non
+            - logement . chauffage . réseau de chaleur . présent = non
+            - logement . chauffage . fioul . présent = non
+            - logement . chauffage . électricité . présent = non
+            - logement . chauffage . bois . présent
+        alors: "'BIOFUELSANDWASTES'"
+      - sinon: "'GASNETWORK'"
+  par défaut: "'GASNETWORK'"
   note: Pour le moment pas de correspondance pour HEATLOWCARBONSYSTEM et COAL et pas de possiblité de sélectionner plusieurs modes de chauffages.
 HOTWATER-source:
   formule:
     variations:
-      - si: logement . chauffage . électricité . présent
-        alors: "'ELECTRICITY'"
-      - si: logement . chauffage . gaz . présent
-        alors: "'GASNETWORK'"
-      - si: logement . chauffage . fioul . présent
-        alors: "'OIL'"
-      - si: logement . chauffage . bois . présent
-        alors: "'BIOFUELSANDWASTES'"
-      - si: logement . chauffage . réseau de chaleur . présent
-        alors: "'HEATNETWORK'"
       - si: logement . chauffage . PAC . présent
         alors: "'HEAT_PUMP'"
-      - sinon: "'default'"
+      - si:
+          toutes ces conditions:
+            - logement . chauffage . PAC . présent = non
+            - logement . chauffage . gaz . présent
+        alors: "'GASNETWORK'"
+      - si:
+          toutes ces conditions:
+            - logement . chauffage . PAC . présent = non
+            - logement . chauffage . gaz . présent = non
+            - logement . chauffage . réseau de chaleur . présent
+        alors: "'HEATNETWORK'"
+      - si:
+          toutes ces conditions:
+            - logement . chauffage . PAC . présent = non
+            - logement . chauffage . gaz . présent = non
+            - logement . chauffage . réseau de chaleur . présent = non
+            - logement . chauffage . fioul . présent
+        alors: "'OIL'"
+      - si:
+          toutes ces conditions:
+            - logement . chauffage . PAC . présent = non
+            - logement . chauffage . gaz . présent = non
+            - logement . chauffage . réseau de chaleur . présent = non
+            - logement . chauffage . fioul . présent = non
+            - logement . chauffage . électricité . présent
+        alors: "'ELECTRICITY'"
+      - si:
+          toutes ces conditions:
+            - logement . chauffage . PAC . présent = non
+            - logement . chauffage . gaz . présent = non
+            - logement . chauffage . réseau de chaleur . présent = non
+            - logement . chauffage . fioul . présent = non
+            - logement . chauffage . électricité . présent = non
+            - logement . chauffage . bois . présent
+        alors: "'BIOFUELSANDWASTES'"
+      - sinon: "'ELECTRICITY'"
+  par défaut: "'ELECTRICITY'"
   note: Pour le moment pas de correspondance pour HEATLOWCARBONSYSTEM et COAL
 COOKING-source:
   formule:
@@ -330,6 +382,7 @@ COOKING-source:
       - si: logement . chauffage . gaz . présent
         alors: "'GASNETWORK'"
       - sinon: "'ELECTRICITY'"
+  par défaut: "'GASNETWORK'"
   note: Pour le moment, électricité par défaut sauf si gaz.
 AC-source:
   formule:
@@ -352,15 +405,47 @@ ELECTRICITY-source:
             - sinon: "'BOTH'"
       - sinon: "'ELECTRICITYNETWORK'"
 consumptionknowledge: "'YES'"
-GASNETWORK-kwh: logement . chauffage . gaz . consommation
-HEATNETWORK-kwh: logement . chauffage . réseau de chaleur . consommation
+GASNETWORK-kwh:
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - HEAT-source = 'GASNETWORK'
+            - HOTWATER-source = 'GASNETWORK'
+            - COOKING-source = 'GASNETWORK'
+        alors: logement . chauffage . gaz . consommation
+      - sinon: 0
+HEATNETWORK-kwh:
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - HEAT-source = 'HEATNETWORK'
+            - HOTWATER-source = 'HEATNETWORK'
+        alors: logement . chauffage . réseau de chaleur . consommation
+      - sinon: 0
 COAL-kwh: "'false'"
-OIL-kwh: logement . chauffage . fioul . consommation
+OIL-kwh:
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - HEAT-source = 'OIL'
+            - HOTWATER-source = 'OIL'
+        alors: logement . chauffage . fioul . consommation
+      - sinon: 0
 BIOFUELSANDWASTES-kwh:
   formule:
-    somme:
-      - logement . chauffage . bois . type . bûches . consommation * logement . chauffage . bois . type . bûches . intensité énergétique
-      - logement . chauffage . bois . type . granulés . consommation
+    variations:
+      - si:
+          une de ces conditions:
+            - HEAT-source = 'BIOFUELSANDWASTES'
+            - HOTWATER-source = 'BIOFUELSANDWASTES'
+        alors:
+          somme:
+            - logement . chauffage . bois . type . bûches . consommation * logement . chauffage . bois . type . bûches . intensité énergétique
+            - logement . chauffage . bois . type . granulés . consommation
+      - sinon: 0
 HEATLOWCARBONSYSTEM-kwh: 0
 ELECTRICITYNETWORK-kwh: logement . électricité . réseau . consommation
 ELECLOWCARBONSYSTEM-kwh: logement . électricité . photovoltaique . autoconsommation
