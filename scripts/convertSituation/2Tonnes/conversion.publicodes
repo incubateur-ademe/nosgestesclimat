@@ -24,9 +24,14 @@ traincommute:
           est défini: transport . transports commun . métro ou tram . présent
         alors: transport . transports commun . métro ou tram . présent
       - sinon: "'YES'"
-boatcommute: non
+boatcommute: "'default'"
 carcommute-kmperday: transport . voiture . km * utils . carSplit / commun . jours par an
-carcommute-occupancy: transport . voiture . voyageurs
+carcommute-occupancy:
+  variations:
+    - si:
+        est défini: transport . voiture . km > 0
+      alors: transport . voiture . voyageurs
+    - sinon: "'absent'"
 twowheelerscommute-kmperday:
   formule:
     variations:
@@ -49,7 +54,7 @@ traincommute-kmperday:
           est défini: transport . transports commun . métro ou tram . présent
         alors: transport . transports commun . métro ou tram . heures par semaine * transport . transports commun . métro ou tram . vitesse / commun . jours par semaine
       - sinon: transport . transports commun . métro ou tram . temps moyen * transport . transports commun . métro ou tram . vitesse / commun . jours par semaine
-boatcommute-kmperday: non
+boatcommute-kmperday: "'default'"
 commute-workdistances-ratio: "'default'"
 cartravel: transport . voiture . km > 0
 twowheelerstravel:
@@ -82,7 +87,12 @@ boattravel:
         alors: transport . ferry . usager
       - sinon: "'YES'"
 cartravel-km: transport . voiture . km * (1 - utils . carSplit)
-cartravel-occupancy: transport . voiture . voyageurs
+cartravel-occupancy:
+  formule:
+    variations:
+      - si: transport . voiture . km > 0
+        alors: transport . voiture . voyageurs
+      - sinon: "'absent'"
 twowheelerstravel-km:
   formule:
     variations:
@@ -123,7 +133,7 @@ planetravel-km:
             - transport . avion . court courrier . durée moyenne * transport . avion . court courrier . vitesse moyenne
             - transport . avion . moyen courrier . durée moyenne * transport . avion . moyen courrier . vitesse moyenne
             - transport . avion . long courrier . durée moyenne * transport . avion . long courrier . vitesse moyenne
-planeprofessional-km: non
+planeprofessional-km: 0
 carcommute-category:
   formule:
     variations:
@@ -171,9 +181,7 @@ carcommute-use-lper100km:
             transport . voiture . gabarit: "'berline'"
             transport . voiture . motorisation: "'thermique'"
             transport . voiture . thermique . carburant: "'essence E5 ou E10'"
-carcommute-age:
-  formule: "'default'"
-  note: Nous n'avons plus l'info de l'âge du véhicule car amortissement par km.
+carcommute-age: "'default'"
 twowheelerscommute-category:
   formule:
     variations:
@@ -198,9 +206,9 @@ twowheelerscommute-motor:
       - si: transport . deux roues . type = 'moto sup 250'
         alors: "'FUEL'"
     par défaut: "'FUEL'"
-twowheelerscommute-fuelconsumptionknowledge: "'NO'"
-twowheelerscommute-fossilfueltype: non
-twowheelerscommute-use-lper100km: non
+twowheelerscommute-fuelconsumptionknowledge: "'default'"
+twowheelerscommute-fossilfueltype: "'default'"
+twowheelerscommute-use-lper100km: "'default'"
 cartravel-category:
   formule:
     variations:
@@ -249,9 +257,7 @@ cartravel-use-lper100km:
             transport . voiture . gabarit: "'berline'"
             transport . voiture . motorisation: "'thermique'"
             transport . voiture . thermique . carburant: "'essence E5 ou E10'"
-cartravel-age:
-  formule: "'default'"
-  note: Nous n'avons plus l'info de l'âge du véhicule car amortissement par km.
+cartravel-age: "'default'"
 twowheelerstravel-category:
   formule:
     variations:
@@ -276,9 +282,9 @@ twowheelerstravel-motor:
       - si: transport . deux roues . type = 'moto sup 250'
         alors: "'FUEL'"
   par défaut: "'FUEL'"
-twowheelerstravel-fuelconsumptionknowledge: "'NO'"
-twowheelerstravel-fossilfueltype: non
-twowheelerstravel-use-lper100km: non
+twowheelerstravel-fuelconsumptionknowledge: "'default'"
+twowheelerstravel-fossilfueltype: "'default'"
+twowheelerstravel-use-lper100km: "'default'"
 household-m2: logement . surface
 household-occupancy: logement . habitants
 household-type:
@@ -289,7 +295,6 @@ household-type:
       - si: logement . type = 'maison'
         alors: "'HOUSE'"
       - sinon: "'default'"
-  note: Nous avons une pseudo catégorie "ni l'un ni l'autre = moyen"
 HEAT-source:
   formule:
     variations:
@@ -424,7 +429,7 @@ HEATNETWORK-kwh:
             - HOTWATER-source = 'HEATNETWORK'
         alors: logement . chauffage . réseau de chaleur . consommation
       - sinon: 0
-COAL-kwh: "'false'"
+COAL-kwh: "'absent'"
 OIL-kwh:
   formule:
     variations:
@@ -432,7 +437,7 @@ OIL-kwh:
           une de ces conditions:
             - HEAT-source = 'OIL'
             - HOTWATER-source = 'OIL'
-        alors: logement . chauffage . fioul . consommation
+        alors: logement . chauffage . fioul . consommation / logement . chauffage . fioul kWh au litre
       - sinon: 0
 BIOFUELSANDWASTES-kwh:
   formule:
@@ -484,15 +489,15 @@ meal-othermeatandfish-timesperweek:
       - alimentation . plats . poisson blanc . nombre
 meal-vegetarian-timesperweek: alimentation . plats . végétarien . nombre
 meal-vegetalian-timesperweek: alimentation . plats . végétalien . nombre
-redmeat-kgperweek: non
-whitemeat-kgperweek: non
-seafood-kgperweek: non
-eggsanddairies-kgperweek: non
-rice-kgperweek: non
-othercereals-kgperweek: non
-fruitsandvegetables-kgperweek: non
-seasonningandother-kgperweek: non
-sugarproducts-kgperweek: non
+redmeat-kgperweek: 0
+whitemeat-kgperweek: 0
+seafood-kgperweek: 0
+eggsanddairies-kgperweek: 0
+rice-kgperweek: 0
+othercereals-kgperweek: 0
+fruitsandvegetables-kgperweek: 0
+seasonningandother-kgperweek: 0
+sugarproducts-kgperweek: 0
 alcohol-timesperweek: alimentation . boisson . alcool . litres
 hotdrinks-timesperweek:
   formule:
@@ -602,14 +607,19 @@ bigdevices-number:
       - divers . numérique . appareils . imprimante . nombre
 
 streaming-hoursperweek: divers . numérique . internet . durée journalière
-tobacco-coeff: divers . tabac . consommation par semaine > 0
+tobacco-coeff:
+  formule:
+    variations:
+      - si: divers . tabac . consommation par semaine > 0
+        alors: "'YES'"
+      - sinon: "'NO'"
 edition-coeff:
   formule:
     variations:
       - si: divers . loisirs . culture . édition . présent = non
         alors: "'NO'"
       - si: divers . loisirs . culture . édition . présent = oui
-        alors: "'OFTEN'"
+        alors: "'MANY'"
       - sinon: "'AVERAGE'"
 restaurants-numberperweek: "'default'"
 otherhangouts-numberperweek: "'default'"
