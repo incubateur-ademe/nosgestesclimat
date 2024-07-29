@@ -4,6 +4,7 @@ utils . twowheelersSplit: 0.7
 
 carcommute: transport . voiture . km > 0
 twowheelerscommute:
+  # Pour les règles présentes dans le modèle NGC et 2T, dans le cas ou il n'y pas de valeur dans la situation renseignée (comme pour un 'Je ne sais pas' par exemple), on prend la valeur **par défaut du modèle NGC**.
   formule:
     variations:
       - si:
@@ -27,6 +28,7 @@ traincommute:
 boatcommute: "'default'"
 carcommute-kmperday: transport . voiture . km * utils . carSplit / commun . jours par an
 carcommute-occupancy:
+  # Pour les règles qui sont soumises à des conditons d'applicabilité, on prend la valeur que le modèle 2T impose dans ce cas, définie dans `ifAbsent2T.yaml`
   variations:
     - si:
         est défini: transport . voiture . km > 0
@@ -54,6 +56,7 @@ traincommute-kmperday:
           est défini: transport . transports commun . métro ou tram . présent
         alors: transport . transports commun . métro ou tram . heures par semaine * transport . transports commun . métro ou tram . vitesse / commun . jours par semaine
       - sinon: transport . transports commun . métro ou tram . temps moyen * transport . transports commun . métro ou tram . vitesse / commun . jours par semaine
+#  Certaines variables 2T sont absentes du modèle NGC, on prend dans ce cas la valeur par défaut du modèle 2T dans `default2T.yaml`
 boatcommute-kmperday: "'default'"
 commute-workdistances-ratio: "'default'"
 cartravel: transport . voiture . km > 0
@@ -296,6 +299,8 @@ household-type:
         alors: "'HOUSE'"
       - sinon: "'default'"
 HEAT-source:
+  # Le modèle 2T n'accepte qu'une valeur pour le mode de chauffage. Nous définissons ici une forme de priorité pour les différents modes de chauffage. Il faut donc lire ces enchainements de variations comme suit:
+  # Si le mode de chauffage est une pompe à chaleur, alors le mode de chauffage est 'HEAT_PUMP'. Si ce n'est pas le cas, on regarde si le mode de chauffage est au gaz. Si c'est le cas, le mode de chauffage est 'GASNETWORK'. Et ainsi de suite.
   formule:
     variations:
       - si: logement . chauffage . PAC . présent

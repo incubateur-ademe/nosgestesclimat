@@ -23,20 +23,25 @@ export default function convertTo2Tonnes(personaSituation) {
   )
   const ifAbsent2T = utils.readYAML(ifAbsent2TFile)
 
+  // We need to merge NGCRules and conversionRules to have all the rules in the same engine
   const rules = { ...NGCRules, ...conversionRules }
   const engine = new Engine(rules)
 
+  // We set the persona situation in the engine but it could be any situation.
   engine.setSituation(personaSituation)
 
   const NGCSituationAs2T = {}
 
   Object.keys(conversionRules).map((key) => {
+    // We need to ignore utils rules
     if (key.startsWith('utils')) {
       return
     }
 
+    // We evaluate conversion rule
     const { nodeValue } = engine.evaluate(key)
 
+    // Publicodes doesn't support bottom dash in variable names
     const formattedKey = key.replace(/-/g, '_')
 
     switch (nodeValue) {
@@ -46,6 +51,9 @@ export default function convertTo2Tonnes(personaSituation) {
       case 'absent':
         NGCSituationAs2T[formattedKey] = ifAbsent2T[formattedKey]
         break
+      // Sometimes, 2T value is a a boolean, sometimes 'YES' or 'NO'.
+      // We need to convert boolean values to 'TRUE' or 'FALSE'
+      // Case for 'YES' and 'NO' is not necessary but it's more explicit
       case 'NO':
         NGCSituationAs2T[formattedKey] = 'NO'
         break
