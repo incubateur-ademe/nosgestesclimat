@@ -166,12 +166,12 @@ function compilePersonas() {
 
 function generateSituationCoverage() {
   Bun.spawn(['bun', './tests/testSituationCoverage.mjs', '-m'], {
-    stdout: Bun.file('./quick-doc/situation-coverage.md')
+    stdout: Bun.file('./quick-doc/reports/situation-coverage.md')
   })
 }
 
 function generateMigrationReport() {
   Bun.spawn(['bun', './scripts/migrationToJSON.mjs', '-m'], {
-    stdout: Bun.file('./quick-doc/migration-report.md')
+    stdout: Bun.file('./quick-doc/reports/migration-report.md')
   })
 }
