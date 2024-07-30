@@ -56,7 +56,7 @@ if (markdown) {
 emptyQuestions.forEach((rule) => {
   if (markdown) {
     console.log(
-      `| ${rule} | ${localRules[rule]['question'] ?? ''} | ${localRules[rule]['par défaut'] ?? ''} |`
+      `| ${rule} | ${localRules[rule]['question']?.replace(/(\r\n|\n|\r)/gm, '') ?? ''} | ${localRules[rule]['par défaut'] ?? ''} |`
     )
   } else {
     console.log(
