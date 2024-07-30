@@ -25,21 +25,21 @@ alimentation . déforestation:
       - sinon: 0
   unité: kgCO2e
   note: |
-    La déforestation importée est l'empreinte carbone associée à la destruction de forêts ailleurs sur la planète. Elle est la combinaison de deux facteurs : 
+    La déforestation importée est l'empreinte carbone associée à la destruction de forêts ailleurs sur la planète. Elle est la combinaison de deux facteurs :
 
     - Les émissions liées au brûlage de la forêt (instantanées)
     - Les émissions liées à la suppression de puits de carbone (futures)
 
-    L’étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41) est la plus complète sur les émissions liées à la déforestation importée. 
+    L’étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41) est la plus complète sur les émissions liées à la déforestation importée.
 
     Une part de ces émissions est à faire varier en fonction du régime alimentaire. Elle concerne :
 
-    - les consommations de viande (en fonction du nombre de repas viande renseignés) : en moyenne 34 kgCO2e / français 
+    - les consommations de viande (en fonction du nombre de repas viande renseignés) : en moyenne 34 kgCO2e / français
     - les consommations de fruits, légumes, céréales et noix d'importation (à faire varier selon si l'on consomme local ou non) : en moyenne 86 kgCO2e / français, discriminées selon la part de local.
 
     Le reste des émissions liées à la déforestation importée liée à l'alimentation est attribué à chaque français de manière égale. Cela correspond à :
 
-    - la consommation d'huiles végétales : 5 kgCO2e / personne 
+    - la consommation d'huiles végétales : 5 kgCO2e / personne
     - la consommation d'autres produits non discriminables en fonction des régimes alimentaires : 76 kgCO2e / personne
 
 alimentation . déforestation . forfait moyen fruits céréales:
@@ -108,7 +108,7 @@ alimentation . plats:
   question: Choisissez les 14 repas (déjeuners et dîners) de votre semaine-type
   titre: Empreinte des repas
   description: |
-    Choisissez les plats qui représentent votre semaine type. 
+    Choisissez les plats qui représentent votre semaine type.
 
     A priori, vous en aurez 14 : 7 déjeuners et 7 dîners. Mais vous pouvez aussi manger moins, ou plus, c'est tout à fait possible !
 
@@ -123,8 +123,8 @@ alimentation . plats:
       - poisson blanc
   unité: kgCO2e/semaine
   note: |
-    Pour le moment, nous proposons 6 repas types pour 6 régimes différents. Il a été choisi de limiter la granularité du modèle via 6 menus représentatifs 
-    des régimes associés pour simplifier l'estimation de l'empreinte du poste alimentation pour l'utilisateur 
+    Pour le moment, nous proposons 6 repas types pour 6 régimes différents. Il a été choisi de limiter la granularité du modèle via 6 menus représentatifs
+    des régimes associés pour simplifier l'estimation de l'empreinte du poste alimentation pour l'utilisateur
     (les spécificités de l'alimentation de chacun pourraient donner lieu à un simulateur complet dédié à l'alimentation).
 
     Ils ne sont pas directement basés sur les régimes de la Base Empreinte, [documentés par l'ADEME](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm), jugés obsolètes (peu exhaustifs, FE non issus d'Agribalyse).
@@ -285,7 +285,7 @@ alimentation . plats . viande rouge . déforestation:
   unité: kgCO2e/repas
   note: |
     L’étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41) donne une empreinte moyenne de 34 kgCO2e / personne de déforestation importée liée à la consommation de viandes d'élevage.
-    Nous partons du principe que ces émissions liées à la production de viandes d'élevage appartiennent majoritairement à la catégorie "viande rouge" : c'est la catégorie la plus consommatrice de terres et de ressources. 
+    Nous partons du principe que ces émissions liées à la production de viandes d'élevage appartiennent majoritairement à la catégorie "viande rouge" : c'est la catégorie la plus consommatrice de terres et de ressources.
     La consommation moyenne par français de viande rouge se situe autour de 3 repas par semaine, soit 156 repas par an.
 
     En conséquence, nous ajoutons à l'empreinte des repas une empreinte moyenne de 0.218 kgCO2e / repas de viande rouge.
@@ -368,211 +368,177 @@ alimentation . petit déjeuner annuel:
   titre: Petit déjeuner
   icônes: 🥐
   formule: petit déjeuner . par jour * commun . jours par an
+  unité: kgCO2e
 
 alimentation . petit déjeuner . par semaine:
-  titre: Empreinte hebdo petit déjeuner
+  titre: Empreinte hebdomadaire petit déjeuner
   formule: par jour * commun . jours par semaine
   unité: kgCO2e/semaine
 
 alimentation . petit déjeuner . par jour:
-  titre: Empreinte hebdo petit déjeuner
+  titre: Empreinte quotidienne petit déjeuner
   formule: alimentation . petit déjeuner * 1 repas/jour
   unité: kgCO2e/jour
 
 alimentation . petit déjeuner:
+  mosaique:
+    type: selection
+    options:
+      - pain . présent
+      - fruits . présent
+      - produit laitier . présent
+      - céréales . présent
+      - protéine animale . présent
+    suggestions:
+      pas de petit déjeuner:
+        pain . présent: non
+        fruits . présent: non
+        produit laitier . présent: non
+        céréales . présent: non
+        protéine animale . présent: non
+  formule: empreinte calculée
+  unité: kgCO2e/repas
+
+alimentation . petit déjeuner . pain:
+  titre: Pain (baguette, miche, viennoiseries...)
+  icônes: 🥖
+
+alimentation . petit déjeuner . pain . présent:
+  question: Prenez-vous du pain au petit-déjeuner ?
+  par défaut: oui
+
+alimentation . petit déjeuner . fruits:
+  titre: Fruits (hors jus)
+  icônes: 🍊
+
+alimentation . petit déjeuner . fruits . présent:
+  question: Prenez-vous des fruits au petit-déjeuner ?
+  par défaut: oui
+
+alimentation . petit déjeuner . produit laitier:
+  titre: Produit laitier (lait, yaourt, beurre...)
+  icônes: 🥛
+
+alimentation . petit déjeuner . produit laitier . présent:
+  question: Prenez-vous un produit laitier au petit-déjeuner ?
+  par défaut: oui
+
+alimentation . petit déjeuner . céréales:
+  titre: Céréales (muesli, corn-flakes, barres de céréales...)
+  icônes: 🌽
+
+alimentation . petit déjeuner . céréales . présent:
+  question: Prenez-vous des céréales au petit-déjeuner ?
+  par défaut: non
+
+alimentation . petit déjeuner . protéine animale:
+  titre: Protéine animale (œuf, jambon, bacon...)
+  icônes: 🍳
+
+alimentation . petit déjeuner . protéine animale . présent:
+  question: Prenez-vous des œufs ou de la viande au petit-déjeuner ?
+  par défaut: non
+
+alimentation . petit déjeuner . empreinte calculée:
+  formule:
+    moyenne:
+      - empreinte pain
+      - empreinte fruits
+      - empreinte produit laitier
+      - empreinte céréales
+      - empreinte protéine animale
+
+alimentation . petit déjeuner . empreinte calculée . empreinte pain:
   formule:
     variations:
-      - si: type = 'continental'
-        alors: continental
-      - si: type = 'lait céréales'
-        alors: lait céréales
-      - si: type = 'britannique'
-        alors: britannique
-      - si: type = 'végétalien'
-        alors: végétalien
+      - si: pain . présent
+        alors: facteur pain * poids petit déjeuner standard
       - sinon: 0
   unité: kgCO2e/repas
 
-alimentation . petit déjeuner . type:
-  question: Quel petit déjeuner vous correspond le plus ?
-  description: |
-    Il existe une variété infinie de petits déjeuners. Nous en avons sélectionné quelques-uns pour que vous obteniez une réponse facilement.
+alimentation . petit déjeuner . empreinte calculée . facteur pain:
+  formule: 0.69
+  unité: kgCO2e/kg
+  note: Facteur issu d'Agribalyse et correspondant à la baguette
 
-    Même si vous ne retrouvez pas exactement votre petit déjeuner, choisissez celui qui s'en rapproche !
-
-    > À noter que votre consommation de jus de fruits / café / thé / chocolat chaud est comptabilisée dans la question dédiée aux boissons chaudes.
-
-  par défaut: "'continental'"
+alimentation . petit déjeuner . empreinte calculée . empreinte fruits:
   formule:
-    une possibilité:
-      choix obligatoire: oui
-      possibilités:
-        - continental
-        - lait céréales
-        - britannique
-        - végétalien
-        - aucun
-
-alimentation . petit déjeuner . continental:
-  titre: Continental
-  formule: 0.28
+    variations:
+      - si: fruits . présent
+        alors: facteur fruits * poids petit déjeuner standard
+      - sinon: 0
   unité: kgCO2e/repas
-  description: |
-    Petit déjeuner avec pain, viennoiserie, beurre, confiture et un fruit.
 
-    L'empreinte du petit déjeuner continental est donné par le tableau suivant :
+alimentation . petit déjeuner . empreinte calculée . facteur fruits:
+  formule: 0.73
+  unité: kgCO2e/kg
+  note: Facteur calculé à partir d'une moyenne pondérée des consommations de fruits des français fournies par l'étude INCA3.
 
-    | Ingrédients                                                                        | CIQUAL | Qte (g) | Kcal  | Protéines (g) | Lipides (g) | kgCO2e/kg |  kgCO2e  |
-    | ---------------------------------------------------------------------------------- | ------ | ------- | ----- | ------------- | ----------- | --------- | -------- |
-    | Pain (Pain, baguette, courante)                                                    | 7001   | 50      | 142   | 4,14          | 0,7         | 0,69      |  0,03    |
-    | Vienoiserie (Croissant, sans précision)                                            | 7602   | 50      | 186   | 3,33          | 10          | 1,61      |  0,08    |
-    | Beurre demi-sel                                                                    | 16402  | 10      | 73,8  | 0,07          | 8,14        | 7,73      |  0,08    |
-    | Confiture (Confiture, tout type de fruits, allégée en sucres (extra ou classique)) | 31024  | 20      | 50,2  | 0             | 0,1         | 1,42      |  0,03    |
-    | Orange                                                                             | 13034  | 100     | 45,5  | 0,75          | 0           | 0,63      |  0,06    |
-    | Total                                                                              |        | 230     | 497,5 | 8,28          | 18,94       |           | **0,28** |
+alimentation . petit déjeuner . empreinte calculée . empreinte produit laitier:
+  formule:
+    variations:
+      - si: produit laitier . présent
+        alors: facteur produit laitier * poids petit déjeuner standard
+      - sinon: 0
+  unité: kgCO2e/repas
 
-    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
-
-    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
-
-alimentation . petit déjeuner . lait céréales:
-  titre: Lait céréales
+alimentation . petit déjeuner . empreinte calculée . facteur produit laitier:
   formule:
     variations:
       - si: type de lait = 'lait de vache'
-        alors: lait vache céréales
+        alors: 3.03
       - si: type de lait = 'lait de soja'
-        alors: lait soja céréales
+        alors: 0.45
       - si: type de lait = 'lait d'avoine'
-        alors: lait avoine céréales
+        alors: 0.54
+  unité: kgCO2e/kg
+  note: |
+    Pour le produit laitier, s'il s'agit de lait de vache, le facteur est calculé à partir d'une moyenne pondérée des consommations de produits laitiers des français fournies par l'étude INCA3.
+    S'il s'agit de lait de soja, il s'agit du facteur "boisson à partir de soja, nature".
+    S'il s'agit de lait d'avoine, il s'agit du facteur "boisson à partir d'avoine, nature".
 
-alimentation . petit déjeuner . lait vache céréales:
-  titre: Céréales avec lait de vache
-  formule: 0.460
+alimentation . petit déjeuner . empreinte calculée . empreinte céréales:
+  formule:
+    variations:
+      - si: céréales . présent
+        alors: facteur céréales * poids petit déjeuner standard
+      - sinon: 0
   unité: kgCO2e/repas
-  description: |
-    Petit déjeuner avec un produit laitier (lait de vache) et une portion de céréales.
 
-    L'empreinte du petit déjeuner lait de vache et céréales est donné par le tableau suivant :
+alimentation . petit déjeuner . empreinte calculée . facteur céréales:
+  formule: 3.23
+  unité: kgCO2e/kg
+  note: Facteur calculé à partir d'une moyenne pondérée des consommations de céréales des français fournies par l'étude INCA3.
 
-    | Ingrédients            | CIQUAL | Qte (g) | Kcal  | Protéines (g) | Lipides (g) | kgCO2e/kg |  kgCO2e  |
-    | ---------------------- | ------ | ------- | ----- | ------------- | ----------- | --------- | -------- |
-    | Céréales               | CRL    | 60      | 243,3 | 5,05          | 4,67        | 3,23      |  0,19    |
-    | Lait demi-écrémé (UHT) | 19041  | 200     | 94,6  | 6,76          | 3,1         | 1,31      |  0,26    |
-    | Total                  |        | 260     | 337,9 | 11,81         | 7,77        |           | **0,46** |
-
-    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
-
-    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
-
-alimentation . petit déjeuner . lait soja céréales:
-  titre: Céréales avec lait de soja
-  formule: 0.280
+alimentation . petit déjeuner . empreinte calculée . empreinte protéine animale:
+  formule:
+    variations:
+      - si: protéine animale . présent
+        alors: facteur protéine animale * poids petit déjeuner standard
+      - sinon: 0
   unité: kgCO2e/repas
-  description: |
-    Petit déjeuner avec un produit laitier (lait de soja) et une portion de céréales.
 
-    L'empreinte du petit déjeuner lait de soja et céréales est donné par le tableau suivant :
+alimentation . petit déjeuner . empreinte calculée . facteur protéine animale:
+  formule:
+    moyenne:
+      - facteur viande blanche
+      - facteur oeuf
+  unité: kgCO2e/kg
+  note: On considère que les protéines animales mangées au petit déjeuner sont majoritairement des viandes blanches (jambon, bacon, poulet) et des œufs.
 
-    | Ingrédients                                        | CIQUAL | Qte (g) | Kcal  | Protéines (g) | Lipides (g) | kgCO2e/kg |  kgCO2e  |
-    | -------------------------------------------------- | ------ | ------- | ----- | ------------- | ----------- | --------- | -------- |
-    | Céréales                                           | CRL    | 60      | 243,3 | 5,05          | 4,67        | 3,23      |  0,19    |
-    | Boisson au soja, nature, non enrichie, préemballée | 18900  | 200     | 71,6  | 6,62          | 4,14        | 0,45      |  0,09    |
-    | Total                                              |        | 260     | 314,9 | 11,67         | 8,81        |           | **0,28** |
+alimentation . petit déjeuner . empreinte calculée . facteur viande blanche:
+  formule: 8.03
+  note: Facteur calculé à partir d'une moyenne pondérée des consommations de viandes blanches des français fournies par l'étude INCA3.
+  unité: kgCO2e/kg
 
-    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+alimentation . petit déjeuner . empreinte calculée . facteur oeuf:
+  formule: 3.17
+  note: Facteur "oeuf" fourni par Agribalyse.
+  unité: kgCO2e/kg
 
-    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
-
-alimentation . petit déjeuner . lait avoine céréales:
-  titre: Céréales avec lait d'avoine
-  formule: 0.300
-  unité: kgCO2e/repas
-  description: |
-    Petit déjeuner avec un produit laitier (lait d'avoine) et une portion de céréales.
-
-    L'empreinte du petit déjeuner lait d'avoine et céréales est donné par le tableau suivant :
-
-    | Ingrédients                                  | CIQUAL | Qte (g) | Kcal  | Protéines (g) | Lipides (g) | kgCO2e/kg |  kgCO2e  |
-    | -------------------------------------------- | ------ | ------- | ----- | ------------- | ----------- | --------- | -------- |
-    | Céréales                                     | CRL    | 60      | 243,3 | 5,05          | 4,67        | 3,23      |  0,19    |
-    | Boisson à base d'avoine, nature, préemballée | 18905  | 200     | 85    | 0,9           | 2,2         | 0,54      |  0,11    |
-    | Total                                        |        | 260     | 328,3 | 5,95          | 6,87        |           | **0,3**  |
-
-    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
-
-    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
-
-alimentation . petit déjeuner . britannique:
-  titre: Britannique
-  formule: 1.18
-  unité: kgCO2e/repas
-  description: |
-    Petit déjeuner avec de la charcuterie, 2 œufs et des toasts.
-
-    L'empreinte du petit déjeuner britannique est donné par le tableau suivant :
-
-    | Ingrédients                                | CIQUAL | Qte (g) | Kcal   | Protéines (g) | Lipides (g) | kgCO2e/kg |  kgCO2e  |
-    | ------------------------------------------ | ------ | ------- | ------ | ------------- | ----------- | --------- | -------- |
-    | Jambon cuit, supérieur                     | 28900  | 100     | 125    | 20,8          | 4,28        | 6,92      |  0,69    |
-    | Oeuf, cru (2)                              | 22000  | 120     | 168    | 15,24         | 11,8        | 3,17      |  0,38    |
-    | Huile                                      | 17440  | 7       | 63,07  | 0             | 7           | 2,57      |  0,02    |
-    | Toasts (2 tranches - Pain de mie, courant) | 7200   | 50      | 137,5  | 3,57          | 1,8         | 1,75      |  0,09    |
-    | Total                                      |        | 277     | 493,57 | 39,61         | 24,88       | 14,41     | **1,18** |
-
-    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
-
-    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
-
-alimentation . petit déjeuner . végétalien:
-  titre: Végétalien
-  formule: 0.380
-  unité: kgCO2e/repas
-  description: |
-    Petit déjeuner avec une portion de muesli, un fruit
-
-    L'empreinte du petit déjeuner végétalien est donné par le tableau suivant :
-
-    | Ingrédients            | CIQUAL | Qte (g) | Kcal   | Protéines (g) | Lipides (g) | kgCO2e/kg |  kgCO2e  |
-    | ---------------------- | ------ | ------- | ------ | ------------- | ----------- | --------- | -------- |
-    | Dessert vegan (fruits) | DV     | 250     | 148,38 | 1,77          | 0,36        | 0,73      |  0,18    |
-    | Céréales               | CRL    | 60      | 243,3  | 5,05          | 4,67        | 3,23      |  0,19    |
-    | Total                  |        | 250     | 148,38 | 1,77          | 0,36        |           | **0,38** |
-
-    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
-
-    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
-
-alimentation . petit déjeuner . type . continental:
-  icônes: 🥐🥖
-  titre: Viennoiserie et pain
-  description: |
-    Nous avons fait le choix de considérer un petit déjeuner standard français proche du petit déjeuner appelé ["continental"](https://fr.wikipedia.org/wiki/Déjeuner#Repas_de_type_continental).
-    Il comprend pain, beurre, confiture, viennoiserie et un fruit.
-
-alimentation . petit déjeuner . type . lait céréales:
-  icônes: 🥣🎑
-  titre: Lait et céréales
-  description: |
-    Un bol de lait ou un yaourt avec des céréales. L'origine (animale ou végétale) du lait que vous buvez vous sera demandée par la suite !
-
-alimentation . petit déjeuner . type . britannique:
-  titre: Salé (type britannique)
-  icônes: 🍳🥓
-  description: |
-    Un petit dej' salé : toasts, œufs, charcuterie. Nous avons allégé le traditionnel [déjeuner anglais ou irlandais](https://fr.wikipedia.org/wiki/Petit_déjeuner_anglais) qui comprend également baked beans, saucisses, tomates, champignons, pommes de terre.
-
-alimentation . petit déjeuner . type . végétalien:
-  titre: Fruits
-  icônes: 🍌🍎
-  description: |
-    Un petit dej' composé de fruits.
-
-alimentation . petit déjeuner . type . aucun:
-  titre: Pas de petit-dej'
-  icônes: ❌
-  description: |
-    Vous ne mangez rien au petit déjeuner (mais vous pouvez boire un café, un thé ou un chocolat chaud pris en compte dans une autre question).
+alimentation . petit déjeuner . empreinte calculée . poids petit déjeuner standard:
+  formule: 0.250
+  unité: kg/repas
 
 alimentation . bonus:
   formule:
