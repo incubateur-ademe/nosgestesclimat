@@ -16,6 +16,7 @@ export default function AppContextProvider({
   const [appContext, dispatch] = useReducer(appContextReducer, {
     engine: initialEngine,
     currentPersona: defaultPersona,
+    currentMetric: 'carbone',
     reportManager: new ReportManager()
   })
 
@@ -31,6 +32,13 @@ export default function AppContextProvider({
       currentPersona: appContext.currentPersona
     })
   }, [personas])
+
+  useEffect(() => {
+    dispatch({
+      type: 'setCurrentMetric',
+      currentMetric: appContext.currentMetric
+    })
+  }, [])
 
   return (
     <AppContext.Provider value={appContext}>

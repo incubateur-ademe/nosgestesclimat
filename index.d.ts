@@ -94,6 +94,9 @@ export type NGCRule = Rule & {
   avertissement?: string
 }
 
+// TODO : should be defined from "métrique" rule directly
+export type Metrics = 'carbone' | 'eau'
+
 // TODO: Should remove "| string" when frontend migrates to model DottedName type
 export type NGCRules = Record<DottedName | string, NGCRule>
 

@@ -1,7 +1,7 @@
-transport . boulot:
+transport . voiture . boulot:
   icônes: 🏢
 
-transport . boulot . seuil activation:
+transport . voiture . boulot . seuil activation:
   titre: Seuil d'activation actions liées aux trajets "Boulot"
   description: |
     Distance minimale pour déclencher cette action. 
@@ -10,23 +10,23 @@ transport . boulot . seuil activation:
     > qu'il aille en voiture au boulot.
 
     Nous définitions la distance du seuil à 2km (trajet aller), pour 5 jours par semaine.
-  formule: transport . boulot . distance
+  formule: transport . voiture . boulot . distance
   unité: km
 
-transport . boulot . distance:
+transport . voiture . boulot . distance:
   formule: semaines * hebdomadaire
   unité: km
 
-transport . boulot . semaines:
+transport . voiture . boulot . semaines:
   formule: 47
   unité: semaine
   description: 47 semaines, plutôt que 52 pour prendre en compte les 5 semaines de congés. C'est une approxiomation importante.
 
-transport . boulot . distance . hebdomadaire:
+transport . voiture . boulot . distance . hebdomadaire:
   formule: km par jour * jours travaillés en voiture
   unité: km/semaine
 
-transport . boulot . jours travaillés en voiture:
+transport . voiture . boulot . jours travaillés en voiture:
   question: Combien de jours par semaine prenez-vous votre voiture pour aller au travail ?
   par défaut: 4
   unité: jour/semaine
@@ -38,12 +38,12 @@ transport . boulot . jours travaillés en voiture:
     4: 4
     5: 5
 
-transport . boulot . distance . km par jour:
+transport . voiture . boulot . distance . km par jour:
   titre: Distance aller-retour trajet domicile travail
   formule: 2 trajet/jour * km aller
   unité: km/jour
 
-transport . boulot . distance . km aller:
+transport . voiture . boulot . distance . km aller:
   titre: Distance aller trajet domicile travail
   question: A quelle distance de chez vous se situe votre travail ?
   unité: km/trajet
@@ -58,31 +58,31 @@ transport . boulot . distance . km aller:
   note: Mettre un lien vers l'étude et mettre à jour avec les statistiques de l'enquête déplacement 2020 si disponible.
   par défaut: 10
 
-transport . boulot . voyageurs:
+transport . voiture . boulot . voyageurs:
   titre: Nombre de voyageurs sur le trajet domicile-travail
   question: Combien êtes-vous dans la voiture pour vos trajets domicile-travail ?
   par défaut: 1
 
-transport . boulot . covoiturage:
-  formule: transport . boulot . voyageurs = 1
+transport . voiture . boulot . covoiturage:
+  formule: transport . voiture . boulot . voyageurs = 1
 
-transport . boulot . covoiturage . nombre de voyageurs:
+transport . voiture . boulot . covoiturage . nombre de voyageurs:
   formule: voyageurs + nombre de covoitureurs
 
-transport . boulot . covoiturage . nombre de covoitureurs:
+transport . voiture . boulot . covoiturage . nombre de covoitureurs:
   question: Combien de personnes pourraient covoiturer avec vous ?
   par défaut: 1
 
-transport . boulot . sans voiture:
+transport . voiture . boulot . sans voiture:
   action:
     dépasse:
-      - transport . boulot . covoiturage
-      - transport . boulot . télétravail
+      - transport . voiture . boulot . covoiturage
+      - transport . voiture . boulot . télétravail
   titre: Aller au travail autrement qu'en voiture
   icônes: 🚌🚲
   description: |
     Les trajets domicile-travail et professionnels sont le premier poste d’émission de gaz à effet de serre des activités de bureau ! Et pour cause : les ¾ de ces déplacements se font seul en voiture, avec de gros impacts environnementaux. Repenser ses trajets, on a peut-être à y gagner plus que ce que l’on croit.
-    
+
     > Découvrez toutes les solutions, les aides disponibles et des témoignages de salariés qui ont changé leur mobilité [en consultant notre article](https://agirpourlatransition.ademe.fr/particuliers/bureau/deplacements/boulot-auto-perso).
 
   non applicable si: seuil activation = 0
@@ -103,11 +103,11 @@ transport . boulot . sans voiture:
         alors: recalcul autres véhicules à moteur
   unité: kgCO2e
 
-transport . boulot . sans voiture . gain empreinte au km:
-  formule: (voiture . empreinte au kilomètre / transport . boulot . voyageurs) - sans voiture . empreinte
+transport . voiture . boulot . sans voiture . gain empreinte au km:
+  formule: (voiture . empreinte au kilomètre / transport . voiture . boulot . voyageurs) - sans voiture . empreinte
   note: On fait l'hypothèse que le trajet est effectué seul.
 
-transport . boulot . sans voiture . empreinte:
+transport . voiture . boulot . sans voiture . empreinte:
   titre: Empreinte transport en commun choisi
   formule:
     variations:
@@ -121,7 +121,7 @@ transport . boulot . sans voiture . empreinte:
   note: |
     On considère qu'un déplacement domicile travail effectué en voiture peut-être remplacé par un train régional et non par un TGV.
 
-transport . boulot . sans voiture . type:
+transport . voiture . boulot . sans voiture . type:
   avec:
     bus:
     métro ou tramway:
@@ -142,29 +142,29 @@ transport . boulot . sans voiture . type:
         - vélo électrique
         - trotinette électrique
 
-transport . boulot . recalcul vélo:
+transport . voiture . boulot . recalcul vélo:
   valeur: transport . mobilité douce . vélo
   contexte:
     transport . mobilité douce . vélo . présent: oui
 
-transport . boulot . recalcul vae:
+transport . voiture . boulot . recalcul vae:
   valeur: transport . mobilité douce . vae
   contexte:
     transport . mobilité douce . vae . présent: oui
-    transport . mobilité douce . vae . km: transport . boulot . distance
+    transport . mobilité douce . vae . km: transport . voiture . boulot . distance
 
-transport . boulot . recalcul autres véhicules à moteur:
+transport . voiture . boulot . recalcul autres véhicules à moteur:
   valeur: transport . mobilité douce . autres véhicules à moteur
   contexte:
     transport . mobilité douce . autres véhicules à moteur . présent: oui
-    transport . mobilité douce . autres véhicules à moteur . km: transport . boulot . distance
+    transport . mobilité douce . autres véhicules à moteur . km: transport . voiture . boulot . distance
 
-transport . boulot . télétravail:
+transport . voiture . boulot . télétravail:
   titre: Faire du télétravail
   icônes: 🏠💻
   description: |
     En travaillant depuis la maison, nous contribuons à économiser de l’énergie et à réduire en effet de 69 % le volume des déplacements par rapport à un jour passé sur le lieu de travail. Un constat loin d’être neutre quand on sait l’impact de nos déplacements domicile-travail sur l’environnement, que ce soit en matière d’émissions de gaz à effet de serre ou de qualité de l’air.
-    
+
     > Pour en savoir plus sur l’intérêt environnemental du télétravail, [consultez notre article](https://agirpourlatransition.ademe.fr/particuliers/maison/numerique/teletravail-ca-change-quoi-planete).
 
   non applicable si: seuil activation = 0
@@ -173,17 +173,17 @@ transport . boulot . télétravail:
       - compatible
       - voiture . km > seuil activation
       - jours travaillés en voiture > 0
-  formule: empreinte jour voiture * jours gagnés * transport . boulot . semaines
+  formule: empreinte jour voiture * jours gagnés * transport . voiture . boulot . semaines
 
-transport . boulot . télétravail . jours gagnés:
+transport . voiture . boulot . télétravail . jours gagnés:
   valeur: jours télétravaillés
   plafond: jours travaillés en voiture
 
-transport . boulot . télétravail . empreinte jour voiture:
-  formule: distance . km par jour * voiture . empreinte au kilomètre / transport . boulot . voyageurs
+transport . voiture . boulot . télétravail . empreinte jour voiture:
+  formule: distance . km par jour * voiture . empreinte au kilomètre / transport . voiture . boulot . voyageurs
   unité: kgCO2e/jour
 
-transport . boulot . télétravail . jours télétravaillés:
+transport . voiture . boulot . télétravail . jours télétravaillés:
   question: Combien de jours de télétravail par semaine pourriez-vous faire ?
   applicable si: compatible
   par défaut: 4
@@ -197,39 +197,37 @@ transport . boulot . télétravail . jours télétravaillés:
   plancher: 1
   plafond: 5
 
-transport . boulot . télétravail . compatible:
+transport . voiture . boulot . télétravail . compatible:
   question: Votre travail est-il totalement ou en partie compatible avec le télétravail ?
   par défaut: oui
 
-transport . boulot . faire du covoiturage:
+transport . voiture . boulot . faire du covoiturage:
   titre: Aller au travail en covoiturage
   applicable si:
     toutes ces conditions:
+      - est défini: voiture . utilisateur
+      - voiture . utilisateur != 'non régulier'
       - voiture . km > seuil activation
       - covoiturage
-  non applicable si:
-    toutes ces conditions:
-      - est défini: voiture . utilisateur
-      - voiture . utilisateur = 'non régulier'
   icônes: 🚗👥
   formule: empreinte boulot * (1 - 1 / boulot . covoiturage . nombre de voyageurs)
   unité: kgCO2e
   description: |
     3 % seulement des déplacements quotidiens en France sont réalisés en covoiturage. C’est peu, surtout quand on sait que 70 % des déplacements domicile-travail sont réalisés au moyen de véhicules individuels.
-    
+
     5 bonnes raisons de tenter le covoiturage
       - C’est économique : à deux, à trois voire à quatre, entre voisins ou entre collègues, c’est une opportunité de diviser ses frais de carburant par le nombre de passagers ;
       - C’est écologique : la voiture individuelle représente à elle seule plus de 15 % des émissions de gaz à effet de serre en France. Or, le covoiturage permet de diviser le nombre des émissions de CO2 par le nombre de voyageurs. Il réduit aussi les émissions de polluants et donc les impacts sur la qualité de l’air ;
       - C’est solidaire : le covoiturage est une solution pleine de potentiel, en particulier dans les zones aujourd’hui peu desservies par les transports en commun ;
       - C’est convivial : entre collègues, entre amis, entre voisins, et même entre inconnus (grâce aux plateformes de covoiturage existantes), la route est moins longue…
       - Dernier atout : le covoiturage constitue une solution pour réduire le trafic (et votre stress).
-    
+
     > Pour en savoir plus sur les aides disponibles pour vous lancer, [consultez notre article](https://agirpourlatransition.ademe.fr/particuliers/bureau/deplacements/covoiturage-bonnes-raisons-de-se-lancer)
 
   note: |
     Voir l'article The Conversation [À quelles conditions le covoiturage sera-t-il un mode de transport durable ?](https://theconversation.com/a-quelles-conditions-le-covoiturage-sera-t-il-un-mode-de-transport-durable-124122)
 
-transport . boulot . faire du covoiturage . empreinte boulot:
+transport . voiture . boulot . faire du covoiturage . empreinte boulot:
   valeur: transport . voiture
   contexte:
     transport . voiture . km: boulot . distance
