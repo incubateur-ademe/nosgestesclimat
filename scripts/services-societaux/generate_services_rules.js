@@ -98,7 +98,6 @@ const dataObject = Object.assign({}, ...data)
 const SPobject = {
   'services publics': {
     titre: 'Services publics',
-    couleur: '#0c2461',
     abréviation: 'S. publics',
     icônes: '🏛',
     formule: { somme: SP_sum },
@@ -111,7 +110,6 @@ const SPobject = {
 const SMobject = {
   'services marchands': {
     titre: 'Services marchands',
-    couleur: '#3c0c61',
     abréviation: 'S. marchands',
     icônes: '✉️',
     formule: { somme: SM_sum },
