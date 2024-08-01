@@ -1,4 +1,4 @@
-import coverageReport from '../../situation-coverage.md?raw'
+import coverageReport from '../../reports/situation-coverage.md?raw'
 import Markdown from '../components/Markdown'
 
 export default function SituationCoveragePage() {

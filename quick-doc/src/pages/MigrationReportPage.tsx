@@ -1,4 +1,4 @@
-import migrationReport from '../../migration-report.md?raw'
+import migrationReport from '../../reports/migration-report.md?raw'
 import Markdown from '../components/Markdown'
 
 export default function MigrationReportPage() {

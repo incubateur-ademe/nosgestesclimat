@@ -1,0 +1,634 @@
+utils:
+utils . carSplit: 0.6
+utils . twowheelersSplit: 0.7
+
+carcommute: transport . voiture . km > 0
+twowheelerscommute:
+  # Pour les règles présentes dans le modèle NGC et 2T, dans le cas ou il n'y pas de valeur dans la situation renseignée (comme pour un 'Je ne sais pas' par exemple), on prend la valeur **par défaut du modèle NGC**.
+  formule:
+    variations:
+      - si:
+          est défini: transport . deux roues . usager
+        alors: transport . deux roues . usager
+      - sinon: "'YES'"
+buscommute:
+  formule:
+    variations:
+      - si:
+          est défini: transport . transports commun . bus . présent
+        alors: transport . transports commun . bus . présent
+      - sinon: "'YES'"
+traincommute:
+  formule:
+    variations:
+      - si:
+          est défini: transport . transports commun . métro ou tram . présent
+        alors: transport . transports commun . métro ou tram . présent
+      - sinon: "'YES'"
+boatcommute: "'default'"
+carcommute-kmperday: transport . voiture . km * utils . carSplit / commun . jours par an
+carcommute-occupancy:
+  # Pour les règles qui sont soumises à des conditons d'applicabilité, on prend la valeur que le modèle 2T impose dans ce cas, définie dans `ifAbsent2T.yaml`
+  variations:
+    - si:
+        est défini: transport . voiture . km > 0
+      alors: transport . voiture . voyageurs
+    - sinon: "'absent'"
+twowheelerscommute-kmperday:
+  formule:
+    variations:
+      - si:
+          est défini: transport . deux roues . usager
+        alors: transport . deux roues . km * utils . twowheelersSplit / commun . jours par an
+      - sinon: transport . deux roues . km annuels moyen * transport . deux roues . pourcentage motards * utils . twowheelersSplit / commun . jours par an
+twowheelerscommute-occupancy: 1
+buscommute-kmperday:
+  formule:
+    variations:
+      - si:
+          est défini: transport . transports commun . bus . présent
+        alors: transport . transports commun . bus . heures par semaine * transport . transports commun . bus . vitesse / commun . jours par semaine
+      - sinon: transport . transports commun . bus . temps moyen * transport . transports commun . bus . vitesse / commun . jours par semaine
+traincommute-kmperday:
+  formule:
+    variations:
+      - si:
+          est défini: transport . transports commun . métro ou tram . présent
+        alors: transport . transports commun . métro ou tram . heures par semaine * transport . transports commun . métro ou tram . vitesse / commun . jours par semaine
+      - sinon: transport . transports commun . métro ou tram . temps moyen * transport . transports commun . métro ou tram . vitesse / commun . jours par semaine
+#  Certaines variables 2T sont absentes du modèle NGC, on prend dans ce cas la valeur par défaut du modèle 2T dans `default2T.yaml`
+boatcommute-kmperday: "'default'"
+commute-workdistances-ratio: "'default'"
+cartravel: transport . voiture . km > 0
+twowheelerstravel:
+  formule:
+    variations:
+      - si:
+          est défini: transport . deux roues . usager
+        alors: transport . deux roues . usager
+      - sinon: "'YES'"
+bustravel:
+  formule:
+    variations:
+      - si:
+          est défini: transport . transports commun . car . présent
+        alors: transport . transports commun . car . présent
+      - sinon: "'YES'"
+traintravel: transport . train . km > 0
+plane:
+  formule:
+    variations:
+      - si:
+          est défini: transport . avion . usager
+        alors: transport . avion . usager
+      - sinon: "'YES'"
+boattravel:
+  formule:
+    variations:
+      - si:
+          est défini: transport . ferry . usager
+        alors: transport . ferry . usager
+      - sinon: "'YES'"
+cartravel-km: transport . voiture . km * (1 - utils . carSplit)
+cartravel-occupancy:
+  formule:
+    variations:
+      - si: transport . voiture . km > 0
+        alors: transport . voiture . voyageurs
+      - sinon: "'absent'"
+twowheelerstravel-km:
+  formule:
+    variations:
+      - si:
+          est défini: transport . deux roues . usager
+        alors: transport . deux roues . km * (1 - utils . twowheelersSplit) / commun . jours par an
+      - sinon: transport . deux roues . km annuels moyen * transport . deux roues . pourcentage motards * (1 - utils . twowheelersSplit) / commun . jours par an
+twowheelerstravel-occupancy: 1
+bustravel-km:
+  formule:
+    variations:
+      - si:
+          est défini: transport . transports commun . car . présent
+        alors: transport . transports commun . car . km par semaine * commun . semaines par an
+      - sinon: transport . transports commun . car . distance moyenne hebdo * commun . semaines par an
+traintravel-km: transport . train . km
+boattravel-km:
+  formule:
+    variations:
+      - si:
+          est défini: transport . ferry . usager
+        alors: transport . ferry . heures * futureco-data . transport . ferry . vitesse moyenne . métrique
+      - sinon: transport . ferry . empreinte moyenne . durée moyenne par français * futureco-data . transport . ferry . vitesse moyenne . métrique
+boattravel-ticket: "'default'"
+boattravel-parking: "'default'"
+planetravel-km:
+  formule:
+    variations:
+      - si:
+          est défini: transport . avion . usager
+        alors:
+          somme:
+            - transport . avion . court courrier . heures de vol * transport . avion . court courrier . vitesse moyenne
+            - transport . avion . moyen courrier . heures de vol * transport . avion . moyen courrier . vitesse moyenne
+            - transport . avion . long courrier . heures de vol * transport . avion . long courrier . vitesse moyenne
+      - sinon:
+          somme:
+            - transport . avion . court courrier . durée moyenne * transport . avion . court courrier . vitesse moyenne
+            - transport . avion . moyen courrier . durée moyenne * transport . avion . moyen courrier . vitesse moyenne
+            - transport . avion . long courrier . durée moyenne * transport . avion . long courrier . vitesse moyenne
+planeprofessional-km: 0
+carcommute-category:
+  formule:
+    variations:
+      - si: transport . voiture . gabarit = 'petite'
+        alors: "'URBAN'"
+      - si: transport . voiture . gabarit = 'moyenne'
+        alors: "'MEDIUM'"
+      - si: transport . voiture . gabarit = 'VUL'
+        alors: "'MEDIUM'"
+      - si: transport . voiture . gabarit = 'berline'
+        alors: "'MEDIUM'"
+      - si: transport . voiture . gabarit = 'SUV'
+        alors: "'HEAVY'"
+      - sinon: "'MEDIUM'"
+carcommute-motor:
+  formule:
+    variations:
+      - si: transport . voiture . motorisation = 'thermique'
+        alors: "'FUEL'"
+      - si: transport . voiture . motorisation = 'hybride'
+        alors: "'HYBRID'"
+      - si: transport . voiture . motorisation = 'électrique'
+        alors: "'ELECTRIC'"
+      - sinon: "'FUEL'"
+carcommute-fossilfueltype:
+  formule:
+    variations:
+      - si: transport . voiture . thermique . carburant = 'gazole B7 ou B10'
+        alors: "'DIESEL'"
+      - si: transport . voiture . thermique . carburant = 'essence E5 ou E10'
+        alors: "'GASOLINE'"
+      - si: transport . voiture . thermique . carburant = 'essence E85'
+        alors: "'GASOLINE'"
+      - sinon: "'GASOLINE'"
+carcommute-fuelconsumptionknowledge: "'YES'"
+carcommute-use-lper100km:
+  formule:
+    variations:
+      - si: transport . voiture . motorisation = 'thermique'
+        alors: transport . voiture . thermique . consommation aux 100
+      - sinon:
+          valeur: transport . voiture . thermique . consommation estimée
+          contexte:
+            transport . voiture . utilisateur: "'propriétaire'"
+            transport . voiture . gabarit: "'berline'"
+            transport . voiture . motorisation: "'thermique'"
+            transport . voiture . thermique . carburant: "'essence E5 ou E10'"
+carcommute-age: "'default'"
+twowheelerscommute-category:
+  formule:
+    variations:
+      - si: transport . deux roues . type = 'scooter thermique'
+        alors: "'SCOOTER'"
+      - si: transport . deux roues . type = 'scooter électrique'
+        alors: "'SCOOTER'"
+      - si: transport . deux roues . type = 'moto inf 250'
+        alors: "'MEDIUM'"
+      - si: transport . deux roues . type = 'moto sup 250'
+        alors: "'HEAVY'"
+  par défaut: "'HEAVY'"
+twowheelerscommute-motor:
+  formule:
+    variations:
+      - si: transport . deux roues . type = 'scooter thermique'
+        alors: "'FUEL'"
+      - si: transport . deux roues . type = 'scooter électrique'
+        alors: "'ELECTRIC'"
+      - si: transport . deux roues . type = 'moto inf 250'
+        alors: "'FUEL'"
+      - si: transport . deux roues . type = 'moto sup 250'
+        alors: "'FUEL'"
+    par défaut: "'FUEL'"
+twowheelerscommute-fuelconsumptionknowledge: "'default'"
+twowheelerscommute-fossilfueltype: "'default'"
+twowheelerscommute-use-lper100km: "'default'"
+cartravel-category:
+  formule:
+    variations:
+      - si: transport . voiture . gabarit = 'petite'
+        alors: "'URBAN'"
+      - si: transport . voiture . gabarit = 'moyenne'
+        alors: "'MEDIUM'"
+      - si: transport . voiture . gabarit = 'VUL'
+        alors: "'MEDIUM'"
+      - si: transport . voiture . gabarit = 'berline'
+        alors: "'MEDIUM'"
+      - si: transport . voiture . gabarit = 'SUV'
+        alors: "'HEAVY'"
+      - sinon: "'MEDIUM'"
+cartravel-motor:
+  formule:
+    variations:
+      - si: transport . voiture . motorisation = 'thermique'
+        alors: "'FUEL'"
+      - si: transport . voiture . motorisation = 'hybride'
+        alors: "'HYBRID'"
+      - si: transport . voiture . motorisation = 'électrique'
+        alors: "'ELECTRIC'"
+      - sinon: "'FUEL'"
+  par défaut: "'FUEL'"
+cartravel-fossilfueltype:
+  formule:
+    variations:
+      - si: transport . voiture . thermique . carburant = 'gazole B7 ou B10'
+        alors: "'DIESEL'"
+      - si: transport . voiture . thermique . carburant = 'essence E5 ou E10'
+        alors: "'GASOLINE'"
+      - si: transport . voiture . thermique . carburant = 'essence E85'
+        alors: "'GASOLINE'"
+      - sinon: "'GASOLINE'"
+cartravel-fuelconsumptionknowledge: "'YES'"
+cartravel-use-lper100km:
+  formule:
+    variations:
+      - si: transport . voiture . motorisation = 'thermique'
+        alors: transport . voiture . thermique . consommation aux 100
+      - sinon:
+          valeur: transport . voiture . thermique . consommation estimée
+          contexte:
+            transport . voiture . utilisateur: "'propriétaire'"
+            transport . voiture . gabarit: "'berline'"
+            transport . voiture . motorisation: "'thermique'"
+            transport . voiture . thermique . carburant: "'essence E5 ou E10'"
+cartravel-age: "'default'"
+twowheelerstravel-category:
+  formule:
+    variations:
+      - si: transport . deux roues . type = 'scooter thermique'
+        alors: "'SCOOTER'"
+      - si: transport . deux roues . type = 'scooter électrique'
+        alors: "'SCOOTER'"
+      - si: transport . deux roues . type = 'moto inf 250'
+        alors: "'MEDIUM'"
+      - si: transport . deux roues . type = 'moto sup 250'
+        alors: "'HEAVY'"
+  par défaut: "'HEAVY'"
+twowheelerstravel-motor:
+  formule:
+    variations:
+      - si: transport . deux roues . type = 'scooter thermique'
+        alors: "'FUEL'"
+      - si: transport . deux roues . type = 'scooter électrique'
+        alors: "'ELECTRIC'"
+      - si: transport . deux roues . type = 'moto inf 250'
+        alors: "'FUEL'"
+      - si: transport . deux roues . type = 'moto sup 250'
+        alors: "'FUEL'"
+  par défaut: "'FUEL'"
+twowheelerstravel-fuelconsumptionknowledge: "'default'"
+twowheelerstravel-fossilfueltype: "'default'"
+twowheelerstravel-use-lper100km: "'default'"
+household-m2: logement . surface
+household-occupancy: logement . habitants
+household-type:
+  formule:
+    variations:
+      - si: logement . type = 'appartement'
+        alors: "'FLAT'"
+      - si: logement . type = 'maison'
+        alors: "'HOUSE'"
+      - sinon: "'default'"
+HEAT-source:
+  # Le modèle 2T n'accepte qu'une valeur pour le mode de chauffage. Nous définissons ici une forme de priorité pour les différents modes de chauffage. Il faut donc lire ces enchainements de variations comme suit:
+  # Si le mode de chauffage est une pompe à chaleur, alors le mode de chauffage est 'HEAT_PUMP'. Si ce n'est pas le cas, on regarde si le mode de chauffage est au gaz. Si c'est le cas, le mode de chauffage est 'GASNETWORK'. Et ainsi de suite.
+  formule:
+    variations:
+      - si: logement . chauffage . PAC . présent
+        alors: "'HEAT_PUMP'"
+      - si:
+          toutes ces conditions:
+            - logement . chauffage . PAC . présent = non
+            - logement . chauffage . gaz . présent
+        alors: "'GASNETWORK'"
+      - si:
+          toutes ces conditions:
+            - logement . chauffage . PAC . présent = non
+            - logement . chauffage . gaz . présent = non
+            - logement . chauffage . réseau de chaleur . présent
+        alors: "'HEATNETWORK'"
+      - si:
+          toutes ces conditions:
+            - logement . chauffage . PAC . présent = non
+            - logement . chauffage . gaz . présent = non
+            - logement . chauffage . réseau de chaleur . présent = non
+            - logement . chauffage . fioul . présent
+        alors: "'OIL'"
+      - si:
+          toutes ces conditions:
+            - logement . chauffage . PAC . présent = non
+            - logement . chauffage . gaz . présent = non
+            - logement . chauffage . réseau de chaleur . présent = non
+            - logement . chauffage . fioul . présent = non
+            - logement . chauffage . électricité . présent
+        alors: "'ELECTRICITY'"
+      - si:
+          toutes ces conditions:
+            - logement . chauffage . PAC . présent = non
+            - logement . chauffage . gaz . présent = non
+            - logement . chauffage . réseau de chaleur . présent = non
+            - logement . chauffage . fioul . présent = non
+            - logement . chauffage . électricité . présent = non
+            - logement . chauffage . bois . présent
+        alors: "'BIOFUELSANDWASTES'"
+      - sinon: "'GASNETWORK'"
+  par défaut: "'GASNETWORK'"
+  note: Pour le moment pas de correspondance pour HEATLOWCARBONSYSTEM et COAL et pas de possiblité de sélectionner plusieurs modes de chauffages.
+HOTWATER-source:
+  formule:
+    variations:
+      - si: logement . chauffage . PAC . présent
+        alors: "'HEAT_PUMP'"
+      - si:
+          toutes ces conditions:
+            - logement . chauffage . PAC . présent = non
+            - logement . chauffage . gaz . présent
+        alors: "'GASNETWORK'"
+      - si:
+          toutes ces conditions:
+            - logement . chauffage . PAC . présent = non
+            - logement . chauffage . gaz . présent = non
+            - logement . chauffage . réseau de chaleur . présent
+        alors: "'HEATNETWORK'"
+      - si:
+          toutes ces conditions:
+            - logement . chauffage . PAC . présent = non
+            - logement . chauffage . gaz . présent = non
+            - logement . chauffage . réseau de chaleur . présent = non
+            - logement . chauffage . fioul . présent
+        alors: "'OIL'"
+      - si:
+          toutes ces conditions:
+            - logement . chauffage . PAC . présent = non
+            - logement . chauffage . gaz . présent = non
+            - logement . chauffage . réseau de chaleur . présent = non
+            - logement . chauffage . fioul . présent = non
+            - logement . chauffage . électricité . présent
+        alors: "'ELECTRICITY'"
+      - si:
+          toutes ces conditions:
+            - logement . chauffage . PAC . présent = non
+            - logement . chauffage . gaz . présent = non
+            - logement . chauffage . réseau de chaleur . présent = non
+            - logement . chauffage . fioul . présent = non
+            - logement . chauffage . électricité . présent = non
+            - logement . chauffage . bois . présent
+        alors: "'BIOFUELSANDWASTES'"
+      - sinon: "'ELECTRICITY'"
+  par défaut: "'ELECTRICITY'"
+  note: Pour le moment pas de correspondance pour HEATLOWCARBONSYSTEM et COAL
+COOKING-source:
+  formule:
+    variations:
+      - si: logement . chauffage . gaz . présent
+        alors: "'GASNETWORK'"
+      - sinon: "'ELECTRICITY'"
+  par défaut: "'GASNETWORK'"
+  note: Pour le moment, électricité par défaut sauf si gaz.
+AC-source:
+  formule:
+    variations:
+      - si:
+          est défini: logement . climatisation . présent
+        alors: logement . climatisation . présent
+      - sinon: "'YES'"
+ELECTRICITY-source:
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - logement . électricité . photovoltaique . présent
+            - logement . électricité . photovoltaique . production > 0
+        alors:
+          variations:
+            - si: logement . électricité . photovoltaique . part autoconsommation = 100
+              alors: "'ELECLOWCARBONSYSTEM'"
+            - sinon: "'BOTH'"
+      - sinon: "'ELECTRICITYNETWORK'"
+consumptionknowledge: "'YES'"
+GASNETWORK-kwh:
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - HEAT-source = 'GASNETWORK'
+            - HOTWATER-source = 'GASNETWORK'
+            - COOKING-source = 'GASNETWORK'
+        alors: logement . chauffage . gaz . consommation
+      - sinon: 0
+HEATNETWORK-kwh:
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - HEAT-source = 'HEATNETWORK'
+            - HOTWATER-source = 'HEATNETWORK'
+        alors: logement . chauffage . réseau de chaleur . consommation
+      - sinon: 0
+COAL-kwh: "'absent'"
+OIL-kwh:
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - HEAT-source = 'OIL'
+            - HOTWATER-source = 'OIL'
+        alors: logement . chauffage . fioul . consommation / logement . chauffage . fioul kWh au litre
+      - sinon: 0
+BIOFUELSANDWASTES-kwh:
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - HEAT-source = 'BIOFUELSANDWASTES'
+            - HOTWATER-source = 'BIOFUELSANDWASTES'
+        alors:
+          somme:
+            - logement . chauffage . bois . type . bûches . consommation * logement . chauffage . bois . type . bûches . intensité énergétique
+            - logement . chauffage . bois . type . granulés . consommation
+      - sinon: 0
+HEATLOWCARBONSYSTEM-kwh: 0
+ELECTRICITYNETWORK-kwh: logement . électricité . réseau . consommation
+ELECLOWCARBONSYSTEM-kwh: logement . électricité . photovoltaique . autoconsommation
+foodconsumptionknowledge: "'NO'"
+breakfast-milkandcereals-timesperweek:
+  formule:
+    variations:
+      - si: alimentation . petit déjeuner . type = 'lait céréales'
+        alors: 7
+      - sinon: 0
+breakfast-fruit-timesperweek:
+  formule:
+    variations:
+      - si: alimentation . petit déjeuner . type = 'végétalien'
+        alors: 7
+      - sinon: 0
+breakfast-bread-timesperweek:
+  formule:
+    variations:
+      - si: alimentation . petit déjeuner . type = 'continental'
+        alors: 7
+      - sinon: 0
+breakfast-english-timesperweek:
+  formule:
+    variations:
+      - si: alimentation . petit déjeuner . type = 'britannique'
+        alors: 7
+      - sinon: 0
+meal-redmeat-timesperweek:
+  formule: alimentation . plats . viande rouge . nombre
+meal-othermeatandfish-timesperweek:
+  formule:
+    somme:
+      - alimentation . plats . viande blanche . nombre
+      - alimentation . plats . poisson gras . nombre
+      - alimentation . plats . poisson blanc . nombre
+meal-vegetarian-timesperweek: alimentation . plats . végétarien . nombre
+meal-vegetalian-timesperweek: alimentation . plats . végétalien . nombre
+redmeat-kgperweek: 0
+whitemeat-kgperweek: 0
+seafood-kgperweek: 0
+eggsanddairies-kgperweek: 0
+rice-kgperweek: 0
+othercereals-kgperweek: 0
+fruitsandvegetables-kgperweek: 0
+seasonningandother-kgperweek: 0
+sugarproducts-kgperweek: 0
+alcohol-timesperweek: alimentation . boisson . alcool . litres
+hotdrinks-timesperweek:
+  formule:
+    somme:
+      - alimentation . boisson . chaude . café . nombre * 0.2
+      - alimentation . boisson . chaude . thé . nombre * 0.2
+      - alimentation . boisson . chaude . chocolat chaud . nombre * 0.2
+      - alimentation . boisson . chaude . chicorée . nombre * 0.2
+juicesandsodas-timesperweek: alimentation . boisson . sucrées . litres
+food-localpurchases:
+  formule:
+    variations:
+      - si: alimentation . local . consommation = 'oui toujours'
+        alors: "'ALWAYS'"
+      - si: alimentation . local . consommation = 'souvent'
+        alors: "'OFTEN'"
+      - si: alimentation . local . consommation = 'parfois'
+        alors: "'SOMETIMES'"
+      - si: alimentation . local . consommation = 'jamais'
+        alors: "'NEVER'"
+      - sinon: "'NEVER'"
+food-nowastepurchases:
+  formule:
+    variations:
+      - si: alimentation . déchets . quantité jetée = 'base'
+        alors: "'NEVER'"
+      - si: alimentation . local . consommation = 'réduction'
+        alors: "'SOMETIMES'"
+      - si: alimentation . local . consommation = 'zéro déchet'
+        alors: "'ALWAYS'"
+      - sinon: "'NEVER'"
+food-transformedpurchases: "'default'"
+food-organicpurchases: "'default'"
+smallclothes-number-newperyear:
+  formule:
+    somme:
+      - divers . textile . t-shirt . nombre
+      - divers . textile . short . nombre
+      - divers . textile . sweat . nombre
+      - divers . textile . robe . nombre
+      - divers . textile . chemise . nombre
+      - divers . textile . chaussure . nombre
+      - divers . textile . petit article . nombre
+bigclothes-number-newperyear:
+  formule:
+    somme:
+      - divers . textile . pantalon . nombre
+      - divers . textile . pull . nombre
+      - divers . textile . manteau . nombre
+      - divers . textile . gros article . nombre
+smallappliances-number:
+  formule:
+    somme:
+      - divers . électroménager . appareils . micro-onde . nombre
+      - divers . électroménager . appareils . bouilloire . nombre
+      - divers . électroménager . appareils . cafetière . nombre
+      - divers . électroménager . appareils . aspirateur . nombre
+      - divers . électroménager . appareils . robot cuisine . nombre
+bigappliances-number:
+  formule:
+    somme:
+      - divers . électroménager . appareils . réfrigérateur . nombre
+      - divers . électroménager . appareils . petit réfrigérateur . nombre
+      - divers . électroménager . appareils . congélateur . nombre
+      - divers . électroménager . appareils . lave-linge . nombre
+      - divers . électroménager . appareils . sèche-linge . nombre
+      - divers . électroménager . appareils . lave-vaisselle . nombre
+      - divers . électroménager . appareils . hotte . nombre
+      - divers . électroménager . appareils . four . nombre
+      - divers . électroménager . appareils . plaques . nombre
+      - divers . ameublement . meubles . armoire . nombre
+      - divers . ameublement . meubles . canapé . nombre
+      - divers . ameublement . meubles . matelas . nombre
+      - divers . ameublement . meubles . lit . nombre
+      - divers . ameublement . meubles . table . nombre
+      - divers . ameublement . meubles . chaise . nombre
+      - divers . ameublement . meubles . petit meuble . nombre
+      - divers . ameublement . meubles . grand meuble . nombre
+
+furnitures-coeff:
+  formule:
+    variations:
+      - si: divers . ameublement . préservation = 'achat neuf'
+        alors: "'LESS_THAN_AVERAGE'"
+      - si: divers . ameublement . préservation = 'faible'
+        alors: "'LESS_THAN_AVERAGE'"
+      - si: divers . ameublement . préservation = 'moyen'
+        alors: "'SAME_AS_AVERAGE'"
+      - si: divers . ameublement . préservation = 'maximum'
+        alors: "'MORE_THAN_AVERAGE'"
+      - sinon: "'SAME_AS_AVERAGE'"
+
+smalldevices-number:
+  formule:
+    somme:
+      - divers . numérique . appareils . téléphone . nombre
+      - divers . numérique . appareils . tablette . nombre
+      - divers . numérique . appareils . enceinte bluetooth . nombre
+bigdevices-number:
+  formule:
+    somme:
+      - divers . numérique . appareils . ordinateur portable . nombre
+      - divers . numérique . appareils . ordinateur fixe . nombre
+      - divers . numérique . appareils . TV . nombre
+      - divers . numérique . appareils . console de salon . nombre
+      - divers . numérique . appareils . console portable . nombre
+      - divers . numérique . appareils . imprimante . nombre
+
+streaming-hoursperweek: divers . numérique . internet . durée journalière
+tobacco-coeff:
+  formule:
+    variations:
+      - si: divers . tabac . consommation par semaine > 0
+        alors: "'YES'"
+      - sinon: "'NO'"
+edition-coeff:
+  formule:
+    variations:
+      - si: divers . loisirs . culture . édition . présent = non
+        alors: "'NO'"
+      - si: divers . loisirs . culture . édition . présent = oui
+        alors: "'MANY'"
+      - sinon: "'AVERAGE'"
+restaurants-numberperweek: "'default'"
+otherhangouts-numberperweek: "'default'"
+clothes-responsiblepurchases: "'default'"
+equipment-responsiblepurchases: "'default'"
+devices-responsiblepurchases: "'default'"
+othergoods-responsiblepurchases: "'default'"
