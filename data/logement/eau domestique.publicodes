@@ -13,8 +13,8 @@ logement . eau domestique:
       - voiture
       - jardin
   description: |
-    L'eau "directe" correspond à l'eau qui sort de votre robinet au quotidien. 
-    Il n'est donc pas question ici de l'eau "virtuelle" qui se cache derrière votre alimentation ou vos biens de consommation.
+    L'eau **directe** correspond à l'eau qui sort de votre robinet au quotidien. 
+    Il n'est donc pas question ici de l'eau **virtuelle** qui se cache derrière votre alimentation ou vos biens de consommation.
 
   note: |
     Les valeurs associées à ce calcul sont tirées de sources diverses et du [simulateur du CIEAU](https://www.cieau.com/le-metier-de-leau/usages-consommation-conseils/calculateur-consommation-eau-annuelle/) (Centre d'Information sur l'EAU).
@@ -43,6 +43,7 @@ logement . eau domestique . bains et douches:
       - bains
 
 logement . eau domestique . bains et douches . habitude:
+  # Question désactivée pour le moment
   # question: Vous êtes plutôt ?
   formule:
     une possibilité:
@@ -84,6 +85,7 @@ logement . eau domestique . bains et douches . douches . quantité:
         alors: 36
       - sinon: 72
   unité: l/douche
+  # TODO : ajouter la source
   note: On considère qu'une douche dure en moyenne 6 minutes avec un débit de 12 litres par minute.
 
 logement . eau domestique . bains et douches . bains:
@@ -110,6 +112,7 @@ logement . eau domestique . bains et douches . bains . quantité:
   titre: Quantité d'eau par bain
   formule: 150
   unité: l/bain
+  # TODO : ajouter la source
   note: On considère qu'un bain consomme en moyenne 150 litres d'eau.
 
 logement . eau domestique . toilettes:
@@ -125,6 +128,7 @@ logement . eau domestique . toilettes . nombre:
   unité: chasse/jour
 
 logement . eau domestique . toilettes . type:
+  # Question désactivée pour le moment
   # question: Quel type de toilettes équipent votre logement ?
   formule:
     une possibilité:
@@ -153,6 +157,7 @@ logement . eau domestique . toilettes . quantité:
       - si: type = 'classiques'
         alors: 12
   unité: l/chasse
+  # TODO : ajouter la source
   note: On considère qu'une chasse d'eau consomme en moyenne 9 litres d'eau même si c'est valeur paut varier si la chasse d'eau est à double commande.
 
 logement . eau domestique . linge:
@@ -175,6 +180,7 @@ logement . eau domestique . linge . quantité:
   titre: Quantité d'eau par lessive
   formule: 80
   unité: l/lessive
+  # TODO : ajouter la source
   note: On considère qu'un lave-linge consomme en moyenne 80 litres d'eau par cycle
 
 logement . eau domestique . vaisselle:
@@ -208,8 +214,9 @@ logement . eau domestique . vaisselle . lave vaisselle . quantité:
   titre: Quantité d'eau par lavage
   formule: 15
   unité: l/lavage
+  # TODO : ajouter la source
   note: |
-    Pour des laves vaiselles récent, on attient des consommations d'eau inférieures à 10 litres. 
+    Pour des laves vaiselles récent, on atteint des consommations d'eau inférieures à 10 litres. 
     Néanmoins, pour des modèles plus anciens, la consommation peut atteindre plus de 30 litres par cycle.
     On considère qu'un lavage de lave-vaisselle consomme en moyenne 15 litres d'eau.
 
@@ -233,6 +240,7 @@ logement . eau domestique . vaisselle . à la main . quantité:
         alors: 4 * logement . habitants
       - sinon: 12 * logement . habitants
   unité: l/lavage
+  # TODO : ajouter la source
   note: On considère que faire la vaiselle à la main consomme 12 litres par membre du foyer.
 
 logement . eau domestique . cuisine:
@@ -245,6 +253,7 @@ logement . eau domestique . cuisine . foyer:
 logement . eau domestique . cuisine . par jour:
   formule: 3
   unité: l/jour
+  # TODO : ajouter la source
   note: On considère une consommation moyenne de 2 litres d'eau par jour pour la cuisine pour le foyer.
 
 logement . eau domestique . hydratation:
@@ -254,6 +263,7 @@ logement . eau domestique . hydratation:
 logement . eau domestique . hydratation . par jour:
   formule: 1.5
   unité: l/jour
+  # TODO : ajouter la source
   note: On considère une consommation moyenne de 1.5 litres d'eau par jour pour l'hydratation.
 
 logement . eau domestique . voiture:
@@ -266,6 +276,7 @@ logement . eau domestique . voiture:
           - transport . voiture . utilisateur = 'régulier non propriétaire'
   formule: 150 * 6
   unité: l
+  # TODO : ajouter la source
   note: |
     Hypothèse de 150L par lavage à raison à raison de 6 fois par an.
     Néanmoins, la valeur varie selon le type de lavage (moins important pour le jet, plus important pour le rouleau).
@@ -277,6 +288,7 @@ logement . eau domestique . voiture:
 #  - La part arrosée
 #  - La fréquence d'arrosage
 #  - La nature du jardin (potager, fleurs, pelouse) ?
+
 logement . eau domestique . jardin:
   applicable si: jardin . surface > 0
   non applicable si: logement . type = 'appartement'
@@ -291,6 +303,7 @@ logement . eau domestique . jardin . par semaine:
   formule: surface * quantité * fréquence
 
 logement . eau domestique . jardin . surface:
+  # Question désactivée pour le moment
   # question: Quelle surface de jardin arrosez-vous régulièrement (potager, fleurs, balcon) ?
   suggestions:
     ❌ je n'arrose pas: 0
@@ -313,6 +326,7 @@ logement . eau domestique . jardin . quantité:
       - si: type arrosage = 'tuyau d'arrosage'
         alors: 25
   unité: l/arrosage/m2
+  # TODO : ajouter la source
   note: On considère qu'un m2 de jardin consomme en moyenne 15 litres d'eau par arrosage. Si un récupérateur d'eau de pluie, la consommation d'eau est bien moindre mais on ne la considère pas nulle pour autant.
 
 logement . eau domestique . jardin . fréquence:
@@ -322,6 +336,7 @@ logement . eau domestique . jardin . fréquence:
 
 logement . eau domestique . jardin . type arrosage:
   applicable si: logement . eau domestique . jardin . surface > 0
+  # Question désactivée pour le moment
   # question: En général, comment arrosez-vous votre jardin ?
   formule:
     une possibilité:
