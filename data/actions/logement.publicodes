@@ -1,4 +1,4 @@
-logement . baisse température:
+logement . chauffage . baisse température:
   titre: Baisser la consigne de son chauffage
   icônes: 🏠🌡
   description: |
@@ -13,7 +13,7 @@ logement . baisse température:
   formule: (nombre degrés * gains 1 degré * empreinte chauffage air) / habitants
   unité: kgCO2e
 
-logement . baisse température . nombre degrés:
+logement . chauffage . baisse température . nombre degrés:
   question: De combien de degrés seriez-vous prêt à diminuer la température de votre logement ?
   icônes: ↘️🌡
   description: |
@@ -40,7 +40,7 @@ logement . température:
   par défaut: 20
   unité: degrés
 
-logement . baisse température . gains 1 degré:
+logement . chauffage . baisse température . gains 1 degré:
   formule: 7
   unité: '%/degré'
   description: |
@@ -71,7 +71,7 @@ logement . empreinte chauffage air utilisateur:
       - chauffage . fioul . empreinte * parc français . chauffage . part chauffage air fioul
       - chauffage . réseau de chaleur . empreinte * parc français . chauffage . part chauffage air réseau de chaleur
 
-logement . installer thermostat:
+logement . chauffage . installer thermostat:
   titre: Installer un thermostat programmable
   icônes: 🌡️🖥️
   description: |
@@ -83,7 +83,7 @@ logement . installer thermostat:
   formule: empreinte chauffage air * 0.12 / habitants
   unité: kgCO2e
 
-logement . installer chauffe-eau solaire:
+logement . chauffage . installer chauffe-eau solaire:
   titre: S’équiper d’un chauffe-eau solaire
   icônes: 🌡️🛁☀️
   description: |
@@ -97,7 +97,7 @@ logement . installer chauffe-eau solaire:
 
   formule: empreinte eau chaude sanitaire * 0.65 / habitants
 
-logement . empreinte eau chaude sanitaire:
+logement . chauffage . empreinte eau chaude sanitaire:
   formule:
     variations:
       - si: chauffage . choix utilisateur
@@ -110,7 +110,7 @@ logement . empreinte eau chaude sanitaire:
     > Nous utilions ici [les données du CEREN](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel)
     via le travail réalisé dans le fichier [chiffres parc logements français.publicodes](https://github.com/incubateur-ademe/nosgestesclimat/blob/master/data/logement/chiffres%20parc%20logements%20fran%C3%A7ais.publicodes).
 
-logement . empreinte eau chaude sanitaire utilisateur:
+logement . chauffage . empreinte eau chaude sanitaire utilisateur:
   formule:
     somme:
       - chauffage . électricité . présent * électricité * parc français . chauffage . part ecs électricité
@@ -119,9 +119,8 @@ logement . empreinte eau chaude sanitaire utilisateur:
       - chauffage . fioul . empreinte * parc français . chauffage . part ecs fioul
       - chauffage . réseau de chaleur . empreinte * parc français . chauffage . part ecs réseau de chaleur
 
-logement . éteindre appareils:
+logement . électricité . éteindre appareils:
   formule: empreinte du foyer / habitants
-  unité: kgCO2e
   titre: Éteindre ses appareils en veille
   icônes: 🏠📺
   description: |
@@ -133,8 +132,8 @@ logement . éteindre appareils:
 
     > Pour en savoir plus sur les différentes solutions pour réduire votre consommation d’électricité, consultez [notre guide « Réduire sa facture d’électricité »](https://librairie.ademe.fr/consommer-autrement/5696-reduire-sa-facture-d-electricite.html).
 
-logement . éteindre appareils . empreinte du foyer:
-  formule: énergie de veille * logement . électricité . intensité carbone équivalente
+logement . électricité . éteindre appareils . empreinte du foyer:
+  formule: énergie de veille * logement . électricité . empreinte au kWh
 
 logement . énergie de veille:
   formule: puissance * temps d'absence
@@ -158,7 +157,7 @@ logement . énergie de veille . temps d'absence . journalier:
   unité: h/jour
   description: On suppose qu'en moyenne, on n'est pas présent chez soi la moitié du temps, ou on dort. La nuit (8h) et en moyenne 4h en journée, pour prendre en compte les weekends qui compensent les journées de travail de 8h, et le fait que tout le monde dans le foyer n'est pas absent au même moment.
 
-logement . se chauffer au bois:
+logement . chauffage . se chauffer au bois:
   titre: Se chauffer au bois
   applicable si:
     toutes ces conditions:
@@ -186,7 +185,7 @@ logement . se chauffer au bois:
     Nous considérons pour l'instant que le remplacement des kWh dédiés au chauffage par la même quantité de kWh de bois est une bonne approximation de premier ordre.
     Nous pourrons par la suite l'adapter en fonction du rendement des installations résidentielles.
 
-logement . se chauffer au bois . recalcul:
+logement . chauffage . se chauffer au bois . recalcul:
   valeur: logement . chauffage . bois . empreinte
   contexte:
     logement . chauffage . bois . présent: oui
@@ -194,19 +193,19 @@ logement . se chauffer au bois . recalcul:
     logement . chauffage . bois . type . granulés . consommation: recalcul . consommation
   note: On considère un chauffage via granulés.
 
-logement . se chauffer au bois . recalcul . consommation:
+logement . chauffage . se chauffer au bois . recalcul . consommation:
   formule:
     somme:
       - chauffage . gaz . présent * chauffage . gaz . consommation
       - chauffage . fioul . présent * chauffage . fioul . consommation / chauffage . fioul kWh au litre
       - chauffage . citerne propane . présent * chauffage . citerne propane . consommation * logement . chauffage . citerne propane . énergie par kg
 
-logement . remplacer gaz par PAC:
+logement . chauffage . remplacer gaz par PAC:
   titre: Remplacer une chaudière gaz par une pompe à chaleur
   action:
     dépasse:
-      - logement . rénovation énergétique
-      - logement . rénovation énergétique BBC
+      - logement . chauffage . rénovation énergétique
+      - logement . chauffage . rénovation énergétique BBC
   applicable si:
     toutes ces conditions:
       - propriétaire
@@ -227,10 +226,10 @@ logement . remplacer gaz par PAC:
 
     Voir [Guide ADEME PAC](https://www.ademe.fr/sites/default/files/assets/documents/guide-pratique-installer-une-pompe-a-chaleur.pdf)
 
-logement . remplacer gaz par PAC . PAC:
-  formule: (chauffage . gaz . consommation / coefficient COP) * logement . électricité . intensité carbone équivalente
+logement . chauffage . remplacer gaz par PAC . PAC:
+  formule: (chauffage . gaz . consommation / coefficient COP) * logement . électricité . empreinte au kWh
 
-logement . remplacer gaz par PAC . PAC . coefficient COP:
+logement . chauffage . remplacer gaz par PAC . PAC . coefficient COP:
   titre: Coefficient de performance réel
   formule: 2
   description: Pour 1kWh d'électricité consommée, combien de kWh de chaleur fournis ?
@@ -239,19 +238,19 @@ logement . remplacer gaz par PAC . PAC . coefficient COP:
     Voir le [Guide EDF](https://particulier.edf.fr/fr/accueil/guide-energie/electricite/pompe-a-chaleur.html).
     Plus d'informations également sur l'article [Pompe à chaleur ou radiateurs électriques ?](https://conseils-thermiques.org/contenu/pompe-a-chaleur-ou-radiateur-electrique.php)
 
-logement . remplacer chauffage électrique par PAC:
+logement . chauffage . remplacer chauffage électrique par PAC:
   titre: Passer du chauffage électrique à une pompe à chaleur
   action:
     dépasse:
-      - logement . rénovation énergétique
-      - logement . rénovation énergétique BBC
+      - logement . chauffage . rénovation énergétique
+      - logement . chauffage . rénovation énergétique BBC
   applicable si:
     toutes ces conditions:
       - propriétaire
       - est défini: chauffage . électricité . présent
       - chauffage . électricité . présent
   icônes: 🔥🔄
-  formule: (logement . électricité . consommation totale * part consommation remplacable - consommation via PAC) * logement . électricité . intensité carbone équivalente / habitants
+  formule: (électricité . consommation totale * part consommation remplacable - consommation via PAC) * logement . électricité . empreinte au kWh / habitants
   unité: kgCO2e
   description: |
     Le chauffage électrique est assez simple à installer mais il est cher à l’usage. Pour diminuer ses factures d’électricité et bénéficier d’un moyen de chauffage fonctionnant grâce aux énergies renouvelables, vous pouvez vous équiper d’une pompe à chaleur.
@@ -264,13 +263,13 @@ logement . remplacer chauffage électrique par PAC:
 
     Voir [Guide ADEME PAC](https://www.ademe.fr/sites/default/files/assets/documents/guide-pratique-installer-une-pompe-a-chaleur.pdf)
 
-logement . remplacer chauffage électrique par PAC . part consommation remplacable:
+logement . chauffage . remplacer chauffage électrique par PAC . part consommation remplacable:
   formule: parc français . chauffage . part chauffage air électricité + parc français . chauffage . part ecs électricité
 
-logement . remplacer chauffage électrique par PAC . consommation via PAC:
+logement . chauffage . remplacer chauffage électrique par PAC . consommation via PAC:
   formule: (logement . électricité . consommation totale * part consommation remplacable / coefficient COP)
 
-logement . remplacer chauffage électrique par PAC . consommation via PAC . coefficient COP:
+logement . chauffage . remplacer chauffage électrique par PAC . consommation via PAC . coefficient COP:
   titre: Coefficient de performance réel
   formule: 2
   description: Pour 1kWh d'électricité consommée, combien de kWh de chaleur fournis ?
@@ -279,13 +278,13 @@ logement . remplacer chauffage électrique par PAC . consommation via PAC . coef
     Voir le [Guide EDF](https://particulier.edf.fr/fr/accueil/guide-energie/electricite/pompe-a-chaleur.html).
     > Plus d'informations également sur l'article [Pompe à chaleur ou radiateurs électriques ?](https://conseils-thermiques.org/contenu/pompe-a-chaleur-ou-radiateur-electrique.php)
 
-logement . séchage air libre:
+logement . électricité . séchage air libre:
   titre: Privilégier l'étendoir au sèche-linge
   applicable si: divers . électroménager . appareils . sèche-linge . nombre > 0
   icônes: 💨👗
   description: |
     Faire sécher son linge à l'air libre plutôt qu’au sèche-linge, c'est économiser de l'énergie.
-  formule: (300 kWh * logement . électricité . intensité carbone équivalente) / habitants
+  formule: (300 kWh * logement . électricité . empreinte au kWh) / habitants
   note: |
     D'après l'étude [ADEME Panel ElecDom 2020](https://librairie.ademe.fr/changement-climatique-et-energie/4473-panel-usages-electrodomestiques.html),
     un sèche-linge a une [consommation moyenne de 300 kWh/an](https://agirpourlatransition.ademe.fr/particuliers/maison/economies-denergie-deau/electricite-combien-consomment-appareils-maison).
@@ -306,12 +305,12 @@ logement . climatisation . réduction:
     > Pour découvrir les bons gestes pour vivre dans un logement confortable sans climatisation, [consultez notre article](https://agirpourlatransition.ademe.fr/particuliers/vacances-loisirs/ete/canicule-comment-garder-logement-frais).
 
 logement . climatisation . part électricité climatisation:
-  formule: logement . climatisation . nombre * 400 kWh * logement . électricité . intensité carbone équivalente
+  formule: logement . climatisation . nombre * 400 kWh * logement . électricité . empreinte au kWh
   note: |
     D'après l'étude [ADEME Panel ElecDom 2020](https://librairie.ademe.fr/changement-climatique-et-energie/4473-panel-usages-electrodomestiques.html), un climatiseur fixe a une [consommation moyenne "de 100 à 700 kWh/an"](https://agirpourlatransition.ademe.fr/particuliers/maison/economies-denergie-deau/electricite-combien-consomment-appareils-maison).
     Nous partons donc sur une moyenne de 400 kWh/an par climatiseur installé.
 
-logement . rénovation énergétique:
+logement . chauffage . rénovation énergétique:
   titre: Rénover son logement
   icônes: 🏚️✨
   formule: (logement . empreinte chauffage air * gain rénovation) / habitants
@@ -340,10 +339,10 @@ logement . propriétaire:
     Pourtant, la loi pourrait dès 2023 être un soutien de poids : les passoires thermiques [seront interdites à la location](https://www.gouvernement.fr/interdiction-a-la-location-des-logements-avec-une-forte-consommation-d-energie-des-2023), forçant les propriétaires à lancer des travaux substentiels.
   par défaut: oui
 
-logement . rénovation énergétique BBC:
+logement . chauffage . rénovation énergétique BBC:
   action:
     dépasse:
-      - logement . rénovation énergétique
+      - logement . chauffage . rénovation énergétique
   titre: Rénover son logement en BBC
   icônes: 🏠✨
   formule: (logement . empreinte chauffage air * gain rénovation) / habitants
@@ -358,11 +357,11 @@ logement . rénovation énergétique BBC:
 
     > Parce qu’une rénovation demande de la réflexion, des connaissances techniques et financières, l’Etat a mis en place un service public de la rénovation qui peut vous accompagner dans votre projet. Pour contacter le conseiller le plus proche de chez vous, rendez-vous sur le site [France Rénov'](https://france-renov.gouv.fr/).
 
-logement . rénovation énergétique BBC . gain rénovation:
+logement . chauffage . rénovation énergétique BBC . gain rénovation:
   formule: 70%
   note: Gain énergétique maximal atteint après une rénovation BBC, source à préciser.
 
-logement . raccordement réseau de chaleur:
+logement . chauffage . raccordement réseau de chaleur:
   titre: Se raccorder à un réseau de chaleur
   icônes: 👥🏭
   applicable si:
@@ -407,7 +406,7 @@ logement . raccordement réseau de chaleur:
     Le raccordement de logements individuels à un réseau de chaleur est encore rare mais pas impossible.
 
     > Pour savoir où se renseigner et comment se raccorder, [consultez cet article](https://agirpourlatransition.ademe.fr/particuliers/maison/travaux/comment-se-raccorder-a-un-reseau-de-chaleur).
-logement . raccordement réseau de chaleur . recalcul:
+logement . chauffage . raccordement réseau de chaleur . recalcul:
   titre: Recalcul émissions via le raccordement à un réseau de chaleur
   note: on considère que la consommation de gaz/fioul sera identique suite à un raccordement au réseau de chaleur.
   formule:
@@ -472,6 +471,7 @@ logement . extérieur . passer à la tondeuse électrique:
   unité: kgCO2e
 
 logement . mutualiser son logement:
+  non applicable si: métrique != "carbone"
   titre: Partager son logement
   icônes: 🏠👥
   description: |
@@ -536,3 +536,26 @@ logement . électricité verte:
     Pour apporter davantage de transparence sur les offres dites "vertes", l'ADEME a créé le label **VertVolt**. Ce label récompense les offres de fournisseurs qui achètent au moins autant d'électricité renouvelable à des producteurs, que ce qu'ils vendent à leurs clients ayant souscrit une offre "verte". Ces offres sont qualifiées d' "engagées". Si, en plus, au moins 25% de cette électricité provient d'installations sans soutien de l'État ou avec une gouvernance partagée (c’est-à-dire que des citoyens sont impliqués dans la gestion ou le financement des centrales), l'offre est qualifiée de "très engagée", car elle permet d’encourager le financement de nouvelles installations d’énergie renouvelable.
 
     [Toutes les infos sur le label VertVolt et les offres d'énergie engagées ou très engagées sont à retrouver ici](https://agirpourlatransition.ademe.fr/particuliers/vertvolt).
+
+#
+# logement . eau domestique . bains et douches . réduire:
+#   titre: Passer aux douches express
+#   non applicable si: logement . eau domestique . bains et douches . habitude = 'douche express'
+#   icônes: 🚿🕒
+#   formule: logement . eau domestique . bains et douches - empreinte douches express
+
+# logement . eau domestique . bains et douches . réduire . empreinte douches express:
+#   valeur: logement . eau domestique . bains et douches
+#   contexte:
+#     logement . eau domestique . bains et douches . habitude: "'douche express'"
+
+# logement . eau domestique . jardin . type arrosage . changer:
+#   titre: Passer au goutte-à-goutte
+#   non applicable si: logement . eau domestique . jardin . type arrosage = 'goutte à goutte'
+#   icônes: 💧🌱
+#   formule: logement . eau domestique . jardin - empreinte goutte à goutte
+
+# logement . eau domestique . jardin . type arrosage . changer . empreinte goutte à goutte:
+#   valeur: logement . eau domestique . jardin
+#   contexte:
+#     logement . eau domestique . jardin . type arrosage: "'goutte à goutte'"
