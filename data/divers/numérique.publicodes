@@ -34,15 +34,32 @@ importer!:
     - acv . imprimante . carbone . fabrication
     - acv . imprimante . carbone . distribution
     - acv . imprimante . durée de vie théorique
+    - acv . smartphone . eau . fabrication
+    - acv . smartphone . eau . distribution
+    - acv . tablette . eau . fabrication
+    - acv . tablette . eau . distribution
+    - acv . ordinateur portable . eau . fabrication
+    - acv . ordinateur portable . eau . distribution
+    - acv . TV . eau . fabrication
+    - acv . TV . eau . distribution
+    - acv . ordinateur fixe . eau . fabrication
+    - acv . ordinateur fixe . eau . distribution
+    - acv . écran . eau . fabrication
+    - acv . écran . eau . distribution
+    - acv . enceinte . eau . fabrication
+    - acv . enceinte . eau . distribution
+    - acv . console de salon . eau . fabrication
+    - acv . console de salon . eau . distribution
+    - acv . console portable . eau . fabrication
+    - acv . console portable . eau . distribution
+    - acv . imprimante . eau . fabrication
+    - acv . imprimante . eau . distribution
 
 divers . numérique:
   titre: Numérique
   abréviation: num.
   description: |
-    Le numérique est au cœur de l'actualité environnementale depuis 2019.
-
-    Pourtant, son empreinte n'est pas forcément celle qu'on croit : par exemple, les multiples appareils de nos maisons sont étonnamment importants.
-  couleur: '#B53471'
+    Le numérique est au cœur de l'actualité environnementale ces dernières années.
   icônes: 📺
   formule:
     somme:
@@ -52,7 +69,7 @@ divers . numérique:
 divers . numérique . internet:
   icônes: 🌐
   formule: empreinte horaire * durée journalière * commun . jours par an
-  unité: kgCO2e
+
 divers . numérique . internet . consommation horaire:
   formule: 0.077
   unité: kWh/h
@@ -75,8 +92,13 @@ divers . numérique . internet . consommation horaire:
       - 28 gCO₂/h pour [Greenspector](https://greenspector.com/fr/impact-video-canal/) (pour l'utilisation de services Canal +)
 
 divers . numérique . internet . empreinte horaire:
-  formule: consommation horaire * commun . intensité électricité
-  unité: kgCO2e/h
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: consommation horaire * commun . intensité électricité
+      - si: métrique = "eau"
+        alors: consommation horaire * logement . électricité . empreinte eau mix électrique
+  note: C'est une hypothèse forte car nous considérons ici les empreintes de mix électrique français.
 
 divers . numérique . internet . durée journalière:
   question: Combien d'heures passez-vous par jour sur internet hors bureau (envoi de mails, surf Web, streaming vidéo, etc.) ?
@@ -208,13 +230,24 @@ divers . numérique . appareils . téléphone . empreinte:
       - https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=Smartphone
       - https://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/produits_informatiques__electr
       - https://www.apple.com/environment/pdf/products/iphone/iPhone_11_PER_sept2019.pdf
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+divers . numérique . appareils . téléphone . empreinte carbone:
   formule: (acv numerique . acv . smartphone . carbone . fabrication + acv numerique . acv . smartphone . carbone . distribution) / 1000 gCO2e/kgCO2e
   unité: kgCO2e
+
+divers . numérique . appareils . téléphone . empreinte eau:
+  formule: acv numerique . acv . smartphone . eau . fabrication + acv numerique . acv . smartphone . eau . distribution
+  unité: l
 
 divers . numérique . appareils . ordinateur portable:
   icônes: 💻
   formule: empreinte * nombre / (durée * coefficient préservation)
-  unité: kgCO2e
 divers . numérique . appareils . ordinateur portable . nombre:
   titre: Nombre d'ordinateurs portables
   question: Utilisez-vous un ordinateur portable ?
@@ -225,13 +258,24 @@ divers . numérique . appareils . ordinateur portable . durée:
   formule: acv numerique . acv . ordinateur portable . durée de vie théorique / 1 an
 divers . numérique . appareils . ordinateur portable . empreinte:
   titre: Empreinte ordinateur portable
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+divers . numérique . appareils . ordinateur portable . empreinte carbone:
   formule: (acv numerique . acv . ordinateur portable . carbone . fabrication + acv numerique . acv . ordinateur portable . carbone . distribution) / 1000 gCO2e/kgCO2e
   unité: kgCO2e
+
+divers . numérique . appareils . ordinateur portable . empreinte eau:
+  formule: acv numerique . acv . ordinateur portable . eau . fabrication + acv numerique . acv . ordinateur portable . eau . distribution
+  unité: l
 
 divers . numérique . appareils . ordinateur fixe:
   icônes: 🖥
   formule: empreinte * nombre / (durée * coefficient préservation * logement . habitants)
-  unité: kgCO2e
   note: |
     Nous considérons qu'un ordinateur fixe c'est une tour et un écran détaché (même s'il existe des ordinateurs fixes où tout est "intégré" dans l'écran).
 divers . numérique . appareils . ordinateur fixe . nombre:
@@ -247,20 +291,43 @@ divers . numérique . appareils . ordinateur fixe . durée:
       - acv numerique . acv . écran . durée de vie théorique / 1 an
 divers . numérique . appareils . ordinateur fixe . empreinte:
   titre: Empreinte d'un ordinateur fixe
-  formule: tour + écran
-divers . numérique . appareils . ordinateur fixe . tour:
-  titre: Empreinte d'un écran
+  formule: tour . empreinte + écran . empreinte
+
+divers . numérique . appareils . tour:
+divers . numérique . appareils . tour . empreinte:
+  titre: Empreinte d'une tour d'ordinateur
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+divers . numérique . appareils . tour . empreinte carbone:
   formule: (acv numerique . acv . ordinateur fixe . carbone . fabrication + acv numerique . acv . ordinateur fixe . carbone . distribution) / 1000 gCO2e/kgCO2e
   unité: kgCO2e
-divers . numérique . appareils . ordinateur fixe . écran:
+divers . numérique . appareils . tour . empreinte eau:
+  formule: acv numerique . acv . ordinateur fixe . eau . fabrication + acv numerique . acv . ordinateur fixe . eau . distribution
+  unité: l
+
+divers . numérique . appareils . écran:
+divers . numérique . appareils . écran . empreinte:
   titre: Empreinte d'un écran
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+divers . numérique . appareils . écran . empreinte carbone:
   formule: (acv numerique . acv . écran . carbone . fabrication + acv numerique . acv . écran . carbone . distribution) / 1000 gCO2e/kgCO2e
   unité: kgCO2e
+divers . numérique . appareils . écran . empreinte eau:
+  formule: acv numerique . acv . écran . eau . fabrication + acv numerique . acv . écran . eau . distribution
+  unité: l
 
 divers . numérique . appareils . tablette:
   icônes: ⬛
   formule: empreinte * nombre / (durée * coefficient préservation)
-  unité: kgCO2e
 divers . numérique . appareils . tablette . nombre:
   titre: Nombre de tablettes
   question: Utilisez-vous une tablette ?
@@ -271,13 +338,22 @@ divers . numérique . appareils . tablette . durée:
   formule: acv numerique . acv . tablette . durée de vie théorique / 1 an
 divers . numérique . appareils . tablette . empreinte:
   titre: Empreinte tablette
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+divers . numérique . appareils . tablette . empreinte carbone:
   formule: (acv numerique . acv . tablette . carbone . fabrication + acv numerique . acv . tablette . carbone . distribution) / 1000 gCO2e/kgCO2e
   unité: kgCO2e
+divers . numérique . appareils . tablette . empreinte eau:
+  formule: acv numerique . acv . tablette . eau . fabrication + acv numerique . acv . tablette . eau . distribution
+  unité: l
 
 divers . numérique . appareils . TV:
   icônes: 📺
   formule: empreinte * nombre / (durée * coefficient préservation * logement . habitants)
-  unité: kgCO2e
   note: |
     La taille étant très variable, il serait mieux d'en faire des variations.
 
@@ -294,13 +370,22 @@ divers . numérique . appareils . TV . durée:
   formule: acv numerique . acv . TV . durée de vie théorique / 1 an
 divers . numérique . appareils . TV . empreinte:
   titre: Empreinte TV
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+divers . numérique . appareils . TV . empreinte carbone:
   formule: (acv numerique . acv . TV . carbone . fabrication + acv numerique . acv . TV . carbone . distribution) / 1000 gCO2e/kgCO2e
   unité: kgCO2e
+divers . numérique . appareils . TV . empreinte eau:
+  formule: acv numerique . acv . TV . eau . fabrication + acv numerique . acv . TV . eau . distribution
+  unité: l
 
 divers . numérique . appareils . enceinte bluetooth:
   icônes: 🎵
   formule: empreinte * nombre / (durée * coefficient préservation)
-  unité: kgCO2e
 divers . numérique . appareils . enceinte bluetooth . nombre:
   titre: Nombre d'enceinte bluetooth
   question: Utilisez-vous une enceinte bluetooth ?
@@ -311,13 +396,22 @@ divers . numérique . appareils . enceinte bluetooth . durée:
   formule: acv numerique . acv . enceinte . durée de vie théorique / 1 an
 divers . numérique . appareils . enceinte bluetooth . empreinte:
   titre: Empreinte enceinte bluetooth
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+divers . numérique . appareils . enceinte bluetooth . empreinte carbone:
   formule: (acv numerique . acv . enceinte . carbone . fabrication + acv numerique . acv . enceinte . carbone . distribution) / 1000 gCO2e/kgCO2e
   unité: kgCO2e
+divers . numérique . appareils . enceinte bluetooth . empreinte eau:
+  formule: acv numerique . acv . enceinte . eau . fabrication + acv numerique . acv . enceinte . eau . distribution
+  unité: l
 
 divers . numérique . appareils . console de salon:
   icônes: 🕹
   formule: empreinte * nombre / (durée * coefficient préservation * logement . habitants)
-  unité: kgCO2e
 divers . numérique . appareils . console de salon . nombre:
   titre: Nombre de consoles de salon
   question: Utilisez-vous une console de salon ?
@@ -328,13 +422,22 @@ divers . numérique . appareils . console de salon . durée:
   formule: acv numerique . acv . console de salon . durée de vie théorique / 1 an
 divers . numérique . appareils . console de salon . empreinte:
   titre: Empreinte console de salon
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+divers . numérique . appareils . console de salon . empreinte carbone:
   formule: (acv numerique . acv . console de salon . carbone . fabrication + acv numerique . acv . console de salon . carbone . distribution) / 1000 gCO2e/kgCO2e
   unité: kgCO2e
+divers . numérique . appareils . console de salon . empreinte eau:
+  formule: acv numerique . acv . console de salon . eau . fabrication + acv numerique . acv . console de salon . eau . distribution
+  unité: l
 
 divers . numérique . appareils . console portable:
   icônes: 🎮
   formule: empreinte * nombre / (durée * coefficient préservation)
-  unité: kgCO2e
 divers . numérique . appareils . console portable . nombre:
   titre: Nombre de consoles portables
   question: Utilisez-vous un console portable ?
@@ -345,13 +448,22 @@ divers . numérique . appareils . console portable . durée:
   formule: acv numerique . acv . console portable . durée de vie théorique / 1 an
 divers . numérique . appareils . console portable . empreinte:
   titre: Empreinte console portable
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+divers . numérique . appareils . console portable . empreinte carbone:
   formule: (acv numerique . acv . console portable . carbone . fabrication + acv numerique . acv . console portable . carbone . distribution) / 1000 gCO2e/kgCO2e
   unité: kgCO2e
+divers . numérique . appareils . console portable . empreinte eau:
+  formule: acv numerique . acv . console portable . eau . fabrication + acv numerique . acv . console portable . eau . distribution
+  unité: l
 
 divers . numérique . appareils . imprimante:
   icônes: 🖨
   formule: empreinte * nombre / (durée * coefficient préservation)
-  unité: kgCO2e
 divers . numérique . appareils . imprimante . nombre:
   titre: Nombre de consoles portables
   question: Utilisez-vous un imprimante ?
@@ -362,9 +474,18 @@ divers . numérique . appareils . imprimante . durée:
   formule: acv numerique . acv . imprimante . durée de vie théorique / 1 an
 divers . numérique . appareils . imprimante . empreinte:
   titre: Empreinte imprimante
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+divers . numérique . appareils . imprimante . empreinte carbone:
   formule: (acv numerique . acv . imprimante . carbone . fabrication + acv numerique . acv . imprimante . carbone . distribution) / 1000 gCO2e/kgCO2e
   unité: kgCO2e
-  note: Facteur d'émissions issu de la Base Carbone
+divers . numérique . appareils . imprimante . empreinte eau:
+  formule: acv numerique . acv . imprimante . eau . fabrication + acv numerique . acv . imprimante . eau . distribution
+  unité: l
 
 divers . numérique . appareils . nombre total:
   titre: Nombre d'appareils numériques dans le logement
