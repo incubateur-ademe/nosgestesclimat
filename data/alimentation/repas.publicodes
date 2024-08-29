@@ -10,6 +10,7 @@ alimentation . repas:
     Comme pour le textile et l'ameublement, est ajoutée ici une part de l'empreinte liée à la déforestation importée.
 
 alimentation . déforestation:
+  non applicable si: métrique != "carbone"
   formule:
     variations:
       - si: déforestation
@@ -23,7 +24,6 @@ alimentation . déforestation:
               alors: forfait base + (forfait moyen fruits céréales * 0.6)
             - sinon: forfait base + (forfait moyen fruits céréales * 0.2)
       - sinon: 0
-  unité: kgCO2e
   note: |
     La déforestation importée est l'empreinte carbone associée à la destruction de forêts ailleurs sur la planète. Elle est la combinaison de deux facteurs : 
 
@@ -58,12 +58,10 @@ alimentation . déjeuner et dîner:
   icônes: 🍽️
   titre: Déjeuners et dîners
   formule: par semaine * commun . semaines par an
-  unité: kgCO2e
 
 alimentation . déjeuner et dîner . par semaine:
   titre: Déjeuners et dîners par semaine
   formule: plats
-  unité: kgCO2e/semaine
 
 alimentation . plats:
   icônes: 🍽️
@@ -121,7 +119,6 @@ alimentation . plats:
       - viande rouge
       - poisson gras
       - poisson blanc
-  unité: kgCO2e/semaine
   note: |
     Pour le moment, nous proposons 6 repas types pour 6 régimes différents. Il a été choisi de limiter la granularité du modèle via 6 menus représentatifs 
     des régimes associés pour simplifier l'estimation de l'empreinte du poste alimentation pour l'utilisateur 
@@ -139,17 +136,24 @@ alimentation . plats:
 alimentation . plats . végétalien:
   titre: Végétalien
   formule: empreinte * nombre
-  unité: kgCO2e/semaine
   icônes: 🌾🥜🥗
   description: |
     Repas sans produits animaux.
 
 alimentation . plats . végétalien . empreinte:
-  titre: Empreinte d'un repas végétalien
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . plats . végétalien . empreinte carbone:
+  titre: Empreinte carbone d'un repas végétalien
   formule: 0.630
   unité: kgCO2e/repas
   note: |
-    L'empreinte d'un repas végétalien est donné par le tableau suivant :
+    L'empreinte carbone d'un repas végétalien est donné par le tableau suivant :
 
     | Ingrédients                 | CIQUAL | Qte (g) | Kcal   | Protéines (g) | Lipides (g) | kgCO2e/kg |  kgCO2e  |
     | --------------------------- | ------ | ------- | ------ | ------------- | ----------- | --------- | -------- |
@@ -166,6 +170,28 @@ alimentation . plats . végétalien . empreinte:
 
     🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
 
+alimentation . plats . végétalien . empreinte eau:
+  titre: Empreinte eau d'un repas végétalien
+  formule: 3610
+  unité: l/repas
+  note: |
+    L'empreinte eau d'un repas végétalien est donné par le tableau suivant :
+
+    | Ingrédients                 | CIQUAL | Qte (g) | Kcal   | Protéines (g) | Lipides (g) |   m3/kg   |    L     |
+    | --------------------------- | ------ | ------- | ------ | ------------- | ----------- | --------- | -------- |
+    | **Entrée + plat principal** |        |         |        |               |             |           |          |
+    | Tofu nature, préemballé     | 20904  | 100     | 143    | 13,4          | 8,5         | 0,23      |  23,0    |
+    | Accompagnement moyen        | AM     | 300     | 192,11 | 15,72         | 2,81        | 6,19      |  1855    |
+    | Huile d'olive vierge extra  | 17270  | 7       | 63     | 0             | 6,99        | 22,0      |  154,3   |
+    |   **Dessert**               |        |         |        |               |             |           |          |
+    | Dessert vegan               | DV     | 200     | 118,7  | 1,42          | 0,29        | 7,81      |  1561    |
+    | Pain                        | 7001   | 50      | 142    | 4,14          | 0,7         | 0,29      |  14,5    |
+    | Total                       |        | 657     | 658,81 | 34,68         | 19,3        |           | **3610** |
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
 alimentation . plats . végétalien . nombre:
   question: Nombre de plats végétaliens par semaine
   par défaut: 0
@@ -176,16 +202,23 @@ alimentation . plats . végétarien:
   titre: Végétarien
   formule: empreinte * nombre
   icônes: 🥗🍳🧀
-  unité: kgCO2e/semaine
   description: |
     Repas sans chair animale, avec des œufs ou un peu de fromage.
 
 alimentation . plats . végétarien . empreinte:
-  titre: Empreinte d'un repas végétarien
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . plats . végétarien . empreinte carbone:
+  titre: Empreinte carbone d'un repas végétarien
   formule: 1.11
   unité: kgCO2e/repas
   note: |
-    L'empreinte d'un repas végétarien est donné par le tableau suivant :
+    L'empreinte carbone d'un repas végétarien est donné par le tableau suivant :
 
     | Ingrédients                 | CIQUAL | Qte (g) | Kcal   | Protéines (g) | Lipides (g) | kgCO2e/kg |  kgCO2e  |
     | --------------------------- | ------ | ------- | ------ | ------------- | ----------- | --------- | -------- |
@@ -202,6 +235,28 @@ alimentation . plats . végétarien . empreinte:
 
     🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
 
+alimentation . plats . végétarien . empreinte eau:
+  titre: Empreinte eau d'un repas végétarien
+  formule: 3546
+  unité: l/repas
+  note: |
+    L'empreinte eau d'un repas végétarien est donné par le tableau suivant :
+
+    | Ingrédients                 | CIQUAL | Qte (g) | Kcal   | Protéines (g) | Lipides (g) |   m3/kg   |    L     |
+    | --------------------------- | ------ | ------- | ------ | ------------- | ----------- | --------- | -------- |
+    | **Entrée + plat principal** |        |         |        |               |             |           |          |
+    | 2 œufs                      | 22000  | 120     | 168    | 15,24         | 11,8        | 4,37      |  524     |
+    | Accompagnement moyen        | AM     | 300     | 192,11 | 15,72         | 2,81        | 6,19      |  1855    |
+    | Huile d'olive vierge extra  | 17270  | 5       | 45     | 0             | 5           | 22,0      |  154,3   |
+    |   **Dessert**               |        |         |        |               |             |           |          |
+    | Dessert moyen               | DE     | 200     | 186,39 | 5,36          | 12,11       | 5,20      |  1041    |
+    | Pain                        | 7001   | 50      | 142    | 4,14          | 0,7         | 0,29      |  14,5    |
+    | Total                       |        | 675     | 733,5  | 40,46         | 32,42       |           | **3546** |
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
 alimentation . plats . végétarien . nombre:
   question: Nombre de plats végétariens par semaine
   par défaut: 5
@@ -211,16 +266,23 @@ alimentation . plats . viande blanche:
   titre: Viande blanche
   icônes: 🍗🥓
   formule: empreinte * nombre
-  unité: kgCO2e/semaine
   description: |
     Repas contenant une pièce de poulet, porc.
 
 alimentation . plats . viande blanche . empreinte:
-  titre: Empreinte d'un repas de type viande blanche (poulet, porc)
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . plats . viande blanche . empreinte carbone:
+  titre: Empreinte carbone d'un repas de type viande blanche (poulet, porc)
   formule: 1.94
   unité: kgCO2e/repas
   note: |
-    L'empreinte d'un repas à dominate "viande blanche" (volaille, porc...) est donné par le tableau suivant :
+    L'empreinte carbone d'un repas à dominate "viande blanche" (volaille, porc...) est donné par le tableau suivant :
 
     | Ingrédients                 | CIQUAL | Qte (g) | Kcal   | Protéines (g) | Lipides (g) | kgCO2e/kg |  kgCO2e  |
     | --------------------------- | ------ | ------- | ------ | ------------- | ----------- | --------- | -------- |
@@ -235,6 +297,30 @@ alimentation . plats . viande blanche . empreinte:
 
     💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
 
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . plats . viande blanche . empreinte eau:
+  titre: Empreinte eau d'un repas de type viande blanche (poulet, porc, fromage)
+  formule: 4010
+  unité: l/repas
+  note: |
+    L'empreinte eau d'un repas à dominate "viande blanche" (volaille, porc...) est donné par le tableau suivant :
+
+    | Ingrédients                 | CIQUAL | Qte (g) | Kcal   | Protéines (g) | Lipides (g) |   m3/kg   |    L     |
+    | --------------------------- | ------ | ------- | ------ | ------------- | ----------- | --------- | -------- |
+    | **Entrée + plat principal** |        |         |        |               |             |           |          |
+    | Viande blanche              | VB     | 150     | 205,06 | 31,27         | 8,31        | 6,59     |  988      |
+    | Accompagnement moyen        | AM     | 300     | 192,11 | 15,72         | 2,81        | 6,19      |  1855    |
+    | Huile d'olive vierge extra  | 17270  | 5       | 45     | 0             | 5           | 22,0      |  154,3   |
+    |       **Dessert**               |        |         |        |               |             |           |          |
+    | Dessert moyen               | DE     | 200     | 186,39 | 5,36          | 12,11       | 5,20      |  1041    |
+    | Pain                        | 7001   | 50      | 142    | 4,14          | 0,7         | 0,29      |  14,5    |
+    | Total                       |        | 705     | 770,56 | 56,49         | 28,94       |           | **4010** |
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
 alimentation . plats . viande blanche . nombre:
   question: Nombre de plats viande blanche par semaine
   par défaut: 4
@@ -245,19 +331,26 @@ alimentation . plats . viande rouge:
   titre: Viande rouge
   icônes: 🥩🍖
   formule: empreinte * nombre
-  unité: kgCO2e/semaine
   description: |
     Repas contenant une pièce de bœuf, veau, ou agneau.
 
 alimentation . plats . viande rouge . empreinte:
-  titre: Empreinte d'un repas de type viande rouge (bœuf, veau, agneau)
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . plats . viande rouge . empreinte carbone:
+  titre: Empreinte carbone d'un repas de type viande rouge (bœuf, veau, agneau)
   formule:
     somme:
       - 4.79
       - déforestation
   unité: kgCO2e/repas
   note: |
-    L'empreinte d'un repas à dominate "viande rouge" (boeuf, veau, agneau...) est donné par le tableau suivant :
+    L'empreinte carbone d'un repas à dominate "viande rouge" (boeuf, veau, agneau...) est donné par le tableau suivant :
 
     | Ingrédients                 | CIQUAL | Qte (g) | Kcal   | Protéines (g) | Lipides (g) | kgCO2e/kg |  kgCO2e  |
     | --------------------------- | ------ | ------- | ------ | ------------- | ----------- | --------- | -------- |
@@ -273,8 +366,31 @@ alimentation . plats . viande rouge . empreinte:
     💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
 
     Pour la partie déforestation, notre alimentation est vectrice de déforestation à l'étranger, à l'impact carbone non négligeable. Cette empreinte n'est pas comprise dans les facteurs d'émission d'Agribalyse.
+
     D'après l'étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41), une part de cette déforestation est spécifiquement associée à la consommation de viande d'élevage.
     Nous considérons que cette part associée aux "viandes d'élevage" est majoritairement associée à la consommation de viande rouge, c'est pourquoi nous ajoutons cette part de déforestation aux repas de viande rouge.
+
+alimentation . plats . viande rouge . empreinte eau:
+  titre: Empreinte eau d'un repas de type viande rouge (bœuf, veau, agneau)
+  formule: 4014
+  unité: l/repas
+  description: |
+    L'empreinte eau d'un repas à dominate "viande rouge" (boeuf, veau, agneau...) est donné par le tableau suivant :
+
+    | Ingrédients                 | CIQUAL | Qte (g) | Kcal   | Protéines (g) | Lipides (g) |   m3/kg   |    L     |
+    | --------------------------- | ------ | ------- | ------ | ------------- | ----------- | --------- | -------- |
+    | **Entrée + plat principal** |        |         |        |               |             |           |          |
+    | Viande rouge                | VR     | 150     | 209,58 | 30,15         | 9,82        | 6,01      |  902     |
+    | Accompagnement moyen        | AM     | 300     | 192,11 | 15,72         | 2,81        | 6,19      |  1856    |
+    | Huile d'olive vierge extra  | 17270  | 5       | 45     | 0             | 5           | 22,04      |  110    |
+    |   **Dessert**               |        |         |        |               |             |           |          |
+    | Dessert moyen               | DE     | 200     | 186,39 | 5,36          | 12,11       | 5,20      |  1041    |
+    | Pain                        | 7001   | 50      | 142    | 4,14          | 0,7         | 0,29      |  14,5    |
+    | Total                       |        | 705     | 775,08 | 55,37         | 30,44       |           | **3923** |
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
 
 alimentation . plats . viande rouge . déforestation:
   formule:
@@ -300,16 +416,23 @@ alimentation . plats . poisson gras:
   titre: Poisson gras
   formule: empreinte * nombre
   icônes: 🍣🥧
-  unité: kgCO2e/semaine
   description: |
     Repas contenant thon, saumon, sardine ou maquereau.
 
 alimentation . plats . poisson gras . empreinte:
-  titre: Empreinte d'un repas de type poisson gras (thon, saumon, sardine, maquereau)
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . plats . poisson gras . empreinte carbone:
+  titre: Empreinte carbone d'un repas de type poisson gras (thon, saumon, sardine, maquereau)
   formule: 1.31
   unité: kgCO2e/repas
-  note: |
-    L'empreinte d'un repas à dominate "poisson gras" (thon, saumon, sardine, maquereau...) est donné par le tableau suivant :
+  description: |
+    L'empreinte carbone d'un repas à dominate "poisson gras" (thon, saumon, sardine, maquereau...) est donné par le tableau suivant :
 
     | Ingrédients                 | CIQUAL | Qte (g) | Kcal   | Protéines (g) | Lipides (g) | kgCO2e/kg |  kgCO2e  |
     | --------------------------- | ------ | ------- | ------ | ------------- | ----------- | --------- | -------- |
@@ -324,6 +447,30 @@ alimentation . plats . poisson gras . empreinte:
 
     💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
 
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . plats . poisson gras . empreinte eau:
+  titre: Empreinte eau d'un repas de type poisson gras (thon, saumon, sardine, maquereau)
+  formule: 3679
+  unité: l/repas
+  description: |
+    L'empreinte eau d'un repas à dominate "poisson gras" (thon, saumon, sardine, maquereau...) est donné par le tableau suivant :
+
+    | Ingrédients                 | CIQUAL | Qte (g) | Kcal   | Protéines (g) | Lipides (g) |   m3/kg   |    L     |
+    | --------------------------- | ------ | ------- | ------ | ------------- | ----------- | --------- | -------- |
+    | **Entrée + plat principal** |        |         |        |               |             |           |          |
+    | Poisson gras                | PG     | 150     | 290,27 | 33,16         | 17,16       | 4,38      |  657     |
+    | Accompagnement moyen        | AM     | 300     | 192,11 | 15,72         | 2,81        | 6,19      |  1856    |
+    | Huile d'olive vierge extra  | 17270  | 5       | 45     | 0             | 5           | 22,04      |  110    |
+    |   **Dessert**               |        |         |        |               |             |           |          |
+    | Dessert moyen               | DE     | 200     | 186,39 | 5,36          | 12,11       | 5,20      |  1041    |
+    | Pain                        | 7001   | 50      | 142    | 4,14          | 0,7         | 0,29      |  14,5    |
+    | Total                       |        | 705     | 746,57 | 54,28         | 25,67       |           | **3679** |
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
 alimentation . plats . poisson gras . nombre:
   question: Nombre de plats poisson gras par semaine
   par défaut: 2
@@ -333,17 +480,24 @@ alimentation . plats . poisson gras . nombre:
 alimentation . plats . poisson blanc:
   titre: Poisson blanc
   formule: empreinte * nombre
-  unité: kgCO2e/semaine
   icônes: 🐟🍚
   description: |
     Repas avec un filet de poisson blanc.
 
 alimentation . plats . poisson blanc . empreinte:
-  titre: Empreinte d'un repas de type poisson blanc
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . plats . poisson blanc . empreinte carbone:
+  titre: Empreinte carbone d'un repas de type poisson blanc
   formule: 2.14
   unité: kgCO2e/repas
-  note: |
-    L'empreinte d'un repas à dominate "poisson blanc" est donné par le tableau suivant :
+  description: |
+    L'empreinte carbone d'un repas à dominate "poisson blanc" est donné par le tableau suivant :
 
     | Ingrédients                 | CIQUAL | Qte (g) | Kcal   | Protéines (g) | Lipides (g) | kgCO2e/kg |  kgCO2e  |
     | --------------------------- | ------ | ------- | ------ | ------------- | ----------- | --------- | -------- |
@@ -357,6 +511,30 @@ alimentation . plats . poisson blanc . empreinte:
     | Total                       |        | 705     | 693,21 | 53,03         | 22,44       |           | **2,14** |
 
     💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . plats . poisson blanc . empreinte eau:
+  titre: Empreinte eau d'un repas de type poisson blanc
+  formule: 3115
+  unité: l/repas
+  description: |
+    L'empreinte eau d'un repas à dominate "poisson blanc" est donné par le tableau suivant :
+
+    | Ingrédients                 | CIQUAL | Qte (g) | Kcal   | Protéines (g) | Lipides (g) |   m3/kg   |    L     |
+    | --------------------------- | ------ | ------- | ------ | ------------- | ----------- | --------- | -------- |
+    | **Entrée + plat principal** |        |         |        |               |             |           |          |
+    | Poisson blanc               | PB     | 150     | 127,71 | 27,81         | 1,82        | 0,63      |  94,0    |
+    | Accompagnement moyen        | AM     | 300     | 192,11 | 15,72         | 2,81        | 6,19      |  1856    |
+    | Huile d'olive vierge extra  | 17270  | 5       | 45     | 0             | 5           | 22,04      |  110    |
+    |   **Dessert**               |        |         |        |               |             |           |          |
+    | Dessert moyen               | DE     | 200     | 186,39 | 5,36          | 12,11       | 5,20      |  1041    |
+    | Pain                        | 7001   | 50      | 142    | 4,14          | 0,7         | 0,29      |  14,5    |
+    | Total                       |        | 705     | 584,02 | 48,93         | 10,33       |           | **3115** |
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
 
 alimentation . plats . poisson blanc . nombre:
   question: Nombre de plats poisson blanc par semaine
@@ -372,12 +550,10 @@ alimentation . petit déjeuner annuel:
 alimentation . petit déjeuner . par semaine:
   titre: Empreinte hebdo petit déjeuner
   formule: par jour * commun . jours par semaine
-  unité: kgCO2e/semaine
 
 alimentation . petit déjeuner . par jour:
   titre: Empreinte hebdo petit déjeuner
   formule: alimentation . petit déjeuner * 1 repas/jour
-  unité: kgCO2e/jour
 
 alimentation . petit déjeuner:
   formule:
@@ -391,7 +567,6 @@ alimentation . petit déjeuner:
       - si: type = 'végétalien'
         alors: végétalien
       - sinon: 0
-  unité: kgCO2e/repas
 
 alimentation . petit déjeuner . type:
   question: Quel petit déjeuner vous correspond le plus ?
@@ -415,21 +590,30 @@ alimentation . petit déjeuner . type:
 
 alimentation . petit déjeuner . continental:
   titre: Continental
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . petit déjeuner . continental . empreinte carbone:
+  titre: Empreinte carbone d'un petit déjeuner continental
   formule: 0.28
   unité: kgCO2e/repas
   description: |
     Petit déjeuner avec pain, viennoiserie, beurre, confiture et un fruit.
 
-    L'empreinte du petit déjeuner continental est donné par le tableau suivant :
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
 
-    | Ingrédients                                                                        | CIQUAL | Qte (g) | Kcal  | Protéines (g) | Lipides (g) | kgCO2e/kg |  kgCO2e  |
-    | ---------------------------------------------------------------------------------- | ------ | ------- | ----- | ------------- | ----------- | --------- | -------- |
-    | Pain (Pain, baguette, courante)                                                    | 7001   | 50      | 142   | 4,14          | 0,7         | 0,69      |  0,03    |
-    | Vienoiserie (Croissant, sans précision)                                            | 7602   | 50      | 186   | 3,33          | 10          | 1,61      |  0,08    |
-    | Beurre demi-sel                                                                    | 16402  | 10      | 73,8  | 0,07          | 8,14        | 7,73      |  0,08    |
-    | Confiture (Confiture, tout type de fruits, allégée en sucres (extra ou classique)) | 31024  | 20      | 50,2  | 0             | 0,1         | 1,42      |  0,03    |
-    | Orange                                                                             | 13034  | 100     | 45,5  | 0,75          | 0           | 0,63      |  0,06    |
-    | Total                                                                              |        | 230     | 497,5 | 8,28          | 18,94       |           | **0,28** |
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . petit déjeuner . continental . empreinte eau:
+  titre: Empreinte eau d'un petit déjeuner continental
+  formule: 1272
+  unité: l/repas
+  description: |
+    Petit déjeuner avec pain, viennoiserie, beurre, confiture et un fruit.
 
     💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
 
@@ -448,18 +632,30 @@ alimentation . petit déjeuner . lait céréales:
 
 alimentation . petit déjeuner . lait vache céréales:
   titre: Céréales avec lait de vache
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . petit déjeuner . lait vache céréales . empreinte carbone:
+  titre: Empreinte carbone d'un petit déjeuner avec lait de vache et céréales
   formule: 0.460
   unité: kgCO2e/repas
   description: |
     Petit déjeuner avec un produit laitier (lait de vache) et une portion de céréales.
 
-    L'empreinte du petit déjeuner lait de vache et céréales est donné par le tableau suivant :
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
 
-    | Ingrédients            | CIQUAL | Qte (g) | Kcal  | Protéines (g) | Lipides (g) | kgCO2e/kg |  kgCO2e  |
-    | ---------------------- | ------ | ------- | ----- | ------------- | ----------- | --------- | -------- |
-    | Céréales               | CRL    | 60      | 243,3 | 5,05          | 4,67        | 3,23      |  0,19    |
-    | Lait demi-écrémé (UHT) | 19041  | 200     | 94,6  | 6,76          | 3,1         | 1,31      |  0,26    |
-    | Total                  |        | 260     | 337,9 | 11,81         | 7,77        |           | **0,46** |
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . petit déjeuner . lait vache céréales . empreinte eau:
+  titre: Empreinte eau d'un petit déjeuner avec lait de vache et céréales
+  formule: 1404
+  unité: l/repas
+  description: |
+    Petit déjeuner avec un produit laitier (lait de vache) et une portion de céréales.
 
     💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
 
@@ -467,18 +663,30 @@ alimentation . petit déjeuner . lait vache céréales:
 
 alimentation . petit déjeuner . lait soja céréales:
   titre: Céréales avec lait de soja
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . petit déjeuner . lait soja céréales . empreinte carbone:
+  titre: Empreinte carbone d'un petit déjeuner avec lait de soja et céréales
   formule: 0.280
   unité: kgCO2e/repas
   description: |
     Petit déjeuner avec un produit laitier (lait de soja) et une portion de céréales.
 
-    L'empreinte du petit déjeuner lait de soja et céréales est donné par le tableau suivant :
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
 
-    | Ingrédients                                        | CIQUAL | Qte (g) | Kcal  | Protéines (g) | Lipides (g) | kgCO2e/kg |  kgCO2e  |
-    | -------------------------------------------------- | ------ | ------- | ----- | ------------- | ----------- | --------- | -------- |
-    | Céréales                                           | CRL    | 60      | 243,3 | 5,05          | 4,67        | 3,23      |  0,19    |
-    | Boisson au soja, nature, non enrichie, préemballée | 18900  | 200     | 71,6  | 6,62          | 4,14        | 0,45      |  0,09    |
-    | Total                                              |        | 260     | 314,9 | 11,67         | 8,81        |           | **0,28** |
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . petit déjeuner . lait soja céréales . empreinte eau:
+  titre: Empreinte eau d'un petit déjeuner avec lait de soja et céréales
+  formule: 1342
+  unité: l/repas
+  description: |
+    Petit déjeuner avec un produit laitier (lait de soja) et une portion de céréales.
 
     💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
 
@@ -486,18 +694,30 @@ alimentation . petit déjeuner . lait soja céréales:
 
 alimentation . petit déjeuner . lait avoine céréales:
   titre: Céréales avec lait d'avoine
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . petit déjeuner . lait avoine céréales . empreinte carbone:
+  titre: Empreinte carbone d'un petit déjeuner avec lait de avoine et céréales
   formule: 0.300
   unité: kgCO2e/repas
   description: |
     Petit déjeuner avec un produit laitier (lait d'avoine) et une portion de céréales.
 
-    L'empreinte du petit déjeuner lait d'avoine et céréales est donné par le tableau suivant :
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
 
-    | Ingrédients                                  | CIQUAL | Qte (g) | Kcal  | Protéines (g) | Lipides (g) | kgCO2e/kg |  kgCO2e  |
-    | -------------------------------------------- | ------ | ------- | ----- | ------------- | ----------- | --------- | -------- |
-    | Céréales                                     | CRL    | 60      | 243,3 | 5,05          | 4,67        | 3,23      |  0,19    |
-    | Boisson à base d'avoine, nature, préemballée | 18905  | 200     | 85    | 0,9           | 2,2         | 0,54      |  0,11    |
-    | Total                                        |        | 260     | 328,3 | 5,95          | 6,87        |           | **0,3**  |
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . petit déjeuner . lait avoine céréales . empreinte eau:
+  titre: Empreinte eau d'un petit déjeuner avec lait de avoine et céréales
+  formule: 1386
+  unité: l/repas
+  description: |
+    Petit déjeuner avec un produit laitier (lait d'avoine) et une portion de céréales.
 
     💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
 
@@ -505,20 +725,30 @@ alimentation . petit déjeuner . lait avoine céréales:
 
 alimentation . petit déjeuner . britannique:
   titre: Britannique
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . petit déjeuner . britannique . empreinte carbone:
+  titre: Empreinte carbone d'un petit déjeuner britannique
   formule: 1.18
   unité: kgCO2e/repas
   description: |
     Petit déjeuner avec de la charcuterie, 2 œufs et des toasts.
 
-    L'empreinte du petit déjeuner britannique est donné par le tableau suivant :
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
 
-    | Ingrédients                                | CIQUAL | Qte (g) | Kcal   | Protéines (g) | Lipides (g) | kgCO2e/kg |  kgCO2e  |
-    | ------------------------------------------ | ------ | ------- | ------ | ------------- | ----------- | --------- | -------- |
-    | Jambon cuit, supérieur                     | 28900  | 100     | 125    | 20,8          | 4,28        | 6,92      |  0,69    |
-    | Oeuf, cru (2)                              | 22000  | 120     | 168    | 15,24         | 11,8        | 3,17      |  0,38    |
-    | Huile                                      | 17440  | 7       | 63,07  | 0             | 7           | 2,57      |  0,02    |
-    | Toasts (2 tranches - Pain de mie, courant) | 7200   | 50      | 137,5  | 3,57          | 1,8         | 1,75      |  0,09    |
-    | Total                                      |        | 277     | 493,57 | 39,61         | 24,88       | 14,41     | **1,18** |
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . petit déjeuner . britannique . empreinte eau:
+  titre: Empreinte eau d'un petit déjeuner britannique
+  formule: 1091
+  unité: l/repas
+  description: |
+    Petit déjeuner avec de la charcuterie, 2 œufs et des toasts.
 
     💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
 
@@ -526,18 +756,30 @@ alimentation . petit déjeuner . britannique:
 
 alimentation . petit déjeuner . végétalien:
   titre: Végétalien
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . petit déjeuner . végétalien . empreinte carbone:
+  titre: Empreinte carbone d'un petit déjeuner végétalien
   formule: 0.380
   unité: kgCO2e/repas
   description: |
     Petit déjeuner avec une portion de muesli, un fruit
 
-    L'empreinte du petit déjeuner végétalien est donné par le tableau suivant :
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
 
-    | Ingrédients            | CIQUAL | Qte (g) | Kcal   | Protéines (g) | Lipides (g) | kgCO2e/kg |  kgCO2e  |
-    | ---------------------- | ------ | ------- | ------ | ------------- | ----------- | --------- | -------- |
-    | Dessert vegan (fruits) | DV     | 250     | 148,38 | 1,77          | 0,36        | 0,73      |  0,18    |
-    | Céréales               | CRL    | 60      | 243,3  | 5,05          | 4,67        | 3,23      |  0,19    |
-    | Total                  |        | 250     | 148,38 | 1,77          | 0,36        |           | **0,38** |
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . petit déjeuner . végétalien . empreinte eau:
+  titre: Empreinte eau d'un petit déjeuner végétalien
+  formule: 1952
+  unité: l/repas
+  description: |
+    Petit déjeuner avec une portion de muesli, un fruit
 
     💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
 
@@ -575,12 +817,14 @@ alimentation . petit déjeuner . type . aucun:
     Vous ne mangez rien au petit déjeuner (mais vous pouvez boire un café, un thé ou un chocolat chaud pris en compte dans une autre question).
 
 alimentation . bonus:
+  non applicable si: métrique != "carbone"
   formule:
     somme:
       - de saison . empreinte
       - local . empreinte
 
 alimentation . local:
+  non applicable si: métrique != "carbone"
   icônes: 🍅🇫🇷
 
 alimentation . local . empreinte:
@@ -662,6 +906,7 @@ alimentation . local . part locale:
     🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1SVYvBaaYDOUDcg5jX0eZFEColnWWIL8PCLMGrPR000o/edit#gid=1694091424) sous forme de tableur.
 
 alimentation . de saison:
+  non applicable si: métrique != "carbone"
   icônes: 🍅🌞
 
 alimentation . de saison . empreinte:
