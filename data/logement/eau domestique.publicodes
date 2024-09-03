@@ -1,0 +1,358 @@
+logement . eau domestique:
+  non applicable si: métrique != "eau"
+  titre: Consommation d'eau domestique
+  icônes: 🚰
+  formule:
+    somme:
+      - bains et douches
+      - toilettes
+      - linge
+      - vaisselle
+      - cuisine
+      - hydratation
+      - voiture
+      - jardin
+  description: |
+    L'eau **directe** correspond à l'eau qui sort de votre robinet au quotidien. 
+    Il n'est donc pas question ici de l'eau **virtuelle** qui se cache derrière votre alimentation ou vos biens de consommation.
+
+  note: |
+    Les valeurs associées à ce calcul sont tirées de sources diverses et du [simulateur du CIEAU](https://www.cieau.com/le-metier-de-leau/usages-consommation-conseils/calculateur-consommation-eau-annuelle/) (Centre d'Information sur l'EAU).
+
+    Selon de nombreux site d'information (mais non sourcés malheureusement), la répartition théorique de la consommation d'eau est la suivante :
+
+    |      Usage       |   Part   |
+    | ---------------- | -------- |
+    | Bains et douches | 39%      |
+    | Toilettes        | 20%      |
+    | Linge            | 12%      |
+    | Vaisselle        | 10%      |
+    | Voiture / jardin | 6%       |
+    | Cuisine          | 6%       |
+    | Boisson          | 1%       |
+    | Autres           | 6%       |
+
+logement . eau domestique . par jour:
+  formule: logement . eau domestique / commun . jours par an
+
+logement . eau domestique . bains et douches:
+  icônes: 🚿🛀
+  formule:
+    somme:
+      - douches
+      - bains
+
+logement . eau domestique . bains et douches . habitude:
+  # Question désactivée pour le moment
+  # question: Vous êtes plutôt ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - douche express
+        - douche longue
+        - bain parfois
+        - bain souvent
+  par défaut: "'bain parfois'"
+
+logement . eau domestique . bains et douches . douche express:
+logement . eau domestique . bains et douches . douche longue:
+logement . eau domestique . bains et douches . bain parfois:
+logement . eau domestique . bains et douches . bain souvent:
+
+logement . eau domestique . bains et douches . douches:
+  formule: par semaine * commun . semaines par an
+
+logement . eau domestique . bains et douches . douches . par semaine:
+  formule: nombre * quantité
+
+logement . eau domestique . bains et douches . douches . nombre:
+  titre: Nombre de douches par semaine
+  formule:
+    variations:
+      - si: habitude = 'bain parfois'
+        alors: 5
+      - si: habitude = 'bain souvent'
+        alors: 5
+      - sinon: 6
+  unité: douche/semaine
+
+logement . eau domestique . bains et douches . douches . quantité:
+  titre: Quantité d'eau par douche
+  formule:
+    variations:
+      - si: habitude = 'douche express'
+        alors: 36
+      - sinon: 72
+  unité: l/douche
+  # TODO : ajouter la source
+  note: On considère qu'une douche dure en moyenne 6 minutes avec un débit de 12 litres par minute.
+
+logement . eau domestique . bains et douches . bains:
+  formule: par semaine * commun . semaines par an
+
+logement . eau domestique . bains et douches . bains . par semaine:
+  formule: nombre * quantité
+
+logement . eau domestique . bains et douches . bains . nombre:
+  titre: Nombre de bains par semaine
+  formule:
+    variations:
+      - si: habitude = 'douche express'
+        alors: 0
+      - si: habitude = 'douche longue'
+        alors: 0
+      - si: habitude = 'bain parfois'
+        alors: 0.5
+      - si: habitude = 'bain souvent'
+        alors: 1
+  unité: bain/semaine
+
+logement . eau domestique . bains et douches . bains . quantité:
+  titre: Quantité d'eau par bain
+  formule: 150
+  unité: l/bain
+  # TODO : ajouter la source
+  note: On considère qu'un bain consomme en moyenne 150 litres d'eau.
+
+logement . eau domestique . toilettes:
+  icônes: 🚽
+  formule: par jour * commun . jours par an
+
+logement . eau domestique . toilettes . par jour:
+  formule: nombre * quantité
+
+logement . eau domestique . toilettes . nombre:
+  titre: Nombre de chasses d'eau par jour
+  par défaut: 3
+  unité: chasse/jour
+
+logement . eau domestique . toilettes . type:
+  # Question désactivée pour le moment
+  # question: Quel type de toilettes équipent votre logement ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - sèches
+        - double chasse
+        - classiques
+  par défaut: "'classiques'"
+
+logement . eau domestique . toilettes . type . sèches:
+  titre: Toilettes sèches
+logement . eau domestique . toilettes . type . double chasse:
+  titre: Système de double-chasse
+logement . eau domestique . toilettes . type . classiques:
+  titre: Toilettes classiques
+
+logement . eau domestique . toilettes . quantité:
+  titre: Quantité d'eau par chasse
+  formule:
+    variations:
+      - si: type = 'sèches'
+        alors: 0
+      - si: type = 'double chasse'
+        alors: 6
+      - si: type = 'classiques'
+        alors: 12
+  unité: l/chasse
+  # TODO : ajouter la source
+  note: On considère qu'une chasse d'eau consomme en moyenne 9 litres d'eau même si c'est valeur paut varier si la chasse d'eau est à double commande.
+
+logement . eau domestique . linge:
+  icônes: 🧺
+  formule: foyer / logement . habitants
+
+logement . eau domestique . linge . foyer:
+  formule: par semaine * commun . semaines par an
+
+logement . eau domestique . linge . par semaine:
+  formule: nombre * quantité
+
+logement . eau domestique . linge . nombre:
+  titre: Nombre de lessives par semaine pour le foyer
+  formule: logement . habitants * 0.7
+  note: On considère une lessive par personne pour 10 jours.
+  unité: lessive/semaine
+
+logement . eau domestique . linge . quantité:
+  titre: Quantité d'eau par lessive
+  formule: 80
+  unité: l/lessive
+  # TODO : ajouter la source
+  note: On considère qu'un lave-linge consomme en moyenne 80 litres d'eau par cycle
+
+logement . eau domestique . vaisselle:
+  icônes: 🧽
+  formule: foyer / logement . habitants
+  note: |
+    A priori, il est plus intéressant de demander si le foyer possède un lave-vaisselle puis la fréquence en attribuant un complément arbitraire "à la main".
+    Si le foyer ne possède pas de lave-vaisselle, on peut simplement considérer que la vaiselle est faite à la main en considérant 
+    une quantité d'eau moyenne consommée par membre du foyer.
+
+logement . eau domestique . vaisselle . foyer:
+  formule:
+    somme:
+      - lave vaisselle
+      - à la main
+
+logement . eau domestique . vaisselle . lave vaisselle:
+  formule: par semaine * commun . semaines par an
+
+logement . eau domestique . vaisselle . lave vaisselle . par semaine:
+  formule: nombre * quantité
+
+logement . eau domestique . vaisselle . lave vaisselle . nombre:
+  titre: Nombre de lavages par semaine
+  applicable si: divers . électroménager . appareils . lave-vaisselle . nombre > 0
+  valeur: logement . habitants * 1
+  note: On considère 1 lavages par personne pour une semaine.
+  unité: lavage/semaine
+
+logement . eau domestique . vaisselle . lave vaisselle . quantité:
+  titre: Quantité d'eau par lavage
+  formule: 15
+  unité: l/lavage
+  # TODO : ajouter la source
+  note: |
+    Pour des laves vaiselles récent, on atteint des consommations d'eau inférieures à 10 litres. 
+    Néanmoins, pour des modèles plus anciens, la consommation peut atteindre plus de 30 litres par cycle.
+    On considère qu'un lavage de lave-vaisselle consomme en moyenne 15 litres d'eau.
+
+logement . eau domestique . vaisselle . à la main:
+  formule: par jour * commun . jours par an
+
+logement . eau domestique . vaisselle . à la main . par jour:
+  formule: nombre * quantité
+
+logement . eau domestique . vaisselle . à la main . nombre:
+  titre: Nombre de lavages par jour
+  valeur: 1
+  unité: lavage/jour
+  note: On considère un lavage par jour.
+
+logement . eau domestique . vaisselle . à la main . quantité:
+  titre: Quantité d'eau par lavage
+  formule:
+    variations:
+      - si: divers . électroménager . appareils . lave-vaisselle . nombre > 0
+        alors: 4 * logement . habitants
+      - sinon: 12 * logement . habitants
+  unité: l/lavage
+  # TODO : ajouter la source
+  note: On considère que faire la vaiselle à la main consomme 12 litres par membre du foyer.
+
+logement . eau domestique . cuisine:
+  icônes: 🥔🚰
+  formule: foyer / logement . habitants
+
+logement . eau domestique . cuisine . foyer:
+  formule: par jour * commun . jours par an
+
+logement . eau domestique . cuisine . par jour:
+  formule: 3
+  unité: l/jour
+  # TODO : ajouter la source
+  note: On considère une consommation moyenne de 2 litres d'eau par jour pour la cuisine pour le foyer.
+
+logement . eau domestique . hydratation:
+  formule: par jour * commun . jours par an
+  note: Eau en bouteille ou non, on confond la comptabilité de la consommation d'eau ici.
+
+logement . eau domestique . hydratation . par jour:
+  formule: 1.5
+  unité: l/jour
+  # TODO : ajouter la source
+  note: On considère une consommation moyenne de 1.5 litres d'eau par jour pour l'hydratation.
+
+logement . eau domestique . voiture:
+  applicable si:
+    toutes ces conditions:
+      - transport . voiture . km > 0
+      - est défini: transport . voiture . utilisateur
+      - une de ces conditions:
+          - transport . voiture . utilisateur = 'propriétaire'
+          - transport . voiture . utilisateur = 'régulier non propriétaire'
+  formule: 150 * 6
+  unité: l
+  # TODO : ajouter la source
+  note: |
+    Hypothèse de 150L par lavage à raison à raison de 6 fois par an.
+    Néanmoins, la valeur varie selon le type de lavage (moins important pour le jet, plus important pour le rouleau).
+
+# Récupérateur d'eau de pluie -> mosaïque jardin -> logement . extérieur . récupérateur eau de pluie . présent
+# Un petit module arrosage de jardin / potager avec la taille du jardin + le système d'arrosage (goutte à goutte, arrosoir, jet, eau de pluie, etc.)
+# Variation très importante selon :
+#  - La taille du jardin
+#  - La part arrosée
+#  - La fréquence d'arrosage
+#  - La nature du jardin (potager, fleurs, pelouse) ?
+
+logement . eau domestique . jardin:
+  applicable si: jardin . surface > 0
+  non applicable si: logement . type = 'appartement'
+  formule: foyer / logement . habitants
+  note: Il sera nécessaire de demander si un récuparateur d'eau de pluie est installée.
+
+logement . eau domestique . jardin . foyer:
+  formule: par semaine * commun . semaines par an * (4 mois / commun . mois par an)
+  note: On considère 2 arrosages par semaine sur les mois d'octobre à mars.
+
+logement . eau domestique . jardin . par semaine:
+  formule: surface * quantité * fréquence
+
+logement . eau domestique . jardin . surface:
+  # Question désactivée pour le moment
+  # question: Quelle surface de jardin arrosez-vous régulièrement (potager, fleurs, balcon) ?
+  suggestions:
+    ❌ je n'arrose pas: 0
+    quelques fleurs: 3
+    petit potager: 30
+    grand potager: 80
+  par défaut: 5
+  unité: m2
+
+logement . eau domestique . jardin . quantité:
+  titre: Quantité d'eau par m2
+  formule:
+    variations:
+      - si: type arrosage = 'arrosoir'
+        alors: 15
+      - si: type arrosage = 'goutte à goutte'
+        alors: 7
+      - si: type arrosage = 'récupérateur eau de pluie'
+        alors: 3
+      - si: type arrosage = 'tuyau d'arrosage'
+        alors: 25
+  unité: l/arrosage/m2
+  # TODO : ajouter la source
+  note: On considère qu'un m2 de jardin consomme en moyenne 15 litres d'eau par arrosage. Si un récupérateur d'eau de pluie, la consommation d'eau est bien moindre mais on ne la considère pas nulle pour autant.
+
+logement . eau domestique . jardin . fréquence:
+  titre: Fréquence d'arrosage
+  formule: 2
+  unité: arrosage/semaine
+
+logement . eau domestique . jardin . type arrosage:
+  applicable si: logement . eau domestique . jardin . surface > 0
+  # Question désactivée pour le moment
+  # question: En général, comment arrosez-vous votre jardin ?
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - arrosoir
+        - goutte à goutte
+        - récupérateur eau de pluie
+        - tuyau d'arrosage
+  par défaut: "'arrosoir'"
+
+logement . eau domestique . jardin . type arrosage . arrosoir:
+  titre: Arrosoir
+logement . eau domestique . jardin . type arrosage . goutte à goutte:
+  titre: Goutte à goutte
+logement . eau domestique . jardin . type arrosage . récupérateur eau de pluie:
+  titre: Récupérateur d'eau de pluie
+logement . eau domestique . jardin . type arrosage . tuyau d'arrosage:
+  titre: Tuyau d'arrosage

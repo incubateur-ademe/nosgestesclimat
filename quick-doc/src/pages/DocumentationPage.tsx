@@ -7,6 +7,8 @@ import { AppContext } from '../AppContext'
 import { pathTo } from '../Nav'
 import Loader from '../components/Loader'
 import remarkGfm from 'remark-gfm'
+import Engine from 'publicodes'
+import MetricToggle from '../components/MetricToggle'
 
 const defaultRule = 'bilan'
 
@@ -34,10 +36,11 @@ export default function DocumentationPage() {
     <Loader delay={0} />
   ) : (
     <div>
+      <MetricToggle />
       <RulePage
         documentationPath={pathTo('doc')}
         rulePath={rulePath}
-        engine={currentEngine as any}
+        engine={currentEngine as Engine}
         renderers={renderers}
         searchBar={true}
         language={'fr'}
