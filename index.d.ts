@@ -1,4 +1,4 @@
-import { Rule, RuleNode, Evaluation } from 'publicodes'
+import { Rule, RuleNode, Evaluation, Situation } from 'publicodes'
 // This file is generated on package build
 import { DottedName } from './dottedNames'
 
@@ -10,20 +10,19 @@ export type NGCRuleNode = RuleNode & {
 
 export type NGCRulesNodes = Record<DottedName, NGCRuleNode>
 
-type Color = `#${string}`
-
 export type NodeValue = Evaluation
 
-export type SuggestionsNode = Record<
+export type SuggestionValue = 'oui' | 'non' | number
+
+export type Suggestions = Record<
   string,
-  string | number | Record<string, string | number>
+  SuggestionValue | Record<string, SuggestionValue>
 >
 
 export type MosaiqueNode = {
   type: 'selection' | 'nombre'
   options: DottedName[]
-  total?: number
-  suggestions?: SuggestionsNode
+  suggestions?: Suggestions
 }
 
 export type MosaicInfos = {
@@ -31,8 +30,6 @@ export type MosaicInfos = {
   mosaicParams: MosaiqueNode
   mosaicDottedNames: [DottedName, NGCRuleNode][]
 }
-
-type Formule = any
 
 export type MigrationType = {
   keysToMigrate: Record<DottedName, DottedName>
@@ -44,7 +41,7 @@ export type Persona = {
   description: string
   icônes: string
   résumé?: string
-  situation: Partial<Record<DottedName, string | number>>
+  situation: Situation<DottedName>
 }
 
 export type Personas = Record<string, Persona>
@@ -69,15 +66,12 @@ export type RegionParams = {
   drapeau?: string
 }
 
-export type SupportedRegionType = {
-  [currentLang: string]: RegionParams
-}
+export type SupportedRegion = Record<string, RegionParams>
 
-export type SupportedRegions = { [key: string]: SupportedRegionType }
+export type SupportedRegions = Record<RegionCode, SupportedRegion>
 
 export type NGCRule = Rule & {
   abréviation?: string
-  couleur?: Color
   mosaique?: MosaiqueNode
   type?: string
   action?: { dépasse: string[] }
@@ -86,7 +80,6 @@ export type NGCRule = Rule & {
   dottedName?: DottedName
   question?: string
   plus?: boolean
-  formule?: Formule
   aide?: string
   inactif?: string
   résumé?: string
@@ -94,11 +87,9 @@ export type NGCRule = Rule & {
   avertissement?: string
 }
 
-// TODO : should be defined from "métrique" rule directly
 export type Metrics = 'carbone' | 'eau'
 
-// TODO: Should remove "| string" when frontend migrates to model DottedName type
-export type NGCRules = Record<DottedName | string, NGCRule>
+export type NGCRules = Record<DottedName, NGCRule>
 
 export type FunFacts = {
   percentageOfBicycleUsers: number
