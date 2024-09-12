@@ -14,12 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v2.3.4
 
       - name: Downloading Artifacts from Previous Workflow...
-        uses: dawidd6/action-download-artifact@v2
+        uses: synergy-au/download-workflow-artifacts-action@v1
         with:
-          workflow: 'upload-compilation-result.yaml'
+          auth-token: ${{ secrets.GITHUB_TOKEN }}
+          workflow-run-id: ${{ github.event.workflow_run.id }}
 
       - name: Updating the PR
         uses: actions/github-script@v6
