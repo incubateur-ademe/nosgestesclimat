@@ -1,6 +1,6 @@
 # Generates an artifact containing the result of the `yarn compile` command.
 
-name: Generate PR artifact
+name: Generate compilation result
 
 on:
   pull_request:
@@ -77,13 +77,12 @@ jobs:
         # Setups the NGC url with the corresponding PR number: https://nosgestesclimat.fr?PR=<pr_number>
         run: echo "::set-output name=fr::${{ steps.deploy-env.outputs.name == 'master' && 'https://preprod.nosgestesclimat.fr' || format('https://preprod.nosgestesclimat.fr?PR={0}', github.event.pull_request.number) }}"
 
-  upload-artifact:
+  generate-comment:
     runs-on: ubuntu-22.04
     needs: compile
     steps:
       - name: Create artifact
         run: |
-          mkdir -p artifacts
           echo "
           <h1 align="center">Report for the pull request #${{ github.event.pull_request.number }}</h2>
 
@@ -121,9 +120,60 @@ jobs:
 
           </details>
 
-          " > artifacts/result.md
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+          " > result.md
+      - name: Updating the PR
+        uses: actions/github-script@v6
         with:
-          name: pr_message
-          path: artifacts
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+
+            const {owner, repo} = context.repo;
+
+            const pull_requests = await github.rest.pulls.list(context.repo);
+            if (!pull_requests.data.length) {
+              return core.error("Currently, there is no open PR.");
+            }
+            core.info('Found ' + pull_requests.data.length + ' PR');
+
+            const triggered_pr = context.payload.pull_request;
+
+            if (!triggered_pr) {
+              return core.error('The corresponding PR could not be found.');
+            }
+
+            core.info('Found the corresponding PR: #' + triggered_pr.number);
+
+            const marker = 'yarn-compile-result';
+
+            if (!fs.existsSync('result.md')) {
+              return core.info("Cannot find 'result.md', skipping")
+            }
+            var body = '<!-- bot: ' + marker + ' -->\n' + fs.readFileSync('result.md', 'utf8');
+
+            const issue_number = triggered_pr.number;
+            const comments = await github.rest.issues.listComments({owner, repo, issue_number});
+            const existing = comments.data.filter((c) => c.body.includes(marker));
+            try {
+              if (existing.length > 0) {
+                const last = existing[existing.length - 1];
+                core.info('Updating the comment ' + last.id);
+                await github.rest.issues.updateComment({
+                  owner,
+                  repo,
+                  body,
+                  comment_id: last.id,
+                });
+              } else {
+                core.info('Creating a comment in the PR #' + issue_number);
+                await github.rest.issues.createComment({
+                  issue_number,
+                  body,
+                  owner,
+                  repo
+                });
+              }
+              core.info('PR comment updated/created successfully');
+            } catch (error) {
+              core.setFailed(`Error updating PR comment: ${error.message}`);
+            }
