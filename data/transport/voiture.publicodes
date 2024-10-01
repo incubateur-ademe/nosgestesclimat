@@ -122,7 +122,7 @@ transport . voiture . utilisateur:
         - régulier non propriétaire
         - non régulier
   description: |
-    Deux données sont importantes dans le cadre du calcul de l'empreinte liée à la construction : 
+    Deux données sont importantes dans le cadre du calcul de l'empreinte liée à la construction :
 
     - L'usage ou non d'un même véhicule pour tous les kilomètres parcourus (si non : on vous attribue un véhicule "moyen")
     - La propriété ou non dudit véhicule s'il s'agit toujours du même
@@ -133,6 +133,7 @@ transport . voiture . utilisateur:
     - Elle ne permettait pas de valoriser l'engagement de ne pas disposer de son propre véhicule, et de pratiquer à la place l'autopartage, ou la location ponctuelle (car l'empreinte de construction était la même, que l'on soit propriétaire ou non).
 
     > Pour pallier ces deux problèmes, et mieux représenter qu'un véhicule possédé mais sous-utilisé s'use plus vite et mérite une empreinte de construction plus importante, **nous appliquons un seuil pour la partie construction de l'empreinte, pour les propriétaires**.
+  par défaut: propriétaire
 
 transport . voiture . utilisateur . propriétaire:
   titre: Oui et j'en suis propriétaire
@@ -358,10 +359,10 @@ transport . voiture . thermique . consommation estimée:
   note: |
     > Si nous avons travaillé les propositions de consommation moyenne, l'idéal au vu de l'impact de cette donnée est bien que l'utilisateur ou l'utilisatrice saisisse sa propre consommation réelle, moyennée sur son usage.
 
-    Pour obtenir nos propositions pour les voitures individuelles, nous avons croisé deux sources de données : 
+    Pour obtenir nos propositions pour les voitures individuelles, nous avons croisé deux sources de données :
 
     - Les données moyennes de consommation des véhicules essence et diesel, [fournies par l'ADEME](https://carlabelling.ademe.fr/chiffrescles/r/evolutionConsoMoyenne)
-    - Les données des "meilleures consommations" par gabarit et par carburant, fournies par [cet article de CAROOM](https://www.caroom.fr/guide/voiture-neuve/comment-choisir/carburant/faible-consommation): 
+    - Les données des "meilleures consommations" par gabarit et par carburant, fournies par [cet article de CAROOM](https://www.caroom.fr/guide/voiture-neuve/comment-choisir/carburant/faible-consommation):
 
     Nous n'avons pas trouvé d'autre source pour obtenir la consommation moyenne par type de véhicule. Dans l'article de CAROOM, sont donnés les chiffres des meilleures performances par véhicule:
 
@@ -374,15 +375,15 @@ transport . voiture . thermique . consommation estimée:
       | Moyenne pondérée | 4,85      | 3,78   |               |
 
     D'un autre côté, nous avons les données fournies par l'ADEME qui donnent des consommations moyennes de 6,8 L/100km pour une essence, 5 L/100km pour un diesel.
-    On remarque bien que les consommations moyennes calculées via les données de CAROOM (4,85 L/100km et 3,78 L/100km) sont bien plus basses que celles 
-    de l'ADEME, ce sont les voitures les plus performantes. 
-      
+    On remarque bien que les consommations moyennes calculées via les données de CAROOM (4,85 L/100km et 3,78 L/100km) sont bien plus basses que celles
+    de l'ADEME, ce sont les voitures les plus performantes.
+
     Nous avons donc retravaillé les chiffres via un ratio (conso moyenne / conso moyenne performante) pour mettre à jour les consommations moyennes par véhicules :
     A titre d'exemple, pour une citadine essence, on obtient le chiffre de 7,11 L/100km via la formule suivante : 5,07 / 4,85 * 6,8.
 
     - Moyennes corrigées (et utilisées dans NGC):
 
-      |                  | E5 ou E10 | Diesel | % circulation |  
+      |                  | E5 ou E10 | Diesel | % circulation |
       |------------------|-----------|--------|---------------|
       | Petite           | 7,11      | 4,83   | 25,29%        |
       | Moyenne          | 6,59      | 4,96   | 10,30%        |
@@ -555,7 +556,7 @@ transport . voiture . thermique . carburant:
     En effet, au vu des problématiques liées au changement d'affectation des sols et autres impacts environnementaux liés à la culture du maïs par exemple, les **biocarburants** ne sont pas pris en compte
     (le facteur d'émission de la base carbone étant particulièrement incertain). Voir nos discussions [ici](https://github.com/incubateur-ademe/nosgestesclimat/pull/1324).
 
-    Le GPL (Gaz de Pétrole Liquéfiés) est un [résidu de l'extraction du pétrole qui était autrefois brûlé](https://fr.wikipedia.org/wiki/Gaz_de_p%C3%A9trole_liqu%C3%A9fi%C3%A9). 
+    Le GPL (Gaz de Pétrole Liquéfiés) est un [résidu de l'extraction du pétrole qui était autrefois brûlé](https://fr.wikipedia.org/wiki/Gaz_de_p%C3%A9trole_liqu%C3%A9fi%C3%A9).
     Il a une empreinte carbone par litre moins importante que les véhicules essence ou diesel, par contre sa consommation est légèrement supérieure, ce qui compense légèrement le gain.
     Mais si les rejets de CO2e sont au final presque équivalents entre le GPL et les autres carburants, c'est [du côté de l'émission de particules nocives](https://agirpourlatransition.ademe.fr/particuliers/conso/conso-responsable/comment-choisir-voiture-deux-roues-moins-polluant) que le GPL est un bien meilleur élève que les autres carburants thermiques.
 
@@ -717,7 +718,7 @@ transport . voiture . entretien pondéré:
   note: |
     Plusieurs sources s'accordent pour dire que l'entretien d'un véhicule électrique est inférieur à celui d'un véhicule thermique de 25%. Comme [celle-ci](https://izi-by-edf.fr/blog/voiture-hybride-entretien/).
 
-    Pour ce qui est d'un véhicule hybride, son entretien se situe entre celui d'un véhicule électrique et celui d'un véhicule thermique. Cela dépend de l'utilisation du moteur électrique ou thermique. 
+    Pour ce qui est d'un véhicule hybride, son entretien se situe entre celui d'un véhicule électrique et celui d'un véhicule thermique. Cela dépend de l'utilisation du moteur électrique ou thermique.
     Nous choisissons de partir sur une hypothèse conservatrice de -10% de coût d'entretien par rapport aux véhicules thermiques.
 
 transport . voiture . entretien:
@@ -731,7 +732,7 @@ transport . voiture . climatisation:
   formule: (émissions gaz fluorés transport / nombre véhicules circulation) / transport . voiture . km annuels moyen
   unité: kgCO2e/km
   note: |
-    L'idée ici est de prendre en compte une part des émissions liées aux gaz fluorés issus des climatisations des véhicules 
+    L'idée ici est de prendre en compte une part des émissions liées aux gaz fluorés issus des climatisations des véhicules
     en France via le total des émissions dues à ces gaz sur le secteur du transport (voitures et VUL diesel, essence, GNV, GPL, électrique).
 
 transport . voiture . climatisation . émissions gaz fluorés transport:
@@ -741,7 +742,7 @@ transport . voiture . climatisation . émissions gaz fluorés transport:
   note: |
     Ce chiffre provient de l'étude [SECTEN](https://www.citepa.org/fr/secten/) (le rapport de référence sur les émissions de gaz à effet de serre et de polluants atmosphériques en France).
 
-    D'après l'excel [Données par substance de gaz à effet de serre (GES) édition 2023, onglet "GF-UE_total"](https://www.citepa.org/wp-content/uploads/publications/secten/2023/Citepa_gaz_a_effet_de_serre_v2.zip), 
+    D'après l'excel [Données par substance de gaz à effet de serre (GES) édition 2023, onglet "GF-UE_total"](https://www.citepa.org/wp-content/uploads/publications/secten/2023/Citepa_gaz_a_effet_de_serre_v2.zip),
     les émissions de gaz fluorés pour le secteur du transport (provenant des équipements de réfrigération et d'air conditionné, utilisant des halocarbures ou du SF6), sont de 1374 ktCO₂e.
 
 transport . voiture . construction:
@@ -896,7 +897,7 @@ transport . voiture . barème construction . batterie . empreinte par kWh:
     Les études académiques sur l'empreinte carbone des batteries des véhicules électriques sont nombreuses, mais leurs résultats sont très variables.
 
     Les valeurs varient de 60 kgCO2e/kWh à 150 kgCO2e/kWh. Une [méta-étude de l'IFPEN](https://www.sciencedirect.com/science/article/abs/pii/S0959652622006291)
-    (Institut Français du Pétrole et des Énergies Nouvelles) calcule une valeur médiane de 83 kgCO2e/kWh, en précisant que les résultats différent selons les chimies de batteries, 
+    (Institut Français du Pétrole et des Énergies Nouvelles) calcule une valeur médiane de 83 kgCO2e/kWh, en précisant que les résultats différent selons les chimies de batteries,
     les pays de productions, le pays des auteurs de l'étude, et que même ces facteurs intégrés il reste une grande variabilité des résultats.
 
     Compte tenu de l'incertitude et des variations observées dans les études, nous adoptons une valeur prudente de 100 kgCO2e/kWh pour l'empreinte carbone des batteries.
@@ -908,7 +909,7 @@ transport . voiture . amortissement:
     Les discussions ont été animées sur l'amortissement de la voiture. Précédemment, dans le but de décourager l'achat neuf, un amortissement non linéaire avait été imaginé, fortement dégressif dans le temps, sur 10 ans.
     Cet amortissement non linéaire avait le mérite de décourager l'achat, et de bien faire comprendre à l'utilisateur qu'une grande partie de l'empreinte du véhicule est liée à sa production, donc à l'achat neuf.
 
-    Mais cet amortissement non linéaire n'était pas évident à comprendre pour les utilisateurs, et manquait son objectif pédagogique. 
+    Mais cet amortissement non linéaire n'était pas évident à comprendre pour les utilisateurs, et manquait son objectif pédagogique.
     Par ailleurs, il occasionnait un double-discours dans Nos Gestes Climat, car dans les actions proposées aux propriétaires de voitures, nous proposons l'achat d'un véhicule électrique, or celui-ci est fortement pénalisant s'il est acheté neuf dans l'empreinte carbone individuelle.
 
     Enfin, il était, dans le simulateur Nos Gestes Climat, une exception : tous les autres biens amortis le sont de manière linéaire (l'empreinte de construction est divisée par la durée de vie du bien).
