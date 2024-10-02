@@ -8,3 +8,675 @@ commun . intensité électricité:
   formule: 0.628
   note: |
     Observatoire de l'énergie, 2022.
+
+transport . voiture: 
+  description: |
+    ![](https://images.unsplash.com/photo-1572312284222-ecf6d70f1907?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=80)
+
+    La voiture est aujourd'hui en Nouvelle-Calédonie essentiellement thermique (essence, diesel), bien que l'électrique commence à se développer.
+
+    Pourtant, électrique ou thermique, elle reste un moyen de déplacement très peu efficient :
+    **il s'agit en moyenne de déplacer un humain de 80kg dans une boîte en métal de 1200kg**.
+
+    Un peu comme si chaque midi, nous faisions à manger pour 10 avant de jeter 90% de la nourriture, ou que nous décidions de chauffer tout le pâté de maisons plutôt que l'intérieur de chacune des 10 maisons.
+    
+    Notons finalement qu'il est important de prendre en compte à la fois l'usage (les km parcourus) et la construction de ce véhicule de plus d'une tonne de matériaux divers.
+
+
+transport . voiture . km annuels moyen:
+  formule : 12150
+  unité : km
+  note : |
+    Chiffre issue de ProspEner (2015 scenario tendancie ou MDE). Il s’agit de la donnée utilisée pour l’adaptation de 2tonnes, mais cela date légèrement.
+    Pour les calculs de l’entretien et de la climatisation de la voiture, cette grandeur est utilisée. J’ai donc mis la donnée chiffrée directement car si on utilise la valeur calédonienne pour la distance, mais les émissions totales de la France, l’estimation devient fausse. 
+
+
+transport . voiture . saisie voyageur : 
+  par défaut: 1.5
+  note : | 
+    ProspEner (2015 scenario tendanciel ou MDE) donne 1.48, arrondis à 1.5
+
+
+transport . voiture . thermique . empreinte au litre:
+  description: |
+      Les empreintes sont disponibles de façon assez détaillée sur [la base carbone](https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=diesel), ici par exemple pour le "diesel". Idem pour "essence".
+      Pour les retrouver facilement, filtrez par unité "kgCO2e/litre" et par géographie "outre-mer".
+      À noter qu’en Nouvelle-Calédonie. Il n’y a qu’un type de gazole et un type d’essence disponible. L’ « excellium diesel » et l’« excellium sans plomb ». Veuillez sélectionner ‘Gazole B7 ou B10’ si vous utilisez du diesel, et ‘Essence E5 ou E10’ si vous utilisez de l’essence. Les facteurs d’émission correspondent bien aux « excellium » diesel et sans plomb. 
+  formule:
+    variations:
+      - si: carburant = 'gazole B7 ou B10'
+        alors: 3.04
+      - si: carburant = 'essence E5 ou E10'
+        alors: 2.93
+      - si: carburant = 'essence E85'
+        alors: 1.11
+  unité: kgCO2e/l
+
+
+transport . voiture . thermique . carburant:
+  description: |
+    En Nouvelle-Calédonie. Il n’y a qu’un type de gazole et un type d’essence disponible. L’ « excellium diesel » et l’« excellium sans plomb ». Veuillez sélectionner ‘Gazole B7 ou B10’ si vous utilisez du diesel, et ‘Essence E5 ou E10’ si vous utilisez de l’essence. Les facteurs d’émission correspondent bien aux « excellium » diesel et sans plomb. L’E85 est un biocarburant pas présent en Nouvelle-Calédonie
+
+
+transport . voiture . thermique . carburant . gazole B7 ou B10:
+  titre: Excellium diesel
+transport . voiture . thermique . carburant . essence E5 ou E10:
+  titre: Excellium sans plomb
+
+
+transport . voiture . notif carburant:
+ description : |
+    Si vous êtes résident de Nouvelle-Calédonie, à priori, vous ne devriez pas avoir ce message car il n’y a pour le moment pas de biocarburant en Nouvelle-Calédonie. Revenez à la question du choix de carburant et choisissez l’esence (E5 ou E10).
+    Votre véhicule roule au biocarburant : au-delà de l'empreinte carbone des biocarburants, il faut bien avoir conscience qu'ils ont une empreinte au sol : ce sol pourrait être utilisé pour faire pousser des céréales pour nous nourrir ou servir de refuges de biodiversité.
+    C'est ce qu'on appelle le "changement d'affectation des sols" ici à des fins de production de biocarburant. Malheureusement, l'impact sur le climat de ce changement d'affectation est difficile à quantifier et particulièrement incertain.
+
+    Nous avons fait le choix d'ajouter cette option dans le test, mais il faut savoir que ce résultat **n'est pas représentatif des conséquences environnementales probables liées à l'utilisation de biocarburants.**
+
+
+transport . voiture . électrique . empreinte au kilomètre:
+  formule:
+    variations:
+      - si: gabarit = 'petite'
+          alors: 0.0159*commun . intensité électricité/0.108
+      - si: gabarit = 'moyenne'
+          alors: 0.0273*commun . intensité électricité/0.108
+      - sinon: 0.0273*commun . intensité électricité/0.108
+  note: |
+    Nous faisons la correspondance suivante entre notre gabarit et les données de la base bilan-GES (au regard des poids des véhicules):
+      - petite -> moyenne entre "entrée de gamme - véhicule léger" 
+      - moyenne -> « cœur de gamme – véhicule compact »
+      - Berline, SUV et VUL et Pickup-> à partir de : "haut de gamme - berline"
+    628 (gCO2E/kWh) correspond au facteur d’émission de la Nouvelle-Calédonie en 2022 (d’après l’observatoire de l’énergie), et 108 (gCO2E/kWh) est le facteur d’émission du réseau utilisé  dans le papier dont sont tirées les facteurs d’émission des véhicules électrique (https://librairie.ademe.fr/cadic/7509/etude-energetique-economique-environnemental-transport-routier-horizon-2040.pdf)
+    Cela ne sert à rien d’adapter pour les pickups électriques car ceux-ci n’existent pas en Nouvelle-Calédonie pour le moment. 
+    Une tentative d’estimation a été faite à partir du document « LES AVIS DE L’ADEME Voitures électriques et bornes de recharge » en comparant la différence entre la courbe de consommation des SUV avec celle des citadines. Le FE trouvé pour les SUV est inférieur au FE des berlines de la base carbone. Ce FE a donc été conservé.
+
+
+transport . voiture . gabarit:
+  par défaut: "'SUV'"
+  note: |
+    La valeur par défaut choisie est « SUV », elle est tirée des données de l’Associations des importateurs de véhicules de Nouvelle-Calédonie. 
+
+
+transport . voiture . gabarit . petite:
+  titre: Petite
+  description: Citadine type Zoé, Fiat 500, Suzuki alto
+transport . voiture . gabarit . moyenne:
+  titre: Moyenne
+  description: Modèle au dessus de la petite citadine, type Mégane, Golf
+transport . voiture . gabarit . VUL:
+  titre: Véhicule utilitaire Léger et Pickups
+  description: Camionette de type Kangoo ou Partner jusqu'au Trafic et Vito, ainsi que les pickups de type toyota Hilux ou Ford Ranger
+  note : | 
+    Les VUL et les Pickups sont regroupés sous la même gamme car les pickups sont souvent achetés en temps que VUL, même s’ils sont utilisés pour des déplacements personnels. 
+transport . voiture . gabarit . berline:
+  titre: Berline
+  description: Une voiture longue, type 308, Tesla Model 3, Audi A3
+transport . voiture . gabarit . SUV:
+  titre: SUV
+  description: |
+    "Sport utility vehicle", type 4x4 urbain, Dacia Duster
+
+
+transport . voiture . consommation estimée:
+  formule:
+    variations:
+      - si: gabarit = 'petite'
+          alors: 5 l/centkm
+      - si: gabarit = 'moyenne'
+          alors: 6 l/centkm
+      - si: gabarit = 'VUL'
+          alors: 8 l/centkm
+      - si: gabarit = 'berline'
+          alors: 7 l/centkm
+      - si: gabarit = 'SUV'
+          alors: 8 l/centkm
+  note: |
+    Le tableau de correspondance n'est qu'indicatif, il est loin d'être rigoureusement réglé sur les statistiques des voitures en circulation en Nouvelle-Calédonie: l'essentiel est que l'utilisateur saisisse sa consommation *réelle*.
+
+    Cela dit, le gabarit "moyen" est calé sur la valeur moyenne **diesel** (carburant le plus commun, 2x essence) de 6,1l/100km en 2019 du bilan transport du ministère de l'Environnement en France métropolitaine : [source](https://www.statistiques.developpement-durable.gouv.fr/bilan-annuel-des-transports-en-2019-0) figure G3-4 page 9.
+
+    Pour le cas de figure des VUL et pickups, la valeur de 8L au cent a été choisi à partir de https://fr.statista.com/statistiques/487198/consommation-carburant-moyenne-vehicules-utilitaires-legers-france/ 
+
+
+transport . voiture . entretien:
+  formule: ((empreinte branche . G45 * 1000000 kgCO2e/ktCO2e * 0.07) / nombre véhicules circulation) / 12200
+  unité: kgCO2e/km
+  note: |
+    Dans le poste G45, nous prenons la part Entretien et réparation de véhicules automobiles (7%).
+    Nous le divisons par le nombre de véhicules en circulation, puis par 12200 km (la moyenne de km effectués par véhicule en France métropolitaine) pour obtenir une empreinte en kgCO2e / km.
+    Sachant que la distance moyenne par véhicule a été adaptée à la Nouvelle-Calédonie, les 12200 km/voitures ont directement été rentrés dans le calcul ici. Ainsi les calculs se basent uniquement sur les données de métropole. Aucune donnée similaire pour la Nouvelle-Calédonie a été trouvée. 
+
+
+transport . voiture . climatisation:
+  formule: (émissions gaz fluorés transport / nombre véhicules circulation) / 12200
+  unité: kgCO2e/km
+  note: |
+    L'idée ici est de prendre en compte une part des émissions liées aux gaz fluorés issus des climatisations des véhicules en France via le total des émissions dues à ces gaz sur le secteur du transport (voitures et VUL diesel, essence, GNV, GPL, électrique).
+    Sachant que la distance moyenne par véhicule a été adaptée à la Nouvelle-Calédonie, les 12200 km/voitures ont directement été rentrés dans le calcul ici. Ainsi les calculs se basent uniquement sur les données de métropole. Aucune donnée similaire pour la Nouvelle-Calédonie a été trouvée. 
+
+
+transport . voiture . construction:
+  note: |
+    Nous utilisons l'étude [FNH-Carbone4](https://github.com/betagouv/ecolab-data/files/5945898/vehicule_electrique_rapport.pdf).
+
+    Pour l'instant, nous n'avons que deux gabarits, la citadine et la berline. Dès lors, en ce qui concerne les véhicules "moyen", VUL, SUV,  nous avons fait le choix de faire une approximation de l'empreinte via le poids en considérant, d'un côté les citadines et véhicules moyens, de l'autre les berlines, VUL et SUV.
+
+    |                              | Poids thermique (kg) | Poids électrique (kg) | Source               |
+    |------------------------------|----------------------|-----------------------|----------------------|
+    | Citadine                     | 1200                 | 1500                  | Etude Carbone 4      |
+    | Véhicule moyen (type Mégane) | 1250                 | 1600                  | Données constructeur |
+    | Berline                      | 1500                 | 2000                  | Etude Carbone 4      |
+    | VUL & Pickup*                | 1800                 | 1800                  | Données constructeur |
+    | SUV (type Audi Q3)           | 1500                 | 1800                  | Données constructeur |
+
+    *Pour le VUL & Pickup, la masse thermique est basée sur une estimation entre les camionettes type  kangoo (1400kg), et les pickups type Toyota Hilux ou Ford Ranger (2200kg). Sachant qu’il n’y a pas de Pickups électriques en Nouvelle-Calédonie, la valeur des VUL électrique initialement choisi par NGC a été conservée. 
+
+    p. 12 de l'étude de Carbone 4:
+    ![](https://user-images.githubusercontent.com/1177762/107264406-3afdd980-6a43-11eb-87ad-a09681240949.png)
+
+    Nous prenons uniquement en compte la "production et fin de vie" ainsi que les données de 2016 plutôt que le scénario prospectif 2030.
+
+    p. 57 et 58.
+
+    ![](https://user-images.githubusercontent.com/1177762/107265071-1eae6c80-6a44-11eb-9b51-c2aee3bfcf3c.png)
+    ![](https://user-images.githubusercontent.com/1177762/107265098-2706a780-6a44-11eb-8681-7901f00e057b.png)
+
+    Nous avons choisi de ne pas retrancher les "crédits de recyclage" correspondant à des émissions évitées via l'utilisation de matériaux recyclés issus du démantèlement d'une voiture, pour le production de nouveaux produits manufacturés.
+    Nous prenons l'hypothèse que l'empreinte réduite bénéficie à celui qui achète le produit issu du recyclage et non pas à celui qui achète un produit amené à être recyclé.
+
+
+transport . voiture . construction . barème thermique:
+  formule:
+    variations:
+      - si:
+        une de ces conditions:
+          - gabarit = 'petite'
+          - gabarit = 'moyenne'
+        alors: 6700+1051*1.225
+      - si:
+        une de ces conditions:
+          - gabarit = 'berline'
+          - gabarit = 'SUV'
+          - gabarit = 'VUL'
+        alors: 7600*1.1+1051*1.650
+  unité: kgCO2e
+  note : |
+    En Nouvelle-Calédonie, Il y a plus de SUV, VUL et Pickup que de berline. Ainsi, la masse moyenne entre le SUV et VUL & pickup a été estimé à 10% plus importante que la masse d’une berline (à partir de masse dans le tableau). Les émissions du groupe regroupant : berline, SUV, VUL et pickup est augmenté de 10% (7600+10%)
+    La Nouvelle-Calédonie importe aussi ses véhicules d’Asie ou d’Europe. Les distances parcourues en transport routier sont négligées, les distances parcourues en fret sont estimées à 23 000km. (https://www.searates.com/fr/services/distances-time/). Le facteur d’émission de fret Ro-Ro chargement moyen est de 0.0457 kgCO2e/t.km (https://base-empreinte.ademe.fr/donnees/jeu-donnees). Il faut donc ajouter 1051kgCO2e/ton (pour petites et moyennes voitures nous considérons 1 225 kg, pour SUV et VUL et pickups, nous considérons 1 650 kg.
+
+
+transport . voiture . construction . barème électrique:
+  formule:
+    variations:
+      - si:
+        une de ces conditions:
+          - gabarit = 'petite'
+          - gabarit = 'moyenne'
+        alors: 10200+151*1.550
+      - si:
+        une de ces conditions:
+          - gabarit = 'berline'
+          - gabarit = 'SUV'
+          - gabarit = 'VUL'
+        alors: 20200+1051*2.000
+  unité: kgCO2e
+  note : |
+    En Nouvelle-Calédonie, les véhicules électriques sont encore très peu développés. Les estimations d’émissions faite pour la construction de la berline comme référence de « grand » véhicule électrique sont conservées
+    La Nouvelle-Calédonie importe aussi ses véhicules d’Asie ou d’Europe. Les distances parcourues en transport routier sont négligées, les distances parcourues en fret sont estimées à 23 000km. (https://www.searates.com/fr/services/distances-time/). Le facteur d’émission de fret Ro-Ro chargement moyen est de 0.0457 kgCO2e/t.km (https://base-empreinte.ademe.fr/donnees/jeu-donnees). Il faut donc ajouter 1051kgCO2e/ton (pour petites et moyennes voitures électriques nous considérons 1 550 kg, pour les berlines, nous considérons 2 000 kg.
+
+
+transport . voiture . construction . barème hybride:
+  formule:
+    variations:
+      - si:
+        une de ces conditions:
+          - gabarit = 'petite'
+          - gabarit = 'moyenne'
+        alors: 9600+1051*1.600
+      - si:
+        une de ces conditions:
+          - gabarit = 'berline'
+          - gabarit = 'SUV'
+          - gabarit = 'VUL'
+        alors: 6900+1051*1.800
+  unité: kgCO2e
+
+  note : |
+    A l’instar des véhicules électrique, nous continuant de considérer les berlines comme représentantes des « grandes » voitures hybrides.
+
+    La Nouvelle-Calédonie importe aussi ses véhicules d’Asie ou d’Europe. Les distances parcourues en transport routier sont négligées, les distances parcourues en fret sont estimées à 23 000km. (https://www.searates.com/fr/services/distances-time/). Le facteur d’émission de fret Ro-Ro chargement moyen est de 0.0457 kgCO2e/t.km (https://base-empreinte.ademe.fr/donnees/jeu-donnees). Il faut donc ajouter 1051kgCO2e/ton (pour petites et moyennes voitures hybrides nous considérons 1 600kg, pour les berlines, nous considérons 1800kg.
+
+    Ètonnamment, la berline a moins d'empreinte construction que la citadine... A voir si l'étude relève ce mystère.
+
+
+transport . voiture . gabarit . berline . poids:
+  formule: 1800
+  unité: kg
+  note: Règle utilisée pour le calcul de l'empreinte de la caravane et camping, car. Nous mettons le poids des SUV plus utilisés en Nouvelle-Calédonie
+
+
+transport . voiture . gabarit . berline . empreinte:
+  formule: 7600+1051*1.800
+  unité: kgCO2e
+  note: Règle utilisée pour le calcul de l'empreinte de la caravane et camping car. Nous ajoutons les émissions liées au transport
+
+
+transport . avion:
+  description: |
+    ![](https://images.unsplash.com/photo-1525624286412-4099c83c1bc8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80)
+
+    L'empreinte de l'avion est conséquente. Il n'est pas forcément plus polluant *au kilomètre* qu'une voiture qui ne déplace qu'une personne,
+    mais la distance et surtout la distance parcourue en une heure (qu'on appelle couramment la vitesse), permet de changer de continent pour un week-end.
+
+    Gardons aussi en tête qu'un minorité de la population mondiale prend l'avion. La moitié des émissions de CO2 du secteur aérien sont causé par 1% de la population. En France métropolitaine, l'essentiel de l'empreinte de l'aviation est concentrée sur 10% ou moins des Français.
+
+    > Pour la définition des gammes de vol, de court-courrier à long-courrier, nous utilisons [cette discussion](https://bilans-ges.ademe.fr/forum/viewtopic.php?t=4192#p5530) du forum Base Carbone.
+
+  note: |
+    Aucune valeur spécifique à la NC a été trouvé pour la répartition des vols sur la population néo-calédonienne.
+
+
+transport . avion . court courrier . vitesse moyenne:
+  formule: 169 km / 0.65 h
+  unité: km/h
+  note: |
+    Nous utilisons la vitesse moyenne de vol Nouméa – Lifou (environ 40min)
+
+
+transport . avion . court courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Nouméa ⇄ Île des pins : 1
+    Nouméa ⇄ Maré: 1.4
+    Nouméa ⇄ Lifou: 1,3
+    Nouméa ⇄ Ouvéa: 1.4
+    Nouméa ⇄ Port vila: 3.3
+  note : |
+    construit à partir des distance entre Nouméa et ces endroits et la vitesse défini 
+
+
+transport . avion . court courrier . durée moyenne:
+  titre: Durée moyenne passée par un Français dans les vols court-courriers
+  formule: passager km moyen / (600/1.3)
+  unité: h
+  note : |
+    La vitesse moyenne a été modifiée pour coller aux durées des trajets courts courriers depuis Nouméa. Cependant, les autres données ne sont pas disponibles et donc se basent sur des données françaises donc il ne faut pas appeler la vitesse moyenne de NC, mais celle de la métropole (600/1.3)
+
+
+transport . avion . court courrier . durée max:
+  formule: 1000 km / (600/1.3)
+  unité: h
+  note : |
+    même réflexion que pour durée moyenne
+
+
+transport . avion . moyen courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Nouméa ⇄ Sydney: 6.5
+    Nouméa ⇄ Auckland: 6,1
+    Nouméa ⇄ Brisbane: 4,8
+    Nouméa ⇄ Wallis-Et-Futuna: 6,1
+    Nouméa ⇄ Melbourne: 8.9
+  note : |
+    Peut-être faut-il arrondir plus ?
+
+
+transport . avion . moyen courrier . durée moyenne:
+  formule: passager km moyen / (1350/2.5)
+  unité: h
+  note : |
+    La vitesse moyenne a été modifiée pour coller aux durées des trajets moyens courriers depuis Nouméa. Cependant, les autres données ne sont pas disponibles et donc se basent sur des données françaises donc il ne faut pas appeler la vitesse moyenne de NC, mais celle de la métropole (1350/2.5)
+
+
+transport . avion . moyen courrier . durée max:
+  formule: 3500 km / (1350/2.5)
+  unité: h
+  note : |
+    Même remarque que pour la durée moyenne
+
+
+transport . avion . long courrier . vitesse moyenne:
+  formule: 7030 km / 8.5 h
+  unité: km/h
+  note: |
+    Nous utilisons la vitesse moyenne de vol pour un Nouméa - Tokyo. D’après Aircalin
+
+
+transport . avion . long courrier . heures de vol:
+  suggestions:
+    🚫✈️: 0
+    Nouméa ⇄ Singapour: 17,5
+    Nouméa ⇄ Tokyo: 17
+    Nouméa ⇄ Bali: 16
+    Nouméa ⇄ Tahiti: 11
+    Nouméa ⇄ Paris: 46
+
+transport . avion . long courrier . durée moyenne:
+  formule: passager km moyen / (5800/8.5)
+  unité: h
+  note : |
+    La vitesse moyenne a été modifiée pour coller aux durées des trajets longs courrier depuis Nouméa. Cependant, les autres données ne sont pas disponibles et donc se basent sur des données françaises donc il ne faut pas appeler la vitesse moyenne de NC, mais celle de la métropole (5800/8.5)
+
+
+transport . bus . heures par semaine:
+  question: Combien d'heures passez-vous dans un bus urbain par semaine ?
+  par défaut: 1.1 h/semaine
+  note : |
+    il s’agit de la valeur utilisée par 2tonnes. Les bus en Nouvelle-Calédonie sont moins utilisés
+
+
+transport . train:
+  titre: Train
+  icônes: 🚌
+  description: |
+    Les bus intercommunaux sont les bus qui permettent le transport entre les différentes villes de Nouvelle-Calédonie (ou dans les autres pays). En Nouvelle-Calédonie, les bus proposants ce service sont les bus RAÏ : https://rai.nc/
+
+transport . train . impact par km:
+  formule: TGV
+  note : |
+    Nous mettons les valeurs du bus dans TGV. 
+
+
+transport . train . TGV:
+  formule: 0.113
+  unité: kgCO2e/km
+  note: |
+    Nous gardons le FE des bus aussi utilisé dans la partie bus venant de la base carbone
+
+transport . train . km:
+  question: Combien de kilomètres parcourez-vous en bus intercommunal (type RAÏ) par an ?
+  Suggestions: 
+    zéro: 0
+    Nouméa ⇄ Yaté: 76 
+    Nouméa ⇄ Koné: 266
+    Nouméa ⇄ Hienghène: 380
+    Nouméa ⇄ Koumac: 368
+    Nouméa ⇄ Bourail: 161
+  unité: km
+  par défaut : 0 km
+  note : | 
+    Distance estimée par maps et destinations choisies à partir des destinations énoncées sur le site de Raï
+
+
+transport . deux roues . empreinte moyenne:
+  formule: 20
+  unité: kgCO2e
+  note : |
+    Il s’agit de la valeur donnée par 2tonnes (2022)
+
+
+transport . deux roues . km annuels moyen:
+  formule: 220
+  unité: km
+  note: |
+    Source pour les km journalier utilisé par 2tonnes (environ 0.6km/jour)
+
+
+transport . deux roues . empreinte au km:
+  unité: kgCO2e/km
+  formule:
+    variations:
+      - si: type = 'scooter thermique'
+        alors: 0.0763 + 0.003
+      - si: type = 'scooter électrique'
+        alors: 0.030 – 0.05*(0.052-0.628) + 0.004
+      - si: type = 'moto inf 250'
+        alors: 0.0763 + 0.004
+      - si: type = 'moto sup 250'
+        alors: 0.191 + 0.007
+
+  note: |
+    Cyclomoteur - Mixte - 2018 ; 76,3 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
+
+    Scooter électrique : 30 gCO2e/km/personne ; étude "Assessing the Environmental Performance of New Mobility" de l'International Transport Forum. [Excel disponible ici](https://www.itf-oecd.org/good-to-go-environmental-performance-new-mobility)
+
+    Moto =< 250 cm3 - Mixte - 2018 ; 76,3 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
+
+    Moto > 250 cm3 - Mixte - 2018 ; 191 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
+
+    Les chiffres ci-dessus incluent la fabrication du véhicule, contrairement aux données précédentes (2021).
+    
+    Pour le calcul de l’électrique adapté à la NC :  
+        --> j'ai pris la valeur utilisée pour la France, j'ai retiré la partie due à la production de l'électricité française : -[conssomation (kWh/km) * FE réseau France (kgCO2e/kWh)] et j'y ai ajouté la partie due à la production de l'électricité en NC +[conssomation (kWh/km) * FE réseau NC (kgCO2e/kWh)]
+
+    La Nouvelle-Calédonie importe aussi ses véhicules d’Asie ou d’Europe. Les voitures sont supposées importées de France à un distance de. 
+      --> Les distances parcourues en transport routier sont négligées, les distance parcourue en fret sont estimées à 23 000km. (https://www.searates.com/fr/services/distances-time/). 
+      --> Le facteur d’émission de fret Ro-Ro chargement moyen est de 0.0457 kgCO2e/t.km (https://base-empreinte.ademe.fr/donnees/jeu-donnees). 
+      Donc, il faut donc ajouter 1051kgCO2e/ton * masse. 
+      --> Les masses indiquée par l’ademe sont 0.09t pour le scooter, 0.12t pour le moto <250cm3, et 0.2 pour les moto > 250cm3. Le nombre moyen de passager est 1.1 et la durée de vie en km est 28 800 (https://base-empreinte.ademe.fr/documentation/base-carbone?docLink=Routier2) .  Pour le scooter électrique, nous considérons une batterie d’environ 0.02t soit un scooter d’environ 0.11t. Le calcul est le suivant : 1051*masse/(nombre de passager * durée de vie en km). Nous trouvons que 0.003kgCO2e/km pour le scooter, 0.004kgCO2e/km pour le escooter et la moto moins de 250cm3 et 0.007kgCO2e/km pour les moto de plus de 250cm3
+
+
+transport . deux roues . entretien:
+  formule: empreinte branche . G45 * 1000000 kgCO2e/ktCO2e * 0.02 * 0.07 / ( 0.68 + 0.07 ) / nombre deux roues circulation / 3000
+  unité: kgCO2e/km
+  note: |
+    Dans le poste G45, nous proratisons le poste Commerce et réparation de motocycles (2%) sur le même rapport que les voitures pour extraire l'entretien de ce poste comprenant également le commerce.
+    Nous le divisons par le nombre de véhicules en circulation, puis par 3000 km (la moyenne de km effectués par véhicule en Métropole) pour obtenir une empreinte en kgCO2e / km.
+    Changer « km annuel moyen » avec 3000 car km annuel moyen a été adapté à la Nouvelle-Calédonie. 
+
+
+transport . mobilité douce . vélo . construction:
+  formule: 120
+  unité: kgCO2e
+  note: |
+    La base empreinte ne propose pas de FE pour le vélo conventionnel.
+
+    Néanmoins, en 2021, le fabricant de vélo Trek a publié [une étude](https://view.publitas.com/trek-bicycle/trek-bicycle-2021-sustainability-report/page/6)
+    présentant l'empreinte carbone de la production de ses vélos. 
+
+    Pour le plus populaire, l'empreinte affichée est de 116 kgCO2e.
+
+    Nous y avons ajouté l'empreinte du transport d'un vélo de France en Nouvelle-Calédonie: 4kgCO2e
+      --> Poids vélo estimé à 15kg
+      --> FE du porte conteneur: 12gCO2e/tonne.km (donnée par le tableur de l'ABC)
+      --> Distance traversée par le porte-conteneur estimée à 23 000 km (https://www.searates.com/fr/services/distances-time/)
+
+transport . mobilité douce . vae . empreinte:
+  formule: 0.00223*628/52
+  unité: kgCO2e/km
+  note: |
+    FE issu de la base empreinte (Vélo/à assistance électrique) et adapté à la NC en utilisant le FE du réseau en France en 2023 (52gCO2e/kWh) d’après l’ADEME contre 628gCO2e/kWh en 2023 en NC d’après l’observatoire de l’énergie. Dans l’idéal il faudrait diviser par le FE utilisé par l’étude d’où sont tirées les données : « MODELISATION ET EVALUATION ENVIRONNMENTALE DE PRODUITS DE CONSOMMATION ET BIENS D’ÉQUIPEMENT », cependant la valeur utilisée de FE du réseau est introuvable dans le rapport. 
+
+
+transport . mobilité douce . vae . construction:
+  formule: 269
+  unité: kgCO2e
+  note: |
+    FE issu de la base empreinte (Vélo/à assistance électrique) 
+    Nous y avons ajouté l'empreinte du transport d'un vélo de France en Nouvelle-Calédonie: 7kgCO2e
+      --> Poids vae estimé à 25kg
+      --> FE du porte conteneur: 12gCO2e/tonne.km (donnée par le tableaur de l'ABC)
+      --> Distance traversée par le porte-conteneur estimée à 23 000 km (https://www.searates.com/fr/services/distances-time/)
+
+
+transport . mobilité douce . autres véhicules à moteur . empreinte:
+  formule: 0.002*628/52
+  unité: kgCO2e/km
+  note: |
+    FE issu de la base empreinte (Vélo/à assistance électrique) et adapté à la NC en utilisant le FE du réseau en France en 2023 (52gCO2e/kWh) d’après l’ADEME contre 628gCO2e/kWh en 2023 en NC d’après l’observatoire de l’énergie. Dans l’idéal il faudrait diviser par le FE utilisé par l’étude d’où sont tirées les données : « MODELISATION ET EVALUATION ENVIRONNMENTALE DE PRODUITS DE CONSOMMATION ET BIENS D’ÉQUIPEMENT », cependant la valeur utilisée de FE du réseau est introuvable dans le rapport. 
+
+
+transport . mobilité douce . autres véhicules à moteur . construction:
+  formule: 94.7
+  unité: kgCO2e
+  note: FE issu de la base empreinte (Trotinette)
+  Nous y avons ajouté l'emprunte du transport d'un vélo de France en Nouvelle-Calédonie: 2.8kgCO2e
+    -->Poids autre véhicule estimé à 10kg
+    -->FE du porte conteneur: 12gCO2e/tonne.km (donnée par le tableaur de l'ABC)
+    -->Distance traversée par le porte-conteneur estimée à 23 000 km (https://www.searates.com/fr/services/distances-time/)
+
+
+transport . vacances . caravane . distance:
+  question: Quelle distance parcourez-vous à l'année en caravane ?
+  par défaut: 0
+  note : |
+    Les caravanes ne sont presque pas (si ce n’est pas du tout utilisée en Nouvelle-Calédonie). Cependant elles sont plus utilisées en Nouvelle-Zélande. Il est probables qu’uniquement les personnes qui y sont allées récemment aient des km.
+    De même les véhicules de ces régions ne sont probablement pas importés depuis la France. Nous n’avons donc pas ajouté les émissions dues au transport de ces véhicules dans le calcul.
+
+
+transport . vacances . camping car . km:
+  titre: km en camping car
+  applicable si: propriétaire
+  question: Quelle distance parcourez-vous à l'année en camping-car ?
+  description: |
+    Attention, ces km de camping-car ne doivent pas être renseignés dans les km voiture (une question à laquelle vous avez probablement déjà répondu), ce sont deux questions différentes.
+  par défaut: 0
+  plancher: 0
+  unité: km
+  note: |
+    Les caravanes ne sont presque pas (si ce n’est pas du tout utilisée en Nouvelle-Calédonie). Cependant elles sont plus utilisées en Nouvelle-Zélande. Il est probable qu’uniquement les personnes qui y sont allées récemment aient des km.
+    De même les véhicules de ces régions ne sont probablement pas importés depuis la France. Nous n’avons donc pas ajouté les émissions dues au transport de ces véhicules dans le calcul.
+
+
+transport . vacances . camping car . empreinte au litre:
+  formule: 2.93
+  unité: kgCO2e/l
+  note: |
+    Source : [Base Carbone]
+
+
+transport . vacances . van . empreinte au litre:
+  formule: 2.93
+  unité: kgCO2e/l
+  note: |
+    Source : [Base Carbone]
+
+
+transport . vacances . van . construction:
+  formule: voiture . gabarit . berline . empreinte * (van . poids / voiture . gabarit . berline . poids) + (1051 *van . poids)
+  unité: kgCO2e
+  note: |
+    On extrapole l'impact de la fabrication d'une caravane car à partir d'un ratio sur le poids et en considérant les données de construction "Berline" (6300 kgCO2e et 1500 kg)
+    Source Figure 6 et tableau 1 [FNH-Carbone4](https://europeanclimate.org/wp-content/uploads/2019/11/quelle-contribution-du-vehicule-electrique-a-la-transition-ecologique-en-france.pdf)
+    On considère un poids de 3t pour le van la limite roulante (avec permis B) est à 3,5t (ce qui laisse 500 kg pour l'aménagement intérieur).
+    
+    Contrairement au caravane et au camping car, les vans sont déjà plus présent en Nouvelle-Calédonie et sont aussi importé d’Europe ou d’Asie. Les distances parcourues en transport routier sont négligées, les distances parcourues en fret sont estimées à 23 000km. (https://www.searates.com/fr/services/distances-time/). Le facteur d’émission de fret Ro-Ro chargement moyen est de 0.0457 kgCO2e/t.km (https://base-empreinte.ademe.fr/donnees/jeu-donnees). Il faut donc ajouter 1051kgCO2e/ton * 3ton
+
+
+transport . vacances . van . km :
+  par défaut: 0
+
+
+transport . ferry . usager:
+  question: Prenez-vous le ferry ou le Betico?
+  note : | 
+    Le Betico est le nom du ferry fonctionnant ici en Nouvelle-Calédonie. Il rejoins les îles Lifou, Maré et l’île des pins
+
+
+transport . ferry . empreinte:
+  formule: 14.4
+  unité : kgCO2e/h
+  note : |
+    Pour cela nous utilisons les données fournies par le BETICO en moyennant sur les 5 dernières années : 
+    --> Conso de carburant par rotation	        / durée   /rotation par an	/passager par rotation
+    --> *Nouméa - Île des Pins : 4615L Gazol	  / 2.5h		/85.8			        /327.8
+    --> *Nouméa – Maré : 7455L Gazol		        / 4h		  /~53.35			      /459.4
+    --> *Nouméa – Lifou : 9585L Gazol		        / 5.2h	  /~53.35			      /404.2
+
+    Ainsi que le facteur d’émission du gazol en Nouvelle-Calédonie (3.04kgCO2e/L)
+
+    Ainsi en calculant : Consommation par rotation/(durée * passager par rotation) pour chaque voyage puis en moyennant par le nombre de rotation par an, nous trouvons 14.42kgCO2e/h
+    Il faut noter que ce calcule ne prend pas en compte le FRET (je n’ai pas réussi à obtenir les données auprès du BETICO). Une partie de la consommation du BETICO est donc injustement attribuée aux passagers. C’est sans doute pour cette raison que nous trouvons un résultat si élevé et très similaire à l’utilisation de l’avion.
+
+
+logement . climatisation . nombre par défaut:
+  formule: 2.9
+  note : |
+    Je suis allé voir les données publiées par l'ISEE, on peut optenir une idée du % de la population avec un système de climatisation, mais nous ne pouvons pas avoir le nombre moyen de climatiseur. Je ne suis pas sûr que la donnée existe pour la Nouvelle-Calédonie. Une des possibilités serait donc de dire qu'il y a autant de climatisation que de personnes dans le ménage. Mais c'est une grosse hypothèse et cela donnerait un grand nombre de climatiseur en moyenne (autour de 2,9).
+    Il faut cependant changer le nombre moyen car en Nouvelle-Calédonie, étant donnée la chaleur il y a beaucoup plus de personnes avec la clim et les logements climatisés ont plus de 1 appareil.
+      Disponible  --> https://www.isee.nc/population/recensement
+
+
+logement:
+  titre: Logement
+  abréviation: logmt.
+  description: |
+    Le poste d'émission le plus important du logement en France métropolitaine consiste à chauffer l'air dans lequel on vit. L'empreinte ne sera pas du tout la même en fonction de la technologie de chauffage. En Nouvelle-Calédonie, le chauffage n'est pas utilisé car le climat est plus chaud. Cependant, la climatisation est beaucoup plus présente et entraine une consommation d'électricité supplémentaire à celle d'un français de métropole.
+  formule:
+    somme:
+      - construction
+      - électricité
+      - climatisation
+      - piscine
+      - extérieur
+      - vacances
+  unité: kgCO2e
+  note : |
+    J’ai supprimé la composante de chauffage
+
+
+logement . habitants:
+  par défaut: 2.9
+  note: |
+    valeur par défaut d'après : https://www.isee.nc/component/phocadownload/category/267-logement-deplacements?download=2046:rp-2019-logements-equipements-les-conditions-de-logement-en-nouvelle-caledonie-en-2019
+
+
+logement . surface:
+  par défaut:
+    variations:
+      - si:
+        est défini: appartement
+        alors:
+          variations:
+            - si: appartement
+              alors: 66,5
+            - sinon: 86,7
+      - sinon: 77,9
+
+  note : |
+    Pour calculer ces données j’ai utilisé les données brut disponible ici (https://www.isee.nc/publications/la-nouvelle-caledonie-en-cartes-et-en-chiffres/donnees-du-recensement-2019-en-open-data). Les classe les logements dans des catégories (surface comprise entre x et y m2). J'ai donc considéré que les logement dans cette catégorie avaient un taille de (x+y)/2. Pour les logements de plus de 120m² j'ai considéré que les logements faisaient 150m² (arbitrairement).
+  suggestions:
+    studio: 25
+    3 pièces: 70
+    maison: 90
+    château 🏰: 1000
+  unité: m2
+
+
+logement . appartement:
+  description: |
+    Par opposition à une maison individuelle.
+    L'augmentation de l'habitat en appartements peut nous faire oublier que la maison reste le logement majoritaire des foyers néo-calédonien. En 1989 moins d'un quart des ménages vivaient en appartement alors qu'en 2019 ils représentaient plus d'un tiers.
+    Cette information influence notamment l'empreinte de construction, mais aussi les possibilités de travaux d'isolation par exemple.
+    Si vous vivez dans un habitat original, par exemple un camping-car / un camion / une péniche / un bateau, pas de problème : choisissez "appartement" et saisissez les m² de ce qui constitue quand même votre logement.
+  note : |
+    En 2019 les maisons représentent 63 % des logements ([Source ISEE]  : https://www.isee.nc/publications/la-nouvelle-caledonie-en-cartes-et-en-chiffres/donnees-du-recensement-2019-en-open-data ) il est majoritaire parmi les résidences principales comme parmi les résidences secondaires et logements occasionnels.
+
+
+logement . âge:
+  par défaut: 25
+  note: |
+    En Nouvelle-Calédonie, près de 55% ont fini d'être construit après 1997 selon l'[ISEE]: https://www.isee.nc/publications/la-nouvelle-caledonie-en-cartes-et-en-chiffres/donnees-du-recensement-2019-en-open-data
+
+
+logement . piscine:
+  description: | 
+    En Nouvelle-Calédonie, et tout particulièrement dans le Grand Nouméa, un grand nombre de logement particulier possède une piscine enterrée dans le jardin. C'est un équipement loin d'être anecdotique qui pèse dans l'empreinte climat de la Nouvelle-Calédonie et de ses habitants.
+
+     Ce sont les travaux de construction, d'entretien, d'achat du matériel divers nécessaire (sureté, gestion de l'eau, produits chimiques sanitaires), et de chauffage (s'il y en a) qui sont les plus impactant pour le climat.
+
+
+logement . électricité . consommation:
+  par défaut: 4753 * logement . habitants
+  note : |
+    Il s’agit de la consommation moyenne par ménage pour le calcul de l’empreinte d’un néo-calédonien moyen en utilisant l’outil de l’atelier 2tonnes. Puisqu’il s’agit de la consommation par ménage et non par foyer, il faut multiplier par le nombre d’habitant du foyer.
+
+
+logement . électricité . intensité carbone:
+  description: |
+    Nous utilisons ici l'empreinte moyenne du mix énergétique de la Nouvelle-Calédonie. Elle est de 628gCO2e/kWh en 2022 d'après l'observatoire de l'énergie.
+
+
+logement . électricité . estimation via le coût:
+  question: Pas de facture ? Entrez vos dépenses approximatives par mois (en CFP)
+  unité: CFP/kWh
+  formule: 33,8
+  note: |
+    Cette formule nous permet de passer des CFP/mois aux kWh/an.
+
+    Le chiffre inclut un coût de l'abonnement, et représente donc une moyenne. Ce n'est pas le prix du kWh marginal. Il inclutn'inclut pas les taxes communales et TGC.
+
+    Chiffre issu de [l'observatoire de l'énerie 2023](https://observatoire-energie.gouv.nc/public/database/).
+
+    /!\ Attention la monnaie change !
