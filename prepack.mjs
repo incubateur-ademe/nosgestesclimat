@@ -53,9 +53,7 @@ const categories = [
   'divers',
   'services sociétaux'
 ]
-function generateCategoriesTypes(destPath) {
-  const rawData = fs.readFileSync(destPath)
-
+function generateCategoriesTypes() {
   const dFile = `
 export type Categories = ${categories.map((category) => `  | "${category}"`).join('\n')}
 `
@@ -83,7 +81,7 @@ ${subcategories.map((subcategory) => `  | "${subcategory}"`).join('\n')}
   return dFile
 }
 
-fs.writeFileSync('./types/categories.d.ts', generateCategoriesTypes(destPath))
+fs.writeFileSync('./types/categories.d.ts', generateCategoriesTypes())
 fs.writeFileSync(
   './types/subcategories.d.ts',
   generateSubcategoriesTypes(destPath)
