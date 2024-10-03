@@ -24,7 +24,11 @@ fs.copyFileSync(
 fs.writeFileSync('index.js', `export * from './index.d.ts';`)
 
 // Generate the DottedName type
-fs.writeFileSync('./dottedNames.d.ts', generateTypes(destPath))
+// Create a types folder at the root of the package
+if (!fs.existsSync('types')) {
+  fs.mkdirSync('types')
+}
+fs.writeFileSync('./types/dottedNames.d.ts', generateTypes(destPath))
 
 console.log(`✅ dottedNames types generated`)
 console.log('➡️ Packaging done')
@@ -41,3 +45,44 @@ ${Object.keys(model)
 
   return dFile
 }
+// Generate types for the Categories and Subcategories dottedNames
+const categories = [
+  'transport',
+  'alimentation',
+  'logement',
+  'divers',
+  'services sociétaux'
+]
+function generateCategoriesTypes() {
+  const dFile = `
+export type Categories = ${categories.map((category) => `  | "${category}"`).join('\n')}
+`
+
+  return dFile
+}
+
+function generateSubcategoriesTypes(destPath) {
+  const rawData = fs.readFileSync(destPath)
+  const model = JSON.parse(rawData)
+
+  const subcategories = categories.flatMap((category) =>
+    Object.keys(model).filter(
+      (dottedName) =>
+        dottedName.startsWith(category + ' . ') &&
+        dottedName.split(' . ').length === 2
+    )
+  )
+
+  const dFile = `
+export type Subcategories =
+${subcategories.map((subcategory) => `  | "${subcategory}"`).join('\n')}
+`
+
+  return dFile
+}
+
+fs.writeFileSync('./types/categories.d.ts', generateCategoriesTypes())
+fs.writeFileSync(
+  './types/subcategories.d.ts',
+  generateSubcategoriesTypes(destPath)
+)
