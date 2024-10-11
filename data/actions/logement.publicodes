@@ -172,6 +172,10 @@ logement . chauffage . se chauffer au bois:
           - toutes ces conditions:
               - est défini: chauffage . citerne propane . présent
               - chauffage . citerne propane . présent
+  non applicable si:
+    toutes ces conditions:
+      - est défini: logement . construction . rénovation . travaux . chauffage . présent
+      - logement . construction . rénovation . travaux . chauffage . présent
   icônes: 🔄🪵
   formule: (logement . chauffage - recalcul) / habitants
   unité: kgCO2e
@@ -211,6 +215,10 @@ logement . chauffage . remplacer gaz par PAC:
       - propriétaire
       - est défini: chauffage . gaz . présent
       - chauffage . gaz . présent
+  non applicable si:
+    toutes ces conditions:
+      - est défini: logement . construction . rénovation . travaux . chauffage . présent
+      - logement . construction . rénovation . travaux . chauffage . présent
   icônes: 🔥🔄
   formule: (chauffage . gaz . empreinte - PAC) / habitants
   unité: kgCO2e
@@ -249,6 +257,10 @@ logement . chauffage . remplacer chauffage électrique par PAC:
       - propriétaire
       - est défini: chauffage . électricité . présent
       - chauffage . électricité . présent
+  non applicable si:
+    toutes ces conditions:
+      - est défini: logement . construction . rénovation . travaux . chauffage . présent
+      - logement . construction . rénovation . travaux . chauffage . présent
   icônes: 🔥🔄
   formule: (électricité . consommation totale * part consommation remplacable - consommation via PAC) * logement . électricité . empreinte au kWh / habitants
   unité: kgCO2e
@@ -316,6 +328,10 @@ logement . chauffage . rénovation énergétique:
   formule: (logement . empreinte chauffage air * gain rénovation) / habitants
   unité: kgCO2e
   applicable si: propriétaire
+  non applicable si:
+    toutes ces conditions:
+      - est défini: logement . construction . rénovation . travaux . isolation . présent
+      - logement . construction . rénovation . travaux . isolation . présent
   description: |
     Mieux isoler, ventiler et équiper son logement permet de vivre dans un logement plus confortable et de diminuer ses factures d’énergie. Plus efficace, le logement sera moins gourmand en énergie.
 
@@ -348,6 +364,10 @@ logement . chauffage . rénovation énergétique BBC:
   formule: (logement . empreinte chauffage air * gain rénovation) / habitants
   unité: kgCO2e
   applicable si: propriétaire
+  non applicable si:
+    toutes ces conditions:
+      - est défini: logement . construction . rénovation . travaux . isolation . présent
+      - logement . construction . rénovation . travaux . isolation . présent
   description: |
     Une rénovation très performante peut mettre de diviser par 6 les besoins énergétiques de son logement. En consommant moins de 50 kWh par m² par an, le logement sera classé en A sur l’étiquette énergie du Diagnostic de Performance Energétique et atteindra le niveau exigé par la certification Bâtiment Basse Consommation (BBC).
 
@@ -528,7 +548,17 @@ logement . installer photovoltaique:
 
     En effet, **l'empreinte carbone d'un kilowattheure d'électricité photovoltaïque est presque inférieure de moitié** à celle d'un kilowattheure d'électricité du réseau.
 
-    Mais ce n'est pas tout ! **L'ajout de capacités de production renouvelables en France a des co-bénéfices importants**, que nous ne pouvons pas valoriser dans le calcul. Vous les retrouverez dans l'action "Devenir producteur d'électricité photovoltaïque".
+    En règle générale, le photovoltaïque s’installe en toiture des habitations car c’est là que l’on trouve la place nécessaire (10 à 30 m2) et l’inclinaison la plus favorable. Une bonne orientation est requise (sud, sud-est ou sud-ouest). Une façade bien exposée peut aussi constituer une alternative à la toiture.
+
+    Si l'on souhaite une installation plus simple, il est aussi possible de se tourner vers les kits solaires dont le marché est en plein essor depuis 3 ans. Commercialisés dans plusieurs enseignes de la grande distribution ou en ligne, les kits « Plug & Play » sans injection sur le réseau peuvent être installés par des particuliers eux-mêmes. Ils se branchent directement à une prise électrique et bénéficient de démarches administratives simplifiées. Avec des tarifs d’achat des kits compris entre 1,5 et 2 € par Wc, ils sont rentables en moins de 10 ans (s’ils sont bien installés !). Ils peuvent couvrir une partie des consommations permanentes du logement (consommation VMC, réfrigérateur, congélateur…) pendant la journée mais ne peuvent pas satisfaire tous les besoins. Les foyers doivent rester connectés au réseau.
+
+    > Vous pouvez aussi participer à un projet citoyen ou participatif. Ces projets permettent aux citoyens d'investir une partie de leur épargne et de participer au montage de projets vertueux pour l'écologie et créateurs d'emplois locaux. Ils permettent aussi de rencontrer d'autres habitants partageant des valeurs communes. Les citoyens peuvent ainsi participer à des projets photovoltaïques de deux façons :
+
+    > - Via le financement participatif : en prêtant une somme d’argent au porteur de projet et en étant rémunéré par des intérêts.
+    > - Via l’investissement dans un projet à gouvernance locale: en faisant l’acquisition de parts du capital de la société porteuse de projet et en s’investissant dans la gouvernance du projet pour pouvoir peser dans les prises de décision.
+
+    Pour en savoir plus, consulter le guide ADEME ["L'électricité photovoltaïque en 10 questions"](https://librairie.ademe.fr/7545-l-electricite-photovoltaique-en-10-questions.html)
+
   non applicable si: électricité . photovoltaique . présent
   applicable si: logement . type = 'maison'
   formule:
