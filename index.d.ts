@@ -1,4 +1,4 @@
-import { Rule, RuleNode, Evaluation, Situation } from 'publicodes'
+import { Evaluation, Rule, RuleNode, Situation } from 'publicodes'
 // This file is generated on package build
 import { DottedName } from './dottedNames'
 
@@ -70,7 +70,14 @@ export type SupportedRegion = Record<string, RegionParams>
 
 export type SupportedRegions = Record<RegionCode, SupportedRegion>
 
-export type NGCRule = Rule & {
+export type NGCRule = Omit<
+  Rule,
+  'formule' | 'question' | 'références' | 'valeur'
+> & {
+  formule?: Rule['formule'] | number
+  question?: Rule['question'] | null
+  références?: Rule['références'] | string[]
+  valeur?: Rule['valeur'] | number
   abréviation?: string
   mosaique?: MosaiqueNode
   type?: string
@@ -78,7 +85,6 @@ export type NGCRule = Rule & {
   icônes?: string
   sévérité?: string
   dottedName?: DottedName
-  question?: string
   plus?: boolean
   aide?: string
   inactif?: string
