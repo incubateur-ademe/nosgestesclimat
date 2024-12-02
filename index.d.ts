@@ -19,6 +19,8 @@ export type Suggestions = Record<
   SuggestionValue | Record<string, SuggestionValue>
 >
 
+export type SuggestionType = 'radio' | 'checkbox' | 'multiple'
+
 export type MosaiqueNode = {
   type: 'selection' | 'nombre'
   options: DottedName[]
@@ -91,6 +93,7 @@ export type NGCRule = Omit<
   résumé?: string
   plancher?: number
   avertissement?: string
+  'type suggestion'?: SuggestionType
 }
 
 export type Metrics = 'carbone' | 'eau'
