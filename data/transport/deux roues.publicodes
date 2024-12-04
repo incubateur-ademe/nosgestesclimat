@@ -1,17 +1,21 @@
+# A faire : 
+#   - ajouter une question pour savoir le nombre de personnes sur le deux roues ?
 transport . deux roues:
+  applicable si: présent
   icônes: 🛵
   formule:
     variations:
       - si:
-          est défini: usager
+          deux roues . présent = oui
+#          est défini: usager
         alors: empreinte
       - sinon: empreinte moyenne
   unité: kgCO2e
 
-transport . deux roues . usager:
-  question: Utilisez-vous un scooter ou une moto ?
-  description: |
-    Les scooters et motos sont aujourd'hui très majoritairement des engins qui fonctionnent au pétrole. Les scooters électriques ayant fait une réelle percée, ils sont ajoutés au modèle.
+#transport . deux roues . usager:
+#  question: Utilisez-vous un scooter ou une moto ?
+#  description: |
+#    Les scooters et motos sont aujourd'hui très majoritairement des engins qui fonctionnent au pétrole. Les scooters électriques ayant fait une réelle percée, ils sont ajoutés au modèle.
 
 transport . deux roues . empreinte:
   icônes: 🛵
@@ -21,13 +25,13 @@ transport . deux roues . empreinte:
 transport . deux roues . empreinte moyenne:
   valeur: deux roues . empreinte
   contexte:
-    deux roues . usager: oui
+    deux roues . présent: oui
     deux roues . type: "'moto sup 250'"
     deux roues . km: km annuels moyen * pourcentage motards
 
 transport . deux roues . km:
-  applicable si: usager
-  question: Combien de km faites-vous à l'année avec votre scooter ou moto ?
+  applicable si: présent
+  question: Combien de km allez vous parcourir en deux roues pour aller et revenir de votre lieu de séjour ?
   par défaut: km annuels moyen
   plancher: 0
   unité: km
@@ -45,7 +49,7 @@ transport . deux roues . km annuels moyen:
     Source pour les km annuels moyens : [datalab ministère écologie 2019](https://www.statistiques.developpement-durable.gouv.fr/bilan-annuel-des-transports-en-2019-0), figure G1-1.
 
 transport . deux roues . type:
-  applicable si: usager
+  applicable si: présent
   question: Quelle est la motorisation de votre scooter ou moto ?
   par défaut: "'moto sup 250'"
   formule:
