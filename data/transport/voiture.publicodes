@@ -1,5 +1,6 @@
 transport . voiture:
-  titre: voiture
+  applicable si: présent
+  titre: Voiture
   icônes: 🚘
   formule:
     variations:
@@ -20,35 +21,30 @@ transport . voiture:
                     alors: empreinte moyenne non régulier
             - sinon: empreinte moyenne
   unité: kgCO2e
-  description: |
-    ![](https://upload.wikimedia.org/wikipedia/commons/9/9a/Congestion_caused_by_a_road_accident%2C_Algarve%2C_Portugal.jpg)
-
-    La voiture est aujourd'hui en France essentiellement thermique (essence, diesel), bien que l'électrique progresse lentement.
-
-    Pourtant, électrique ou thermique, elle reste un moyen de déplacement très peu efficient :
-    **il s'agit en moyenne de déplacer un humain de 80kg dans une boîte en métal de 1200kg**.
-
-    Un peu comme si chaque midi, nous faisions à manger pour 10 avant de jeter 90% de la nourriture, ou que nous décidions de chauffer tout le pâté de maisons plutôt que l'intérieur de chacune des 10 maisons.
-
-    Notons finalement qu'il est important de prendre en compte à la fois l'usage (les km parcourus) et la construction de ce véhicule de plus d'une tonne de matériaux divers.
+#  description: |
+#    ![](https://upload.wikimedia.org/wikipedia/commons/9/9a/Congestion_caused_by_a_road_accident%2C_Algarve%2C_Portugal.jpg)
+#
+#    La voiture est aujourd'hui en France essentiellement thermique (essence, diesel), bien que l'électrique progresse lentement.
+#
+#    Pourtant, électrique ou thermique, elle reste un moyen de déplacement très peu efficient :
+#    **il s'agit en moyenne de déplacer un humain de 80kg dans une boîte en métal de 1200kg**.
+#
+#    Un peu comme si chaque midi, nous faisions à manger pour 10 avant de jeter 90% de la nourriture, ou que nous décidions de chauffer tout le pâté de maisons plutôt que l'intérieur de chacune des 10 maisons.
+#
+#    Notons finalement qu'il est important de prendre en compte à la fois l'usage (les km parcourus) et la construction de ce véhicule de plus d'une tonne de matériaux divers.
 
 transport . voiture . km:
   titre: Km en voiture
-  question: Quelle distance parcourez-vous à l'année en voiture ?
+  question: Quelle distance allez-vous parcourir pour aller et revenir de votre lieu de séjour  ?
   description: |
-    Ne comptez que les kilomètres de déplacement personnel (courses, loisirs, famille, etc.) et de déplacement domicile travail pour rejoindre votre lieu de travail habituel.
-
-    Par exemple, si vous êtes en mission professionnelle dans un autre département ou un autre pays, cela rentre dans la comptabilité de votre entreprise : ne le comptez pas ici.
+    Ne cherchez pas à renseignez le kilométrage exact, l'arrondi à la dizaine ou la centaine supérieure fera l'affaire.
   # It seems that there is a [publicodes bug](https://github.com/publicodes/publicodes/issues/517). For now, we can't use `km annuels moyen réel` directly here, until the problem is fixed.
   par défaut: 8210
   unité: km
   plancher: 0
   suggestions:
-    zéro: 0
-    vacances: 2000
-    10km / jour: 3600
-    1000km / mois: 12000
-    20 000km / an: 20000
+    Paris ⇄ Lille: 400
+    Bruxelle ⇄ Lille : 200
 
 transport . voiture . km annuels moyen réel:
   #8210
@@ -113,6 +109,7 @@ transport . voiture . nombre véhicules circulation . VUL:
 
 transport . voiture . utilisateur:
   question: Utilisez-vous majoritairement la même voiture pour vous déplacer ?
+#  question: Allez-vous utiliser votre propre voiture ou une voiture louée ou empruntée ?
   applicable si: km > 0
   formule:
     une possibilité:
@@ -191,7 +188,7 @@ transport . voiture . empreinte calculée:
 
 transport . voiture . voyageurs:
   titre: Nombre de voyageurs
-  question: Quel est le nombre moyen de voyageurs dans la voiture ?
+  question: Quel sera le nombre moyen de voyageurs dans la voiture ?
   applicable si: km > 0
   description: |
     Une voiture consomme à peu près autant qu'elle ait 1, 2 ou 5 voyageurs à bord. Voyager à plusieurs, c'est donc potentiellement diviser par 5 l'empreinte individuelle !
@@ -295,7 +292,7 @@ transport . voiture . empreinte au kilomètre calculée:
     > Hybride : enlever 15% aux consommations ci-dessus (source ADEME: http://www2.ademe.fr/servlet/KBaseShow?catid=13655)
 
 transport . voiture . motorisation:
-  question: Quel type de voiture utilisez-vous ?
+  question: Quelle est la motorisation de la voiture que vous-allez utiliser ?
   applicable si:
     toutes ces conditions:
       - est défini: utilisateur
@@ -520,7 +517,7 @@ transport . voiture . thermique . empreinte au litre:
   unité: kgCO2e/l
 
 transport . voiture . thermique . carburant:
-  question: Quel type de carburant votre voiture consomme-t-elle ?
+  question: Quel type de carburant la voiture consomme-t-elle ?
   applicable si:
     toutes ces conditions:
       - est défini: utilisateur
@@ -942,4 +939,4 @@ transport . voiture . durée de vie en km:
     - Gabarit "berline" : correspondant au segment B ou C, soit 225000 km
     - Gabarit "SUV" : correspondant au segment E ou F, soit 270000 km
 
-    Pour le moment, nous ne faisons pas la différence entre thermique et électrique. C'est une hypothèse très forte.
+    Pour le moment, nous ne faisons pas la différence entre thermique et électrique. C'est une hypothèse très forte.*
