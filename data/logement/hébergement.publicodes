@@ -1,0 +1,269 @@
+logement . hébergement:
+  question: Dans quel(s) type(s) d'hébergements allez-vous loger pendant votre séjour ?
+  titre: Nuitées d'hébergement
+  mosaique:
+    type: selection
+    options:
+      - hotel . présent
+      - camping . présent
+      - auberge de jeunesse . présent
+      - locations . présent
+  icônes: 🏨
+  description: |
+    Renseignez ici les différents types d'hébergements que vous occuperez pendant votre séjour.
+  formule:
+    variations:
+      - si: choix utilisateur
+        alors: empreinte totale / habitants
+      - sinon: empreinte par défaut / habitants
+
+
+logement . hébergement . empreinte totale:
+  formule:
+    somme:
+      - empreinte hotel
+      - empreinte camping
+      - empreinte auberge de jeunesse * logement . habitants
+      - empreinte locations
+  unité: kgCO2e
+
+# A caler avec Christophe
+logement . hébergement . empreinte par défaut:
+  formule:
+    somme:
+      - 2 * empreinte hotel par nuit
+  unité: kgCO2e
+  note: On considère que le séjour moyen en Haut de France est de 3 nuits en hôtel. A caler avec Christophe.
+
+logement . hébergement . choix utilisateur:
+  titre: Choix utilisateur pour les nuitées
+  formule:
+    une de ces conditions:
+      - est défini: hotel . présent
+      - est défini: camping . présent
+      - est défini: auberge de jeunesse . présent
+      - est défini: locations . présent
+
+logement . hébergement . empreinte hotel:
+  titre: Empreinte hôtel ou chambre d'hôtes
+  applicable si:
+    toutes ces conditions:
+      - est défini: hotel . présent
+      - hotel . présent
+  formule:
+    variations:
+      - si: logement . habitants > 8
+        alors: 3 * hotel . nombre de nuitées * empreinte hotel par nuit
+      - si: logement . habitants > 4
+        alors: 2 * hotel . nombre de nuitées * empreinte hotel par nuit
+      - sinon: hotel . nombre de nuitées * empreinte hotel par nuit
+  note: |
+    ## Les paramètres du calcul
+
+    Le calcul de l'empreinte liée aux séjours en hôtels peut être assez complexe au vu de la diversités des paramètres de l'équation, avec entre autres :
+
+    - **Le nombre de nuits passées à l'hotêl à l'année :**
+
+        Il peut-être difficile d'estimer le nombre de nuitées à l'hôtel pendant l'année, mais également de faire la différence
+        entre les différents types d'hébergement.
+
+    - **Le nombre de personnes dans la chambre :**
+
+        Comment estimer le nombre de personnes présent dans la chambre ? Ce chiffre peut-être différent selon les nuits,
+        le plus simple pour une première approximation est d'amortir l'empreinte des nuits d'hôtel par le nombre de personnes
+        qui composent le foyer.
+
+    - **La localisation :**
+
+        Que ce soit entre pays ou même entre villes, des différences d'impact peuvent apparaître, notamment car
+        l'un des paramètres important de l'empreinte des hôtels est le mix électrique.
+
+    - **Standing :**
+
+        Le standing de l'hotêl est également un facteur important. Un hotêl bas de gamme et un hotêl haut de gamme n'auront pas la même empreinte.
+
+    Pour calculer l'empreinte annuelle de sa "consommation" de prestations hôtelières, et dans un objectif de simplifier la réponse à cette question,
+    nous avons fait le choix de demander à l'utilisateur seulement le nombre de nuitées par an qu'il passe à l'hôtel même si effectivement l'empreinte
+    peut être plus ou moins importante selon les hypothèses de départ.
+
+    ## La cohérence du résultat
+
+    Avec les valeurs par défaut représentatives des français, on trouve pour ce calcul une empreinte de 42,24 kgCO2e.
+
+    L'idée ici est de comparer ce résultat avec le résultat issu de l'approche "macro" du SDES pour [la branche économique "Hébergement"](https://nosgestesclimat.fr/documentation/empreinte-branche/I55-par-hab),
+    qui donne une empreinte de 73,62 kgCO2e par habitant.
+
+    Ainsi, en considérant seulement la partie "Hotellerie" (67% du CA de la branche), on trouve une valeur de 49 kgCO2e. L'ordre de grandeur est similaire ! En revanche, cette estimation prend en compte les déplacvements professionels.
+
+    - **Le nombre de personnes partageant la chambre :**
+
+    Nous considérons dans ce modèle que l'empreinte de l'hôtel est divisée par le nombre d'habitants du logement.
+    C'est une hypothèse forte car on peut facilement imaginer que le famille / foyer ne voyage pas toujours au complet !
+    Par ailleurs, on fait également l'hypotèse qu'une famille de plus de 4 personnes prendra 2 chambres, plus de 8, 3 chambres, ce qui explique les facteurs 2 et 3 dans les formules.
+
+logement . hébergement . hotel:
+  titre: Hôtel ou chambre d'hôtes
+  icônes: 🏨
+
+logement . hébergement . hotel . présent:
+  question: Allez-vous réserver une chambre d'hôtel ?
+
+logement . hébergement . empreinte hotel par nuit:
+  formule: 6.93
+  unité: kgCO2e/nuit
+  note: |
+    # Notre hypothèse sur le facteur d'émission utilisé
+
+      D'après [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345),
+      les français voyagent à 86% en France. On assume donc ici que **les nuitées se passent en France**.
+
+    # Notre source de données
+
+      Le rapport final de pré-déploiement de l'affichage environnemental des hôtels, [publication ADEME de mars 2020](https://librairie.ademe.fr/consommer-autrement/4096-projet-de-pre-deploiement-de-l-affichage-environnemental-des-hotels.html), donne une moyenne de 9,91 kg éqCO2 / nuitée.
+      En retranchant la partie petit-déjeuner (comptant pour 30% de l'empreinte), car sinon nous aurions une double comptabilité de ces derniers, on se retrouve avec une empreinte par nuitée de 9,91 * (1 - 30%) = 6,93 kg éqCO2.
+
+      Le rapport permet également de scinder les empreintes selon la classe de l'hôtel. Pour démarrer, nous avons assumé de partir sur la moyenne des empreintes toutes classes confondues, mais cela pourra être implémenté par la suite. Cela donnerait :
+
+      - Hôtels sans classement : 4,73 kg éqCO2 / nuitée
+      - Hôtels 2* : 8,53 kg éqCO2 / nuitée
+      - Hôtels 3* : 8,47 kg éqCO2 / nuitée
+      - Hôtels 4* : 11,43 kg éqCO2 / nuitée
+      - Hôtels 5* : 17,11 kg éqCO2 / nuitée
+
+      Depuis plusieurs années, [Betterfly Tourism](https://www.betterfly-tourism.com/affichage-environnemental-hotels/) implémente en partenariat avec l'ADEME l'affichage environnemental auprès des hôtels. Il sera donc possible de réévaluer l'empreinte avec des données plus récentes issues de leur base de données consolidée.
+
+      De son côté, le [Hotel Carbon Measurement Initiative (HCMI)](https://sustainablehospitalityalliance.org/resource/hotel-carbon-measurement-initiative/) qui alimente le [Cornell Hotel Sustainability Benchmarking Index](https://greenview.sg/services/chsb-index/) présente des [données](https://ecommons.cornell.edu/handle/1813/109990) pertinentes pour notre usage.
+      Cela pourra être un bon point de départ pour le jour où nous souhaiterons différencier les nuitées d'hôtel selon le pays fréquenté.
+      À noter que le HCMI donne une moyenne pour la France de 7,7 kg éqCO2 / nuitée, ce qui est très proche de la donnée que nous avons choisie, elle calculée à partir du référentiel ADEME.
+
+      > Point publicodes : Cette règle étant utilisée dans d'autres espaces nom que `logement . hébergement . hotel` c'est important ici de ne pas l'inclure dans cet espace non qui rendrait l'empreinte de la nuitée non applicable si la règle hotel est elle aussi non applicable.
+
+#A caler avec Hdf Tourisme pour la valeur par défaut
+logement . hébergement . hotel . nombre de nuitées:
+  question: Combien de nuits allez-vous passer à l'hôtel ou en chambre d'hôtes pendant votre séjour ?
+  unité: nuit
+  description: |
+    Renseignez ici les nuits passées dans un hôtel, une chambre privée ou chambre d'hôtes.
+  plancher: 0
+  par défaut: 2
+  note: La valeur par défaut est arbitraire et doit être calée avec HdF Tourisme.
+  suggestions:
+    un week-end: 2
+    un week-end prolongé: 4
+    une semaine: 7
+
+logement . hébergement . empreinte camping:
+  titre: Empreinte emplacement en camping
+  applicable si:
+    toutes ces conditions:
+      - est défini: camping . présent
+      - camping . présent
+  formule: camping . empreinte par nuit * camping . nombre de nuitées
+
+logement . hébergement . camping:
+  titre: Emplacement en camping
+  icônes: ⛺️
+
+logement . hébergement . camping . présent:
+  question: Allez-vous réserver un emplacement de camping ?
+
+logement . hébergement . camping . empreinte par nuit:
+  formule: 1.4
+  unité: kgCO2e/nuit
+  note: |
+    Ces données sont issues de la proposition de référentiel ADEME pour l'hôtellerie de plein air, étude effectuée sur 13 campings de l'Hérault conjointement entre Betterfly Tourism et l'ADEME.
+    Les données sont fournies par Betterfly Tourism et datent de juin 2021. La moyenne de l'empreinte par nuitée sur les 13 campings étudiés est de 1,4 kg éqCO2.
+    Le référentiel ADEME est présent dans la base Impacts depuis mai 2023.
+
+logement . hébergement . camping . nombre de nuitées:
+  question: Combien de nuits allez- vous passer en camping par an pendant votre séjour ?
+  unité: nuit
+  description: |
+    Renseignez ici les nuits passées en camping (tente, hamac, bungalow...).
+  plancher: 0
+  par défaut: 2
+  note: La valeur par défaut est arbitraire et doit être calée avec HdF Tourisme.
+  suggestions:
+    un week-end: 2
+    un week-end prolongé: 4
+    une semaine: 7
+
+logement . hébergement . empreinte auberge de jeunesse:
+  titre: Empreinte auberge de jeunesse
+  applicable si:
+    toutes ces conditions:
+      - est défini: auberge de jeunesse . présent
+      - auberge de jeunesse . présent
+  formule: auberge de jeunesse . empreinte par nuit * auberge de jeunesse . nombre de nuitées
+
+logement . hébergement . auberge de jeunesse:
+  titre: Auberge de jeunesse
+  icônes: 🛏️
+
+logement . hébergement . auberge de jeunesse . présent:
+  question: Allez-vous réserver une place en auberge de jeunesse ?
+
+logement . hébergement . auberge de jeunesse . empreinte par nuit:
+  formule: empreinte hotel par nuit / nombre de personnes dans le dortoir
+  unité: kgCO2e/nuit
+  note: |
+    Pour une première approximation d'une nuit en auberge de jeunesse, l'idée est ici de diviser l'impact
+    d'une nuitée classique en hôtel par le nombre de personnes dans un dortoir moyen.
+
+logement . hébergement . auberge de jeunesse . nombre de personnes dans le dortoir:
+  formule: 6
+  note: On considère ici qu'un dortoir "classique" comprend 6 personnes.
+
+logement . hébergement . auberge de jeunesse . nombre de nuitées:
+  question: Combien de nuits allez-vous passer en auberge de jeunesse pendant votre séjour ?
+  unité: nuit
+  description: |
+    Renseignez ici les nuits passées en auberge de jeunesse (dortoir).
+  plancher: 0
+  par défaut: 2
+  note: La valeur par défaut est arbitraire et doit être calée avec HdF Tourisme.
+  suggestions:
+    un week-end: 2
+    un week-end prolongé: 4
+    une semaine: 7
+
+logement . hébergement . empreinte locations:
+  titre: Empreinte locations meublées
+  applicable si:
+    toutes ces conditions:
+      - est défini: locations . présent
+      - locations . présent
+  formule: locations . empreinte par nuit * locations . nombre de nuitées
+
+logement . hébergement . locations:
+  titre: Locations meublées
+  icônes: 🛏️🏠
+
+logement . hébergement . locations . présent:
+  question: Allez-vous louer une location meublée (type Airbnb) ?
+
+  description: |
+    💡 Déclarez ici les nuits passées en locations meublées de type Airbnb ou Abritel.
+
+logement . hébergement . locations . empreinte par nuit:
+  formule: 5.8
+  unité: kgCO2e/nuit
+  note: |
+    Ces données sont issues du [Bilan des émissions de gaz à effet de serre du secteur du tourisme en France](https://librairie.ademe.fr/changement-climatique-et-energie/4688-bilan-des-emissions-de-gaz-a-effet-de-serre-du-secteur-du-tourisme-en-france.html)
+    Elles représentent une approche dite "top-down", que voici. On considère d'abord que les surfaces fournies par Airbnb en France sont représentatives de la location saisonnière dans le Pays. On applique à ces surfaces les facteurs d'émission de la base Carbone correspondant aux résidences secondaires en France. Enfin, on applique un taux d'occupation des locations saisonnières de 25%.
+    L'approche de Nos GEStes Climat, habituellement, est plutôt "bottom-up" : nous partons de l'usage, appliquons les facteurs d'émission et obtenons une empreinte.
+    Néanmoins, l'approche bottom-up est ici très complexe à implémenter : elle supposerait de poser une quantité importante de questions à l'utilisateur (surface, mode de chauffage des locations saisonnières louées...).
+    Le chiffre obtenu par l'approche top-down, 5,8 kg éqCO2, est tout à fait cohérent avec le reste des données disponibles sur les autres types de logement touristiques, et nous paraît un bon début pour approximer cette donnée complexe.
+
+logement . hébergement . locations . nombre de nuitées:
+  question: Combien de nuits allez-vous passer en locations meublées pendant votre séjour ?
+  unité: nuit
+  description: |
+    Renseignez ici les nuits passées en location meublée (Airbnb, Abritel...).
+  plancher: 0
+  par défaut: 2
+  note: La valeur par défaut est arbitraire et doit être calée avec HdF Tourisme.
+  suggestions:
+    un week-end: 2
+    un week-end prolongé: 4
+    une semaine: 7
