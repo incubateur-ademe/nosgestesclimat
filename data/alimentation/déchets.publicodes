@@ -6,56 +6,54 @@ alimentation . déchets:
     les ménages sont des emballages alimentaires)
   formule:
     variations:
-      - si: quantité jetée = 'zéro déchet'
-        alors: niveau zéro déchets
-      - sinon:
-          somme:
-            - niveau moyen
-            - gestes
+      - si: tri = 'yes'
+        alors: 0.01
+      - si: tri = 'parfois'
+        alors: 0.02
+      - si: tri = 'toujours'
+        alors: 0.03
+      - sinon: 0.09
+  unité: kgCO2e
+#          somme:
+#            - niveau moyen
+#            - gestes
 
-alimentation . déchets . quantité jetée:
-  question: Comment estimeriez-vous la quantité de déchets que vous jetez ?
+alimentation . déchets . tri:
+  question: Avez-vous l'habitude de faire le tri même lors de vos weekends et vacances ?
   description: |
-    > Répondez 'Zéro Déchet' uniquement si vous traquez le moindre déchet.
-
-    Pour en savoir plus sur les modes de vie zéro déchets, visitez le site [Zero Waste France](https://www.zerowastefrance.org/passer-a-laction/adopter-zero-dechet/).
-
-    > Sachez qu'en cas d'engagement "zéro déchet", nous considérons tout de même des émissions de gaz à effet (mais largement réduites) car il est très difficile
-    voire impossible de ne générer aucun déchet, certains étant invisibles et inévitables.
-  par défaut: "'base'"
+    Répondez "Oui" si le geste de tri est un geste automatique pour vous (même si vous ne disposez pas toujours de poubelles de tri à votre disposition). Répondez "Oui parfois" si ce 
+    n'est pas un réflexe et qu'il vous arrive parfois d'oublier. Répondez "Non" si vous ne faites jamais le tri.
+  par défaut: "'non'"
   formule:
     une possibilité:
       choix obligatoire: oui
       possibilités:
-        - base
-        - réduction
-        - zéro déchet
+        - jamais
+        - parfois
+        - toujours
 
-alimentation . déchets . quantité jetée . base:
-  titre: Je jette sans faire attention
+alimentation . déchets . tri . jamais:
+  titre: Non, je jette sans faire attention
   description: |
-    Vous avez tendance à jeter sans vous poser de question.
+    Vous avez tendance à jeter sans vous poser de question quant à la nature du déchet et sa poubelle de destination.
 
-alimentation . déchets . quantité jetée . réduction:
-  titre: Je limite mes déchets
+alimentation . déchets . tri . parfois:
+  titre: Oui, parfois
   description: |
-    Vous avez encore des progrès à faire pour atteindre le niveau zéro déchet.
-    Vous mettez toutefois en place des éco-gestes pour réduire votre impact ?
-    Sélectionnez cette réponse et rendez-vous à la question suivante !
+    Vous avez encore des progrès à faire mais vous essayez de faire le tri au maximum.
 
-alimentation . déchets . quantité jetée . zéro déchet:
-  titre: Je suis zéro-déchet
+alimentation . déchets . tri . toujours:
+  titre: Oui, tout le temps
   description: |
-    Un niveau d'engagement particulièrement fort ! La taille de votre poubelle est minimale,
-    vous ne jetez *presque* jamais !
+    Vous cherchez toujours à jeter un déchet dans la poubelle qui lui est destiné.
 
-alimentation . déchets . notif zéro déchet:
-  type: notification
-  formule: quantité jetée = 'zéro déchet'
-  description: |
-    Vous avez renseigné un mode de vie zéro déchet. Il faut savoir que ce niveau d'engagement
-    correspond à une personne qui est investie à **100% dans la démarche de réduction de ses déchets**.
-    Consommer en vrac n'est pas suffisant pour être zéro-déchet.
+#alimentation . déchets . notif zéro déchet:
+#  type: notification
+#  formule: quantité jetée = 'zéro déchet'
+#  description: |
+#    Vous avez renseigné un mode de vie zéro déchet. Il faut savoir que ce niveau d'engagement
+#    correspond à une personne qui est investie à **100% dans la démarche de réduction de ses déchets**.
+#    Consommer en vrac n'est pas suffisant pour être zéro-déchet.
 
 alimentation . déchets . niveau zéro déchets:
   formule:
@@ -84,7 +82,7 @@ alimentation . déchets . niveau moyen:
     Ce niveau correspond à la moyenne française.
 
 alimentation . déchets . gestes:
-  applicable si: quantité jetée = 'réduction'
+#  applicable si: quantité jetée = 'réduction'
   mosaique:
     type: selection
     options:
