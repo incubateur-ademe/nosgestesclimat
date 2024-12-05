@@ -19,35 +19,37 @@ alimentation . boisson . chaude:
         thé . nombre: 0
         chocolat chaud . nombre: 0
         chicorée . nombre: 0
-      un café:
+      un café chaque matin:
         café . nombre: 1
         thé . nombre: 0
         chocolat chaud . nombre: 0
         chicorée . nombre: 0
-      beaucoup de café:
-        café . nombre: 4
+      un café matin et midi:
+        café . nombre: 2
         thé . nombre: 0
         chocolat chaud . nombre: 0
         chicorée . nombre: 0
-      un café et un thé:
+      un thé chaque matin:
+        café . nombre: 0
+        thé . nombre: 1
+        chocolat chaud . nombre: 0
+        chicorée . nombre: 0
+      thé le matin, café à midi:
         café . nombre: 1
         thé . nombre: 1
         chocolat chaud . nombre: 0
         chicorée . nombre: 0
-      un chocolat chaud:
+      un chocolat chaud chaque matin:
         café . nombre: 0
         thé . nombre: 0
         chocolat chaud . nombre: 1
         chicorée . nombre: 0
-  question: Quelle est votre consommation de boissons chaudes par jour (en nombre de tasses) ?
+  question: Quelle sera (approximativement) votre consommation de boissons chaudes par jour (en nombre de tasses) ?
   icônes: ☕️🫖
   description: |
-    Vos consommations de boissons chaudes pour une journée type. Un café par jour ? Un thé tous les soirs ? Un chocolat chaud au petit déjeuner ?
-    Les consommations plus ponctuelles sont considérées comme négligeables.
+    Cherchez ici à renseigner une consommation représentative de votre consommation, ce n'est pas grave si cela ne correspond pas à ce que vous boirez exactement
 
-    A noter que vous pourrez sélectionner le type de lait que vous consommez dans une autre question !
-
-    > Le café ou thé que vous consommez au petit déjeuner est à prendre en compte ici !
+    _Précision_ : considérez le déca comme un café !
   formule: par jour * commun . jours par an
 
 alimentation . boisson . chaude . par jour:
@@ -80,28 +82,28 @@ alimentation . boisson . chaude . chicorée:
   formule: tasse de chicorée * nombre
 
 alimentation . boisson . chaude . café . nombre:
-  question: Nombre de cafés par jour
+  question: Nombre de cafés pendant le séjour
   par défaut: 1.5
   plancher: 0
   unité: tasse/jour
   note: Un français moyen boit 500 tasses de café par an ([source](https://fr.statista.com/themes/10144/le-cafe-en-france/#topFacts)), soit environ une tasse et demi par jour.
 
 alimentation . boisson . chaude . thé . nombre:
-  question: Nombre de thés par jour
+  question: Nombre de thés pendant le séjour
   par défaut: 0.5
   plancher: 0
   unité: tasse/jour
   note: Un français moyen consomme 250g de thé par an ([source](https://www.francesoir.fr/lifestyle-vie-quotidienne/le-boom-de-la-consommation-en-france)), soit 5 grammes par semaine. Nous avons estimé que cela correspondait approximativement à une demi tasse par jour.
 
 alimentation . boisson . chaude . chocolat chaud . nombre:
-  question: Nombre de chocolats chauds par jour
+  question: Nombre de chocolats chauds pendant le séjour
   par défaut: 0
   plancher: 0
   unité: tasse/jour
   note: Nous ne considérons pas de tasses de chocolat chaud par défaut.
 
 alimentation . boisson . chaude . chicorée . nombre:
-  question: Nombre de tasses de chicorée par jour
+  question: Nombre de tasses de chicorée pendant le séjour
   par défaut: 0
   plancher: 0
   unité: tasse/jour
@@ -248,7 +250,7 @@ alimentation . type de lait:
     une de ces conditions:
       - boisson . chaude . chocolat chaud . nombre > 0
       - petit déjeuner . type = 'lait céréales'
-  question: Le lait que vous consommez est-il d'origine animale ou végétale ?
+  question: Quel sera le type de lait que vous consommerez ?
   par défaut: "'lait de vache'"
   formule:
     une possibilité:
@@ -330,29 +332,35 @@ alimentation . boisson . froide:
     somme:
       - sucrées
       - alcool
+      - sucrées2
+      - alcool2
       - eau en bouteille
 
 alimentation . boisson . eau en bouteille:
   titre: Eau en bouteille
-  formule:
-    variations:
-      - si:
-          est défini: consommateur
-        alors: consommation annuelle * empreinte
-      - sinon: consommation moyenne * empreinte
+  formule: consommation moyenne * empreinte
+  unité: kgCO2e
 
-alimentation . boisson . eau en bouteille . consommateur:
-  question: Buvez-vous votre eau en bouteille ?
+#alimentation . boisson . eau en bouteille . consommateur:
+#  question: Buvez-vous votre eau en bouteille ?
+#  description: |
+#    Si vous buvez principalement de l'eau du robinet et que votre consommation d'eau en bouteille se réduit à de rares occasions (par exemple un repas sur le pouce en boulangerie par semaine, avec leur fameux menu "sandwich + dessert + boisson en bouteille plastique"), répondez non.
+#
+#    Si vous achetez régulièrement des packs d'eau en bouteille au supermarché ou si vous achetez une petite bouteille chaque jour à la cantine du boulot, répondez oui.
+#
+#    > Sachez que la consommation d'eau du robinet a une empreinte climat si faible que nous ne vous poserons pas la question de votre consommation alimentaire d'eau.
+#  note: |
+#    Les français boivent en moyenne entre 100 et 150 litres d'eau en bouteille par an [source](https://www.planetoscope.com/consommation-eau/854-litres-d-eau-en-bouteille-vendus-en-france.html), soit environ un tiers de nos besoins de 1-1,5l par jour [source](https://www.mangerbouger.fr/Le-Mag/Bien-etre/L-eau-indispensable-a-notre-bonne-sante).
+#
+#    Nous avons considéré que la valeur par défaut était donc "non".
+
+alimentation . boisson . eau en bouteille . consommation:
+  question: Combien de bouteille d'eau en plastique comptez-vous boire (en équivalent d'1 litre) ?
   description: |
-    Si vous buvez principalement de l'eau du robinet et que votre consommation d'eau en bouteille se réduit à de rares occasions (par exemple un repas sur le pouce en boulangerie par semaine, avec leur fameux menu "sandwich + dessert + boisson en bouteille plastique"), répondez non.
-
-    Si vous achetez régulièrement des packs d'eau en bouteille au supermarché ou si vous achetez une petite bouteille chaque jour à la cantine du boulot, répondez oui.
-
-    > Sachez que la consommation d'eau du robinet a une empreinte climat si faible que nous ne vous poserons pas la question de votre consommation alimentaire d'eau.
-  note: |
-    Les français boivent en moyenne entre 100 et 150 litres d'eau en bouteille par an [source](https://www.planetoscope.com/consommation-eau/854-litres-d-eau-en-bouteille-vendus-en-france.html), soit environ un tiers de nos besoins de 1-1,5l par jour [source](https://www.mangerbouger.fr/Le-Mag/Bien-etre/L-eau-indispensable-a-notre-bonne-sante).
-
-    Nous avons considéré que la valeur par défaut était donc "non".
+    Si chaque jour, pour votre consommation personnelle, vous achetez une bouteille d'1,5l, renseignez 1,5l. Si vous ne buvez qu'une seule
+    bouteille de 0,5l, renseignez 0,5.
+  par défaut: 1
+  unité: l
 
 alimentation . boisson . eau en bouteille . empreinte:
   formule:
@@ -379,11 +387,99 @@ alimentation . boisson . eau en bouteille . consommation moyenne:
     La consommation moyenne de l'eau en bouteille est en 2018 de 135 litres par an par habitant (soit 90 bouteilles),
     d'après le syndicat des eaux minérales naturelles ([source](https://eaumineralenaturelle.fr/qui-sommes-nous/leau-minerale-en-chiffres))
 
-alimentation . boisson . eau en bouteille . consommation annuelle:
-  applicable si: consommateur
-  formule: commun . jours par an * 1.5 l/jour
-  unité: l
-  description: On considère que chacun boit 1,5 litres d'eau par jour.
+alimentation . boisson . sucrées2:
+  mosaique:
+    type: nombre
+    options:
+      - sirop . nombre
+      - cocktail sans alcool . nombre
+      - soda . nombre
+      - jus de fruit . nombre
+    suggestions:
+      aucun:
+        sirop . nombre: 0
+        cocktail sans alcool . nombre: 0
+        soda . nombre: 0
+        jus de fruit . nombre: 0
+  question: Quelle sera (approximativement) votre consommation de boissons sucrées pendant votre séjour ?
+  formule:
+    somme:
+      - sirop
+      - cocktail sans alcool
+      - soda
+      - jus de fruit
+
+alimentation . boisson . sucrées2 . sirop . empreinte:
+  titre: Empreinte verre de sirop
+  formule: 100
+  unité: kgCO2e
+  note: Facteur d'émissions de la Base Carbone et quantité de 20 cl par verre
+
+alimentation . boisson . sucrées2 . sirop . nombre:
+  titre: Nombre de verres de sirop
+  question: Combien de verres de sirop allez-vous boire ?
+  plancher: 0
+  par défaut: 0
+
+alimentation . boisson . sucrées2 . sirop:
+  titre: Sirop à l'eau (20 cl)
+  icônes: 💧
+  formule: empreinte * nombre
+  unité: kgCO2e
+
+alimentation . boisson . sucrées2 . cocktail sans alcool . empreinte:
+  titre: Empreinte cocktail sans alcool
+  formule: 100
+  unité: kgCO2e
+  note: Facteur d'émissions de la Base Carbone et quantité de 33 cl par verre
+
+alimentation . boisson . sucrées2 . cocktail sans alcool . nombre:
+  titre: Nombre de cocktail sans alcool
+  question: Combien de cocktail sans alcool allez-vous boire ?
+  plancher: 0
+  par défaut: 0
+
+alimentation . boisson . sucrées2 . cocktail sans alcool:
+  titre: Cocktail sans alcool (33 cl)
+  icônes: 🍹
+  formule: empreinte * nombre
+  unité: kgCO2e
+
+alimentation . boisson . sucrées2 . soda . empreinte:
+  titre: Empreinte verre de soda
+  formule: 100
+  unité: kgCO2e
+  note: Facteur d'émissions de la Base Carbone et quantité de 33 cl par verre
+
+alimentation . boisson . sucrées2 . soda . nombre:
+  titre: Nombre de verres de soda
+  question: Combien de verres de soda allez-vous boire ?
+  plancher: 0
+  par défaut: 0
+
+alimentation . boisson . sucrées2 . soda:
+  titre: Soda (33 cl)
+  icônes: 🥤
+  formule: empreinte * nombre
+  unité: kgCO2e
+
+alimentation . boisson . sucrées2 . jus de fruit . empreinte:
+  titre: Empreinte verre de jus de fruit
+  formule: 100
+  unité: kgCO2e
+  note: Facteur d'émissions de la Base Carbone et quantité de 20 cl par verre
+
+alimentation . boisson . sucrées2 . jus de fruit . nombre:
+  titre: Nombre de verres de jus de fruit
+  question: Combien de verres de jus de fruit allez-vous boire ?
+  plancher: 0
+  par défaut: 0
+
+alimentation . boisson . sucrées2 . jus de fruit:
+  titre: Jus de fruit (20 cl)
+  icônes: 🧃
+  formule: empreinte * nombre
+  unité: kgCO2e
 
 alimentation . boisson . sucrées:
   description: |
@@ -445,6 +541,121 @@ alimentation . boisson . sucrées . litres:
   plancher: 0
   unité: l/semaine
   note: La consommation de sodas et boissons sucrées en France est en moyenne de 50,9 litres par habitant ([source](https://www.sante-et-nutrition.com/consommation-soda-france/)) soit à peu près 1 litre par semaine.
+
+alimentation . boisson . alcool2:
+  mosaique:
+    type: nombre
+    options:
+      - bière demi . nombre
+      - bière pinte . nombre
+      - vin . nombre
+      - champagne . nombre
+      - cocktail . nombre
+    suggestions:
+      aucun:
+        bière demi . nombre: 0
+        bière pinte . nombre: 0
+        vin . nombre: 0
+        champagne . nombre: 0
+        cocktail . nombre: 0
+  question: Quelle sera (approximativement) votre consommation de boissons alcoolisées pendant votre séjour ?
+  formule:
+    somme:
+      - bière demi
+      - bière pinte
+      - vin
+      - champagne
+      - cocktail
+
+alimentation . boisson . alcool2 . bière demi . empreinte:
+  titre: Empreinte demi de bière
+  formule: 100
+  unité: kgCO2e
+  note: Facteur d'émissions de la Base Carbone et quantité de 25 cl pour un demi
+
+alimentation . boisson . alcool2 . bière demi . nombre:
+  titre: Nombre de verres de sirop
+  question: Combien de demis de bière allez-vous boire ?
+  plancher: 0
+  par défaut: 0
+
+alimentation . boisson . alcool2 . bière demi:
+  titre: Bière (demi)
+  icônes: 🍻
+  formule: empreinte * nombre
+  unité: kgCO2e
+
+alimentation . boisson . alcool2 . bière pinte . empreinte:
+  titre: Empreinte pinte de bière
+  formule: 100
+  unité: kgCO2e
+  note: Facteur d'émissions de la Base Carbone et quantité de 50 cl pour une pinte
+
+alimentation . boisson . alcool2 . bière pinte . nombre:
+  titre: Nombre de pintes de bière
+  question: Combien de pintes de bière allez-vous boire ?
+  plancher: 0
+  par défaut: 0
+
+alimentation . boisson . alcool2 . bière pinte:
+  titre: Bière pinte (50 cl)
+  icônes: 🍺
+  formule: empreinte * nombre
+  unité: kgCO2e
+
+alimentation . boisson . alcool2 . vin . empreinte:
+  titre: Empreinte verre de vin
+  formule: 100
+  unité: kgCO2e
+  note: Facteur d'émissions de la Base Carbone et quantité de 20 cl par verre
+
+alimentation . boisson . alcool2 . vin . nombre:
+  titre: Nombre de verres de vin
+  question: Combien de verres de vin allez-vous boire ?
+  plancher: 0
+  par défaut: 0
+
+alimentation . boisson . alcool2 . vin:
+  titre: Vin (20 cl)
+  icônes: 🍷
+  formule: empreinte * nombre
+  unité: kgCO2e
+
+alimentation . boisson . alcool2 . champagne . empreinte:
+  titre: Empreinte verre de champagne
+  formule: 100
+  unité: kgCO2e
+  note: Facteur d'émissions de la Base Carbone et quantité de 15 cl par verre
+
+alimentation . boisson . alcool2 . champagne . nombre:
+  titre: Nombre de verres de champagne
+  question: Combien de verres de champagne allez-vous boire ?
+  plancher: 0
+  par défaut: 0
+
+alimentation . boisson . alcool2 . champagne:
+  titre: Champagne (15 cl)
+  icônes: 🥂
+  formule: empreinte * nombre
+  unité: kgCO2e
+
+alimentation . boisson . alcool2 . cocktail . empreinte:
+  titre: Empreinte cocktail
+  formule: 100
+  unité: kgCO2e
+  note: Facteur d'émissions de la Base Carbone et quantité de 30 cl par verre
+
+alimentation . boisson . alcool2 . cocktail . nombre:
+  titre: Nombre de cocktail
+  question: Combien de cocktail allez-vous boire ?
+  plancher: 0
+  par défaut: 0
+
+alimentation . boisson . alcool2 . cocktail:
+  titre: Cocktail (30 cl)
+  icônes: 🍸
+  formule: empreinte * nombre
+  unité: kgCO2e
 
 alimentation . boisson . alcool:
   description: |
