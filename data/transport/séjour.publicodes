@@ -1,6 +1,158 @@
-### Il faut revoir le modèle en fonction des différentes possibilités (proprio, covoit ou location/empreint)
-transport . voiture:
-  applicable si: présent
+#Checker les formulations des questions et descriptions
+#Train et Car longue distance : checker les FE 
+#Voiture : poser la question de s'il s'agit du même véhicule ou si louez mais attention il faut affiner les réponses à la première question voiture car on n'est plus sur du proprio régulier non proprio et non régulier
+
+transport . séjour:
+#  applicable si: présent
+  applicable si:
+    une de ces conditions:
+      - transport . train . présent
+      - transport . car longue distance . présent
+      - transport . voiture . présent
+      - transport . deux roues . présent
+#      - transport . transports commun . présent
+#      - transport . mobilité douce . présent
+      - transport . taxi . présent
+#  applicable si: transport . train . présent
+  titre: Transport pendant le séjour
+  mosaique:
+    type: selection
+    options:
+      - train . présent
+      - car longue distance . présent
+      - voiture . présent
+#      - deux roues . présent
+#      - transports commun . présent
+#      - mobilité douce . présent
+#      - taxi . présent
+    suggestions:
+      aucun:
+        train . présent: non
+        car longue distance . présent: non
+        voiture . présent: non
+#        deux roues . présent: non
+#        transports commun . présent: non
+#        mobilité douce . présent: non
+#        taxi . présent: non
+  question: Quel(s) moyen(s) de transport allez-vous utiliser pendant votre séjour ?
+  icônes: 📍
+  description: |
+    Renseignez les différents types de transport que vous allez utiliser **pendant votre séjour uniquement**. Comme expliqué Précédemment les trajets aller-retour entre 
+    votre domicile et votre (premier) lieu d'hébergement sont à prendre en compte à la première question.
+  formule:
+    somme:
+      - train
+      - car longue distance
+      - voiture
+#      - deux roues
+#      - transports commun
+#      - mobilité douce
+#      - taxi
+##      - avion
+##      - vacances
+##      - ferry
+
+transport . séjour . notif voiture:
+  type: notification
+  formule:
+    une de ces conditions:
+      - transport . voiture . utilisateur = 'non régulier'
+  description: |
+    Vous avez dit faire du covoiturage pour vous rendre sur votre lieu séjour et/ou en revenir. Nous allons toutefois vous reposer des questions sur le type
+    de véhicule utilisé pour les trajets pendant votre séjour
+
+# A voir si cette notif est vraiment utile ?
+transport . séjour . voiture . location:
+  type: notification
+  formule: 
+    une de ces conditions: 
+      - transport . voiture . utilisateur = 'non régulier'
+      - transport . train . présent = 'oui'
+      - transport . car longue distance . présent = 'oui'
+      - transport . deux roues . présent = 'oui'
+      - transport . taxi . présent = 'oui'
+  description: |
+    Vous avez dit ne pas venir en voiture ou faire du covoiturage. Nous considérons que vous allez louer une voiture ?
+
+### Train ###
+transport . séjour . train . présent:
+  question: Allez-vous utiliser des trains pour vous déplacer pendant votre séjour ?
+  par défaut: non
+
+transport . séjour . train:
+  applicable si: séjour . train . présent
+  titre: Train séjour
+  icônes: 🚞
+  formule: 99 * km
+  unité: kgCO2e
+
+transport . séjour . train . km:
+  applicable si: séjour . train . présent
+  question: Combien de kilomètres allez vous parcourir en train pendant votre séjour ?
+  description: |
+    Renseignez un nombre de km cohérent (en arrondissant à la dizaine ou centaine supérieure) avec les distances que vous allez parcourir en train pendant votre séjour.
+    Pour rappel, **ne prenez pas en compte** d'éventuels km pour aller sur votre lieu de séjour et revenir à votre domicile. Vous avez dû renseigner ces km lors de la première question.
+  suggestions:
+    Paris ⇄ Amiens : 250
+    Bruxelle ⇄ Lille : 350
+  unité: km
+  plancher: 0
+  par défaut: 300
+
+### Car longue distance ###
+
+transport . séjour . car longue distance . présent:
+  question: Allez-vous utiliser des cars longue distance pour vous déplacer pendant votre séjour ?
+  par défaut: non
+
+transport . séjour . car longue distance:
+  applicable si: séjour . car longue distance . présent
+  titre: Car "Macron"
+  icônes: 🚌
+  formule: km * impact par km
+  unité: kgCO2e
+
+transport . séjour . car longue distance . km:
+  question: Combien de kilomètres allez vous parcourir en car de longue distance (Ouibus, Flixbus, etc.) pendant votre séjour ?
+  description: |
+    Renseignez un nombre de km cohérent (en arrondissant à la dizaine ou centaine supérieure) avec les distances que vous allez parcourir en car longue distance pendant votre séjour.
+    Pour rappel, **ne prenez pas en compte** d'éventuels km pour aller sur votre lieu de séjour et revenir à votre domicile. Vous avez dû renseigner ces km lors de la première question.
+  suggestions:
+    Paris ⇄ Lille: 400
+    Bruxelle ⇄ Lille : 200
+  unité: km
+  par défaut: 300
+
+transport . séjour . car longue distance . impact par km:
+  formule: 0.029
+  unité: kgCO2e/km
+  note: |
+    FE (amont + combustion) Autocar - Gazole longue distance [Base Empreinte - hypothèses de la section "Autobus - autocars"] : 25 gCO2e/passager.km consolidé
+    en intégrant la fabrication du véhicule. Soit une composante "fabrication" estimée à 4.4 gCO2eq/passager.km pour un FE total de 29 gCO2e/passager.km
+    Hypothèses retenues pour la consolidation (reprises de la Base Empreinte) :
+     - 4 kgCO2eq/kg pour la fabrication des autobus/autocar (basé sur une analyse de la littérature)
+     - masse d’un autocar = 12 tonnes
+     - durée de vie en km = 361 884 km
+     - nombre de passagers moyen = 30
+
+### Voiture ###
+
+transport . séjour . voiture . présent:
+  question: Allez-vous utiliser une voiture pour vous déplacer pendant votre séjour ?
+  par défaut: non
+
+### A caler les possibilités existantes entre les types de déplacements en voiture possible pour venir (proprio, covoit, location) et pendant le séjour (oui je garde ma voiture perso, non je continue de louer la même ?; non je loue une nouvelle voiture ?)
+### --> La solution la plus simple semble de poser la question de la location de véhicule si en Q1 on dit "pas voiture" ou covoit car si on vient en voiture (que ça soit la sienne, louée ou empruntée) il quasi certains que les gens la garderont pour leur séjour
+transport . séjour . voiture . identique:
+  applicable si :
+    toutes ces conditions:
+      - transport . séjour . voiture . présent = oui
+      - transport . voiture . présent = oui
+  question: Allez-vous utiliser la même voiture pour vos déplacements pendant le séjour que pour faire l'aller-retour depuis votre domicile ?
+  description: Il est fort probable que si vous veniez en Haut de France en voiture vous 
+
+transport . séjour . voiture:
+  applicable si: séjour . voiture . présent
   titre: Voiture
   icônes: 🚘
   formule:
@@ -18,16 +170,8 @@ transport . voiture:
                         - utilisateur = 'propriétaire'
                         - utilisateur = 'régulier non propriétaire'
                     alors: empreinte calculée
-                  - si: 
-                      toutes ces conditions:
-                        - utilisateur = 'non régulier'
-                        - motorisation = 'thermique'
-                    alors: empreinte moyenne non régulier thermique
-                  - si: 
-                      toutes ces conditions:
-                        - utilisateur = 'non régulier'
-                        - motorisation = 'électrique'
-                    alors: empreinte moyenne non régulier électrique
+                  - si: utilisateur = 'non régulier'
+                    alors: empreinte moyenne non régulier
             - sinon: empreinte moyenne
   unité: kgCO2e
 #  description: |
@@ -42,25 +186,24 @@ transport . voiture:
 #
 #    Notons finalement qu'il est important de prendre en compte à la fois l'usage (les km parcourus) et la construction de ce véhicule de plus d'une tonne de matériaux divers.
 
-transport . voiture . km:
+transport . séjour . voiture . km:
   titre: Km en voiture
-  question: Quelle distance allez-vous parcourir en voiture pour aller et revenir de votre lieu de séjour  ?
+  question: Quelle distance allez-vous parcourir en voiture pendant votre séjour  ?
   description: |
-    Ne cherchez pas à renseignez le kilométrage exact, l'arrondi à la dizaine ou centaine supérieure fera l'affaire.
+    Sommez la distance des différents trajets effectués pendant votre séjour mais ne cherchez pas à renseignez le kilométrage exact, l'arrondi à la dizaine ou centaine supérieure fera l'affaire.
   # It seems that there is a [publicodes bug](https://github.com/publicodes/publicodes/issues/517). For now, we can't use `km annuels moyen réel` directly here, until the problem is fixed.
-#  par défaut: 8210  
-  par défaut: 500 
+  par défaut: 8210
   unité: km
   plancher: 0
   suggestions:
     Paris ⇄ Lille: 400
     Bruxelle ⇄ Lille : 200
 
-transport . voiture . km annuels moyen réel:
+transport . séjour . voiture . km annuels moyen réel:
   #8210
   formule: km annuels moyen * nombre véhicules circulation / population
 
-transport . voiture . km annuels moyen:
+transport . séjour . voiture . km annuels moyen:
   #12216
   formule:
     somme:
@@ -75,7 +218,7 @@ transport . voiture . km annuels moyen:
 
     Nous avons choisi de ne pas prendre en compte la catégorisation pro/perso dans de nombreux véhicules professionels sont utilisés également pour les trajets perso et domicile travail (que nous prenons en compte dans le calculateur).
 
-transport . voiture . km annuels moyen . véhicules légers:
+transport . séjour . voiture . km annuels moyen . véhicules légers:
   formule: 11957
   unité: km
   note: |
@@ -84,7 +227,7 @@ transport . voiture . km annuels moyen . véhicules légers:
 
     Nous considérons néanmoins les données pour l'année 2022 car la distance moyenne parcourue par véhicule n'est dispo que pour 2022.
 
-transport . voiture . km annuels moyen . VUL:
+transport . séjour . voiture . km annuels moyen . VUL:
   formule: 13793
   unité: km
   note: |
@@ -93,7 +236,7 @@ transport . voiture . km annuels moyen . VUL:
 
     Nous considérons néanmoins les données pour l'année 2022 car la distance moyenne parcourue par véhicule n'est dispo que pour 2022.
 
-transport . voiture . nombre véhicules circulation:
+transport . séjour . voiture . nombre véhicules circulation:
   formule: véhicules légers + VUL
   note: |
     Ce chiffre concerne les véhicules en circulation (voitures et VUL).
@@ -103,24 +246,23 @@ transport . voiture . nombre véhicules circulation:
 
     Nous avons choisi de ne pas prendre en compte la catégorisation pro/perso dans de nombreux véhicules professionels sont utilisés également pour les trajets perso et domicile travail (que nous prenons en compte dans le calculateur).
 
-transport . voiture . nombre véhicules circulation . véhicules légers:
+transport . séjour . voiture . nombre véhicules circulation . véhicules légers:
   formule: 38814659
   note: |
     Ce chiffre est issu des [Données sur le parc automobile français au 1er janvier 2023](https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2023?rubrique=&dossier=1348).
 
     Nous considérons néanmoins les données pour l'année 2022 car la distance moyenne parcourue par véhicule n'est dispo que pour 2022.
 
-transport . voiture . nombre véhicules circulation . VUL:
+transport . séjour . voiture . nombre véhicules circulation . VUL:
   formule: 6384963
   note: |
     Ce chiffre est issu des [Données sur le parc automobile français au 1er janvier 2023](https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2023?rubrique=&dossier=1348).
 
     Nous considérons néanmoins les données pour l'année 2022 car la distance moyenne parcourue par véhicule n'est dispo que pour 2022.
 
-#On garde la sémantique du modèle source NGC (propriétaire, régulier non propriétaire, non régulier) pour ne pas se compliquer quand bien même elle n'est pas des plus claire au regard des cas d'utilisation (proprio, location/emprunt, covoit)
-transport . voiture . utilisateur:
-#  question: Utilisez-vous majoritairement la même voiture pour vous déplacer ?
-  question: Allez-vous utiliser votre propre voiture, faire du covoiturage ou bien utiliser une voiture louée ou empruntée ?
+transport . séjour . voiture . utilisateur:
+  question: Utilisez-vous majoritairement la même voiture pour vous déplacer ?
+#  question: Allez-vous utiliser votre propre voiture ou une voiture louée ou empruntée ?
   applicable si: km > 0
   formule:
     une possibilité:
@@ -129,29 +271,41 @@ transport . voiture . utilisateur:
         - propriétaire
         - régulier non propriétaire
         - non régulier
+  description: |
+    Deux données sont importantes dans le cadre du calcul de l'empreinte liée à la construction :
+
+    - L'usage ou non d'un même véhicule pour tous les kilomètres parcourus (si non : on vous attribue un véhicule "moyen")
+    - La propriété ou non dudit véhicule s'il s'agit toujours du même
+
+    Nous avons fait le choix d'attribuer l'empreinte de construction au pro-rata des kilomètres parcourus. Mais cette approche avait deux défauts :
+
+    - Elle était extrêmement avantageuse pour les petits rouleurs, alors que leur véhicule qui roule moins peut s'user plus vite (un moteur a besoin de tourner régulièrement) et donc avoir une durée de vie inférieure.
+    - Elle ne permettait pas de valoriser l'engagement de ne pas disposer de son propre véhicule, et de pratiquer à la place l'autopartage, ou la location ponctuelle (car l'empreinte de construction était la même, que l'on soit propriétaire ou non).
+
+    > Pour pallier ces deux problèmes, et mieux représenter qu'un véhicule possédé mais sous-utilisé s'use plus vite et mérite une empreinte de construction plus importante, **nous appliquons un seuil pour la partie construction de l'empreinte, pour les propriétaires**.
   par défaut: "'régulier non propriétaire'"
 
-transport . voiture . utilisateur . propriétaire:
-  titre: Je vais utiliser ma propre voiture
-  description: Cette voiture vous appartient que vous soyez une personne seule, un couple, ou une famille
-transport . voiture . utilisateur . régulier non propriétaire:
-  titre: Je vais louer ou emprunter une voiture
-#  description: Vous allez louer ou emprunter la voiture d'une connaissance.
-transport . voiture . utilisateur . non régulier:
-  titre: Je vais faire du covoiturage
-#  description: Vous ne disposez pas de votre propre véhicule et vous optez pour  usages sont tous différents.
+transport . séjour . voiture . utilisateur . propriétaire:
+  titre: Oui et j'en suis propriétaire
+  description: Vous faites la grande majorité de vos trajets avec un même véhicule que vous possédez.
+transport . séjour . voiture . utilisateur . régulier non propriétaire:
+  titre: Oui mais ce n'est pas la mienne
+  description: Vous utilisez presque systématiquement la voiture d'un ami, de votre grand-mère, ou le même véhicule en autopartage.
+transport . séjour . voiture . utilisateur . non régulier:
+  titre: Non, je change souvent (autopartage, proches, taxi...)
+  description: Vous ne disposez pas de votre propre véhicule et les usages sont tous différents.
 
-#transport . voiture . notif utilsateur irrégulier:
-#  type: notification
-#  formule:
-#    toutes ces conditions:
-#      - est défini: voiture . utilisateur
-#      - utilisateur = 'non régulier'
-#      - km > 0
-#  description: |
-#    Vous roulez avec des véhicules différents : nous vous avons donc attribué les caractéristiques d'une voiture "moyenne".
+transport . séjour . voiture . notif utilsateur irrégulier:
+  type: notification
+  formule:
+    toutes ces conditions:
+      - est défini: voiture . utilisateur
+      - utilisateur = 'non régulier'
+      - km > 0
+  description: |
+    Vous roulez avec des véhicules différents : nous vous avons donc attribué les caractéristiques d'une voiture "moyenne".
 
-transport . voiture . empreinte moyenne:
+transport . séjour . voiture . empreinte moyenne:
   valeur: voiture . empreinte calculée
   contexte:
     voiture . utilisateur: "'propriétaire'"
@@ -166,60 +320,67 @@ transport . voiture . empreinte moyenne:
         voiture . motorisation: "'thermique'"
         voiture . thermique . carburant: "'essence E5 ou E10'"
 
-transport . voiture . empreinte moyenne non régulier thermique:
+transport . séjour . voiture . empreinte moyenne non régulier:
   valeur: voiture . empreinte calculée
   contexte:
-    voiture . construction: 0 #En vérifiant dans quick-doc le 0 ici n'est pas overuled par le "régulier non propriétaire" de voiture . utilisateur (dans cette fonction contexte) qui aurait pu se répercuter dans la variable voiture . construction:
     voiture . utilisateur: "'régulier non propriétaire'"
+    voiture . gabarit: "'berline'"
+    voiture . motorisation: "'thermique'"
     voiture . thermique . carburant: "'essence E5 ou E10'"
     voiture . thermique . consommation aux 100:
       valeur: voiture . thermique . consommation estimée
       contexte:
         voiture . utilisateur: "'régulier non propriétaire'"
+        voiture . gabarit: "'berline'"
+        voiture . motorisation: "'thermique'"
         voiture . thermique . carburant: "'essence E5 ou E10'"
 
-transport . voiture . empreinte moyenne non régulier électrique:
-  valeur: voiture . empreinte calculée
-  contexte:
-    voiture . construction: 0 #En vérifiant dans quick-doc le 0 ici n'est pas overuled par le "régulier non propriétaire" de voiture . utilisateur (dans cette fonction contexte) qui aurait pu se répercuter dans la variable voiture . construction:
-    voiture . utilisateur: "'régulier non propriétaire'"
-    voiture . électrique . consommation aux 100:
-      valeur: voiture . électrique . consommation estimée
-      contexte:
-        voiture . utilisateur: "'régulier non propriétaire'"
-
-transport . voiture . empreinte calculée:
+transport . séjour . voiture . empreinte calculée:
   formule: (usage + construction) / voyageurs
   unité: kgCO2e
 
-transport . voiture . voyageurs:
+transport . séjour . voiture . voyageurs:
   titre: Nombre de voyageurs
   question: Quel sera le nombre moyen de voyageurs dans la voiture ?
-  applicable si: km > 0
+  applicable si:
+    une de ces conditions:
+      - transport . voiture . utilisateur = 'non régulier'
+      - transport . train . présent = 'oui'
+      - transport . car longue distance . présent = 'oui'
+      - transport . deux roues . présent = 'oui'
+      - transport . taxi . présent = 'oui'  
+#Je pense qu'on peut supprimer la condition ci-dessous
+#  applicable si: km > 0
   description: |
-    Si vous voyagez en couple, renseignez 2. Si vous êtes une famille de quatre, renseignez 4, etc.
-    
-    Si jamais vous prévoyez de prendre des covoitureurs ou si vous allez faire du covoiturage vous-même, essayez d'estimer un nombre cohérent avec vos habitudes et votre véhicule.
+    Une voiture consomme à peu près autant qu'elle ait 1, 2 ou 5 voyageurs à bord. Voyager à plusieurs, c'est donc potentiellement diviser par 5 l'empreinte individuelle !
+
+    🤔 Mais cette question n'est pas facile : il est probable que dans une année vous soyez parti en vacances à 3, ayez pris la voiture quotidiennement tout seul, etc.
+
+    Essayez d'estimer une moyenne approximative : si tous les jours vous prenez la voiture tout seul, mettez 1 ou 1,2.
+    Si vous ne la prenez qu'en famille ou entre amis, mettez 3 ou 4.
+
+    > Dans une prochaine évolution du simulateur, nous pourrons séparer les questions par type de trajets : vacances, domicile-travail, quotidiens avec un nombre de voyageurs personnalisable.
+
+    Bien sûr, si vous vous faites conduire ou si vous prenez le taxi, le chauffeur ne compte pas, car il est au service de votre déplacement.
   plancher: 1
   avertissement: |
     Le nombre de voyageurs ne peut pas être nul. Au volant de votre voiture, vous en êtes le premier voyageur.
-  par défaut: 2
-#  par défaut: 1.2
+  par défaut: 1.2
   suggestions:
     je suis seul: 1
     deux: 2
     cinq: 5
 
-transport . voiture . usage:
+transport . séjour . voiture . usage:
   titre: Usage de la voiture
   formule: usage au kilomètre * km
   unité: kgCO2e
 
-transport . voiture . usage au kilomètre:
+transport . séjour . voiture . usage au kilomètre:
   formule: empreinte au kilomètre + base au kilomètre
   unité: kgCO2e/km
 
-transport . voiture . empreinte au kilomètre:
+transport . séjour . voiture . empreinte au kilomètre:
   formule:
     variations:
       - si:
@@ -235,7 +396,7 @@ transport . voiture . empreinte au kilomètre:
               alors: empreinte au kilomètre non régulier
       - sinon: empreinte au kilomètre moyenne
 
-transport . voiture . empreinte au kilomètre moyenne:
+transport . séjour . voiture . empreinte au kilomètre moyenne:
   valeur: voiture . empreinte au kilomètre calculée
   contexte:
     voiture . utilisateur: "'propriétaire'"
@@ -250,7 +411,7 @@ transport . voiture . empreinte au kilomètre moyenne:
         voiture . motorisation: "'thermique'"
         voiture . thermique . carburant: "'essence E5 ou E10'"
 
-transport . voiture . empreinte au kilomètre non régulier:
+transport . séjour . voiture . empreinte au kilomètre non régulier:
   valeur: voiture . empreinte au kilomètre calculée
   contexte:
     voiture . utilisateur: "'régulier non propriétaire'"
@@ -265,7 +426,7 @@ transport . voiture . empreinte au kilomètre non régulier:
         voiture . motorisation: "'thermique'"
         voiture . thermique . carburant: "'essence E5 ou E10'"
 
-transport . voiture . empreinte au kilomètre calculée:
+transport . séjour . voiture . empreinte au kilomètre calculée:
   formule:
     variations:
       - si: motorisation = 'thermique'
@@ -291,16 +452,24 @@ transport . voiture . empreinte au kilomètre calculée:
 
     > Hybride : enlever 15% aux consommations ci-dessus (source ADEME: http://www2.ademe.fr/servlet/KBaseShow?catid=13655)
 
-transport . voiture . motorisation:
+transport . séjour . voiture . motorisation:
   question: Quelle est la motorisation de la voiture que vous allez utiliser ?
   applicable si:
-    toutes ces conditions:
-      - est défini: utilisateur
-      - une de ces conditions:
-          - utilisateur = 'propriétaire'
-          - utilisateur = 'régulier non propriétaire'
-          - utilisateur = 'non régulier'
-      - km > 0
+    une de ces conditions:
+      - transport . voiture . utilisateur = 'non régulier'
+      - transport . train . présent = 'oui'
+      - transport . car longue distance . présent = 'oui'
+      - transport . deux roues . présent = 'oui'
+      - transport . taxi . présent = 'oui'  
+#Je pense qu'on peut supprimer le bloc de conditions ci-dessous
+#  applicable si:
+#    toutes ces conditions:
+#      - est défini: utilisateur
+#      - une de ces conditions:
+#          - utilisateur = 'propriétaire'
+#          - utilisateur = 'régulier non propriétaire'
+#      - km > 0
+#  description: 💡 **Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
   par défaut: "'thermique'"
   formule:
     une possibilité:
@@ -309,40 +478,47 @@ transport . voiture . motorisation:
         - thermique
         - hybride
         - électrique
-transport . voiture . motorisation . thermique:
+transport . séjour . voiture . motorisation . thermique:
   titre: Thermique (diesel/essence/GPL)
-transport . voiture . motorisation . électrique:
+transport . séjour . voiture . motorisation . électrique:
   titre: Électrique
-transport . voiture . motorisation . hybride:
+transport . séjour . voiture . motorisation . hybride:
   titre: Hybride
 
-transport . voiture . thermique:
+transport . séjour . voiture . thermique:
   titre: Voiture thermique
 
-transport . voiture . thermique . empreinte au kilomètre:
+transport . séjour . voiture . thermique . empreinte au kilomètre:
   titre: empreinte au km thermique
   formule: consommation au kilomètre * empreinte au litre
   note: Cette méthode de calcul, plutôt qu'un barème gabarit -> empreinte au km, permet à l'utilisateur qui connait la consommation moyenne réelle de sa voiture de la saisir pour plus de précision.
   unité: kgCO2e/km
 
-transport . voiture . thermique . consommation au kilomètre:
+transport . séjour . voiture . thermique . consommation au kilomètre:
   formule: consommation aux 100 / 100 km/centkm
   unité: l/km
 
-transport . voiture . thermique . consommation aux 100:
+transport . séjour . voiture . thermique . consommation aux 100:
   question: Connaissez-vous la consommation moyenne de la voiture ?
   applicable si:
-    toutes ces conditions:
-      - est défini: utilisateur
-      - une de ces conditions:
-          - utilisateur = 'propriétaire'
-          - utilisateur = 'régulier non propriétaire'
-      - une de ces conditions:
-          - motorisation = 'thermique'
-          - motorisation = 'hybride'
-      - km > 0
-  description: |
-    **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
+    une de ces conditions:
+      - transport . voiture . utilisateur = 'non régulier'
+      - transport . train . présent = 'oui'
+      - transport . car longue distance . présent = 'oui'
+      - transport . deux roues . présent = 'oui'
+      - transport . taxi . présent = 'oui'
+### Je pense qu'on peut supprimer le bloc de conditions ci-dessous
+#      - toutes ces conditions:
+#          - est défini: utilisateur
+#          - une de ces conditions:
+#              - utilisateur = 'propriétaire'
+#              - utilisateur = 'régulier non propriétaire'
+#          - une de ces conditions:
+#              - motorisation = 'thermique'
+#              - motorisation = 'hybride'
+#          - km > 0
+#  description: |
+#    **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
   suggestions:
     5 l/100km: 5
     7 l/100km: 7
@@ -351,7 +527,7 @@ transport . voiture . thermique . consommation aux 100:
   unité: l/centkm
   note: Les suggestions de réponse sont à la louche, à préciser et sourcer.
 
-transport . voiture . thermique . consommation estimée:
+transport . séjour . voiture . thermique . consommation estimée:
   titre: Consommation estimée voiture
   note: |
     > Si nous avons travaillé les propositions de consommation moyenne, l'idéal au vu de l'impact de cette donnée est bien que l'utilisateur ou l'utilisatrice saisisse sa propre consommation réelle, moyennée sur son usage.
@@ -455,47 +631,47 @@ transport . voiture . thermique . consommation estimée:
             - si: thermique . carburant = 'GPL'
               alors: SUV essence * 1.15
 
-transport . voiture . thermique . consommation estimée . petite diesel:
+transport . séjour . voiture . thermique . consommation estimée . petite diesel:
   titre: Consommation moyenne petite voiture diesel
   formule: 4.83
   unité: l/centkm
 
-transport . voiture . thermique . consommation estimée . petite essence:
+transport . séjour . voiture . thermique . consommation estimée . petite essence:
   titre: Consommation moyenne petite voiture essence
   formule: 7.11
   unité: l/centkm
 
-transport . voiture . thermique . consommation estimée . moyenne diesel:
+transport . séjour . voiture . thermique . consommation estimée . moyenne diesel:
   titre: Consommation moyenne voiture "moyenne" diesel
   formule: 4.96
   unité: l/centkm
 
-transport . voiture . thermique . consommation estimée . moyenne essence:
+transport . séjour . voiture . thermique . consommation estimée . moyenne essence:
   titre: Consommation moyenne voiture "moyenne" essence
   formule: 6.59
   unité: l/centkm
 
-transport . voiture . thermique . consommation estimée . VUL diesel:
+transport . séjour . voiture . thermique . consommation estimée . VUL diesel:
   titre: Consommation moyenne VUL diesel
   formule: 7.7
   unité: l/centkm
 
-transport . voiture . thermique . consommation estimée . VUL essence:
+transport . séjour . voiture . thermique . consommation estimée . VUL essence:
   titre: Consommation moyenne VUL essence
   formule: 9
   unité: l/centkm
 
-transport . voiture . thermique . consommation estimée . SUV diesel:
+transport . séjour . voiture . thermique . consommation estimée . SUV diesel:
   titre: Consommation moyenne SUV diesel
   formule: 5.48
   unité: l/centkm
 
-transport . voiture . thermique . consommation estimée . SUV essence:
+transport . séjour . voiture . thermique . consommation estimée . SUV essence:
   titre: Consommation moyenne SUV essence
   formule: 7.13
   unité: l/centkm
 
-transport . voiture . thermique . empreinte au litre:
+transport . séjour . voiture . thermique . empreinte au litre:
   description: |
     Les empreintes sont disponibles de façon assez détaillée sur [la base carbone](https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=diesel), ici par exemple pour le "diesel". Idem pour "essence".
     Pour les retrouver facilement, filtrez par unité "kgCO2e/litre" et par géographie "France continentale".
@@ -516,18 +692,26 @@ transport . voiture . thermique . empreinte au litre:
         alors: 1.86
   unité: kgCO2e/l
 
-transport . voiture . thermique . carburant:
+transport . séjour . voiture . thermique . carburant:
   question: Quel type de carburant la voiture consomme-t-elle ?
   applicable si:
-    toutes ces conditions:
-      - est défini: utilisateur
-      - une de ces conditions:
-          - utilisateur = 'propriétaire'
-          - utilisateur = 'régulier non propriétaire'
-      - une de ces conditions:
-          - motorisation = 'thermique'
-          - motorisation = 'hybride'
-      - km > 0
+    une de ces conditions:
+      - transport . voiture . utilisateur = 'non régulier'
+      - transport . train . présent = 'oui'
+      - transport . car longue distance . présent = 'oui'
+      - transport . deux roues . présent = 'oui'
+      - transport . taxi . présent = 'oui'  
+#Je pense qu'on peut supprimer le bloc de conditions ci-dessous  
+#  applicable si:
+#    toutes ces conditions:
+#      - est défini: utilisateur
+#      - une de ces conditions:
+#          - utilisateur = 'propriétaire'
+#          - utilisateur = 'régulier non propriétaire'
+#      - une de ces conditions:
+#          - motorisation = 'thermique'
+#          - motorisation = 'hybride'
+#      - km > 0
   description: |
     Pour comprendre les différents types de carburants, [cet article pédagogique](https://www.francetvinfo.fr/economie/automobile/essence/les-carburants-changent-de-nom-a-la-pompe-voici-comment-vous-y-retrouver_2967013.html) est très utile.
 
@@ -557,16 +741,16 @@ transport . voiture . thermique . carburant:
     Il a une empreinte carbone par litre moins importante que les véhicules essence ou diesel, par contre sa consommation est légèrement supérieure, ce qui compense légèrement le gain.
     Mais si les rejets de CO2e sont au final presque équivalents entre le GPL et les autres carburants, c'est [du côté de l'émission de particules nocives](https://agirpourlatransition.ademe.fr/particuliers/conso/conso-responsable/comment-choisir-voiture-deux-roues-moins-polluant) que le GPL est un bien meilleur élève que les autres carburants thermiques.
 
-transport . voiture . thermique . carburant . gazole B7 ou B10:
+transport . séjour . voiture . thermique . carburant . gazole B7 ou B10:
   titre: Gazole (B7 ou B10)
-transport . voiture . thermique . carburant . essence E5 ou E10:
+transport . séjour . voiture . thermique . carburant . essence E5 ou E10:
   titre: Essence (E5 ou E10)
-transport . voiture . thermique . carburant . essence E85:
+transport . séjour . voiture . thermique . carburant . essence E85:
   titre: Essence E85 (biocarburants)
-transport . voiture . thermique . carburant . GPL:
+transport . séjour . voiture . thermique . carburant . GPL:
   titre: GPL (Gaz de Pétrole Liquéfiés)
 
-transport . voiture . notif carburant:
+transport . séjour . voiture . notif carburant:
   type: notification
   formule: thermique . carburant = 'essence E85'
   description: |
@@ -575,21 +759,21 @@ transport . voiture . notif carburant:
 
     Nous avons fait le choix d'ajouter cette option dans le test, mais il faut savoir que ce résultat **n'est pas représentatif des conséquences environnementales probables liées à l'utilisation de biocarburants.**
 
-transport . voiture . électrique:
+transport . séjour . voiture . électrique:
   titre: Voiture électrique
 
-transport . voiture . électrique . empreinte au kilomètre:
+transport . séjour . voiture . électrique . empreinte au kilomètre:
   titre: empreinte au km électrique
   unité: kgCO2e/km
   formule: consommation au kilomètre * logement . électricité . empreinte au kWh
   note: |
     Nous considérons ici le mix électrique moyen français. La majorité des possesseurs de voitures électriques rechargent leur véhicule chez eux avec une tarification heure creuses, qui est plus avantageuse financièrement et correspond d'ailleurs aux moments où la demande en électricité est moins forte et le mix électrique moins carboné (les centrales gaz ne sont pas sollicitées).
 
-transport . voiture . électrique . consommation au kilomètre:
+transport . séjour . voiture . électrique . consommation au kilomètre:
   formule: consommation aux 100 / 100 km/centkm
   unité: kWh/km
 
-transport . voiture . électrique . consommation aux 100:
+transport . séjour . voiture . électrique . consommation aux 100:
   titre: Consommation électrique au km
   question: Connaissez-vous la consommation moyenne de la voiture ?
   applicable si:
@@ -607,7 +791,7 @@ transport . voiture . électrique . consommation aux 100:
   par défaut: consommation estimée
   unité: kWh/centkm
 
-transport . voiture . électrique . consommation estimée:
+transport . séjour . voiture . électrique . consommation estimée:
   variations:
     - si: gabarit = 'petite'
       alors: 15
@@ -622,16 +806,27 @@ transport . voiture . électrique . consommation estimée:
   unité: kWh/centkm
   note: Données moyennes fournies par le service Transport et Mobilité de l'ADEME.
 
-transport . voiture . gabarit:
+transport . séjour . voiture . gabarit:
   question: Quel est le gabarit de la voiture ?
   applicable si:
-    toutes ces conditions:
-      - est défini: utilisateur
-      - une de ces conditions:
-          - utilisateur = 'propriétaire'
-          - utilisateur = 'régulier non propriétaire'
-          - utilisateur = 'non régulier'
-      - km > 0
+    une de ces conditions:
+      - transport . voiture . utilisateur = 'non régulier'
+      - transport . train . présent = 'oui'
+      - transport . car longue distance . présent = 'oui'
+      - transport . deux roues . présent = 'oui'
+      - transport . taxi . présent = 'oui'  
+#Je pense qu'on peut supprimer le bloc de conditions ci-dessous
+#  applicable si:
+#    toutes ces conditions:
+#      - est défini: utilisateur
+#      - une de ces conditions:
+#          - utilisateur = 'propriétaire'
+#          - utilisateur = 'régulier non propriétaire'
+#      - km > 0
+#  description: |
+#    **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
+#
+#    Plus une voiture est lourde et haute donc avec une forte prise au vent, plus elle consomme donc plus elle pollue !
   par défaut: "'berline'"
   note: |
     Nous considérons que la voiture par défaut est une "Berline", en témoigne [une étude menée par AAA Data](https://www.alphabet.com/fr-fr/parc-automobile-roulant-les-donnees-cles)
@@ -646,49 +841,49 @@ transport . voiture . gabarit:
         - berline
         - SUV
 
-transport . voiture . gabarit . petite:
+transport . séjour . voiture . gabarit . petite:
   titre: Petite
   description: Citadine type Zoé, Fiat 500
-transport . voiture . gabarit . moyenne:
+transport . séjour . voiture . gabarit . moyenne:
   titre: Moyenne
   description: Modèle au dessus de la petite citadine, type Mégane, Golf
-transport . voiture . gabarit . VUL:
+transport . séjour . voiture . gabarit . VUL:
   titre: Véhicule utilitaire
   description: Camionette de type Kangoo ou Partner jusqu'au Trafic et Vito
-transport . voiture . gabarit . berline:
+transport . séjour . voiture . gabarit . berline:
   titre: Berline
   description: Une voiture longue, type 308, Tesla Model 3, Audi A3
-transport . voiture . gabarit . SUV:
+transport . séjour . voiture . gabarit . SUV:
   titre: SUV
   description: |
     "Sport utility vehicle", type 4x4 urbain
 
-transport . voiture . gabarit . petite . poids:
+transport . séjour . voiture . gabarit . petite . poids:
   formule: 1000
   unité: kg
   note: Les valeurs de poids sont tirées du simulateur [carculator](https://carculator.readthedocs.io/en/latest/modeling.html#size-classes) qui utilise le papier [Cost and well-to-wheel implications of the vehicle fleet CO2 emission regulation in the European Union, Christian and others, 2014](https://www.sciencedirect.com/science/article/abs/pii/S0965856414000494?via%3Dihub)
 
-transport . voiture . gabarit . moyenne . poids:
+transport . séjour . voiture . gabarit . moyenne . poids:
   formule: 1500
   unité: kg
   note: Les valeurs de poids sont tirées du simulateur [carculator](https://carculator.readthedocs.io/en/latest/modeling.html#size-classes) qui utilise le papier [Cost and well-to-wheel implications of the vehicle fleet CO2 emission regulation in the European Union, Christian and others, 2014](https://www.sciencedirect.com/science/article/abs/pii/S0965856414000494?via%3Dihub)
 
-transport . voiture . gabarit . VUL . poids:
+transport . séjour . voiture . gabarit . VUL . poids:
   formule: 1750
   unité: kg
   note: Les valeurs de poids sont tirées du simulateur [carculator](https://carculator.readthedocs.io/en/latest/modeling.html#size-classes) qui utilise le papier [Cost and well-to-wheel implications of the vehicle fleet CO2 emission regulation in the European Union, Christian and others, 2014](https://www.sciencedirect.com/science/article/abs/pii/S0965856414000494?via%3Dihub)
 
-transport . voiture . gabarit . berline . poids:
+transport . séjour . voiture . gabarit . berline . poids:
   formule: 1750
   unité: kg
   note: Les valeurs de poids sont tirées du simulateur [carculator](https://carculator.readthedocs.io/en/latest/modeling.html#size-classes) qui utilise le papier [Cost and well-to-wheel implications of the vehicle fleet CO2 emission regulation in the European Union, Christian and others, 2014](https://www.sciencedirect.com/science/article/abs/pii/S0965856414000494?via%3Dihub)
 
-transport . voiture . gabarit . SUV . poids:
+transport . séjour . voiture . gabarit . SUV . poids:
   formule: 2000
   unité: kg
   note: Les valeurs de poids sont tirées du simulateur [carculator](https://carculator.readthedocs.io/en/latest/modeling.html#size-classes) qui utilise le papier [Cost and well-to-wheel implications of the vehicle fleet CO2 emission regulation in the European Union, Christian and others, 2014](https://www.sciencedirect.com/science/article/abs/pii/S0965856414000494?via%3Dihub)
 
-transport . voiture . base au kilomètre:
+transport . séjour . voiture . base au kilomètre:
   applicable si:
     toutes ces conditions:
       - est défini: utilisateur
@@ -699,7 +894,7 @@ transport . voiture . base au kilomètre:
   formule: entretien pondéré + climatisation
   unité: kgCO2e/km
 
-transport . voiture . entretien pondéré:
+transport . séjour . voiture . entretien pondéré:
   formule:
     variations:
       - si: motorisation = 'thermique'
@@ -715,21 +910,21 @@ transport . voiture . entretien pondéré:
     Pour ce qui est d'un véhicule hybride, son entretien se situe entre celui d'un véhicule électrique et celui d'un véhicule thermique. Cela dépend de l'utilisation du moteur électrique ou thermique.
     Nous choisissons de partir sur une hypothèse conservatrice de -10% de coût d'entretien par rapport aux véhicules thermiques.
 
-transport . voiture . entretien:
-  formule: ((empreinte branche . G45 * 1000000 kgCO2e/ktCO2e * 0.07) / nombre véhicules circulation) / transport . voiture . km annuels moyen
+transport . séjour . voiture . entretien:
+  formule: ((empreinte branche . G45 * 1000000 kgCO2e/ktCO2e * 0.07) / nombre véhicules circulation) / transport . séjour . voiture . km annuels moyen
   unité: kgCO2e/km
   note: |
     Dans le poste G45, nous prenons la part Entretien et réparation de véhicules automobiles (7%).
     Nous le divisons par le nombre de véhicules en circulation, puis par 12200 km (la moyenne de km effectués par véhicule) pour obtenir une empreinte en kgCO2e / km.
 
-transport . voiture . climatisation:
-  formule: (émissions gaz fluorés transport / nombre véhicules circulation) / transport . voiture . km annuels moyen
+transport . séjour . voiture . climatisation:
+  formule: (émissions gaz fluorés transport / nombre véhicules circulation) / transport . séjour . voiture . km annuels moyen
   unité: kgCO2e/km
   note: |
     L'idée ici est de prendre en compte une part des émissions liées aux gaz fluorés issus des climatisations des véhicules
     en France via le total des émissions dues à ces gaz sur le secteur du transport (voitures et VUL diesel, essence, GNV, GPL, électrique).
 
-transport . voiture . climatisation . émissions gaz fluorés transport:
+transport . séjour . voiture . climatisation . émissions gaz fluorés transport:
   titre: Emissions nationales dûes aux climatisations des voitures et VUL
   formule: 1374000000
   unité: kgCO2e
@@ -739,7 +934,7 @@ transport . voiture . climatisation . émissions gaz fluorés transport:
     D'après l'excel [Données par substance de gaz à effet de serre (GES) édition 2023, onglet "GF-UE_total"](https://www.citepa.org/wp-content/uploads/publications/secten/2023/Citepa_gaz_a_effet_de_serre_v2.zip),
     les émissions de gaz fluorés pour le secteur du transport (provenant des équipements de réfrigération et d'air conditionné, utilisant des halocarbures ou du SF6), sont de 1374 ktCO₂e.
 
-transport . voiture . construction:
+transport . séjour . voiture . construction:
   titre: Construction de la voiture
   formule:
     variations:
@@ -748,30 +943,28 @@ transport . voiture . construction:
             - voiture . utilisateur = 'propriétaire'
             - km < seuil km
         alors: construction au kilomètre * seuil km
-      - si: voiture . utilisateur = 'régulier non propriétaire'
-        alors: construction au kilomètre * km
-      - sinon: 0
+      - sinon: construction au kilomètre * km
   unité: kgCO2e
   note: |
     Pour le moment, nous ne considérons pas l'amortissement complet d'une voiture (c'est-à-dire que nous n'avons pas l'info de l'âge ou le kilométrage complet de la voiture donc sa contruction ne sera jamais nulle).
   # Nous pourrions utiliser ici le mécanisme `plancher` avec pour valeur "construction au kilomètre * seuil km"
   # mais il est plus simple ici de comprendre la méhotodo avec `variations`.
 
-transport . voiture . construction . seuil km:
+transport . séjour . voiture . construction . seuil km:
   formule: voiture . durée de vie en km / durée de vie moyenne
   plafond: voiture . km annuels moyen
   unité: km
 
-transport . voiture . durée de vie moyenne:
+transport . séjour . voiture . durée de vie moyenne:
   formule: 20
   note: |
     On considère que l'âge moyen d'une voiture qui part à la casse est de 20 ans. Néanmoins, c'est une hypothèse forte car on peut légitimement penser qu'une voiture électrique possède une durée de vie plus longue qu'une voiture thermique. Il faudrait cependant considérer une valeur plus importante également pour la durée de vie en km.
 
-transport . voiture . construction au kilomètre:
+transport . séjour . voiture . construction au kilomètre:
   formule: barème construction * amortissement
   unité: kgCO2e/km
 
-transport . voiture . barème construction:
+transport . séjour . voiture . barème construction:
   formule:
     variations:
       - si: motorisation = 'thermique'
@@ -801,7 +994,7 @@ transport . voiture . barème construction:
     - Pour les véhicules électriques, nous calculons l'empreinte de la batterie en fonction de sa capacité, puis nous ajoutons l'empreinte de la construction d'une voiture thermique de gamme équivalente.
     - Pour les véhicules hybrides, nous utilisons les mêmes données que pour les véhicules électriques (hypothèse forte, voir note sur le barème hybride).
 
-transport . voiture . barème construction . barème thermique:
+transport . séjour . voiture . barème construction . barème thermique:
   formule:
     variations:
       - si: gabarit = 'petite'
@@ -816,12 +1009,12 @@ transport . voiture . barème construction . barème thermique:
         alors: empreinte par kg * gabarit . SUV . poids
   unité: kgCO2e
 
-transport . voiture . barème construction . barème thermique . empreinte par kg:
+transport . séjour . voiture . barème construction . barème thermique . empreinte par kg:
   formule: 4.5
   unité: kgCO2e/kg
   note: Facteur d'émission issu de la Base Empreinte.
 
-transport . voiture . barème construction . barème électrique:
+transport . séjour . voiture . barème construction . barème électrique:
   formule: barème thermique + batterie
   unité: kgCO2e
   note: |
@@ -831,7 +1024,7 @@ transport . voiture . barème construction . barème électrique:
     > Ce surplus d'émissions est d'environ +50% (mais varie d'environ +20% à plus d'une multiplication par 2 selon les études).
     https://bonpote.com/la-voiture-electrique-solution-ideale-pour-le-climat/
 
-transport . voiture . barème construction . barème électrique . batterie:
+transport . séjour . voiture . barème construction . barème électrique . batterie:
   formule: capacité * barème construction . batterie . empreinte par kWh
   unité: kgCO2e
   note: |
@@ -840,7 +1033,7 @@ transport . voiture . barème construction . barème électrique . batterie:
     La capacité de la batterie est exprimée en kWh, elle peut varier considérablement selon les modèles de voitures électriques.
     Pour réduire l'impact de la voiture électrique il faut privilégier les modèles avec une batterie de petite capacité.
 
-transport . voiture . barème construction . barème électrique . batterie . capacité:
+transport . séjour . voiture . barème construction . barème électrique . batterie . capacité:
   applicable si:
     toutes ces conditions:
       - est défini: utilisateur
@@ -871,22 +1064,22 @@ transport . voiture . barème construction . barème électrique . batterie . ca
     autonomie moyenne: 65
     grande autonomie: 100
 
-transport . voiture . barème construction . barème hybride:
+transport . séjour . voiture . barème construction . barème hybride:
   formule: barème thermique + batterie
   unité: kgCO2e
   note: |
     On fait l'hypothèse forte que la construction d'un véhicule hybride correspond à l'empreinte d'un véhicule électrique équipé d'une petite batterie. Néanmoins, le calcul est plus complexe, notamment car le type de véhicule hybride (rechargeable ou non) sur la composition de la voiture. On a également 2 moteurs...
 
-transport . voiture . barème construction . barème hybride . batterie:
+transport . séjour . voiture . barème construction . barème hybride . batterie:
   formule: capacité * barème construction . batterie . empreinte par kWh
   unité: kgCO2e
 
-transport . voiture . barème construction . barème hybride . capacité:
+transport . séjour . voiture . barème construction . barème hybride . capacité:
   valeur: 40
   unité: kWh
 
-transport . voiture . barème construction . batterie:
-transport . voiture . barème construction . batterie . empreinte par kWh:
+transport . séjour . voiture . barème construction . batterie:
+transport . séjour . voiture . barème construction . batterie . empreinte par kWh:
   formule: 100
   unité: kgCO2e/kWh
   note: |
@@ -900,7 +1093,7 @@ transport . voiture . barème construction . batterie . empreinte par kWh:
 
     [Étude Carbone 4 sur l'empreinte des batteries (en)](https://www.carbone4.com/publication-liion-battery-carbon-footprint)
 
-transport . voiture . amortissement:
+transport . séjour . voiture . amortissement:
   description: |
     Les discussions ont été animées sur l'amortissement de la voiture. Précédemment, dans le but de décourager l'achat neuf, un amortissement non linéaire avait été imaginé, fortement dégressif dans le temps, sur 10 ans.
     Cet amortissement non linéaire avait le mérite de décourager l'achat, et de bien faire comprendre à l'utilisateur qu'une grande partie de l'empreinte du véhicule est liée à sa production, donc à l'achat neuf.
@@ -917,7 +1110,7 @@ transport . voiture . amortissement:
     C'est donc, finalement, ce choix-là que nous avons fait : l'amortissement du véhicule est fonction du nombre de km parcourus, au regard du nombre de km maximal correspondant au gabarit du véhicule.
   formule: 1 / durée de vie en km
 
-transport . voiture . durée de vie en km:
+transport . séjour . voiture . durée de vie en km:
   formule:
     variations:
       - si: gabarit = 'petite'
@@ -939,3 +1132,161 @@ transport . voiture . durée de vie en km:
     - Gabarit "SUV" : correspondant au segment E ou F, soit 270000 km
 
     Pour le moment, nous ne faisons pas la différence entre thermique et électrique. C'est une hypothèse très forte.*
+
+### Deux roues ###
+# A faire : 
+#   - ajouter une question pour savoir le nombre de personnes sur le deux roues ?
+
+transport . séjour . deux roues . présent:
+  question: Allez-vous utiliser un deux roues pour vous déplacer pendant votre séjour ?
+  par défaut: non
+
+transport . séjour . deux roues:
+  applicable si: présent
+  icônes: 🛵
+  formule:
+    variations:
+      - si: transport . séjour . deux roues . présent = oui
+#          est défini: usager
+        alors: empreinte
+      - sinon: empreinte moyenne
+  unité: kgCO2e
+
+#transport . séjour . deux roues . usager:
+#  question: Utilisez-vous un scooter ou une moto ?
+#  description: |
+#    Les scooters et motos sont aujourd'hui très majoritairement des engins qui fonctionnent au pétrole. Les scooters électriques ayant fait une réelle percée, ils sont ajoutés au modèle.
+
+transport . séjour . deux roues . empreinte:
+  icônes: 🛵
+  formule: (empreinte au km + entretien pondéré) * km
+  unité: kgCO2e
+
+transport . séjour . deux roues . empreinte moyenne:
+  valeur: deux roues . empreinte
+  contexte:
+#    deux roues . présent: oui
+    deux roues . type: "'moto sup 250'"
+    deux roues . km: km annuels moyen * pourcentage motards
+
+transport . séjour . deux roues . km:
+  applicable si: présent
+  question: Combien de km allez vous parcourir en deux roues pour aller et revenir de votre lieu de séjour ?
+  par défaut: km annuels moyen
+  plancher: 0
+  unité: km
+  suggestions:
+    zéro: 0
+    vacances: 2000
+    10km / jour: 3600
+    1000km / mois: 12000
+    20 000km / an: 20000
+
+transport . séjour . deux roues . km annuels moyen:
+  formule: 3000
+  unité: km
+  note: |
+    Source pour les km annuels moyens : [datalab ministère écologie 2019](https://www.statistiques.developpement-durable.gouv.fr/bilan-annuel-des-transports-en-2019-0), figure G1-1.
+
+transport . séjour . deux roues . type:
+  applicable si: présent
+  question: Quelle est la motorisation de votre scooter ou moto ?
+  par défaut: "'moto sup 250'"
+  formule:
+    une possibilité:
+      choix obligatoire: oui
+      possibilités:
+        - scooter électrique
+        - scooter thermique
+        - moto inf 250
+        - moto sup 250
+  note: |
+    Le parc des deux-roues motorisés se divise en [3 catégories](https://www.inserr.fr/sites/default/files/public/7-parc_de_vehicules_en_circulation_0.pdf).
+    - Les cyclomoteurs (moins de 50 cm³) : 17,00 % du parc
+    - Les motocyclettes légères (50 à 125 cm³) : 26,00 % du parc
+    - Les motocyclettes lourdes (plus de 125 cm³) : 56,00 % du parc
+
+transport . séjour . deux roues . type . scooter électrique:
+  titre: Électrique
+transport . séjour . deux roues . type . scooter thermique:
+  titre: 50 cm³
+transport . séjour . deux roues . type . moto inf 250:
+  titre: Moins de 250 cm³
+transport . séjour . deux roues . type . moto sup 250:
+  titre: Plus de 250 cm³
+
+transport . séjour . deux roues . empreinte au km:
+  unité: kgCO2e/km
+  formule:
+    variations:
+      - si: type = 'scooter thermique'
+        alors: 0.0763 kgCO2e/km
+      - si: type = 'scooter électrique'
+        alors: 0.030 kgCO2e/km
+      - si: type = 'moto inf 250'
+        alors: 0.0763 kgCO2e/km
+      - si: type = 'moto sup 250'
+        alors: 0.191 kgCO2e/km
+
+  note: |
+    Cyclomoteur - Mixte - 2018 ; 76,3 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
+
+    Scooter électrique : 30 gCO2e/km/personne ; étude "Assessing the Environmental Performance of New Mobility" de l'International Transport Forum. [Excel disponible ici](https://www.itf-oecd.org/good-to-go-environmental-performance-new-mobility)
+
+    Moto =< 250 cm3 - Mixte - 2018 ; 76,3 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
+
+    Moto > 250 cm3 - Mixte - 2018 ; 191 gCO2e/km/personne ; calculs ADEME à partir d'HBEFA (2020)
+
+    Les chiffres ci-dessus incluent la fabrication du véhicule, contrairement aux données précédentes (2021).
+
+transport . séjour . deux roues . entretien pondéré:
+  formule:
+    variations:
+      - si: type = 'scooter électrique'
+        alors: entretien * 0.75
+      - sinon: entretien
+  unité: kgCO2e/km
+  note: Nous choisissons de pondérer l'entretien des scooters électriques par le même facteur qui réduit celui des véhicules électriques par rapport aux véhicules thermiques.
+
+transport . séjour . deux roues . entretien:
+  formule: empreinte branche . G45 * 1000000 kgCO2e/ktCO2e * 0.02 * 0.07 / ( 0.68 + 0.07 ) / nombre deux roues circulation / km annuels moyen
+  unité: kgCO2e/km
+  note: |
+    Dans le poste G45, nous proratisons le poste Commerce et réparation de motocycles (2%) sur le même rapport que les voitures pour extraire l'entretien de ce poste comprenant également le commerce.
+    Nous le divisons par le nombre de véhicules en circulation, puis par 3000 km (la moyenne de km effectués par véhicule) pour obtenir une empreinte en kgCO2e / km.
+
+transport . séjour . deux roues . nombre deux roues circulation:
+  formule: 2700000
+  note: Le nombre de deux-roues en circulation en 2020, stable, est de [2,7 millions](https://www.onisr.securite-routiere.gouv.fr/etudes-et-recherches/vehicules/parc-des-vehicules/le-parc-deux-roues-motorises-des-menages)
+
+transport . séjour . deux roues . pourcentage motards:
+  formule: nombre deux roues circulation / population
+
+### Taxi ###
+
+transport . séjour . taxi . présent:
+  question: Allez-vous utiliser un taxi pour vous déplacer pendant votre séjour ?
+  par défaut: non
+
+transport . séjour . taxi:
+  applicable si: présent
+  titre: Taxi
+  icônes: 🚕
+  formule: heures * impact par heure
+
+
+transport . séjour . taxi . heures:
+  question: Combien d'heures allez vous parcourir en taxi pour aller et revenir de votre lieu de séjour ?
+  description: Blablabla
+  suggestions:
+    15 min: 0.25
+    30 min: 0.5
+  unité: h
+  plancher: 0
+  par défaut: 0.25
+
+transport . séjour . taxi . impact par heure:
+  formule: 1
+  unité: kgCO2e/h
+  note: |
+    FE à consulter
