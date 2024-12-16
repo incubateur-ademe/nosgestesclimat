@@ -166,12 +166,37 @@ transport . séjour . voiture:
               alors:
                 variations:
                   - si:
-                      une de ces conditions:
-                        - utilisateur = 'propriétaire'
-                        - utilisateur = 'régulier non propriétaire'
+                      toutes ces conditions:
+                        - transport . voiture . utilisateur = 'propriétaire'
+                        - transport . voiture . motorisation = 'thermique'
+                    alors: empreinte séjour propriétaire thermique
+                  - si:
+                      toutes ces conditions:
+                        - transport . voiture . utilisateur = 'propriétaire'
+                        - transport . voiture . motorisation = 'hybride'
+                    alors: empreinte séjour propriétaire hybride
+                  - si:
+                      toutes ces conditions:
+                        - transport . voiture . utilisateur = 'propriétaire'
+                        - transport . voiture . motorisation = 'électrique'
+                    alors: empreinte séjour propriétaire électrique
+                  - si:
+                      toutes ces conditions:
+                        - transport . voiture . utilisateur = 'régulier non propriétaire'
+                        - transport . voiture . motorisation = 'thermique'
+                    alors: empreinte séjour régulier non propriétaire thermique
+                  - si:
+                      toutes ces conditions:
+                        - transport . voiture . utilisateur = 'régulier non propriétaire'
+                        - transport . voiture . motorisation = 'hybride'
+                    alors: empreinte séjour régulier non propriétaire hybride
+                  - si:
+                      toutes ces conditions:
+                        - transport . voiture . utilisateur = 'régulier non propriétaire'
+                        - transport . voiture . motorisation = 'électrique'
+                    alors: empreinte séjour régulier non propriétaire électrique
+                  - si: transport . voiture . utilisateur = 'non régulier'
                     alors: empreinte calculée
-                  - si: utilisateur = 'non régulier'
-                    alors: empreinte moyenne non régulier
             - sinon: empreinte moyenne
   unité: kgCO2e
 #  description: |
@@ -188,11 +213,12 @@ transport . séjour . voiture:
 
 transport . séjour . voiture . km:
   titre: Km en voiture
-  question: Quelle distance allez-vous parcourir en voiture pendant votre séjour  ?
+  question: Quelle distance allez-vous parcourir en voiture pendant votre séjour ?
   description: |
     Sommez la distance des différents trajets effectués pendant votre séjour mais ne cherchez pas à renseignez le kilométrage exact, l'arrondi à la dizaine ou centaine supérieure fera l'affaire.
   # It seems that there is a [publicodes bug](https://github.com/publicodes/publicodes/issues/517). For now, we can't use `km annuels moyen réel` directly here, until the problem is fixed.
-  par défaut: 8210
+#  par défaut: 8210
+  par défaut: 200
   unité: km
   plancher: 0
   suggestions:
@@ -305,6 +331,44 @@ transport . séjour . voiture . notif utilsateur irrégulier:
   description: |
     Vous roulez avec des véhicules différents : nous vous avons donc attribué les caractéristiques d'une voiture "moyenne".
 
+# Le bloc qui suit a 6 fois la même construction de modèle et donc la même valeur affectée à 6 variables différentes et c'est dans la formule de transport . séjour . voiture qu'on affecte la valeur au bon endroit
+transport . séjour . voiture . empreinte séjour propriétaire thermique:
+  valeur: transport . voiture . empreinte calculée
+  contexte:
+    transport . voiture . km: transport . séjour . voiture . km
+    transport . voiture . voyageurs: transport . séjour . voiture . voyageurs
+
+transport . séjour . voiture . empreinte séjour propriétaire hybride:
+  valeur: transport . voiture . empreinte calculée
+  contexte:
+    transport . voiture . km: transport . séjour . voiture . km
+    transport . voiture . voyageurs: transport . séjour . voiture . voyageurs
+
+transport . séjour . voiture . empreinte séjour propriétaire électrique:
+  valeur: transport . voiture . empreinte calculée
+  contexte:
+    transport . voiture . km: transport . séjour . voiture . km
+    transport . voiture . voyageurs: transport . séjour . voiture . voyageurs
+
+transport . séjour . voiture . empreinte séjour régulier non propriétaire thermique:
+  valeur: transport . voiture . empreinte calculée
+  contexte:
+    transport . voiture . km: transport . séjour . voiture . km
+    transport . voiture . voyageurs: transport . séjour . voiture . voyageurs
+
+transport . séjour . voiture . empreinte séjour régulier non propriétaire hybride:
+  valeur: transport . voiture . empreinte calculée
+  contexte:
+    transport . voiture . km: transport . séjour . voiture . km
+    transport . voiture . voyageurs: transport . séjour . voiture . voyageurs
+
+transport . séjour . voiture . empreinte séjour régulier non propriétaire électrique:
+  valeur: transport . voiture . empreinte calculée
+  contexte:
+    transport . voiture . km: transport . séjour . voiture . km
+    transport . voiture . voyageurs: transport . séjour . voiture . voyageurs
+# Fin du bloc
+
 transport . séjour . voiture . empreinte moyenne:
   valeur: voiture . empreinte calculée
   contexte:
@@ -341,27 +405,10 @@ transport . séjour . voiture . empreinte calculée:
 
 transport . séjour . voiture . voyageurs:
   titre: Nombre de voyageurs
-  question: Quel sera le nombre moyen de voyageurs dans la voiture ?
-  applicable si:
-    une de ces conditions:
-      - transport . voiture . utilisateur = 'non régulier'
-      - transport . train . présent = 'oui'
-      - transport . car longue distance . présent = 'oui'
-      - transport . deux roues . présent = 'oui'
-      - transport . taxi . présent = 'oui'  
-#Je pense qu'on peut supprimer la condition ci-dessous
-#  applicable si: km > 0
+  question: Quel sera le nombre moyen de voyageurs dans la voiture pendant votre séjour ?
+  applicable si: km > 0
   description: |
-    Une voiture consomme à peu près autant qu'elle ait 1, 2 ou 5 voyageurs à bord. Voyager à plusieurs, c'est donc potentiellement diviser par 5 l'empreinte individuelle !
-
-    🤔 Mais cette question n'est pas facile : il est probable que dans une année vous soyez parti en vacances à 3, ayez pris la voiture quotidiennement tout seul, etc.
-
-    Essayez d'estimer une moyenne approximative : si tous les jours vous prenez la voiture tout seul, mettez 1 ou 1,2.
-    Si vous ne la prenez qu'en famille ou entre amis, mettez 3 ou 4.
-
-    > Dans une prochaine évolution du simulateur, nous pourrons séparer les questions par type de trajets : vacances, domicile-travail, quotidiens avec un nombre de voyageurs personnalisable.
-
-    Bien sûr, si vous vous faites conduire ou si vous prenez le taxi, le chauffeur ne compte pas, car il est au service de votre déplacement.
+    Si vous voyagerez avec les mêmes personnes pendant votre séjour que pour les trajets aller-retour entre votre domicile et votre (premier) lieu d'hébergement, renseignez le même nombre de voyageurs (en vous incluant).
   plancher: 1
   avertissement: |
     Le nombre de voyageurs ne peut pas être nul. Au volant de votre voiture, vous en êtes le premier voyageur.
@@ -380,21 +427,29 @@ transport . séjour . voiture . usage au kilomètre:
   formule: empreinte au kilomètre + base au kilomètre
   unité: kgCO2e/km
 
+#Metttre simplement empreinte au kilomètre calculée
 transport . séjour . voiture . empreinte au kilomètre:
-  formule:
-    variations:
-      - si:
-          est défini: utilisateur
-        alors:
-          variations:
-            - si:
-                une de ces conditions:
-                  - utilisateur = 'propriétaire'
-                  - utilisateur = 'régulier non propriétaire'
-              alors: empreinte au kilomètre calculée
-            - si: utilisateur = 'non régulier'
-              alors: empreinte au kilomètre non régulier
-      - sinon: empreinte au kilomètre moyenne
+  formule: empreinte au kilomètre calculée
+#  formule:
+#    variations:
+#      - si:
+#          est défini: utilisateur
+#        alors: empreinte au kilomètre calculée
+#      - sinon: empreinte au kilomètre moyenne
+#  formule:
+#    variations:
+#      - si:
+#          est défini: utilisateur
+#        alors:
+#          variations:
+#            - si:
+#                une de ces conditions:
+#                  - utilisateur = 'propriétaire'
+#                  - utilisateur = 'régulier non propriétaire'
+#              alors: empreinte au kilomètre calculée
+#            - si: utilisateur = 'non régulier'
+#              alors: empreinte au kilomètre non régulier
+#      - sinon: empreinte au kilomètre moyenne
 
 transport . séjour . voiture . empreinte au kilomètre moyenne:
   valeur: voiture . empreinte au kilomètre calculée
@@ -407,21 +462,6 @@ transport . séjour . voiture . empreinte au kilomètre moyenne:
       valeur: voiture . thermique . consommation estimée
       contexte:
         voiture . utilisateur: "'propriétaire'"
-        voiture . gabarit: "'berline'"
-        voiture . motorisation: "'thermique'"
-        voiture . thermique . carburant: "'essence E5 ou E10'"
-
-transport . séjour . voiture . empreinte au kilomètre non régulier:
-  valeur: voiture . empreinte au kilomètre calculée
-  contexte:
-    voiture . utilisateur: "'régulier non propriétaire'"
-    voiture . gabarit: "'berline'"
-    voiture . motorisation: "'thermique'"
-    voiture . thermique . carburant: "'essence E5 ou E10'"
-    voiture . thermique . consommation aux 100:
-      valeur: voiture . thermique . consommation estimée
-      contexte:
-        voiture . utilisateur: "'régulier non propriétaire'"
         voiture . gabarit: "'berline'"
         voiture . motorisation: "'thermique'"
         voiture . thermique . carburant: "'essence E5 ou E10'"
@@ -455,12 +495,14 @@ transport . séjour . voiture . empreinte au kilomètre calculée:
 transport . séjour . voiture . motorisation:
   question: Quelle est la motorisation de la voiture que vous allez utiliser ?
   applicable si:
-    une de ces conditions:
-      - transport . voiture . utilisateur = 'non régulier'
-      - transport . train . présent = 'oui'
-      - transport . car longue distance . présent = 'oui'
-      - transport . deux roues . présent = 'oui'
-      - transport . taxi . présent = 'oui'  
+    toutes ces conditions:
+      - km > 0
+      - une de ces conditions:
+          - transport . voiture . utilisateur = 'non régulier'
+          - transport . train . présent = 'oui'
+          - transport . car longue distance . présent = 'oui'
+          - transport . deux roues . présent = 'oui'
+          - transport . taxi . présent = 'oui'  
 #Je pense qu'on peut supprimer le bloc de conditions ci-dessous
 #  applicable si:
 #    toutes ces conditions:
@@ -498,34 +540,42 @@ transport . séjour . voiture . thermique . consommation au kilomètre:
   formule: consommation aux 100 / 100 km/centkm
   unité: l/km
 
+# Je commente car cette variable ne sert que pour le cas Q1 = covoit/autres ce qui signifie qu'on considère qu'il loue une voiture pour le séjour. Et dans le cas d'une location
+# on ne veut pas questionner la consommation
 transport . séjour . voiture . thermique . consommation aux 100:
-  question: Connaissez-vous la consommation moyenne de la voiture ?
-  applicable si:
-    une de ces conditions:
-      - transport . voiture . utilisateur = 'non régulier'
-      - transport . train . présent = 'oui'
-      - transport . car longue distance . présent = 'oui'
-      - transport . deux roues . présent = 'oui'
-      - transport . taxi . présent = 'oui'
-### Je pense qu'on peut supprimer le bloc de conditions ci-dessous
-#      - toutes ces conditions:
-#          - est défini: utilisateur
-#          - une de ces conditions:
-#              - utilisateur = 'propriétaire'
-#              - utilisateur = 'régulier non propriétaire'
-#          - une de ces conditions:
-#              - motorisation = 'thermique'
-#              - motorisation = 'hybride'
-#          - km > 0
-#  description: |
-#    **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
-  suggestions:
-    5 l/100km: 5
-    7 l/100km: 7
-    9 l/100km: 9
-  par défaut: consommation estimée
+#  question: Connaissez-vous la consommation moyenne de la voiture ?
+#  applicable si:
+#    toutes ces conditions:
+#      - km > 0
+#      - une de ces conditions:
+#          - transport . voiture . utilisateur = 'non régulier'
+#          - transport . train . présent = 'oui'
+#          - transport . car longue distance . présent = 'oui'
+#          - transport . deux roues . présent = 'oui'
+#          - transport . taxi . présent = 'oui'  
+#      - une de ces conditions:
+#          - motorisation = 'thermique'
+#          - motorisation = 'hybride'
+#### Je pense qu'on peut supprimer le bloc de conditions ci-dessous
+##      - toutes ces conditions:
+##          - est défini: utilisateur
+##          - une de ces conditions:
+##              - utilisateur = 'propriétaire'
+##              - utilisateur = 'régulier non propriétaire'
+##          - une de ces conditions:
+##              - motorisation = 'thermique'
+##              - motorisation = 'hybride'
+##          - km > 0
+##  description: |
+##    **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
+#  suggestions:
+#    5 l/100km: 5
+#    7 l/100km: 7
+#    9 l/100km: 9
+#  par défaut: consommation estimée
+  formule: consommation estimée
   unité: l/centkm
-  note: Les suggestions de réponse sont à la louche, à préciser et sourcer.
+#  note: Les suggestions de réponse sont à la louche, à préciser et sourcer.
 
 transport . séjour . voiture . thermique . consommation estimée:
   titre: Consommation estimée voiture
@@ -692,42 +742,48 @@ transport . séjour . voiture . thermique . empreinte au litre:
         alors: 1.86
   unité: kgCO2e/l
 
+# Je commente car cette variable ne sert que pour le cas Q1 = covoit/autres ce qui signifie qu'on considère qu'il loue une voiture pour le séjour. Et dans le cas d'une location
+# on ne veut pas questionner le type de carburant
 transport . séjour . voiture . thermique . carburant:
-  question: Quel type de carburant la voiture consomme-t-elle ?
-  applicable si:
-    une de ces conditions:
-      - transport . voiture . utilisateur = 'non régulier'
-      - transport . train . présent = 'oui'
-      - transport . car longue distance . présent = 'oui'
-      - transport . deux roues . présent = 'oui'
-      - transport . taxi . présent = 'oui'  
-#Je pense qu'on peut supprimer le bloc de conditions ci-dessous  
+#  question: Quel type de carburant la voiture consomme-t-elle ?
 #  applicable si:
 #    toutes ces conditions:
-#      - est défini: utilisateur
+#      - km > 0
 #      - une de ces conditions:
-#          - utilisateur = 'propriétaire'
-#          - utilisateur = 'régulier non propriétaire'
+#          - transport . voiture . utilisateur = 'non régulier'
+#          - transport . train . présent = 'oui'
+#          - transport . car longue distance . présent = 'oui'
+#          - transport . deux roues . présent = 'oui'
+#          - transport . taxi . présent = 'oui'  
 #      - une de ces conditions:
 #          - motorisation = 'thermique'
 #          - motorisation = 'hybride'
-#      - km > 0
+##Je pense qu'on peut supprimer le bloc de conditions ci-dessous  
+##  applicable si:
+##    toutes ces conditions:
+##      - est défini: utilisateur
+##      - une de ces conditions:
+##          - utilisateur = 'propriétaire'
+##          - utilisateur = 'régulier non propriétaire'
+##      - une de ces conditions:
+##          - motorisation = 'thermique'
+##          - motorisation = 'hybride'
+##      - km > 0
   description: |
     Pour comprendre les différents types de carburants, [cet article pédagogique](https://www.francetvinfo.fr/economie/automobile/essence/les-carburants-changent-de-nom-a-la-pompe-voici-comment-vous-y-retrouver_2967013.html) est très utile.
 
     [Cet article](https://www.ecologie.gouv.fr/carburants-et-combustibles-autorises-en-france) du ministère de l'Écologie explique plus en détail les carburants légaux en France.
 
     > Attention, si le type de carburant fait varier de façon significative l'empreinte climat au litre, la consommation en litre par 100km elle aussi varie. Veillez à saisir une consommation au litre basée sur votre moyenne réelle.
-
   par défaut: "'essence E5 ou E10'"
-  formule:
-    une possibilité:
-      choix obligatoire: oui
-      possibilités:
-        - gazole B7 ou B10
-        - essence E5 ou E10
-        - essence E85
-        - GPL
+#  formule:
+#    une possibilité:
+#      choix obligatoire: oui
+#      possibilités:
+#        - gazole B7 ou B10
+#        - essence E5 ou E10
+#        - essence E85
+#        - GPL
   note: |
     La domination du couple gazole-essence est écrasante [source](https://www.leprogres.fr/magazine-automobile/2021/03/27/quels-sont-les-carburants-les-plus-utilises-dans-votre-commune).
 
@@ -741,14 +797,14 @@ transport . séjour . voiture . thermique . carburant:
     Il a une empreinte carbone par litre moins importante que les véhicules essence ou diesel, par contre sa consommation est légèrement supérieure, ce qui compense légèrement le gain.
     Mais si les rejets de CO2e sont au final presque équivalents entre le GPL et les autres carburants, c'est [du côté de l'émission de particules nocives](https://agirpourlatransition.ademe.fr/particuliers/conso/conso-responsable/comment-choisir-voiture-deux-roues-moins-polluant) que le GPL est un bien meilleur élève que les autres carburants thermiques.
 
-transport . séjour . voiture . thermique . carburant . gazole B7 ou B10:
-  titre: Gazole (B7 ou B10)
+#transport . séjour . voiture . thermique . carburant . gazole B7 ou B10:
+#  titre: Gazole (B7 ou B10)
 transport . séjour . voiture . thermique . carburant . essence E5 ou E10:
   titre: Essence (E5 ou E10)
-transport . séjour . voiture . thermique . carburant . essence E85:
-  titre: Essence E85 (biocarburants)
-transport . séjour . voiture . thermique . carburant . GPL:
-  titre: GPL (Gaz de Pétrole Liquéfiés)
+#transport . séjour . voiture . thermique . carburant . essence E85:
+#  titre: Essence E85 (biocarburants)
+#transport . séjour . voiture . thermique . carburant . GPL:
+#  titre: GPL (Gaz de Pétrole Liquéfiés)
 
 transport . séjour . voiture . notif carburant:
   type: notification
@@ -778,12 +834,22 @@ transport . séjour . voiture . électrique . consommation aux 100:
   question: Connaissez-vous la consommation moyenne de la voiture ?
   applicable si:
     toutes ces conditions:
-      - est défini: utilisateur
-      - une de ces conditions:
-          - utilisateur = 'propriétaire'
-          - utilisateur = 'régulier non propriétaire'
-      - motorisation = 'électrique'
       - km > 0
+      - une de ces conditions:
+          - transport . voiture . utilisateur = 'non régulier'
+          - transport . train . présent = 'oui'
+          - transport . car longue distance . présent = 'oui'
+          - transport . deux roues . présent = 'oui'
+          - transport . taxi . présent = 'oui'  
+      - motorisation = 'électrique'
+#  applicable si:
+#    toutes ces conditions:
+#      - est défini: utilisateur
+#      - une de ces conditions:
+#          - utilisateur = 'propriétaire'
+#          - utilisateur = 'régulier non propriétaire'
+#      - motorisation = 'électrique'
+#      - km > 0
   suggestions:
     15 kWh/100km: 15
     20 kWh/100km: 20
@@ -809,12 +875,14 @@ transport . séjour . voiture . électrique . consommation estimée:
 transport . séjour . voiture . gabarit:
   question: Quel est le gabarit de la voiture ?
   applicable si:
-    une de ces conditions:
-      - transport . voiture . utilisateur = 'non régulier'
-      - transport . train . présent = 'oui'
-      - transport . car longue distance . présent = 'oui'
-      - transport . deux roues . présent = 'oui'
-      - transport . taxi . présent = 'oui'  
+    toutes ces conditions:
+      - km > 0
+      - une de ces conditions:
+          - transport . voiture . utilisateur = 'non régulier'
+          - transport . train . présent = 'oui'
+          - transport . car longue distance . présent = 'oui'
+          - transport . deux roues . présent = 'oui'
+          - transport . taxi . présent = 'oui'    
 #Je pense qu'on peut supprimer le bloc de conditions ci-dessous
 #  applicable si:
 #    toutes ces conditions:
@@ -885,11 +953,12 @@ transport . séjour . voiture . gabarit . SUV . poids:
 
 transport . séjour . voiture . base au kilomètre:
   applicable si:
-    toutes ces conditions:
-      - est défini: utilisateur
-      - une de ces conditions:
-          - utilisateur = 'propriétaire'
-          - utilisateur = 'régulier non propriétaire'
+    une de ces conditions:
+      - transport . voiture . utilisateur = 'non régulier'
+      - transport . train . présent = 'oui'
+      - transport . car longue distance . présent = 'oui'
+      - transport . deux roues . présent = 'oui'
+      - transport . taxi . présent = 'oui' 
   titre: Entretien et climatisation au kilomètre
   formule: entretien pondéré + climatisation
   unité: kgCO2e/km
@@ -936,14 +1005,7 @@ transport . séjour . voiture . climatisation . émissions gaz fluorés transpor
 
 transport . séjour . voiture . construction:
   titre: Construction de la voiture
-  formule:
-    variations:
-      - si:
-          toutes ces conditions:
-            - voiture . utilisateur = 'propriétaire'
-            - km < seuil km
-        alors: construction au kilomètre * seuil km
-      - sinon: construction au kilomètre * km
+  formule: construction au kilomètre * km
   unité: kgCO2e
   note: |
     Pour le moment, nous ne considérons pas l'amortissement complet d'une voiture (c'est-à-dire que nous n'avons pas l'info de l'âge ou le kilométrage complet de la voiture donc sa contruction ne sera jamais nulle).
@@ -1037,9 +1099,6 @@ transport . séjour . voiture . barème construction . barème électrique . bat
   applicable si:
     toutes ces conditions:
       - est défini: utilisateur
-      - une de ces conditions:
-          - utilisateur = 'propriétaire'
-          - utilisateur = 'régulier non propriétaire'
       - motorisation = 'électrique'
   description: |
     La capacité de la batterie est exprimée en kWh, elle varie considérablement selon les modèles de véhicules.
