@@ -89,6 +89,7 @@ export type NGCRule = Omit<
   inactif?: string
   résumé?: string
   plancher?: number
+  plafond?: number
   avertissement?: string
 }
 
