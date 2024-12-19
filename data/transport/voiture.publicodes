@@ -207,7 +207,7 @@ transport . voiture . voyageurs:
   plancher: 1
   plafond: 9
   avertissement: |
-    Le nombre de voyageurs est compris entre 1 (vous) et 9 (8 passager au plus).
+    Le nombre de voyageurs est compris entre 1 (vous) et 9 (8 passagers au plus).
   note: |
     On considère que le nombre maximal de voyageurs est de 9 (limite du permis B). Néanmoins, cette question est souvent mal répondue car les utilisateurs.rices ne considèrent pas le nombre de voyageurs moyen : ils répondront 3 s'ils emmènent leurs enfants à l'école sans prendre en compte qu'ils sont seuls dans leur voiture la majorité du temps.
   par défaut: 1.2
@@ -218,7 +218,11 @@ transport . voiture . voyageurs:
 
 transport . voiture . notif nombreux voyageurs:
   type: notification
-  formule: transport . voiture . voyageurs >= 3
+  formule:
+    toutes ces conditions:
+      - transport . voiture . voyageurs >= 3
+      - transport . voiture . voyageurs < 9
+      # C'est un hack.. On devrait avoir <= 9. Pas de notif si "9" renseigné mais au moins, la notif n'est pas présente si 12 renseigné (car derrière le 12 de l'interface, c'est bien le plafond qui est considéré dans le moteur).
   description: |
     > Bravo ! Vous optimisez bien vos trajets en voiture !
 
