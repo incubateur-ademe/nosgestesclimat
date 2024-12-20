@@ -129,7 +129,8 @@ transport . voiture . utilisateur:
         - propriétaire
         - régulier non propriétaire
         - non régulier
-  par défaut: "'régulier non propriétaire'"
+#  par défaut: "'régulier non propriétaire'"
+#  par défaut: "'non régulier'"
 
 transport . voiture . utilisateur . propriétaire:
   titre: Je vais utiliser ma propre voiture
@@ -739,16 +740,15 @@ transport . voiture . climatisation . émissions gaz fluorés transport:
     D'après l'excel [Données par substance de gaz à effet de serre (GES) édition 2023, onglet "GF-UE_total"](https://www.citepa.org/wp-content/uploads/publications/secten/2023/Citepa_gaz_a_effet_de_serre_v2.zip),
     les émissions de gaz fluorés pour le secteur du transport (provenant des équipements de réfrigération et d'air conditionné, utilisant des halocarbures ou du SF6), sont de 1374 ktCO₂e.
 
+# On enlève le '* seuil km' pour les propriétaires car c'était beaucoup trop pénalisant --> il n'y a donc pas de variations de modèle entre propriétaire et régulier non propriétaire
 transport . voiture . construction:
   titre: Construction de la voiture
   formule:
     variations:
       - si:
-          toutes ces conditions:
+          une de ces conditions:
             - voiture . utilisateur = 'propriétaire'
-            - km < seuil km
-        alors: construction au kilomètre * seuil km
-      - si: voiture . utilisateur = 'régulier non propriétaire'
+            - voiture . utilisateur = 'régulier non propriétaire'
         alors: construction au kilomètre * km
       - sinon: 0
   unité: kgCO2e
