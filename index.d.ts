@@ -1,7 +1,11 @@
 import { Evaluation, Rule, RuleNode, Situation } from 'publicodes'
+import { Subcategories as GeneratedSubcategories } from './types/subcategories.d'
+import { Categories as GeneratedCategories } from './types/categories.d'
+import { DottedName as GeneratedDottedName } from './types/dottedNames'
 
-import { DottedName } from './types/dottedNames'
-export { DottedName } from './types/dottedNames'
+export type DottedName = GeneratedDottedName
+export type Categories = GeneratedCategories
+export type Subcategories = GeneratedSubcategories
 
 export type NGCRuleNode = RuleNode & {
   rawNode: NGCRule
@@ -71,24 +75,22 @@ export type SupportedRegions = Record<RegionCode, SupportedRegion>
 
 export type NGCRule = Omit<
   Rule,
-  'formule' | 'question' | 'références' | 'valeur'
+  'formule' | 'question' | 'valeur' | 'description' | 'note'
 > & {
   formule?: Rule['formule'] | number
   question?: Rule['question'] | null
-  références?: Rule['références'] | string[]
   valeur?: Rule['valeur'] | number
+  description?: Rule['description'] | string
+  note?: Rule['note'] | string
   abréviation?: string
   mosaique?: MosaiqueNode
   type?: string
   action?: { dépasse: string[] }
   icônes?: string
-  sévérité?: string
-  dottedName?: DottedName
-  plus?: boolean
   aide?: string
   inactif?: string
-  résumé?: string
   plancher?: number
+  plafond?: number
   avertissement?: string
 }
 
