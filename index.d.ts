@@ -1,7 +1,7 @@
 import { Evaluation, Rule, RuleNode, Situation } from 'publicodes'
-import { Subcategories as GeneratedSubcategories } from './types/subcategories.d'
 import { Categories as GeneratedCategories } from './types/categories.d'
 import { DottedName as GeneratedDottedName } from './types/dottedNames'
+import { Subcategories as GeneratedSubcategories } from './types/subcategories.d'
 
 export type DottedName = GeneratedDottedName
 export type Categories = GeneratedCategories
@@ -90,7 +90,7 @@ export type NGCRule = Omit<
   aide?: string
   inactif?: string
   plancher?: number
-  plafond?: number
+  plafond?: string | number
   avertissement?: string
 }
 
