@@ -89,7 +89,7 @@ export type NGCRule = Omit<
   icônes?: string
   aide?: string
   inactif?: string
-  plancher?: number
+  plancher?: string | number
   plafond?: string | number
   avertissement?: string
 }
