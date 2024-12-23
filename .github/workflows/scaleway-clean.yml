@@ -1,0 +1,14 @@
+name: Clean Scaleway Bucket
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  clean-bucket:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clean Scaleway bucket
+        run: |
+          AWS_ACCESS_KEY_ID=${{ secrets.SCW_ACCESS_KEY }} AWS_SECRET_ACCESS_KEY=${{ secrets.SCW_SECRET_KEY }} aws s3 rm s3://${{ vars.BUCKET_NAME }}/model/${{ github.event.pull_request.number }} --recursive --endpoint-url ${{ vars.BUCKET_ENDPOINT }}
