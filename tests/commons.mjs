@@ -232,7 +232,7 @@ An error occured while testing the model:
 }
 
 function formatValue(value) {
-  return value === null ? 'null' : Math.fround(value).toLocaleString('en-us')
+  return value === null ? 'null' : Math.fround(value).toLocaleString('fr-FR')
 }
 
 function fmtCLIErr(
