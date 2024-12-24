@@ -9,8 +9,6 @@ const everyModelFolder = 'public'
 const originModelFile = 'co2-model.FR-lang.fr.json'
 
 const destPath = 'nosgestesclimat.model.json'
-const rawData = fs.readFileSync(destPath)
-const model = JSON.parse(rawData)
 
 console.log('➡️ Preparing package ...')
 
@@ -19,6 +17,9 @@ fs.copyFileSync(
   path.join(process.cwd(), `${everyModelFolder}/${originModelFile}`),
   destPath
 )
+
+const rawData = fs.readFileSync(destPath)
+const model = JSON.parse(rawData)
 
 // Generating main index file (it only export types)
 fs.writeFileSync('index.js', `export * from './index.d.ts';`)
