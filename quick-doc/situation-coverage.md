@@ -215,12 +215,12 @@ _(Sachez qu'en moyenne, 1 panneau = 400 Wc)_
 | transport . mobilité douce . autres véhicules à moteur . présent | Possédez vous une trottinette électrique, gyropode, monocycle électrique, hoverboard...? | Yoram, Mehdi |
 | transport . mobilité douce . autres véhicules à moteur . km | Combien de kilomètres faites-vous à l'année avec votre trottinette électrique, gyropode, monocycle électrique, hoverboard...? | Mehdi |
 | transport . train . km | Combien de kilomètres parcourez-vous en train par an ? | Yoram, Corentin, Sandy, Mehdi, Sylviane, Jessica, Nolan |
-| transport . transports commun . bus . présent | Vous arrive t-il de prendre le bus ? | Yoram, Corentin, Sandy, Mehdi, Sylviane, Jessica, Nolan |
-| transport . transports commun . bus . heures par semaine | Combien d'heures passez-vous dans un bus par semaine ? | Corentin, Nolan |
-| transport . transports commun . car . présent | Vous arrive t-il de prendre le car ? | Yoram, Corentin, Sandy, Mehdi, Sylviane, Jessica, Nolan |
-| transport . transports commun . car . km par semaine | Combien de kilomètres parcourez-vous en car par semaine ? | Sylviane |
-| transport . transports commun . métro ou tram . présent | Vous arrive t-il de prendre le métro ou tram ? | Yoram, Corentin, Sandy, Mehdi, Sylviane, Jessica, Nolan |
-| transport . transports commun . métro ou tram . heures par semaine | Combien d'heures passez-vous par semaine en métro, tram, RER ? | Corentin, Jessica, Nolan |
+| transport . transports commun . mosaic . bus . présent | Vous arrive t-il de prendre le bus ? | Yoram, Corentin, Sandy, Mehdi, Sylviane, Jessica, Nolan |
+| transport . transports commun . mosaic . bus . heures par semaine | Combien d'heures passez-vous dans un bus par semaine ? | Corentin, Nolan |
+| transport . transports commun . mosaic . car . présent | Vous arrive t-il de prendre le car ? | Yoram, Corentin, Sandy, Mehdi, Sylviane, Jessica, Nolan |
+| transport . transports commun . mosaic . car . km par semaine | Combien de kilomètres parcourez-vous en car par semaine ? | Sylviane |
+| transport . transports commun . mosaic . métro ou tram . présent | Vous arrive t-il de prendre le métro ou tram ? | Yoram, Corentin, Sandy, Mehdi, Sylviane, Jessica, Nolan |
+| transport . transports commun . mosaic . métro ou tram . heures par semaine | Combien d'heures passez-vous par semaine en métro, tram, RER ? | Corentin, Jessica, Nolan |
 | transport . vacances . caravane . propriétaire | Possédez-vous une caravane ? | Yoram, Sandy |
 | transport . vacances . caravane . distance | Quelle distance parcourez-vous à l'année en caravane ? | Sandy |
 | transport . vacances . camping car . propriétaire | Possédez-vous un camping car ? | Yoram, Sandy, Gérard |
