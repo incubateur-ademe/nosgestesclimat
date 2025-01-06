@@ -28,8 +28,10 @@ jobs:
         run: |
           if [ -n "${{ github.event.pull_request }}" ]; then
             FILES_PATH=model/${{ github.event.pull_request.number }}
-          else
+          elif [[ "${{ github.ref }}" == "preprod" ]]; then
             FILES_PATH=model/nightly
+          else
+            FILES_PATH=model/master
           fi
           AWS_ACCESS_KEY_ID=${{ secrets.SCW_ACCESS_KEY }} AWS_SECRET_ACCESS_KEY=${{ secrets.SCW_SECRET_KEY }} aws s3 rm s3://${{ vars.BUCKET_NAME }}/$FILES_PATH --recursive --endpoint-url ${{ vars.BUCKET_ENDPOINT }}
           AWS_ACCESS_KEY_ID=${{ secrets.SCW_ACCESS_KEY }} AWS_SECRET_ACCESS_KEY=${{ secrets.SCW_SECRET_KEY }} aws s3 cp public s3://${{ vars.BUCKET_NAME }}/$FILES_PATH --recursive --endpoint-url ${{ vars.BUCKET_ENDPOINT }} --acl public-read
