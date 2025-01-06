@@ -1,0 +1,35 @@
+name: Deploy to Scaleway
+
+on:
+  push:
+    branches:
+      - preprod
+  pull_request:
+    branches:
+      - preprod
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Run compile script
+        run: yarn compile
+      - name: Upload to Scaleway bucket
+        run: |
+          if [ -n "${{ github.event.pull_request }}" ]; then
+            FILES_PATH=model/${{ github.event.pull_request.number }}
+          else
+            FILES_PATH=model/nightly
+          fi
+          AWS_ACCESS_KEY_ID=${{ secrets.SCW_ACCESS_KEY }} AWS_SECRET_ACCESS_KEY=${{ secrets.SCW_SECRET_KEY }} aws s3 rm s3://${{ vars.BUCKET_NAME }}/$FILES_PATH --recursive --endpoint-url ${{ vars.BUCKET_ENDPOINT }}
+          AWS_ACCESS_KEY_ID=${{ secrets.SCW_ACCESS_KEY }} AWS_SECRET_ACCESS_KEY=${{ secrets.SCW_SECRET_KEY }} aws s3 cp public s3://${{ vars.BUCKET_NAME }}/$FILES_PATH --recursive --endpoint-url ${{ vars.BUCKET_ENDPOINT }} --acl public-read
