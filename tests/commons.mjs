@@ -7,10 +7,12 @@ import yargs from 'yargs'
 import { readFile } from 'fs/promises'
 import { serializeUnit } from 'publicodes'
 
-const PREPROD_PREVIEW_URL = 'https://preprod--ecolab-data.netlify.app/'
+const PREPROD_PREVIEW_URL =
+  'https://nosgestesclimat-dev.s3.fr-par.scw.cloud/model/nightly/'
 
 // Same as site-nextjs, shouldn't it be https://data.nosgestesclimat.fr/ ?
-const LATEST_PREVIEW_URL = 'https://master--ecolab-data.netlify.app/'
+const LATEST_PREVIEW_URL =
+  'https://nosgestesclimat-dev.s3.fr-par.scw.cloud/model/master/'
 
 export function getArgs() {
   return yargs(process.argv.slice(2))
