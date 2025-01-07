@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - preprod
+      - master
   pull_request:
     branches:
       - preprod
@@ -28,6 +29,8 @@ jobs:
         run: |
           if [ -n "${{ github.event.pull_request }}" ]; then
             FILES_PATH=model/${{ github.event.pull_request.number }}
+          elif [[ "${GITHUB_REF#refs/heads/}" == "master" ]]; then
+            FILES_PATH=model/master
           else
             FILES_PATH=model/nightly
           fi
