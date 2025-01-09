@@ -57,15 +57,15 @@ transport . séjour . notif voiture:
   formule:
     toutes ces conditions:
       - transport . voiture . utilisateur = 'non régulier'
-      - transport . séjour . voiture . présent = 'oui'
+      - transport . séjour . voiture . présent = oui
   description: |
-    Vous avez dit faire du covoiturage pour vous rendre sur votre lieu séjour et/ou en revenir. Nous allons donc vous poser des questions propres à la voiture qui 
-    sera utilisée pendant votre séjour.
+    Vous avez dit faire du covoiturage pour vous rendre sur votre lieu séjour et vous comptez utiliser une voiture pendant votre séjour. Nous allons donc vous poser de nouvelles questions sur les
+    caractéristiques de votre séjour et de la voiture que vous allez utiliser.
 
 ### Train ###
 transport . séjour . train . présent:
   question: Allez-vous utiliser des trains pour vous déplacer pendant votre séjour ?
-  par défaut: oui
+  par défaut: non
 
 transport . séjour . train:
   applicable si: séjour . train . présent
@@ -127,12 +127,12 @@ transport . séjour . car longue distance . impact par km:
 
 transport . séjour . voiture . présent:
   question: Allez-vous utiliser une voiture pour vous déplacer pendant votre séjour ?
-  par défaut: oui
+  par défaut: non
 
 ### A caler les possibilités existantes entre les types de déplacements en voiture possible pour venir (proprio, covoit, location) et pendant le séjour (oui je garde ma voiture perso, non je continue de louer la même ?; non je loue une nouvelle voiture ?)
 ### --> La solution la plus simple semble de poser la question de la location de véhicule si en Q1 on dit "pas voiture" ou covoit car si on vient en voiture (que ça soit la sienne, louée ou empruntée) il quasi certains que les gens la garderont pour leur séjour
 transport . séjour . voiture . identique:
-  applicable si :
+  applicable si:
     toutes ces conditions:
       - transport . séjour . voiture . présent = oui
       - transport . voiture . présent = oui
@@ -151,36 +151,41 @@ transport . séjour . voiture:
       - sinon:
           variations:
             - si:
-                toutes ces conditions:
-                  - transport . voiture . utilisateur = 'propriétaire'
-                  - transport . voiture . motorisation = 'thermique'
-              alors: empreinte séjour propriétaire thermique
-            - si:
-                toutes ces conditions:
-                  - transport . voiture . utilisateur = 'propriétaire'
-                  - transport . voiture . motorisation = 'hybride'
-              alors: empreinte séjour propriétaire hybride
-            - si:
-                toutes ces conditions:
-                  - transport . voiture . utilisateur = 'propriétaire'
-                  - transport . voiture . motorisation = 'électrique'
-              alors: empreinte séjour propriétaire électrique
-            - si:
-                toutes ces conditions:
-                  - transport . voiture . utilisateur = 'régulier non propriétaire'
-                  - transport . voiture . motorisation = 'thermique'
-              alors: empreinte séjour régulier non propriétaire thermique
-            - si:
-                toutes ces conditions:
-                  - transport . voiture . utilisateur = 'régulier non propriétaire'
-                  - transport . voiture . motorisation = 'hybride'
-              alors: empreinte séjour régulier non propriétaire hybride
-            - si:
-                toutes ces conditions:
-                  - transport . voiture . utilisateur = 'régulier non propriétaire'
-                  - transport . voiture . motorisation = 'électrique'
-              alors: empreinte séjour régulier non propriétaire électrique
-            - sinon: empreinte calculée ### Attribut servant pour 3 cas : A-R = autres que voiture ; A-R = voiture + non régulier + séjour = voiture ; pour le cas spécifique : A-R = voiture + jnsp sur voiture . utilisateur + séjour = voiture
+                est défini: transport . voiture . utilisateur
+              alors:
+                variations:
+                  - si:
+                      toutes ces conditions:
+                        - transport . voiture . utilisateur = 'propriétaire'
+                        - transport . voiture . motorisation = 'thermique'
+                    alors: empreinte séjour propriétaire thermique
+                  - si:
+                      toutes ces conditions:
+                        - transport . voiture . utilisateur = 'propriétaire'
+                        - transport . voiture . motorisation = 'hybride'
+                    alors: empreinte séjour propriétaire hybride
+                  - si:
+                      toutes ces conditions:
+                        - transport . voiture . utilisateur = 'propriétaire'
+                        - transport . voiture . motorisation = 'électrique'
+                    alors: empreinte séjour propriétaire électrique
+                  - si:
+                      toutes ces conditions:
+                        - transport . voiture . utilisateur = 'régulier non propriétaire'
+                        - transport . voiture . motorisation = 'thermique'
+                    alors: empreinte séjour régulier non propriétaire thermique
+                  - si:
+                      toutes ces conditions:
+                        - transport . voiture . utilisateur = 'régulier non propriétaire'
+                        - transport . voiture . motorisation = 'hybride'
+                    alors: empreinte séjour régulier non propriétaire hybride
+                  - si:
+                      toutes ces conditions:
+                        - transport . voiture . utilisateur = 'régulier non propriétaire'
+                        - transport . voiture . motorisation = 'électrique'
+                    alors: empreinte séjour régulier non propriétaire électrique
+                  - sinon: empreinte calculée ### Attribut servant pour 3 cas : A-R = autres que voiture ; A-R = voiture/non régulier + séjour = voiture ; pour le cas spécifique : A-R = voiture/jnsp sur voiture . utilisateur + séjour = voiture
+            - sinon: empreinte moyenne
   unité: kgCO2e
 #  description: |
 #    ![](https://upload.wikimedia.org/wikipedia/commons/9/9a/Congestion_caused_by_a_road_accident%2C_Algarve%2C_Portugal.jpg)
@@ -199,7 +204,7 @@ transport . séjour . voiture . km:
   question: Quelle distance allez-vous parcourir en voiture pendant votre séjour ?
   description: |
     Sommez la distance des différents trajets effectués pendant votre séjour mais ne cherchez pas à renseignez le kilométrage exact, l'arrondi à la dizaine ou centaine supérieure fera l'affaire.
-  # It seems that there is a [publicodes bug](https://github.com/publicodes/publicodes/issues/517). For now, we can't use `km annuels moyen réel` directly here, until the problem is fixed.
+# It seems that there is a [publicodes bug](https://github.com/publicodes/publicodes/issues/517). For now, we can't use `km annuels moyen réel` directly here, until the problem is fixed.
 #  par défaut: 8210
   par défaut: 200
   unité: km
@@ -208,10 +213,10 @@ transport . séjour . voiture . km:
     Paris ⇄ Lille: 400
     Bruxelle ⇄ Lille : 200
 
-transport . séjour . voiture . km annuels moyen réel:
-  #8210
-  formule: km annuels moyen * nombre véhicules circulation / population
-
+#transport . séjour . voiture . km annuels moyen réel:
+#  #8210
+#  formule: km annuels moyen * nombre véhicules circulation / population
+#
 transport . séjour . voiture . km annuels moyen:
   #12216
   formule:
@@ -269,41 +274,41 @@ transport . séjour . voiture . nombre véhicules circulation . VUL:
 
     Nous considérons néanmoins les données pour l'année 2022 car la distance moyenne parcourue par véhicule n'est dispo que pour 2022.
 
-transport . séjour . voiture . utilisateur:
-  question: Utilisez-vous majoritairement la même voiture pour vous déplacer ?
-#  question: Allez-vous utiliser votre propre voiture ou une voiture louée ou empruntée ?
-  applicable si: km > 0
-  formule:
-    une possibilité:
-      choix obligatoire: oui
-      possibilités:
-        - propriétaire
-        - régulier non propriétaire
-        - non régulier
-  description: |
-    Deux données sont importantes dans le cadre du calcul de l'empreinte liée à la construction :
-
-    - L'usage ou non d'un même véhicule pour tous les kilomètres parcourus (si non : on vous attribue un véhicule "moyen")
-    - La propriété ou non dudit véhicule s'il s'agit toujours du même
-
-    Nous avons fait le choix d'attribuer l'empreinte de construction au pro-rata des kilomètres parcourus. Mais cette approche avait deux défauts :
-
-    - Elle était extrêmement avantageuse pour les petits rouleurs, alors que leur véhicule qui roule moins peut s'user plus vite (un moteur a besoin de tourner régulièrement) et donc avoir une durée de vie inférieure.
-    - Elle ne permettait pas de valoriser l'engagement de ne pas disposer de son propre véhicule, et de pratiquer à la place l'autopartage, ou la location ponctuelle (car l'empreinte de construction était la même, que l'on soit propriétaire ou non).
-
-    > Pour pallier ces deux problèmes, et mieux représenter qu'un véhicule possédé mais sous-utilisé s'use plus vite et mérite une empreinte de construction plus importante, **nous appliquons un seuil pour la partie construction de l'empreinte, pour les propriétaires**.
-  par défaut: "'régulier non propriétaire'"
-
-transport . séjour . voiture . utilisateur . propriétaire:
-  titre: Oui et j'en suis propriétaire
-  description: Vous faites la grande majorité de vos trajets avec un même véhicule que vous possédez.
-transport . séjour . voiture . utilisateur . régulier non propriétaire:
-  titre: Oui mais ce n'est pas la mienne
-  description: Vous utilisez presque systématiquement la voiture d'un ami, de votre grand-mère, ou le même véhicule en autopartage.
-transport . séjour . voiture . utilisateur . non régulier:
-  titre: Non, je change souvent (autopartage, proches, taxi...)
-  description: Vous ne disposez pas de votre propre véhicule et les usages sont tous différents.
-
+#transport . séjour . voiture . utilisateur:
+#  question: Utilisez-vous majoritairement la même voiture pour vous déplacer ?
+##  question: Allez-vous utiliser votre propre voiture ou une voiture louée ou empruntée ?
+#  applicable si: km > 0
+#  formule:
+#    une possibilité:
+#      choix obligatoire: oui
+#      possibilités:
+#        - propriétaire
+#        - régulier non propriétaire
+#        - non régulier
+#  description: |
+#    Deux données sont importantes dans le cadre du calcul de l'empreinte liée à la construction :
+#
+#    - L'usage ou non d'un même véhicule pour tous les kilomètres parcourus (si non : on vous attribue un véhicule "moyen")
+#    - La propriété ou non dudit véhicule s'il s'agit toujours du même
+#
+#    Nous avons fait le choix d'attribuer l'empreinte de construction au pro-rata des kilomètres parcourus. Mais cette approche avait deux défauts :
+#
+#    - Elle était extrêmement avantageuse pour les petits rouleurs, alors que leur véhicule qui roule moins peut s'user plus vite (un moteur a besoin de tourner régulièrement) et donc avoir une durée de vie inférieure.
+#    - Elle ne permettait pas de valoriser l'engagement de ne pas disposer de son propre véhicule, et de pratiquer à la place l'autopartage, ou la location ponctuelle (car l'empreinte de construction était la même, que l'on soit propriétaire ou non).
+#
+#    > Pour pallier ces deux problèmes, et mieux représenter qu'un véhicule possédé mais sous-utilisé s'use plus vite et mérite une empreinte de construction plus importante, **nous appliquons un seuil pour la partie construction de l'empreinte, pour les propriétaires**.
+#  par défaut: "'régulier non propriétaire'"
+#
+#transport . séjour . voiture . utilisateur . propriétaire:
+#  titre: Oui et j'en suis propriétaire
+#  description: Vous faites la grande majorité de vos trajets avec un même véhicule que vous possédez.
+#transport . séjour . voiture . utilisateur . régulier non propriétaire:
+#  titre: Oui mais ce n'est pas la mienne
+#  description: Vous utilisez presque systématiquement la voiture d'un ami, de votre grand-mère, ou le même véhicule en autopartage.
+#transport . séjour . voiture . utilisateur . non régulier:
+#  titre: Non, je change souvent (autopartage, proches, taxi...)
+#  description: Vous ne disposez pas de votre propre véhicule et les usages sont tous différents.
+#
 #transport . séjour . voiture . notif utilsateur irrégulier:
 #  type: notification
 #  formule:
@@ -418,21 +423,21 @@ transport . séjour . voiture . empreinte au kilomètre:
 #            - si: utilisateur = 'non régulier'
 #              alors: empreinte au kilomètre non régulier
 #      - sinon: empreinte au kilomètre moyenne
-
-transport . séjour . voiture . empreinte au kilomètre moyenne:
-  valeur: voiture . empreinte au kilomètre calculée
-  contexte:
-#    voiture . utilisateur: "'propriétaire'"
-    voiture . gabarit: "'berline'"
-    voiture . motorisation: "'thermique'"
-    voiture . thermique . carburant: "'essence E5 ou E10'"
-    voiture . thermique . consommation aux 100:
-      valeur: voiture . thermique . consommation estimée
-      contexte:
-#        voiture . utilisateur: "'propriétaire'"
-        voiture . gabarit: "'berline'"
-        voiture . motorisation: "'thermique'"
-        voiture . thermique . carburant: "'essence E5 ou E10'"
+#
+#transport . séjour . voiture . empreinte au kilomètre moyenne:
+#  valeur: voiture . empreinte au kilomètre calculée
+#  contexte:
+##    voiture . utilisateur: "'propriétaire'"
+#    voiture . gabarit: "'berline'"
+#    voiture . motorisation: "'thermique'"
+#    voiture . thermique . carburant: "'essence E5 ou E10'"
+#    voiture . thermique . consommation aux 100:
+#      valeur: voiture . thermique . consommation estimée
+#      contexte:
+##        voiture . utilisateur: "'propriétaire'"
+#        voiture . gabarit: "'berline'"
+#        voiture . motorisation: "'thermique'"
+#        voiture . thermique . carburant: "'essence E5 ou E10'"
 
 transport . séjour . voiture . empreinte au kilomètre calculée:
   formule:
@@ -500,7 +505,7 @@ transport . séjour . voiture . thermique . consommation au kilomètre:
   formule: consommation aux 100 / 100 km/centkm
   unité: l/km
 
-# Je commente car cette variable ne sert que pour le cas Q1 = covoit/autres ce qui signifie qu'on considère qu'il loue une voiture pour le séjour. Et dans le cas d'une location
+# Je commente car cette variable ne sert que pour le cas Q1 = covoit/autres ce qui signifie qu'on considère qu'il loue une voiture pour les trajets du séjour. Et dans le cas d'une location
 # on ne veut pas questionner la consommation
 transport . séjour . voiture . thermique . consommation aux 100:
 #  question: Connaissez-vous la consommation moyenne de la voiture ?
@@ -703,7 +708,7 @@ transport . séjour . voiture . thermique . empreinte au litre:
         alors: 1.86
   unité: kgCO2e/l
 
-# Je commente car cette variable ne sert que pour le cas Q1 = covoit/autres ce qui signifie qu'on considère qu'il loue une voiture pour le séjour. Et dans le cas d'une location
+# Je commente car cette variable ne sert que pour le cas Q1 = covoit/autres ce qui signifie qu'on considère qu'il loue une voiture pour les trajets du séjour. Et dans le cas d'une location
 # on ne veut pas questionner le type de carburant
 transport . séjour . voiture . thermique . carburant:
 #  question: Quel type de carburant la voiture consomme-t-elle ?
@@ -791,7 +796,7 @@ transport . séjour . voiture . électrique . consommation au kilomètre:
   formule: consommation aux 100 / 100 km/centkm
   unité: kWh/km
 
-# Je commente car cette variable ne sert que pour le cas Q1 = covoit/autres ce qui signifie qu'on considère qu'il loue une voiture pour le séjour. Et dans le cas d'une location
+# Je commente car cette variable ne sert que pour le cas Q1 = covoit/autres ce qui signifie qu'on considère qu'il loue une voiture pour les trajets du séjour. Et dans le cas d'une location
 # on ne veut pas questionner le type de carburant
 transport . séjour . voiture . électrique . consommation aux 100:
   titre: Consommation électrique au km
