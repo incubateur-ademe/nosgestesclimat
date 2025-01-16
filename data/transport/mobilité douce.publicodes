@@ -1,4 +1,11 @@
 transport . mobilité douce:
+# Cette variable "intermédiaire" est un hack pour réussir à mettre une mosaique fille après une mosaique mère (même si le choix mobilité douce n'est pas à l'heure actuelle proposé dans la mosaique mère)
+  applicable si: présent
+  titre: Déplacements actifs
+  icônes: 🚋
+  formule: transport . mobilité douce . type * 1
+
+transport . mobilité douce . type:
   applicable si: présent
   icônes: 🚲🛴
   mosaique:
@@ -31,12 +38,12 @@ transport . mobilité douce:
   note: Pour la question des modalités utilisées pour aller et revenir de son lieu de séjour, nous excluons les petits véhicules électriques (gyropod, hoverboard, etc.) ainsi que la trottinette non électrique.
 
 ### On commente car on ne veut pas voir poper la notif
-#transport . mobilité douce . notif marche ou vélo:
+#transport . mobilité douce . type . notif marche ou vélo:
 #  type: notification
 #  formule:
 #    une de ces conditions:
-#      - marche . présent = oui
-#      - vélo . présent = oui
+#      - type . marche . présent = oui
+#      - type . vélo . présent = oui
 #  description: |
 #    **Vous avez renseigné marcher ou faire du vélo ?**
 #    Félicitations ! 👏
@@ -46,7 +53,7 @@ transport . mobilité douce:
 #
 #    💡 A noter que l'empreinte de la marche et de **l'usage** du vélo classique (et non la fabrication) est considérée comme nulle.
 
-transport . mobilité douce . marche:
+transport . mobilité douce . type . marche:
   titre: Marche
   applicable si: présent
   icônes: 👟
@@ -54,15 +61,16 @@ transport . mobilité douce . marche:
   unité: kgCO2e
   note: L'empreinte de la marche est considérée comme nulle.
 
-transport . mobilité douce . marche . présent:
-  question: Allez-vous vous déplacer en marchant ?
+transport . mobilité douce . type . marche . présent:
+  question: Allez-vous vous déplacer en marchant pour vous rendre ou revenir de votre lieu de séjour ?
   par défaut: non
 
-transport . mobilité douce . vélo:
+transport . mobilité douce . type . vélo:
   titre: Vélo classique
   applicable si: présent
   icônes: 🦵🚲
-  formule: construction amortie
+# On proratise la construction en fonction de la durée du séjour car il s'agit très certainement d'un vélo de location
+  formule: construction amortie * (transport . durée séjour / 365)
   unité: kgCO2e
   note: |
     Nous considérons que **l'usage** du vélo musculaire a une empreinte nulle.
@@ -71,15 +79,15 @@ transport . mobilité douce . vélo:
 
     Nous avons tous les ingrédients ici pour le faire, mais c'est loin d'être aussi simple. Le surplus d'activité physique est aussi associé à des risques et donc des dépenses de santé bien moindres.
 
-transport . mobilité douce . vélo . présent:
-  question: Allez-vous vous déplacer avec un vélo "classique" (i.e. sans assistance électrique) ?
+transport . mobilité douce . type . vélo . présent:
+  question: Allez-vous vous déplacer avec un vélo "classique" (i.e. sans assistance électrique)  pour vous rendre ou revenir de votre lieu de séjour ?
   par défaut: non
 
-transport . mobilité douce . vélo . construction amortie:
+transport . mobilité douce . type . vélo . construction amortie:
   formule: construction / durée de vie
   unité: kgCO2e
 
-transport . mobilité douce . vélo . construction:
+transport . mobilité douce . type . vélo . construction:
   formule: 116
   unité: kgCO2e
   note: |
@@ -90,99 +98,64 @@ transport . mobilité douce . vélo . construction:
 
     Pour le plus populaire, l'empreinte affichée est de 116 kgCO2e.
 
-transport . mobilité douce . vélo . durée de vie:
+transport . mobilité douce . type . vélo . durée de vie:
   formule: 12
   note: |
     On considère la durée de vie d'un vélo conventionnel identique à celle d'un VAE (hypothèse forte, car il semble qu'un VAE emporte davatange de composants qui peuvent s'user davantage)
     Hypothèse issue du HBEFA (Manuel des facteurs d'émission pour le transport routier), d'après la documentation de la base empreinte.
     Chiffres tirés de l'étude ADEME de 2019 ["Modélisation et évaluation environnementale de produits de consommation et biens d'équipement"](https://librairie.ademe.fr/dechets-economie-circulaire/127-modelisation-et-evaluation-environnementale-de-produits-de-consommation-et-biens-d-equipement.html)
 
-transport . mobilité douce . vae:
+transport . mobilité douce . type . vae:
+# Modification du modèle par rapport à NGC pour prendre directement le FE complet (fabrication + usage) de la Base Empreinte
   titre: Vélo à Assistance Électrique
   icônes: 🚲⚡
   applicable si: présent
-  formule: empreinte * km + construction amortie
+  formule: empreinte au km * km
   unité: kgCO2e
   note: |
     Les vélos-cargo à assistance électrique sont à classer dans la catégorie VAE. La différence de motorisation et de poids, et donc d'empreinte, est trop minime pour mériter une catégorie à part.
 
-transport . mobilité douce . vae . présent:
-  question: Allez-vous vous déplacer avec un Vélo à Assistance Électrique (VAE) ?
+transport . mobilité douce . type . vae . présent:
+  question: Allez-vous vous déplacer avec un Vélo à Assistance Électrique (VAE) pour vous rendre ou revenir de votre lieu de séjour ?
   par défaut: non
 
-transport . mobilité douce . vae . empreinte:
-  formule: 0.00223
+transport . mobilité douce . type . vae . empreinte au km:
+  formule: 0.0109
   unité: kgCO2e/km
-  note: FE issu de la base empreinte (Vélo/à assistance électrique)
+  note: FE issu de la base empreinte (Vélo/à assistance électrique) sur le périmètre complet (fabrication + usage)
 
-transport . mobilité douce . vae . km:
+transport . mobilité douce . type . vae . km:
   question: Combien de kilomètres allez-vous faire en vélo électrique pour aller et revenir de votre lieu de séjour ?
-  par défaut: 1000
+  par défaut: 20
   unité: km
   suggestions:
-    5km / jour: 1800.001
-    10km / jour: 3600.001
-    100km / semaine: 5200.001
-    500km / mois: 6000.001
-#    je l'utilise occasionnellement: 250.001
-#    je l'utilise pour aller au travail: 1500.001
-transport . mobilité douce . vae . construction amortie:
-  titre: Construction amortie
-  formule: construction / durée de vie
-  unité: kgCO2e
+    10 km: 10
+    20 km: 20
+    50 km: 50
+    100 km: 100
 
-transport . mobilité douce . vae . construction:
-  formule: 262
-  unité: kgCO2e
-  note: FE issu de la base empreinte (Vélo/à assistance électrique)
-
-transport . mobilité douce . vae . durée de vie:
-  formule: 12
-  note: |
-    Hypothèse issue du HBEFA (Manuel des facteurs d'émission pour le transport routier), d'après la documentation de la base empreinte.
-    Chiffres tirés de l'étude ADEME de 2019 ["Modélisation et évaluation environnementale de produits de consommation et biens d'équipement"](https://librairie.ademe.fr/dechets-economie-circulaire/127-modelisation-et-evaluation-environnementale-de-produits-de-consommation-et-biens-d-equipement.html)
-
-transport . mobilité douce . trottinette électrique:
+transport . mobilité douce . type . trottinette électrique:
+# Modification du modèle par rapport à NGC pour prendre directement le FE complet (fabrication + usage) de la Base Empreinte
   titre: Trottinette électrique
   icônes: 🛴⚡
   applicable si: présent
-  formule: empreinte * km + construction amortie
+  formule: empreinte au km * km
   unité: kgCO2e
 
-transport . mobilité douce . trottinette électrique . présent:
-  question: Allez-vous vous déplacer avec une trottinette électrique ?
+transport . mobilité douce . type . trottinette électrique . présent:
+  question: Allez-vous vous déplacer avec une trottinette électrique pour vous rendre ou revenir de votre lieu de séjour  ?
   par défaut: non
 
-transport . mobilité douce . trottinette électrique . empreinte:
-  formule: 0.002
+transport . mobilité douce . type . trottinette électrique . empreinte au km:
+  formule: 0.0249
   unité: kgCO2e/km
-  note: FE issu de la base empreinte (Trottinette)
+  note: FE issu de la base empreinte (Trottinette) sur le périmètre complet (fabrication + usage)
 
-transport . mobilité douce . trottinette électrique . km:
+transport . mobilité douce . type . trottinette électrique . km:
   question: Combien de kilomètres allez-vous faire en trottinette électrique pour aller et revenir de votre lieu de séjour ?
   par défaut: 1000
   unité: km
   suggestions:
-    5km / jour: 1800.001
-    10km / jour: 3600.001
-    100km / semaine: 5200.001
-    500km / mois: 6000.001
-#    je l'utilise occasionnellement: 250.001
-#    je l'utilise pour aller au travail: 1500.001
-
-transport . mobilité douce . trottinette électrique . construction amortie:
-  titre: Construction amortie
-  formule: construction / durée de vie
-  unité: kgCO2e
-
-transport . mobilité douce . trottinette électrique . construction:
-  formule: 91.9
-  unité: kgCO2e
-  note: FE issu de la base empreinte (Trottinette)
-
-transport . mobilité douce . trottinette électrique . durée de vie:
-  formule: 4
-  note: |
-    Hypothèse issue du HBEFA (Manuel des facteurs d'émission pour le transport routier), d'après la documentation de la base empreinte.
-    Chiffres tirés de l'étude ADEME de 2019 ["Modélisation et évaluation environnementale de produits de consommation et biens d'équipement"](https://librairie.ademe.fr/dechets-economie-circulaire/127-modelisation-et-evaluation-environnementale-de-produits-de-consommation-et-biens-d-equipement.html)
-
+    10 km: 10
+    20 km: 20
+    50 km: 50

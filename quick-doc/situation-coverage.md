@@ -36,7 +36,7 @@
 _(Sachez qu'en moyenne, 1 panneau = 400 Wc)_
  |  |
 | logement . vacances . échange . nombre de nuitées | Combien de nuits passez-vous en échange de maison par an ? | moyenne |
-| transport . mobilité douce . vae . km | Combien de kilomètres faites-vous à l'année avec votre Vélo à Assistance Électrique (VAE) ? | 1000 |
+| transport . mobilité douce . type . vae . km | Combien de kilomètres faites-vous à l'année avec votre Vélo à Assistance Électrique (VAE) ? | 1000 |
 | transport . vacances . van . km | Quelle distance parcourez-vous à l'année en van ? | 9310 |
 | transport . vacances . van . consommation aux 100 | Connaissez-vous la consommation moyenne de votre van ? | 9 |
 | transport . voiture . thermique . carburant | Quel type de carburant votre voiture consomme-t-elle ? | 'essence E5 ou E10' |
@@ -209,9 +209,9 @@ _(Sachez qu'en moyenne, 1 panneau = 400 Wc)_
 | transport . deux roues . type | Quelle est la motorisation de votre scooter ou moto ? | Corentin, Jessica |
 | transport . ferry . usager | Prenez-vous le ferry ? | Yoram, Sandy, Mehdi, Anne Claire, Gérard |
 | transport . ferry . heures | Combien d'heures par an voyagez-vous en ferry ou croisière ? | Anne Claire, Gérard |
-| transport . mobilité douce . marche . présent | Vous déplacez-vous en marchant ? | Yoram |
-| transport . mobilité douce . vélo . présent | Possédez-vous un vélo "musculaire" (sans assistance) ? | Yoram, Corentin |
-| transport . mobilité douce . vae . présent | Possédez vous un vélo à Assistance Électrique (VAE) ? | Yoram |
+| transport . mobilité douce . type . marche . présent | Vous déplacez-vous en marchant ? | Yoram |
+| transport . mobilité douce . type . vélo . présent | Possédez-vous un vélo "musculaire" (sans assistance) ? | Yoram, Corentin |
+| transport . mobilité douce . type . vae . présent | Possédez vous un vélo à Assistance Électrique (VAE) ? | Yoram |
 | transport . mobilité douce . autres véhicules à moteur . présent | Possédez vous une trottinette électrique, gyropode, monocycle électrique, hoverboard...? | Yoram, Mehdi |
 | transport . mobilité douce . autres véhicules à moteur . km | Combien de kilomètres faites-vous à l'année avec votre trottinette électrique, gyropode, monocycle électrique, hoverboard...? | Mehdi |
 | transport . train . km | Combien de kilomètres parcourez-vous en train par an ? | Yoram, Corentin, Sandy, Mehdi, Sylviane, Jessica, Nolan |

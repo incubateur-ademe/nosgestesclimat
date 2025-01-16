@@ -16,8 +16,18 @@ transport . voiture:
                   - si:
                       une de ces conditions:
                         - utilisateur = 'propriétaire'
-                        - utilisateur = 'régulier non propriétaire'
+#                        - utilisateur = 'régulier non propriétaire'
                     alors: empreinte calculée
+                  - si:
+                      toutes ces conditions:
+                        - utilisateur = 'régulier non propriétaire'
+                        - motorisation = 'thermique'
+                    alors: empreinte régulier non propriétaire thermique
+                  - si:
+                      toutes ces conditions:
+                        - utilisateur = 'régulier non propriétaire'
+                        - motorisation = 'électrique'
+                    alors: empreinte régulier non propriétaire électrique
                   - si: 
                       toutes ces conditions:
                         - utilisateur = 'non régulier'
@@ -167,30 +177,50 @@ transport . voiture . empreinte moyenne:
         voiture . motorisation: "'thermique'"
         voiture . thermique . carburant: "'essence E5 ou E10'"
 
-transport . voiture . empreinte non régulier thermique:
+transport . voiture . empreinte régulier non propriétaire thermique:
   valeur: voiture . empreinte calculée
   contexte:
-    voiture . construction: 0 #En vérifiant dans quick-doc le 0 ici n'est pas overuled par le "régulier non propriétaire" de voiture . utilisateur (dans cette fonction contexte) qui aurait pu se répercuter dans la variable voiture . construction:
-    voiture . utilisateur: "'régulier non propriétaire'"
+    voiture . utilisateur: "'propriétaire'" #Nécessaire pour la variable "carburant"
     voiture . thermique . carburant: "'essence E5 ou E10'"
     voiture . thermique . consommation aux 100:
       valeur: voiture . thermique . consommation estimée
       contexte:
-        voiture . utilisateur: "'régulier non propriétaire'"
+        voiture . utilisateur: "'propriétaire'" #Nécessaire pour la variable "consommation au 100"
+        voiture . thermique . carburant: "'essence E5 ou E10'"
+
+transport . voiture . empreinte régulier non propriétaire électrique:
+  valeur: voiture . empreinte calculée
+  contexte:
+    voiture . utilisateur: "'propriétaire'" #On spécifie "propriétaire" ici aussi car celui spécifié dans le contexte de "consommation estimée" ne suffit pas
+    voiture . électrique . consommation aux 100:
+      valeur: voiture . électrique . consommation estimée
+      contexte:
+        voiture . utilisateur: "'propriétaire'"
+
+transport . voiture . empreinte non régulier thermique:
+  valeur: voiture . empreinte calculée
+  contexte:
+    voiture . construction: 0 #En vérifiant dans quick-doc le 0 ici n'est pas overuled par le "propriétaire" de voiture . utilisateur (dans cette fonction contexte) qui aurait pu se répercuter dans la variable voiture . construction:
+    voiture . utilisateur: "'propriétaire'" #Nécessaire pour la variable "carburant"
+    voiture . thermique . carburant: "'essence E5 ou E10'"
+    voiture . thermique . consommation aux 100:
+      valeur: voiture . thermique . consommation estimée
+      contexte:
+        voiture . utilisateur: "'propriétaire'" #Nécessaire pour la variable "consommation au 100"
         voiture . thermique . carburant: "'essence E5 ou E10'"
 
 transport . voiture . empreinte non régulier électrique:
   valeur: voiture . empreinte calculée
   contexte:
-    voiture . construction: 0 #En vérifiant dans quick-doc le 0 ici n'est pas overuled par le "régulier non propriétaire" de voiture . utilisateur (dans cette fonction contexte) qui aurait pu se répercuter dans la variable voiture . construction:
-    voiture . utilisateur: "'régulier non propriétaire'"
+    voiture . construction: 0 #En vérifiant dans quick-doc le 0 ici n'est pas overuled par le "propriétaire" de voiture . utilisateur (dans cette fonction contexte) qui aurait pu se répercuter dans la variable voiture . construction:
+    voiture . utilisateur: "'propriétaire'"
     voiture . électrique . consommation aux 100:
       valeur: voiture . électrique . consommation estimée
       contexte:
-        voiture . utilisateur: "'régulier non propriétaire'"
+        voiture . utilisateur: "'propriétaire'"
 
 transport . voiture . empreinte calculée:
-  formule: (usage + construction) / voyageurs
+  formule: (usage + construction) / voyageurs / durée séjour
   unité: kgCO2e
 
 transport . voiture . voyageurs:
@@ -302,7 +332,7 @@ transport . voiture . motorisation:
           - utilisateur = 'régulier non propriétaire'
           - utilisateur = 'non régulier'
       - km > 0
-  par défaut: "'thermique'"
+  par défaut: "'électrique'"
   formule:
     une possibilité:
       choix obligatoire: oui
@@ -337,7 +367,7 @@ transport . voiture . thermique . consommation aux 100:
       - est défini: utilisateur
       - une de ces conditions:
           - utilisateur = 'propriétaire'
-          - utilisateur = 'régulier non propriétaire'
+#          - utilisateur = 'régulier non propriétaire'
       - une de ces conditions:
           - motorisation = 'thermique'
           - motorisation = 'hybride'
@@ -524,7 +554,7 @@ transport . voiture . thermique . carburant:
       - est défini: utilisateur
       - une de ces conditions:
           - utilisateur = 'propriétaire'
-          - utilisateur = 'régulier non propriétaire'
+#          - utilisateur = 'régulier non propriétaire'
       - une de ces conditions:
           - motorisation = 'thermique'
           - motorisation = 'hybride'
@@ -598,7 +628,7 @@ transport . voiture . électrique . consommation aux 100:
       - est défini: utilisateur
       - une de ces conditions:
           - utilisateur = 'propriétaire'
-          - utilisateur = 'régulier non propriétaire'
+#          - utilisateur = 'régulier non propriétaire'
       - motorisation = 'électrique'
       - km > 0
   suggestions:
