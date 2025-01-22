@@ -68,7 +68,9 @@ logement . électricité . réseau . consommation par défaut:
   formule:
     variations:
       - si: logement . chauffage . choix utilisateur = non
-        alors: surface * (parc français . consommation électricité autre par m2 + parc français . surface . part électricité * parc français . chauffage . consommation électricité par m2)
+#        alors: surface * (parc français . consommation électricité autre par m2 + parc français . surface . part électricité * parc français . chauffage . consommation électricité par m2)
+        ### On modifie la formule car la variable "logement . surface" a été supprimée
+        alors: parc français . surface moyenne * (parc français . consommation électricité autre par m2 + parc français . surface . part électricité * parc français . chauffage . consommation électricité par m2)
       - si:
           toutes ces conditions:
             - logement . chauffage . choix utilisateur = oui
@@ -76,7 +78,9 @@ logement . électricité . réseau . consommation par défaut:
             - est défini: logement . chauffage . PAC . présent
             - logement . chauffage . électricité . présent
             - logement . chauffage . PAC . présent
-        alors: surface * (parc français . consommation électricité autre par m2 + parc français . chauffage . consommation électricité par m2)
+#        alors: surface * (parc français . consommation électricité autre par m2 + parc français . chauffage . consommation électricité par m2)
+        ### On modifie la formule car la variable "logement . surface" a été supprimée
+        alors: parc français . surface moyenne * (parc français . consommation électricité autre par m2 + parc français . chauffage . consommation électricité par m2)
       - si:
           toutes ces conditions:
             - logement . chauffage . choix utilisateur = oui
@@ -84,7 +88,9 @@ logement . électricité . réseau . consommation par défaut:
             - est défini: logement . chauffage . PAC . présent
             - logement . chauffage . électricité . présent
             - logement . chauffage . PAC . présent = non
-        alors: surface * (parc français . consommation électricité autre par m2 + parc français . chauffage . consommation électricité hors PAC par m2)
+#        alors: surface * (parc français . consommation électricité autre par m2 + parc français . chauffage . consommation électricité hors PAC par m2)
+        ### On modifie la formule car la variable "logement . surface" a été supprimée
+        alors: parc français . surface moyenne * (parc français . consommation électricité autre par m2 + parc français . chauffage . consommation électricité hors PAC par m2)
       - si:
           toutes ces conditions:
             - logement . chauffage . choix utilisateur = oui
@@ -92,8 +98,12 @@ logement . électricité . réseau . consommation par défaut:
             - est défini: logement . chauffage . PAC . présent
             - logement . chauffage . électricité . présent = non
             - logement . chauffage . PAC . présent
-        alors: surface * (parc français . consommation électricité autre par m2 + parc français . chauffage . consommation électricité PAC par m2)
-      - sinon: surface * parc français . consommation électricité autre par m2
+#        alors: surface * (parc français . consommation électricité autre par m2 + parc français . chauffage . consommation électricité PAC par m2)
+        ### On modifie la formule car la variable "logement . surface" a été supprimée
+        alors: parc français . surface moyenne * (parc français . consommation électricité autre par m2 + parc français . chauffage . consommation électricité PAC par m2)
+#      - sinon: surface * parc français . consommation électricité autre par m2
+        ### On modifie la formule car la variable "logement . surface" a été supprimée
+      - sinon: parc français . surface moyenne * parc français . consommation électricité autre par m2
 
 logement . électricité . réseau . consommation estimée via le coût:
   titre: Consommation estimée via le coût
@@ -169,7 +179,9 @@ logement . électricité . photovoltaique . production:
   icônes: 🌞⚡️
   question: Quelle est la production annuelle d'électricité de vos panneaux solaires photovoltaïques, qu'elle soit autoconsommée ou réinjectée dans le réseau ?
   plancher: 0
-  par défaut: logement . surface * 30 Wc/m2 * logement . électricité . photovoltaique . production estimée via la puissance installée . facteur
+#  par défaut: logement . surface * 30 Wc/m2 * logement . électricité . photovoltaique . production estimée via la puissance installée . facteur
+### On modifie la formule car la variable "logement . surface" a été supprimée
+  par défaut: parc français . surface moyenne * 30 Wc/m2 * logement . électricité . photovoltaique . production estimée via la puissance installée . facteur
   unité: kWh
   suggestions:
     1000 kWh: 1000
