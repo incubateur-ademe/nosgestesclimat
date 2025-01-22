@@ -1,38 +1,38 @@
 logement . chauffage . baisse température:
-#  titre: Baisser la consigne de son chauffage
-#  icônes: 🏠🌡
-#  description: |
-#    Le chauffage représente 66 % de la dépense énergétique d’un ménage. De nombreux foyers sont encore équipés de chaudières au gaz et au fioul qui émettent d’importantes quantités de gaz à effet de serre. En faisant des économies de chauffage, on peut donc limiter de manière importante son impact sur le climat.
-#
-#    Baisser la température d'un degré permet de réaliser 7% d'économies d'énergie.
-#
-#    > Pour mieux maîtriser la température de votre logement, pensez à installer une régulation et une programmation.
-#
-#    > Pour en savoir plus, consultez [notre guide « Un hiver tout confort »](https://librairie.ademe.fr/changement-climatique-et-energie/5100-un-hiver-tout-confort-9791029718984.html) et [notre guide « Changer de chauffage »](https://librairie.ademe.fr/urbanisme-et-batiment/5099-changer-de-chauffage-9791029718731.html)
-#  applicable si: température > 19
-#  formule: (nombre degrés * gains 1 degré * empreinte chauffage air) / habitants
-#  unité: kgCO2e
-#
-#logement . chauffage . baisse température . nombre degrés:
-#  question: De combien de degrés seriez-vous prêt à diminuer la température de votre logement ?
-#  icônes: ↘️🌡
-#  description: |
-#    Les ¾ de la consommation d’énergie d’un ménage sont consacrés au chauffage et à l’eau chaude.
-#
-#    Cette consommation d’énergie, en plus d’avoir un coût financier non négligeable, augmente l’empreinte carbone des ménages.
-#
-#    Elle peut toutefois facilement être limitée en diminuant la température des pièces occupées sans perdre de confort thermique ou bien ressentir une sensation de froid (à condition d’avoir des logements bien isolés).
-#
-#    Par exemple, régler la température entre 19° et 21°C dans les pièces occupées la journée (et 17°C la nuit ou dans les pièces peu occupées).
-#
-#    En effet, baisser la température de chauffage d’1°C représente une économie d’énergie de 7%.
-#  par défaut: 1
-#  unité: degré
-#  suggestions:
-#    1 degré: 1
-#    2 degrés: 2
-#    3 degrés: 3
-#
+  titre: Baisser la consigne de son chauffage
+  icônes: 🏠🌡
+  description: |
+    Le chauffage représente 66 % de la dépense énergétique d’un ménage. De nombreux foyers sont encore équipés de chaudières au gaz et au fioul qui émettent d’importantes quantités de gaz à effet de serre. En faisant des économies de chauffage, on peut donc limiter de manière importante son impact sur le climat.
+
+    Baisser la température d'un degré permet de réaliser 7% d'économies d'énergie.
+
+    > Pour mieux maîtriser la température de votre logement, pensez à installer une régulation et une programmation.
+
+    > Pour en savoir plus, consultez [notre guide « Un hiver tout confort »](https://librairie.ademe.fr/changement-climatique-et-energie/5100-un-hiver-tout-confort-9791029718984.html) et [notre guide « Changer de chauffage »](https://librairie.ademe.fr/urbanisme-et-batiment/5099-changer-de-chauffage-9791029718731.html)
+  applicable si: température > 19
+  formule: (nombre degrés * gains 1 degré * empreinte chauffage air) / habitants
+  unité: kgCO2e
+
+logement . chauffage . baisse température . nombre degrés:
+  question: De combien de degrés seriez-vous prêt à diminuer la température de votre logement ?
+  icônes: ↘️🌡
+  description: |
+    Les ¾ de la consommation d’énergie d’un ménage sont consacrés au chauffage et à l’eau chaude.
+
+    Cette consommation d’énergie, en plus d’avoir un coût financier non négligeable, augmente l’empreinte carbone des ménages.
+
+    Elle peut toutefois facilement être limitée en diminuant la température des pièces occupées sans perdre de confort thermique ou bien ressentir une sensation de froid (à condition d’avoir des logements bien isolés).
+
+    Par exemple, régler la température entre 19° et 21°C dans les pièces occupées la journée (et 17°C la nuit ou dans les pièces peu occupées).
+
+    En effet, baisser la température de chauffage d’1°C représente une économie d’énergie de 7%.
+  par défaut: 1
+  unité: degré
+  suggestions:
+    1 degré: 1
+    2 degrés: 2
+    3 degrés: 3
+
 logement . température:
   question: À quelle température chauffez-vous votre logement ?
   description: Cette question nous permet simplement de ne pas vous proposer de baisser la température quand elle est déjà relativement faible.
@@ -50,74 +50,74 @@ logement . chauffage . baisse température . gains 1 degré:
   note: |
     Où est la source pour ces 7% ? Peut-on décliner ce chiffre pour chaque type d'énergie (bois, gaz, etc.) ? Quelle est la sensibilité de ce chiffre au type de logement, son isolation, etc. ?
 
-#logement . empreinte chauffage air:
-#  formule:
-#    variations:
-#      - si: chauffage . choix utilisateur
-#        alors: empreinte chauffage air utilisateur
-#      - sinon: parc français . chauffage . empreinte moyenne chauffage air par m2 * logement . surface
-#  description: |
-#    Pour chaque kWh de chaque type d'énergie, quelle est la part utilisée pour le chauffage de l'air d'un foyer ?
-#
-#    > Nous utilisons ici [les données du CEREN](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel)
-#    via le travail réalisé dans le fichier [chiffres parc logements français.publicodes](https://github.com/incubateur-ademe/nosgestesclimat/blob/master/data/logement/chiffres%20parc%20logements%20fran%C3%A7ais.publicodes).
-#
-#logement . empreinte chauffage air utilisateur:
-#  formule:
-#    somme:
-#      - chauffage . électricité . présent * électricité * parc français . chauffage . part chauffage air électricité
-#      - (chauffage . gaz . empreinte + chauffage . citerne propane . empreinte) * parc français . chauffage . part chauffage air gaz
-#      - chauffage . bois . empreinte * parc français . chauffage . part chauffage air bois
-#      - chauffage . fioul . empreinte * parc français . chauffage . part chauffage air fioul
-#      - chauffage . réseau de chaleur . empreinte * parc français . chauffage . part chauffage air réseau de chaleur
-#
-#logement . chauffage . installer thermostat:
-#  titre: Installer un thermostat programmable
-#  icônes: 🌡️🖥️
-#  description: |
-#    Le saviez-vous ? L'installation d'un thermostat programmable permet de faire jusqu'à 15% d'économies de chauffage.
-#
-#    > Pour en savoir plus le fonctionnement du thermostat et sur son installation, [consultez notre article](https://agirpourlatransition.ademe.fr/particuliers/maison/economies-denergie-deau/reduire-facture-chauffage-thermostat-programmable).
-#
-#  note: Nous choisissons de partir sur une réduction de 12% de l'énergie liée au chauffage.
-#  formule: empreinte chauffage air * 0.12 / habitants
-#  unité: kgCO2e
-#
-#logement . chauffage . installer chauffe-eau solaire:
-#  titre: S’équiper d’un chauffe-eau solaire
-#  icônes: 🌡️🛁☀️
-#  description: |
-#    C'est la solution solaire thermique la plus simple à mettre en œuvre. Elle permet de couvrir une bonne partie des besoins d'eau chaude de la maison.
-#
-#    Selon l’appoint utilisé, le chauffe-eau solaire diminue les rejets de gaz à effet de serre de 45 % à plus de 70 % par rapport à un chauffe-eau à gaz.
-#
-#    Il permet aussi de diviser les dépenses d’eau chaude par 2 voire par 3 par rapport à un système électrique, au gaz ou au fioul.
-#
-#    > Pour en savoir plus sur la technologie, son fonctionnement et les coûts d’installation, consultez [notre guide "Adopter le solaire thermique"](https://librairie.ademe.fr/energies-renouvelables-reseaux-et-stockage/6136-adopter-le-solaire-thermique.html).
-#
-#  formule: empreinte eau chaude sanitaire * 0.65 / habitants
-#
-#logement . chauffage . empreinte eau chaude sanitaire:
-#  formule:
-#    variations:
-#      - si: chauffage . choix utilisateur
-#        alors: empreinte eau chaude sanitaire utilisateur
-#      - sinon: parc français . chauffage . empreinte moyenne ecs par m2 * logement . surface
-#  unité: kgCO2e
-#  description: |
-#    Pour chaque kWh de chaque type d'énergie, quelle est la part utilisée pour l'eau chaude sanitaire (ECS) d'un foyer ?
-#
-#    > Nous utilions ici [les données du CEREN](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel)
-#    via le travail réalisé dans le fichier [chiffres parc logements français.publicodes](https://github.com/incubateur-ademe/nosgestesclimat/blob/master/data/logement/chiffres%20parc%20logements%20fran%C3%A7ais.publicodes).
-#
-#logement . chauffage . empreinte eau chaude sanitaire utilisateur:
-#  formule:
-#    somme:
-#      - chauffage . électricité . présent * électricité * parc français . chauffage . part ecs électricité
-#      - (chauffage . gaz . empreinte + chauffage . citerne propane . empreinte) * parc français . chauffage . part ecs gaz
-#      - chauffage . bois . empreinte * parc français . chauffage . part ecs bois
-#      - chauffage . fioul . empreinte * parc français . chauffage . part ecs fioul
-#      - chauffage . réseau de chaleur . empreinte * parc français . chauffage . part ecs réseau de chaleur
+logement . empreinte chauffage air:
+  formule:
+    variations:
+      - si: chauffage . choix utilisateur
+        alors: empreinte chauffage air utilisateur
+      - sinon: parc français . chauffage . empreinte moyenne chauffage air par m2 * logement . surface
+  description: |
+    Pour chaque kWh de chaque type d'énergie, quelle est la part utilisée pour le chauffage de l'air d'un foyer ?
+
+    > Nous utilisons ici [les données du CEREN](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel)
+    via le travail réalisé dans le fichier [chiffres parc logements français.publicodes](https://github.com/incubateur-ademe/nosgestesclimat/blob/master/data/logement/chiffres%20parc%20logements%20fran%C3%A7ais.publicodes).
+
+logement . empreinte chauffage air utilisateur:
+  formule:
+    somme:
+      - chauffage . électricité . présent * électricité * parc français . chauffage . part chauffage air électricité
+      - (chauffage . gaz . empreinte + chauffage . citerne propane . empreinte) * parc français . chauffage . part chauffage air gaz
+      - chauffage . bois . empreinte * parc français . chauffage . part chauffage air bois
+      - chauffage . fioul . empreinte * parc français . chauffage . part chauffage air fioul
+      - chauffage . réseau de chaleur . empreinte * parc français . chauffage . part chauffage air réseau de chaleur
+
+logement . chauffage . installer thermostat:
+  titre: Installer un thermostat programmable
+  icônes: 🌡️🖥️
+  description: |
+    Le saviez-vous ? L'installation d'un thermostat programmable permet de faire jusqu'à 15% d'économies de chauffage.
+
+    > Pour en savoir plus le fonctionnement du thermostat et sur son installation, [consultez notre article](https://agirpourlatransition.ademe.fr/particuliers/maison/economies-denergie-deau/reduire-facture-chauffage-thermostat-programmable).
+
+  note: Nous choisissons de partir sur une réduction de 12% de l'énergie liée au chauffage.
+  formule: empreinte chauffage air * 0.12 / habitants
+  unité: kgCO2e
+
+logement . chauffage . installer chauffe-eau solaire:
+  titre: S’équiper d’un chauffe-eau solaire
+  icônes: 🌡️🛁☀️
+  description: |
+    C'est la solution solaire thermique la plus simple à mettre en œuvre. Elle permet de couvrir une bonne partie des besoins d'eau chaude de la maison.
+
+    Selon l’appoint utilisé, le chauffe-eau solaire diminue les rejets de gaz à effet de serre de 45 % à plus de 70 % par rapport à un chauffe-eau à gaz.
+
+    Il permet aussi de diviser les dépenses d’eau chaude par 2 voire par 3 par rapport à un système électrique, au gaz ou au fioul.
+
+    > Pour en savoir plus sur la technologie, son fonctionnement et les coûts d’installation, consultez [notre guide "Adopter le solaire thermique"](https://librairie.ademe.fr/energies-renouvelables-reseaux-et-stockage/6136-adopter-le-solaire-thermique.html).
+
+  formule: empreinte eau chaude sanitaire * 0.65 / habitants
+
+logement . chauffage . empreinte eau chaude sanitaire:
+  formule:
+    variations:
+      - si: chauffage . choix utilisateur
+        alors: empreinte eau chaude sanitaire utilisateur
+      - sinon: parc français . chauffage . empreinte moyenne ecs par m2 * logement . surface
+  unité: kgCO2e
+  description: |
+    Pour chaque kWh de chaque type d'énergie, quelle est la part utilisée pour l'eau chaude sanitaire (ECS) d'un foyer ?
+
+    > Nous utilions ici [les données du CEREN](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel)
+    via le travail réalisé dans le fichier [chiffres parc logements français.publicodes](https://github.com/incubateur-ademe/nosgestesclimat/blob/master/data/logement/chiffres%20parc%20logements%20fran%C3%A7ais.publicodes).
+
+logement . chauffage . empreinte eau chaude sanitaire utilisateur:
+  formule:
+    somme:
+      - chauffage . électricité . présent * électricité * parc français . chauffage . part ecs électricité
+      - (chauffage . gaz . empreinte + chauffage . citerne propane . empreinte) * parc français . chauffage . part ecs gaz
+      - chauffage . bois . empreinte * parc français . chauffage . part ecs bois
+      - chauffage . fioul . empreinte * parc français . chauffage . part ecs fioul
+      - chauffage . réseau de chaleur . empreinte * parc français . chauffage . part ecs réseau de chaleur
 
 logement . électricité . éteindre appareils:
   formule: empreinte du foyer / habitants
@@ -322,24 +322,24 @@ logement . climatisation . part électricité climatisation:
     D'après l'étude [ADEME Panel ElecDom 2020](https://librairie.ademe.fr/changement-climatique-et-energie/4473-panel-usages-electrodomestiques.html), un climatiseur fixe a une [consommation moyenne "de 100 à 700 kWh/an"](https://agirpourlatransition.ademe.fr/particuliers/maison/economies-denergie-deau/electricite-combien-consomment-appareils-maison).
     Nous partons donc sur une moyenne de 400 kWh/an par climatiseur installé.
 
-#logement . chauffage . rénovation énergétique:
-#  titre: Rénover son logement
-#  icônes: 🏚️✨
-#  formule: (logement . empreinte chauffage air * gain rénovation) / habitants
-#  unité: kgCO2e
-#  applicable si: propriétaire
-#  non applicable si:
-#    toutes ces conditions:
-#      - est défini: logement . construction . rénovation . travaux . isolation . présent
-#      - logement . construction . rénovation . travaux . isolation . présent
-#  description: |
-#    Mieux isoler, ventiler et équiper son logement permet de vivre dans un logement plus confortable et de diminuer ses factures d’énergie. Plus efficace, le logement sera moins gourmand en énergie.
-#
-#    En rénovant votre logement vous participez à réduire les émissions de gaz à effet de serre.
-#
-#    Plusieurs aides financières sont disponibles pour soutenir votre investissement.
-#
-#    > Parce qu’une rénovation demande de la réflexion, des connaissances techniques et financières, l’Etat a mis en place un service public de la rénovation qui peut vous accompagner dans votre projet. Pour contacter le conseiller le plus proche de chez vous, rendez-vous sur le site [France Rénov'](https://france-renov.gouv.fr/).
+logement . chauffage . rénovation énergétique:
+  titre: Rénover son logement
+  icônes: 🏚️✨
+  formule: (logement . empreinte chauffage air * gain rénovation) / habitants
+  unité: kgCO2e
+  applicable si: propriétaire
+  non applicable si:
+    toutes ces conditions:
+      - est défini: logement . construction . rénovation . travaux . isolation . présent
+      - logement . construction . rénovation . travaux . isolation . présent
+  description: |
+    Mieux isoler, ventiler et équiper son logement permet de vivre dans un logement plus confortable et de diminuer ses factures d’énergie. Plus efficace, le logement sera moins gourmand en énergie.
+
+    En rénovant votre logement vous participez à réduire les émissions de gaz à effet de serre.
+
+    Plusieurs aides financières sont disponibles pour soutenir votre investissement.
+
+    > Parce qu’une rénovation demande de la réflexion, des connaissances techniques et financières, l’Etat a mis en place un service public de la rénovation qui peut vous accompagner dans votre projet. Pour contacter le conseiller le plus proche de chez vous, rendez-vous sur le site [France Rénov'](https://france-renov.gouv.fr/).
 
 logement . gain rénovation:
   formule: 39%
@@ -356,26 +356,26 @@ logement . propriétaire:
   par défaut: oui
 
 logement . chauffage . rénovation énergétique BBC:
-#  action:
-#    dépasse:
-#      - logement . chauffage . rénovation énergétique
-#  titre: Rénover son logement en BBC
-#  icônes: 🏠✨
-#  formule: (logement . empreinte chauffage air * gain rénovation) / habitants
-#  unité: kgCO2e
-#  applicable si: propriétaire
-#  non applicable si:
-#    toutes ces conditions:
-#      - est défini: logement . construction . rénovation . travaux . isolation . présent
-#      - logement . construction . rénovation . travaux . isolation . présent
-#  description: |
-#    Une rénovation très performante peut mettre de diviser par 6 les besoins énergétiques de son logement. En consommant moins de 50 kWh par m² par an, le logement sera classé en A sur l’étiquette énergie du Diagnostic de Performance Energétique et atteindra le niveau exigé par la certification Bâtiment Basse Consommation (BBC).
-#
-#    Votre logement ne consommera presque plus d’énergie pour le chauffage tout en restant très confortable.
-#
-#    Plusieurs aides financières sont disponibles pour soutenir votre investissement.
-#
-#    > Parce qu’une rénovation demande de la réflexion, des connaissances techniques et financières, l’Etat a mis en place un service public de la rénovation qui peut vous accompagner dans votre projet. Pour contacter le conseiller le plus proche de chez vous, rendez-vous sur le site [France Rénov'](https://france-renov.gouv.fr/).
+  action:
+    dépasse:
+      - logement . chauffage . rénovation énergétique
+  titre: Rénover son logement en BBC
+  icônes: 🏠✨
+  formule: (logement . empreinte chauffage air * gain rénovation) / habitants
+  unité: kgCO2e
+  applicable si: propriétaire
+  non applicable si:
+    toutes ces conditions:
+      - est défini: logement . construction . rénovation . travaux . isolation . présent
+      - logement . construction . rénovation . travaux . isolation . présent
+  description: |
+    Une rénovation très performante peut mettre de diviser par 6 les besoins énergétiques de son logement. En consommant moins de 50 kWh par m² par an, le logement sera classé en A sur l’étiquette énergie du Diagnostic de Performance Energétique et atteindra le niveau exigé par la certification Bâtiment Basse Consommation (BBC).
+
+    Votre logement ne consommera presque plus d’énergie pour le chauffage tout en restant très confortable.
+
+    Plusieurs aides financières sont disponibles pour soutenir votre investissement.
+
+    > Parce qu’une rénovation demande de la réflexion, des connaissances techniques et financières, l’Etat a mis en place un service public de la rénovation qui peut vous accompagner dans votre projet. Pour contacter le conseiller le plus proche de chez vous, rendez-vous sur le site [France Rénov'](https://france-renov.gouv.fr/).
 
 logement . chauffage . rénovation énergétique BBC . gain rénovation:
   formule: 70%
@@ -491,17 +491,17 @@ logement . extérieur . passer à la tondeuse électrique:
   unité: kgCO2e
 
 logement . mutualiser son logement:
-#  non applicable si: métrique != "carbone"
-#  titre: Partager son logement
-#  icônes: 🏠👥
-#  description: |
-#    Vivre en colocation n'est pas seulement intéressant pour partager les factures et créer des liens sociaux, c'est aussi un moyen de réduire son empreinte sur le climat en mutualisant les espaces, les consommations et les équipements.
-#
-#    Nous avons tendance à vouloir vivre dans de plus grands logements mais cela contribue à l’étalement urbain et à l’artificialisation des sols. De plus, la construction de nouveaux logements consomme beaucoup d’énergie et augmente les émissions de gaz à effet de serre.
-#
-#    Partager des espaces de vie est donc une solution pour diminuer notre impact sur le climat.
-#  applicable si: logement . surface / habitants > 50
-#  formule: nombre colocataires * empreinte partagée
+  non applicable si: métrique != "carbone"
+  titre: Partager son logement
+  icônes: 🏠👥
+  description: |
+    Vivre en colocation n'est pas seulement intéressant pour partager les factures et créer des liens sociaux, c'est aussi un moyen de réduire son empreinte sur le climat en mutualisant les espaces, les consommations et les équipements.
+
+    Nous avons tendance à vouloir vivre dans de plus grands logements mais cela contribue à l’étalement urbain et à l’artificialisation des sols. De plus, la construction de nouveaux logements consomme beaucoup d’énergie et augmente les émissions de gaz à effet de serre.
+
+    Partager des espaces de vie est donc une solution pour diminuer notre impact sur le climat.
+  applicable si: logement . surface / habitants > 50
+  formule: nombre colocataires * empreinte partagée
 
 logement . nombre colocataires:
   question: Combien de colocataires pourriez-vous accueillir ?

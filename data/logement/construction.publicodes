@@ -1,7 +1,7 @@
 logement . construction:
   non applicable si: métrique != "carbone"
   icônes: 🧱
-#  formule: surface * empreinte amortie / habitants
+  formule: surface * empreinte amortie / habitants
   note: |
     Dans une première approche, Nos Gestes Climat considérait qu'un logement était amorti entièrement au bout de 50 ans, sans considérer les travaux de rafraîchissement et de rénovation. Nous avons décidé de revoir notre copie pour prendre en compte ces éléments.
 
@@ -108,19 +108,19 @@ logement . construction . rénovation . travaux:
       - rénovation . présent
       - isolation . présent
       - chauffage . présent
-#      - extension . présent
+      - extension . présent
     suggestions:
       aucun:
         rénovation . présent: non
         isolation . présent: non
         chauffage . présent: non
-#        extension . présent: non
+        extension . présent: non
   formule:
     somme:
       - rénovation
       - isolation
       - chauffage
-#      - extension #On comment pour éviter l'erreur de compilation car dans la variable "extension" il y a un appel à "logement . surface" qui a été supprimée
+      - extension
   unité: kgCO2e/m2
 
 logement . construction . rénovation . travaux . travaux réalisés:
@@ -130,7 +130,7 @@ logement . construction . rénovation . travaux . travaux réalisés:
       - rénovation . présent
       - isolation . présent
       - chauffage . présent
-#      - extension . présent #On comment pour éviter l'erreur de compilation car dans la variable "extension" il y a un appel à "logement . surface" qui a été supprimée
+      - extension . présent
 
 logement . construction . rénovation . travaux . rénovation:
   titre: Rénovation
@@ -173,33 +173,33 @@ logement . construction . rénovation . travaux . chauffage . présent:
   question: Avez-vous changé de système de chauffage ?
   par défaut: non
 
-#logement . construction . rénovation . travaux . extension:
-#  # Pour le moment, il n'est pas possible de désactiver une carte de la mosaique selon certaines conditions.
-#  # non applicable si: logement . type = 'appartement'
-#  titre: Extension
-#  icônes: 🏡
-#  applicable si: extension . présent
-#  formule:
-#    variations:
-#      - si: logement . âge > logement . construction . base . plafond
-#        alors: ratio * logement . construction . base . maison
-#      - sinon: 0
-#  note: |
-#    Si le logement n'est pas encore amorti, on considère que l'extension est comprise dans la construction de base.
-#  unité: kgCO2e/m2
-#
-#logement . construction . rénovation . travaux . extension . présent:
-#  question: Avez-vous réalisé une extension de votre logement ?
-#  par défaut: non
-#
-#logement . construction . rénovation . travaux . extension . ratio:
-#  formule: taille / logement . surface
-#
-#logement . construction . rénovation . travaux . extension . taille:
-#  question: Quelle est la taille de l'extension réalisée (en m²) ?
-#  par défaut: 0.2 * logement . surface
-#  unité: m2
-#  note: En moyenne, on considère que l'extension représente 20% de la surface du logement (le max étant fixé à 30%).
+logement . construction . rénovation . travaux . extension:
+  # Pour le moment, il n'est pas possible de désactiver une carte de la mosaique selon certaines conditions.
+  # non applicable si: logement . type = 'appartement'
+  titre: Extension
+  icônes: 🏡
+  applicable si: extension . présent
+  formule:
+    variations:
+      - si: logement . âge > logement . construction . base . plafond
+        alors: ratio * logement . construction . base . maison
+      - sinon: 0
+  note: |
+    Si le logement n'est pas encore amorti, on considère que l'extension est comprise dans la construction de base.
+  unité: kgCO2e/m2
+
+logement . construction . rénovation . travaux . extension . présent:
+  question: Avez-vous réalisé une extension de votre logement ?
+  par défaut: non
+
+logement . construction . rénovation . travaux . extension . ratio:
+  formule: taille / logement . surface
+
+logement . construction . rénovation . travaux . extension . taille:
+  question: Quelle est la taille de l'extension réalisée (en m²) ?
+  par défaut: 0.2 * logement . surface
+  unité: m2
+  note: En moyenne, on considère que l'extension représente 20% de la surface du logement (le max étant fixé à 30%).
 
 logement . construction . déforestation:
   applicable si: logement . âge < plafond
