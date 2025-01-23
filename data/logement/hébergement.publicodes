@@ -8,6 +8,12 @@ logement . hébergement:
       - camping . présent
       - auberge de jeunesse . présent
       - locations . présent
+    suggestions:
+      aucun:
+        hotel . présent: non
+        camping . présent: non
+        auberge de jeunesse . présent: non
+        locations . présent: non
   icônes: 🏨
   description: |
     Renseignez ici les différents types d'hébergements que vous occuperez pendant votre séjour.
@@ -25,6 +31,7 @@ logement . hébergement . empreinte totale:
       - empreinte camping
       - empreinte auberge de jeunesse * logement . habitants
       - empreinte locations
+      - aquatique 
   unité: kgCO2e
 
 # A caler avec Christophe
@@ -149,7 +156,7 @@ logement . hébergement . hotel . nombre de nuitées:
   note: La valeur par défaut est arbitraire et doit être calée avec HdF Tourisme.
   suggestions:
     un week-end: 2
-    un week-end prolongé: 4
+    un week-end prolongé: 3
     une semaine: 7
 
 logement . hébergement . empreinte camping:
@@ -185,7 +192,7 @@ logement . hébergement . camping . nombre de nuitées:
   note: La valeur par défaut est arbitraire et doit être calée avec HdF Tourisme.
   suggestions:
     un week-end: 2
-    un week-end prolongé: 4
+    un week-end prolongé: 3
     une semaine: 7
 
 logement . hébergement . empreinte auberge de jeunesse:
@@ -224,7 +231,7 @@ logement . hébergement . auberge de jeunesse . nombre de nuitées:
   note: La valeur par défaut est arbitraire et doit être calée avec HdF Tourisme.
   suggestions:
     un week-end: 2
-    un week-end prolongé: 4
+    un week-end prolongé: 3
     une semaine: 7
 
 logement . hébergement . empreinte locations:
@@ -265,5 +272,85 @@ logement . hébergement . locations . nombre de nuitées:
   note: La valeur par défaut est arbitraire et doit être calée avec HdF Tourisme.
   suggestions:
     un week-end: 2
-    un week-end prolongé: 4
+    un week-end prolongé: 3
     une semaine: 7
+
+# Pour être parfaitement exacte côté modèle, il faudrait que je divise cette empreinte d'un ratio j_séjour/365 car je crois que l'empreinte de la piscine est calculée sur une année
+logement . hébergement . aquatique:
+  titre: Piscines, spa, jacuzzi
+  question: Votre logement sera-t-il équipé d'une piscine ou d'un spa/jacuzzi ?
+  mosaique:
+    type: selection
+    options:
+      - piscine non chauffée . présent
+      - piscine chauffée . présent
+      - spa jacuzzi . présent
+    suggestions:
+      aucun:
+        piscine non chauffée . présent: non
+        piscine  chauffée . présent: non
+        spa jacuzzi . présent: non
+  icônes: 🏊‍♀️
+  description: |
+    Même si vous ne comptez pas les utiliser, renseignez quand même ce dont votre hébergement est équipé.
+  formule:
+    somme:
+      - piscine non chauffée
+      - piscine chauffée
+      - spa jacuzzi
+
+#Je pense qu'il faudrait que j'importe la règle "piscine . empreinte chauffage" du modèle de Mael dans le modèle de base de piscine puis que l'appel ou non en fonction de si la piscine est chauffée ou non 
+logement . hébergement . aquatique . piscine non chauffée:
+  applicable si: présent
+  formule: piscine non chauffée . empreinte
+
+logement . hébergement . aquatique . piscine non chauffée . présent:
+  question: Allez-vous disposer d'une piscine non chauffée ?
+
+logement . hébergement . aquatique . piscine non chauffée . empreinte:
+  valeur: logement . piscine
+  contexte:
+    métrique: "'carbone'"
+    logement . piscine . surface: 60 #On considère une piscine de 5 x 12
+    logement . piscine . type: "'creusée'"
+#    voiture . électrique . consommation aux 100:   # Je garde cette sous-structure pour pour le template au cas où j'aurai besoin de l'adapter pour que le modèle tourne
+#      valeur: voiture . électrique . consommation estimée
+#      contexte:
+#        voiture . utilisateur: "'propriétaire'"
+
+
+logement . hébergement . aquatique . piscine chauffée:
+  applicable si: présent
+  formule: piscine chauffée . empreinte
+
+logement . hébergement . aquatique . piscine chauffée . présent:
+  question: Allez-vous disposer d'une piscine chauffée ?
+
+logement . hébergement . aquatique . piscine chauffée . empreinte:
+  valeur: logement . piscine
+  contexte:
+    métrique: "'carbone'"
+    logement . piscine . surface: 60 #On considère une piscine de 5 x 12
+    logement . piscine . type: "'creusée'"
+#    voiture . électrique . consommation aux 100:   # Je garde cette sous-structure pour pour le template au cas où j'aurai besoin de l'adapter pour que le modèle tourne
+#      valeur: voiture . électrique . consommation estimée
+#      contexte:
+#        voiture . utilisateur: "'propriétaire'"
+
+logement . hébergement . aquatique . spa jacuzzi:
+  applicable si: présent
+  formule: spa jacuzzi . empreinte
+
+logement . hébergement . aquatique . spa jacuzzi . présent:
+  question: Allez-vous disposer d'un spa/jacuzzi ?
+
+logement . hébergement . aquatique . spa jacuzzi . empreinte:
+  valeur: logement . piscine
+  contexte:
+    métrique: "'carbone'"
+    logement . piscine . surface: 10 #On considère une piscine de 3 x 3
+    logement . piscine . type: "'hors sol'"
+#    voiture . électrique . consommation aux 100:   # Je garde cette sous-structure pour pour le template au cas où j'aurai besoin de l'adapter pour que le modèle tourne
+#      valeur: voiture . électrique . consommation estimée
+#      contexte:
+#        voiture . utilisateur: "'propriétaire'"
