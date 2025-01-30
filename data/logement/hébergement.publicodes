@@ -1,4 +1,14 @@
 logement . hébergement:
+  titre: Hébergement
+  description: |
+    Cette catégorie concerne les caractéristiques de votre hébergement pendant le séjour.
+  icônes: 🏨
+  formule:
+    somme:
+      - nuitées
+      - aquatique
+
+logement . hébergement . nuitées:
   question: Dans quel(s) type(s) d'hébergements allez-vous loger pendant votre séjour ?
   titre: Nuitées d'hébergement
   mosaique:
@@ -23,26 +33,24 @@ logement . hébergement:
         alors: empreinte totale / habitants
       - sinon: empreinte par défaut / habitants
 
-
-logement . hébergement . empreinte totale:
+logement . hébergement . nuitées . empreinte totale:
   formule:
     somme:
       - empreinte hotel
       - empreinte camping
       - empreinte auberge de jeunesse * logement . habitants
       - empreinte locations
-      - aquatique 
   unité: kgCO2e
 
 # A caler avec Christophe
-logement . hébergement . empreinte par défaut:
+logement . hébergement . nuitées . empreinte par défaut:
   formule:
     somme:
       - 2 * empreinte hotel par nuit
   unité: kgCO2e
   note: On considère que le séjour moyen en Haut de France est de 3 nuits en hôtel. A caler avec Christophe.
 
-logement . hébergement . choix utilisateur:
+logement . hébergement . nuitées . choix utilisateur:
   titre: Choix utilisateur pour les nuitées
   formule:
     une de ces conditions:
@@ -51,7 +59,7 @@ logement . hébergement . choix utilisateur:
       - est défini: auberge de jeunesse . présent
       - est défini: locations . présent
 
-logement . hébergement . empreinte hotel:
+logement . hébergement . nuitées . empreinte hotel:
   titre: Empreinte hôtel ou chambre d'hôtes
   applicable si:
     toutes ces conditions:
@@ -108,14 +116,14 @@ logement . hébergement . empreinte hotel:
     C'est une hypothèse forte car on peut facilement imaginer que le famille / foyer ne voyage pas toujours au complet !
     Par ailleurs, on fait également l'hypotèse qu'une famille de plus de 4 personnes prendra 2 chambres, plus de 8, 3 chambres, ce qui explique les facteurs 2 et 3 dans les formules.
 
-logement . hébergement . hotel:
+logement . hébergement . nuitées . hotel:
   titre: Hôtel ou chambre d'hôtes
   icônes: 🏨
 
-logement . hébergement . hotel . présent:
+logement . hébergement . nuitées . hotel . présent:
   question: Allez-vous réserver une chambre d'hôtel ?
 
-logement . hébergement . empreinte hotel par nuit:
+logement . hébergement . nuitées . empreinte hotel par nuit:
   formule: 6.93
   unité: kgCO2e/nuit
   note: |
@@ -143,10 +151,10 @@ logement . hébergement . empreinte hotel par nuit:
       Cela pourra être un bon point de départ pour le jour où nous souhaiterons différencier les nuitées d'hôtel selon le pays fréquenté.
       À noter que le HCMI donne une moyenne pour la France de 7,7 kg éqCO2 / nuitée, ce qui est très proche de la donnée que nous avons choisie, elle calculée à partir du référentiel ADEME.
 
-      > Point publicodes : Cette règle étant utilisée dans d'autres espaces nom que `logement . hébergement . hotel` c'est important ici de ne pas l'inclure dans cet espace non qui rendrait l'empreinte de la nuitée non applicable si la règle hotel est elle aussi non applicable.
+      > Point publicodes : Cette règle étant utilisée dans d'autres espaces nom que `logement . hébergement . nuitées . hotel` c'est important ici de ne pas l'inclure dans cet espace non qui rendrait l'empreinte de la nuitée non applicable si la règle hotel est elle aussi non applicable.
 
 #A caler avec Hdf Tourisme pour la valeur par défaut
-logement . hébergement . hotel . nombre de nuitées:
+logement . hébergement . nuitées . hotel . nombre de nuitées:
   question: Combien de nuits allez-vous passer à l'hôtel ou en chambre d'hôtes pendant votre séjour ?
   unité: nuit
   description: |
@@ -159,7 +167,7 @@ logement . hébergement . hotel . nombre de nuitées:
     un week-end prolongé: 3
     une semaine: 7
 
-logement . hébergement . empreinte camping:
+logement . hébergement . nuitées . empreinte camping:
   titre: Empreinte emplacement en camping
   applicable si:
     toutes ces conditions:
@@ -167,14 +175,14 @@ logement . hébergement . empreinte camping:
       - camping . présent
   formule: camping . empreinte par nuit * camping . nombre de nuitées
 
-logement . hébergement . camping:
+logement . hébergement . nuitées . camping:
   titre: Emplacement en camping
   icônes: ⛺️
 
-logement . hébergement . camping . présent:
+logement . hébergement . nuitées . camping . présent:
   question: Allez-vous réserver un emplacement de camping ?
 
-logement . hébergement . camping . empreinte par nuit:
+logement . hébergement . nuitées . camping . empreinte par nuit:
   formule: 1.4
   unité: kgCO2e/nuit
   note: |
@@ -182,7 +190,7 @@ logement . hébergement . camping . empreinte par nuit:
     Les données sont fournies par Betterfly Tourism et datent de juin 2021. La moyenne de l'empreinte par nuitée sur les 13 campings étudiés est de 1,4 kg éqCO2.
     Le référentiel ADEME est présent dans la base Impacts depuis mai 2023.
 
-logement . hébergement . camping . nombre de nuitées:
+logement . hébergement . nuitées . camping . nombre de nuitées:
   question: Combien de nuits allez- vous passer en camping par an pendant votre séjour ?
   unité: nuit
   description: |
@@ -195,7 +203,7 @@ logement . hébergement . camping . nombre de nuitées:
     un week-end prolongé: 3
     une semaine: 7
 
-logement . hébergement . empreinte auberge de jeunesse:
+logement . hébergement . nuitées . empreinte auberge de jeunesse:
   titre: Empreinte auberge de jeunesse
   applicable si:
     toutes ces conditions:
@@ -203,25 +211,25 @@ logement . hébergement . empreinte auberge de jeunesse:
       - auberge de jeunesse . présent
   formule: auberge de jeunesse . empreinte par nuit * auberge de jeunesse . nombre de nuitées
 
-logement . hébergement . auberge de jeunesse:
+logement . hébergement . nuitées . auberge de jeunesse:
   titre: Auberge de jeunesse
   icônes: 🛏️
 
-logement . hébergement . auberge de jeunesse . présent:
+logement . hébergement . nuitées . auberge de jeunesse . présent:
   question: Allez-vous réserver une place en auberge de jeunesse ?
 
-logement . hébergement . auberge de jeunesse . empreinte par nuit:
+logement . hébergement . nuitées . auberge de jeunesse . empreinte par nuit:
   formule: empreinte hotel par nuit / nombre de personnes dans le dortoir
   unité: kgCO2e/nuit
   note: |
     Pour une première approximation d'une nuit en auberge de jeunesse, l'idée est ici de diviser l'impact
     d'une nuitée classique en hôtel par le nombre de personnes dans un dortoir moyen.
 
-logement . hébergement . auberge de jeunesse . nombre de personnes dans le dortoir:
+logement . hébergement . nuitées . auberge de jeunesse . nombre de personnes dans le dortoir:
   formule: 6
   note: On considère ici qu'un dortoir "classique" comprend 6 personnes.
 
-logement . hébergement . auberge de jeunesse . nombre de nuitées:
+logement . hébergement . nuitées . auberge de jeunesse . nombre de nuitées:
   question: Combien de nuits allez-vous passer en auberge de jeunesse pendant votre séjour ?
   unité: nuit
   description: |
@@ -234,7 +242,7 @@ logement . hébergement . auberge de jeunesse . nombre de nuitées:
     un week-end prolongé: 3
     une semaine: 7
 
-logement . hébergement . empreinte locations:
+logement . hébergement . nuitées . empreinte locations:
   titre: Empreinte locations meublées
   applicable si:
     toutes ces conditions:
@@ -242,17 +250,17 @@ logement . hébergement . empreinte locations:
       - locations . présent
   formule: locations . empreinte par nuit * locations . nombre de nuitées
 
-logement . hébergement . locations:
+logement . hébergement . nuitées . locations:
   titre: Locations meublées
   icônes: 🛏️🏠
 
-logement . hébergement . locations . présent:
+logement . hébergement . nuitées . locations . présent:
   question: Allez-vous louer une location meublée (type Airbnb) ?
 
   description: |
     💡 Déclarez ici les nuits passées en locations meublées de type Airbnb ou Abritel.
 
-logement . hébergement . locations . empreinte par nuit:
+logement . hébergement . nuitées . locations . empreinte par nuit:
   formule: 5.8
   unité: kgCO2e/nuit
   note: |
@@ -262,7 +270,7 @@ logement . hébergement . locations . empreinte par nuit:
     Néanmoins, l'approche bottom-up est ici très complexe à implémenter : elle supposerait de poser une quantité importante de questions à l'utilisateur (surface, mode de chauffage des locations saisonnières louées...).
     Le chiffre obtenu par l'approche top-down, 5,8 kg éqCO2, est tout à fait cohérent avec le reste des données disponibles sur les autres types de logement touristiques, et nous paraît un bon début pour approximer cette donnée complexe.
 
-logement . hébergement . locations . nombre de nuitées:
+logement . hébergement . nuitées . locations . nombre de nuitées:
   question: Combien de nuits allez-vous passer en locations meublées pendant votre séjour ?
   unité: nuit
   description: |
@@ -290,66 +298,98 @@ logement . hébergement . aquatique:
         piscine non chauffée . présent: non
         piscine  chauffée . présent: non
         spa jacuzzi . présent: non
-  icônes: 🏊‍♀️
   description: |
     Même si vous ne comptez pas les utiliser, renseignez quand même ce dont votre hébergement est équipé.
   formule:
-    somme:
-      - piscine non chauffée
-      - piscine chauffée
-      - spa jacuzzi
+    variations:
+      - si: choix utilisateur
+        alors: empreinte totale / habitants
+      - sinon: empreinte par défaut / habitants
+#  formule:
+#    somme:
+#      - piscine non chauffée
+#      - piscine chauffée
+#      - spa jacuzzi
+
+logement . hébergement . aquatique . choix utilisateur:
+  titre: Choix utilisateur aquatique
+  formule:
+    une de ces conditions:
+      - est défini: piscine non chauffée . présent
+      - est défini: piscine chauffée . présent
+      - est défini: spa jacuzzi . présent
 
 #Je pense qu'il faudrait que j'importe la règle "piscine . empreinte chauffage" du modèle de Mael dans le modèle de base de piscine puis que l'appel ou non en fonction de si la piscine est chauffée ou non 
+logement . hébergement . aquatique . empreinte totale:
+  formule:
+    somme:
+      - piscine non chauffée . empreinte
+      - piscine chauffée . empreinte
+      - spa jacuzzi . empreinte
+  unité: kgCO2e
+
+logement . hébergement . aquatique . empreinte par défaut:
+  formule: 100
+  unité: kgCO2e
+    
 logement . hébergement . aquatique . piscine non chauffée:
-  applicable si: présent
-  formule: piscine non chauffée . empreinte
+  titre: Piscine non chauffée
+  icônes: 🏊‍♀️
+#  formule: piscine non chauffée . empreinte
 
 logement . hébergement . aquatique . piscine non chauffée . présent:
   question: Allez-vous disposer d'une piscine non chauffée ?
 
 logement . hébergement . aquatique . piscine non chauffée . empreinte:
-  valeur: logement . piscine
-  contexte:
-    métrique: "'carbone'"
-    logement . piscine . surface: 60 #On considère une piscine de 5 x 12
-    logement . piscine . type: "'creusée'"
+  formule: 10 #Retravailler la fonction 'contexte' pour qu'elle fonctionne
+  unité: kgCO2e
+#  valeur: logement . piscine
+#  contexte:
+#    métrique: "'carbone'"
+#    logement . piscine . surface: 60 #On considère une piscine de 5 x 12
+#    logement . piscine . type: "'creusée'"
 #    voiture . électrique . consommation aux 100:   # Je garde cette sous-structure pour pour le template au cas où j'aurai besoin de l'adapter pour que le modèle tourne
 #      valeur: voiture . électrique . consommation estimée
 #      contexte:
 #        voiture . utilisateur: "'propriétaire'"
 
-
 logement . hébergement . aquatique . piscine chauffée:
-  applicable si: présent
-  formule: piscine chauffée . empreinte
+  titre: Piscine chauffée
+  icônes: 🏊‍♀️🌡️
+#  formule: piscine chauffée . empreinte
 
 logement . hébergement . aquatique . piscine chauffée . présent:
   question: Allez-vous disposer d'une piscine chauffée ?
 
 logement . hébergement . aquatique . piscine chauffée . empreinte:
-  valeur: logement . piscine
-  contexte:
-    métrique: "'carbone'"
-    logement . piscine . surface: 60 #On considère une piscine de 5 x 12
-    logement . piscine . type: "'creusée'"
+  formule: 10 #Retravailler la fonction 'contexte' pour qu'elle fonctionne
+  unité: kgCO2e
+#  valeur: logement . piscine
+#  contexte:
+#    métrique: "'carbone'"
+#    logement . piscine . surface: 60 #On considère une piscine de 5 x 12
+#    logement . piscine . type: "'creusée'"
 #    voiture . électrique . consommation aux 100:   # Je garde cette sous-structure pour pour le template au cas où j'aurai besoin de l'adapter pour que le modèle tourne
 #      valeur: voiture . électrique . consommation estimée
 #      contexte:
 #        voiture . utilisateur: "'propriétaire'"
 
 logement . hébergement . aquatique . spa jacuzzi:
-  applicable si: présent
-  formule: spa jacuzzi . empreinte
+  titre: Spa et/ou jacuzzi
+  icônes: 🧖‍♂️♨️
+#  formule: spa jacuzzi . empreinte
 
 logement . hébergement . aquatique . spa jacuzzi . présent:
   question: Allez-vous disposer d'un spa/jacuzzi ?
 
 logement . hébergement . aquatique . spa jacuzzi . empreinte:
-  valeur: logement . piscine
-  contexte:
-    métrique: "'carbone'"
-    logement . piscine . surface: 10 #On considère une piscine de 3 x 3
-    logement . piscine . type: "'hors sol'"
+  formule: 10 #Retravailler la fonction 'contexte' pour qu'elle fonctionne
+  unité: kgCO2e
+#  valeur: logement . piscine
+#  contexte:
+#    métrique: "'carbone'"
+#    logement . piscine . surface: 10 #On considère une piscine de 3 x 3
+#    logement . piscine . type: "'hors sol'"
 #    voiture . électrique . consommation aux 100:   # Je garde cette sous-structure pour pour le template au cas où j'aurai besoin de l'adapter pour que le modèle tourne
 #      valeur: voiture . électrique . consommation estimée
 #      contexte:
