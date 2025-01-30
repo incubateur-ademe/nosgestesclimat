@@ -6,6 +6,7 @@ alimentation . boisson:
       - froide
 
 alimentation . boisson . chaude:
+  ordre: 6
   mosaique:
     type: nombre
     options:
@@ -183,7 +184,9 @@ alimentation . boisson . tasse de chocolat chaud:
   formule:
     somme:
       - empreinte cacao en poudre * quantité cacao par tasse
-      - empreinte lait * quantité lait par tasse
+      - empreinte lait de vache * quantité lait par tasse #Modif du modèle NGC qui prenait "empreinte lait". 
+#Cette modif est dûe au fait que je n'arrive pas à gérer l'ordre de la question sur le type de lait pour les chocolats chauds
+#--> on considère donc que les chocolats chauds se font avec du lait de vache
 
 alimentation . boisson . tasse de chocolat chaud . empreinte cacao en poudre:
   formule:
@@ -246,6 +249,7 @@ alimentation . boisson . tasse de chicorée . quantité chicorée par tasse:
   note: On fait l'hypothèse qu'une tasse de chicorée contient en moyenne 3 grammes de chicorée instantanée.
 
 alimentation . type de lait:
+  ordre: 3
   applicable si:
     une de ces conditions:
       - boisson . chaude . chocolat chaud . nombre > 0
@@ -332,8 +336,8 @@ alimentation . boisson . froide:
     somme:
       - sucrées
       - alcool
-      - sucrées2
-      - alcool2
+      - sucrées
+      - alcool
       - eau en bouteille
 
 alimentation . boisson . eau en bouteille:
@@ -387,7 +391,8 @@ alimentation . boisson . eau en bouteille . consommation moyenne:
     La consommation moyenne de l'eau en bouteille est en 2018 de 135 litres par an par habitant (soit 90 bouteilles),
     d'après le syndicat des eaux minérales naturelles ([source](https://eaumineralenaturelle.fr/qui-sommes-nous/leau-minerale-en-chiffres))
 
-alimentation . boisson . sucrées2:
+alimentation . boisson . sucrées:
+  ordre: 8
   mosaique:
     type: nombre
     options:
@@ -409,140 +414,141 @@ alimentation . boisson . sucrées2:
       - soda
       - jus de fruit
 
-alimentation . boisson . sucrées2 . sirop . empreinte:
+alimentation . boisson . sucrées . sirop . empreinte:
   titre: Empreinte verre de sirop
   formule: 100
   unité: kgCO2e
   note: Facteur d'émissions de la Base Carbone et quantité de 20 cl par verre
 
-alimentation . boisson . sucrées2 . sirop . nombre:
+alimentation . boisson . sucrées . sirop . nombre:
   titre: Nombre de verres de sirop
   question: Combien de verres de sirop allez-vous boire ?
   plancher: 0
   par défaut: 0
 
-alimentation . boisson . sucrées2 . sirop:
+alimentation . boisson . sucrées . sirop:
   titre: Sirop à l'eau (20 cl)
   icônes: 💧
   formule: empreinte * nombre
   unité: kgCO2e
 
-alimentation . boisson . sucrées2 . cocktail sans alcool . empreinte:
+alimentation . boisson . sucrées . cocktail sans alcool . empreinte:
   titre: Empreinte cocktail sans alcool
   formule: 100
   unité: kgCO2e
   note: Facteur d'émissions de la Base Carbone et quantité de 33 cl par verre
 
-alimentation . boisson . sucrées2 . cocktail sans alcool . nombre:
+alimentation . boisson . sucrées . cocktail sans alcool . nombre:
   titre: Nombre de cocktail sans alcool
   question: Combien de cocktail sans alcool allez-vous boire ?
   plancher: 0
   par défaut: 0
 
-alimentation . boisson . sucrées2 . cocktail sans alcool:
+alimentation . boisson . sucrées . cocktail sans alcool:
   titre: Cocktail sans alcool (33 cl)
   icônes: 🍹
   formule: empreinte * nombre
   unité: kgCO2e
 
-alimentation . boisson . sucrées2 . soda . empreinte:
+alimentation . boisson . sucrées . soda . empreinte:
   titre: Empreinte verre de soda
   formule: 100
   unité: kgCO2e
   note: Facteur d'émissions de la Base Carbone et quantité de 33 cl par verre
 
-alimentation . boisson . sucrées2 . soda . nombre:
+alimentation . boisson . sucrées . soda . nombre:
   titre: Nombre de verres de soda
   question: Combien de verres de soda allez-vous boire ?
   plancher: 0
   par défaut: 0
 
-alimentation . boisson . sucrées2 . soda:
+alimentation . boisson . sucrées . soda:
   titre: Soda (33 cl)
   icônes: 🥤
   formule: empreinte * nombre
   unité: kgCO2e
 
-alimentation . boisson . sucrées2 . jus de fruit . empreinte:
+alimentation . boisson . sucrées . jus de fruit . empreinte:
   titre: Empreinte verre de jus de fruit
   formule: 100
   unité: kgCO2e
   note: Facteur d'émissions de la Base Carbone et quantité de 20 cl par verre
 
-alimentation . boisson . sucrées2 . jus de fruit . nombre:
+alimentation . boisson . sucrées . jus de fruit . nombre:
   titre: Nombre de verres de jus de fruit
   question: Combien de verres de jus de fruit allez-vous boire ?
   plancher: 0
   par défaut: 0
 
-alimentation . boisson . sucrées2 . jus de fruit:
+alimentation . boisson . sucrées . jus de fruit:
   titre: Jus de fruit (20 cl)
   icônes: 🧃
   formule: empreinte * nombre
   unité: kgCO2e
 
-alimentation . boisson . sucrées:
-  description: |
-    Notons que des alternatives au soda, très simples à préparer maison, sont possibles : c'est le cas du [kéfir](https://fr.wikipedia.org/wiki/K%C3%A9fir) ou [Kombucha](https://fr.wikipedia.org/wiki/Kombucha). Nous n'avons pas encore évalué les gains d'empreinte offerts par ces alternatives.
-  formule: litres * commun . semaines par an * facteur
+#alimentation . boisson . sucrées:
+#  description: |
+#    Notons que des alternatives au soda, très simples à préparer maison, sont possibles : c'est le cas du [kéfir](https://fr.wikipedia.org/wiki/K%C3%A9fir) ou [Kombucha](https://fr.wikipedia.org/wiki/Kombucha). Nous n'avons pas encore évalué les gains d'empreinte offerts par ces alternatives.
+#  formule: litres * commun . semaines par an * facteur
+#
+#alimentation . boisson . sucrées . facteur:
+#  formule:
+#    moyenne:
+#      - facteur sodas
+#      - facteur jus de fruits
+#  note: |
+#    Cette valeur est bien sûr très approximative, encore davantage pour l'empreinte eau : elle est particulièrement importante pour les jus de fruits (l'empreinte étant très liée à l'agriculture) alors que relativement aux jus de fruits, l'empreinte des sodas est faible. Considérer une moyenne devra être revu par la suite.
+#
+#alimentation . boisson . sucrées . facteur sodas:
+#  formule:
+#    variations:
+#      - si: métrique = "carbone"
+#        alors: facteur sodas carbone
+#      - si: métrique = "eau"
+#        alors: facteur sodas eau
+#
+#alimentation . boisson . sucrées . facteur sodas carbone:
+#  formule: 0.49
+#  unité: kgCO2e/l
+#  note: Facteur d'émission issu d'[Agribalyse, Cola, sucré](https://agribalyse.ademe.fr/app/aliments/18037#Cola,_sucr%C3%A9,_avec_%C3%A9dulcorants), 0.51 kgCO2e/kg. On considère que la masse volumique est de 1kg/l.
+#
+#alimentation . boisson . sucrées . facteur sodas eau:
+#  formule: 306
+#  unité: l/l
+#  note: Facteur d'émission issu d'[Agribalyse, Cola, sucré](https://agribalyse.ademe.fr/app/aliments/18037#Cola,_sucr%C3%A9,_avec_%C3%A9dulcorants). On considère que la masse volumique est de 1kg/l.
+#
+#alimentation . boisson . sucrées . facteur jus de fruits:
+#  formule:
+#    variations:
+#      - si: métrique = "carbone"
+#        alors: facteur jus de fruits carbone
+#      - si: métrique = "eau"
+#        alors: facteur jus de fruits eau
+#
+#alimentation . boisson . sucrées . facteur jus de fruits carbone:
+#  formule: 0.88
+#  unité: kgCO2e/l
+#  note: Facteur d'émission issu d'[Agribalyse, Jus multifruit, pur jus, standard](https://agribalyse.ademe.fr/app/aliments/2069#Jus_multifruit,_%C3%A0_base_de_concentr%C3%A9,_standard), 0.91 kgCO2e/kg. On considère que la masse volumique est de 1kg/l.
+#
+#alimentation . boisson . sucrées . facteur jus de fruits eau:
+#  formule: 8980
+#  unité: l/l
+#  note: Facteur d'émission issu d'[Agribalyse, Jus multifruit, pur jus, standard](https://agribalyse.ademe.fr/app/aliments/2035#Jus_multifruit,_pur_jus,_standard). On considère que la masse volumique est de 1kg/l.
+#
+#alimentation . boisson . sucrées . litres:
+#  titre: Consommation de boissons sucrées
+#  question: Quelle est votre consommation par semaine de sodas, jus de fruits, etc. ?
+#  suggestions:
+#    nulle: 0
+#    ponctuelle: 1
+#    quotidienne: 3
+#  par défaut: 1
+#  plancher: 0
+#  unité: l/semaine
+#  note: La consommation de sodas et boissons sucrées en France est en moyenne de 50,9 litres par habitant ([source](https://www.sante-et-nutrition.com/consommation-soda-france/)) soit à peu près 1 litre par semaine.
 
-alimentation . boisson . sucrées . facteur:
-  formule:
-    moyenne:
-      - facteur sodas
-      - facteur jus de fruits
-  note: |
-    Cette valeur est bien sûr très approximative, encore davantage pour l'empreinte eau : elle est particulièrement importante pour les jus de fruits (l'empreinte étant très liée à l'agriculture) alors que relativement aux jus de fruits, l'empreinte des sodas est faible. Considérer une moyenne devra être revu par la suite.
-
-alimentation . boisson . sucrées . facteur sodas:
-  formule:
-    variations:
-      - si: métrique = "carbone"
-        alors: facteur sodas carbone
-      - si: métrique = "eau"
-        alors: facteur sodas eau
-
-alimentation . boisson . sucrées . facteur sodas carbone:
-  formule: 0.49
-  unité: kgCO2e/l
-  note: Facteur d'émission issu d'[Agribalyse, Cola, sucré](https://agribalyse.ademe.fr/app/aliments/18037#Cola,_sucr%C3%A9,_avec_%C3%A9dulcorants), 0.51 kgCO2e/kg. On considère que la masse volumique est de 1kg/l.
-
-alimentation . boisson . sucrées . facteur sodas eau:
-  formule: 306
-  unité: l/l
-  note: Facteur d'émission issu d'[Agribalyse, Cola, sucré](https://agribalyse.ademe.fr/app/aliments/18037#Cola,_sucr%C3%A9,_avec_%C3%A9dulcorants). On considère que la masse volumique est de 1kg/l.
-
-alimentation . boisson . sucrées . facteur jus de fruits:
-  formule:
-    variations:
-      - si: métrique = "carbone"
-        alors: facteur jus de fruits carbone
-      - si: métrique = "eau"
-        alors: facteur jus de fruits eau
-
-alimentation . boisson . sucrées . facteur jus de fruits carbone:
-  formule: 0.88
-  unité: kgCO2e/l
-  note: Facteur d'émission issu d'[Agribalyse, Jus multifruit, pur jus, standard](https://agribalyse.ademe.fr/app/aliments/2069#Jus_multifruit,_%C3%A0_base_de_concentr%C3%A9,_standard), 0.91 kgCO2e/kg. On considère que la masse volumique est de 1kg/l.
-
-alimentation . boisson . sucrées . facteur jus de fruits eau:
-  formule: 8980
-  unité: l/l
-  note: Facteur d'émission issu d'[Agribalyse, Jus multifruit, pur jus, standard](https://agribalyse.ademe.fr/app/aliments/2035#Jus_multifruit,_pur_jus,_standard). On considère que la masse volumique est de 1kg/l.
-
-alimentation . boisson . sucrées . litres:
-  titre: Consommation de boissons sucrées
-  question: Quelle est votre consommation par semaine de sodas, jus de fruits, etc. ?
-  suggestions:
-    nulle: 0
-    ponctuelle: 1
-    quotidienne: 3
-  par défaut: 1
-  plancher: 0
-  unité: l/semaine
-  note: La consommation de sodas et boissons sucrées en France est en moyenne de 50,9 litres par habitant ([source](https://www.sante-et-nutrition.com/consommation-soda-france/)) soit à peu près 1 litre par semaine.
-
-alimentation . boisson . alcool2:
+alimentation . boisson . alcool:
+  ordre: 9
   mosaique:
     type: nombre
     options:
@@ -567,177 +573,177 @@ alimentation . boisson . alcool2:
       - champagne
       - cocktail
 
-alimentation . boisson . alcool2 . bière demi . empreinte:
+alimentation . boisson . alcool . bière demi . empreinte:
   titre: Empreinte demi de bière
   formule: 100
   unité: kgCO2e
   note: Facteur d'émissions de la Base Carbone et quantité de 25 cl pour un demi
 
-alimentation . boisson . alcool2 . bière demi . nombre:
+alimentation . boisson . alcool . bière demi . nombre:
   titre: Nombre de verres de sirop
   question: Combien de demis de bière allez-vous boire ?
   plancher: 0
   par défaut: 0
 
-alimentation . boisson . alcool2 . bière demi:
+alimentation . boisson . alcool . bière demi:
   titre: Bière (demi)
   icônes: 🍻
   formule: empreinte * nombre
   unité: kgCO2e
 
-alimentation . boisson . alcool2 . bière pinte . empreinte:
+alimentation . boisson . alcool . bière pinte . empreinte:
   titre: Empreinte pinte de bière
   formule: 100
   unité: kgCO2e
   note: Facteur d'émissions de la Base Carbone et quantité de 50 cl pour une pinte
 
-alimentation . boisson . alcool2 . bière pinte . nombre:
+alimentation . boisson . alcool . bière pinte . nombre:
   titre: Nombre de pintes de bière
   question: Combien de pintes de bière allez-vous boire ?
   plancher: 0
   par défaut: 0
 
-alimentation . boisson . alcool2 . bière pinte:
+alimentation . boisson . alcool . bière pinte:
   titre: Bière pinte (50 cl)
   icônes: 🍺
   formule: empreinte * nombre
   unité: kgCO2e
 
-alimentation . boisson . alcool2 . vin . empreinte:
+alimentation . boisson . alcool . vin . empreinte:
   titre: Empreinte verre de vin
   formule: 100
   unité: kgCO2e
   note: Facteur d'émissions de la Base Carbone et quantité de 20 cl par verre
 
-alimentation . boisson . alcool2 . vin . nombre:
+alimentation . boisson . alcool . vin . nombre:
   titre: Nombre de verres de vin
   question: Combien de verres de vin allez-vous boire ?
   plancher: 0
   par défaut: 0
 
-alimentation . boisson . alcool2 . vin:
+alimentation . boisson . alcool . vin:
   titre: Vin (20 cl)
   icônes: 🍷
   formule: empreinte * nombre
   unité: kgCO2e
 
-alimentation . boisson . alcool2 . champagne . empreinte:
+alimentation . boisson . alcool . champagne . empreinte:
   titre: Empreinte verre de champagne
   formule: 100
   unité: kgCO2e
   note: Facteur d'émissions de la Base Carbone et quantité de 15 cl par verre
 
-alimentation . boisson . alcool2 . champagne . nombre:
+alimentation . boisson . alcool . champagne . nombre:
   titre: Nombre de verres de champagne
   question: Combien de verres de champagne allez-vous boire ?
   plancher: 0
   par défaut: 0
 
-alimentation . boisson . alcool2 . champagne:
+alimentation . boisson . alcool . champagne:
   titre: Champagne (15 cl)
   icônes: 🥂
   formule: empreinte * nombre
   unité: kgCO2e
 
-alimentation . boisson . alcool2 . cocktail . empreinte:
+alimentation . boisson . alcool . cocktail . empreinte:
   titre: Empreinte cocktail
   formule: 100
   unité: kgCO2e
   note: Facteur d'émissions de la Base Carbone et quantité de 30 cl par verre
 
-alimentation . boisson . alcool2 . cocktail . nombre:
+alimentation . boisson . alcool . cocktail . nombre:
   titre: Nombre de cocktail
   question: Combien de cocktail allez-vous boire ?
   plancher: 0
   par défaut: 0
 
-alimentation . boisson . alcool2 . cocktail:
+alimentation . boisson . alcool . cocktail:
   titre: Cocktail (30 cl)
   icônes: 🍸
   formule: empreinte * nombre
   unité: kgCO2e
 
-alimentation . boisson . alcool:
-  description: |
-    Étonnamment, notre consommation d'alcool prend un rôle important dans notre empreinte.
-
-    La bonne nouvelle, c'est que nous pouvons l'améliorer de façon très simple : plus que l'alimentation, une boisson est lourde, voyage beaucoup, et son emballage a une empreinte significative.
-
-    > Prenons l'exemple d'une 🍺 bière de 25cl : brassée au bout du monde, elle a voyagé des milliers de kilomètres et son contenu (la boisson) est emballé dans un contenant qui fait presque le même poids (200g de verre).
-
-    > En privilégiant une bière brassée localement, servie à la pression (le fût étant réutilisé des années), on peut réduire drastiquement l'empreinte sans changer la consommation.
-  formule: litres * commun . semaines par an * facteur
-
-alimentation . boisson . alcool . facteur:
-  formule:
-    moyenne:
-      - facteur bière
-      - facteur vin
-      - facteur cocktail
-  note: Le vin n'a pas la même empreinte que la bière au litre, c'est une grosse simplification, notamment pour l'empreinte eau.
-
-alimentation . boisson . alcool . facteur bière:
-  formule:
-    variations:
-      - si: métrique = "carbone"
-        alors: facteur bière carbone
-      - si: métrique = "eau"
-        alors: facteur bière eau
-
-alimentation . boisson . alcool . facteur bière carbone:
-  formule: 1.30
-  unité: kgCO2e/l
-  note: Facteur d'émission issu d'[Agribalyse, bière coeur de marché](https://agribalyse.ademe.fr/app/aliments/5001#Bi%C3%A8re_%22coeur_de_march%C3%A9%22_(4-5%C2%B0_alcool)), 1.12 kgCO2e/kg. On considère que la masse volumique de la bière est de 1kg/l.
-
-alimentation . boisson . alcool . facteur bière eau:
-  formule: 244
-  unité: l/l
-  note: Facteur d'émission issu d'[Agribalyse, bière coeur de marché](https://agribalyse.ademe.fr/app/aliments/5001#Bi%C3%A8re_%22coeur_de_march%C3%A9%22_(4-5%C2%B0_alcool)), 1.12 kgCO2e/kg. On considère que la masse volumique de la bière est de 1kg/l.
-
-alimentation . boisson . alcool . facteur vin:
-  formule:
-    variations:
-      - si: métrique = "carbone"
-        alors: facteur vin carbone
-      - si: métrique = "eau"
-        alors: facteur vin eau
-
-alimentation . boisson . alcool . facteur vin carbone:
-  formule: 1.48
-  unité: kgCO2e/l
-  note: Facteur d'émission issu d'[Agribalyse, vin blanc sec](https://agribalyse.ademe.fr/app/aliments/5215#Vin_blanc_sec), 1.22 kgCO2e/kg. On considère que la masse volumique du vin est de 1kg/l.
-
-alimentation . boisson . alcool . facteur vin eau:
-  formule: 256
-  unité: l/l
-  note: Facteur d'émission issu d'[Agribalyse, vin blanc sec](https://agribalyse.ademe.fr/app/aliments/5215#Vin_blanc_sec), 1.22 kgCO2e/kg. On considère que la masse volumique du vin est de 1kg/l.
-
-alimentation . boisson . alcool . facteur cocktail:
-  formule:
-    variations:
-      - si: métrique = "carbone"
-        alors: facteur cocktail carbone
-      - si: métrique = "eau"
-        alors: facteur cocktail eau
-
-alimentation . boisson . alcool . facteur cocktail carbone:
-  formule: 1.09
-  unité: kgCO2e/l
-  note: Facteur d'émission issu d'[Agribalyse, cocktail base rhum](https://agribalyse.ademe.fr/app/aliments/1012#Cocktail_%C3%A0_base_de_rhum), 0.91 kgCO2e/kg. On considère que la masse volumique d'un cocktail est de 1kg/l.
-
-alimentation . boisson . alcool . facteur cocktail eau:
-  formule: 693
-  unité: l/l
-  note: Facteur d'émission issu d'[Agribalyse, cocktail base rhum](https://agribalyse.ademe.fr/app/aliments/1012#Cocktail_%C3%A0_base_de_rhum), 0.91 kgCO2e/kg. On considère que la masse volumique d'un cocktail est de 1kg/l.
-
-alimentation . boisson . alcool . litres:
-  titre: Consommation d'alcool
-  question: Quelle est votre consommation par semaine d'alcool (vin, bière, etc.) ?
-  suggestions:
-    nulle: 0
-    ponctuelle: 1
-    quotidienne: 3
-  par défaut: 1.5
-  plancher: 0
-  unité: l/semaine
-  note: La consommation d'alcool en France est de 79,6 litres d'alcool, tous alcools confondus, soit à peu près 1,5 litres par semaine ([source](https://www.insee.fr/fr/statistiques/4319377#graphique-figure2))
+#alimentation . boisson . alcool:
+#  description: |
+#    Étonnamment, notre consommation d'alcool prend un rôle important dans notre empreinte.
+#
+#    La bonne nouvelle, c'est que nous pouvons l'améliorer de façon très simple : plus que l'alimentation, une boisson est lourde, voyage beaucoup, et son emballage a une empreinte significative.
+#
+#    > Prenons l'exemple d'une 🍺 bière de 25cl : brassée au bout du monde, elle a voyagé des milliers de kilomètres et son contenu (la boisson) est emballé dans un contenant qui fait presque le même poids (200g de verre).
+#
+#    > En privilégiant une bière brassée localement, servie à la pression (le fût étant réutilisé des années), on peut réduire drastiquement l'empreinte sans changer la consommation.
+#  formule: litres * commun . semaines par an * facteur
+#
+#alimentation . boisson . alcool . facteur:
+#  formule:
+#    moyenne:
+#      - facteur bière
+#      - facteur vin
+#      - facteur cocktail
+#  note: Le vin n'a pas la même empreinte que la bière au litre, c'est une grosse simplification, notamment pour l'empreinte eau.
+#
+#alimentation . boisson . alcool . facteur bière:
+#  formule:
+#    variations:
+#      - si: métrique = "carbone"
+#        alors: facteur bière carbone
+#      - si: métrique = "eau"
+#        alors: facteur bière eau
+#
+#alimentation . boisson . alcool . facteur bière carbone:
+#  formule: 1.30
+#  unité: kgCO2e/l
+#  note: Facteur d'émission issu d'[Agribalyse, bière coeur de marché](https://agribalyse.ademe.fr/app/aliments/5001#Bi%C3%A8re_%22coeur_de_march%C3%A9%22_(4-5%C2%B0_alcool)), 1.12 kgCO2e/kg. On considère que la masse volumique de la bière est de 1kg/l.
+#
+#alimentation . boisson . alcool . facteur bière eau:
+#  formule: 244
+#  unité: l/l
+#  note: Facteur d'émission issu d'[Agribalyse, bière coeur de marché](https://agribalyse.ademe.fr/app/aliments/5001#Bi%C3%A8re_%22coeur_de_march%C3%A9%22_(4-5%C2%B0_alcool)), 1.12 kgCO2e/kg. On considère que la masse volumique de la bière est de 1kg/l.
+#
+#alimentation . boisson . alcool . facteur vin:
+#  formule:
+#    variations:
+#      - si: métrique = "carbone"
+#        alors: facteur vin carbone
+#      - si: métrique = "eau"
+#        alors: facteur vin eau
+#
+#alimentation . boisson . alcool . facteur vin carbone:
+#  formule: 1.48
+#  unité: kgCO2e/l
+#  note: Facteur d'émission issu d'[Agribalyse, vin blanc sec](https://agribalyse.ademe.fr/app/aliments/5215#Vin_blanc_sec), 1.22 kgCO2e/kg. On considère que la masse volumique du vin est de 1kg/l.
+#
+#alimentation . boisson . alcool . facteur vin eau:
+#  formule: 256
+#  unité: l/l
+#  note: Facteur d'émission issu d'[Agribalyse, vin blanc sec](https://agribalyse.ademe.fr/app/aliments/5215#Vin_blanc_sec), 1.22 kgCO2e/kg. On considère que la masse volumique du vin est de 1kg/l.
+#
+#alimentation . boisson . alcool . facteur cocktail:
+#  formule:
+#    variations:
+#      - si: métrique = "carbone"
+#        alors: facteur cocktail carbone
+#      - si: métrique = "eau"
+#        alors: facteur cocktail eau
+#
+#alimentation . boisson . alcool . facteur cocktail carbone:
+#  formule: 1.09
+#  unité: kgCO2e/l
+#  note: Facteur d'émission issu d'[Agribalyse, cocktail base rhum](https://agribalyse.ademe.fr/app/aliments/1012#Cocktail_%C3%A0_base_de_rhum), 0.91 kgCO2e/kg. On considère que la masse volumique d'un cocktail est de 1kg/l.
+#
+#alimentation . boisson . alcool . facteur cocktail eau:
+#  formule: 693
+#  unité: l/l
+#  note: Facteur d'émission issu d'[Agribalyse, cocktail base rhum](https://agribalyse.ademe.fr/app/aliments/1012#Cocktail_%C3%A0_base_de_rhum), 0.91 kgCO2e/kg. On considère que la masse volumique d'un cocktail est de 1kg/l.
+#
+#alimentation . boisson . alcool . litres:
+#  titre: Consommation d'alcool
+#  question: Quelle est votre consommation par semaine d'alcool (vin, bière, etc.) ?
+#  suggestions:
+#    nulle: 0
+#    ponctuelle: 1
+#    quotidienne: 3
+#  par défaut: 1.5
+#  plancher: 0
+#  unité: l/semaine
+#  note: La consommation d'alcool en France est de 79,6 litres d'alcool, tous alcools confondus, soit à peu près 1,5 litres par semaine ([source](https://www.insee.fr/fr/statistiques/4319377#graphique-figure2))
