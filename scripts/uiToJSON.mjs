@@ -24,8 +24,6 @@ const funFactsRules = {
   percentageOfGasHeating: 'ui . organisations . logement . chauffage gaz',
   percentageOfFuelHeating: 'ui . organisations . logement . chauffage fioul',
   percentageOfWoodHeating: 'ui . organisations . logement . chauffage bois',
-  averageOfElectricityConsumption:
-    'ui . organisations . logement . consommation électricité',
   percentageOfCoolingSystem:
     'ui . organisations . logement . possède climatisation',
   percentageOfVegan: 'ui . organisations . alimentation . est végétalien',

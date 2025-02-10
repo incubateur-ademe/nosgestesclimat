@@ -110,7 +110,6 @@ export type FunFacts = {
   percentageOfGasHeating: number
   percentageOfFuelHeating: number
   percentageOfWoodHeating: number
-  averageOfElectricityConsumption: number
   percentageOfCoolingSystem: number
   percentageOfVegan: number
   percentageOfRedMeat: number
