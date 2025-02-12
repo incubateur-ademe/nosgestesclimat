@@ -16,13 +16,15 @@ logement . hébergement . nuitées:
     options:
       - hotel . présent
       - camping . présent
-      - auberge de jeunesse . présent
+      - résidence de tourisme . présent
+#      - auberge de jeunesse . présent
       - locations . présent
     suggestions:
       aucun:
         hotel . présent: non
         camping . présent: non
-        auberge de jeunesse . présent: non
+        résidence de tourisme . présent: non
+#        auberge de jeunesse . présent: non
         locations . présent: non
   icônes: 🏨
   description: |
@@ -38,7 +40,8 @@ logement . hébergement . nuitées . empreinte totale:
     somme:
       - empreinte hotel
       - empreinte camping
-      - empreinte auberge de jeunesse * logement . habitants
+      - empreinte résidence de tourisme
+#      - empreinte auberge de jeunesse * logement . habitants
       - empreinte locations
   unité: kgCO2e
 
@@ -56,7 +59,8 @@ logement . hébergement . nuitées . choix utilisateur:
     une de ces conditions:
       - est défini: hotel . présent
       - est défini: camping . présent
-      - est défini: auberge de jeunesse . présent
+      - est défini: résidence de tourisme . présent
+#      - est défini: auberge de jeunesse . présent
       - est défini: locations . présent
 
 logement . hébergement . nuitées . empreinte hotel:
@@ -167,6 +171,34 @@ logement . hébergement . nuitées . hotel . nombre de nuitées:
     un week-end prolongé: 3
     une semaine: 7
 
+logement . hébergement . nuitées . empreinte résidence de tourisme:
+  titre: Empreinte résidence de tourisme
+  applicable si:
+    toutes ces conditions:
+      - est défini: résidence de tourisme . présent
+      - résidence de tourisme . présent
+  formule: empreinte hotel par nuit * résidence de tourisme . nombre de nuitées
+
+logement . hébergement . nuitées . résidence de tourisme:
+  titre: Résidence de tourisme
+  icônes: 🏘️
+
+logement . hébergement . nuitées . résidence de tourisme . présent:
+  question: Allez-vous réserver une résidence de tourisme ?
+
+logement . hébergement . nuitées . résidence de tourisme . nombre de nuitées:
+  question: Combien de nuits allez-vous passer dans une résidence de tourisme ?
+  unité: nuit
+  description: |
+    Renseignez ici les nuits passées en résidence de tourisme, apparhôtel ou vilage vacances
+  plancher: 0
+  par défaut: 2
+  note: La valeur par défaut est arbitraire et doit être calée avec HdF Tourisme.
+  suggestions:
+    un week-end: 2
+    un week-end prolongé: 3
+    une semaine: 7
+
 logement . hébergement . nuitées . empreinte camping:
   titre: Empreinte emplacement en camping
   applicable si:
@@ -191,7 +223,7 @@ logement . hébergement . nuitées . camping . empreinte par nuit:
     Le référentiel ADEME est présent dans la base Impacts depuis mai 2023.
 
 logement . hébergement . nuitées . camping . nombre de nuitées:
-  question: Combien de nuits allez- vous passer en camping par an pendant votre séjour ?
+  question: Combien de nuits allez-vous passer en camping par an pendant votre séjour ?
   unité: nuit
   description: |
     Renseignez ici les nuits passées en camping (tente, hamac, bungalow...).

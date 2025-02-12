@@ -2,21 +2,23 @@
 #Train et Car longue distance : checker les FE 
 #Voiture : poser la question de s'il s'agit du même véhicule ou si louez mais attention il faut affiner les réponses à la première question voiture car on n'est plus sur du proprio régulier non proprio et non régulier
 séjour:
+# Cette première mosaique concerne les modes de transport dit "secondaires", c.à.d ceux faits pendant le séjour dans la région Haut de France.
+# Sur avis de HdF Tourisme, on considère 6 modes de transport principaux : TER, voiture, deux roues motorisés, transport en commun, mobilité douce et taxi
   applicable si:
     une de ces conditions:
       - transport . train . présent
       - transport . car longue distance . présent
       - transport . voiture . présent
       - transport . deux roues . présent
-      - transport . transports commun . présent
+#      - transport . transports commun . présent
 #      - transport . mobilité douce . présent
-      - transport . taxi . présent
+#      - transport . taxi . présent
   titre: Transport pendant le séjour
   mosaique:
     type: selection
     options:
       - train . présent
-      - car longue distance . présent
+#      - car longue distance . présent 
       - voiture . présent
       - deux roues . présent
       - transports commun . présent
@@ -25,7 +27,7 @@ séjour:
     suggestions:
       aucun:
         train . présent: non
-        car longue distance . présent: non
+#        car longue distance . présent: non
         voiture . présent: non
         deux roues . présent: non
         transports commun . présent: non
@@ -39,15 +41,12 @@ séjour:
   formule:
     somme:
       - train
-      - car longue distance
+#      - car longue distance
       - voiture
       - deux roues
       - transports commun
       - mobilité douce
       - taxi
-##      - avion
-##      - vacances
-##      - ferry
 
 séjour . notif voiture:
   type: notification
@@ -66,7 +65,7 @@ séjour . train . présent:
 
 séjour . train:
   applicable si: séjour . train . présent
-  titre: Train
+  titre: TER
   icônes: 🚞
   formule: 99 * km
   unité: kgCO2e
@@ -86,39 +85,40 @@ séjour . train . km:
 
 ### Car longue distance ###
 
-séjour . car longue distance . présent:
-  question: Allez-vous utiliser des cars longue distance pour vous déplacer pendant votre séjour ?
-  par défaut: non
-
-séjour . car longue distance:
-  applicable si: séjour . car longue distance . présent
-  titre: Car Flixbus, Ouibus...
-  icônes: 🚌
-  formule: km * impact par km
-  unité: kgCO2e
-
-séjour . car longue distance . km:
-  question: Combien de kilomètres allez vous parcourir en car de longue distance (Ouibus, Flixbus, etc.) pendant votre séjour ?
-  description: |
-    Renseignez un nombre de km cohérent (en arrondissant à la dizaine ou centaine supérieure) avec les distances que vous allez parcourir en car longue distance pendant votre séjour.
-    Pour rappel, **ne prenez pas en compte** d'éventuels km pour aller sur votre lieu de séjour et revenir à votre domicile. Vous avez dû renseigner ces km lors de la première question.
-  suggestions:
-    Paris ⇄ Lille: 400
-    Bruxelle ⇄ Lille : 200
-  unité: km
-  par défaut: 300
-
-séjour . car longue distance . impact par km:
-  formule: 0.029
-  unité: kgCO2e/km
-  note: |
-    FE (amont + combustion) Autocar - Gazole longue distance [Base Empreinte - hypothèses de la section "Autobus - autocars"] : 25 gCO2e/passager.km consolidé
-    en intégrant la fabrication du véhicule. Soit une composante "fabrication" estimée à 4.4 gCO2eq/passager.km pour un FE total de 29 gCO2e/passager.km
-    Hypothèses retenues pour la consolidation (reprises de la Base Empreinte) :
-     - 4 kgCO2eq/kg pour la fabrication des autobus/autocar (basé sur une analyse de la littérature)
-     - masse d’un autocar = 12 tonnes
-     - durée de vie en km = 361 884 km
-     - nombre de passagers moyen = 30
+# On commente car sur avis HdF Tourisme. Ce mode de transport n'a pas sa place dans les transports faits pendant le séjour 
+#séjour . car longue distance . présent:
+#  question: Allez-vous utiliser des cars longue distance pour vous déplacer pendant votre séjour ?
+#  par défaut: non
+#
+#séjour . car longue distance:
+#  applicable si: séjour . car longue distance . présent
+#  titre: Car Flixbus, Ouibus...
+#  icônes: 🚌
+#  formule: km * impact par km
+#  unité: kgCO2e
+#
+#séjour . car longue distance . km:
+#  question: Combien de kilomètres allez vous parcourir en car de longue distance (Ouibus, Flixbus, etc.) pendant votre séjour ?
+#  description: |
+#    Renseignez un nombre de km cohérent (en arrondissant à la dizaine ou centaine supérieure) avec les distances que vous allez parcourir en car longue distance pendant votre séjour.
+#    Pour rappel, **ne prenez pas en compte** d'éventuels km pour aller sur votre lieu de séjour et revenir à votre domicile. Vous avez dû renseigner ces km lors de la première question.
+#  suggestions:
+#    Paris ⇄ Lille: 400
+#    Bruxelle ⇄ Lille : 200
+#  unité: km
+#  par défaut: 300
+#
+#séjour . car longue distance . impact par km:
+#  formule: 0.029
+#  unité: kgCO2e/km
+#  note: |
+#    FE (amont + combustion) Autocar - Gazole longue distance [Base Empreinte - hypothèses de la section "Autobus - autocars"] : 25 gCO2e/passager.km consolidé
+#    en intégrant la fabrication du véhicule. Soit une composante "fabrication" estimée à 4.4 gCO2eq/passager.km pour un FE total de 29 gCO2e/passager.km
+#    Hypothèses retenues pour la consolidation (reprises de la Base Empreinte) :
+#     - 4 kgCO2eq/kg pour la fabrication des autobus/autocar (basé sur une analyse de la littérature)
+#     - masse d’un autocar = 12 tonnes
+#     - durée de vie en km = 361 884 km
+#     - nombre de passagers moyen = 30
 
 ### Voiture ###
 
@@ -473,7 +473,7 @@ séjour . voiture . motorisation:
           - transport . train . présent
           - transport . car longue distance . présent
           - transport . deux roues . présent
-          - transport . taxi . présent
+#          - transport . taxi . présent
   par défaut: "'thermique'"
   formule:
     une possibilité:
@@ -849,7 +849,7 @@ séjour . voiture . gabarit:
           - transport . train . présent
           - transport . car longue distance . présent
           - transport . deux roues . présent
-          - transport . taxi . présent   
+#          - transport . taxi . présent   
 #Je pense qu'on peut supprimer le bloc de conditions ci-dessous
 #  applicable si:
 #    toutes ces conditions:
@@ -926,7 +926,7 @@ séjour . voiture . base au kilomètre:
       - transport . train . présent
       - transport . car longue distance . présent
       - transport . deux roues . présent
-      - transport . taxi . présent
+#      - transport . taxi . présent
   titre: Entretien et climatisation au kilomètre
   formule: entretien pondéré + climatisation
   unité: kgCO2e/km
@@ -1170,6 +1170,8 @@ séjour . deux roues . présent:
   par défaut: non
 
 séjour . deux roues:
+  applicable si: séjour . deux roues . présent
+  titre: Deux roues motorisés
   icônes: 🛵
   formule:
     variations:
@@ -1364,19 +1366,19 @@ séjour . transports commun . type:
     type: selection
     options:
       - bus . présent
-      - car . présent
+#      - car . présent
       - métro ou tram . présent
     suggestions:
       aucun:
         bus . présent: non
-        car . présent: non
+#        car . présent: non
         métro ou tram . présent: non
   question: Quel type de transport en commun allez-vous emprunter pendant votre séjour ?
   icônes: 🚋
   formule:
     somme:
       - bus
-      - car
+#      - car
       - métro ou tram
 
 séjour . transports commun . type . bus:
@@ -1446,70 +1448,71 @@ séjour . transports commun . type . bus . heures:
   unité: h/semaine
   par défaut: 0.5
 
-séjour . transports commun . type . car:
-  titre: Autocar
-  description: Transport interurbain.
-  icônes: 🚌
-# Je commente la veille formule (avec le hack) pour garder trace et je reprends la formule ici de NGE.
-  formule:
-    variations:
-      - si:
-          est défini: séjour . transports commun . type . car . présent
-        alors: empreinte
-      - sinon: empreinte par défaut
+# On commente l'option Autocar pour ne garder que Bus urbain et métro/tramway dans séjour/transport en commun
+#séjour . transports commun . type . car:
+#  titre: Autocar
+#  description: Transport interurbain.
+#  icônes: 🚌
+## Je commente la veille formule (avec le hack) pour garder trace et je reprends la formule ici de NGE.
 #  formule:
 #    variations:
 #      - si:
-#          est défini: car . présent
-#        alors:
-#          # This is a hack to make sure all branch is not desactivated: we need to have the value in a `somme`, if not, the value applicability is spread to the parent and all branch is desactivated.
-#          somme:
-#            - empreinte
+#          est défini: séjour . transports commun . type . car . présent
+#        alors: empreinte
 #      - sinon: empreinte par défaut
-
-séjour . transports commun . type . car . empreinte:
-#On ne peut malheureusement pas simplifier et renvoyer vers la même variable dans "transports commun.publicodes" du fait de conditions "applicable si" au sein de ce fichier --> on reprend donc la variables "impact par km"
-  formule: km * impact par km
-  unité: kgCO2e
-
-séjour . transports commun . type . car . empreinte par défaut:
-  valeur: car . empreinte
-  contexte:
-    car . présent: oui
-    car . km: 15
-  note: la valeur de 15 km de trajet par défaut n'est pas sourcée mais semble toutefois cohérente.
-
-séjour . transports commun . type . car . présent:
-  question: Allez-vous prendre le car pendant votre séjour ?
-  par défaut: non 
-
-séjour . transports commun . type . car . impact par km:
-  formule: 0.100
-  unité: kgCO2e/km
-  note: |
-    FE (amont + combustion) Autobus - Gazole courte distance [Base Empreinte - hypothèses de la section "Autobus - autocars"] : 92 gCO2e/passager.km consolidé
-    en intégrant la fabrication du véhicule. Soit une composante "fabrication" estimée à 8.9 gCO2eq/passager.km pour un FE total de 100.9 gCO2e/passager.km
-    Hypothèses retenues pour la consolidation (reprises de la Base Empreinte) :
-     - 4 kgCO2eq/kg pour la fabrication des autobus/autocar (basé sur une analyse de la littérature)
-     - masse d’un autocar = 12 tonnes
-     - durée de vie en km = 361 884 km
-     - nombre de passagers moyen = 30
-    /!\ Bizarrement ce FE consolidé à partir des hypothèses diffère de ce qu'affiche la Base Empreinte - FE Autobus/Gazole : 113 gCO2eq/passager.km
-    /!\ Le 92 gCO2eq/passager.km de la documentation ne correspond pas à la somme amont + combustion du FE : 20.5 + 83.8 = 104,3 gCO2eq/passager.k
-
-séjour . transports commun . type . car . km:
-  applicable si: séjour . transports commun . type . car . présent
-  question: Combien de kilomètres allez-vous faire en car pendant votre séjour ?
-  description: Ne cherchez pas à renseigner la valeur exacte, un arrondi à la dizaine supérieure fera l'affaire.
-  suggestions:
-    10 km: 10
-    15 km: 15
-    20 km: 20
-  unité: km
-  par défaut: 15
+##  formule:
+##    variations:
+##      - si:
+##          est défini: car . présent
+##        alors:
+##          # This is a hack to make sure all branch is not desactivated: we need to have the value in a `somme`, if not, the value applicability is spread to the parent and all branch is desactivated.
+##          somme:
+##            - empreinte
+##      - sinon: empreinte par défaut
+#
+#séjour . transports commun . type . car . empreinte:
+##On ne peut malheureusement pas simplifier et renvoyer vers la même variable dans "transports commun.publicodes" du fait de conditions "applicable si" au sein de ce fichier --> on reprend donc la variables "impact par km"
+#  formule: km * impact par km
+#  unité: kgCO2e
+#
+#séjour . transports commun . type . car . empreinte par défaut:
+#  valeur: car . empreinte
+#  contexte:
+#    car . présent: oui
+#    car . km: 15
+#  note: la valeur de 15 km de trajet par défaut n'est pas sourcée mais semble toutefois cohérente.
+#
+#séjour . transports commun . type . car . présent:
+#  question: Allez-vous prendre le car pendant votre séjour ?
+#  par défaut: non 
+#
+#séjour . transports commun . type . car . impact par km:
+#  formule: 0.100
+#  unité: kgCO2e/km
+#  note: |
+#    FE (amont + combustion) Autobus - Gazole courte distance [Base Empreinte - hypothèses de la section "Autobus - autocars"] : 92 gCO2e/passager.km consolidé
+#    en intégrant la fabrication du véhicule. Soit une composante "fabrication" estimée à 8.9 gCO2eq/passager.km pour un FE total de 100.9 gCO2e/passager.km
+#    Hypothèses retenues pour la consolidation (reprises de la Base Empreinte) :
+#     - 4 kgCO2eq/kg pour la fabrication des autobus/autocar (basé sur une analyse de la littérature)
+#     - masse d’un autocar = 12 tonnes
+#     - durée de vie en km = 361 884 km
+#     - nombre de passagers moyen = 30
+#    /!\ Bizarrement ce FE consolidé à partir des hypothèses diffère de ce qu'affiche la Base Empreinte - FE Autobus/Gazole : 113 gCO2eq/passager.km
+#    /!\ Le 92 gCO2eq/passager.km de la documentation ne correspond pas à la somme amont + combustion du FE : 20.5 + 83.8 = 104,3 gCO2eq/passager.k
+#
+#séjour . transports commun . type . car . km:
+#  applicable si: séjour . transports commun . type . car . présent
+#  question: Combien de kilomètres allez-vous faire en car pendant votre séjour ?
+#  description: Ne cherchez pas à renseigner la valeur exacte, un arrondi à la dizaine supérieure fera l'affaire.
+#  suggestions:
+#    10 km: 10
+#    15 km: 15
+#    20 km: 20
+#  unité: km
+#  par défaut: 15
 
 séjour . transports commun . type . métro ou tram:
-  titre: Métro, tramway, train de banlieue
+  titre: Métro, tramway
   icônes: 🚊
   description: |
     Tous modes de transport urbains sur rails.
@@ -1594,7 +1597,7 @@ séjour . mobilité douce . présent:
 séjour . mobilité douce:
 # Cette variable "intermédiaire" est un hack pour réussir à mettre une mosaique fille après une mosaique mère (même si le choix mobilité douce n'est pas à l'heure actuelle proposé dans la mosaique mère)
   applicable si: présent
-  titre: Déplacements actifs
+  titre: Vélo, trottinette, etc.
   icônes: 🚲🛴
   formule: séjour . mobilité douce . type * 1
 
@@ -1607,12 +1610,14 @@ séjour . mobilité douce . type:
       - marche . présent
       - vélo . présent
       - vae . présent
+      - trottinette . présent
       - trottinette électrique . présent
     suggestions:
       aucun:
         marche . présent: non
         vélo . présent: non
         vae . présent: non
+        trottinette . présent: non
         trottinette électrique . présent: non
   question: Quel(s) mode(s) de déplacement "actif" allez-vous utiliser pendant votre séjour ?
   titre: Déplacements actifs 
@@ -1621,6 +1626,7 @@ séjour . mobilité douce . type:
       - marche
       - vélo
       - vae
+      - trottinette
       - trottinette électrique
 
 ### Garde t'on la notif ?
@@ -1653,7 +1659,7 @@ séjour . mobilité douce . type . marche . présent:
   par défaut: non
 
 séjour . mobilité douce . type . vélo:
-  titre: Vélo classique
+  titre: Vélo
   applicable si: séjour . mobilité douce . type . vélo . présent
   icônes: 🦵🚲
 #On ne peut malheureusement pas simplifier et renvoyer vers la même variable dans "mobilité douce.publicodes" du fait de conditions "applicable si" au sein de ce fichier --> on reprend donc les variables "construction amortie"
@@ -1717,6 +1723,39 @@ séjour . mobilité douce . type . vae . km:
     20 km: 20
     50 km: 50
     100 km: 100
+
+séjour . mobilité douce . type . trottinette:
+  titre: Trottinette
+  icônes: 🛴
+  applicable si: séjour . mobilité douce . type . trottinette . présent
+#On ne peut malheureusement pas simplifier et renvoyer vers la même variable dans "mobilité douce.publicodes" du fait de conditions "applicable si" au sein de ce fichier --> on reprend donc les variables "empreinte au km"
+  formule: construction amortie * (transport . durée séjour / 365)
+  unité: kgCO2e
+  note: |
+    Nous considérons que **l'usage** d'une trottinette musculaire a une empreinte nulle.
+
+séjour . mobilité douce . type . trottinette . présent:
+  question: Allez-vous vous déplacer avec une trottinette "classique" (i.e. sans assistance électrique) pendant votre séjour ?
+  par défaut: non
+
+séjour . mobilité douce . type . trottinette . construction amortie:
+  formule: construction / durée de vie
+  unité: kgCO2e
+
+séjour . mobilité douce . type . trottinette . construction:
+  formule: 62.5
+  unité: kgCO2e
+  note: |
+    La base empreinte ne propose pas de FE pour la trottinette conventionnel. On repart de l'empreinte d'une trottinette électrique 
+    à laquelle on ôte les impacts liés aux composants électroniques, cuivre, LED et batteries (-32%). Pour cela on s'appuie sur
+    l'analyse détaillée des procédés contributeurs (page 50 de l'[étude source](https://librairie.ademe.fr/consommer-autrement/127-modelisation-et-evaluation-environnementale-de-produits-de-consommation-et-biens-d-equipement.html))
+
+séjour . mobilité douce . type . trottinette . durée de vie:
+  formule: 6
+  note: |
+    On majore de 50 % la durée de vie d'une trottinette non électrique. La durée de vie d'une trottinette électrique est issue des
+    hypothèses HBEFA (Manuel des facteurs d'émission pour le transport routier), d'après la documentation de la base empreinte.
+    Chiffres tirés de l'étude ADEME de 2019 ["Modélisation et évaluation environnementale de produits de consommation et biens d'équipement"](https://librairie.ademe.fr/dechets-economie-circulaire/127-modelisation-et-evaluation-environnementale-de-produits-de-consommation-et-biens-d-equipement.html)
 
 séjour . mobilité douce . type . trottinette électrique:
   titre: Trottinette électrique
