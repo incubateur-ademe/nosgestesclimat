@@ -128,6 +128,13 @@ try {
         }
       },
       err: (_) => {}
+    },
+    options: {
+      strict: {
+        noOrphanRule: true,
+        checkPossibleValues: true,
+        noCycleRuntime: true
+      }
     }
   })
 
