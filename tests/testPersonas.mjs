@@ -105,8 +105,13 @@ for (const personaName in localPersonas) {
     if (!(rule in prodRules)) {
       continue
     }
-
-    const local = localEngine.evaluate(rule)
+    let local
+    try {
+      local = localEngine.evaluate(rule)
+    } catch (e) {
+      console.error({ type: 'error', rule, message: e.message })
+      continue
+    }
     const prod = prodEngine.evaluate(rule)
     results.push({ type: 'result', rule, actual: local, expected: prod })
   }

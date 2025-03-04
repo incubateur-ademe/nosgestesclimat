@@ -97,14 +97,12 @@ function checkMigrationCoverage() {
         missingMigrationsKeys.push(ruleName)
       }
 
-      if (rule.formule?.['une possibilité']) {
+      if (rule['une possibilité']) {
         if (!localRules[ruleName]) {
           continue
         }
-        const prodPossibilities =
-          rule.formule['une possibilité']['possibilités']
-        const localPossibilities =
-          localRules[ruleName].formule['une possibilité']['possibilités']
+        const prodPossibilities = rule['une possibilité']
+        const localPossibilities = localRules[ruleName]['une possibilité']
         const missingProdPossibilities = prodPossibilities.filter(
           (elt) =>
             !localPossibilities.includes(elt) &&
