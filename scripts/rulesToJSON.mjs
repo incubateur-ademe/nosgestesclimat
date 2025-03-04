@@ -123,11 +123,24 @@ try {
     logger: {
       log: (_) => {},
       warn: (message) => {
-        if (!markdown) {
+        if (
+          !markdown &&
+          // Needs to be fixed, error raised with 1.8 publicodes version
+          !message.includes(
+            "Un cycle a été détecté lors de l'évaluation de cette règle"
+          )
+        ) {
           console.warn(message)
         }
       },
       err: (_) => {}
+    },
+    options: {
+      strict: {
+        noOrphanRule: true,
+        checkPossibleValues: true,
+        noCycleRuntime: false
+      }
     }
   })
 

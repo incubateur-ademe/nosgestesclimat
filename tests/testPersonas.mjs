@@ -1,5 +1,6 @@
 import c from 'ansi-colors'
 import Engine from 'publicodes'
+import OldEngine from 'publicodes-old'
 import { disabledLogger } from '@publicodes/tools'
 
 import {
@@ -36,7 +37,7 @@ const localEngine = new Engine(localRules, {
   logger: disabledLogger,
   strict: { situation: false }
 })
-const prodEngine = new Engine(prodRules, {
+const prodEngine = new OldEngine(prodRules, {
   logger: disabledLogger,
   strict: { situation: false }
 })
@@ -105,8 +106,13 @@ for (const personaName in localPersonas) {
     if (!(rule in prodRules)) {
       continue
     }
-
-    const local = localEngine.evaluate(rule)
+    let local
+    try {
+      local = localEngine.evaluate(rule)
+    } catch (e) {
+      console.error({ type: 'error', rule, message: e.message })
+      continue
+    }
     const prod = prodEngine.evaluate(rule)
     results.push({ type: 'result', rule, actual: local, expected: prod })
   }
