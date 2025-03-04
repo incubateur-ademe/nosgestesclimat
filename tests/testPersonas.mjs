@@ -1,6 +1,5 @@
 import c from 'ansi-colors'
 import Engine from 'publicodes'
-import OldEngine from 'publicodes-old'
 import { disabledLogger } from '@publicodes/tools'
 
 import {
@@ -37,7 +36,7 @@ const localEngine = new Engine(localRules, {
   logger: disabledLogger,
   strict: { situation: false }
 })
-const prodEngine = new OldEngine(prodRules, {
+const prodEngine = new Engine(prodRules, {
   logger: disabledLogger,
   strict: { situation: false }
 })
