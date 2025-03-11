@@ -2,7 +2,7 @@ alimentation . repas:
   icônes: 🍽️
   formule:
     somme:
-      - petit déjeuner annuel
+      - petit déjeuner séjour
       - déjeuner et dîner
       - bonus
       - déforestation
@@ -43,24 +43,20 @@ alimentation . déforestation:
     - la consommation d'autres produits non discriminables en fonction des régimes alimentaires : 76 kgCO2e / personne
 
 alimentation . déforestation . forfait moyen fruits céréales:
-  formule: 86
+  formule: 86 * (transport . durée séjour / 365)
   unité: kgCO2e
   note: |
     Nous partons du principe qu'en moyenne un français consomme "parfois" local. Aussi, c'est à cette mesure que s'applique l'empreinte moyenne de déforestation.
     Sachant qu'une part des aliments concernés est **forcément** importée et que même une personne disant consommer local importe une partie de son alimentation, la pondération minimale est de 20% de l'empreinte moyenne.
 
 alimentation . déforestation . forfait base:
-  formule: 5 + 76
+  formule: (5 + 76) * (transport . durée séjour / 365)
   unité: kgCO2e
   note: Forfait attribué à tous car non discriminable par régime alimentaire, correspondant aux catégories "huiles végétales" et "autres produits alimentaires".
 
 alimentation . déjeuner et dîner:
   icônes: 🍽️
   titre: Déjeuners et dîners
-  formule: par semaine * commun . semaines par an
-
-alimentation . déjeuner et dîner . par semaine:
-  titre: Déjeuners et dîners par semaine
   formule: plats
 
 alimentation . plats:
@@ -77,37 +73,38 @@ alimentation . plats:
       - poisson blanc . nombre
     suggestions:
       végétalien:
-        végétalien . nombre: 14
+        végétalien . nombre: 2 * transport . durée séjour
         végétarien . nombre: 0
         viande blanche . nombre: 0
         viande rouge . nombre: 0
         poisson gras . nombre: 0
         poisson blanc . nombre: 0
       végétarien:
-        végétalien . nombre: 3
-        végétarien . nombre: 11
+        végétalien . nombre: transport . durée séjour
+        végétarien . nombre: transport . durée séjour
         viande blanche . nombre: 0
         viande rouge . nombre: 0
         poisson gras . nombre: 0
         poisson blanc . nombre: 0
-      peu de viande:
-        végétalien . nombre: 1
-        végétarien . nombre: 7
-        viande blanche . nombre: 4
-        viande rouge . nombre: 0
-        poisson gras . nombre: 1
-        poisson blanc . nombre: 1
+#      peu de viande:
+#        végétalien . nombre: 1
+#        végétarien . nombre: 7
+#        viande blanche . nombre: 4
+#        viande rouge . nombre: 0
+#        poisson gras . nombre: 1
+#        poisson blanc . nombre: 1
       viande chaque jour:
         végétalien . nombre: 0
         végétarien . nombre: 0
-        viande blanche . nombre: 6
-        viande rouge . nombre: 6
-        poisson gras . nombre: 1
-        poisson blanc . nombre: 1
+        viande blanche . nombre: transport . durée séjour
+        viande rouge . nombre: transport . durée séjour
+        poisson gras . nombre: 0
+        poisson blanc . nombre: 0
   question: Comment vont se composer vos déjeuners et dîners durant le séjour ?
   titre: Empreinte des repas
   description: |
-    En cohérence avec la durée de votre séjour, renseignez le nombre et les types de plats que vous allez probablement manger.
+    En cohérence avec la durée de votre séjour, renseignez le nombre et les types de plats que vous allez probablement manger. Par exemple, si vous restez trois jours en 
+    Haut de France vous devez renseigner 6 repas.
   formule:
     somme:
       - végétalien
@@ -168,10 +165,10 @@ alimentation . plats . végétalien . empreinte eau:
     🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
 
 alimentation . plats . végétalien . nombre:
-  question: Nombre de plats végétaliens par semaine
+  question: Nombre de plats végétaliens
   par défaut: 0
   plancher: 0
-  unité: repas/semaine
+  unité: repas
 
 alimentation . plats . végétarien:
   titre: Végétarien
@@ -211,9 +208,10 @@ alimentation . plats . végétarien . empreinte eau:
     🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
 
 alimentation . plats . végétarien . nombre:
-  question: Nombre de plats végétariens par semaine
-  par défaut: 5
-  unité: repas/semaine
+  question: Nombre de plats végétariens
+  par défaut: 2 * transport . durée séjour * 36%
+  unité: repas
+  note: 36% = 5 repas végétarien sur 14 par défaut dans le modèle NGC
 
 alimentation . plats . viande blanche:
   titre: Viande blanche
@@ -253,10 +251,11 @@ alimentation . plats . viande blanche . empreinte eau:
     🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
 
 alimentation . plats . viande blanche . nombre:
-  question: Nombre de plats viande blanche par semaine
-  par défaut: 4
+  question: Nombre de plats viande blanche
+  par défaut: 2 * transport . durée séjour * 29%
   plancher: 0
-  unité: repas/semaine
+  unité: repas
+  note: 29% = 4 repas viande blanche sur 14 par défaut dans le modèle NGC
 
 alimentation . plats . viande rouge:
   titre: Viande rouge
@@ -316,10 +315,11 @@ alimentation . plats . viande rouge . déforestation:
     En conséquence, nous ajoutons à l'empreinte des repas une empreinte moyenne de 0.218 kgCO2e / repas de viande rouge.
 
 alimentation . plats . viande rouge . nombre:
-  question: Nombre de plats viande rouge par semaine
-  par défaut: 3
+  question: Nombre de plats viande rouge
+  par défaut: 2 * transport . durée séjour * 21%
   plancher: 0
-  unité: repas/semaine
+  unité: repas
+  note: 21% = 3 repas viande rouge sur 14 par défaut dans le modèle NGC
 
 alimentation . plats . poisson gras:
   titre: Poisson gras
@@ -359,10 +359,11 @@ alimentation . plats . poisson gras . empreinte eau:
     🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
 
 alimentation . plats . poisson gras . nombre:
-  question: Nombre de plats poisson gras par semaine
-  par défaut: 2
+  question: Nombre de plats poisson gras
+  par défaut: 2 * transport . durée séjour * 14%
   plancher: 0
-  unité: repas/semaine
+  unité: repas
+  note: 14% = 2 repas poisson gras sur 14 par défaut dans le modèle NGC
 
 alimentation . plats . poisson blanc:
   titre: Poisson blanc
@@ -402,19 +403,15 @@ alimentation . plats . poisson blanc . empreinte eau:
     🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
 
 alimentation . plats . poisson blanc . nombre:
-  question: Nombre de plats poisson blanc par semaine
+  question: Nombre de plats poisson blanc
   par défaut: 0
   plancher: 0
-  unité: repas/semaine
+  unité: repas
 
-alimentation . petit déjeuner annuel:
+alimentation . petit déjeuner séjour:
   titre: Petit déjeuner
   icônes: 🥐
-  formule: petit déjeuner . par jour * commun . jours par an
-
-alimentation . petit déjeuner . par semaine:
-  titre: Empreinte hebdo petit déjeuner
-  formule: par jour * commun . jours par semaine
+  formule: petit déjeuner . par jour * transport . durée séjour
 
 alimentation . petit déjeuner . par jour:
   titre: Empreinte hebdo petit déjeuner
@@ -697,7 +694,7 @@ alimentation . local . empreinte:
     variations:
       - si: consommation = 'jamais'
         alors: 0
-      - sinon: (-1) * niveau * part locale annuelle
+      - sinon: (-1) * niveau * part locale
   unité: kgCO2e
 
 alimentation . local . consommation:
@@ -747,9 +744,6 @@ alimentation . local . niveau:
   description: |
     On applique un coefficient de 0,333 et 0,666 dans le cas où l'utilisateur indique qu'il consomme respectivement "parfois" ou "souvent" local.
 
-alimentation . local . part locale annuelle:
-  formule: part locale * commun . semaines par an
-
 alimentation . local . part locale:
   formule:
     somme:
@@ -759,8 +753,8 @@ alimentation . local . part locale:
       - alimentation . plats . viande rouge * 1%
       - alimentation . plats . poisson gras * 5%
       - alimentation . plats . poisson blanc * 6%
-      - alimentation . petit déjeuner . par semaine * 8%
-  unité: kgCO2e/semaine
+      - alimentation . petit déjeuner séjour * 8%
+  unité: kgCO2e
   description: |
     Dans une première approche, nous avons choisi de travailler sur les menus proposés dans le simulateur en considérant les facteurs d'émission d'Agribalyse, actualisés en divisant la part de transport par 2.
 
@@ -844,7 +838,7 @@ alimentation . de saison . ratio:
     🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1SVYvBaaYDOUDcg5jX0eZFEColnWWIL8PCLMGrPR000o/edit#gid=1694091424) sous forme de tableur.
 
 alimentation . de saison . part de saison:
-  formule: pourcentage de saison * (petit déjeuner annuel + déjeuner et dîner)
+  formule: pourcentage de saison * (petit déjeuner + déjeuner et dîner)
   unité: kgCO2e
   description: |
     Le pourcentage de produits de saison est appliqué à l'ensemble des repas d'un individu.
