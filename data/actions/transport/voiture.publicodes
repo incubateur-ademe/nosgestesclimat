@@ -1,5 +1,5 @@
 transport . voiture . éco-conduite:
-  titre: Adopter une éco-conduite
+  titre: Adopter une éco-conduite pendant votre séjour
   applicable si: voiture . km > 0
   icônes: 🚗☮
   formule: voiture . empreinte au kilomètre * voiture . km * réduction / transport . voiture . voyageurs
@@ -20,7 +20,7 @@ transport . voiture . éco-conduite . réduction:
     Hypothèse de réduction de 15% ([Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter))
 
 transport . voiture . limitation autoroute:
-  titre: Rouler à 110km/h sur l'autoroute
+  titre: Rouler à 110km/h sur l'autoroute pour venir en Haut de France
   icônes: 🚗🛣️
   applicable si: voiture . km > 0
   formule: transport . voiture . empreinte au kilomètre * km autoroute * réduction / transport . voiture . voyageurs
@@ -30,18 +30,12 @@ transport . voiture . limitation autoroute:
     > Pour découvrir tous les conseils pour économiser du carburant, [consultez notre fiche](https://librairie.ademe.fr/mobilite-et-transport/5886-10-gestes-pour-economiser-de-l-energie-lors-de-ses-deplacements.html).
 
 transport . voiture . limitation autoroute . km autoroute:
-  question: Combien de km à l'année faites-vous sur autoroute (à peu près) ?
-  unité: km
-  par défaut: voiture . km * 0.1
+#  question: Combien de km à l'année faites-vous sur autoroute (à peu près) ?
+#  par défaut: voiture . km * 0.1
+  formule: voiture . km * 0.9
   description: |
-    On parcourt environ 80 milliards de km / an sur autoroute (voiture).
-  suggestions:
-    Paris ⇄ Athènes: 6000
-    Brest ⇄ Nice: 3000
-    Paris ⇄ Marseille: 1600
-    Bordeaux ⇄ Lyon: 1100
-  note: |
-    Fil twitter intéressant sur le sujet: https://twitter.com/Tomsawy22670318/status/1274257124701462528.
+    On considère que 90 % des km faits pour venir en Haut de France le seront sur autoroute.
+  unité: km
 
 transport . voiture . limitation autoroute . réduction:
   titre: Gain de consommation 130 -> 110
@@ -66,208 +60,331 @@ transport . voiture . limitation autoroute . réduction:
     - une autre évaluation, qui elle nous donne le calcul :)  : https://twitter.com/Tomsawy22670318/status/1274257122373570565
       Attention, pour être rigoureux, comme évoqué dans ce dernier fil, il faut prendre en compte la distribution de la vitesse et la catégorie de voiture (présence d'une 6ème vitesse par exemple). On ne roule évidement pas tout le temps à 130.
 
-transport . voiture . covoiturage:
-  titre: Covoiturer
-  applicable si: voiture . km > 0
+transport . voiture . covoiturage un:
+  titre: Prendre un covoitureur
+  applicable si: 
+    toutes ces conditions:
+      - voiture . km > 0
+      - est défini: voiture . utilisateur
+      - voiture . utilisateur = 'propriétaire'
+      - voiture . voyageurs < 4 #On ne prend un covoit que si 3 ou en dessous ? Descendre la limite à 2 ?
   non applicable si:
     toutes ces conditions:
       - est défini: voiture . utilisateur
       - voiture . utilisateur = 'non régulier'
-  action:
-    dépasse:
-      - transport . voiture . boulot . covoiturage
   icônes: 🚗👥
-  formule: transport . voiture * réduction covoiturage
+#  formule: transport . voiture * réduction covoiturage
+  formule: transport . voiture - recalcul
   description: |
     5 bonnes raisons de tenter le covoiturage :
-      - C’est économique : à deux, à trois voire à quatre, entre voisins ou entre collègues, c’est une opportunité de diviser ses frais de carburant par le nombre de passagers ;
+      - C’est économique : à deux, à trois voire à quatre, c’est une opportunité de diviser ses frais de carburant par le nombre de passagers ;
       - C’est écologique : la voiture individuelle représente à elle seule plus de 15 % des émissions de gaz à effet de serre en France. Or, le covoiturage permet de diviser le nombre des émissions de CO2 par le nombre de voyageurs. Il réduit aussi les émissions de polluants et donc les impacts sur la qualité de l’air ;
       - C’est solidaire : le covoiturage est une solution pleine de potentiel, en particulier dans les zones aujourd’hui peu desservies par les transports en commun ;
-      - C’est convivial : entre collègues, entre amis, entre voisins, et même entre inconnus (grâce aux plateformes de covoiturage existantes), la route est moins longue…
+      - C’est convivial : même entre inconnus (grâce aux plateformes de covoiturage existantes), la route est moins longue…
       - Dernier atout : le covoiturage constitue une solution pour réduire le trafic (et votre stress).
 
     > Pour en savoir plus sur les aides disponibles pour vous lancer, [consultez notre article](https://agirpourlatransition.ademe.fr/particuliers/bureau/deplacements/covoiturage-bonnes-raisons-de-se-lancer)
   note: |
     Voir l'article The Conversation [À quelles conditions le covoiturage sera-t-il un mode de transport durable ?](https://theconversation.com/a-quelles-conditions-le-covoiturage-sera-t-il-un-mode-de-transport-durable-124122)
 
-transport . réduction covoiturage:
-  formule: 20%
-  description: |
-    On pourrait naïvement penser que le covoiturage divise par 2 l'empreinte par personne. Mais en réalité, [une étude menée en Île-de-France](https://www.sciencedirect.com/science/article/pii/S1361920918303201) 
-    montre que les réductions sont plutôt de l'ordre de 20%... avant les effets rebonds, qui réduisent le gain final du covoiturage à seulement 6%.
+transport . voiture . covoiturage un . recalcul:
+  valeur: transport . voiture
+  contexte:
+    transport . voiture . voyageurs: transport . voiture . voyageurs + 1
 
-    ![](https://images.theconversation.com/files/297327/original/file-20191016-98644-c9y1zz.png?ixlib=rb-1.1.0&q=30&auto=format&w=754&h=588&fit=crop&dpr=2)
-  note: |
-    Voir l'article The Conversation [À quelles conditions le covoiturage sera-t-il un mode de transport durable ?](https://theconversation.com/a-quelles-conditions-le-covoiturage-sera-t-il-un-mode-de-transport-durable-124122).
-
-transport . voiture . autopartage:
-  titre: Se mettre à l'autopartage
-  icônes: 🚗🤝
-  formule: transport . voiture - recalcul
-  applicable si:
+transport . voiture . covoiturage deux:
+  titre: Prendre deux covoitureurs
+  applicable si: 
     toutes ces conditions:
       - voiture . km > 0
-      - voiture . km < plafond activation autopartage
+      - est défini: voiture . utilisateur
+      - voiture . utilisateur = 'propriétaire'
+      - voiture . voyageurs < 3  #On ne prend un covoit que si 2 ou en dessous ? Descendre la limite à 1 ?
   non applicable si:
     toutes ces conditions:
       - est défini: voiture . utilisateur
       - voiture . utilisateur = 'non régulier'
+  action:
+    dépasse:
+      - transport . voiture . covoiturage un
+  icônes: 🚗👥
+#  formule: transport . voiture * réduction covoiturage
+  formule: transport . voiture - recalcul
   description: |
-    On peut être un grand adepte de la marche, du vélo et des transports en communs et avoir parfois besoin d’une voiture ; pour les loisirs, les déplacements longs ou pour aller faire de grosses courses.
+    5 bonnes raisons de tenter le covoiturage :
+      - C’est économique : à deux, à trois voire à quatre, c’est une opportunité de diviser ses frais de carburant par le nombre de passagers ;
+      - C’est écologique : la voiture individuelle représente à elle seule plus de 15 % des émissions de gaz à effet de serre en France. Or, le covoiturage permet de diviser le nombre des émissions de CO2 par le nombre de voyageurs. Il réduit aussi les émissions de polluants et donc les impacts sur la qualité de l’air ;
+      - C’est solidaire : le covoiturage est une solution pleine de potentiel, en particulier dans les zones aujourd’hui peu desservies par les transports en commun ;
+      - C’est convivial : même entre inconnus (grâce aux plateformes de covoiturage existantes), la route est moins longue…
+      - Dernier atout : le covoiturage constitue une solution pour réduire le trafic (et votre stress).
 
-    L’autopartage est une solution, en particulier si vous ne voyez pas l’intérêt d’être propriétaire d’un véhicule qui passe le plus clair de son temps au parking. Dans le cadre de l’autopartage, vous utilisez un véhicule mutualisé. Ce sont des coûts en moins (assurance, charges d’entretien) mais aussi des tracas de stationnement qui disparaissent.
-  unité: kgCO2e
+    > Pour en savoir plus sur les aides disponibles pour vous lancer, [consultez notre article](https://agirpourlatransition.ademe.fr/particuliers/bureau/deplacements/covoiturage-bonnes-raisons-de-se-lancer)
+  note: |
+    Voir l'article The Conversation [À quelles conditions le covoiturage sera-t-il un mode de transport durable ?](https://theconversation.com/a-quelles-conditions-le-covoiturage-sera-t-il-un-mode-de-transport-durable-124122)
 
-transport . voiture . autopartage . recalcul:
+transport . voiture . covoiturage deux . recalcul:
   valeur: transport . voiture
   contexte:
-    transport . voiture . km: transport . voiture . km * (1 - 0.41)
-  note: |
-    L'auto-partage permet de réduire le nombre de km parcourus dans l'année (l'usage de la voiture est moins systématique).
-    En moyenne, on compte une baisse de 41% des kilomètres par an d'après [cette étude ADEME](https://presse.ademe.fr/wp-content/uploads/2013/03/ena_4pages_presse_130306.pdf).
+    transport . voiture . voyageurs: transport . voiture . voyageurs + 2
 
-transport . plafond activation autopartage:
-  formule: 7200
-  note: Nous supposons qu'au-delà de 600 km par mois en moyenne, il est difficile de se projeter dans un usage d'autopartage.
-  unité: km
+#transport . réduction covoiturage:
+#  formule: 20%
+#  description: |
+#    On pourrait naïvement penser que le covoiturage divise par 2 l'empreinte par personne. Mais en réalité, [une étude menée en Île-de-France](https://www.sciencedirect.com/science/article/pii/S1361920918303201) 
+#    montre que les réductions sont plutôt de l'ordre de 20%... avant les effets rebonds, qui réduisent le gain final du covoiturage à seulement 6%.
+#
+#    ![](https://images.theconversation.com/files/297327/original/file-20191016-98644-c9y1zz.png?ixlib=rb-1.1.0&q=30&auto=format&w=754&h=588&fit=crop&dpr=2)
+#  note: |
+#    Voir l'article The Conversation [À quelles conditions le covoiturage sera-t-il un mode de transport durable ?](https://theconversation.com/a-quelles-conditions-le-covoiturage-sera-t-il-un-mode-de-transport-durable-124122).
 
-transport . voiture . voiture 5km:
-  titre: Se passer de voiture pour moins de 5 km
-  icônes: 🚗🚲
-  formule: transport . voiture - recalcul
+# On désactive cette action car inapropriée dans le contexte Tourisme
+#transport . voiture . autopartage:
+#  titre: Se mettre à l'autopartage
+#  icônes: 🚗🤝
+#  formule: transport . voiture - recalcul
+#  applicable si:
+#    toutes ces conditions:
+#      - voiture . km > 0
+#      - voiture . km < plafond activation autopartage
+#  non applicable si:
+#    toutes ces conditions:
+#      - est défini: voiture . utilisateur
+#      - voiture . utilisateur = 'non régulier'
+#  description: |
+#    On peut être un grand adepte de la marche, du vélo et des transports en communs et avoir parfois besoin d’une voiture ; pour les loisirs, les déplacements longs ou pour aller faire de grosses courses.
+#
+#    L’autopartage est une solution, en particulier si vous ne voyez pas l’intérêt d’être propriétaire d’un véhicule qui passe le plus clair de son temps au parking. Dans le cadre de l’autopartage, vous utilisez un véhicule mutualisé. Ce sont des coûts en moins (assurance, charges d’entretien) mais aussi des tracas de stationnement qui disparaissent.
+#  unité: kgCO2e
+#
+#transport . voiture . autopartage . recalcul:
+#  valeur: transport . voiture
+#  contexte:
+#    transport . voiture . km: transport . voiture . km * (1 - 0.41)
+#  note: |
+#    L'auto-partage permet de réduire le nombre de km parcourus dans l'année (l'usage de la voiture est moins systématique).
+#    En moyenne, on compte une baisse de 41% des kilomètres par an d'après [cette étude ADEME](https://presse.ademe.fr/wp-content/uploads/2013/03/ena_4pages_presse_130306.pdf).
+#
+#transport . plafond activation autopartage:
+#  formule: 7200
+#  note: Nous supposons qu'au-delà de 600 km par mois en moyenne, il est difficile de se projeter dans un usage d'autopartage.
+#  unité: km
+
+# On désactive cette action mais à voir si pour une V2 on ne peut pas prendre l'information des trajets courts qui seront effectués (notamment par 
+# une question sur le volet Action comme le fait NGC actuellement)
+#transport . voiture . voiture 5km:
+#  titre: Se passer de voiture pour moins de 5 km
+#  icônes: 🚗🚲
+#  formule: transport . voiture - recalcul
+#  applicable si:
+#    toutes ces conditions:
+#      - voiture . km > seuil d'activation 5km
+#      - est défini: voiture . utilisateur
+#      - voiture . utilisateur = 'propriétaire'
+#  note: |
+#    On fait l'hypothèse qu'une personne qui n'est pas propriétaire de voiture se passe *déjà* d'une voiture pour de courts trajets.
+#  description: |
+#    En ville, 40 % des trajets quotidiens effectués en voiture font moins de 3 km. Ils sont par ailleurs 2 fois plus polluants qu’un trajet de plus grande distance : la faute à une surconsommation de carburant à moteur froid ou encore aux arrêts et redémarrages fréquents liés à la circulation en ville.
+#
+#    Le vélo est aussi rapide que la voiture sur les distances inférieures à 5 km. La marche est également une excellente solution. Elle représente le 2e mode de déplacement en France.
+#
+#    > Pour encore plus de solutions et découvrir les aides disponibles, [consultez notre article](https://agirpourlatransition.ademe.fr/particuliers/bureau/deplacements/changons-air-changeons-mobilite).
+#
+#transport . voiture . voiture 5km . recalcul:
+#  valeur: transport . voiture
+#  contexte:
+#    transport . voiture . km: transport . voiture . voiture 5km . distance totale
+#
+#transport . seuil d'activation 5km:
+#  titre: Seuil d'activation actions liées aux courts trajets
+#  description: |
+#    Distance minimale pour déclencher cette action. 
+#
+#    > Si quelqu'un nous dit qu'il ne fait que 200km de voiture dans l'année, il y a peu de chances 
+#    > qu'il s'agisse de trajets de 5km.
+#
+#    On définit cette valeur comme étant équivalente à 2 trajets de 5 km A/R par semaine.
+#  formule: commun . semaines par an * 2 trajet/semaine * distance moyenne aller-retour trajet court
+#  unité: km
+#
+#transport . distance moyenne aller-retour trajet court:
+#  formule: distance moyenne trajet court * 2
+#  unité: km/trajet
+#
+#transport . distance moyenne trajet court:
+#  formule: 2.5
+#  unité: km/trajet
+#  description: Nous estimons simplement à 2,5km la moyenne de distance des trajets inférieurs à 5km.
+#
+#transport . voiture . voiture 5km . distance totale:
+#  titre: Distance totale évitée
+#  formule:
+#    variations:
+#      - si: distance totale renseignée > transport . voiture . km
+#        alors: transport . voiture . km
+#      - sinon: distance totale renseignée
+#
+#transport . voiture . voiture 5km . distance totale renseignée:
+#  formule: fréquence * distance moyenne aller-retour trajet court * commun . semaines par an
+#
+#transport . voiture . voiture 5km . fréquence:
+#  question: Combien de fois par semaine prenez-vous la voiture pour moins de 5km ?
+#  description: |
+#    Je vais chercher mon pain à 2km en voiture, cela représente un trajet.
+#    Je vais au travail tous les jours du lundi au vendredi à 4km, c'est 5 trajets.
+#  par défaut: 10
+#  unité: trajet/semaine
+#  suggestions:
+#    jamais: 0
+#    seulement le weekend: 2
+#    dans la semaine: 5
+#    chaque jour: 7
+#    deux trajets par jour: 14
+
+transport . voiture . location voiture électrique:
+  titre: Louer électrique plutôt que thermique
+  icônes: 🔌🚗
   applicable si:
     toutes ces conditions:
-      - voiture . km > seuil d'activation 5km
+      - voiture . km > 0
       - est défini: voiture . utilisateur
-      - voiture . utilisateur = 'propriétaire'
-  note: |
-    On fait l'hypothèse qu'une personne qui n'est pas propriétaire de voiture se passe *déjà* d'une voiture pour de courts trajets.
-  description: |
-    En ville, 40 % des trajets quotidiens effectués en voiture font moins de 3 km. Ils sont par ailleurs 2 fois plus polluants qu’un trajet de plus grande distance : la faute à une surconsommation de carburant à moteur froid ou encore aux arrêts et redémarrages fréquents liés à la circulation en ville.
-
-    Le vélo est aussi rapide que la voiture sur les distances inférieures à 5 km. La marche est également une excellente solution. Elle représente le 2e mode de déplacement en France.
-
-    > Pour encore plus de solutions et découvrir les aides disponibles, [consultez notre article](https://agirpourlatransition.ademe.fr/particuliers/bureau/deplacements/changons-air-changeons-mobilite).
-
-transport . voiture . voiture 5km . recalcul:
-  valeur: transport . voiture
-  contexte:
-    transport . voiture . km: transport . voiture . voiture 5km . distance totale
-
-transport . seuil d'activation 5km:
-  titre: Seuil d'activation actions liées aux courts trajets
-  description: |
-    Distance minimale pour déclencher cette action. 
-
-    > Si quelqu'un nous dit qu'il ne fait que 200km de voiture dans l'année, il y a peu de chances 
-    > qu'il s'agisse de trajets de 5km.
-
-    On définit cette valeur comme étant équivalente à 2 trajets de 5 km A/R par semaine.
-  formule: commun . semaines par an * 2 trajet/semaine * distance moyenne aller-retour trajet court
-  unité: km
-
-transport . distance moyenne aller-retour trajet court:
-  formule: distance moyenne trajet court * 2
-  unité: km/trajet
-
-transport . distance moyenne trajet court:
-  formule: 2.5
-  unité: km/trajet
-  description: Nous estimons simplement à 2,5km la moyenne de distance des trajets inférieurs à 5km.
-
-transport . voiture . voiture 5km . distance totale:
-  titre: Distance totale évitée
-  formule:
-    variations:
-      - si: distance totale renseignée > transport . voiture . km
-        alors: transport . voiture . km
-      - sinon: distance totale renseignée
-
-transport . voiture . voiture 5km . distance totale renseignée:
-  formule: fréquence * distance moyenne aller-retour trajet court * commun . semaines par an
-
-transport . voiture . voiture 5km . fréquence:
-  question: Combien de fois par semaine prenez-vous la voiture pour moins de 5km ?
-  description: |
-    Je vais chercher mon pain à 2km en voiture, cela représente un trajet.
-    Je vais au travail tous les jours du lundi au vendredi à 4km, c'est 5 trajets.
-  par défaut: 10
-  unité: trajet/semaine
-  suggestions:
-    jamais: 0
-    seulement le weekend: 2
-    dans la semaine: 5
-    chaque jour: 7
-    deux trajets par jour: 14
-
-transport . voiture . voiture électrique:
-  titre: Rouler en voiture électrique
-  icônes: 🔌🚗
-  applicable si: voiture . km > 0
+      - voiture . utilisateur = 'régulier non propriétaire'
+# Ajouter une condition sur un nombre de km max (transport . km) ? Car le véhicule élec n'aura pas l'autonomie pour faire plusieurs centaines de km 
   non applicable si:
     une de ces conditions:
       - transport . voiture . motorisation = 'électrique'
       - toutes ces conditions:
           - est défini: voiture . utilisateur
           - une de ces conditions:
+              - voiture . utilisateur = 'propriétaire'
               - voiture . utilisateur = 'non régulier'
-              - voiture . utilisateur = 'régulier non propriétaire'
   formule: transport . voiture - recalcul
   description: |
-    Les véhicules électriques sont désormais dotés de moteurs de puissance comparable aux voitures thermiques. Alimentés par des batteries rechargeables sur le réseau électrique domestique ou des bornes de recharge, qui commencent à être installées un peu partout sur le territoire, ces véhicules ont aujourd’hui une autonomie de plusieurs centaines de kilomètres.
-
-    Ils sont par conséquent très adaptés pour la grande majorité des trajets quotidiens. Silencieux, non polluants sur leur lieu d’utilisation, ils conviennent en ce sens à la circulation en ville. Un moteur électrique nécessite très peu d’entretien par rapport à un moteur à essence ou Diesel et peut avoir une durée de vie supérieure. À l’usage, ce type de véhicules est donc plus économique.
-
-    Certaines villes encouragent d’ailleurs leur développement, en leur accordant des avantages ou en accueillant des services d’autopartages électriques.
+    Blabla sur l'électrique et sur le fait que l'autonomie sera suffisante pour vous rendre en Haut de France au regard des km renseignés
   note: |
-    Envisager de ne proposer cette action que si elle > 0 voire > à plusieurs centaines de kgCO2eq. 
-    L'action peut-être négative si le véhicule initial est relativement vieux et que l'on fait peu de kilomètres.
+    Blabla
 
-transport . voiture . voiture électrique . recalcul:
+transport . voiture . location voiture électrique . recalcul:
   valeur: transport . voiture
   contexte:
     transport . voiture . motorisation: "'électrique'"
 
-transport . voiture . réduire taille:
-  titre: Choisir une petite voiture
-  description: |
-    Le prix, la dimension, le confort, l’esthétisme, ça compte mais ce ne peut plus être les seuls critères de choix. La consommation de carburant et les faibles émissions de CO₂ sont tout aussi essentielles ! 
+#On désactive cette action car inapropriée pour lui préférer une action sur la location de voiture électrique
+#transport . voiture . voiture électrique:
+#  titre: Rouler en voiture électrique
+#  icônes: 🔌🚗
+#  applicable si: voiture . km > 0
+#  non applicable si:
+#    une de ces conditions:
+#      - transport . voiture . motorisation = 'électrique'
+#      - toutes ces conditions:
+#          - est défini: voiture . utilisateur
+#          - une de ces conditions:
+#              - voiture . utilisateur = 'non régulier'
+#              - voiture . utilisateur = 'régulier non propriétaire'
+#  formule: transport . voiture - recalcul
+#  description: |
+#    Les véhicules électriques sont désormais dotés de moteurs de puissance comparable aux voitures thermiques. Alimentés par des batteries rechargeables sur le réseau électrique domestique ou des bornes de recharge, qui commencent à être installées un peu partout sur le territoire, ces véhicules ont aujourd’hui une autonomie de plusieurs centaines de kilomètres.
+#
+#    Ils sont par conséquent très adaptés pour la grande majorité des trajets quotidiens. Silencieux, non polluants sur leur lieu d’utilisation, ils conviennent en ce sens à la circulation en ville. Un moteur électrique nécessite très peu d’entretien par rapport à un moteur à essence ou Diesel et peut avoir une durée de vie supérieure. À l’usage, ce type de véhicules est donc plus économique.
+#
+#    Certaines villes encouragent d’ailleurs leur développement, en leur accordant des avantages ou en accueillant des services d’autopartages électriques.
+#  note: |
+#    Envisager de ne proposer cette action que si elle > 0 voire > à plusieurs centaines de kgCO2eq. 
+#    L'action peut-être négative si le véhicule initial est relativement vieux et que l'on fait peu de kilomètres.
+#
+#transport . voiture . voiture électrique . recalcul:
+#  valeur: transport . voiture
+#  contexte:
+#    transport . voiture . motorisation: "'électrique'"
 
-    Rendez-vous [sur le site Je Change ma Voiture](https://jechangemavoiture.gouv.fr/) pour une mobilité plus propre et plus économe.
-  applicable si: voiture . km > 0
+
+transport . voiture . location réduire taille:
+  titre: Louer une petite voiture pour le séjour
+  applicable si:
+    toutes ces conditions : 
+      - voiture . km > 0
+      - est défini: voiture . utilisateur
+      - voiture . utilisateur = 'régulier non propriétaire'
   non applicable si:
     une de ces conditions:
       - transport . voiture . motorisation = 'petite'
       - toutes ces conditions:
           - est défini: voiture . utilisateur
           - une de ces conditions:
+              - voiture . utilisateur = 'propriétaire'
               - voiture . utilisateur = 'non régulier'
-              - voiture . utilisateur = 'régulier non propriétaire'
   formule: transport . voiture - recalcul
+  description: |
+    Blabla sur le fait que les voitures sont de plus en plus grosse et que la sobriété sur les véhicules c'est important (=taille adaptée au nombre de voyageurs).
 
-transport . voiture . réduire taille . recalcul:
+transport . voiture . location réduire taille . recalcul:
   valeur: transport . voiture
   contexte:
     transport . voiture . gabarit: "'petite'"
 
-transport . voiture . faire durer:
-  titre: Faire durer son véhicule
-  applicable si:
-    toutes ces conditions:
-      - voiture . km > 0
-      - est défini: voiture . utilisateur
-      - voiture . utilisateur = 'propriétaire'
+#On désactive cette action car inapropriée pour lui préférer une action sur la location d'une voiture de petite taille
+#transport . voiture . réduire taille:
+#  titre: Choisir une petite voiture
+#  description: |
+#    Le prix, la dimension, le confort, l’esthétisme, ça compte mais ce ne peut plus être les seuls critères de choix. La consommation de carburant et les faibles émissions de CO₂ sont tout aussi essentielles ! 
+#
+#    Rendez-vous [sur le site Je Change ma Voiture](https://jechangemavoiture.gouv.fr/) pour une mobilité plus propre et plus économe.
+#  applicable si: voiture . km > 0
+#  non applicable si:
+#    une de ces conditions:
+#      - transport . voiture . motorisation = 'petite'
+#      - toutes ces conditions:
+#          - est défini: voiture . utilisateur
+#          - une de ces conditions:
+#              - voiture . utilisateur = 'non régulier'
+#              - voiture . utilisateur = 'régulier non propriétaire'
+#  formule: transport . voiture - recalcul
+#
+#transport . voiture . réduire taille . recalcul:
+#  valeur: transport . voiture
+#  contexte:
+#    transport . voiture . gabarit: "'petite'"
+
+# On désactive cette action car inapropriée dans le contexte Tourisme
+#transport . voiture . faire durer:
+#  titre: Faire durer son véhicule
+#  applicable si:
+#    toutes ces conditions:
+#      - voiture . km > 0
+#      - est défini: voiture . utilisateur
+#      - voiture . utilisateur = 'propriétaire'
+#  description: |
+#    Il est très difficile, à ce jour, de donner un chiffre sur la durée de vie d'un véhicule, que ce soit en kilomètres parcourus comme en année. 
+#    Le fait est que cela dépend de beaucoup de paramètres : l'entretien du véhicule, l'accidentologie, la manière de conduire, le type de moteur, la dépendance à l'électronique...
+#    Certains véhicules sont bons pour la casse au bout de 150 000 km quand d'autres roulent toujours des mécaniques à 400 000 km. 
+#
+#    Or, une part importante de l'empreinte d'un véhicule réside dans sa construction. Le faire durer est donc primordial et a une incidence importante sur l'empreinte carbone.
+#
+#    Nous avons considéré qu'un véhicule bien entretenu pouvait augmenter sa durée de vie de 30%.
+#  formule: transport . voiture . empreinte calculée - recalcul
+#
+#transport . voiture . faire durer . recalcul:
+#  valeur: transport . voiture . empreinte calculée
+#  contexte:
+#    transport . voiture . durée de vie en km: transport . voiture . durée de vie en km * 1.2
+
+# On défini cette action mais elle ne sera pas probablement poussée en V1 car il faudrait s'assurer qu'une alternative train existe pour le trajet effectué
+# en voiture ce qui suppose de demander plus d'infos que maintenant (lieu de départ/d'arrivée notamment)
+## Doit-on faire ces actions alternatives pour le deux roues et le bus longue distance ?
+transport . voiture . prendre le train:
+  titre: Aller en Haut de France en train
+  icônes: 🚆
   description: |
-    Il est très difficile, à ce jour, de donner un chiffre sur la durée de vie d'un véhicule, que ce soit en kilomètres parcourus comme en année. 
-    Le fait est que cela dépend de beaucoup de paramètres : l'entretien du véhicule, l'accidentologie, la manière de conduire, le type de moteur, la dépendance à l'électronique...
-    Certains véhicules sont bons pour la casse au bout de 150 000 km quand d'autres roulent toujours des mécaniques à 400 000 km. 
+    Blabla sur le fait que le train est écolo mais oui plus cher (quoique pas tous le temps)
+  non applicable si: 
+    une de ces conditions:
+      - transport . train . présent
+      - transport . car longue distance . présent
+      - transport . deux roues . présent
+  applicable si: voiture . km > 0
+  formule: transport . voiture - recalcul
 
-    Or, une part importante de l'empreinte d'un véhicule réside dans sa construction. Le faire durer est donc primordial et a une incidence importante sur l'empreinte carbone.
-
-    Nous avons considéré qu'un véhicule bien entretenu pouvait augmenter sa durée de vie de 30%.
-  formule: transport . voiture . empreinte calculée - recalcul
-
-transport . voiture . faire durer . recalcul:
-  valeur: transport . voiture . empreinte calculée
+transport . voiture . prendre le train . recalcul:
+  valeur: transport . train
   contexte:
-    transport . voiture . durée de vie en km: transport . voiture . durée de vie en km * 1.2
+    transport . train . km: transport . voiture . km

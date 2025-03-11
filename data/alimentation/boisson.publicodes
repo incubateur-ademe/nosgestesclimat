@@ -51,7 +51,7 @@ alimentation . boisson . chaude:
     Cherchez ici à renseigner une consommation représentative de votre consommation, ce n'est pas grave si cela ne correspond pas à ce que vous boirez exactement
 
     _Précision_ : considérez le déca comme un café !
-  formule: par jour * commun . jours par an
+  formule: par jour * transport . durée séjour
 
 alimentation . boisson . chaude . par jour:
   titre: Empreinte boissons chaudes par jour
@@ -83,28 +83,28 @@ alimentation . boisson . chaude . chicorée:
   formule: tasse de chicorée * nombre
 
 alimentation . boisson . chaude . café . nombre:
-  question: Nombre de cafés pendant le séjour
+  question: Nombre de cafés par jour pendant le séjour
   par défaut: 1.5
   plancher: 0
   unité: tasse/jour
   note: Un français moyen boit 500 tasses de café par an ([source](https://fr.statista.com/themes/10144/le-cafe-en-france/#topFacts)), soit environ une tasse et demi par jour.
 
 alimentation . boisson . chaude . thé . nombre:
-  question: Nombre de thés pendant le séjour
+  question: Nombre de thés par jour pendant le séjour
   par défaut: 0.5
   plancher: 0
   unité: tasse/jour
   note: Un français moyen consomme 250g de thé par an ([source](https://www.francesoir.fr/lifestyle-vie-quotidienne/le-boom-de-la-consommation-en-france)), soit 5 grammes par semaine. Nous avons estimé que cela correspondait approximativement à une demi tasse par jour.
 
 alimentation . boisson . chaude . chocolat chaud . nombre:
-  question: Nombre de chocolats chauds pendant le séjour
+  question: Nombre de chocolats chauds par jour pendant le séjour
   par défaut: 0
   plancher: 0
   unité: tasse/jour
   note: Nous ne considérons pas de tasses de chocolat chaud par défaut.
 
 alimentation . boisson . chaude . chicorée . nombre:
-  question: Nombre de tasses de chicorée pendant le séjour
+  question: Nombre de tasses de chicorée par jour pendant le séjour
   par défaut: 0
   plancher: 0
   unité: tasse/jour
@@ -342,7 +342,7 @@ alimentation . boisson . froide:
 
 alimentation . boisson . eau en bouteille:
   titre: Eau en bouteille
-  formule: consommation moyenne * empreinte
+  formule: consommation * empreinte
   unité: kgCO2e
 
 #alimentation . boisson . eau en bouteille . consommateur:
@@ -359,11 +359,11 @@ alimentation . boisson . eau en bouteille:
 #    Nous avons considéré que la valeur par défaut était donc "non".
 
 alimentation . boisson . eau en bouteille . consommation:
-  question: Combien de bouteille d'eau en plastique comptez-vous boire (en équivalent d'1 litre) ?
+  question: Combien de bouteille d'eau en plastique comptez-vous boire par jour, pendant votre séjour (en équivalent d'1 litre) ?
   description: |
-    Si chaque jour, pour votre consommation personnelle, vous achetez une bouteille d'1,5l, renseignez 1,5l. Si vous ne buvez qu'une seule
+    Si vous comptez acheter une bouteille d'1,5l par jour, renseignez 1,5l. Si vous ne boirez qu'une seule
     bouteille de 0,5l, renseignez 0,5.
-  par défaut: 1
+  par défaut: consommation moyenne * (transport . durée séjour / 365)
   unité: l
 
 alimentation . boisson . eau en bouteille . empreinte:
@@ -414,33 +414,21 @@ alimentation . boisson . sucrées:
       - soda
       - jus de fruit
 
-alimentation . boisson . sucrées . sirop . empreinte:
-  titre: Empreinte verre de sirop
-  formule: 100
-  unité: kgCO2e
-  note: Facteur d'émissions de la Base Carbone et quantité de 20 cl par verre
-
-alimentation . boisson . sucrées . sirop . nombre:
-  titre: Nombre de verres de sirop
-  question: Combien de verres de sirop allez-vous boire ?
-  plancher: 0
-  par défaut: 0
-
 alimentation . boisson . sucrées . sirop:
   titre: Sirop à l'eau (20 cl)
   icônes: 💧
   formule: empreinte * nombre
   unité: kgCO2e
 
-alimentation . boisson . sucrées . cocktail sans alcool . empreinte:
-  titre: Empreinte cocktail sans alcool
-  formule: 100
+alimentation . boisson . sucrées . sirop . empreinte:
+  titre: Empreinte verre de sirop
+  formule: 0.076
   unité: kgCO2e
-  note: Facteur d'émissions de la Base Carbone et quantité de 33 cl par verre
+  note: Source Agribalyse. Moyenne FE sirop 1,03 kgCO2eq/kg (3cl) + FE bouteille eau 0,268 kgCO2eq/kg (17cl) ; hypothèse masse volumique sirop = eau = 1kg/L et 20 cl par verre
 
-alimentation . boisson . sucrées . cocktail sans alcool . nombre:
-  titre: Nombre de cocktail sans alcool
-  question: Combien de cocktail sans alcool allez-vous boire ?
+alimentation . boisson . sucrées . sirop . nombre:
+  titre: Nombre de verres de sirop
+  question: Combien de verres de sirop allez-vous boire ?
   plancher: 0
   par défaut: 0
 
@@ -450,15 +438,15 @@ alimentation . boisson . sucrées . cocktail sans alcool:
   formule: empreinte * nombre
   unité: kgCO2e
 
-alimentation . boisson . sucrées . soda . empreinte:
-  titre: Empreinte verre de soda
-  formule: 100
+alimentation . boisson . sucrées . cocktail sans alcool . empreinte:
+  titre: Empreinte cocktail sans alcool
+  formule: 0.30
   unité: kgCO2e
-  note: Facteur d'émissions de la Base Carbone et quantité de 33 cl par verre
+  note: Source Agribalyse FE jus cocktail sans alcool 0,921 kgCO2eq/kg ; hypothèse masse volumique cocktail = eau = 1kg/L et 33 cl par verre
 
-alimentation . boisson . sucrées . soda . nombre:
-  titre: Nombre de verres de soda
-  question: Combien de verres de soda allez-vous boire ?
+alimentation . boisson . sucrées . cocktail sans alcool . nombre:
+  titre: Nombre de cocktail sans alcool
+  question: Combien de cocktail sans alcool allez-vous boire ?
   plancher: 0
   par défaut: 0
 
@@ -468,15 +456,15 @@ alimentation . boisson . sucrées . soda:
   formule: empreinte * nombre
   unité: kgCO2e
 
-alimentation . boisson . sucrées . jus de fruit . empreinte:
-  titre: Empreinte verre de jus de fruit
-  formule: 100
+alimentation . boisson . sucrées . soda . empreinte:
+  titre: Empreinte verre de soda
+  formule: 0.17
   unité: kgCO2e
-  note: Facteur d'émissions de la Base Carbone et quantité de 20 cl par verre
+  note: Source Agribalyse moyenne FE cola/tonic 0,512 kgCO2eq/kg * 0.33 kg/canette ; hypothèse masse volumique soda = eau = 1kg/L
 
-alimentation . boisson . sucrées . jus de fruit . nombre:
-  titre: Nombre de verres de jus de fruit
-  question: Combien de verres de jus de fruit allez-vous boire ?
+alimentation . boisson . sucrées . soda . nombre:
+  titre: Nombre de verres de soda
+  question: Combien de verres de soda allez-vous boire ?
   plancher: 0
   par défaut: 0
 
@@ -485,6 +473,18 @@ alimentation . boisson . sucrées . jus de fruit:
   icônes: 🧃
   formule: empreinte * nombre
   unité: kgCO2e
+
+alimentation . boisson . sucrées . jus de fruit . empreinte:
+  titre: Empreinte verre de jus de fruit
+  formule: 0.14
+  unité: kgCO2e
+  note: Source Agribalyse moyenne FE jus hors ananas 0,715 kgCO2eq/kg ; hypothèse masse volumique jus de fruit = eau = 1kg/L et quantité de 20 cl par verre
+
+alimentation . boisson . sucrées . jus de fruit . nombre:
+  titre: Nombre de verres de jus de fruit
+  question: Combien de verres de jus de fruit allez-vous boire ?
+  plancher: 0
+  par défaut: 0
 
 #alimentation . boisson . sucrées:
 #  description: |
@@ -573,33 +573,21 @@ alimentation . boisson . alcool:
       - champagne
       - cocktail
 
-alimentation . boisson . alcool . bière demi . empreinte:
-  titre: Empreinte demi de bière
-  formule: 100
-  unité: kgCO2e
-  note: Facteur d'émissions de la Base Carbone et quantité de 25 cl pour un demi
-
-alimentation . boisson . alcool . bière demi . nombre:
-  titre: Nombre de verres de sirop
-  question: Combien de demis de bière allez-vous boire ?
-  plancher: 0
-  par défaut: 0
-
 alimentation . boisson . alcool . bière demi:
-  titre: Bière (demi)
+  titre: Bière demi (25 cl)
   icônes: 🍻
   formule: empreinte * nombre
   unité: kgCO2e
 
-alimentation . boisson . alcool . bière pinte . empreinte:
-  titre: Empreinte pinte de bière
-  formule: 100
+alimentation . boisson . alcool . bière demi . empreinte:
+  titre: Empreinte demi de bière
+  formule: 0.28
   unité: kgCO2e
-  note: Facteur d'émissions de la Base Carbone et quantité de 50 cl pour une pinte
+  note: Source Agribalyse moyenne FE bière 1,12 kgCO2eq/kg ; hypothèse masse volumique bière = eau = 1kg/l et quantité = 25 cl
 
-alimentation . boisson . alcool . bière pinte . nombre:
-  titre: Nombre de pintes de bière
-  question: Combien de pintes de bière allez-vous boire ?
+alimentation . boisson . alcool . bière demi . nombre:
+  titre: Nombre de verres de sirop
+  question: Combien de demis de bière allez-vous boire ?
   plancher: 0
   par défaut: 0
 
@@ -609,15 +597,15 @@ alimentation . boisson . alcool . bière pinte:
   formule: empreinte * nombre
   unité: kgCO2e
 
-alimentation . boisson . alcool . vin . empreinte:
-  titre: Empreinte verre de vin
-  formule: 100
+alimentation . boisson . alcool . bière pinte . empreinte:
+  titre: Empreinte pinte de bière
+  formule: 0.56
   unité: kgCO2e
-  note: Facteur d'émissions de la Base Carbone et quantité de 20 cl par verre
+  note: Source Agribalyse moyenne FE bière 1,12 kgCO2eq/kg ; hypothèse masse volumique bière = eau = 1kg/l et quantité = 50 cl
 
-alimentation . boisson . alcool . vin . nombre:
-  titre: Nombre de verres de vin
-  question: Combien de verres de vin allez-vous boire ?
+alimentation . boisson . alcool . bière pinte . nombre:
+  titre: Nombre de pintes de bière
+  question: Combien de pintes de bière allez-vous boire ?
   plancher: 0
   par défaut: 0
 
@@ -627,15 +615,15 @@ alimentation . boisson . alcool . vin:
   formule: empreinte * nombre
   unité: kgCO2e
 
-alimentation . boisson . alcool . champagne . empreinte:
-  titre: Empreinte verre de champagne
-  formule: 100
+alimentation . boisson . alcool . vin . empreinte:
+  titre: Empreinte verre de vin
+  formule: 0.3
   unité: kgCO2e
-  note: Facteur d'émissions de la Base Carbone et quantité de 15 cl par verre
+  note: source Agribalyse moyenne FE vin 1,19 kgCO2eq/kg ; hypothèse masse volumique vin = eau = 1kg/L et quantité = 20 cl
 
-alimentation . boisson . alcool . champagne . nombre:
-  titre: Nombre de verres de champagne
-  question: Combien de verres de champagne allez-vous boire ?
+alimentation . boisson . alcool . vin . nombre:
+  titre: Nombre de verres de vin
+  question: Combien de verres de vin allez-vous boire ?
   plancher: 0
   par défaut: 0
 
@@ -645,15 +633,15 @@ alimentation . boisson . alcool . champagne:
   formule: empreinte * nombre
   unité: kgCO2e
 
-alimentation . boisson . alcool . cocktail . empreinte:
-  titre: Empreinte cocktail
-  formule: 100
+alimentation . boisson . alcool . champagne . empreinte:
+  titre: Empreinte verre de champagne
+  formule: 0.15
   unité: kgCO2e
-  note: Facteur d'émissions de la Base Carbone et quantité de 30 cl par verre
+  note: source Agribalyse FE champagne 1,22 kgCO2eq/kg ; hypothèse masse volumique champagne = eau = 1kg/L et quantité = 15 cl
 
-alimentation . boisson . alcool . cocktail . nombre:
-  titre: Nombre de cocktail
-  question: Combien de cocktail allez-vous boire ?
+alimentation . boisson . alcool . champagne . nombre:
+  titre: Nombre de verres de champagne
+  question: Combien de verres de champagne allez-vous boire ?
   plancher: 0
   par défaut: 0
 
@@ -662,6 +650,18 @@ alimentation . boisson . alcool . cocktail:
   icônes: 🍸
   formule: empreinte * nombre
   unité: kgCO2e
+
+alimentation . boisson . alcool . cocktail . empreinte:
+  titre: Empreinte cocktail
+  formule: 0.32
+  unité: kgCO2e
+  note: source Agribalyse moyenne FE cocktail (base rhum, base whisky, punch) 0,95 kgCO2eq/kg ; hypothèse masse volumique cocktail = eau = 1kg/L et quantité = 30 cl
+
+alimentation . boisson . alcool . cocktail . nombre:
+  titre: Nombre de cocktail
+  question: Combien de cocktail allez-vous boire ?
+  plancher: 0
+  par défaut: 0
 
 #alimentation . boisson . alcool:
 #  description: |
