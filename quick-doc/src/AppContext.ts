@@ -1,3 +1,4 @@
+import { NGCRules } from './../../index.d'
 import { Context, Dispatch, createContext } from 'react'
 import Engine from 'publicodes'
 import { PersonaKey, personas } from './Personas'
@@ -5,7 +6,7 @@ import ReportManager from './ReportManager'
 
 import rules from '../../public/co2-model.FR-lang.fr.json'
 
-export const initialEngine = new Engine(rules, {
+export const initialEngine = new Engine(rules as NGCRules, {
   strict: {
     situation: false
   }

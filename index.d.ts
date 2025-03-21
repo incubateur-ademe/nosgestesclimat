@@ -73,26 +73,25 @@ export type SupportedRegion = Record<string, RegionParams>
 
 export type SupportedRegions = Record<RegionCode, SupportedRegion>
 
-export type NGCRule = Omit<
-  Rule,
-  'formule' | 'question' | 'valeur' | 'description' | 'note'
-> & {
-  formule?: Rule['formule'] | number
-  question?: Rule['question'] | null
-  valeur?: Rule['valeur'] | number
-  description?: Rule['description'] | string
-  note?: Rule['note'] | string
-  abréviation?: string
-  mosaique?: MosaiqueNode
-  type?: string
-  action?: { dépasse: string[] }
-  icônes?: string
-  aide?: string
-  inactif?: string
-  plancher?: string | number
-  plafond?: string | number
-  avertissement?: string
-}
+export type NGCRule =
+  | (Omit<Rule, 'formule' | 'question' | 'valeur' | 'description' | 'note'> & {
+      formule?: Rule['formule'] | number
+      question?: Rule['question'] | null
+      valeur?: Rule['valeur'] | number
+      description?: Rule['description'] | string
+      note?: Rule['note'] | string
+      abréviation?: string
+      mosaique?: MosaiqueNode
+      type?: string
+      action?: { dépasse: string[] }
+      icônes?: string
+      aide?: string
+      inactif?: string
+      plancher?: string | number
+      plafond?: string | number
+      avertissement?: string
+    })
+  | null
 
 export type Metrics = 'carbone' | 'eau'
 
