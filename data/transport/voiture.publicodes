@@ -16,16 +16,21 @@ transport . voiture:
                   - si:
                       une de ces conditions:
                         - utilisateur = 'propriétaire'
+                        - utilisateur = 'propriétaire covoit'
 #                        - utilisateur = 'régulier non propriétaire'
                     alors: empreinte calculée
                   - si:
                       toutes ces conditions:
-                        - utilisateur = 'régulier non propriétaire'
+                        - une de ces conditions:
+                          - utilisateur = 'régulier non propriétaire'
+                          - utilisateur = 'régulier non propriétaire covoit'
                         - motorisation = 'thermique'
                     alors: empreinte régulier non propriétaire thermique
                   - si:
                       toutes ces conditions:
-                        - utilisateur = 'régulier non propriétaire'
+                        - une de ces conditions:
+                          - utilisateur = 'régulier non propriétaire'
+                          - utilisateur = 'régulier non propriétaire covoit'
                         - motorisation = 'électrique'
                     alors: empreinte régulier non propriétaire électrique
                   - si: 
@@ -53,6 +58,7 @@ transport . voiture:
 #    Notons finalement qu'il est important de prendre en compte à la fois l'usage (les km parcourus) et la construction de ce véhicule de plus d'une tonne de matériaux divers.
 
 transport . voiture . km:
+#  ordre: 1
   titre: Km en voiture
   question: Quelle distance allez-vous parcourir en voiture pour aller et revenir de votre lieu de séjour  ?
   description: |
@@ -129,17 +135,18 @@ transport . voiture . nombre véhicules circulation . VUL:
 
 #On garde la sémantique du modèle source NGC (propriétaire, régulier non propriétaire, non régulier) pour ne pas se compliquer quand bien même elle n'est pas des plus claire au regard des cas d'utilisation (proprio, location/emprunt, covoit)
 transport . voiture . utilisateur:
-  question: Allez-vous utiliser votre propre voiture, faire du covoiturage ou bien utiliser une voiture louée ou empruntée ?
-#  question: Parmi les situations ci-dessous, dans quel cas vous trouverez-vous pour venir en Haut de France en voiture ?
+#  ordre: 2
+#  question: Allez-vous utiliser votre propre voiture, faire du covoiturage ou bien utiliser une voiture louée ou empruntée ?
+  question: Parmi les situations ci-dessous, dans quel cas vous trouverez-vous pour venir en Haut de France en voiture ?
   applicable si: km > 0
   formule:
     une possibilité:
       choix obligatoire: oui
       possibilités:
         - propriétaire
-#        - propriétaire covoit
+        - propriétaire covoit
         - régulier non propriétaire
-#        - régulier non propriétaire covoit
+        - régulier non propriétaire covoit
         - non régulier
 #  par défaut: "'propriétaire'"
 #  par défaut: "'régulier non propriétaire'"
@@ -148,13 +155,13 @@ transport . voiture . utilisateur:
 transport . voiture . utilisateur . propriétaire:
   titre: Je vais utiliser ma propre voiture
   description: Cette voiture vous appartient que vous soyez une personne seule, un couple, ou une famille
-#transport . voiture . utilisateur . propriétaire covoit:
-#  titre: Je vais utiliser ma propre voiture et prendre des covoitureurs
-#  description: Cette voiture vous appartient que vous soyez une personne seule, un couple, ou une famille et vous allez prendre des covoitureurs pour le trajet
+transport . voiture . utilisateur . propriétaire covoit:
+  titre: Je vais utiliser ma propre voiture et prendre des covoitureurs
+  description: Cette voiture vous appartient que vous soyez une personne seule, un couple, ou une famille et vous allez prendre des covoitureurs pour le trajet
 transport . voiture . utilisateur . régulier non propriétaire:
   titre: Je vais louer ou emprunter une voiture
-#transport . voiture . utilisateur . régulier non propriétaire covoit:
-#  titre: Je vais louer ou emprunter une voiture et prendre des covoitureurs pour le trajet
+transport . voiture . utilisateur . régulier non propriétaire covoit:
+  titre: Je vais louer ou emprunter une voiture et prendre des covoitureurs pour le trajet
 transport . voiture . utilisateur . non régulier:
   titre: Je vais faire du covoiturage (en tant que passager)
 
@@ -230,16 +237,17 @@ transport . voiture . empreinte calculée:
   unité: kgCO2e
 
 transport . voiture . voyageurs:
+#  ordre: 3
   titre: Nombre de voyageurs
   question: Quel sera le nombre moyen de voyageurs dans la voiture ?
   applicable si: km > 0
   description: |
     Pensez à vous inclure ! Ainsi, si vous voyagez en couple, renseignez 2. Si vous êtes une famille de quatre, renseignez 4, etc.
     
-    Si jamais vous prévoyez de prendre des covoitureurs ou si vous allez faire du covoiturage vous-même, essayez d'estimer un nombre cohérent avec vos habitudes et votre véhicule.
+    Si jamais vous prévoyez de prendre des covoitureurs ou si vous allez faire du covoiturage vous-même, essayez d'estimer un nombre cohérent avec vos habitudes et/ou votre véhicule.
   plancher: 1
   avertissement: |
-    Le nombre de voyageurs ne peut pas être nul. Au volant de votre voiture, vous en êtes le premier voyageur.
+    Le nombre de voyageurs ne peut pas être nul. Il y a forcément un conducteur derrière le volant.
   par défaut: 2
 #  par défaut: 1.2
   suggestions:
@@ -335,7 +343,9 @@ transport . voiture . motorisation:
       - est défini: utilisateur
       - une de ces conditions:
           - utilisateur = 'propriétaire'
+          - utilisateur = 'propriétaire covoit'
           - utilisateur = 'régulier non propriétaire'
+          - utilisateur = 'régulier non propriétaire covoit'
           - utilisateur = 'non régulier'
       - km > 0
   par défaut: "'électrique'"
@@ -373,6 +383,7 @@ transport . voiture . thermique . consommation aux 100:
       - est défini: utilisateur
       - une de ces conditions:
           - utilisateur = 'propriétaire'
+          - utilisateur = 'propriétaire covoit'
 #          - utilisateur = 'régulier non propriétaire'
       - une de ces conditions:
           - motorisation = 'thermique'
@@ -560,6 +571,7 @@ transport . voiture . thermique . carburant:
       - est défini: utilisateur
       - une de ces conditions:
           - utilisateur = 'propriétaire'
+          - utilisateur = 'propriétaire covoit'
 #          - utilisateur = 'régulier non propriétaire'
       - une de ces conditions:
           - motorisation = 'thermique'
@@ -634,6 +646,7 @@ transport . voiture . électrique . consommation aux 100:
       - est défini: utilisateur
       - une de ces conditions:
           - utilisateur = 'propriétaire'
+          - utilisateur = 'propriétaire covoit'
 #          - utilisateur = 'régulier non propriétaire'
       - motorisation = 'électrique'
       - km > 0
@@ -666,7 +679,9 @@ transport . voiture . gabarit:
       - est défini: utilisateur
       - une de ces conditions:
           - utilisateur = 'propriétaire'
+          - utilisateur = 'propriétaire covoit'
           - utilisateur = 'régulier non propriétaire'
+          - utilisateur = 'régulier non propriétaire covoit'
           - utilisateur = 'non régulier'
       - km > 0
   par défaut: "'berline'"
@@ -731,7 +746,9 @@ transport . voiture . base au kilomètre:
       - est défini: utilisateur
       - une de ces conditions:
           - utilisateur = 'propriétaire'
+          - utilisateur = 'propriétaire covoit'
           - utilisateur = 'régulier non propriétaire'
+          - utilisateur = 'régulier non propriétaire covoit'
   titre: Entretien et climatisation au kilomètre
   formule: entretien pondéré + climatisation
   unité: kgCO2e/km
@@ -784,7 +801,9 @@ transport . voiture . construction:
       - si:
           une de ces conditions:
             - voiture . utilisateur = 'propriétaire'
+            - voiture . utilisateur = 'propriétaire covoit'
             - voiture . utilisateur = 'régulier non propriétaire'
+            - voiture . utilisateur = 'régulier non propriétaire covoit'
         alors: construction au kilomètre * km
       - sinon: 0
   unité: kgCO2e
@@ -882,7 +901,9 @@ transport . voiture . barème construction . barème électrique . batterie . ca
       - est défini: utilisateur
       - une de ces conditions:
           - utilisateur = 'propriétaire'
+          - utilisateur = 'propriétaire covoit'
           - utilisateur = 'régulier non propriétaire'
+          - utilisateur = 'régulier non propriétaire covoit'
       - motorisation = 'électrique'
   description: |
     La capacité de la batterie est exprimée en kWh, elle varie considérablement selon les modèles de véhicules.
