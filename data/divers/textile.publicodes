@@ -3,9 +3,202 @@ divers . textile:
   formule:
     somme:
       - empreinte
-      - déforestation
+      # - déforestation
+  note: |
+    Les données d'empreinte carbone et eau sont issues du [simulateur Ecobalyse](https://ecobalyse.beta.gouv.fr/), de l'ADEME.
+
+    Sur ce simulateur, les différences d'empreinte entre les empreintes des vêtements plus ou moins durables se retrouvent dans [l'indice de durabilité](https://fabrique-numerique.gitbook.io/ecobalyse/textile/durabilite). Nous nous sommes penchés sur le calcul d'un indice de durabilité "moyen" (voir `divers . textile . indice de durabilité`).
 
 divers . textile . empreinte:
+  formule:
+    variations:
+      - si: volume = "minimum"
+        alors: garde robe minimale
+      - si: volume = "renouvellement occasionnel"
+        alors: garde robe raisonnée
+      - si: volume = "accro au shopping"
+        alors: garde robe importante
+      - sinon: empreinte calculée
+  par défaut: empreinte moyenne
+
+divers . textile . empreinte calculée:
+  formule:
+    somme:
+      - t-shirt
+      - pantalon
+      - short
+      - sweat
+      - robe
+      - chemise
+      - pull
+      - chaussure
+      - manteau
+      - petit article
+      - gros article
+
+divers . textile . empreinte moyenne:
+  valeur: empreinte calculée
+  contexte:
+    t-shirt . nombre: t-shirt . nombre par défaut
+    pantalon . nombre: pantalon . nombre par défaut
+    short . nombre: short . nombre par défaut
+    sweat . nombre: sweat . nombre par défaut
+    robe . nombre: robe . nombre par défaut
+    chemise . nombre: chemise . nombre par défaut
+    pull . nombre: pull . nombre par défaut
+    chaussure . nombre: chaussure . nombre par défaut
+    manteau . nombre: manteau . nombre par défaut
+    petit article . nombre: petit article . nombre par défaut
+    gros article . nombre: gros article . nombre par défaut
+
+divers . textile . empreinte . garde robe minimale:
+  titre: Garde-robe minimaliste
+  description: |
+    Vous avez une garde-robe minimaliste, vous ne possédez que le strict nécessaire. Vous vous séparez facilement de ce que vous n'utilisez plus et vous achetez peu de vêtements.
+  valeur: empreinte calculée
+  contexte:
+    indice de durabilité:
+      variations:
+        - si: revente = oui
+          alors: 1.5
+        - sinon: 1.16
+    t-shirt . nombre: 3
+    pantalon . nombre: 1
+    short . nombre: 1
+    sweat . nombre: 1
+    robe . nombre: 1
+    chemise . nombre: 0
+    pull . nombre: 1
+    chaussure . nombre: 1
+    manteau . nombre: 0
+    petit article . nombre: 3
+    gros article . nombre: 1
+
+divers . textile . empreinte . garde robe raisonnée:
+  titre: Garde-robe raisonnée
+  description: |
+    Vous avez une garde-robe raisonnée, vous achetez de manière occasionnelle.
+  valeur: empreinte calculée
+  contexte:
+    indice de durabilité:
+      variations:
+        - si: qualité = "toujours neuf"
+          alors: 0.67
+        - si: qualité = "majoritairement neuf"
+          alors: 1
+        - si: qualité = "majoritairement seconde main"
+          alors: 1.3
+        - si: qualité = "uniquement seconde main"
+          alors: 1.5
+        - sinon: 1.16
+    t-shirt . nombre: t-shirt . nombre par défaut
+    pantalon . nombre: pantalon . nombre par défaut
+    short . nombre: short . nombre par défaut
+    sweat . nombre: sweat . nombre par défaut
+    robe . nombre: robe . nombre par défaut
+    chemise . nombre: chemise . nombre par défaut
+    pull . nombre: pull . nombre par défaut
+    chaussure . nombre: chaussure . nombre par défaut
+    manteau . nombre: manteau . nombre par défaut
+    petit article . nombre: petit article . nombre par défaut
+    gros article . nombre: gros article . nombre par défaut
+
+divers . textile . empreinte . garde robe importante:
+  titre: Garde-robe importante
+  description: |
+    Vous avez une très grande garde-robe, vous en achetez très souvent.
+  valeur: empreinte calculée
+  contexte:
+    indice de durabilité:
+      variations:
+        - si: qualité = "toujours neuf"
+          alors: 0.67
+        - si: qualité = "majoritairement neuf"
+          alors: 1
+        - si: qualité = "majoritairement seconde main"
+          alors: 1.3
+        - si: qualité = "uniquement seconde main"
+          alors: 1.5
+        - sinon: 1.16
+    t-shirt . nombre: 8
+    pantalon . nombre: 3
+    short . nombre: 2
+    sweat . nombre: 2
+    robe . nombre: 3
+    chemise . nombre: 2
+    pull . nombre: 1
+    chaussure . nombre: 4
+    manteau . nombre: 1
+    petit article . nombre: 15
+    gros article . nombre: 2
+
+divers . textile . volume:
+  question: À quelle fréquence achetez-vous des vêtements ?
+  une possibilité:
+    - minimum
+    - renouvellement occasionnel
+    - accro au shopping
+  avec:
+    minimum:
+      titre: Moins de 3 fois par an
+    renouvellement occasionnel:
+      titre: Environ une fois par mois
+    accro au shopping:
+      titre: Plusieurs fois pas mois
+
+divers . textile . revente:
+  applicable si:
+    une de ces conditions:
+      - volume = "minimum"
+      - nombre total <= 15
+  question: Est-ce que vous vous séparez de ce que vous ne portez plus ?
+  # Impact sur l'indice de durabilité
+
+divers . textile . qualité:
+  applicable si:
+    une de ces conditions:
+      - volume = "renouvellement occasionnel"
+      - volume = "accro au shopping"
+      - nombre total > 15
+  question: Vos derniers vêtements ont majoritairement été achetés
+  une possibilité:
+    - toujours neuf
+    - majoritairement neuf
+    - majoritairement seconde main
+    - uniquement seconde main
+  avec:
+    toujours neuf:
+    majoritairement neuf:
+    majoritairement seconde main:
+    uniquement seconde main:
+  # FE "seconde" main = augmentation de l'indice de durabilité ?
+
+divers . textile . notif acheter mieux:
+  type: notification
+  formule:
+    une de ces conditions:
+      - qualité = 'toujours neuf'
+      - qualité = 'majoritairement neuf'
+  description: |
+    C'est cool car ta garde robe est pas immense mais achète mieux please
+
+divers . textile . notif encouragement:
+  type: notification
+  formule:
+    une de ces conditions:
+      - qualité = 'majoritairement seconde main'
+      - qualité = 'uniquement seconde main'
+  description: |
+    Bravo, c'est pas neuf. L'empreinte de la seconde main c'est pas 0 donc réduit quand même please.
+
+divers . textile . notif acheter moins:
+  type: notification
+  formule: volume = "accro au shopping"
+  description: |
+    Renseigne toi sur les pratiques d'achat, ca va pas du tout
+  # Une notif, c'est suffisant ?
+
+divers . textile . empreinte précise:
   titre: Empreinte de sa garde-robe
   mosaique:
     type: nombre
@@ -21,82 +214,11 @@ divers . textile . empreinte:
       - manteau . nombre
       - petit article . nombre
       - gros article . nombre
-    suggestions:
-      aucun:
-        t-shirt . nombre: 0
-        pantalon . nombre: 0
-        short . nombre: 0
-        sweat . nombre: 0
-        robe . nombre: 0
-        chemise . nombre: 0
-        pull . nombre: 0
-        chaussure . nombre: 0
-        manteau . nombre: 0
-        petit article . nombre: 0
-        gros article . nombre: 0
-      juste des sous-vêtements:
-        t-shirt . nombre: 0
-        pantalon . nombre: 0
-        short . nombre: 0
-        sweat . nombre: 0
-        robe . nombre: 0
-        chemise . nombre: 0
-        pull . nombre: 0
-        chaussure . nombre: 0
-        manteau . nombre: 0
-        petit article . nombre: 18
-        gros article . nombre: 0
-      petite garde-robe:
-        t-shirt . nombre: 4
-        pantalon . nombre: 1
-        short . nombre: 1
-        sweat . nombre: 1
-        robe . nombre: 1
-        chemise . nombre: 0
-        pull . nombre: 1
-        chaussure . nombre: 2
-        manteau . nombre: 0
-        petit article . nombre: 18
-        gros article . nombre: 1
-      accro au shopping:
-        t-shirt . nombre: 8
-        pantalon . nombre: 3
-        short . nombre: 2
-        sweat . nombre: 2
-        robe . nombre: 3
-        chemise . nombre: 2
-        pull . nombre: 1
-        chaussure . nombre: 3
-        manteau . nombre: 1
-        petit article . nombre: 20
-        gros article . nombre: 1
-  question: Quels vêtements achetez-vous neufs en général dans une année ?
-  icônes: 👚
-  formule:
-    somme:
-      - t-shirt
-      - pantalon
-      - short
-      - sweat
-      - robe
-      - chemise
-      - pull
-      - chaussure
-      - manteau
-      - petit article
-      - gros article
-  description: |
-    À ce stade, nous excluons du calcul l'achat en friperies, la récupération, l'occasion.
-
-    Les achats dont la fréquence est supérieure à 2 ans sont jugés comme négligeables.
-
-  note: |
-    Les données d'empreinte carbone et eau sont issues du [simulateur Ecobalyse](https://ecobalyse.beta.gouv.fr/), de l'ADEME.
-
-    Sur ce simulateur, les différences d'empreinte entre les empreintes des vêtements plus ou moins durables se retrouvent dans [l'indice de durabilité](https://fabrique-numerique.gitbook.io/ecobalyse/textile/durabilite). Nous nous sommes penchés sur le calcul d'un indice de durabilité "moyen" (voir `divers . textile . indice de durabilité`).
+  question: Quels vêtements achetez-vous en général dans une année (neufs ou de seconde main) ?
 
 divers . textile . notif débarras surplus:
   type: notification
+  #TODO: on garde cette notif ?
   formule: textile . nombre total > 0
   description: |
     > Le saviez-vous ?
@@ -127,7 +249,11 @@ divers . textile . t-shirt . nombre:
   question: Nombre de t-shirt achetés sur une année
   plancher: 0
   plafond: 30
-  par défaut: 4
+  par défaut: nombre par défaut
+
+divers . textile . t-shirt . nombre par défaut:
+  question: Nombre de t-shirt achetés par un français moyen sur une année
+  formule: 5
 
 divers . textile . t-shirt . empreinte:
   formule:
@@ -155,7 +281,11 @@ divers . textile . pantalon . nombre:
   question: Nombre de pantalons/jeans achetés sur une année
   plancher: 0
   plafond: 20
-  par défaut: 2
+  par défaut: pantalon . nombre par défaut
+
+divers . textile . pantalon . nombre par défaut:
+  question: Nombre de pantalons achetés par un français moyen sur une année
+  formule: 2
 
 divers . textile . pantalon . empreinte:
   formule:
@@ -184,7 +314,11 @@ divers . textile . short . nombre:
   question: Nombre de shorts achetés sur une année
   plancher: 0
   plafond: 20
-  par défaut: 1
+  par défaut: short . nombre par défaut
+
+divers . textile . short . nombre par défaut:
+  question: Nombre de shorts achetés par un français moyen sur une année
+  formule: 1
 
 divers . textile . short . empreinte:
   formule:
@@ -213,7 +347,11 @@ divers . textile . sweat . nombre:
   question: Nombre de sweats achetés sur une année
   plancher: 0
   plafond: 20
-  par défaut: 2
+  par défaut: sweat . nombre par défaut
+
+divers . textile . sweat . nombre par défaut:
+  question: Nombre de sweats achetés par un français moyen sur une année
+  formule: 2
 
 divers . textile . sweat . empreinte:
   formule:
@@ -241,7 +379,11 @@ divers . textile . robe . nombre:
   question: Nombre de robes achetées sur une année
   plancher: 0
   plafond: 20
-  par défaut: 2
+  par défaut: robe . nombre par défaut
+
+divers . textile . robe . nombre par défaut:
+  question: Nombre de robes achetés par un français moyen sur une année
+  formule: 2
 
 divers . textile . robe . empreinte:
   formule:
@@ -269,7 +411,11 @@ divers . textile . chemise . nombre:
   question: Nombre de chemises achetées sur une année
   plancher: 0
   plafond: 20
-  par défaut: 2
+  par défaut: chemise . nombre par défaut
+
+divers . textile . chemise . nombre par défaut:
+  question: Nombre de chemises achetés par un français moyen sur une année
+  formule: 2
 
 divers . textile . chemise . empreinte:
   formule:
@@ -298,7 +444,11 @@ divers . textile . pull . nombre:
   question: Nombre de pulls achetés sur une année
   plancher: 0
   plafond: 20
-  par défaut: 1
+  par défaut: pull . nombre par défaut
+
+divers . textile . pull . nombre par défaut:
+  question: Nombre de pulls achetés par un français moyen sur une année
+  formule: 1
 
 divers . textile . pull . empreinte:
   formule:
@@ -327,7 +477,11 @@ divers . textile . chaussure . nombre:
   question: Nombre de chaussures achetées sur une année
   plancher: 0
   plafond: 30
-  par défaut: 2
+  par défaut: chaussure . nombre par défaut
+
+divers . textile . chaussure . nombre par défaut:
+  question: Nombre de paires de chaussures achetés par un français moyen sur une année
+  formule: 3
 
 divers . textile . chaussure . empreinte:
   formule:
@@ -355,7 +509,11 @@ divers . textile . manteau . nombre:
   question: Nombre de manteaux achetés sur une année
   plancher: 0
   plafond: 10
-  par défaut: 1
+  par défaut: manteau . nombre par défaut
+
+divers . textile . manteau . nombre par défaut:
+  question: Nombre de paires de chaussures achetés par un français moyen sur une année
+  formule: 1
 
 divers . textile . manteau . empreinte:
   formule:
@@ -385,7 +543,11 @@ divers . textile . petit article . nombre:
   question: Nombre de petits articles génériques achetés sur une année
   plancher: 0
   plafond: 50
-  par défaut: 1
+  par défaut: petit article . nombre par défaut
+
+divers . textile . petit article . nombre par défaut:
+  question: Nombre de petits articles achetés par un français moyen sur une année
+  formule: 5
 
 divers . textile . petit article . empreinte:
   formule:
@@ -415,7 +577,11 @@ divers . textile . gros article . nombre:
   question: Nombre de gros articles génériques achetés sur une année
   plancher: 0
   plafond: 10
-  par défaut: 1
+  par défaut: gros article . nombre par défaut
+
+divers . textile . gros article . nombre par défaut:
+  question: Nombre de gros articles achetés par un français moyen sur une année
+  formule: 1
 
 divers . textile . gros article . empreinte:
   formule:
@@ -449,23 +615,25 @@ divers . textile . nombre total:
       - manteau . nombre
       - petit article . nombre
       - gros article . nombre
+#
+#
+#
+# divers . textile . déforestation:
+#   non applicable si: métrique != "carbone"
+#   formule:
+#     variations:
+#       - si: déforestation
+#         alors:
+#           variations:
+#             - si: divers . textile . nombre total <= 5
+#               alors: facteur textile * 0.5
+#             - si: divers . textile . nombre total > 15
+#               alors: facteur textile * 1.5
+#             - sinon: facteur textile
+#       - sinon: 0
+#   note: Nous considérons qu'un achat "moyen" de vêtements se situe entre 5 et 15 pièces par an.
 
-divers . textile . déforestation:
-  non applicable si: métrique != "carbone"
-  formule:
-    variations:
-      - si: déforestation
-        alors:
-          variations:
-            - si: divers . textile . nombre total <= 5
-              alors: facteur textile * 0.5
-            - si: divers . textile . nombre total > 15
-              alors: facteur textile * 1.5
-            - sinon: facteur textile
-      - sinon: 0
-  note: Nous considérons qu'un achat "moyen" de vêtements se situe entre 5 et 15 pièces par an.
-
-divers . textile . déforestation . facteur textile:
-  formule: 24
-  unité: kgCO2e
-  note: L’étude Pendril & al. donne une empreinte moyenne de 24 kgCO2e par personne et par an liée à la déforestation importée de nos consommations de textiles.
+# divers . textile . déforestation . facteur textile:
+#   formule: 24
+#   unité: kgCO2e
+#   note: L’étude Pendril & al. donne une empreinte moyenne de 24 kgCO2e par personne et par an liée à la déforestation importée de nos consommations de textiles.
