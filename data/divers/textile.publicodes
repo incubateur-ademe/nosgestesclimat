@@ -18,67 +18,64 @@ divers . textile . empreinte:
         alors: garde robe raisonnée
       - si: volume = "accro au shopping"
         alors: garde robe importante
-      - sinon: empreinte calculée
   par défaut: empreinte moyenne
 
-divers . textile . empreinte calculée:
+divers . textile . empreinte moyenne:
   formule:
     somme:
-      - t-shirt
-      - pantalon
-      - short
-      - sweat
-      - robe
-      - chemise
-      - pull
-      - chaussure
-      - manteau
-      - petit article
-      - gros article
-
-divers . textile . empreinte moyenne:
-  valeur: empreinte calculée
-  contexte:
-    t-shirt . nombre: t-shirt . nombre par défaut
-    pantalon . nombre: pantalon . nombre par défaut
-    short . nombre: short . nombre par défaut
-    sweat . nombre: sweat . nombre par défaut
-    robe . nombre: robe . nombre par défaut
-    chemise . nombre: chemise . nombre par défaut
-    pull . nombre: pull . nombre par défaut
-    chaussure . nombre: chaussure . nombre par défaut
-    manteau . nombre: manteau . nombre par défaut
-    petit article . nombre: petit article . nombre par défaut
-    gros article . nombre: gros article . nombre par défaut
+      - t-shirt . empreinte * t-shirt . nombre par défaut
+      - pantalon . empreinte * pantalon . nombre par défaut
+      - short . empreinte * short . nombre par défaut
+      - sweat . empreinte * sweat . nombre par défaut
+      - robe . empreinte * robe . nombre par défaut
+      - chemise . empreinte * chemise . nombre par défaut
+      - pull . empreinte * pull . nombre par défaut
+      - chaussure . empreinte * chaussure . nombre par défaut
+      - manteau . empreinte * manteau . nombre par défaut
+      - petit article . empreinte * petit article . nombre par défaut
+      - gros article . empreinte * gros article . nombre par défaut
 
 divers . textile . empreinte . garde robe minimale:
   titre: Garde-robe minimaliste
   description: |
     Vous avez une garde-robe minimaliste, vous ne possédez que le strict nécessaire. Vous vous séparez facilement de ce que vous n'utilisez plus et vous achetez peu de vêtements.
-  valeur: empreinte calculée
+  formule:
+    somme:
+      - t-shirt . empreinte * 3
+      - pantalon . empreinte * 1
+      - short . empreinte * 1
+      - sweat . empreinte * 1
+      - robe . empreinte * 1
+      - chemise . empreinte * 0
+      - pull . empreinte * 1
+      - chaussure . empreinte * 1
+      - manteau . empreinte * 0
+      - petit article . empreinte * 3
+      - gros article . empreinte * 1
   contexte:
     indice de durabilité:
       variations:
         - si: revente = oui
           alors: 1.5
         - sinon: 1.16
-    t-shirt . nombre: 3
-    pantalon . nombre: 1
-    short . nombre: 1
-    sweat . nombre: 1
-    robe . nombre: 1
-    chemise . nombre: 0
-    pull . nombre: 1
-    chaussure . nombre: 1
-    manteau . nombre: 0
-    petit article . nombre: 3
-    gros article . nombre: 1
 
 divers . textile . empreinte . garde robe raisonnée:
   titre: Garde-robe raisonnée
   description: |
     Vous avez une garde-robe raisonnée, vous achetez de manière occasionnelle.
-  valeur: empreinte calculée
+  formule:
+    somme:
+      - t-shirt . empreinte * t-shirt . nombre par défaut
+      - pantalon . empreinte * pantalon . nombre par défaut
+      - short . empreinte * short . nombre par défaut
+      - sweat . empreinte * sweat . nombre par défaut
+      - robe . empreinte * robe . nombre par défaut
+      - chemise . empreinte * chemise . nombre par défaut
+      - pull . empreinte * pull . nombre par défaut
+      - chaussure . empreinte * chaussure . nombre par défaut
+      - manteau . empreinte * manteau . nombre par défaut
+      - petit article . empreinte * petit article . nombre par défaut
+      - gros article . empreinte * gros article . nombre par défaut
   contexte:
     indice de durabilité:
       variations:
@@ -91,23 +88,24 @@ divers . textile . empreinte . garde robe raisonnée:
         - si: qualité = "uniquement seconde main"
           alors: 1.5
         - sinon: 1.16
-    t-shirt . nombre: t-shirt . nombre par défaut
-    pantalon . nombre: pantalon . nombre par défaut
-    short . nombre: short . nombre par défaut
-    sweat . nombre: sweat . nombre par défaut
-    robe . nombre: robe . nombre par défaut
-    chemise . nombre: chemise . nombre par défaut
-    pull . nombre: pull . nombre par défaut
-    chaussure . nombre: chaussure . nombre par défaut
-    manteau . nombre: manteau . nombre par défaut
-    petit article . nombre: petit article . nombre par défaut
-    gros article . nombre: gros article . nombre par défaut
 
 divers . textile . empreinte . garde robe importante:
   titre: Garde-robe importante
   description: |
     Vous avez une très grande garde-robe, vous en achetez très souvent.
-  valeur: empreinte calculée
+  formule:
+    somme:
+      - t-shirt . empreinte * 8
+      - pantalon . empreinte * 3
+      - short . empreinte * 2
+      - sweat . empreinte * 2
+      - robe . empreinte * 3
+      - chemise . empreinte * 2
+      - pull . empreinte * 1
+      - chaussure . empreinte * 4
+      - manteau . empreinte * 1
+      - petit article . empreinte * 15
+      - gros article . empreinte * 2
   contexte:
     indice de durabilité:
       variations:
@@ -120,17 +118,6 @@ divers . textile . empreinte . garde robe importante:
         - si: qualité = "uniquement seconde main"
           alors: 1.5
         - sinon: 1.16
-    t-shirt . nombre: 8
-    pantalon . nombre: 3
-    short . nombre: 2
-    sweat . nombre: 2
-    robe . nombre: 3
-    chemise . nombre: 2
-    pull . nombre: 1
-    chaussure . nombre: 4
-    manteau . nombre: 1
-    petit article . nombre: 15
-    gros article . nombre: 2
 
 divers . textile . volume:
   question: À quelle fréquence achetez-vous des vêtements ?
@@ -147,10 +134,7 @@ divers . textile . volume:
       titre: Plusieurs fois pas mois
 
 divers . textile . revente:
-  applicable si:
-    une de ces conditions:
-      - volume = "minimum"
-      - nombre total <= 15
+  applicable si: volume = "minimum"
   question: Est-ce que vous vous séparez de ce que vous ne portez plus ?
   # Impact sur l'indice de durabilité
 
@@ -159,7 +143,6 @@ divers . textile . qualité:
     une de ces conditions:
       - volume = "renouvellement occasionnel"
       - volume = "accro au shopping"
-      - nombre total > 15
   question: Vos derniers vêtements ont majoritairement été achetés
   une possibilité:
     - toujours neuf
@@ -215,6 +198,38 @@ divers . textile . empreinte précise:
       - petit article . nombre
       - gros article . nombre
   question: Quels vêtements achetez-vous en général dans une année (neufs ou de seconde main) ?
+  applicable si: choix précis
+  remplace: divers . textile . empreinte
+  formule:
+    somme:
+      - t-shirt
+      - pantalon
+      - short
+      - sweat
+      - robe
+      - chemise
+      - pull
+      - chaussure
+      - manteau
+      - petit article
+      - gros article
+  contexte:
+    indice de durabilité:
+      variations:
+        - si: revente
+          alors: 1.5
+        - si: qualité = "toujours neuf"
+          alors: 0.67
+        - si: qualité = "majoritairement neuf"
+          alors: 1
+        - si: qualité = "majoritairement seconde main"
+          alors: 1.3
+        - si: qualité = "uniquement seconde main"
+          alors: 1.5
+        - sinon: 1.16
+
+divers . textile . choix précis:
+  par défaut: non
 
 divers . textile . notif débarras surplus:
   type: notification
