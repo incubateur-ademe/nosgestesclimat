@@ -22,7 +22,7 @@ divers . loisirs . culture:
       - musées et monuments . présent
       - activité nature . présent
       - barque . présent 
-      - tourisme . présent
+#      - tourisme . présent
       - activité motorisée . présent
       - footing . présent
       - journée spa . présent 
@@ -36,7 +36,7 @@ divers . loisirs . culture:
       - musées et monuments . présent: non
       - activité nature . présent: non
       - barque . présent : non
-      - tourisme . présent: non
+#      - tourisme . présent: non
       - activité motorisée . présent: non
       - footing . présent: non
       - journée spa . présent: non
@@ -61,7 +61,7 @@ divers . loisirs . culture . empreinte totale:
       - empreinte musées et monuments
       - empreinte activité nature
       - empreinte barque
-      - empreinte tourisme
+#      - empreinte tourisme
       - empreinte activité motorisée
       - empreinte footing
       - empreinte journée spa
@@ -72,15 +72,24 @@ divers . loisirs . culture . empreinte totale:
     Pour le moment, nous prenons en compte les concerts et spectacles, musées, l'édition (presse, livres), la pratique de la musique.
     Les achats d'abonnements TV ou les jeux d'argents sont exclus pour le moment.
 
+
 divers . loisirs . culture . empreinte par défaut:
-  description: Un calcul statistique des pratiques culturelles pour un Français moyen.
   formule:
     somme:
-      - concerts et spectacles . moyenne macro française
-      - musées et monuments . moyenne macro française
-      - édition . moyenne macro française
-      - pratique de la musique . moyenne macro française
+      - empreinte concerts et spectacles
+      - empreinte musées et monuments
   unité: kgCO2e
+  note: Valeur non sourcée. A discuter avec Haut de France Tourisme !
+
+#divers . loisirs . culture . empreinte par défaut:
+#  description: Un calcul statistique des pratiques culturelles pour un Français moyen.
+#  formule:
+#    somme:
+#      - concerts et spectacles . moyenne macro française
+#      - musées et monuments . moyenne macro française
+#      - édition . moyenne macro française
+#      - pratique de la musique . moyenne macro française
+#  unité: kgCO2e
 
 divers . loisirs . culture . choix utilisateur:
   titre: Choix utilisateur pour les pratiques culturelles
@@ -90,7 +99,7 @@ divers . loisirs . culture . choix utilisateur:
       - est défini: musées et monuments . présent
       - est défini: activité nature . présent
       - est défini: barque . présent 
-      - est défini: tourisme . présent
+#      - est défini: tourisme . présent
       - est défini: activité motorisée . présent
       - est défini: footing . présent
       - est défini: journée spa . présent 
@@ -104,7 +113,8 @@ divers . loisirs . culture . empreinte concerts et spectacles:
     toutes ces conditions:
       - est défini: concerts et spectacles . présent
       - concerts et spectacles . présent
-  formule: concerts et spectacles . moyenne macro pondérée
+  formule: concerts et spectacles . moyenne macro unité
+#  formule: concerts et spectacles . moyenne macro pondérée
   unité: kgCO2e
   note: Cette catégorie comprend les concerts, théâtres, opéras, ballets, spectacles de rue et cinémas.
 
@@ -115,20 +125,20 @@ divers . loisirs . culture . concerts et spectacles:
 divers . loisirs . culture . concerts et spectacles . présent:
   question: Vous arrive-t-il d'assister à des concerts ou spectacles ?
 
-divers . loisirs . culture . concerts et spectacles . moyenne macro pondérée:
-  formule: moyenne macro française * fréquence pondérée
+divers . loisirs . culture . concerts et spectacles . moyenne macro unité:
+  formule: moyenne macro française / nombre entrées macro
   unité: kgCO2e
 
 divers . loisirs . culture . concerts et spectacles . moyenne macro française:
-  formule: empreinte branche . R90 par hab + empreinte branche . J59 par hab * 0.92
+  formule: empreinte branche . R90 * 1000000 kgCO2e/ktCO2e + empreinte branche . J59 * 1000000 kgCO2e/ktCO2e * 0.92
   unité: kgCO2e
   note: |
     Nous tirons la moyenne française des calculs effectués par le SDES (Service des Données et Études Statistiques). Elle correspond à la somme des domaines correspondant aux codes NAF R90 ("Activités créatives, artistiques et de spectacles") et J59.1 ("Activités cinématographiques, vidéo et de télévision").
     ([Voir le détail de cette branche](https://nosgestesclimat.fr/documentation/empreinte-branche/J59-par-hab))
     Cette empreinte est légèrement surévaluée, car les activités cinématographies, vidéo et de télévision englobent un pan plus large de l'économie que le seul cinéma. À ce jour, nous n'avons pas la possibilité de distinguer la partie de ce secteur correspondant au cinéma, et celle correspondant à la télévision.
 
-divers . loisirs . culture . concerts et spectacles . fréquence pondérée:
-  formule: fréquence / 3 spectacle/an
+divers . loisirs . culture . concerts et spectacles . nombre entrées macro:
+  formule: 233000000
   note: |
     En 2022, les cinémas français ont enregistré [152 millions d'entrées](https://www.cnc.fr/professionnels/actualites/a-152-millions-dentrees-en-2022-fort-rebond-de-la-frequentation-dans-un-contexte-encore-atypique_1861985).
     Côté théâtre, [7,4 millions de billets ont été vendus en 2022](https://www.artcena.fr/sites/default/files/medias/ASTP-Etude%20Les%20Franc%CC%A7ais%20et%20le%20The%CC%81a%CC%82tre%202023-diffusion%20juin%202023.pdf).
@@ -137,12 +147,40 @@ divers . loisirs . culture . concerts et spectacles . fréquence pondérée:
     Du côté des festivals, ils ont enregistré [7,4 millions d'entrées en 2022](https://www.touslesfestivals.com/actualites/le-bilan-des-festivals-de-lannee-2022-lannee-de-reprise-110123).
     Enfin pour les concerts, en 2019 ils enregistraient [27,9 millions d'entrées](https://www.culture.gouv.fr/Thematiques/Etudes-et-statistiques/Statistiques-culturelles/Donnees-statistiques-par-domaine_Cultural-statistics-databases/Spectacles-musicaux).
 
-    L'ensemble de ces chiffres rapportés à la taille de la population nous porte à penser qu'en moyenne, un Français assiste à 3 spectacles par an, tous types de spectacles confondus (ceci est sûrement sous-évalué, car il manque une partie des spectacles ne donnant pas lieu à la vente de billets comptabilisés)
-    L'empreinte qu'on attribue à l'individu subit une règle de 3 par rapport à cette moyenne de fréquentation, qui correspond à l'empreinte moyenne du secteur divisée par la population.
+    Cela aboutit a un total d'environ 233 millions d'entrées (ceci est sûrement sous-évalué, car il manque une partie des spectacles ne donnant pas lieu à la vente de billets comptabilisés)
 
-divers . loisirs . culture . concerts et spectacles . fréquence:
-  formule: 3
-  unité: spectacle/an
+#divers . loisirs . culture . concerts et spectacles . moyenne macro pondérée:
+#  formule: moyenne macro française / fréquence pondérée
+#  unité: kgCO2e
+#
+#divers . loisirs . culture . concerts et spectacles . moyenne macro pondérée:
+#  formule: moyenne macro française * fréquence pondérée
+#  unité: kgCO2e
+#
+#divers . loisirs . culture . concerts et spectacles . moyenne macro française:
+#  formule: empreinte branche . R90 par hab + empreinte branche . J59 par hab * 0.92
+#  unité: kgCO2e
+#  note: |
+#    Nous tirons la moyenne française des calculs effectués par le SDES (Service des Données et Études Statistiques). Elle correspond à la somme des domaines correspondant aux codes NAF R90 ("Activités créatives, artistiques et de spectacles") et J59.1 ("Activités cinématographiques, vidéo et de télévision").
+#    ([Voir le détail de cette branche](https://nosgestesclimat.fr/documentation/empreinte-branche/J59-par-hab))
+#    Cette empreinte est légèrement surévaluée, car les activités cinématographies, vidéo et de télévision englobent un pan plus large de l'économie que le seul cinéma. À ce jour, nous n'avons pas la possibilité de distinguer la partie de ce secteur correspondant au cinéma, et celle correspondant à la télévision.
+#
+#divers . loisirs . culture . concerts et spectacles . fréquence pondérée:
+#  formule: fréquence / 3 spectacle/an
+#  note: |
+#    En 2022, les cinémas français ont enregistré [152 millions d'entrées](https://www.cnc.fr/professionnels/actualites/a-152-millions-dentrees-en-2022-fort-rebond-de-la-frequentation-dans-un-contexte-encore-atypique_1861985).
+#    Côté théâtre, [7,4 millions de billets ont été vendus en 2022](https://www.artcena.fr/sites/default/files/medias/ASTP-Etude%20Les%20Franc%CC%A7ais%20et%20le%20The%CC%81a%CC%82tre%202023-diffusion%20juin%202023.pdf).
+#    À cela nous pouvons ajouter [4,2 millions d'entrées pour les spectacles vivants](https://www.culture.gouv.fr/Thematiques/Etudes-et-statistiques/Statistiques-culturelles/Donnees-statistiques-par-domaine_Cultural-statistics-databases/Theatre-et-spectacles) (données de 2019).
+#    Pour les spectacles de rue (même source), 37% ont assisté à un événement national, 25% à une fête locale et 12% à une animation dans un centre commercial. En sommant ces participations, nous pouvons estimer que la moitié de la population a assisté à un spectacle de rue.
+#    Du côté des festivals, ils ont enregistré [7,4 millions d'entrées en 2022](https://www.touslesfestivals.com/actualites/le-bilan-des-festivals-de-lannee-2022-lannee-de-reprise-110123).
+#    Enfin pour les concerts, en 2019 ils enregistraient [27,9 millions d'entrées](https://www.culture.gouv.fr/Thematiques/Etudes-et-statistiques/Statistiques-culturelles/Donnees-statistiques-par-domaine_Cultural-statistics-databases/Spectacles-musicaux).
+#
+#    L'ensemble de ces chiffres rapportés à la taille de la population nous porte à penser qu'en moyenne, un Français assiste à 3 spectacles par an, tous types de spectacles confondus (ceci est sûrement sous-évalué, car il manque une partie des spectacles ne donnant pas lieu à la vente de billets comptabilisés)
+#    L'empreinte qu'on attribue à l'individu subit une règle de 3 par rapport à cette moyenne de fréquentation, qui correspond à l'empreinte moyenne du secteur divisée par la population.
+#
+#divers . loisirs . culture . concerts et spectacles . fréquence:
+#  formule: 3
+#  unité: spectacle/an
 
 divers . loisirs . culture . empreinte musées et monuments:
   titre: Empreinte musées et monuments
@@ -151,7 +189,8 @@ divers . loisirs . culture . empreinte musées et monuments:
     toutes ces conditions:
       - est défini: musées et monuments . présent
       - musées et monuments . présent
-  formule: musées et monuments . moyenne macro pondérée
+  formule: musées et monuments . moyenne macro unité
+#  formule: musées et monuments . moyenne macro pondérée
   unité: kgCO2e
   note: Cette catégorie comprend les visites de musées et monuments nationaux, de parcs et zoos.
 
@@ -162,53 +201,72 @@ divers . loisirs . culture . musées et monuments:
 divers . loisirs . culture . musées et monuments . présent:
   question: Vous arrive-t-il de visiter des musées, monuments et parcs nationaux ?
 
-divers . loisirs . culture . musées et monuments . moyenne macro pondérée:
-  formule: moyenne macro française * fréquence approximée / proportion de visiteurs
+divers . loisirs . culture . musées et monuments . moyenne macro unité:
+  formule: moyenne macro française / nombre visites macro
 
 divers . loisirs . culture . musées et monuments . moyenne macro française:
-  formule: empreinte branche . R91 par hab
+  formule: empreinte branche . R91 * 1000000 kgCO2e/ktCO2e
   unité: kgCO2e
   note: |
-    Nous tirons la moyenne française des calculs effectués par le SDES (Service des Données et Études Statistiques).
+    L'estimation de l'empreinte du secteur repose sur les calculs effectués par le SDES (Service des Données et Études Statistiques).
     Elle correspond au code NAF R91 ("Bibliothèques, archives, musées et autres activités culturelles").
 
     > Cette division comprend les activités des bibliothèques et des archives, la gestion des musées de toute nature, des jardins botaniques et zoologiques, la gestion des sites historiques et les activités des réserves naturelles. Elle comprend également la préservation et l'exposition des objets, sites et curiosités naturelles présentant un intérêt historique, culturel et éducatif (sites du patrimoine mondial, etc.).
-divers . loisirs . culture . musées et monuments . fréquence approximée:
-  formule:
-    variations:
-      - si: fréquence = 'occasionnel'
-        alors: 1
-      - si: fréquence = 'amateur'
-        alors: 2
+
+divers . loisirs . culture . musées et monuments . nombre visites macro:
+  formule: 33500000
   note: |
-    Ces facteurs ont été fixés arbitrairement, via l'étude ["La visite des musées, expositions et monuments en 2019"](https://www.culture.gouv.fr/Media/Thematiques/Etudes-et-statistiques/Files/Publications/Culture-etudes/20212/Note-de-synthese-CREDOC), publiée par le ministère de la culture.
+    L'estimation s'appuie sur le nombre de visites 2021 donné [ici](https://www.culture.gouv.fr/Thematiques/Etudes-et-statistiques/Publications/Collections-de-synthese/Patrimostat/Patrimostat-edition-2021) soit 11,7 millions.
+    On considère ensuite le niveau de fréquentation 2019 (car plus représentatif des fréquentations acutelles) en inversant la baisse de -65% sur la période 2019-2021 (cf. page 4). On obtient ainsi 33,5 millions de visites.
 
-    D'après cette étude, nous avons pour les visites des musées et du patrimoine :
-
-    - 30% de la population qui est "amateur" : plus de 3 visites annuelles
-    - 37% de la population qui est visiteur "occasionnel" : 1 à 2 visites par an
-    - Le reste non-visiteur
-
-    Ces chiffres concernent les personnes de plus de 18 ans. On a donc un léger biais ici.
-
-    On pourrait également raisonner par [visite](https://www.culture.gouv.fr/Thematiques/Etudes-et-statistiques/Publications/Collections-de-synthese/Patrimostat/Patrimostat-edition-2021) ?
-
-divers . loisirs . culture . musées et monuments . fréquence:
-  formule: "'occasionnel'"
-  note: Cette question permet de pondérer l'empreinte des visites en musées selon la table décrite dans la règle `musées et monuments . fréquence approximée`.
-
-divers . loisirs . culture . musées et monuments . fréquence . occasionnel:
-  titre: Une à deux fois par an
-divers . loisirs . culture . musées et monuments . fréquence . amateur:
-  titre: Trois fois ou plus par an
-
-divers . loisirs . culture . musées et monuments . proportion de visiteurs:
-  formule: 0.69
-  note: |
-    D'après l'étude ["La visite des musées, expositions et monuments en 2019"](https://www.culture.gouv.fr/Media/Thematiques/Etudes-et-statistiques/Files/Publications/Culture-etudes/20212/Note-de-synthese-CREDOC),
-    "69% de la population déclare avoir visité au moins un monument, un musée ou une exposition".
-    Ce chiffre est différent de celui que l'on retrouve en sommant les visiteurs occasionnels et amateurs (qui excluent peut-être les visiteurs d'expositions temporaires).
-    De plus, il concerne les personnes de plus de 18 ans. On a donc un léger biais ici.
+#divers . loisirs . culture . musées et monuments . moyenne macro pondérée:
+#  formule: moyenne macro française * fréquence approximée / proportion de visiteurs
+#
+#divers . loisirs . culture . musées et monuments . moyenne macro française:
+#  formule: empreinte branche . R91 par hab
+#  unité: kgCO2e
+#  note: |
+#    Nous tirons la moyenne française des calculs effectués par le SDES (Service des Données et Études Statistiques).
+#    Elle correspond au code NAF R91 ("Bibliothèques, archives, musées et autres activités culturelles").
+#
+#    > Cette division comprend les activités des bibliothèques et des archives, la gestion des musées de toute nature, des jardins botaniques et zoologiques, la gestion des sites historiques et les activités des réserves naturelles. Elle comprend également la préservation et l'exposition des objets, sites et curiosités naturelles présentant un intérêt historique, culturel et éducatif (sites du patrimoine mondial, etc.).
+#
+#divers . loisirs . culture . musées et monuments . fréquence approximée:
+#  formule:
+#    variations:
+#      - si: fréquence = 'occasionnel'
+#        alors: 1
+#      - si: fréquence = 'amateur'
+#        alors: 2
+#  note: |
+#    Ces facteurs ont été fixés arbitrairement, via l'étude ["La visite des musées, expositions et monuments en 2019"](https://www.culture.gouv.fr/Media/Thematiques/Etudes-et-statistiques/Files/Publications/Culture-etudes/20212/Note-de-synthese-CREDOC), publiée par le ministère de la culture.
+#
+#    D'après cette étude, nous avons pour les visites des musées et du patrimoine :
+#
+#    - 30% de la population qui est "amateur" : plus de 3 visites annuelles
+#    - 37% de la population qui est visiteur "occasionnel" : 1 à 2 visites par an
+#    - Le reste non-visiteur
+#
+#    Ces chiffres concernent les personnes de plus de 18 ans. On a donc un léger biais ici.
+#
+#    On pourrait également raisonner par [visite](https://www.culture.gouv.fr/Thematiques/Etudes-et-statistiques/Publications/Collections-de-synthese/Patrimostat/Patrimostat-edition-2021) ?
+#
+#divers . loisirs . culture . musées et monuments . fréquence:
+#  formule: "'occasionnel'"
+#  note: Cette question permet de pondérer l'empreinte des visites en musées selon la table décrite dans la règle `musées et monuments . fréquence approximée`.
+#
+#divers . loisirs . culture . musées et monuments . fréquence . occasionnel:
+#  titre: Une à deux fois par an
+#divers . loisirs . culture . musées et monuments . fréquence . amateur:
+#  titre: Trois fois ou plus par an
+#
+#divers . loisirs . culture . musées et monuments . proportion de visiteurs:
+#  formule: 0.69
+#  note: |
+#    D'après l'étude ["La visite des musées, expositions et monuments en 2019"](https://www.culture.gouv.fr/Media/Thematiques/Etudes-et-statistiques/Files/Publications/Culture-etudes/20212/Note-de-synthese-CREDOC),
+#    "69% de la population déclare avoir visité au moins un monument, un musée ou une exposition".
+#    Ce chiffre est différent de celui que l'on retrouve en sommant les visiteurs occasionnels et amateurs (qui excluent peut-être les visiteurs d'expositions temporaires).
+#    De plus, il concerne les personnes de plus de 18 ans. On a donc un léger biais ici.
 
 divers . loisirs . culture . activité nature:
   titre: Activités de pleine nature
@@ -242,21 +300,21 @@ divers . loisirs . culture . empreinte barque:
   formule: 1
   unité: kgCO2e
 
-divers . loisirs . culture . tourisme:
-  titre: Activités de tourisme (motorisées ou non)
-  icônes: 🚶‍♂️🔍
-
-divers . loisirs . culture . tourisme . présent:
-  question: Allez-vous faire du tourisme ?
-
-divers . loisirs . culture . empreinte tourisme:
-  titre: Empreinte tourisme
-  applicable si:
-    toutes ces conditions:
-      - est défini: tourisme . présent
-      - tourisme . présent
-  formule: 1
-  unité: kgCO2e
+#divers . loisirs . culture . tourisme:
+#  titre: Activités de tourisme (motorisées ou non)
+#  icônes: 🚶‍♂️🔍
+#
+#divers . loisirs . culture . tourisme . présent:
+#  question: Allez-vous faire du tourisme ?
+#
+#divers . loisirs . culture . empreinte tourisme:
+#  titre: Empreinte tourisme
+#  applicable si:
+#    toutes ces conditions:
+#      - est défini: tourisme . présent
+#      - tourisme . présent
+#  formule: 1
+#  unité: kgCO2e
 
 divers . loisirs . culture . activité motorisée:
   titre: Activités motorisées (quad, jet-ski, etc.)
