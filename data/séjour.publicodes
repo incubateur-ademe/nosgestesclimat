@@ -55,8 +55,20 @@ séjour . notif voiture:
       - transport . voiture . utilisateur = 'non régulier'
       - séjour . voiture . présent = oui
   description: |
-    Vous avez dit faire du covoiturage pour vous rendre sur votre lieu séjour et vous comptez utiliser une voiture pendant votre séjour. Nous allons donc vous poser de nouvelles questions sur les
-    caractéristiques de votre séjour et de la voiture que vous allez utiliser.
+    Vous avez dit faire du covoiturage pour vous rendre en Haut de France et vous comptez utiliser une voiture pendant votre séjour. Nous allons donc vous poser des questions sur les
+    caractéristiques de la voiture que vous allez utiliser.
+
+séjour . notif actif:
+  type: notification
+  formule: séjour . mobilité douce . présent = 'oui'
+  description: |
+    **Vous avez renseigné marcher, faire du vélo ou de la trottinette ?**
+    Félicitations ! 👏
+
+    Le vélo et la trottinette sont des modes de transport super sobres : a peine quelques kilos de matériel pour déplacer un corps de ~70 kilos.
+    Quant à vos chaussures, elles sont un véhicule ultra léger !
+
+    💡 A noter que l'empreinte de la marche et de **l'usage** du vélo classique (et non la fabrication) est considérée comme nulle.
 
 ### Train ###
 séjour . train . présent:
@@ -67,18 +79,18 @@ séjour . train:
   applicable si: séjour . train . présent
   titre: TER
   icônes: 🚞
-  formule: 99 * km
+  formule: transport . train . TER * km
   unité: kgCO2e
 
 séjour . train . km:
   applicable si: séjour . train . présent
-  question: Combien de kilomètres allez vous parcourir en train pendant votre séjour ?
+  question: Combien de kilomètres allez vous parcourir en TER pendant votre séjour ?
   description: |
     Renseignez un nombre de km cohérent (en arrondissant à la dizaine ou centaine supérieure) avec les distances que vous allez parcourir en train pendant votre séjour.
     Pour rappel, **ne prenez pas en compte** d'éventuels km pour aller sur votre lieu de séjour et revenir à votre domicile. Vous avez dû renseigner ces km lors de la première question.
   suggestions:
     Paris ⇄ Amiens : 250
-    Bruxelle ⇄ Lille : 350
+    Bruxelle ⇄ Lille : 200
   unité: km
   plancher: 0
   par défaut: 300
@@ -1161,9 +1173,7 @@ séjour . voiture . durée de vie en km:
     Pour le moment, nous ne faisons pas la différence entre thermique et électrique. C'est une hypothèse très forte.*
 
 ### Deux roues ###
-# A faire : 
-#   - Diviser par le nombre de voyageurs ? Dois-je avoir une règle de contrôle type si >2 on multiplie par 2 (car 4 voyageurs par exemple -> mais ce cas se présentera-t'il ?)
-#   - Ajouter un question sur la motorisation élec ou thermique ? 
+# Poser une question sur la motorisation élec ou thermique si un FE moto/élec existe 
 
 séjour . deux roues . présent:
   question: Allez-vous utiliser un deux roues pendant votre séjour ?
@@ -1175,17 +1185,21 @@ séjour . deux roues:
   icônes: 🛵🏍️
   formule:
     variations:
-      - si: séjour . deux roues . présent = oui
-        alors: empreinte
-      - si: #On considère que si un utilisateur renseigne dans la Q1 transport (aller-retour) utiliser un deux roues de "grosse cylindrée" (i.e =/= de scooter), il en est réalité propriétaire.
-          toutes ces conditions:
-            - est défini: transport . deux roues . type
-            - une de ces conditions:
-              - transport . deux roues . type = 'moto inf 250'
-              - transport . deux roues . type = 'moto sup 250'
-            - séjour . deux roues . présent = oui
-        alors: empreinte séjour deux roues possédé
-      - sinon: empreinte moyenne
+      - si: km = 0
+        alors: 0
+      - sinon:
+          variations:
+            - si:
+                toutes ces conditions:
+                  - est défini: transport . deux roues . type
+                  - séjour . deux roues . présent = oui
+                  - une de ces conditions:
+                    - transport . deux roues . type = 'moto inf 250'
+                    - transport . deux roues . type = 'moto sup 250'
+              alors: empreinte séjour deux roues possédé
+            - si: séjour . deux roues . présent = oui
+              alors: empreinte
+            - sinon: empreinte moyenne
   unité: kgCO2e
 
 #séjour . deux roues . usager:
@@ -1228,13 +1242,6 @@ séjour . deux roues . type:
     une de ces conditions: 
       - toutes ces conditions:
         - transport . deux roues . présent = non
-        - séjour . deux roues . présent = oui
-      # A enlever au regard de la nouvelle philosophie de la Q1 qui porte uniquement sur les transports principaux et non plus sur une combinaison de modes de transport
-      - toutes ces conditions:
-        - est défini: transport . deux roues . type
-        - une de ces conditions:
-          - transport . deux roues . type = 'scooter électrique'
-          - transport . deux roues . type = 'scooter thermique'
         - séjour . deux roues . présent = oui
   question: Quelle est la motorisation du deux roues que vous allez utiliser ?
   par défaut: "'scooter thermique0'"
@@ -1311,8 +1318,8 @@ séjour . deux roues . nombre deux roues circulation:
   formule: 2700000
   note: Le nombre de deux-roues en circulation en 2020, stable, est de [2,7 millions](https://www.onisr.securite-routiere.gouv.fr/etudes-et-recherches/vehicules/parc-des-vehicules/le-parc-deux-roues-motorises-des-menages)
 
-séjour . deux roues . pourcentage motards:
-  formule: nombre deux roues circulation / population
+#séjour . deux roues . pourcentage motards:
+#  formule: nombre deux roues circulation / population
 
 séjour . deux roues . km annuels moyen:
   formule: 3000
@@ -1629,22 +1636,6 @@ séjour . mobilité douce . type:
       - vae
       - trottinette
       - trottinette électrique
-
-### Garde t'on la notif ?
-#séjour . mobilité douce . notif marche ou vélo:
-#  type: notification
-#  formule:
-#    une de ces conditions:
-#      - marche . présent = oui
-#      - vélo . présent = oui
-#  description: |
-#    **Vous avez renseigné marcher ou faire du vélo ?**
-#    Félicitations ! 👏
-#
-#    Le vélo est un mode de transport super sobre : on utilise 15 kilos de matériel pour déplacer un corps de ~70 kilos.
-#    Quant à vos chaussures, elles sont un véhicule ultra léger !
-#
-#    💡 A noter que l'empreinte de la marche et de **l'usage** du vélo classique (et non la fabrication) est considérée comme nulle.
 
 séjour . mobilité douce . type . marche:
   titre: Marche
