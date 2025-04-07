@@ -117,18 +117,53 @@ divers . numérique . appareils . préservation allongée:
 
 divers . textile . réduire neuf:
 
-# divers . textile . réduire neuf . acheter d'occasion:
-#   applicable si: divers . textile . nombre de textiles achetés > 2
-#   icônes: 👖🔁
-#   formule: divers . textile
-#   unité: kgCO2e
-#   description: |
-#     L'achat de vêtements neufs pèse très lourd dans notre empreinte carbone. Au niveau mondial, on estime que c'est 10% des émissions mondiales de gaz à effet de serre qui sont à attribuer à l'industrie textile.
+divers . textile . réduire neuf . privilégier la seconde main:
+  applicable si:
+    toutes ces conditions:
+      - une de ces conditions:
+          - volume = "renouvellement occasionnel"
+          - volume = "accro au shopping"
+      - une de ces conditions:
+          - qualité = "neuf en magasin"
+          - qualité = "neuf en ligne"
+  icônes: 👖🔁
+  formule: divers . textile - recalcul
+  unité: kgCO2e
+  description: |
+    L'achat de vêtements neufs pèse très lourd dans notre empreinte carbone. Au niveau mondial, on estime que c'est 10% des émissions mondiales de gaz à effet de serre qui sont à attribuer à l'industrie textile.
 
-#     Il est temps de revoir notre rapport à notre garde-robe ! Posséder moins, choisir des vêtements de qualité que l'on peut réparer, se fournir en seconde-main.
+    Il est temps de revoir notre rapport à notre garde-robe ! Posséder moins, choisir des vêtements de qualité que l'on peut réparer, se fournir en seconde-main.
+
+divers . textile . réduire neuf . privilégier la seconde main . recalcul:
+  variations:
+    - si: divers . textile . choix précis
+      alors:
+        valeur:
+          somme:
+            - t-shirt
+            - pantalon
+            - short
+            - sweat
+            - robe
+            - chemise
+            - pull
+            - chaussure
+            - manteau
+            - petit article
+            - gros article
+        contexte:
+          divers . textile . indice de durabilité: 1.4
+    - sinon:
+        valeur: divers . textile . empreinte
+        contexte:
+          divers . textile . qualité: "'occasion en ligne'"
 
 divers . textile . réduire neuf . diviser par deux achats:
-  applicable si: divers . textile . nombre total > 10
+  applicable si:
+    toutes ces conditions:
+      - une de ces conditions:
+          - volume = "renouvellement occasionnel"
+          - volume = "accro au shopping"
   titre: Acheter deux fois moins de vêtements
   icônes: 👖📉
   formule: divers . textile / 2
@@ -169,26 +204,6 @@ divers . produits consommables . réduire . recalcul:
   valeur: produits consommables
   contexte:
     produits consommables . consommation: "'faible'"
-
-divers . autres produits . réduire:
-  non applicable si: autres produits . niveau de dépenses = 'faible'
-  titre: Privilégier la seconde main
-  icônes: 📦️💶
-  formule: divers . autres produits - recalcul
-  unité: kgCO2e
-  description: |
-    Dans bien des cas, vous pouvez trouver un produit d’occasion pour répondre à votre besoin.
-
-    En achetant des produits d’occasion, vous évitez la fabrication de produits neufs qui nécessite de l’énergie et de nombreuses matières.
-
-    Si on ne cherche à acquérir que les produits dont on a vraiment besoin acheter d’occasion permet de réduire les émissions de gaz à effet de serre et d’épargner les ressources de la planète.
-
-    Mais attention à ne pas acheter plus d’objets que nécessaire au seul motif que vous pouvez les acheter moins chers d’occasion !
-
-divers . autres produits . réduire . recalcul:
-  valeur: autres produits
-  contexte:
-    autres produits . niveau de dépenses: "'faible'"
 # divers . arrêter sport motorisé:
 #   applicable si: divers . loisirs . sports . sports énergivores . présent
 #   titre: Arrêter la pratique d'un sport motorisé
