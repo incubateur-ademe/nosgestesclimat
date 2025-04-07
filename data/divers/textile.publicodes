@@ -55,14 +55,18 @@ divers . textile . empreinte . garde robe minimale:
   contexte:
     indice de durabilité:
       variations:
-        - si: revente = oui
+        - si: revente = "toujours"
           alors: 1.5
+        - si: revente = "parfois"
+          alors: 1.3
+        - si: revente = "jamais"
+          alors: 1
         - sinon: 1.16
 
 divers . textile . empreinte . garde robe raisonnée:
   titre: Garde-robe raisonnée
   description: |
-    Vous avez une garde-robe raisonnée, vous achetez de manière occasionnelle.
+    Vous avez une garde-robe raisonnée, vous achetez de manière occasionnelle, vous vous êtes dans la "norme".
   formule:
     somme:
       - t-shirt . empreinte * t-shirt . nombre par défaut
@@ -79,14 +83,16 @@ divers . textile . empreinte . garde robe raisonnée:
   contexte:
     indice de durabilité:
       variations:
-        - si: qualité = "toujours neuf"
-          alors: 0.67
-        - si: qualité = "majoritairement neuf"
-          alors: 1
-        - si: qualité = "majoritairement seconde main"
-          alors: 1.3
-        - si: qualité = "uniquement seconde main"
-          alors: 1.5
+        - si:
+            une de ces conditions:
+              - qualité = "neuf en magasin"
+              - qualité = "neuf en ligne"
+          alors: 0.9
+        - si:
+            une de ces conditions:
+              - qualité = "occasion en magasin"
+              - qualité = "occasion en ligne"
+          alors: 1.2
         - sinon: 1.16
 
 divers . textile . empreinte . garde robe importante:
@@ -109,77 +115,97 @@ divers . textile . empreinte . garde robe importante:
   contexte:
     indice de durabilité:
       variations:
-        - si: qualité = "toujours neuf"
-          alors: 0.67
-        - si: qualité = "majoritairement neuf"
-          alors: 1
-        - si: qualité = "majoritairement seconde main"
-          alors: 1.3
-        - si: qualité = "uniquement seconde main"
-          alors: 1.5
+        - si:
+            une de ces conditions:
+              - qualité = "neuf en magasin"
+              - qualité = "neuf en ligne"
+          alors: 0.9
+        - si:
+            une de ces conditions:
+              - qualité = "occasion en magasin"
+              - qualité = "occasion en ligne"
+          alors: 1.2
         - sinon: 1.16
 
 divers . textile . volume:
-  question: À quelle fréquence achetez-vous des vêtements ?
+  question: Pour quelle raison achetez-vous de nouveaux vêtements ?
   une possibilité:
     - minimum
     - renouvellement occasionnel
     - accro au shopping
   avec:
     minimum:
-      titre: Moins de 3 fois par an
+      titre: Mes achats correspondent à un besoin précis
     renouvellement occasionnel:
-      titre: Environ une fois par mois
+      titre: Mes achats sont majoritairement mûs par le besoin
     accro au shopping:
-      titre: Plusieurs fois pas mois
+      titre: Mes achats sont majoritairement mûs par le plaisir
 
 divers . textile . revente:
   applicable si: volume = "minimum"
   question: Est-ce que vous vous séparez de ce que vous ne portez plus ?
-  # Impact sur l'indice de durabilité
+  une possibilité:
+    - toujours
+    - parfois
+    - jamais
+  avec:
+    toujours:
+      titre: Oui, je revends ou donne dès que je ne porte plus
+    parfois:
+      titre: Ça dépend des vêtements
+    jamais:
+      titre: Non, je conserve mes anciens vêtements
 
 divers . textile . qualité:
   applicable si:
     une de ces conditions:
       - volume = "renouvellement occasionnel"
       - volume = "accro au shopping"
-  question: Vos derniers vêtements ont majoritairement été achetés
+  question: Vos derniers vêtements ont majoritairement été achetés ?
   une possibilité:
-    - toujours neuf
-    - majoritairement neuf
-    - majoritairement seconde main
-    - uniquement seconde main
+    - neuf en magasin
+    - neuf en ligne
+    - occasion en magasin
+    - occasion en ligne
   avec:
-    toujours neuf:
-    majoritairement neuf:
-    majoritairement seconde main:
-    uniquement seconde main:
-  # FE "seconde" main = augmentation de l'indice de durabilité ?
+    neuf en magasin:
+      titre: Neufs, en magasin
+    neuf en ligne:
+      titre: Neufs, en ligne
+    occasion en magasin:
+      titre: D’occasion, en magasin
+    occasion en ligne:
+      titre: D’occasion, en ligne
 
 divers . textile . notif acheter mieux:
   type: notification
   formule:
-    une de ces conditions:
-      - qualité = 'toujours neuf'
-      - qualité = 'majoritairement neuf'
+    toutes ces conditions:
+      - volume = "renouvellement occasionnel"
+      - une de ces conditions:
+          - qualité = 'neuf en magasin'
+          - qualité = 'neuf en ligne'
   description: |
-    C'est cool car ta garde robe est pas immense mais achète mieux please
+    La taille de votre garde-robe est raisonnable, néanmoins, pensez à la seconde main pour vos futurs achats.
 
 divers . textile . notif encouragement:
   type: notification
   formule:
-    une de ces conditions:
-      - qualité = 'majoritairement seconde main'
-      - qualité = 'uniquement seconde main'
+    toutes ces conditions:
+      - volume = "renouvellement occasionnel"
+      - une de ces conditions:
+          - qualité = 'occasion en magasin'
+          - qualité = 'occasion en ligne'
   description: |
-    Bravo, c'est pas neuf. L'empreinte de la seconde main c'est pas 0 donc réduit quand même please.
+    Bravo, vous achetez généralement des vêtements de seconde main. Essayez néanmoins de restreindre vos achats à ce qui est nécessaire.
 
 divers . textile . notif acheter moins:
   type: notification
   formule: volume = "accro au shopping"
   description: |
-    Renseigne toi sur les pratiques d'achat, ca va pas du tout
-  # Une notif, c'est suffisant ?
+    D'après une étude récente, c'est plus des deux-tiers du contenu de nos placards qui n'en sort jamais.
+
+    > Avant d'acheter une nouvelle pièce : et si vous faisiez un peu de tri ?
 
 divers . textile . empreinte précise:
   titre: Empreinte de sa garde-robe
@@ -216,33 +242,26 @@ divers . textile . empreinte précise:
   contexte:
     indice de durabilité:
       variations:
-        - si: revente
+        - si: revente = "toujours"
           alors: 1.5
-        - si: qualité = "toujours neuf"
-          alors: 0.67
-        - si: qualité = "majoritairement neuf"
-          alors: 1
-        - si: qualité = "majoritairement seconde main"
+        - si: revente = "parfois"
           alors: 1.3
-        - si: qualité = "uniquement seconde main"
-          alors: 1.5
+        - si: revente = "jamais"
+          alors: 1
+        - si:
+            une de ces conditions:
+              - qualité = "neuf en magasin"
+              - qualité = "neuf en ligne"
+          alors: 0.8
+        - si:
+            une de ces conditions:
+              - qualité = "occasion en magasin"
+              - qualité = "occasion en ligne"
+          alors: 1.2
         - sinon: 1.16
 
 divers . textile . choix précis:
   par défaut: non
-
-divers . textile . notif débarras surplus:
-  type: notification
-  #TODO: on garde cette notif ?
-  formule: textile . nombre total > 0
-  description: |
-    > Le saviez-vous ?
-
-    > D'après une étude commandée par l'entreprise de déménagement Movinga en 2018, les français ne porteraient pas 68% (!) de leur garde-robe. C'est donc plus des deux-tiers du contenu de nos placards qui n'en sort jamais.
-
-    > Avant d'acheter une nouvelle pièce : et si vous faisiez un peu de tri ?
-  note: |
-    [Source](https://www.corsenetinfos.corsica/Halte-au-Gaspi-Les-Francais-ne-portent-pas-68-des-vetements-qu-ils-possedent-_a34819.html)
 
 divers . textile . indice de durabilité:
   formule: 1.16
