@@ -107,12 +107,20 @@ const checkAndUpdateDiff = (impactType, product) => {
       hasChanged = true
     }
     diff += `\n${ruleName} : ${textileRules[ruleName].formule} => ${newImpact}`
-    lines = lines.map((line, index) => {
-      if (line && line.startsWith(ruleName)) {
-        lines[index + 1] = `  formule: ${newImpact}`
-      }
-      return line
-    })
+    const ruleLineIndex = lines.findIndex(
+      (line) => line && line.startsWith(ruleName)
+    )
+    if (ruleLineIndex === -1) {
+      console.error(`Rule ${ruleName} not found in textile rules file.`)
+      return
+    }
+    lines[ruleLineIndex + 1] = `  formule: ${newImpact}`
+    lines[ruleLineIndex + 3] =
+      `  note: |\n` +
+      lines[ruleLineIndex + 4] +
+      `\n\n    Description technique: ${productImpacts[product].description}` +
+      `\n\n    URL de simulation: ${productImpacts[product].url}`
+    lines.splice(ruleLineIndex + 4, 5)
   }
 }
 
@@ -129,4 +137,6 @@ if (hasChanged) {
   console.log(diff)
   fs.writeFileSync(textileRulesFile, lines.join('\n'), 'utf-8')
   console.log('Rules have been updated.')
+} else {
+  console.log('No changes detected.')
 }
