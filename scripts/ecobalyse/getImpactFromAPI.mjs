@@ -3,11 +3,11 @@ import path from 'path'
 import YAML from 'yaml'
 import 'dotenv/config'
 
-const version = 'latest'
+const VERSION = 'latest'
 const ecobalyseAPI =
-  version === 'latest'
+  VERSION === 'latest'
     ? `https://ecobalyse.beta.gouv.fr/api/textile/simulator`
-    : `https://ecobalyse.beta.gouv.fr/versions/v${version}/api/textile/simulator`
+    : `https://ecobalyse.beta.gouv.fr/versions/v${VERSION}/api/textile/simulator`
 
 const products = JSON.parse(
   fs.readFileSync(path.resolve('scripts/ecobalyse/products.json'), 'utf-8')
