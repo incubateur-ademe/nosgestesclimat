@@ -17,106 +17,151 @@ divers . textile . empreinte:
         alors: garde robe raisonnée
       - si: volume = "accro au shopping"
         alors: garde robe importante
-  par défaut: empreinte moyenne
+  par défaut: garde robe raisonnée
 
-divers . textile . empreinte moyenne:
-  formule:
-    somme:
-      - t-shirt . empreinte * t-shirt . nombre par défaut
-      - pantalon . empreinte * pantalon . nombre par défaut
-      - short . empreinte * short . nombre par défaut
-      - sweat . empreinte * sweat . nombre par défaut
-      - robe . empreinte * robe . nombre par défaut
-      - chemise . empreinte * chemise . nombre par défaut
-      - pull . empreinte * pull . nombre par défaut
-      - chaussure . empreinte * chaussure . nombre par défaut
-      - manteau . empreinte * manteau . nombre par défaut
-      - petit article . empreinte * petit article . nombre par défaut
-      - gros article . empreinte * gros article . nombre par défaut
+# divers . textile . empreinte moyenne:
+#   formule: empreinte calculée
+#   contexte:
+#     t-shirt . nombre: t-shirt . nombre par défaut
+#     pantalon . nombre: pantalon . nombre par défaut
+#     short . nombre: short . nombre par défaut
+#     sweat . nombre: sweat . nombre par défaut
+#     robe . nombre: robe . nombre par défaut
+#     chemise . nombre: chemise . nombre par défaut
+#     pull . nombre: pull . nombre par défaut
+#     chaussure . nombre: chaussure . nombre par défaut
+#     manteau . nombre: manteau . nombre par défaut
+#     petit article . nombre: petit article . nombre par défaut
+#     gros article . nombre: gros article . nombre par défaut
 
 divers . textile . empreinte . garde robe minimale:
   titre: Garde-robe minimaliste
   description: |
     Vous avez une garde-robe minimaliste, vous ne possédez que le strict nécessaire. Vous vous séparez facilement de ce que vous n'utilisez plus et vous achetez peu de vêtements.
-  formule:
-    somme:
-      # 13 articles
-      - t-shirt . empreinte * 3
-      - pantalon . empreinte * 1
-      - short . empreinte * 1
-      - sweat . empreinte * 1
-      - robe . empreinte * 1
-      - chemise . empreinte * 0
-      - pull . empreinte * 1
-      - chaussure . empreinte * 1
-      - manteau . empreinte * 0
-      - petit article . empreinte * 3
-      - gros article . empreinte * 1
+  valeur: empreinte calculée
+  # 13 articles
   contexte:
-    indice de durabilité: indice de durabilité corrigé
+    t-shirt . nombre: 3
+    pantalon . nombre: 1
+    short . nombre: 1
+    sweat . nombre: 1
+    robe . nombre: 1
+    chemise . nombre: 0
+    pull . nombre: 1
+    chaussure . nombre: 1
+    manteau . nombre: 0
+    petit article . nombre: 3
+    gros article . nombre: 1
+    facteur garde robe:
+      variations:
+        - si: revente = "toujours"
+          alors: 1
+        - si: revente = "parfois"
+          alors: 1.5
+        - si: revente = "jamais"
+          alors: 2
 
 divers . textile . empreinte . garde robe raisonnée:
   titre: Garde-robe raisonnée
   description: |
     Vous avez une garde-robe raisonnée, vous achetez de manière occasionnelle, vous vous êtes dans la "norme".
-  formule:
-    somme:
-      # 25 articles
-      - t-shirt . empreinte * t-shirt . nombre par défaut
-      - pantalon . empreinte * pantalon . nombre par défaut
-      - short . empreinte * short . nombre par défaut
-      - sweat . empreinte * sweat . nombre par défaut
-      - robe . empreinte * robe . nombre par défaut
-      - chemise . empreinte * chemise . nombre par défaut
-      - pull . empreinte * pull . nombre par défaut
-      - chaussure . empreinte * chaussure . nombre par défaut
-      - manteau . empreinte * manteau . nombre par défaut
-      - petit article . empreinte * petit article . nombre par défaut
-      - gros article . empreinte * gros article . nombre par défaut
+  # 25 articles
+  formule: empreinte calculée
   contexte:
-    indice de durabilité: indice de durabilité corrigé
+    t-shirt . nombre: t-shirt . nombre par défaut
+    pantalon . nombre: pantalon . nombre par défaut
+    short . nombre: short . nombre par défaut
+    sweat . nombre: sweat . nombre par défaut
+    robe . nombre: robe . nombre par défaut
+    chemise . nombre: chemise . nombre par défaut
+    pull . nombre: pull . nombre par défaut
+    chaussure . nombre: chaussure . nombre par défaut
+    manteau . nombre: manteau . nombre par défaut
+    petit article . nombre: petit article . nombre par défaut
+    gros article . nombre: gros article . nombre par défaut
+    facteur garde robe:
+      variations:
+        - si:
+            une de ces conditions:
+              - qualité = "neuf en magasin"
+              - qualité = "neuf en ligne"
+          alors: 2
+        - si:
+            une de ces conditions:
+              - qualité = "occasion en magasin"
+              - qualité = "occasion en ligne"
+          alors: 1.5
 
 divers . textile . empreinte . garde robe importante:
   titre: Garde-robe importante
   description: |
     Vous avez une très grande garde-robe, vous en achetez très souvent.
+  valeur: empreinte calculée
+  # 43 articles
+  contexte:
+    facteur garde robe:
+      variations:
+        - si:
+            une de ces conditions:
+              - qualité = "neuf en magasin"
+              - qualité = "neuf en ligne"
+          alors: 2
+        - si:
+            une de ces conditions:
+              - qualité = "occasion en magasin"
+              - qualité = "occasion en ligne"
+          alors: 1.5
+    t-shirt . nombre: 8
+    pantalon . nombre: 3
+    short . nombre: 2
+    sweat . nombre: 2
+    robe . nombre: 3
+    chemise . nombre: 2
+    pull . nombre: 1
+    chaussure . nombre: 4
+    manteau . nombre: 1
+    petit article . nombre: 15
+    gros article . nombre: 2
+
+divers . textile . indice de durabilité moyen:
   formule:
     somme:
-      # 43 articles
-      - t-shirt . empreinte * 8
-      - pantalon . empreinte * 3
-      - short . empreinte * 2
-      - sweat . empreinte * 2
-      - robe . empreinte * 3
-      - chemise . empreinte * 2
-      - pull . empreinte * 1
-      - chaussure . empreinte * 4
-      - manteau . empreinte * 1
-      - petit article . empreinte * 15
-      - gros article . empreinte * 2
-  contexte:
-    indice de durabilité: indice de durabilité corrigé
+      - t-shirt . indice de durabilité * t-shirt . nombre / nombre total
+      - pantalon . indice de durabilité * pantalon . nombre / nombre total
+      - short . indice de durabilité * short . nombre / nombre total
+      - sweat . indice de durabilité * sweat . nombre / nombre total
+      - robe . indice de durabilité * robe . nombre / nombre total
+      - chemise . indice de durabilité * chemise . nombre / nombre total
+      - pull . indice de durabilité * pull . nombre / nombre total
+      - manteau . indice de durabilité * manteau . nombre / nombre total
+      - petit article . indice de durabilité * petit article . nombre / nombre total
+      - gros article . indice de durabilité * gros article . nombre / nombre total
+  plancher: 0.67
+  plafond: 1.45
+  avec:
+    nombre total:
+      somme:
+        - t-shirt . nombre
+        - pantalon . nombre
+        - short . nombre
+        - sweat . nombre
+        - robe . nombre
+        - chemise . nombre
+        - pull . nombre
+        - manteau . nombre
+        - petit article . nombre
+        - gros article . nombre
+  description: |
+    Nous avons choisi de travailler avec un indice de durabilité global sur l'ensemble des vêtements, contrairement à une approche plus spécifique, item par item. En effet, nous adoptons une méthode déjà très sujete à discussions ce qui permet de dilluer de potentiels biais avec cette moyenne.
 
-divers . textile . indice de durabilité corrigé:
-  formule:
-    variations:
-      - si: revente = "toujours"
-        alors: 1.5
-      - si: revente = "parfois"
-        alors: 1.3
-      - si: revente = "jamais"
-        alors: 1
-      - si:
-          une de ces conditions:
-            - qualité = "neuf en magasin"
-            - qualité = "neuf en ligne"
-        alors: 0.9
-      - si:
-          une de ces conditions:
-            - qualité = "occasion en magasin"
-            - qualité = "occasion en ligne"
-        alors: 1.2
-      - sinon: 1.16
+    Nous avons décidé de travailler avec 2 jeux de données: le nombre de portés moyen par vêtement, issu d'une étude ADEME récente (à paraître courant juin) et également le nombre de vêtements réellement achetés par an. Croisés avec le nombre de fois dans l'année pendant lesquels le vêtement peut être porté et le nombre de vêtements "actifs" dans la garde-robe, on obtient un nombre de portés réels.
+
+    Pour chaque vêtement, nous avons calculé un indice de durabilité moyen selon la formule : `indice de durabilité = nombre de portés réel / nombre de portés moyen`, sachant que la valeur de cet indice est retreint entre 0,67 et 1,45. On obtient en moyenne un chiffre de 0.95 pour les achats moyens.
+
+divers . textile . facteur garde robe:
+  par défaut: 1.5
+  description: |
+    Ce facteur permet d'extrapoler la taille de la garde robe à partir des achats annuels afin d'obtenir le nombre de vêtements "actifs" dans la garde-robe. C'est à dire, les vêtements qui sont susceptibles d'être portés.
 
 divers . textile . volume:
   question: Pour quelle raison achetez-vous de nouveaux vêtements ?
@@ -168,8 +213,24 @@ divers . textile . qualité:
     occasion en ligne:
       titre: D’occasion, en ligne
 
-divers . textile . empreinte précise:
+divers . textile . empreinte calculée:
   titre: Empreinte de sa garde-robe
+  formule:
+    somme:
+      - t-shirt
+      - pantalon
+      - short
+      - sweat
+      - robe
+      - chemise
+      - pull
+      - chaussure
+      - manteau
+      - petit article
+      - gros article
+
+divers . textile . empreinte précise:
+  titre: Empreinte précise de sa garde-robe
   mosaique:
     type: nombre
     options:
@@ -187,36 +248,29 @@ divers . textile . empreinte précise:
   question: Quels vêtements achetez-vous en général dans une année (neufs ou de seconde main) ?
   applicable si: choix précis
   remplace: divers . textile . empreinte
-  formule:
-    somme:
-      - t-shirt
-      - pantalon
-      - short
-      - sweat
-      - robe
-      - chemise
-      - pull
-      - chaussure
-      - manteau
-      - petit article
-      - gros article
+  formule: empreinte calculée
   contexte:
-    indice de durabilité: indice de durabilité corrigé
+    facteur garde robe:
+      variations:
+        - si: revente = "toujours"
+          alors: 1
+        - si: revente = "parfois"
+          alors: 1.5
+        - si: revente = "jamais"
+          alors: 2
+        - si:
+            une de ces conditions:
+              - qualité = "neuf en magasin"
+              - qualité = "neuf en ligne"
+          alors: 2
+        - si:
+            une de ces conditions:
+              - qualité = "occasion en magasin"
+              - qualité = "occasion en ligne"
+          alors: 1.5
 
 divers . textile . choix précis:
   par défaut: non
-
-divers . textile . indice de durabilité:
-  formule: 1.16
-  description: |
-    Se basant sur [l’étude Toluna & Harris Interactive pour le Ministère de la Transition Écologique et de la Cohésion des Territoire](https://harris-interactive.fr/opinion_polls/les-francais-et-lindustrie-textile/) réalisée en février 2024 sur 1076 personnes, nous pondérerons le facteur de durabilité associé à nos textiles de la manière suivante :
-
-    - 18% “frugal” : correspond à un indice de 1,45
-    - 58% “raisonné” : correspond à un indice de 1,19 (grande entreprise sans service de réparation, nombre de références limité, traçabilité affichée)
-    - 20% “coup de cœur” : correspond à un indice de 1 (pas de traçabilité, prix plus faible)
-    - 2% “compulsif” : correspond à l’indice ultra fast-fashion soit 0,67
-
-    Ce qui donne un vêtement moyen avec un indice de durabilité moyen de 1,16. C'est l'indice que nous utilisons pour calculer les empreintes moyennes de chacun des vêtements listés.
 
 divers . textile . t-shirt:
   icônes: 👕
@@ -232,6 +286,29 @@ divers . textile . t-shirt . nombre par défaut:
   description: Nombre de t-shirt achetés par un français moyen sur une année
   formule: 5
 
+divers . textile . t-shirt . nombre garde robe:
+  description: Nombre de t-shirt dans votre garde-robe
+  formule: nombre * facteur garde robe
+  plancher: 1
+
+divers . textile . t-shirt . nombre de portés potentiel:
+  description: Nombre de fois que vous pouvez porter un t-shirt dans l'année
+  formule: 365
+
+divers . textile . t-shirt . nombre de portés réel:
+  description: Nombre de fois que vous portez un t-shirt dans l'année
+  formule: nombre de portés potentiel / nombre garde robe
+
+divers . textile . t-shirt . durée moyenne:
+  description: Nombre de portés annuel moyen suivant l'achat
+  formule: 59.6
+
+divers . textile . t-shirt . indice de durabilité:
+  description: Indice de durabilité du t-shirt
+  formule: nombre de portés réel / durée moyenne
+  plancher: 0.67
+  plafond: 1.45
+
 divers . textile . t-shirt . empreinte:
   formule:
     variations:
@@ -241,7 +318,7 @@ divers . textile . t-shirt . empreinte:
         alors: empreinte eau
 
 divers . textile . t-shirt . empreinte carbone:
-  formule: hors durabilité / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: kgCO2e
 
 divers . textile . t-shirt . empreinte carbone . hors durabilité:
@@ -255,7 +332,7 @@ divers . textile . t-shirt . empreinte carbone . hors durabilité:
     URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJjb3VudHJ5U3Bpbm5pbmciOiJDTiIsImRpc2FibGVkU3RlcHMiOlsidXNlIiwiZW9sIl0sIm1hc3MiOjAuMTUsIm1hdGVyaWFscyI6W3siaWQiOiJlaS1jb3RvbiIsInNoYXJlIjoxfV0sIm51bWJlck9mUmVmZXJlbmNlcyI6MTAwMCwicGh5c2ljYWxEdXJhYmlsaXR5IjoxLCJwcmljZSI6MTAwLCJwcm9kdWN0IjoidHNoaXJ0IiwidHJhY2VhYmlsaXR5IjpmYWxzZSwidHJpbXMiOltdLCJ1cGN5Y2xlZCI6ZmFsc2V9
 
 divers . textile . t-shirt . empreinte eau:
-  formule: hors durabilité / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: l
 
 divers . textile . t-shirt . empreinte eau . hors durabilité:
@@ -282,6 +359,29 @@ divers . textile . pantalon . nombre par défaut:
   description: Nombre de pantalons achetés par un français moyen sur une année
   formule: 2
 
+divers . textile . pantalon . nombre garde robe:
+  description: Nombre de pantalons dans votre garde-robe
+  formule: nombre * facteur garde robe
+  plancher: 1
+
+divers . textile . pantalon . nombre de portés potentiel:
+  description: Nombre de fois que vous pouvez porter un pantalon dans l'année
+  formule: 3 / 4 * 365
+
+divers . textile . pantalon . nombre de portés réel:
+  description: Nombre de fois que vous portez un pantalon dans l'année
+  formule: nombre de portés potentiel / nombre garde robe
+
+divers . textile . pantalon . durée moyenne:
+  description: Nombre de portés annuel moyen suivant l'achat
+  formule: 73.4
+
+divers . textile . pantalon . indice de durabilité:
+  description: Indice de durabilité du pantalon
+  formule: nombre de portés réel / durée moyenne
+  plancher: 0.67
+  plafond: 1.45
+
 divers . textile . pantalon . empreinte:
   formule:
     variations:
@@ -291,7 +391,7 @@ divers . textile . pantalon . empreinte:
         alors: empreinte eau
 
 divers . textile . pantalon . empreinte carbone:
-  formule: hors durabilité / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: kgCO2e
 
 divers . textile . pantalon . empreinte carbone . hors durabilité:
@@ -305,7 +405,7 @@ divers . textile . pantalon . empreinte carbone . hors durabilité:
     URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJjb3VudHJ5U3Bpbm5pbmciOiJDTiIsImRpc2FibGVkU3RlcHMiOlsidXNlIiwiZW9sIl0sImZhZGluZyI6dHJ1ZSwibWFzcyI6MC40NSwibWF0ZXJpYWxzIjpbeyJpZCI6ImVpLWNvdG9uIiwic2hhcmUiOjF9XSwibnVtYmVyT2ZSZWZlcmVuY2VzIjoxMDAwLCJwaHlzaWNhbER1cmFiaWxpdHkiOjEsInByaWNlIjoxMDAsInByb2R1Y3QiOiJqZWFuIiwidHJhY2VhYmlsaXR5IjpmYWxzZSwidHJpbXMiOlt7ImlkIjoiMGM5MDNmYzctMjc5Yi00Mzc1LThjZmEtY2E4MTMzYjhlOTczIiwicXVhbnRpdHkiOjF9LHsiaWQiOiIwZThlYTc5OS05YjA2LTQ5MGMtYTkyNS0zNzU2NDc0NmM0NTQiLCJxdWFudGl0eSI6MX1dLCJ1cGN5Y2xlZCI6ZmFsc2V9
 
 divers . textile . pantalon . empreinte eau:
-  formule: hors durabilité / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: l
 
 divers . textile . pantalon . empreinte eau . hors durabilité:
@@ -333,6 +433,29 @@ divers . textile . short . nombre par défaut:
   description: Nombre de shorts achetés par un français moyen sur une année
   formule: 1
 
+divers . textile . short . nombre garde robe:
+  description: Nombre de shorts dans votre garde-robe
+  formule: nombre * facteur garde robe
+  plancher: 1
+
+divers . textile . short . nombre de portés potentiel:
+  description: Nombre de fois que vous pouvez porter un short dans l'année
+  formule: 1 / 2 * 1 / 4 * 365
+
+divers . textile . short . nombre de portés réel:
+  description: Nombre de fois que vous portez un short dans l'année
+  formule: nombre de portés potentiel / nombre garde robe
+
+divers . textile . short . durée moyenne:
+  description: Nombre de portés annuel moyen suivant l'achat
+  formule: 19.7
+
+divers . textile . short . indice de durabilité:
+  description: Indice de durabilité du short
+  formule: nombre de portés réel / durée moyenne
+  plancher: 0.67
+  plafond: 1.45
+
 divers . textile . short . empreinte:
   formule:
     variations:
@@ -342,7 +465,7 @@ divers . textile . short . empreinte:
         alors: empreinte eau
 
 divers . textile . short . empreinte carbone:
-  formule: hors durabilité / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: kgCO2e
 
 divers . textile . short . empreinte carbone . hors durabilité:
@@ -356,7 +479,7 @@ divers . textile . short . empreinte carbone . hors durabilité:
     URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJjb3VudHJ5U3Bpbm5pbmciOiJDTiIsImRpc2FibGVkU3RlcHMiOlsidXNlIiwiZW9sIl0sImZhZGluZyI6dHJ1ZSwibWFzcyI6MC4zLCJtYXRlcmlhbHMiOlt7ImlkIjoiZWktY290b24iLCJzaGFyZSI6MX1dLCJudW1iZXJPZlJlZmVyZW5jZXMiOjEwMDAsInBoeXNpY2FsRHVyYWJpbGl0eSI6MSwicHJpY2UiOjEwMCwicHJvZHVjdCI6ImplYW4iLCJ0cmFjZWFiaWxpdHkiOmZhbHNlLCJ0cmltcyI6W3siaWQiOiIwYzkwM2ZjNy0yNzliLTQzNzUtOGNmYS1jYTgxMzNiOGU5NzMiLCJxdWFudGl0eSI6MX0seyJpZCI6IjBlOGVhNzk5LTliMDYtNDkwYy1hOTI1LTM3NTY0NzQ2YzQ1NCIsInF1YW50aXR5IjoxfV0sInVwY3ljbGVkIjpmYWxzZX0=
 
 divers . textile . short . empreinte eau:
-  formule: hors durabilité / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: l
 
 divers . textile . short . empreinte eau . hors durabilité:
@@ -384,6 +507,29 @@ divers . textile . sweat . nombre par défaut:
   description: Nombre de sweats achetés par un français moyen sur une année
   formule: 2
 
+divers . textile . sweat . nombre garde robe:
+  description: Nombre de sweats dans votre garde-robe
+  formule: nombre * facteur garde robe
+  plancher: 1
+
+divers . textile . sweat . nombre de portés potentiel:
+  description: Nombre de fois que vous pouvez porter un sweat dans l'année
+  formule: 1 / 3 * 3 / 4 * 365
+
+divers . textile . sweat . nombre de portés réel:
+  description: Nombre de fois que vous portez un sweat dans l'année
+  formule: nombre de portés potentiel / nombre garde robe
+
+divers . textile . sweat . durée moyenne:
+  description: Nombre de portés annuel moyen suivant l'achat
+  formule: 47.7
+
+divers . textile . sweat . indice de durabilité:
+  description: Indice de durabilité du sweat
+  formule: nombre de portés réel / durée moyenne
+  plancher: 0.67
+  plafond: 1.45
+
 divers . textile . sweat . empreinte:
   formule:
     variations:
@@ -393,7 +539,7 @@ divers . textile . sweat . empreinte:
         alors: empreinte eau
 
 divers . textile . sweat . empreinte carbone:
-  formule: hors durabilité / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: kgCO2e
 
 divers . textile . sweat . empreinte carbone . hors durabilité:
@@ -407,7 +553,7 @@ divers . textile . sweat . empreinte carbone . hors durabilité:
     URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJjb3VudHJ5U3Bpbm5pbmciOiJDTiIsImRpc2FibGVkU3RlcHMiOlsidXNlIiwiZW9sIl0sIm1hc3MiOjAuNCwibWF0ZXJpYWxzIjpbeyJpZCI6ImVpLWNvdG9uIiwic2hhcmUiOjF9XSwibnVtYmVyT2ZSZWZlcmVuY2VzIjoxMDAwLCJwaHlzaWNhbER1cmFiaWxpdHkiOjEsInByaWNlIjoxMDAsInByb2R1Y3QiOiJwdWxsIiwidHJhY2VhYmlsaXR5IjpmYWxzZSwidHJpbXMiOltdLCJ1cGN5Y2xlZCI6ZmFsc2V9
 
 divers . textile . sweat . empreinte eau:
-  formule: hors durabilité / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: l
 
 divers . textile . sweat . empreinte eau . hors durabilité:
@@ -434,6 +580,29 @@ divers . textile . robe . nombre par défaut:
   description: Nombre de robes achetés par un français moyen sur une année
   formule: 2
 
+divers . textile . robe . nombre garde robe:
+  description: Nombre de robes dans votre garde-robe
+  formule: nombre * facteur garde robe
+  plancher: 1
+
+divers . textile . robe . nombre de portés potentiel:
+  description: Nombre de fois que vous pouvez porter une robe dans l'année
+  formule: 1 / 2 * 1 / 4 * 365
+
+divers . textile . robe . nombre de portés réel:
+  description: Nombre de fois que vous portez une robe dans l'année
+  formule: nombre de portés potentiel / nombre garde robe
+
+divers . textile . robe . durée moyenne:
+  description: Nombre de portés annuel moyen suivant l'achat
+  formule: 19.7
+
+divers . textile . robe . indice de durabilité:
+  description: Indice de durabilité de la robe
+  formule: nombre de portés réel / durée moyenne
+  plancher: 0.67
+  plafond: 1.45
+
 divers . textile . robe . empreinte:
   formule:
     variations:
@@ -443,7 +612,7 @@ divers . textile . robe . empreinte:
         alors: empreinte eau
 
 divers . textile . robe . empreinte carbone:
-  formule: hors durabilité / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: kgCO2e
 
 divers . textile . robe . empreinte carbone . hors durabilité:
@@ -457,7 +626,7 @@ divers . textile . robe . empreinte carbone . hors durabilité:
     URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJjb3VudHJ5U3Bpbm5pbmciOiJDTiIsImRpc2FibGVkU3RlcHMiOlsidXNlIiwiZW9sIl0sIm1hc3MiOjAuNSwibWF0ZXJpYWxzIjpbeyJpZCI6ImVpLWNvdG9uIiwic2hhcmUiOjF9XSwibnVtYmVyT2ZSZWZlcmVuY2VzIjoxMDAwLCJwaHlzaWNhbER1cmFiaWxpdHkiOjEsInByaWNlIjoxMDAsInByb2R1Y3QiOiJqdXBlIiwidHJhY2VhYmlsaXR5IjpmYWxzZSwidHJpbXMiOlt7ImlkIjoiMGU4ZWE3OTktOWIwNi00OTBjLWE5MjUtMzc1NjQ3NDZjNDU0IiwicXVhbnRpdHkiOjF9LHsiaWQiOiJkNTZiYjBkNS03OTk5LTRiOGItYjA3Ni05NGQ3OTA5OWI1NmEiLCJxdWFudGl0eSI6MX1dLCJ1cGN5Y2xlZCI6ZmFsc2V9
 
 divers . textile . robe . empreinte eau:
-  formule: hors durabilité / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: l
 
 divers . textile . robe . empreinte eau . hors durabilité:
@@ -484,6 +653,29 @@ divers . textile . chemise . nombre par défaut:
   description: Nombre de chemises achetés par un français moyen sur une année
   formule: 2
 
+divers . textile . chemise . nombre garde robe:
+  description: Nombre de chemises dans votre garde-robe
+  formule: nombre * facteur garde robe
+  plancher: 1
+
+divers . textile . chemise . nombre de portés potentiel:
+  description: Nombre de fois que vous pouvez porter une chemise dans l'année
+  formule: 1 / 3 * 3 / 4 * 365
+
+divers . textile . chemise . nombre de portés réel:
+  description: Nombre de fois que vous portez une chemise dans l'année
+  formule: nombre de portés potentiel / nombre garde robe
+
+divers . textile . chemise . durée moyenne:
+  description: Nombre de portés annuel moyen suivant l'achat
+  formule: 38.8
+
+divers . textile . chemise . indice de durabilité:
+  description: Indice de durabilité de la chemise
+  formule: nombre de portés réel / durée moyenne
+  plancher: 0.67
+  plafond: 1.45
+
 divers . textile . chemise . empreinte:
   formule:
     variations:
@@ -493,7 +685,7 @@ divers . textile . chemise . empreinte:
         alors: empreinte eau
 
 divers . textile . chemise . empreinte carbone:
-  formule: hors durabilité / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: kgCO2e
 
 divers . textile . chemise . empreinte carbone . hors durabilité:
@@ -507,7 +699,7 @@ divers . textile . chemise . empreinte carbone . hors durabilité:
     URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJjb3VudHJ5U3Bpbm5pbmciOiJDTiIsImRpc2FibGVkU3RlcHMiOlsidXNlIiwiZW9sIl0sIm1hc3MiOjAuMjUsIm1hdGVyaWFscyI6W3siaWQiOiJlaS1jb3RvbiIsInNoYXJlIjoxfV0sIm51bWJlck9mUmVmZXJlbmNlcyI6MTAwMCwicGh5c2ljYWxEdXJhYmlsaXR5IjoxLCJwcmljZSI6MTAwLCJwcm9kdWN0IjoiY2hlbWlzZSIsInRyYWNlYWJpbGl0eSI6ZmFsc2UsInRyaW1zIjpbeyJpZCI6ImQ1NmJiMGQ1LTc5OTktNGI4Yi1iMDc2LTk0ZDc5MDk5YjU2YSIsInF1YW50aXR5IjoxMH1dLCJ1cGN5Y2xlZCI6ZmFsc2V9
 
 divers . textile . chemise . empreinte eau:
-  formule: hors durabilité / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: l
 
 divers . textile . chemise . empreinte eau . hors durabilité:
@@ -535,6 +727,29 @@ divers . textile . pull . nombre par défaut:
   description: Nombre de pulls achetés par un français moyen sur une année
   formule: 1
 
+divers . textile . pull . nombre garde robe:
+  description: Nombre de pulls dans votre garde-robe
+  formule: nombre * facteur garde robe
+  plancher: 1
+
+divers . textile . pull . nombre de portés potentiel:
+  description: Nombre de fois que vous pouvez porter un pull dans l'année
+  formule: 2 / 3 * 3 / 4 * 365
+
+divers . textile . pull . nombre de portés réel:
+  description: Nombre de fois que vous portez un pull dans l'année
+  formule: nombre de portés potentiel / nombre garde robe
+
+divers . textile . pull . durée moyenne:
+  description: Nombre de portés annuel moyen suivant l'achat
+  formule: 47.7
+
+divers . textile . pull . indice de durabilité:
+  description: Indice de durabilité de la pull
+  formule: nombre de portés réel / durée moyenne
+  plancher: 0.67
+  plafond: 1.45
+
 divers . textile . pull . empreinte:
   formule:
     variations:
@@ -544,7 +759,7 @@ divers . textile . pull . empreinte:
         alors: empreinte eau
 
 divers . textile . pull . empreinte carbone:
-  formule: hors durabilité / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: kgCO2e
 
 divers . textile . pull . empreinte carbone . hors durabilité:
@@ -558,7 +773,7 @@ divers . textile . pull . empreinte carbone . hors durabilité:
     URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJjb3VudHJ5U3Bpbm5pbmciOiJDTiIsImRpc2FibGVkU3RlcHMiOlsidXNlIiwiZW9sIl0sIm1hc3MiOjAuNTUsIm1hdGVyaWFscyI6W3siaWQiOiJlaS1jb3RvbiIsInNoYXJlIjoxfV0sIm51bWJlck9mUmVmZXJlbmNlcyI6MTAwMCwicGh5c2ljYWxEdXJhYmlsaXR5IjoxLCJwcmljZSI6MTAwLCJwcm9kdWN0IjoicHVsbCIsInRyYWNlYWJpbGl0eSI6ZmFsc2UsInRyaW1zIjpbXSwidXBjeWNsZWQiOmZhbHNlfQ==
 
 divers . textile . pull . empreinte eau:
-  formule: hors durabilité / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: l
 
 divers . textile . pull . empreinte eau . hors durabilité:
@@ -620,6 +835,29 @@ divers . textile . manteau . nombre par défaut:
   description: Nombre de paires de chaussures achetés par un français moyen sur une année
   formule: 1
 
+divers . textile . manteau . nombre garde robe:
+  description: Nombre de manteaux dans votre garde-robe
+  formule: nombre * facteur garde robe
+  plancher: 1
+
+divers . textile . manteau . nombre de portés potentiel:
+  description: Nombre de fois que vous pouvez porter un manteau dans l'année
+  formule: 1 / 2 * 2 / 3 * 365
+
+divers . textile . manteau . nombre de portés réel:
+  description: Nombre de fois que vous portez un manteau dans l'année
+  formule: nombre de portés potentiel / nombre garde robe
+
+divers . textile . manteau . durée moyenne:
+  description: Nombre de portés annuel moyen suivant l'achat
+  formule: 56.9
+
+divers . textile . manteau . indice de durabilité:
+  description: Indice de durabilité du manteau
+  formule: nombre de portés réel / durée moyenne
+  plancher: 0.67
+  plafond: 1.45
+
 divers . textile . manteau . empreinte:
   formule:
     variations:
@@ -629,7 +867,7 @@ divers . textile . manteau . empreinte:
         alors: empreinte eau
 
 divers . textile . manteau . empreinte carbone:
-  formule: hors durabilité / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: kgCO2e
 
 divers . textile . manteau . empreinte carbone . hors durabilité:
@@ -643,7 +881,7 @@ divers . textile . manteau . empreinte carbone . hors durabilité:
     URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJjb3VudHJ5U3Bpbm5pbmciOiJDTiIsImRpc2FibGVkU3RlcHMiOlsidXNlIiwiZW9sIl0sIm1hc3MiOjAuOTUsIm1hdGVyaWFscyI6W3siaWQiOiJlaS1jb3RvbiIsInNoYXJlIjoxfV0sIm51bWJlck9mUmVmZXJlbmNlcyI6MTAwMCwicGh5c2ljYWxEdXJhYmlsaXR5IjoxLCJwcmljZSI6MTAwLCJwcm9kdWN0IjoibWFudGVhdSIsInRyYWNlYWJpbGl0eSI6ZmFsc2UsInRyaW1zIjpbeyJpZCI6Ijg2Yjg3N2ZmLTBkNTktNDgyZi1iYjM0LTNmZjMwNmIwNzQ5NiIsInF1YW50aXR5IjoxfSx7ImlkIjoiZDU2YmIwZDUtNzk5OS00YjhiLWIwNzYtOTRkNzkwOTliNTZhIiwicXVhbnRpdHkiOjN9XSwidXBjeWNsZWQiOmZhbHNlfQ==
 
 divers . textile . manteau . empreinte eau:
-  formule: hors durabilité / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: l
 
 divers . textile . manteau . empreinte eau . hors durabilité:
@@ -672,6 +910,29 @@ divers . textile . petit article . nombre par défaut:
   description: Nombre de petits articles achetés par un français moyen sur une année
   formule: 5
 
+divers . textile . petit article . nombre garde robe:
+  description: Nombre de petits articles dans votre garde-robe
+  formule: nombre * facteur garde robe
+  plancher: 1
+
+divers . textile . petit article . nombre de portés potentiel:
+  description: Nombre de fois que vous pouvez porter un petit article dans l'année
+  formule: 365
+
+divers . textile . petit article . nombre de portés réel:
+  description: Nombre de fois que vous portez un petit article dans l'année
+  formule: nombre de portés potentiel / nombre garde robe
+
+divers . textile . petit article . durée moyenne:
+  description: Nombre de portés annuel moyen suivant l'achat
+  formule: 59.6
+
+divers . textile . petit article . indice de durabilité:
+  description: Indice de durabilité du petit article
+  formule: nombre de portés réel / durée moyenne
+  plancher: 0.67
+  plafond: 1.45
+
 divers . textile . petit article . empreinte:
   formule:
     variations:
@@ -681,7 +942,7 @@ divers . textile . petit article . empreinte:
         alors: empreinte eau
 
 divers . textile . petit article . empreinte carbone:
-  formule: hors durabilité / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: kgCO2e
 
 divers . textile . petit article . empreinte carbone . hors durabilité:
@@ -695,7 +956,7 @@ divers . textile . petit article . empreinte carbone . hors durabilité:
     URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJjb3VudHJ5U3Bpbm5pbmciOiJDTiIsImRpc2FibGVkU3RlcHMiOlsidXNlIiwiZW9sIl0sIm1hc3MiOjAuMDQsIm1hdGVyaWFscyI6W3siaWQiOiJlaS1jb3RvbiIsInNoYXJlIjoxfV0sIm51bWJlck9mUmVmZXJlbmNlcyI6MTAwMCwicGh5c2ljYWxEdXJhYmlsaXR5IjoxLCJwcmljZSI6MTAwLCJwcm9kdWN0IjoiY2hhdXNzZXR0ZXMiLCJ0cmFjZWFiaWxpdHkiOmZhbHNlLCJ0cmltcyI6W10sInVwY3ljbGVkIjpmYWxzZX0=
 
 divers . textile . petit article . empreinte eau:
-  formule: hors durabilité / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: l
 
 divers . textile . petit article . empreinte eau . hors durabilité:
@@ -724,6 +985,29 @@ divers . textile . gros article . nombre par défaut:
   description: Nombre de gros articles achetés par un français moyen sur une année
   formule: 1
 
+divers . textile . gros article . nombre garde robe:
+  description: Nombre de gros articles dans votre garde-robe
+  formule: nombre * facteur garde robe
+  plancher: 1
+
+divers . textile . gros article . nombre de portés potentiel:
+  description: Nombre de fois que vous pouvez porter un gros article dans l'année
+  formule: 1 / 2 * 2 / 3 * 365
+
+divers . textile . gros article . nombre de portés réel:
+  description: Nombre de fois que vous portez un gros article dans l'année
+  formule: nombre de portés potentiel / nombre garde robe
+
+divers . textile . gros article . durée moyenne:
+  description: Nombre de portés annuel moyen suivant l'achat
+  formule: 56.9
+
+divers . textile . gros article . indice de durabilité:
+  description: Indice de durabilité du gros article
+  formule: nombre de portés réel / durée moyenne
+  plancher: 0.67
+  plafond: 1.45
+
 divers . textile . gros article . empreinte:
   formule:
     variations:
@@ -733,7 +1017,7 @@ divers . textile . gros article . empreinte:
         alors: empreinte eau
 
 divers . textile . gros article . empreinte carbone:
-  formule: hors durabilité / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: kgCO2e
 
 divers . textile . gros article . empreinte carbone . hors durabilité:
@@ -747,7 +1031,7 @@ divers . textile . gros article . empreinte carbone . hors durabilité:
     URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJjb3VudHJ5U3Bpbm5pbmciOiJDTiIsImRpc2FibGVkU3RlcHMiOlsidXNlIiwiZW9sIl0sIm1hc3MiOjAuOTUsIm1hdGVyaWFscyI6W3siaWQiOiJlaS1jb3RvbiIsInNoYXJlIjoxfV0sIm51bWJlck9mUmVmZXJlbmNlcyI6MTAwMCwicGh5c2ljYWxEdXJhYmlsaXR5IjoxLCJwcmljZSI6MTAwLCJwcm9kdWN0IjoibWFudGVhdSIsInRyYWNlYWJpbGl0eSI6ZmFsc2UsInRyaW1zIjpbeyJpZCI6Ijg2Yjg3N2ZmLTBkNTktNDgyZi1iYjM0LTNmZjMwNmIwNzQ5NiIsInF1YW50aXR5IjoxfSx7ImlkIjoiZDU2YmIwZDUtNzk5OS00YjhiLWIwNzYtOTRkNzkwOTliNTZhIiwicXVhbnRpdHkiOjN9XSwidXBjeWNsZWQiOmZhbHNlfQ==
 
 divers . textile . gros article . empreinte eau:
-  formule: hors durabilité / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: l
 
 divers . textile . gros article . empreinte eau . hors durabilité:
