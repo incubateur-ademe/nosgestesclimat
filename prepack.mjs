@@ -53,6 +53,7 @@ ${Object.keys(model)
         .map((subDottedName) => {
           return `  | "${dottedName} . ${subDottedName}"`
         })
+        .concat([`  | "${dottedName}"`])
         .join('\n')
     } else {
       return `  | "${dottedName}"`
