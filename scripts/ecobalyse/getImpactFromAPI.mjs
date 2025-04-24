@@ -68,25 +68,21 @@ const defaultRequest = {
   upcycled: false
 }
 
-const productImpacts = await Object.keys(products).reduce(
-  async (acc, product) => {
-    let collection = await acc
-    const productData = products[product]
-    const request = {
-      ...defaultRequest,
-      ...productData
-    }
-    const result = await getImpactFromAPI(request)
-    collection[product] = {
-      cch: Math.round(result.impacts.cch * 100) / 100,
-      wtu: Math.round(result.impacts.wtu * 1000),
-      description: result.description,
-      url: result.webUrl
-    }
-    return collection
-  },
-  Promise.resolve({})
-)
+const productImpacts = {}
+for (const product of Object.keys(products)) {
+  const productData = products[product]
+  const request = {
+    ...defaultRequest,
+    ...productData
+  }
+  const result = await getImpactFromAPI(request)
+  productImpacts[product] = {
+    cch: Math.round(result.impacts.cch * 100) / 100,
+    wtu: Math.round(result.impacts.wtu * 1000),
+    description: result.description,
+    url: result.webUrl
+  }
+}
 
 let hasChanged = false
 let diff = ''
