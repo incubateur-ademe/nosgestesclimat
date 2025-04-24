@@ -19,21 +19,6 @@ divers . textile . empreinte:
         alors: garde robe importante
   par défaut: garde robe raisonnée
 
-# divers . textile . empreinte moyenne:
-#   formule: empreinte calculée
-#   contexte:
-#     t-shirt . nombre: t-shirt . nombre par défaut
-#     pantalon . nombre: pantalon . nombre par défaut
-#     short . nombre: short . nombre par défaut
-#     sweat . nombre: sweat . nombre par défaut
-#     robe . nombre: robe . nombre par défaut
-#     chemise . nombre: chemise . nombre par défaut
-#     pull . nombre: pull . nombre par défaut
-#     chaussure . nombre: chaussure . nombre par défaut
-#     manteau . nombre: manteau . nombre par défaut
-#     petit article . nombre: petit article . nombre par défaut
-#     gros article . nombre: gros article . nombre par défaut
-
 divers . textile . empreinte . garde robe minimale:
   titre: Garde-robe minimaliste
   description: |
@@ -52,14 +37,7 @@ divers . textile . empreinte . garde robe minimale:
     manteau . nombre: 0
     petit article . nombre: 3
     gros article . nombre: 1
-    facteur garde robe:
-      variations:
-        - si: revente = "toujours"
-          alors: 1
-        - si: revente = "parfois"
-          alors: 1.5
-        - si: revente = "jamais"
-          alors: 2
+    facteur garde robe: facteur garde robe corrigé
 
 divers . textile . empreinte . garde robe raisonnée:
   titre: Garde-robe raisonnée
@@ -79,18 +57,7 @@ divers . textile . empreinte . garde robe raisonnée:
     manteau . nombre: manteau . nombre par défaut
     petit article . nombre: petit article . nombre par défaut
     gros article . nombre: gros article . nombre par défaut
-    facteur garde robe:
-      variations:
-        - si:
-            une de ces conditions:
-              - qualité = "neuf en magasin"
-              - qualité = "neuf en ligne"
-          alors: 2
-        - si:
-            une de ces conditions:
-              - qualité = "occasion en magasin"
-              - qualité = "occasion en ligne"
-          alors: 1.5
+    facteur garde robe: facteur garde robe corrigé
 
 divers . textile . empreinte . garde robe importante:
   titre: Garde-robe importante
@@ -99,18 +66,6 @@ divers . textile . empreinte . garde robe importante:
   valeur: empreinte calculée
   # 43 articles
   contexte:
-    facteur garde robe:
-      variations:
-        - si:
-            une de ces conditions:
-              - qualité = "neuf en magasin"
-              - qualité = "neuf en ligne"
-          alors: 2
-        - si:
-            une de ces conditions:
-              - qualité = "occasion en magasin"
-              - qualité = "occasion en ligne"
-          alors: 1.5
     t-shirt . nombre: 8
     pantalon . nombre: 3
     short . nombre: 2
@@ -122,6 +77,7 @@ divers . textile . empreinte . garde robe importante:
     manteau . nombre: 1
     petit article . nombre: 15
     gros article . nombre: 2
+    facteur garde robe: facteur garde robe corrigé
 
 divers . textile . indice de durabilité moyen:
   formule:
@@ -163,6 +119,26 @@ divers . textile . facteur garde robe:
   description: |
     Ce facteur permet d'extrapoler la taille de la garde robe à partir des achats annuels afin d'obtenir le nombre de vêtements "actifs" dans la garde-robe. C'est à dire, les vêtements qui sont susceptibles d'être portés.
 
+divers . textile . facteur garde robe corrigé:
+  formule:
+    variations:
+      - si: revente = "toujours"
+        alors: 1
+      - si: revente = "parfois"
+        alors: 1.5
+      - si: revente = "jamais"
+        alors: 2
+      - si:
+          une de ces conditions:
+            - qualité = "neuf en magasin"
+            - qualité = "neuf en ligne"
+        alors: 2
+      - si:
+          une de ces conditions:
+            - qualité = "occasion en magasin"
+            - qualité = "occasion en ligne"
+        alors: 1.5
+
 divers . textile . volume:
   question: Pour quelle raison achetez-vous de nouveaux vêtements ?
   une possibilité:
@@ -171,11 +147,11 @@ divers . textile . volume:
     - accro au shopping
   avec:
     minimum:
-      titre: Mes achats correspondent à un besoin précis
+      titre: Je n'achète que le strict nécessaire
     renouvellement occasionnel:
-      titre: Mes achats sont majoritairement motivés par le besoin
+      titre: J'achète par besoin mais je peux céder à des achats coup-de-cœur
     accro au shopping:
-      titre: Mes achats sont majoritairement motivés par le plaisir
+      titre: Je fais plus souvent des achats par plaisir que par besoin
 
 divers . textile . revente:
   applicable si: volume = "minimum"
@@ -250,24 +226,7 @@ divers . textile . empreinte précise:
   remplace: divers . textile . empreinte
   formule: empreinte calculée
   contexte:
-    facteur garde robe:
-      variations:
-        - si: revente = "toujours"
-          alors: 1
-        - si: revente = "parfois"
-          alors: 1.5
-        - si: revente = "jamais"
-          alors: 2
-        - si:
-            une de ces conditions:
-              - qualité = "neuf en magasin"
-              - qualité = "neuf en ligne"
-          alors: 2
-        - si:
-            une de ces conditions:
-              - qualité = "occasion en magasin"
-              - qualité = "occasion en ligne"
-          alors: 1.5
+    facteur garde robe: facteur garde robe corrigé
 
 divers . textile . choix précis:
   par défaut: non
