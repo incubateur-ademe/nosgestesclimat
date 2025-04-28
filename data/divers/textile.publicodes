@@ -158,7 +158,7 @@ divers . textile . indice de durabilité moyen:
         - petit article . nombre
         - gros article . nombre
   description: |
-    Nous avons choisi de travailler avec un indice de durabilité global sur l'ensemble des vêtements, contrairement à une approche plus spécifique, item par item. En effet, nous adoptons une méthode déjà très sujete à discussions ce qui permet de dilluer de potentiels biais avec cette moyenne.
+    Nous avons choisi de travailler avec un indice de durabilité global sur l'ensemble des vêtements, contrairement à une approche plus spécifique, item par item. En effet, il n'y a pas de raison d'avoir une pratique d'achat différente pour ses tee-shirts par rapport à ses pantalons
 
     Nous avons décidé de travailler avec 2 jeux de données: le nombre de portés moyen par vêtement, issu d'une étude ADEME récente (à paraître courant juin) et également le nombre de vêtements réellement achetés par an. Croisés avec le nombre de fois dans l'année pendant lesquels le vêtement peut être porté et le nombre de vêtements "actifs" dans la garde-robe, on obtient un nombre de portés réels.
 
@@ -188,15 +188,15 @@ divers . textile . volume:
     - minimum
     - renouvellement occasionnel
     - accro au shopping
-  avec:
-    minimum:
-      titre: Je n'achète que le strict nécessaire
-    renouvellement occasionnel:
-      titre: J'achète par besoin mais je peux céder à des achats coup-de-cœur
-    accro au shopping:
-      titre: Je fais plus souvent des achats par plaisir que par besoin
   description: |
-    L'achat "coup-de-coeur" peut-être vu comme l'achat d'une pièce à la mode, tendance. L'achat par besoin est un achat réfléchi qui vient remplacer un vêtement usé, abîmé ou une occasion spécifique.
+    L'achat "coup-de-coeur" peut-être vu comme l'achat d'une pièce à la mode, tendance. L'achat par besoin est un achat réfléchi qui se fait par nécessité : remplacement de vêtements usés ou abîmés, ou nouvel usage (vous vous inscrivez au football et vous n'avez ni crampons ni short).
+
+divers . textile . volume . minimum:
+  titre: Je n'achète que le strict nécessaire
+divers . textile . volume . renouvellement occasionnel:
+  titre: J'achète par besoin mais je peux céder à des achats coup-de-cœur
+divers . textile . volume . accro au shopping:
+  titre: Je fais plus souvent des achats par plaisir que par besoin
 
 divers . textile . revente:
   applicable si: volume = "minimum"
@@ -205,33 +205,34 @@ divers . textile . revente:
     - toujours
     - parfois
     - jamais
-  avec:
-    toujours:
-      titre: Oui, je revends ou donne dès que je ne porte plus
-    parfois:
-      titre: Ça dépend des vêtements
-    jamais:
-      titre: Non, je conserve mes anciens vêtements
+
+divers . textile . revente . toujours:
+  titre: Oui, je revends ou donne dès que je ne porte plus
+divers . textile . revente . parfois:
+  titre: Ça dépend des vêtements
+divers . textile . revente . jamais:
+  titre: Non, je conserve mes anciens vêtements
 
 divers . textile . qualité:
   applicable si:
     une de ces conditions:
       - volume = "renouvellement occasionnel"
       - volume = "accro au shopping"
-  question: Vos derniers vêtements ont majoritairement été achetés ?
+  question: |
+    Vos derniers vêtements ont majoritairement été achetés :
   une possibilité:
     - neuf fast fashion
     - neuf éthique
     - occasion
-  avec:
-    neuf fast fashion:
-      titre: Neuf, chez de grandes enseignes
-    neuf éthique:
-      titre: Neufs, auprès de marques éco-responsables
-    occasion:
-      titre: D'occasion, en friperie ou en ligne
   description: |
     On entend derrière "grandes enseignes" des marques qui possèdent un nombre de références très élevé, qui ont peu de traçabilité. A l'inverse, une enseigne de plus petite taille produit moins et est en mesure de garantir la traçabilité de ses pièces, éventuellement un service de réparation.
+
+divers . textile . qualité . neuf fast fashion:
+  titre: Neufs, chez des enseignes à large gamme de produits (Kiabi, Zara, Shein...)
+divers . textile . qualité . neuf éthique:
+  titre: Neufs, chez des enseignes proposant une gamme travaillée (Lacoste, Patagonia, Petit Bateau...)
+divers . textile . qualité . occasion:
+  titre: D'occasion
 
 divers . textile . empreinte calculée:
   titre: Empreinte de sa garde-robe
@@ -300,7 +301,7 @@ divers . textile . t-shirt . nombre garde robe:
 
 divers . textile . t-shirt . nombre de portés potentiel:
   description: Nombre de fois que vous pouvez porter un t-shirt dans l'année
-  formule: 365
+  formule: commun . jours par an / 1 jour
 
 divers . textile . t-shirt . nombre de portés réel:
   description: Nombre de fois que vous portez un t-shirt dans l'année
@@ -373,7 +374,7 @@ divers . textile . pantalon . nombre garde robe:
 
 divers . textile . pantalon . nombre de portés potentiel:
   description: Nombre de fois que vous pouvez porter un pantalon dans l'année
-  formule: 3 / 4 * 365
+  formule: 3 / 4 * commun . jours par an / 1 jour
 
 divers . textile . pantalon . nombre de portés réel:
   description: Nombre de fois que vous portez un pantalon dans l'année
@@ -447,7 +448,7 @@ divers . textile . short . nombre garde robe:
 
 divers . textile . short . nombre de portés potentiel:
   description: Nombre de fois que vous pouvez porter un short dans l'année
-  formule: 1 / 2 * 1 / 4 * 365
+  formule: 1 / 2 * 1 / 4 * commun . jours par an / 1 jour
 
 divers . textile . short . nombre de portés réel:
   description: Nombre de fois que vous portez un short dans l'année
@@ -521,7 +522,7 @@ divers . textile . sweat . nombre garde robe:
 
 divers . textile . sweat . nombre de portés potentiel:
   description: Nombre de fois que vous pouvez porter un sweat dans l'année
-  formule: 1 / 3 * 3 / 4 * 365
+  formule: 1 / 3 * 3 / 4 * commun . jours par an / 1 jour
 
 divers . textile . sweat . nombre de portés réel:
   description: Nombre de fois que vous portez un sweat dans l'année
@@ -594,7 +595,7 @@ divers . textile . robe . nombre garde robe:
 
 divers . textile . robe . nombre de portés potentiel:
   description: Nombre de fois que vous pouvez porter une robe dans l'année
-  formule: 1 / 2 * 1 / 4 * 365
+  formule: 1 / 2 * 1 / 4 * commun . jours par an / 1 jour
 
 divers . textile . robe . nombre de portés réel:
   description: Nombre de fois que vous portez une robe dans l'année
@@ -667,7 +668,7 @@ divers . textile . chemise . nombre garde robe:
 
 divers . textile . chemise . nombre de portés potentiel:
   description: Nombre de fois que vous pouvez porter une chemise dans l'année
-  formule: 1 / 3 * 3 / 4 * 365
+  formule: 1 / 3 * 3 / 4 * commun . jours par an / 1 jour
 
 divers . textile . chemise . nombre de portés réel:
   description: Nombre de fois que vous portez une chemise dans l'année
@@ -741,7 +742,7 @@ divers . textile . pull . nombre garde robe:
 
 divers . textile . pull . nombre de portés potentiel:
   description: Nombre de fois que vous pouvez porter un pull dans l'année
-  formule: 2 / 3 * 3 / 4 * 365
+  formule: 2 / 3 * 3 / 4 * commun . jours par an / 1 jour
 
 divers . textile . pull . nombre de portés réel:
   description: Nombre de fois que vous portez un pull dans l'année
@@ -849,7 +850,7 @@ divers . textile . manteau . nombre garde robe:
 
 divers . textile . manteau . nombre de portés potentiel:
   description: Nombre de fois que vous pouvez porter un manteau dans l'année
-  formule: 1 / 2 * 2 / 3 * 365
+  formule: 1 / 2 * 2 / 3 * commun . jours par an / 1 jour
 
 divers . textile . manteau . nombre de portés réel:
   description: Nombre de fois que vous portez un manteau dans l'année
@@ -924,7 +925,7 @@ divers . textile . petit article . nombre garde robe:
 
 divers . textile . petit article . nombre de portés potentiel:
   description: Nombre de fois que vous pouvez porter un petit article dans l'année
-  formule: 365
+  formule: commun . jours par an / 1 jour
 
 divers . textile . petit article . nombre de portés réel:
   description: Nombre de fois que vous portez un petit article dans l'année
@@ -999,7 +1000,7 @@ divers . textile . gros article . nombre garde robe:
 
 divers . textile . gros article . nombre de portés potentiel:
   description: Nombre de fois que vous pouvez porter un gros article dans l'année
-  formule: 1 / 2 * 2 / 3 * 365
+  formule: 1 / 2 * 2 / 3 * commun . jours par an / 1 jour
 
 divers . textile . gros article . nombre de portés réel:
   description: Nombre de fois que vous portez un gros article dans l'année
