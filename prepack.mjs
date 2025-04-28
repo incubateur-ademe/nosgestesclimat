@@ -47,7 +47,18 @@ function generateDottedNamesType(model) {
   const dFile = `
 export type DottedName =
 ${Object.keys(model)
-  .map((dottedName) => `  | "${dottedName}"`)
+  .map((dottedName) => {
+    if (model[dottedName] && Object.keys(model[dottedName]).includes('avec')) {
+      return Object.keys(model[dottedName].avec)
+        .map((subDottedName) => {
+          return `  | "${dottedName} . ${subDottedName}"`
+        })
+        .concat([`  | "${dottedName}"`])
+        .join('\n')
+    } else {
+      return `  | "${dottedName}"`
+    }
+  })
   .join('\n')}`
   return dFile
 }

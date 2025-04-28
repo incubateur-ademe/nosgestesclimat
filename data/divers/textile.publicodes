@@ -3,10 +3,255 @@ divers . textile:
   formule:
     somme:
       - empreinte
-      - déforestation
+  note: |
+    Les données d'empreinte carbone et eau sont issues du [simulateur Ecobalyse](https://ecobalyse.beta.gouv.fr/), de l'ADEME (version 5.0.0).
+
+    Sur ce simulateur, les différences d'empreinte entre les empreintes des vêtements plus ou moins durables se retrouvent dans [l'indice de durabilité](https://fabrique-numerique.gitbook.io/ecobalyse/textile/durabilite). Nous nous sommes penchés sur le calcul d'un indice de durabilité "moyen" (voir `divers . textile . indice de durabilité`).
 
 divers . textile . empreinte:
+  formule:
+    variations:
+      - si: volume = "minimum"
+        alors: garde robe minimale
+      - si: volume = "renouvellement occasionnel"
+        alors: garde robe raisonnée
+      - si: volume = "accro au shopping"
+        alors: garde robe importante
+  par défaut:
+    valeur: garde robe raisonnée
+    contexte:
+      facteur garde robe: 1.5
+      facteur garde robe corrigé: 1.5
+      facteur qualité: 1
+
+divers . textile . empreinte . garde robe minimale:
+  titre: Garde-robe minimaliste
+  description: |
+    Vous avez une garde-robe minimaliste, vous ne possédez que le strict nécessaire. Vous vous séparez facilement de ce que vous n'utilisez plus et vous achetez peu de vêtements.
+  valeur: empreinte calculée
+  # 13 articles
+  contexte:
+    t-shirt . nombre: 3
+    pantalon . nombre: 1
+    short . nombre: 1
+    sweat . nombre: 1
+    robe . nombre: 1
+    chemise . nombre: 0
+    pull . nombre: 1
+    chaussure . nombre: 1
+    manteau . nombre: 0
+    petit article . nombre: 3
+    gros article . nombre: 1
+    facteur garde robe: facteur garde robe corrigé
+
+divers . textile . empreinte . garde robe raisonnée:
+  titre: Garde-robe raisonnée
+  description: |
+    Vous avez une garde-robe raisonnée, vous achetez de manière occasionnelle, vous vous êtes dans la "norme".
+  # 25 articles
+  formule: empreinte calculée
+  contexte:
+    t-shirt . nombre: t-shirt . nombre par défaut
+    pantalon . nombre: pantalon . nombre par défaut
+    short . nombre: short . nombre par défaut
+    sweat . nombre: sweat . nombre par défaut
+    robe . nombre: robe . nombre par défaut
+    chemise . nombre: chemise . nombre par défaut
+    pull . nombre: pull . nombre par défaut
+    chaussure . nombre: chaussure . nombre par défaut
+    manteau . nombre: manteau . nombre par défaut
+    petit article . nombre: petit article . nombre par défaut
+    gros article . nombre: gros article . nombre par défaut
+    facteur garde robe: facteur garde robe corrigé
+    indice de durabilité moyen:
+      valeur: indice de durabilité moyen * facteur qualité
+      contexte:
+        t-shirt . nombre: t-shirt . nombre par défaut
+        pantalon . nombre: pantalon . nombre par défaut
+        short . nombre: short . nombre par défaut
+        sweat . nombre: sweat . nombre par défaut
+        robe . nombre: robe . nombre par défaut
+        chemise . nombre: chemise . nombre par défaut
+        pull . nombre: pull . nombre par défaut
+        chaussure . nombre: chaussure . nombre par défaut
+        manteau . nombre: manteau . nombre par défaut
+        petit article . nombre: petit article . nombre par défaut
+        gros article . nombre: gros article . nombre par défaut
+        facteur garde robe: facteur garde robe corrigé
+
+divers . textile . empreinte . garde robe importante:
+  titre: Garde-robe importante
+  description: |
+    Vous avez une très grande garde-robe, vous en achetez très souvent.
+  valeur: empreinte calculée
+  # 43 articles
+  contexte:
+    t-shirt . nombre: 8
+    pantalon . nombre: 3
+    short . nombre: 2
+    sweat . nombre: 2
+    robe . nombre: 3
+    chemise . nombre: 2
+    pull . nombre: 1
+    chaussure . nombre: 4
+    manteau . nombre: 1
+    petit article . nombre: 15
+    gros article . nombre: 2
+    facteur garde robe: facteur garde robe corrigé
+    indice de durabilité moyen:
+      valeur: indice de durabilité moyen * facteur qualité
+      contexte:
+        t-shirt . nombre: 8
+        pantalon . nombre: 3
+        short . nombre: 2
+        sweat . nombre: 2
+        robe . nombre: 3
+        chemise . nombre: 2
+        pull . nombre: 1
+        chaussure . nombre: 4
+        manteau . nombre: 1
+        petit article . nombre: 15
+        gros article . nombre: 2
+        facteur garde robe: facteur garde robe corrigé
+
+divers . textile . facteur qualité:
+  formule:
+    variations:
+      - si: qualité = "neuf fast fashion"
+        alors: 0.67
+      - si: qualité = "neuf éthique"
+        alors: 1.45
+      - sinon: 1
+  description: |
+    On calcule ces facteurs de qualité à partir du simulateur Ecoablyse :
+      - "neuf fast fashion": -33% (Grande entreprise sans service de réparation, t-shirt à 10€, pas de traçabilité, nombre de référence très élevé, 100000)
+      - "neuf éthique": +45% (Entreprise avec service de réparation, t-shirt à 25€, traçabilité, nombre de référence peu élevé, 1000)
+
+    Le caractère seconde main impacte la taille de la garde robe.
+
+divers . textile . indice de durabilité moyen:
+  formule:
+    somme:
+      - t-shirt . indice de durabilité * t-shirt . nombre / nombre total
+      - pantalon . indice de durabilité * pantalon . nombre / nombre total
+      - short . indice de durabilité * short . nombre / nombre total
+      - sweat . indice de durabilité * sweat . nombre / nombre total
+      - robe . indice de durabilité * robe . nombre / nombre total
+      - chemise . indice de durabilité * chemise . nombre / nombre total
+      - pull . indice de durabilité * pull . nombre / nombre total
+      - manteau . indice de durabilité * manteau . nombre / nombre total
+      - petit article . indice de durabilité * petit article . nombre / nombre total
+      - gros article . indice de durabilité * gros article . nombre / nombre total
+  plancher: 0.67
+  plafond: 1.45
+  avec:
+    nombre total:
+      somme:
+        - t-shirt . nombre
+        - pantalon . nombre
+        - short . nombre
+        - sweat . nombre
+        - robe . nombre
+        - chemise . nombre
+        - pull . nombre
+        - manteau . nombre
+        - petit article . nombre
+        - gros article . nombre
+  description: |
+    Nous avons choisi de travailler avec un indice de durabilité global sur l'ensemble des vêtements, contrairement à une approche plus spécifique, item par item. En effet, il n'y a pas de raison d'avoir une pratique d'achat différente pour ses tee-shirts par rapport à ses pantalons
+
+    Nous avons décidé de travailler avec 2 jeux de données: le nombre de portés moyen par vêtement, issu d'une étude ADEME récente (à paraître courant juin) et également le nombre de vêtements réellement achetés par an. Croisés avec le nombre de fois dans l'année pendant lesquels le vêtement peut être porté et le nombre de vêtements "actifs" dans la garde-robe, on obtient un nombre de portés réels.
+
+    Pour chaque vêtement, nous avons calculé un indice de durabilité moyen selon la formule : `indice de durabilité = nombre de portés réel / nombre de portés moyen`, sachant que la valeur de cet indice est retreint entre 0,67 et 1,45. On obtient en moyenne un chiffre de 0.95 pour les achats moyens.
+
+divers . textile . facteur garde robe:
+  formule: 1.5
+  description: |
+    Ce facteur permet d'extrapoler la taille de la garde robe à partir des achats annuels afin d'obtenir le nombre de vêtements "actifs" dans la garde-robe. C'est à dire, les vêtements qui sont susceptibles d'être portés.
+
+divers . textile . facteur garde robe corrigé:
+  formule:
+    variations:
+      - si: revente = "toujours"
+        alors: 1
+      - si: revente = "parfois"
+        alors: 1.3
+      - si: revente = "jamais"
+        alors: 2
+      - si: qualité = "occasion"
+        alors: 1.3
+      - sinon: 1.5
+
+divers . textile . volume:
+  question: Pour quelle raison achetez-vous de nouveaux vêtements ?
+  une possibilité:
+    - minimum
+    - renouvellement occasionnel
+    - accro au shopping
+  description: |
+    L'achat "coup-de-coeur" peut-être vu comme l'achat d'une pièce à la mode, tendance. L'achat par besoin est un achat réfléchi qui se fait par nécessité : remplacement de vêtements usés ou abîmés, ou nouvel usage (vous vous inscrivez au football et vous n'avez ni crampons ni short).
+
+divers . textile . volume . minimum:
+  titre: Je n'achète que le strict nécessaire
+divers . textile . volume . renouvellement occasionnel:
+  titre: J'achète par besoin mais je peux céder à des achats coup-de-cœur
+divers . textile . volume . accro au shopping:
+  titre: Je fais plus souvent des achats par plaisir que par besoin
+
+divers . textile . revente:
+  applicable si: volume = "minimum"
+  question: Est-ce que vous vous séparez de ce que vous ne portez plus ?
+  une possibilité:
+    - toujours
+    - parfois
+    - jamais
+
+divers . textile . revente . toujours:
+  titre: Oui, je revends ou donne dès que je ne porte plus
+divers . textile . revente . parfois:
+  titre: Ça dépend des vêtements
+divers . textile . revente . jamais:
+  titre: Non, je conserve mes anciens vêtements
+
+divers . textile . qualité:
+  applicable si:
+    une de ces conditions:
+      - volume = "renouvellement occasionnel"
+      - volume = "accro au shopping"
+  question: |
+    Vos derniers vêtements ont majoritairement été achetés :
+  une possibilité:
+    - neuf fast fashion
+    - neuf éthique
+    - occasion
+  description: |
+    On entend derrière "grandes enseignes" des marques qui possèdent un nombre de références très élevé, qui ont peu de traçabilité. A l'inverse, une enseigne de plus petite taille produit moins et est en mesure de garantir la traçabilité de ses pièces, éventuellement un service de réparation.
+
+divers . textile . qualité . neuf fast fashion:
+  titre: Neufs, chez des enseignes à large gamme de produits (Kiabi, Zara, Shein...)
+divers . textile . qualité . neuf éthique:
+  titre: Neufs, chez des enseignes proposant une gamme travaillée (Lacoste, Patagonia, Petit Bateau...)
+divers . textile . qualité . occasion:
+  titre: D'occasion
+
+divers . textile . empreinte calculée:
   titre: Empreinte de sa garde-robe
+  formule:
+    somme:
+      - t-shirt
+      - pantalon
+      - short
+      - sweat
+      - robe
+      - chemise
+      - pull
+      - chaussure
+      - manteau
+      - petit article
+      - gros article
+
+divers . textile . empreinte précise:
+  titre: Empreinte précise de sa garde-robe
   mosaique:
     type: nombre
     options:
@@ -21,103 +266,19 @@ divers . textile . empreinte:
       - manteau . nombre
       - petit article . nombre
       - gros article . nombre
-    suggestions:
-      aucun:
-        t-shirt . nombre: 0
-        pantalon . nombre: 0
-        short . nombre: 0
-        sweat . nombre: 0
-        robe . nombre: 0
-        chemise . nombre: 0
-        pull . nombre: 0
-        chaussure . nombre: 0
-        manteau . nombre: 0
-        petit article . nombre: 0
-        gros article . nombre: 0
-      juste des sous-vêtements:
-        t-shirt . nombre: 0
-        pantalon . nombre: 0
-        short . nombre: 0
-        sweat . nombre: 0
-        robe . nombre: 0
-        chemise . nombre: 0
-        pull . nombre: 0
-        chaussure . nombre: 0
-        manteau . nombre: 0
-        petit article . nombre: 18
-        gros article . nombre: 0
-      petite garde-robe:
-        t-shirt . nombre: 4
-        pantalon . nombre: 1
-        short . nombre: 1
-        sweat . nombre: 1
-        robe . nombre: 1
-        chemise . nombre: 0
-        pull . nombre: 1
-        chaussure . nombre: 2
-        manteau . nombre: 0
-        petit article . nombre: 18
-        gros article . nombre: 1
-      accro au shopping:
-        t-shirt . nombre: 8
-        pantalon . nombre: 3
-        short . nombre: 2
-        sweat . nombre: 2
-        robe . nombre: 3
-        chemise . nombre: 2
-        pull . nombre: 1
-        chaussure . nombre: 3
-        manteau . nombre: 1
-        petit article . nombre: 20
-        gros article . nombre: 1
-  question: Quels vêtements achetez-vous neufs en général dans une année ?
-  icônes: 👚
-  formule:
-    somme:
-      - t-shirt
-      - pantalon
-      - short
-      - sweat
-      - robe
-      - chemise
-      - pull
-      - chaussure
-      - manteau
-      - petit article
-      - gros article
-  description: |
-    À ce stade, nous excluons du calcul l'achat en friperies, la récupération, l'occasion.
+  question: Quels vêtements achetez-vous en général dans une année (neufs ou de seconde main) ?
+  applicable si: choix précis
+  remplace: divers . textile . empreinte
+  formule: empreinte calculée
+  contexte:
+    facteur garde robe: facteur garde robe corrigé
+    indice de durabilité moyen:
+      valeur: indice de durabilité moyen * facteur qualité
+      contexte:
+        facteur garde robe: facteur garde robe corrigé
 
-    Les achats dont la fréquence est supérieure à 2 ans sont jugés comme négligeables.
-
-  note: |
-    Les données d'empreinte carbone et eau sont issues du [simulateur Ecobalyse](https://ecobalyse.beta.gouv.fr/), de l'ADEME.
-
-    Sur ce simulateur, les différences d'empreinte entre les empreintes des vêtements plus ou moins durables se retrouvent dans [l'indice de durabilité](https://fabrique-numerique.gitbook.io/ecobalyse/textile/durabilite). Nous nous sommes penchés sur le calcul d'un indice de durabilité "moyen" (voir `divers . textile . indice de durabilité`).
-
-divers . textile . notif débarras surplus:
-  type: notification
-  formule: textile . nombre total > 0
-  description: |
-    > Le saviez-vous ?
-
-    > D'après une étude commandée par l'entreprise de déménagement Movinga en 2018, les français ne porteraient pas 68% (!) de leur garde-robe. C'est donc plus des deux-tiers du contenu de nos placards qui n'en sort jamais.
-
-    > Avant d'acheter une nouvelle pièce : et si vous faisiez un peu de tri ?
-  note: |
-    [Source](https://www.corsenetinfos.corsica/Halte-au-Gaspi-Les-Francais-ne-portent-pas-68-des-vetements-qu-ils-possedent-_a34819.html)
-
-divers . textile . indice de durabilité:
-  formule: 1.16
-  description: |
-    Se basant sur [l’étude Toluna & Harris Interactive pour le Ministère de la Transition Écologique et de la Cohésion des Territoire](https://harris-interactive.fr/opinion_polls/les-francais-et-lindustrie-textile/) réalisée en février 2024 sur 1076 personnes, nous pondérerons le facteur de durabilité associé à nos textiles de la manière suivante :
-
-    - 18% “frugal” : correspond à un indice de 1,45
-    - 58% “raisonné” : correspond à un indice de 1,19 (grande entreprise sans service de réparation, nombre de références limité, traçabilité affichée)
-    - 20% “coup de cœur” : correspond à un indice de 1 (pas de traçabilité, prix plus faible)
-    - 2% “compulsif” : correspond à l’indice ultra fast-fashion soit 0,67
-
-    Ce qui donne un vêtement moyen avec un indice de durabilité moyen de 1,16. C'est l'indice que nous utilisons pour calculer les empreintes moyennes de chacun des vêtements listés.
+divers . textile . choix précis:
+  par défaut: non
 
 divers . textile . t-shirt:
   icônes: 👕
@@ -127,7 +288,34 @@ divers . textile . t-shirt . nombre:
   question: Nombre de t-shirt achetés sur une année
   plancher: 0
   plafond: 30
-  par défaut: 4
+  par défaut: nombre par défaut
+
+divers . textile . t-shirt . nombre par défaut:
+  description: Nombre de t-shirt achetés par un français moyen sur une année
+  formule: 5
+
+divers . textile . t-shirt . nombre garde robe:
+  description: Nombre de t-shirt dans votre garde-robe
+  formule: nombre * facteur garde robe
+  plancher: 1
+
+divers . textile . t-shirt . nombre de portés potentiel:
+  description: Nombre de fois que vous pouvez porter un t-shirt dans l'année
+  formule: commun . jours par an / 1 jour
+
+divers . textile . t-shirt . nombre de portés réel:
+  description: Nombre de fois que vous portez un t-shirt dans l'année
+  formule: nombre de portés potentiel / nombre garde robe
+
+divers . textile . t-shirt . durée moyenne:
+  description: Nombre de portés annuel moyen suivant l'achat
+  formule: 59.6
+
+divers . textile . t-shirt . indice de durabilité:
+  description: Indice de durabilité du t-shirt
+  formule: nombre de portés réel / durée moyenne
+  plancher: 0.67
+  plafond: 1.45
 
 divers . textile . t-shirt . empreinte:
   formule:
@@ -138,14 +326,32 @@ divers . textile . t-shirt . empreinte:
         alors: empreinte eau
 
 divers . textile . t-shirt . empreinte carbone:
-  formule: 6.00 kgCO2e / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: kgCO2e
-  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le t-shirt en coton (majorant par défaut), sans la partie utilisation (consommation électrique liée au lavage, comptabilisée par ailleurs dans la partie "électricité" du modèle) et fin de vie.
+
+divers . textile . t-shirt . empreinte carbone . hors durabilité:
+  formule: 4.78
+  unité: kgCO2e
+  note: |
+    Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le t-shirt en coton (majorant par défaut), sans la partie utilisation (consommation électrique liée au lavage, comptabilisée par ailleurs dans la partie "électricité" du modèle) et fin de vie.
+
+    Description technique: T-shirt / Polo, durabilité physique 1 : 0,150kg, matière : 100% Coton provenance  par défaut (Asie - Pacifique), filature : Pays inconnu (par défaut), Tricotage moyen (par défaut) : Pays inconnu (par défaut), ennoblissement : Teinture moyenne : Pays inconnu (par défaut), impression : non, confection : Pays inconnu (par défaut), distribution : France
+
+    URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJkaXNhYmxlZFN0ZXBzIjpbInVzZSIsImVvbCJdLCJtYXNzIjowLjE1LCJtYXRlcmlhbHMiOlt7ImlkIjoiZWktY290b24iLCJzaGFyZSI6MX1dLCJudW1iZXJPZlJlZmVyZW5jZXMiOjEwMDAsInBoeXNpY2FsRHVyYWJpbGl0eSI6MSwicHJpY2UiOjEwMCwicHJvZHVjdCI6InRzaGlydCIsInRyYWNlYWJpbGl0eSI6ZmFsc2UsInRyaW1zIjpbXSwidXBjeWNsZWQiOmZhbHNlfQ==
 
 divers . textile . t-shirt . empreinte eau:
-  formule: 1400 l / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: l
-  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le t-shirt en coton (majorant par défaut), sans la partie utilisation (eau domestique liée au lavage, comptabilisée par ailleurs dans la partie "eau domestique" du modèle) et fin de vie.
+
+divers . textile . t-shirt . empreinte eau . hors durabilité:
+  formule: 1408
+  unité: l
+  note: |
+    Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le t-shirt en coton (majorant par défaut), sans la partie utilisation (eau domestique liée au lavage, comptabilisée par ailleurs dans la partie "eau domestique" du modèle) et fin de vie.
+
+    Description technique: T-shirt / Polo, durabilité physique 1 : 0,150kg, matière : 100% Coton provenance  par défaut (Asie - Pacifique), filature : Pays inconnu (par défaut), Tricotage moyen (par défaut) : Pays inconnu (par défaut), ennoblissement : Teinture moyenne : Pays inconnu (par défaut), impression : non, confection : Pays inconnu (par défaut), distribution : France
+
+    URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJkaXNhYmxlZFN0ZXBzIjpbInVzZSIsImVvbCJdLCJtYXNzIjowLjE1LCJtYXRlcmlhbHMiOlt7ImlkIjoiZWktY290b24iLCJzaGFyZSI6MX1dLCJudW1iZXJPZlJlZmVyZW5jZXMiOjEwMDAsInBoeXNpY2FsRHVyYWJpbGl0eSI6MSwicHJpY2UiOjEwMCwicHJvZHVjdCI6InRzaGlydCIsInRyYWNlYWJpbGl0eSI6ZmFsc2UsInRyaW1zIjpbXSwidXBjeWNsZWQiOmZhbHNlfQ==
 
 divers . textile . pantalon:
   icônes: 👖
@@ -155,7 +361,34 @@ divers . textile . pantalon . nombre:
   question: Nombre de pantalons/jeans achetés sur une année
   plancher: 0
   plafond: 20
-  par défaut: 2
+  par défaut: pantalon . nombre par défaut
+
+divers . textile . pantalon . nombre par défaut:
+  description: Nombre de pantalons achetés par un français moyen sur une année
+  formule: 2
+
+divers . textile . pantalon . nombre garde robe:
+  description: Nombre de pantalons dans votre garde-robe
+  formule: nombre * facteur garde robe
+  plancher: 1
+
+divers . textile . pantalon . nombre de portés potentiel:
+  description: Nombre de fois que vous pouvez porter un pantalon dans l'année
+  formule: 3 / 4 * commun . jours par an / 1 jour
+
+divers . textile . pantalon . nombre de portés réel:
+  description: Nombre de fois que vous portez un pantalon dans l'année
+  formule: nombre de portés potentiel / nombre garde robe
+
+divers . textile . pantalon . durée moyenne:
+  description: Nombre de portés annuel moyen suivant l'achat
+  formule: 73.4
+
+divers . textile . pantalon . indice de durabilité:
+  description: Indice de durabilité du pantalon
+  formule: nombre de portés réel / durée moyenne
+  plancher: 0.67
+  plafond: 1.45
 
 divers . textile . pantalon . empreinte:
   formule:
@@ -166,14 +399,32 @@ divers . textile . pantalon . empreinte:
         alors: empreinte eau
 
 divers . textile . pantalon . empreinte carbone:
-  formule: 26.56 kgCO2e / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: kgCO2e
-  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le jean en coton (majorant par défaut), sans la partie utilisation (consommation électrique liée au lavage, comptabilisée par ailleurs dans la partie "électricité" du modèle) et fin de vie.
+
+divers . textile . pantalon . empreinte carbone . hors durabilité:
+  formule: 21.52
+  unité: kgCO2e
+  note: |
+    Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le jean en coton (majorant par défaut), sans la partie utilisation (consommation électrique liée au lavage, comptabilisée par ailleurs dans la partie "électricité" du modèle) et fin de vie.
+
+    Description technique: Jean, durabilité physique 1 : 0,450kg, matière : 100% Coton provenance  par défaut (Asie - Pacifique), filature : Pays inconnu (par défaut), Tissage : Pays inconnu (par défaut), ennoblissement : Teinture moyenne : Pays inconnu (par défaut), impression : non, confection : Pays inconnu (par défaut) (délavé), distribution : France
+
+    URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJkaXNhYmxlZFN0ZXBzIjpbInVzZSIsImVvbCJdLCJmYWRpbmciOnRydWUsIm1hc3MiOjAuNDUsIm1hdGVyaWFscyI6W3siaWQiOiJlaS1jb3RvbiIsInNoYXJlIjoxfV0sIm51bWJlck9mUmVmZXJlbmNlcyI6MTAwMCwicGh5c2ljYWxEdXJhYmlsaXR5IjoxLCJwcmljZSI6MTAwLCJwcm9kdWN0IjoiamVhbiIsInRyYWNlYWJpbGl0eSI6ZmFsc2UsInRyaW1zIjpbeyJpZCI6IjBjOTAzZmM3LTI3OWItNDM3NS04Y2ZhLWNhODEzM2I4ZTk3MyIsInF1YW50aXR5IjoxfSx7ImlkIjoiMGU4ZWE3OTktOWIwNi00OTBjLWE5MjUtMzc1NjQ3NDZjNDU0IiwicXVhbnRpdHkiOjF9XSwidXBjeWNsZWQiOmZhbHNlfQ==
 
 divers . textile . pantalon . empreinte eau:
-  formule: 4780 l / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: l
-  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le jean en coton (majorant par défaut), sans la partie utilisation (eau domestique liée au lavage, comptabilisée par ailleurs dans la partie "eau domestique" du modèle) et fin de vie.
+
+divers . textile . pantalon . empreinte eau . hors durabilité:
+  formule: 4785
+  unité: l
+  note: |
+    Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le jean en coton (majorant par défaut), sans la partie utilisation (eau domestique liée au lavage, comptabilisée par ailleurs dans la partie "eau domestique" du modèle) et fin de vie.
+
+    Description technique: Jean, durabilité physique 1 : 0,450kg, matière : 100% Coton provenance  par défaut (Asie - Pacifique), filature : Pays inconnu (par défaut), Tissage : Pays inconnu (par défaut), ennoblissement : Teinture moyenne : Pays inconnu (par défaut), impression : non, confection : Pays inconnu (par défaut) (délavé), distribution : France
+
+    URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJkaXNhYmxlZFN0ZXBzIjpbInVzZSIsImVvbCJdLCJmYWRpbmciOnRydWUsIm1hc3MiOjAuNDUsIm1hdGVyaWFscyI6W3siaWQiOiJlaS1jb3RvbiIsInNoYXJlIjoxfV0sIm51bWJlck9mUmVmZXJlbmNlcyI6MTAwMCwicGh5c2ljYWxEdXJhYmlsaXR5IjoxLCJwcmljZSI6MTAwLCJwcm9kdWN0IjoiamVhbiIsInRyYWNlYWJpbGl0eSI6ZmFsc2UsInRyaW1zIjpbeyJpZCI6IjBjOTAzZmM3LTI3OWItNDM3NS04Y2ZhLWNhODEzM2I4ZTk3MyIsInF1YW50aXR5IjoxfSx7ImlkIjoiMGU4ZWE3OTktOWIwNi00OTBjLWE5MjUtMzc1NjQ3NDZjNDU0IiwicXVhbnRpdHkiOjF9XSwidXBjeWNsZWQiOmZhbHNlfQ==
 
 divers . textile . short:
   titre: Shorts
@@ -184,7 +435,34 @@ divers . textile . short . nombre:
   question: Nombre de shorts achetés sur une année
   plancher: 0
   plafond: 20
-  par défaut: 1
+  par défaut: short . nombre par défaut
+
+divers . textile . short . nombre par défaut:
+  description: Nombre de shorts achetés par un français moyen sur une année
+  formule: 1
+
+divers . textile . short . nombre garde robe:
+  description: Nombre de shorts dans votre garde-robe
+  formule: nombre * facteur garde robe
+  plancher: 1
+
+divers . textile . short . nombre de portés potentiel:
+  description: Nombre de fois que vous pouvez porter un short dans l'année
+  formule: 1 / 2 * 1 / 4 * commun . jours par an / 1 jour
+
+divers . textile . short . nombre de portés réel:
+  description: Nombre de fois que vous portez un short dans l'année
+  formule: nombre de portés potentiel / nombre garde robe
+
+divers . textile . short . durée moyenne:
+  description: Nombre de portés annuel moyen suivant l'achat
+  formule: 19.7
+
+divers . textile . short . indice de durabilité:
+  description: Indice de durabilité du short
+  formule: nombre de portés réel / durée moyenne
+  plancher: 0.67
+  plafond: 1.45
 
 divers . textile . short . empreinte:
   formule:
@@ -195,14 +473,32 @@ divers . textile . short . empreinte:
         alors: empreinte eau
 
 divers . textile . short . empreinte carbone:
-  formule: 18.09 kgCO2e / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: kgCO2e
-  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le jean en coton (majorant par défaut) avec un poids de 300 grammes, sans la partie utilisation (consommation électrique liée au lavage, comptabilisée par ailleurs dans la partie "électricité" du modèle) et fin de vie.
+
+divers . textile . short . empreinte carbone . hors durabilité:
+  formule: 14.76
+  unité: kgCO2e
+  note: |
+    Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le jean en coton (majorant par défaut) avec un poids de 300 grammes, sans la partie utilisation (consommation électrique liée au lavage, comptabilisée par ailleurs dans la partie "électricité" du modèle) et fin de vie.
+
+    Description technique: Jean, durabilité physique 1 : 0,300kg, matière : 100% Coton provenance  par défaut (Asie - Pacifique), filature : Pays inconnu (par défaut), Tissage : Pays inconnu (par défaut), ennoblissement : Teinture moyenne : Pays inconnu (par défaut), impression : non, confection : Pays inconnu (par défaut) (délavé), distribution : France
+
+    URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJkaXNhYmxlZFN0ZXBzIjpbInVzZSIsImVvbCJdLCJmYWRpbmciOnRydWUsIm1hc3MiOjAuMywibWF0ZXJpYWxzIjpbeyJpZCI6ImVpLWNvdG9uIiwic2hhcmUiOjF9XSwibnVtYmVyT2ZSZWZlcmVuY2VzIjoxMDAwLCJwaHlzaWNhbER1cmFiaWxpdHkiOjEsInByaWNlIjoxMDAsInByb2R1Y3QiOiJqZWFuIiwidHJhY2VhYmlsaXR5IjpmYWxzZSwidHJpbXMiOlt7ImlkIjoiMGM5MDNmYzctMjc5Yi00Mzc1LThjZmEtY2E4MTMzYjhlOTczIiwicXVhbnRpdHkiOjF9LHsiaWQiOiIwZThlYTc5OS05YjA2LTQ5MGMtYTkyNS0zNzU2NDc0NmM0NTQiLCJxdWFudGl0eSI6MX1dLCJ1cGN5Y2xlZCI6ZmFsc2V9
 
 divers . textile . short . empreinte eau:
-  formule: 3200 l / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: l
-  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le jean en coton (majorant par défaut) avec un poids de 300 grammes, sans la partie utilisation (eau domestique liée au lavage, comptabilisée par ailleurs dans la partie "eau domestique" du modèle) et fin de vie.
+
+divers . textile . short . empreinte eau . hors durabilité:
+  formule: 3206
+  unité: l
+  note: |
+    Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le jean en coton (majorant par défaut) avec un poids de 300 grammes, sans la partie utilisation (eau domestique liée au lavage, comptabilisée par ailleurs dans la partie "eau domestique" du modèle) et fin de vie.
+
+    Description technique: Jean, durabilité physique 1 : 0,300kg, matière : 100% Coton provenance  par défaut (Asie - Pacifique), filature : Pays inconnu (par défaut), Tissage : Pays inconnu (par défaut), ennoblissement : Teinture moyenne : Pays inconnu (par défaut), impression : non, confection : Pays inconnu (par défaut) (délavé), distribution : France
+
+    URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJkaXNhYmxlZFN0ZXBzIjpbInVzZSIsImVvbCJdLCJmYWRpbmciOnRydWUsIm1hc3MiOjAuMywibWF0ZXJpYWxzIjpbeyJpZCI6ImVpLWNvdG9uIiwic2hhcmUiOjF9XSwibnVtYmVyT2ZSZWZlcmVuY2VzIjoxMDAwLCJwaHlzaWNhbER1cmFiaWxpdHkiOjEsInByaWNlIjoxMDAsInByb2R1Y3QiOiJqZWFuIiwidHJhY2VhYmlsaXR5IjpmYWxzZSwidHJpbXMiOlt7ImlkIjoiMGM5MDNmYzctMjc5Yi00Mzc1LThjZmEtY2E4MTMzYjhlOTczIiwicXVhbnRpdHkiOjF9LHsiaWQiOiIwZThlYTc5OS05YjA2LTQ5MGMtYTkyNS0zNzU2NDc0NmM0NTQiLCJxdWFudGl0eSI6MX1dLCJ1cGN5Y2xlZCI6ZmFsc2V9
 
 divers . textile . sweat:
   titre: Sweat (en coton)
@@ -213,7 +509,34 @@ divers . textile . sweat . nombre:
   question: Nombre de sweats achetés sur une année
   plancher: 0
   plafond: 20
-  par défaut: 2
+  par défaut: sweat . nombre par défaut
+
+divers . textile . sweat . nombre par défaut:
+  description: Nombre de sweats achetés par un français moyen sur une année
+  formule: 2
+
+divers . textile . sweat . nombre garde robe:
+  description: Nombre de sweats dans votre garde-robe
+  formule: nombre * facteur garde robe
+  plancher: 1
+
+divers . textile . sweat . nombre de portés potentiel:
+  description: Nombre de fois que vous pouvez porter un sweat dans l'année
+  formule: 1 / 3 * 3 / 4 * commun . jours par an / 1 jour
+
+divers . textile . sweat . nombre de portés réel:
+  description: Nombre de fois que vous portez un sweat dans l'année
+  formule: nombre de portés potentiel / nombre garde robe
+
+divers . textile . sweat . durée moyenne:
+  description: Nombre de portés annuel moyen suivant l'achat
+  formule: 47.7
+
+divers . textile . sweat . indice de durabilité:
+  description: Indice de durabilité du sweat
+  formule: nombre de portés réel / durée moyenne
+  plancher: 0.67
+  plafond: 1.45
 
 divers . textile . sweat . empreinte:
   formule:
@@ -224,14 +547,32 @@ divers . textile . sweat . empreinte:
         alors: empreinte eau
 
 divers . textile . sweat . empreinte carbone:
-  formule: 15.55 kgCO2e / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: kgCO2e
-  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le pull en coton (majorant par défaut) avec un poids de 400 grammes, sans la partie utilisation (consommation électrique liée au lavage, comptabilisée par ailleurs dans la partie "électricité" du modèle) et fin de vie.
+
+divers . textile . sweat . empreinte carbone . hors durabilité:
+  formule: 12.11
+  unité: kgCO2e
+  note: |
+    Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le pull en coton (majorant par défaut) avec un poids de 400 grammes, sans la partie utilisation (consommation électrique liée au lavage, comptabilisée par ailleurs dans la partie "électricité" du modèle) et fin de vie.
+
+    Description technique: Pull, durabilité physique 1 : 0,400kg, matière : 100% Coton provenance  par défaut (Asie - Pacifique), filature : Pays inconnu (par défaut), Tricotage moyen (par défaut) : Pays inconnu (par défaut), ennoblissement : Teinture moyenne : Pays inconnu (par défaut), impression : non, confection : Pays inconnu (par défaut), distribution : France
+
+    URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJkaXNhYmxlZFN0ZXBzIjpbInVzZSIsImVvbCJdLCJtYXNzIjowLjQsIm1hdGVyaWFscyI6W3siaWQiOiJlaS1jb3RvbiIsInNoYXJlIjoxfV0sIm51bWJlck9mUmVmZXJlbmNlcyI6MTAwMCwicGh5c2ljYWxEdXJhYmlsaXR5IjoxLCJwcmljZSI6MTAwLCJwcm9kdWN0IjoicHVsbCIsInRyYWNlYWJpbGl0eSI6ZmFsc2UsInRyaW1zIjpbXSwidXBjeWNsZWQiOmZhbHNlfQ==
 
 divers . textile . sweat . empreinte eau:
-  formule: 3940 l / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: l
-  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le pull en coton (majorant par défaut) avec un poids de 400 grammes, sans la partie utilisation (eau domestique liée au lavage, comptabilisée par ailleurs dans la partie "eau domestique" du modèle) et fin de vie.
+
+divers . textile . sweat . empreinte eau . hors durabilité:
+  formule: 3949
+  unité: l
+  note: |
+    Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le pull en coton (majorant par défaut) avec un poids de 400 grammes, sans la partie utilisation (eau domestique liée au lavage, comptabilisée par ailleurs dans la partie "eau domestique" du modèle) et fin de vie.
+
+    Description technique: Pull, durabilité physique 1 : 0,400kg, matière : 100% Coton provenance  par défaut (Asie - Pacifique), filature : Pays inconnu (par défaut), Tricotage moyen (par défaut) : Pays inconnu (par défaut), ennoblissement : Teinture moyenne : Pays inconnu (par défaut), impression : non, confection : Pays inconnu (par défaut), distribution : France
+
+    URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJkaXNhYmxlZFN0ZXBzIjpbInVzZSIsImVvbCJdLCJtYXNzIjowLjQsIm1hdGVyaWFscyI6W3siaWQiOiJlaS1jb3RvbiIsInNoYXJlIjoxfV0sIm51bWJlck9mUmVmZXJlbmNlcyI6MTAwMCwicGh5c2ljYWxEdXJhYmlsaXR5IjoxLCJwcmljZSI6MTAwLCJwcm9kdWN0IjoicHVsbCIsInRyYWNlYWJpbGl0eSI6ZmFsc2UsInRyaW1zIjpbXSwidXBjeWNsZWQiOmZhbHNlfQ==
 
 divers . textile . robe:
   icônes: 👗
@@ -241,7 +582,34 @@ divers . textile . robe . nombre:
   question: Nombre de robes achetées sur une année
   plancher: 0
   plafond: 20
-  par défaut: 2
+  par défaut: robe . nombre par défaut
+
+divers . textile . robe . nombre par défaut:
+  description: Nombre de robes achetés par un français moyen sur une année
+  formule: 2
+
+divers . textile . robe . nombre garde robe:
+  description: Nombre de robes dans votre garde-robe
+  formule: nombre * facteur garde robe
+  plancher: 1
+
+divers . textile . robe . nombre de portés potentiel:
+  description: Nombre de fois que vous pouvez porter une robe dans l'année
+  formule: 1 / 2 * 1 / 4 * commun . jours par an / 1 jour
+
+divers . textile . robe . nombre de portés réel:
+  description: Nombre de fois que vous portez une robe dans l'année
+  formule: nombre de portés potentiel / nombre garde robe
+
+divers . textile . robe . durée moyenne:
+  description: Nombre de portés annuel moyen suivant l'achat
+  formule: 19.7
+
+divers . textile . robe . indice de durabilité:
+  description: Indice de durabilité de la robe
+  formule: nombre de portés réel / durée moyenne
+  plancher: 0.67
+  plafond: 1.45
 
 divers . textile . robe . empreinte:
   formule:
@@ -252,14 +620,32 @@ divers . textile . robe . empreinte:
         alors: empreinte eau
 
 divers . textile . robe . empreinte carbone:
-  formule: 22.95 kgCO2e / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: kgCO2e
-  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant la jupe en coton (majorant par défaut) avec un poids majoré de deux tiers (soit 500 grammes), sans la partie utilisation (consommation électrique liée au lavage, comptabilisée par ailleurs dans la partie "électricité" du modèle) et fin de vie.
+
+divers . textile . robe . empreinte carbone . hors durabilité:
+  formule: 18.84
+  unité: kgCO2e
+  note: |
+    Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant la jupe en coton (majorant par défaut) avec un poids majoré de deux tiers (soit 500 grammes), sans la partie utilisation (consommation électrique liée au lavage, comptabilisée par ailleurs dans la partie "électricité" du modèle) et fin de vie.
+
+    Description technique: Jupe / Robe, durabilité physique 1 : 0,500kg, matière : 100% Coton provenance  par défaut (Asie - Pacifique), filature : Pays inconnu (par défaut), Tissage : Pays inconnu (par défaut), ennoblissement : Teinture moyenne : Pays inconnu (par défaut), impression : non, confection : Pays inconnu (par défaut), distribution : France
+
+    URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJkaXNhYmxlZFN0ZXBzIjpbInVzZSIsImVvbCJdLCJtYXNzIjowLjUsIm1hdGVyaWFscyI6W3siaWQiOiJlaS1jb3RvbiIsInNoYXJlIjoxfV0sIm51bWJlck9mUmVmZXJlbmNlcyI6MTAwMCwicGh5c2ljYWxEdXJhYmlsaXR5IjoxLCJwcmljZSI6MTAwLCJwcm9kdWN0IjoianVwZSIsInRyYWNlYWJpbGl0eSI6ZmFsc2UsInRyaW1zIjpbeyJpZCI6IjBlOGVhNzk5LTliMDYtNDkwYy1hOTI1LTM3NTY0NzQ2YzQ1NCIsInF1YW50aXR5IjoxfSx7ImlkIjoiZDU2YmIwZDUtNzk5OS00YjhiLWIwNzYtOTRkNzkwOTliNTZhIiwicXVhbnRpdHkiOjF9XSwidXBjeWNsZWQiOmZhbHNlfQ==
 
 divers . textile . robe . empreinte eau:
-  formule: 5070 l / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: l
-  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant la jupe en coton (majorant par défaut) avec un poids majoré de deux tiers (soit 500 grammes), sans la partie utilisation (eau domestique liée au lavage, comptabilisée par ailleurs dans la partie "eau domestique" du modèle) et fin de vie.
+
+divers . textile . robe . empreinte eau . hors durabilité:
+  formule: 5094
+  unité: l
+  note: |
+    Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant la jupe en coton (majorant par défaut) avec un poids majoré de deux tiers (soit 500 grammes), sans la partie utilisation (eau domestique liée au lavage, comptabilisée par ailleurs dans la partie "eau domestique" du modèle) et fin de vie.
+
+    Description technique: Jupe / Robe, durabilité physique 1 : 0,500kg, matière : 100% Coton provenance  par défaut (Asie - Pacifique), filature : Pays inconnu (par défaut), Tissage : Pays inconnu (par défaut), ennoblissement : Teinture moyenne : Pays inconnu (par défaut), impression : non, confection : Pays inconnu (par défaut), distribution : France
+
+    URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJkaXNhYmxlZFN0ZXBzIjpbInVzZSIsImVvbCJdLCJtYXNzIjowLjUsIm1hdGVyaWFscyI6W3siaWQiOiJlaS1jb3RvbiIsInNoYXJlIjoxfV0sIm51bWJlck9mUmVmZXJlbmNlcyI6MTAwMCwicGh5c2ljYWxEdXJhYmlsaXR5IjoxLCJwcmljZSI6MTAwLCJwcm9kdWN0IjoianVwZSIsInRyYWNlYWJpbGl0eSI6ZmFsc2UsInRyaW1zIjpbeyJpZCI6IjBlOGVhNzk5LTliMDYtNDkwYy1hOTI1LTM3NTY0NzQ2YzQ1NCIsInF1YW50aXR5IjoxfSx7ImlkIjoiZDU2YmIwZDUtNzk5OS00YjhiLWIwNzYtOTRkNzkwOTliNTZhIiwicXVhbnRpdHkiOjF9XSwidXBjeWNsZWQiOmZhbHNlfQ==
 
 divers . textile . chemise:
   icônes: 👔
@@ -269,7 +655,34 @@ divers . textile . chemise . nombre:
   question: Nombre de chemises achetées sur une année
   plancher: 0
   plafond: 20
-  par défaut: 2
+  par défaut: chemise . nombre par défaut
+
+divers . textile . chemise . nombre par défaut:
+  description: Nombre de chemises achetés par un français moyen sur une année
+  formule: 2
+
+divers . textile . chemise . nombre garde robe:
+  description: Nombre de chemises dans votre garde-robe
+  formule: nombre * facteur garde robe
+  plancher: 1
+
+divers . textile . chemise . nombre de portés potentiel:
+  description: Nombre de fois que vous pouvez porter une chemise dans l'année
+  formule: 1 / 3 * 3 / 4 * commun . jours par an / 1 jour
+
+divers . textile . chemise . nombre de portés réel:
+  description: Nombre de fois que vous portez une chemise dans l'année
+  formule: nombre de portés potentiel / nombre garde robe
+
+divers . textile . chemise . durée moyenne:
+  description: Nombre de portés annuel moyen suivant l'achat
+  formule: 38.8
+
+divers . textile . chemise . indice de durabilité:
+  description: Indice de durabilité de la chemise
+  formule: nombre de portés réel / durée moyenne
+  plancher: 0.67
+  plafond: 1.45
 
 divers . textile . chemise . empreinte:
   formule:
@@ -280,14 +693,32 @@ divers . textile . chemise . empreinte:
         alors: empreinte eau
 
 divers . textile . chemise . empreinte carbone:
-  formule: 11.76 kgCO2e / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: kgCO2e
-  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant la chemise en coton (majorant par défaut), sans la partie utilisation (consommation électrique liée au lavage, comptabilisée par ailleurs dans la partie "électricité" du modèle) et fin de vie.
+
+divers . textile . chemise . empreinte carbone . hors durabilité:
+  formule: 9.71
+  unité: kgCO2e
+  note: |
+    Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant la chemise en coton (majorant par défaut), sans la partie utilisation (consommation électrique liée au lavage, comptabilisée par ailleurs dans la partie "électricité" du modèle) et fin de vie.
+
+    Description technique: Chemise, durabilité physique 1 : 0,250kg, matière : 100% Coton provenance  par défaut (Asie - Pacifique), filature : Pays inconnu (par défaut), Tissage : Pays inconnu (par défaut), ennoblissement : Teinture moyenne : Pays inconnu (par défaut), impression : non, confection : Pays inconnu (par défaut), distribution : France
+
+    URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJkaXNhYmxlZFN0ZXBzIjpbInVzZSIsImVvbCJdLCJtYXNzIjowLjI1LCJtYXRlcmlhbHMiOlt7ImlkIjoiZWktY290b24iLCJzaGFyZSI6MX1dLCJudW1iZXJPZlJlZmVyZW5jZXMiOjEwMDAsInBoeXNpY2FsRHVyYWJpbGl0eSI6MSwicHJpY2UiOjEwMCwicHJvZHVjdCI6ImNoZW1pc2UiLCJ0cmFjZWFiaWxpdHkiOmZhbHNlLCJ0cmltcyI6W3siaWQiOiJkNTZiYjBkNS03OTk5LTRiOGItYjA3Ni05NGQ3OTA5OWI1NmEiLCJxdWFudGl0eSI6MTB9XSwidXBjeWNsZWQiOmZhbHNlfQ==
 
 divers . textile . chemise . empreinte eau:
-  formule: 2540 l / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: l
-  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant la chemise en coton (majorant par défaut), sans la partie utilisation (eau domestique liée au lavage, comptabilisée par ailleurs dans la partie "eau domestique" du modèle) et fin de vie.
+
+divers . textile . chemise . empreinte eau . hors durabilité:
+  formule: 2552
+  unité: l
+  note: |
+    Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant la chemise en coton (majorant par défaut), sans la partie utilisation (eau domestique liée au lavage, comptabilisée par ailleurs dans la partie "eau domestique" du modèle) et fin de vie.
+
+    Description technique: Chemise, durabilité physique 1 : 0,250kg, matière : 100% Coton provenance  par défaut (Asie - Pacifique), filature : Pays inconnu (par défaut), Tissage : Pays inconnu (par défaut), ennoblissement : Teinture moyenne : Pays inconnu (par défaut), impression : non, confection : Pays inconnu (par défaut), distribution : France
+
+    URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJkaXNhYmxlZFN0ZXBzIjpbInVzZSIsImVvbCJdLCJtYXNzIjowLjI1LCJtYXRlcmlhbHMiOlt7ImlkIjoiZWktY290b24iLCJzaGFyZSI6MX1dLCJudW1iZXJPZlJlZmVyZW5jZXMiOjEwMDAsInBoeXNpY2FsRHVyYWJpbGl0eSI6MSwicHJpY2UiOjEwMCwicHJvZHVjdCI6ImNoZW1pc2UiLCJ0cmFjZWFiaWxpdHkiOmZhbHNlLCJ0cmltcyI6W3siaWQiOiJkNTZiYjBkNS03OTk5LTRiOGItYjA3Ni05NGQ3OTA5OWI1NmEiLCJxdWFudGl0eSI6MTB9XSwidXBjeWNsZWQiOmZhbHNlfQ==
 
 divers . textile . pull:
   titre: Pull (laine ou acrylique)
@@ -298,7 +729,34 @@ divers . textile . pull . nombre:
   question: Nombre de pulls achetés sur une année
   plancher: 0
   plafond: 20
-  par défaut: 1
+  par défaut: pull . nombre par défaut
+
+divers . textile . pull . nombre par défaut:
+  description: Nombre de pulls achetés par un français moyen sur une année
+  formule: 1
+
+divers . textile . pull . nombre garde robe:
+  description: Nombre de pulls dans votre garde-robe
+  formule: nombre * facteur garde robe
+  plancher: 1
+
+divers . textile . pull . nombre de portés potentiel:
+  description: Nombre de fois que vous pouvez porter un pull dans l'année
+  formule: 2 / 3 * 3 / 4 * commun . jours par an / 1 jour
+
+divers . textile . pull . nombre de portés réel:
+  description: Nombre de fois que vous portez un pull dans l'année
+  formule: nombre de portés potentiel / nombre garde robe
+
+divers . textile . pull . durée moyenne:
+  description: Nombre de portés annuel moyen suivant l'achat
+  formule: 47.7
+
+divers . textile . pull . indice de durabilité:
+  description: Indice de durabilité de la pull
+  formule: nombre de portés réel / durée moyenne
+  plancher: 0.67
+  plafond: 1.45
 
 divers . textile . pull . empreinte:
   formule:
@@ -309,14 +767,32 @@ divers . textile . pull . empreinte:
         alors: empreinte eau
 
 divers . textile . pull . empreinte carbone:
-  formule: 21.16 kgCO2e / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: kgCO2e
-  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le pull en coton (majorant par défaut), sans la partie utilisation (consommation électrique liée au lavage, comptabilisée par ailleurs dans la partie "électricité" du modèle) et fin de vie.
+
+divers . textile . pull . empreinte carbone . hors durabilité:
+  formule: 16.44
+  unité: kgCO2e
+  note: |
+    Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le pull en coton (majorant par défaut), sans la partie utilisation (consommation électrique liée au lavage, comptabilisée par ailleurs dans la partie "électricité" du modèle) et fin de vie.
+
+    Description technique: Pull, durabilité physique 1 : 0,550kg, matière : 100% Coton provenance  par défaut (Asie - Pacifique), filature : Pays inconnu (par défaut), Tricotage moyen (par défaut) : Pays inconnu (par défaut), ennoblissement : Teinture moyenne : Pays inconnu (par défaut), impression : non, confection : Pays inconnu (par défaut), distribution : France
+
+    URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJkaXNhYmxlZFN0ZXBzIjpbInVzZSIsImVvbCJdLCJtYXNzIjowLjU1LCJtYXRlcmlhbHMiOlt7ImlkIjoiZWktY290b24iLCJzaGFyZSI6MX1dLCJudW1iZXJPZlJlZmVyZW5jZXMiOjEwMDAsInBoeXNpY2FsRHVyYWJpbGl0eSI6MSwicHJpY2UiOjEwMCwicHJvZHVjdCI6InB1bGwiLCJ0cmFjZWFiaWxpdHkiOmZhbHNlLCJ0cmltcyI6W10sInVwY3ljbGVkIjpmYWxzZX0=
 
 divers . textile . pull . empreinte eau:
-  formule: 5410 l / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: l
-  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le pull en coton (majorant par défaut), sans la partie utilisation (eau domestique liée au lavage, comptabilisée par ailleurs dans la partie "eau domestique" du modèle) et fin de vie.
+
+divers . textile . pull . empreinte eau . hors durabilité:
+  formule: 5423
+  unité: l
+  note: |
+    Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le pull en coton (majorant par défaut), sans la partie utilisation (eau domestique liée au lavage, comptabilisée par ailleurs dans la partie "eau domestique" du modèle) et fin de vie.
+
+    Description technique: Pull, durabilité physique 1 : 0,550kg, matière : 100% Coton provenance  par défaut (Asie - Pacifique), filature : Pays inconnu (par défaut), Tricotage moyen (par défaut) : Pays inconnu (par défaut), ennoblissement : Teinture moyenne : Pays inconnu (par défaut), impression : non, confection : Pays inconnu (par défaut), distribution : France
+
+    URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJkaXNhYmxlZFN0ZXBzIjpbInVzZSIsImVvbCJdLCJtYXNzIjowLjU1LCJtYXRlcmlhbHMiOlt7ImlkIjoiZWktY290b24iLCJzaGFyZSI6MX1dLCJudW1iZXJPZlJlZmVyZW5jZXMiOjEwMDAsInBoeXNpY2FsRHVyYWJpbGl0eSI6MSwicHJpY2UiOjEwMCwicHJvZHVjdCI6InB1bGwiLCJ0cmFjZWFiaWxpdHkiOmZhbHNlLCJ0cmltcyI6W10sInVwY3ljbGVkIjpmYWxzZX0=
 
 divers . textile . chaussure:
   titre: Paire de chaussures
@@ -327,7 +803,11 @@ divers . textile . chaussure . nombre:
   question: Nombre de chaussures achetées sur une année
   plancher: 0
   plafond: 30
-  par défaut: 2
+  par défaut: chaussure . nombre par défaut
+
+divers . textile . chaussure . nombre par défaut:
+  description: Nombre de paires de chaussures achetés par un français moyen sur une année
+  formule: 3
 
 divers . textile . chaussure . empreinte:
   formule:
@@ -340,12 +820,14 @@ divers . textile . chaussure . empreinte:
 divers . textile . chaussure . empreinte carbone:
   formule: 16.47
   unité: kgCO2e
-  note: Moyenne de l'empreinte entre des chaussures en cuir, en tissu et de sport de la Base Empreinte.
+  note: |
+    Moyenne de l'empreinte entre des chaussures en cuir, en tissu et de sport de la Base Empreinte.
 
 divers . textile . chaussure . empreinte eau:
   formule: 0
   unité: l
-  note: Pour le moment, nous Ecobalyse ne fournit pas d'empreinte environnementale pour une paire de chaussures.
+  note: |
+    Pour le moment, nous Ecobalyse ne fournit pas d'empreinte environnementale pour une paire de chaussures.
 
 divers . textile . manteau:
   icônes: 🧥
@@ -355,7 +837,34 @@ divers . textile . manteau . nombre:
   question: Nombre de manteaux achetés sur une année
   plancher: 0
   plafond: 10
-  par défaut: 1
+  par défaut: manteau . nombre par défaut
+
+divers . textile . manteau . nombre par défaut:
+  description: Nombre de paires de chaussures achetés par un français moyen sur une année
+  formule: 1
+
+divers . textile . manteau . nombre garde robe:
+  description: Nombre de manteaux dans votre garde-robe
+  formule: nombre * facteur garde robe
+  plancher: 1
+
+divers . textile . manteau . nombre de portés potentiel:
+  description: Nombre de fois que vous pouvez porter un manteau dans l'année
+  formule: 1 / 2 * 2 / 3 * commun . jours par an / 1 jour
+
+divers . textile . manteau . nombre de portés réel:
+  description: Nombre de fois que vous portez un manteau dans l'année
+  formule: nombre de portés potentiel / nombre garde robe
+
+divers . textile . manteau . durée moyenne:
+  description: Nombre de portés annuel moyen suivant l'achat
+  formule: 56.9
+
+divers . textile . manteau . indice de durabilité:
+  description: Indice de durabilité du manteau
+  formule: nombre de portés réel / durée moyenne
+  plancher: 0.67
+  plafond: 1.45
 
 divers . textile . manteau . empreinte:
   formule:
@@ -366,14 +875,32 @@ divers . textile . manteau . empreinte:
         alors: empreinte eau
 
 divers . textile . manteau . empreinte carbone:
-  formule: 40.99 kgCO2e / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: kgCO2e
-  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le manteau en coton (majorant par défaut), sans la partie utilisation (consommation électrique liée au lavage, comptabilisée par ailleurs dans la partie "électricité" du modèle) et fin de vie.
+
+divers . textile . manteau . empreinte carbone . hors durabilité:
+  formule: 32.92
+  unité: kgCO2e
+  note: |
+    Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le manteau en coton (majorant par défaut), sans la partie utilisation (consommation électrique liée au lavage, comptabilisée par ailleurs dans la partie "électricité" du modèle) et fin de vie.
+
+    Description technique: Manteau / Veste, durabilité physique 1 : 0,950kg, matière : 100% Coton provenance  par défaut (Asie - Pacifique), filature : Pays inconnu (par défaut), Tissage : Pays inconnu (par défaut), ennoblissement : Teinture moyenne : Pays inconnu (par défaut), impression : non, confection : Pays inconnu (par défaut), distribution : France
+
+    URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJkaXNhYmxlZFN0ZXBzIjpbInVzZSIsImVvbCJdLCJtYXNzIjowLjk1LCJtYXRlcmlhbHMiOlt7ImlkIjoiZWktY290b24iLCJzaGFyZSI6MX1dLCJudW1iZXJPZlJlZmVyZW5jZXMiOjEwMDAsInBoeXNpY2FsRHVyYWJpbGl0eSI6MSwicHJpY2UiOjEwMCwicHJvZHVjdCI6Im1hbnRlYXUiLCJ0cmFjZWFiaWxpdHkiOmZhbHNlLCJ0cmltcyI6W3siaWQiOiI4NmI4NzdmZi0wZDU5LTQ4MmYtYmIzNC0zZmYzMDZiMDc0OTYiLCJxdWFudGl0eSI6MX0seyJpZCI6ImQ1NmJiMGQ1LTc5OTktNGI4Yi1iMDc2LTk0ZDc5MDk5YjU2YSIsInF1YW50aXR5IjozfV0sInVwY3ljbGVkIjpmYWxzZX0=
 
 divers . textile . manteau . empreinte eau:
-  formule: 9560 l / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: l
-  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le manteau en coton (majorant par défaut), sans la partie utilisation (eau domestique liée au lavage, comptabilisée par ailleurs dans la partie "eau domestique" du modèle) et fin de vie.
+
+divers . textile . manteau . empreinte eau . hors durabilité:
+  formule: 9625
+  unité: l
+  note: |
+    Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le manteau en coton (majorant par défaut), sans la partie utilisation (eau domestique liée au lavage, comptabilisée par ailleurs dans la partie "eau domestique" du modèle) et fin de vie.
+
+    Description technique: Manteau / Veste, durabilité physique 1 : 0,950kg, matière : 100% Coton provenance  par défaut (Asie - Pacifique), filature : Pays inconnu (par défaut), Tissage : Pays inconnu (par défaut), ennoblissement : Teinture moyenne : Pays inconnu (par défaut), impression : non, confection : Pays inconnu (par défaut), distribution : France
+
+    URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJkaXNhYmxlZFN0ZXBzIjpbInVzZSIsImVvbCJdLCJtYXNzIjowLjk1LCJtYXRlcmlhbHMiOlt7ImlkIjoiZWktY290b24iLCJzaGFyZSI6MX1dLCJudW1iZXJPZlJlZmVyZW5jZXMiOjEwMDAsInBoeXNpY2FsRHVyYWJpbGl0eSI6MSwicHJpY2UiOjEwMCwicHJvZHVjdCI6Im1hbnRlYXUiLCJ0cmFjZWFiaWxpdHkiOmZhbHNlLCJ0cmltcyI6W3siaWQiOiI4NmI4NzdmZi0wZDU5LTQ4MmYtYmIzNC0zZmYzMDZiMDc0OTYiLCJxdWFudGl0eSI6MX0seyJpZCI6ImQ1NmJiMGQ1LTc5OTktNGI4Yi1iMDc2LTk0ZDc5MDk5YjU2YSIsInF1YW50aXR5IjozfV0sInVwY3ljbGVkIjpmYWxzZX0=
 
 divers . textile . petit article:
   titre: Autre petit article
@@ -385,7 +912,34 @@ divers . textile . petit article . nombre:
   question: Nombre de petits articles génériques achetés sur une année
   plancher: 0
   plafond: 50
-  par défaut: 1
+  par défaut: petit article . nombre par défaut
+
+divers . textile . petit article . nombre par défaut:
+  description: Nombre de petits articles achetés par un français moyen sur une année
+  formule: 5
+
+divers . textile . petit article . nombre garde robe:
+  description: Nombre de petits articles dans votre garde-robe
+  formule: nombre * facteur garde robe
+  plancher: 1
+
+divers . textile . petit article . nombre de portés potentiel:
+  description: Nombre de fois que vous pouvez porter un petit article dans l'année
+  formule: commun . jours par an / 1 jour
+
+divers . textile . petit article . nombre de portés réel:
+  description: Nombre de fois que vous portez un petit article dans l'année
+  formule: nombre de portés potentiel / nombre garde robe
+
+divers . textile . petit article . durée moyenne:
+  description: Nombre de portés annuel moyen suivant l'achat
+  formule: 59.6
+
+divers . textile . petit article . indice de durabilité:
+  description: Indice de durabilité du petit article
+  formule: nombre de portés réel / durée moyenne
+  plancher: 0.67
+  plafond: 1.45
 
 divers . textile . petit article . empreinte:
   formule:
@@ -396,14 +950,32 @@ divers . textile . petit article . empreinte:
         alors: empreinte eau
 
 divers . textile . petit article . empreinte carbone:
-  formule: 1.40 kgCO2e / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: kgCO2e
-  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant la paire de chaussettes en coton (majorant par défaut), sans la partie utilisation (consommation électrique liée au lavage, comptabilisée par ailleurs dans la partie "électricité" du modèle) et fin de vie.
+
+divers . textile . petit article . empreinte carbone . hors durabilité:
+  formule: 1.09
+  unité: kgCO2e
+  note: |
+    Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant la paire de chaussettes en coton (majorant par défaut), sans la partie utilisation (consommation électrique liée au lavage, comptabilisée par ailleurs dans la partie "électricité" du modèle) et fin de vie.
+
+    Description technique: Chaussettes, durabilité physique 1 : 0,040kg, matière : 100% Coton provenance  par défaut (Asie - Pacifique), filature : Pays inconnu (par défaut), Tricotage Fully fashioned / Seamless : Pays inconnu (par défaut), ennoblissement : Teinture moyenne : Pays inconnu (par défaut), impression : non, confection : Pays inconnu (par défaut), distribution : France
+
+    URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJkaXNhYmxlZFN0ZXBzIjpbInVzZSIsImVvbCJdLCJtYXNzIjowLjA0LCJtYXRlcmlhbHMiOlt7ImlkIjoiZWktY290b24iLCJzaGFyZSI6MX1dLCJudW1iZXJPZlJlZmVyZW5jZXMiOjEwMDAsInBoeXNpY2FsRHVyYWJpbGl0eSI6MSwicHJpY2UiOjEwMCwicHJvZHVjdCI6ImNoYXVzc2V0dGVzIiwidHJhY2VhYmlsaXR5IjpmYWxzZSwidHJpbXMiOltdLCJ1cGN5Y2xlZCI6ZmFsc2V9
 
 divers . textile . petit article . empreinte eau:
-  formule: 310 l / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: l
-  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant la paire de chaussettes en coton (majorant par défaut), sans la partie utilisation (eau domestique liée au lavage, comptabilisée par ailleurs dans la partie "eau domestique" du modèle) et fin de vie.
+
+divers . textile . petit article . empreinte eau . hors durabilité:
+  formule: 310
+  unité: l
+  note: |
+    Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant la paire de chaussettes en coton (majorant par défaut), sans la partie utilisation (eau domestique liée au lavage, comptabilisée par ailleurs dans la partie "eau domestique" du modèle) et fin de vie.
+
+    Description technique: Chaussettes, durabilité physique 1 : 0,040kg, matière : 100% Coton provenance  par défaut (Asie - Pacifique), filature : Pays inconnu (par défaut), Tricotage Fully fashioned / Seamless : Pays inconnu (par défaut), ennoblissement : Teinture moyenne : Pays inconnu (par défaut), impression : non, confection : Pays inconnu (par défaut), distribution : France
+
+    URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJkaXNhYmxlZFN0ZXBzIjpbInVzZSIsImVvbCJdLCJtYXNzIjowLjA0LCJtYXRlcmlhbHMiOlt7ImlkIjoiZWktY290b24iLCJzaGFyZSI6MX1dLCJudW1iZXJPZlJlZmVyZW5jZXMiOjEwMDAsInBoeXNpY2FsRHVyYWJpbGl0eSI6MSwicHJpY2UiOjEwMCwicHJvZHVjdCI6ImNoYXVzc2V0dGVzIiwidHJhY2VhYmlsaXR5IjpmYWxzZSwidHJpbXMiOltdLCJ1cGN5Y2xlZCI6ZmFsc2V9
 
 divers . textile . gros article:
   titre: Autre gros article
@@ -415,7 +987,34 @@ divers . textile . gros article . nombre:
   question: Nombre de gros articles génériques achetés sur une année
   plancher: 0
   plafond: 10
-  par défaut: 1
+  par défaut: gros article . nombre par défaut
+
+divers . textile . gros article . nombre par défaut:
+  description: Nombre de gros articles achetés par un français moyen sur une année
+  formule: 1
+
+divers . textile . gros article . nombre garde robe:
+  description: Nombre de gros articles dans votre garde-robe
+  formule: nombre * facteur garde robe
+  plancher: 1
+
+divers . textile . gros article . nombre de portés potentiel:
+  description: Nombre de fois que vous pouvez porter un gros article dans l'année
+  formule: 1 / 2 * 2 / 3 * commun . jours par an / 1 jour
+
+divers . textile . gros article . nombre de portés réel:
+  description: Nombre de fois que vous portez un gros article dans l'année
+  formule: nombre de portés potentiel / nombre garde robe
+
+divers . textile . gros article . durée moyenne:
+  description: Nombre de portés annuel moyen suivant l'achat
+  formule: 56.9
+
+divers . textile . gros article . indice de durabilité:
+  description: Indice de durabilité du gros article
+  formule: nombre de portés réel / durée moyenne
+  plancher: 0.67
+  plafond: 1.45
 
 divers . textile . gros article . empreinte:
   formule:
@@ -426,14 +1025,32 @@ divers . textile . gros article . empreinte:
         alors: empreinte eau
 
 divers . textile . gros article . empreinte carbone:
-  formule: 40.99 kgCO2e / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: kgCO2e
-  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le manteau en coton (majorant par défaut), sans la partie utilisation (consommation électrique liée au lavage, comptabilisée par ailleurs dans la partie "électricité" du modèle) et fin de vie.
+
+divers . textile . gros article . empreinte carbone . hors durabilité:
+  formule: 32.92
+  unité: kgCO2e
+  note: |
+    Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le manteau en coton (majorant par défaut), sans la partie utilisation (consommation électrique liée au lavage, comptabilisée par ailleurs dans la partie "électricité" du modèle) et fin de vie.
+
+    Description technique: Manteau / Veste, durabilité physique 1 : 0,950kg, matière : 100% Coton provenance  par défaut (Asie - Pacifique), filature : Pays inconnu (par défaut), Tissage : Pays inconnu (par défaut), ennoblissement : Teinture moyenne : Pays inconnu (par défaut), impression : non, confection : Pays inconnu (par défaut), distribution : France
+
+    URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJkaXNhYmxlZFN0ZXBzIjpbInVzZSIsImVvbCJdLCJtYXNzIjowLjk1LCJtYXRlcmlhbHMiOlt7ImlkIjoiZWktY290b24iLCJzaGFyZSI6MX1dLCJudW1iZXJPZlJlZmVyZW5jZXMiOjEwMDAsInBoeXNpY2FsRHVyYWJpbGl0eSI6MSwicHJpY2UiOjEwMCwicHJvZHVjdCI6Im1hbnRlYXUiLCJ0cmFjZWFiaWxpdHkiOmZhbHNlLCJ0cmltcyI6W3siaWQiOiI4NmI4NzdmZi0wZDU5LTQ4MmYtYmIzNC0zZmYzMDZiMDc0OTYiLCJxdWFudGl0eSI6MX0seyJpZCI6ImQ1NmJiMGQ1LTc5OTktNGI4Yi1iMDc2LTk0ZDc5MDk5YjU2YSIsInF1YW50aXR5IjozfV0sInVwY3ljbGVkIjpmYWxzZX0=
 
 divers . textile . gros article . empreinte eau:
-  formule: 9560 l / indice de durabilité
+  formule: hors durabilité / indice de durabilité moyen
   unité: l
-  note: Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le manteau en coton (majorant par défaut), sans la partie utilisation (eau domestique liée au lavage, comptabilisée par ailleurs dans la partie "eau domestique" du modèle) et fin de vie.
+
+divers . textile . gros article . empreinte eau . hors durabilité:
+  formule: 9625
+  unité: l
+  note: |
+    Facteur d'émission issu du simulateur textile [Ecobalyse](https://ecobalyse.beta.gouv.fr/#/textile/simulator) en considérant le manteau en coton (majorant par défaut), sans la partie utilisation (eau domestique liée au lavage, comptabilisée par ailleurs dans la partie "eau domestique" du modèle) et fin de vie.
+
+    Description technique: Manteau / Veste, durabilité physique 1 : 0,950kg, matière : 100% Coton provenance  par défaut (Asie - Pacifique), filature : Pays inconnu (par défaut), Tissage : Pays inconnu (par défaut), ennoblissement : Teinture moyenne : Pays inconnu (par défaut), impression : non, confection : Pays inconnu (par défaut), distribution : France
+
+    URL de simulation: https://ecobalyse.beta.gouv.fr/#/textile/simulator/ecs/eyJidXNpbmVzcyI6ImxhcmdlLWJ1c2luZXNzLXdpdGhvdXQtc2VydmljZXMiLCJkaXNhYmxlZFN0ZXBzIjpbInVzZSIsImVvbCJdLCJtYXNzIjowLjk1LCJtYXRlcmlhbHMiOlt7ImlkIjoiZWktY290b24iLCJzaGFyZSI6MX1dLCJudW1iZXJPZlJlZmVyZW5jZXMiOjEwMDAsInBoeXNpY2FsRHVyYWJpbGl0eSI6MSwicHJpY2UiOjEwMCwicHJvZHVjdCI6Im1hbnRlYXUiLCJ0cmFjZWFiaWxpdHkiOmZhbHNlLCJ0cmltcyI6W3siaWQiOiI4NmI4NzdmZi0wZDU5LTQ4MmYtYmIzNC0zZmYzMDZiMDc0OTYiLCJxdWFudGl0eSI6MX0seyJpZCI6ImQ1NmJiMGQ1LTc5OTktNGI4Yi1iMDc2LTk0ZDc5MDk5YjU2YSIsInF1YW50aXR5IjozfV0sInVwY3ljbGVkIjpmYWxzZX0=
 
 divers . textile . nombre total:
   formule:
@@ -449,23 +1066,3 @@ divers . textile . nombre total:
       - manteau . nombre
       - petit article . nombre
       - gros article . nombre
-
-divers . textile . déforestation:
-  non applicable si: métrique != "carbone"
-  formule:
-    variations:
-      - si: déforestation
-        alors:
-          variations:
-            - si: divers . textile . nombre total <= 5
-              alors: facteur textile * 0.5
-            - si: divers . textile . nombre total > 15
-              alors: facteur textile * 1.5
-            - sinon: facteur textile
-      - sinon: 0
-  note: Nous considérons qu'un achat "moyen" de vêtements se situe entre 5 et 15 pièces par an.
-
-divers . textile . déforestation . facteur textile:
-  formule: 24
-  unité: kgCO2e
-  note: L’étude Pendril & al. donne une empreinte moyenne de 24 kgCO2e par personne et par an liée à la déforestation importée de nos consommations de textiles.
