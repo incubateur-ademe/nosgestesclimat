@@ -1,6 +1,5 @@
 import fs from 'fs'
 import c from 'ansi-colors'
-import cli from '@incubateur-ademe/nosgestesclimat-scripts/cli'
 import utils from '@incubateur-ademe/nosgestesclimat-scripts/utils'
 import { disabledLogger } from '@publicodes/tools'
 import path from 'path'

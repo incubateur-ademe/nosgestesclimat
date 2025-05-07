@@ -24,6 +24,7 @@ import {
 } from './i18n/regionCommons.js'
 
 import rulesToJSONWorker from './rulesToJSON.worker.mjs'
+import { disabledLogger } from '@publicodes/tools'
 
 const t9nDir = 'data/i18n/t9n'
 
@@ -120,30 +121,29 @@ try {
 
 try {
   const engine = new Engine(baseRules, {
-    logger: {
-      log: (_) => {},
-      warn: (message) => {
-        if (
-          !markdown &&
-          // Needs to be fixed, error raised with 1.8 publicodes version
-          !message.includes(
-            "Un cycle a été détecté lors de l'évaluation de cette règle"
-          )
-        ) {
-          console.warn(message)
-        }
-      },
-      err: (_) => {}
-    },
-    options: {
-      strict: {
-        noOrphanRule: true,
-        checkPossibleValues: true,
-        noCycleRuntime: false
-      }
+    logger: markdown
+      ? disabledLogger
+      : {
+          log: (_) => {},
+          warn: (message) => {
+            if (
+              // Needs to be fixed, error raised with 1.8 publicodes version
+              !message.includes(
+                "Un cycle a été détecté lors de l'évaluation de cette règle"
+              )
+            ) {
+              console.warn(message)
+            }
+          },
+          err: (_) => {}
+        },
+    strict: {
+      situation: false,
+      noOrphanRule: true,
+      checkPossibleValues: false,
+      noCycleRuntime: false
     }
   })
-
   engine.evaluate({ valeur: 'bilan', contexte: { métrique: "'carbone'" } })
   engine.evaluate({ valeur: 'bilan', contexte: { métrique: "'eau'" } })
   engine.evaluate('actions')
