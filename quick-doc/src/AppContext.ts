@@ -6,9 +6,12 @@ import ReportManager from './ReportManager'
 
 import rules from '../../public/co2-model.FR-lang.fr.json'
 
-export const initialEngine = new Engine(rules as NGCRules, {
+export const initialEngine = new Engine(rules as unknown as NGCRules, {
   strict: {
     situation: false
+  },
+  warn: {
+    cyclicReferences: false
   }
 })
 
