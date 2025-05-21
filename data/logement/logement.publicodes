@@ -55,9 +55,9 @@ logement . surface:
     La surface de votre logement ne peut-être nulle et ne pas être supérieure à 1000 m².
   par défaut:
     variations:
-      - si: logement . type = 'appartement'
+      - si: logement . est un appartement
         alors: parc français . surface moyenne appartement
-      - si: logement . type = 'maison'
+      - si: logement . est une maison
         alors: parc français . surface moyenne maison
       - sinon: parc français . surface moyenne
   note: |
@@ -78,7 +78,6 @@ logement . type:
   une possibilité:
     - maison
     - appartement
-  par défaut: "'moyen'"
   description: |
     L'augmentation de l'habitat en appartements peut nous faire oublier que la maison reste le logement majoritaire des foyers français en 2018.
 
@@ -91,9 +90,31 @@ logement . type:
 
 logement . type . maison:
   titre: Maison
+
 logement . type . appartement:
   titre: Appartement
-logement . type . moyen:
+
+logement . est une maison:
+  valeur:
+    toutes ces conditions:
+      - est défini: logement . type
+      - logement . type = 'maison'
+      - logement . utiliser valeur moyenne = non
+
+logement . est un appartement:
+  valeur:
+    toutes ces conditions:
+      - est défini: logement . type
+      - logement . type = 'appartement'
+      - logement . utiliser valeur moyenne = non
+
+logement . utiliser valeur moyenne:
+  description: >
+    Règle permettant de forcer le calcul de la valeur moyenne du logement
+    (appartement/maison) sans pour autant ajouter une possibilité dans la règle
+    `logement . type`.
+  valeur:
+    est non défini: logement . type
 
 logement . âge:
   question: Quel est l'âge de votre logement ?
