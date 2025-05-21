@@ -44,24 +44,10 @@ logement . extérieur:
         barbecue électrique ou gaz . présent: non
         barbecue charbon . présent: oui
   question: Que possédez-vous dans votre extérieur (jardin, balcon) ?
-  formule:
-    variations:
-      - si: choix utilisateur
-        alors: empreinte totale / habitants
-      - sinon: empreinte par défaut / habitants
+  formule: empreinte / habitants
+  unité: kgCO2e
 
-logement . extérieur . choix utilisateur:
-  titre: Choix utilisateur pour le jardin
-  formule:
-    une de ces conditions:
-      - est défini: salon de jardin bois . présent
-      - est défini: salon de jardin résine ou métal . présent
-      - est défini: tondeuse électrique ou robot . présent
-      - est défini: tondeuse thermique . présent
-      - est défini: barbecue électrique ou gaz . présent
-      - est défini: barbecue charbon . présent
-
-logement . extérieur . empreinte totale:
+logement . extérieur . empreinte:
   formule:
     somme:
       - empreinte calculée salon de jardin bois
@@ -72,17 +58,6 @@ logement . extérieur . empreinte totale:
       - empreinte calculée barbecue charbon
   unité: kgCO2e
 
-logement . extérieur . empreinte par défaut:
-  description: calcul statistique pour établir l'équipement "moyen" d'un jardin français (et non, "à la française", ce qui serait très différent...)
-  somme:
-    - empreinte moyenne salon de jardin bois
-    - empreinte moyenne salon de jardin résine ou métal
-    - empreinte moyenne tondeuse électrique ou robot
-    - empreinte moyenne tondeuse thermique
-    - empreinte moyenne barbecue électrique ou gaz
-    - empreinte moyenne barbecue charbon
-  unité: kgCO2e
-
 logement . extérieur . salon de jardin bois:
   titre: Salon de jardin en bois
   icônes: 🏡🪵
@@ -91,11 +66,12 @@ logement . extérieur . salon de jardin bois . présent:
   question: Possédez-vous un salon de jardin en bois ?
 
 logement . extérieur . empreinte calculée salon de jardin bois:
-  applicable si:
-    toutes ces conditions:
-      - est défini: salon de jardin bois . présent
-      - salon de jardin bois . présent
-  formule: empreinte salon de jardin bois amortie
+  formule:
+    variations:
+      - si: salon de jardin bois . présent
+        alors: empreinte salon de jardin bois amortie
+      - sinon: 0
+  par défaut: empreinte moyenne salon de jardin bois
 
 logement . extérieur . empreinte moyenne salon de jardin bois:
   formule: empreinte salon de jardin bois amortie * part propriétaires salon jardin bois
@@ -125,11 +101,12 @@ logement . extérieur . salon de jardin résine ou métal . présent:
   question: Possédez-vous un salon de jardin en résine ou métal ?
 
 logement . extérieur . empreinte calculée salon de jardin résine ou métal:
-  applicable si:
-    toutes ces conditions:
-      - est défini: salon de jardin résine ou métal . présent
-      - salon de jardin résine ou métal . présent
-  formule: empreinte salon de jardin résine ou métal amortie
+  formule:
+    variations:
+      - si: salon de jardin résine ou métal . présent
+        alors: empreinte salon de jardin résine ou métal amortie
+      - sinon: 0
+  par défaut: empreinte moyenne salon de jardin résine ou métal
 
 logement . extérieur . empreinte moyenne salon de jardin résine ou métal:
   formule: empreinte salon de jardin résine ou métal amortie * part propriétaires salon jardin résine ou métal
@@ -171,11 +148,12 @@ logement . extérieur . tondeuse électrique ou robot . présent:
   question: Possédez-vous une tondeuse électrique ou robot ?
 
 logement . extérieur . empreinte calculée tondeuse électrique ou robot:
-  applicable si:
-    toutes ces conditions:
-      - est défini: tondeuse électrique ou robot . présent
-      - tondeuse électrique ou robot . présent
-  formule: empreinte tondeuse électrique ou robot amortie
+  formule:
+    variations:
+      - si: tondeuse électrique ou robot . présent
+        alors: empreinte tondeuse électrique ou robot amortie
+      - sinon: 0
+  par défaut: empreinte moyenne tondeuse électrique ou robot
 
 logement . extérieur . empreinte moyenne tondeuse électrique ou robot:
   formule: empreinte tondeuse électrique ou robot amortie * part propriétaires tondeuse électrique ou robot
@@ -220,11 +198,12 @@ logement . extérieur . tondeuse thermique . présent:
   question: Possédez-vous une tondeuse thermique ?
 
 logement . extérieur . empreinte calculée tondeuse thermique:
-  applicable si:
-    toutes ces conditions:
-      - est défini: tondeuse thermique . présent
-      - tondeuse thermique . présent
-  formule: empreinte tondeuse thermique amortie
+  formule:
+    variations:
+      - si: tondeuse thermique . présent
+        alors: empreinte tondeuse thermique amortie
+      - sinon: 0
+  par défaut: empreinte moyenne tondeuse thermique
 
 logement . extérieur . empreinte moyenne tondeuse thermique:
   formule: empreinte tondeuse thermique amortie * part propriétaires tondeuse thermique
@@ -279,11 +258,12 @@ logement . extérieur . barbecue électrique ou gaz . présent:
   question: Possédez-vous un barbecue électrique ou gaz ?
 
 logement . extérieur . empreinte calculée barbecue électrique ou gaz:
-  applicable si:
-    toutes ces conditions:
-      - est défini: barbecue électrique ou gaz . présent
-      - barbecue électrique ou gaz . présent
-  formule: empreinte barbecue électrique ou gaz amortie
+  formule:
+    variations:
+      - si: barbecue électrique ou gaz . présent
+        alors: empreinte barbecue électrique ou gaz amortie
+      - sinon: 0
+  par défaut: empreinte moyenne barbecue électrique ou gaz
 
 logement . extérieur . empreinte moyenne barbecue électrique ou gaz:
   formule: empreinte barbecue électrique ou gaz amortie * part propriétaires barbecue électrique ou gaz
@@ -321,11 +301,12 @@ logement . extérieur . barbecue charbon . présent:
   question: Possédez-vous un barbecue au charbon ?
 
 logement . extérieur . empreinte calculée barbecue charbon:
-  applicable si:
-    toutes ces conditions:
-      - est défini: barbecue charbon . présent
-      - barbecue charbon . présent
-  formule: empreinte barbecue charbon
+  formule:
+    variations:
+      - si: barbecue charbon . présent
+        alors: empreinte barbecue charbon
+      - sinon: 0
+  par défaut: empreinte moyenne barbecue charbon
 
 logement . extérieur . empreinte moyenne barbecue charbon:
   formule: empreinte barbecue charbon * part propriétaires barbecue charbon
