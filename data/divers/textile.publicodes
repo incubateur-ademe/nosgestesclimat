@@ -144,17 +144,23 @@ divers . textile . empreinte . garde robe importante . nombre total:
 divers . textile . facteur qualité:
   formule:
     variations:
-      - si: qualité = "neuf fast fashion"
+      - si:
+          une de ces conditions:
+            - qualité = "neuf fast fashion"
+            - qualité = "occasion"
         alors: 0.67
-      - si: qualité = "neuf éthique"
+      - si:
+          une de ces conditions:
+            - qualité = "neuf éthique"
+            - qualité = "occasion réfléchie"
         alors: 1.33
-      - sinon: 1
+  par défaut: 1
   description: |
     On calcule ces facteurs de qualité à partir du simulateur Ecoablyse :
       - "neuf fast fashion": -33% (Grande entreprise sans service de réparation, t-shirt à 10€, pas de traçabilité, nombre de référence très élevé, 100000)
       - "neuf éthique": +33% (Entreprise avec service de réparation, t-shirt à 20€, traçabilité, nombre de référence peu élevé, 1000)
 
-    Le caractère seconde main impacte la taille de la garde robe.
+    Le caractère seconde main impacte la taille de la garde robe. Nous avons également choisi de travailler un facteur qualité spécifique pour les vêtements d'occasion en considérant que lors des achats d'occasion, la qualité n'est pas le premier critère. En revanche, si l'achat est réfléchi, on fait l'hypothèse que la qualité des pièces achetées est meilleure.
 
 divers . textile . indice de durabilité moyen:
   formule:
@@ -207,7 +213,7 @@ divers . textile . facteur garde robe corrigé:
         alors: 2
       - si: qualité = "occasion"
         alors: 1.3
-      - sinon: 1.5
+  par défaut: 1.5
 
 divers . textile . volume:
   question: Pour quelle raison achetez-vous de nouveaux vêtements ?
@@ -251,6 +257,7 @@ divers . textile . qualité:
     - neuf fast fashion
     - neuf éthique
     - occasion
+    - occasion réfléchie
   description: |
     On entend derrière "grandes enseignes" des marques qui possèdent un nombre de références très élevé, qui ont peu de traçabilité. A l'inverse, une enseigne de plus petite taille produit moins et est en mesure de garantir la traçabilité de ses pièces, éventuellement un service de réparation.
 
@@ -260,6 +267,8 @@ divers . textile . qualité . neuf éthique:
   titre: Neufs, chez des enseignes proposant une gamme travaillée (Lacoste, Patagonia, Petit Bateau...)
 divers . textile . qualité . occasion:
   titre: D'occasion
+divers . textile . qualité . occasion réfléchie:
+  titre: D'occasion, en sélectionnant mes pièces de manière précautionneuse
 
 divers . textile . empreinte calculée:
   titre: Empreinte de sa garde-robe
