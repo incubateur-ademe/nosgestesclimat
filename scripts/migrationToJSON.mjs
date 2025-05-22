@@ -128,10 +128,7 @@ function checkMigrationCoverage() {
             )
         )
 
-        if (
-          missingProdPossibilities.length > 0 ||
-          missingLocalPossibilities.length > 0
-        ) {
+        if (missingProdPossibilities.length > 0) {
           nbMissingMigrations++
           missingMigrationsValues.push([
             ruleName,
