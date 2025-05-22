@@ -132,7 +132,7 @@ try {
     strict: {
       situation: false,
       noOrphanRule: true,
-      checkPossibleValues: false,
+      checkPossibleValues: true,
       noCycleRuntime: false
     },
     warn: {
