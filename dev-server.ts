@@ -73,11 +73,12 @@ process.on('SIGINT', () => {
 
 // TODO:
 // - [ ] add a way to cancel execution?
-app.get('/testPersonas/:version/:persona', (req, res) => {
+app.get('/testPersonas/:version/:metric/:persona', (req, res) => {
   const persona = req.params.persona
   const version = req.params.version
+  const metric = req.params.metric
 
-  console.log(`get /${version}/${persona}`)
+  console.log(`get /${version}/${metric}/${persona}`)
   const start = Date.now()
 
   const proc = Bun.spawn(
@@ -88,6 +89,8 @@ app.get('/testPersonas/:version/:persona', (req, res) => {
       persona,
       '-v',
       version,
+      '-i',
+      metric,
       '--markdown'
     ],
     {
@@ -103,7 +106,7 @@ app.get('/testPersonas/:version/:persona', (req, res) => {
   new Response(proc.stdout).text().then((report) => {
     const timeElapsed = Date.now() - start
     res.send({ timeElapsed: timeElapsed, report })
-    console.log(`Sent response for /${version}/${persona}`)
+    console.log(`Sent response for /${version}/${metric}/${persona}`)
   })
 })
 

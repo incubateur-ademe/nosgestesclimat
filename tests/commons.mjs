@@ -47,6 +47,11 @@ export function getArgs() {
       type: 'string',
       description: 'Test only one persona'
     })
+    .option('metric', {
+      alias: 'i',
+      type: 'string',
+      description: 'Choose whether to use carbon or water metric'
+    })
     .help('h')
     .alias('h', 'help').argv
 }

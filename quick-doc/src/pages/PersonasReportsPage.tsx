@@ -9,7 +9,7 @@ import {
 } from 'react'
 import { AppContext } from '../AppContext'
 import { CheckCircle2, Loader2, Play, XCircle } from 'lucide-react'
-import { Version, versionFromString } from '../Versions'
+import { Metric, Version, versionFromString } from '../Versions'
 import { defaultPersona, personas } from '../Personas'
 
 type SyncStatus = 'none' | 'loading' | 'requested' | 'done' | 'error'
@@ -19,6 +19,7 @@ export default function PersonasReportsPage() {
   const [report, setReport] = useState<string | null>(null)
   const [syncStatus, setSyncStatus] = useState<SyncStatus>('none')
   const [version, setVersion] = useState<Version>('nightly')
+  const [metric, setMetric] = useState<Metric>('carbone')
   const [timeElapsed, setTimeElapsed] = useState<number | 'cached' | 'none'>(
     'none'
   )
@@ -42,7 +43,11 @@ export default function PersonasReportsPage() {
       return
     }
 
-    const cachedReport = reportManager.getCachedReport(currentPersona, version)
+    const cachedReport = reportManager.getCachedReport(
+      currentPersona,
+      version,
+      metric
+    )
 
     if (cachedReport) {
       setReport(cachedReport)
@@ -53,7 +58,7 @@ export default function PersonasReportsPage() {
       setSyncStatus('none')
       setTimeElapsed('none')
     }
-  }, [currentPersona, version])
+  }, [currentPersona, version, metric])
 
   useEffect(() => {
     if (syncStatus === 'requested') {
@@ -62,6 +67,7 @@ export default function PersonasReportsPage() {
       reportManager?.fetchReport(
         currentPersona,
         version,
+        metric,
         setSyncedReport,
         setTimeElapsed,
         onError,
@@ -86,6 +92,7 @@ export default function PersonasReportsPage() {
         <VersionSelector
           version={version}
           setVersion={setVersion}
+          setMetric={setMetric}
           isDisabled={syncStatus !== 'none'}
         />
         <SyncButton syncStatus={syncStatus} setSyncStatus={setSyncStatus} />
@@ -174,10 +181,12 @@ function SyncButton({
 function VersionSelector({
   version,
   setVersion,
+  setMetric,
   isDisabled
 }: {
   version: Version
   setVersion: Dispatch<SetStateAction<Version>>
+  setMetric: Dispatch<SetStateAction<Metric>>
   isDisabled: boolean
 }) {
   const options = (
@@ -187,6 +196,12 @@ function VersionSelector({
         value="nightly"
       >
         Nightly (preprod)
+      </option>
+      <option
+        className={version === 'nightly-eau' ? 'selected' : ''}
+        value="nightly-eau"
+      >
+        Nightly (preprod) - Eau
       </option>
       <option className={version === 'latest' ? 'selected' : ''} value="latest">
         Latest (master)
@@ -204,7 +219,10 @@ function VersionSelector({
   ) : (
     <select
       className="cursor-pointer rounded border border-gray-300 bg-white px-4 py-2 hover:border-gray-300"
-      onChange={(e) => setVersion(versionFromString(e.target.value))}
+      onChange={(e) => {
+        setVersion(versionFromString(e.target.value))
+        setMetric(e.target.value === 'nightly-eau' ? 'eau' : 'carbone')
+      }}
     >
       {options}
     </select>
