@@ -1,8 +1,10 @@
-export type Version = 'nightly' | 'latest'
+export type Version = 'nightly' | 'latest' | 'nightly-eau'
 
 export function versionFromString(version: string): Version {
   switch (version) {
     case 'nightly':
+      return 'nightly'
+    case 'nightly-eau':
       return 'nightly'
     case 'latest':
       return 'latest'
@@ -10,3 +12,5 @@ export function versionFromString(version: string): Version {
       throw new Error(`Invalid version: ${version}`)
   }
 }
+
+export type Metric = 'eau' | 'carbone'
