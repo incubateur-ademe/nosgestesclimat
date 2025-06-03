@@ -4,37 +4,36 @@ alimentation . nombre de plats viande:
 
 alimentation . nombre de plats poisson:
   formule: plats . poisson gras . nombre + plats . poisson blanc . nombre
-  unité: repas/semaine
+  unité: repas
 
-# A voir comment adapter l'action au contexte des courts séjour --> pour l'instant on commente
-#alimentation . repas . réduire viande:
-#alimentation . repas . réduire viande . max 1 par jour:
-#  applicable si: nombre de plats viande > 7 repas/semaine
-#  titre: Réduire la viande à un repas par jour
-#  icônes: 🥩1️⃣
-#  formule: différence par semaine * commun . semaines par an
-#  description: |
-#    Vous consommez de la viande à tous les repas ?
-#
-#    Pour réduire facilement votre consommation de protéines animales, ne consommez de viande qu’une fois par jour et en plus petite quantité. C’est un bon début pour limiter votre empreinte carbone.
-#
-#alimentation . repas . réduire viande . max 1 par jour . différence par semaine:
-#  formule: plats - nouveau régime
-#
-#alimentation . repas . réduire viande . max 1 par jour . nouveau régime:
-#  formule:
-#    somme:
-#      - (plats . viande blanche / nombre de plats viande) * 7 repas/semaine
-#      - (plats . viande rouge / nombre de plats viande) * 7 repas/semaine
-#      - plats . végétalien
-#      - plats . végétarien
-#      - plats . poisson gras
-#      - plats . poisson blanc
-#      - compensation végétarienne
-#
-#alimentation . repas . réduire viande . max 1 par jour . nouveau régime . compensation végétarienne:
-#  formule: plats . végétarien . empreinte * (nombre de plats viande - 7 repas/semaine)
-#
+alimentation . repas . réduire viande:
+alimentation . repas . réduire viande . max 1 par jour:
+  applicable si: nombre de plats viande >= transport . durée séjour
+  titre: Limiter la viande à un repas par jour pendant votre séjour
+  icônes: 🥩1️⃣
+  formule: différence séjour * transport . durée séjour
+  description: |
+    Pour un séjour végétarien, essayez d'éviter de consommer de la viande à tous les repas !
+
+    Pas toujours simple me direz-vous quand les offres de repas sont toutes carnées mais c'est un geste fort pour limiter l'empreinte de votre séjour.
+
+alimentation . repas . réduire viande . max 1 par jour . différence séjour:
+  formule: plats - nouveau régime
+
+alimentation . repas . réduire viande . max 1 par jour . nouveau régime:
+  formule:
+    somme:
+      - (plats . viande blanche / nombre de plats viande) * transport . durée séjour #Nb de repas par jour = 2 * transport . durée séjour --> on divise donc bien par deux
+      - (plats . viande rouge / nombre de plats viande) * transport . durée séjour
+      - plats . végétalien
+      - plats . végétarien
+      - plats . poisson gras
+      - plats . poisson blanc
+      - compensation végétarienne
+
+alimentation . repas . réduire viande . max 1 par jour . nouveau régime . compensation végétarienne:
+  formule: plats . végétarien . empreinte * (nombre de plats viande - transport . durée séjour)
+
 #alimentation . repas . réduire viande . max 2 par semaine:
 #  applicable si: nombre de plats viande > 2
 #  action:
@@ -69,11 +68,10 @@ alimentation . nombre de plats poisson:
 alimentation . repas . viande faible empreinte:
   applicable si: plats . viande rouge . nombre > 0
   action:
-#    dépasse:   #Je commente car j'ai commenté l'action "réduire viande . max 1 par jour"
-#      - alimentation . repas . réduire viande . max 1 par jour
-  titre: Privilégier la volaille ou le porc
-#  formule: différence par semaine * commun . semaines par an
-  formule: différence
+    dépasse:
+      - alimentation . repas . réduire viande . max 1 par jour
+  titre: Privilégier la volaille ou le porc pendant votre séjour
+  formule: différence séjour
   icônes: ➡️🍗
   description: |
     Toutes les viandes n’ont pas le même impact sur le climat. Pour réduire son empreinte carbone, il est plus intéressant de manger de la volaille que du porc, du bœuf, du veau, du mouton ou de l’agneau.
@@ -84,12 +82,10 @@ alimentation . repas . viande faible empreinte:
 
     > Pour en savoir plus sur les impacts de notre alimentation sur notre santé et la planète, consultez [le guide « Préserver sa santé et la planète »](https://librairie.ademe.fr/consommer-autrement/6260-preserver-sa-sante-et-la-planete.html)
 
-#alimentation . repas . viande faible empreinte . différence par semaine:
-alimentation . repas . viande faible empreinte . différence:
+alimentation . repas . viande faible empreinte . différence séjour:
   formule: plats - nouveau régime
 
-#alimentation . repas . viande faible empreinte . différence par semaine . nouveau régime:
-alimentation . repas . viande faible empreinte . différence . nouveau régime:
+alimentation . repas . viande faible empreinte . différence séjour . nouveau régime:
   formule:
     somme:
       - plats . viande blanche
@@ -99,8 +95,7 @@ alimentation . repas . viande faible empreinte . différence . nouveau régime:
       - plats . poisson gras
       - plats . poisson blanc
 
-#alimentation . repas . viande faible empreinte . différence par semaine . nouveau régime . compensation viande blanche:
-alimentation . repas . viande faible empreinte . différence . nouveau régime . compensation viande blanche:
+alimentation . repas . viande faible empreinte . différence séjour . nouveau régime . compensation viande blanche:
   formule: plats . viande blanche . empreinte * plats . viande rouge . nombre
   note: On compense la suppression des plat viande rouge en plat viande blanche.
 
@@ -139,20 +134,17 @@ alimentation . repas . viande faible empreinte . différence . nouveau régime .
 alimentation . repas . poisson faible empreinte:
   applicable si: plats . poisson blanc . nombre > 0
   titre: Préférer les poissons gras (thon, saumon...)
-#  formule: différence par semaine * commun . semaines par an
-  formule: différence
+  formule: différence séjour
   icônes: ➡️🐟️
   description: |
     Le choix des poissons que nous consommons a un impact sur notre empreinte carbone. Pêcher, transporter, préparer, stocker des poissons blancs plutôt que des poissons gras consomment plus d’énergie et émet donc plus de gaz à effet de serre.
 
     En moyenne, un repas avec du poisson blanc a une empreinte carbone 50% supérieure à un repas avec un poisson comme le thon, le maquereau, le saumon ou les sardines.
 
-#alimentation . repas . poisson faible empreinte . différence par semaine:
-alimentation . repas . poisson faible empreinte . différence:
+alimentation . repas . poisson faible empreinte . différence séjour:
   formule: plats - nouveau régime
 
-#alimentation . repas . poisson faible empreinte . différence par semaine . nouveau régime:
-alimentation . repas . poisson faible empreinte . différence . nouveau régime:
+alimentation . repas . poisson faible empreinte . différence séjour . nouveau régime:
   formule:
     somme:
       - plats . viande blanche
@@ -162,8 +154,7 @@ alimentation . repas . poisson faible empreinte . différence . nouveau régime:
       - plats . poisson gras
       - compensation poisson gras
 
-#alimentation . repas . poisson faible empreinte . différence par semaine . nouveau régime . compensation poisson gras:
-alimentation . repas . poisson faible empreinte . différence . nouveau régime . compensation poisson gras:
+alimentation . repas . poisson faible empreinte . différence séjour . nouveau régime . compensation poisson gras:
   formule: plats . poisson gras . empreinte * plats . poisson blanc . nombre
   description: On compense la suppression des plats poisson blanc en plat poisson gras.
 
@@ -175,13 +166,12 @@ alimentation . devenir végétarien:
       - nombre de plats poisson > 0
   action:
     dépasse: #Je commente certains attributs car j'ai commenté les actions qui correspondent
-#      - alimentation . repas . réduire viande . max 1 par jour
+      - alimentation . repas . réduire viande . max 1 par jour
 #      - alimentation . repas . réduire viande . max 2 par semaine
       - alimentation . repas . viande faible empreinte
 #      - alimentation . repas . réduire poisson . max 2 par semaine
       - alimentation . repas . poisson faible empreinte
-#  formule: différence par semaine * commun . semaines par an
-  formule: différence par jour * transport . durée séjour
+  formule: différence séjour
   icônes: 🥗🧀
   description: |
     Adopter un régime végétarien, sans viande ni poisson mais avec des œufs, du lait, du fromage, des yaourts, permettra de diminuer de manière importante les émissions de gaz à effet de serre de votre alimentation pendant le séjour.
@@ -190,29 +180,21 @@ alimentation . devenir végétarien:
 #
 #    > Pour trouver des idées de recettes à base de légumineuses, [consultez notre livre de recettes](https://librairie.ademe.fr/consommer-autrement/1768-recettes-des-4-saisons-a-base-de-legumes-et-legumineuses.html)
 
-#alimentation . devenir végétarien . différence par semaine:
-alimentation . devenir végétarien . différence par jour:
-  titre: Différence par jour
+alimentation . devenir végétarien . différence séjour:
+  titre: Différence séjour
   formule:
     somme:
-#      - différence par semaine petits déjeuners
-#      - différence par semaine repas
-      - différence par jour petits déjeuners
-      - différence par jour repas
+      - différence séjour petits déjeuners
+      - différence séjour repas
 
-#alimentation . devenir végétarien . différence par semaine petits déjeuners:
-alimentation . devenir végétarien . différence par jour petits déjeuners:
+alimentation . devenir végétarien . différence séjour petits déjeuners:
   applicable si: alimentation . petit déjeuner . type = 'britannique'
-#  formule: alimentation . petit déjeuner . par semaine - une semaine petit déjeuner végétalien
-  formule: alimentation . petit déjeuner . par jour - un jour petit déjeuner végétalien
+  formule: (alimentation . petit déjeuner . par jour - un jour petit déjeuner végétalien) * transport . durée séjour
 
-
-#alimentation . devenir végétarien . différence par semaine repas:
-alimentation . devenir végétarien . différence par jour repas:
+alimentation . devenir végétarien . différence séjour repas:
   formule: plats - recalcul
 
-#alimentation . devenir végétarien . différence par semaine repas . recalcul:
-alimentation . devenir végétarien . différence par jour repas . recalcul:
+alimentation . devenir végétarien . différence séjour repas . recalcul:
   valeur: plats
   contexte:
     plats . végétarien . nombre: nouveau nombre plats végé
@@ -221,15 +203,13 @@ alimentation . devenir végétarien . différence par jour repas . recalcul:
     plats . poisson gras: 0
     plats . poisson blanc: 0
 
-#alimentation . devenir végétarien . différence par semaine repas . nouveau nombre plats végé:
-alimentation . devenir végétarien . différence par jour repas . nouveau nombre plats végé:
+alimentation . devenir végétarien . différence séjour repas . nouveau nombre plats végé:
   formule: plats . végétarien . nombre + nombre plats non végé
-  unité: repas/jour
+  unité: repas
 
-#alimentation . devenir végétarien . différence par semaine repas . nombre plats non végé:
-alimentation . devenir végétarien . différence par jour repas . nombre plats non végé:
+alimentation . devenir végétarien . différence séjour repas . nombre plats non végé:
   formule: nombre de plats viande + nombre de plats poisson
-  unité: repas/jour
+  unité: repas
 
 alimentation . devenir végétalien:
   titre: Opter pour un séjour végétalien
@@ -240,14 +220,13 @@ alimentation . devenir végétalien:
       - plats . végétarien . nombre > 0
   action:
     dépasse: #Je commente certains attributs car j'ai commenté les actions qui correspondent
-#      - alimentation . repas . réduire viande . max 1 par jour
+      - alimentation . repas . réduire viande . max 1 par jour
 #      - alimentation . repas . réduire viande . max 2 par semaine
       - alimentation . repas . viande faible empreinte
 #      - alimentation . repas . réduire poisson . max 2 par semaine
       - alimentation . repas . poisson faible empreinte
       - alimentation . devenir végétarien
-#  formule: différence par semaine * commun . semaines par an
-  formule: différence par jour * transport . durée séjour
+  formule: différence séjour
   icônes: 🥗🌾
   description: |
     Supprimer toutes les protéines animales (viande, poisson, œuf, produits laitiers) de votre alimentation diminue très fortement les émissions de gaz à effet de serre.
@@ -255,62 +234,60 @@ alimentation . devenir végétalien:
 #    ⚠️ Attention ! Le régime végétalien n'est pas adapté à tous les publics. Les risques de carences sont élevés, notamment chez les enfants, les femmes enceintes et les personnes fragiles.
 #    Si vous réfléchissez à adopter cette alimentation, pensez à en parler à votre médecin, pour qu'il vérifie que cela ne se fait pas au détriment de votre santé.
 
-#alimentation . devenir végétalien . différence par semaine:
-alimentation . devenir végétalien . différence par jour:
-  titre: Différence par jour
+alimentation . devenir végétalien . différence séjour:
+  titre: Différence séjour
   formule:
     somme:
-#      - différence par semaine repas
-#      - différence par semaine petits déjeuners
-#      - différence par semaine chocolat chaud
-      - différence par jour repas
-      - différence par jour petits déjeuners
-      - différence par jour chocolat chaud
+      - différence séjour repas
+      - différence séjour petits déjeuners
+      - différence séjour chocolat chaud
 
-#alimentation . devenir végétalien . différence par semaine repas:
-alimentation . devenir végétalien . différence par jour repas:
-#  formule: plats - une semaine plats végétalien
-  formule: plats - un jour plats végétalien
-
-#alimentation . une semaine plats végétalien:
-alimentation . un jour plats végétalien:
-  formule: 2 repas/jour * plats . végétalien . empreinte
-
-#alimentation . devenir végétalien . différence par semaine petits déjeuners:
-alimentation . devenir végétalien . différence par jour petits déjeuners:
+alimentation . devenir végétalien . différence séjour petits déjeuners:
   applicable si:
     une de ces conditions:
       - alimentation . petit déjeuner . type = 'britannique'
       - toutes ces conditions:
           - alimentation . petit déjeuner . type = 'lait céréales'
           - alimentation . type de lait = 'lait de vache'
-#  formule: alimentation . petit déjeuner . par semaine - une semaine petit déjeuner végétalien
-  formule: alimentation . petit déjeuner . par jour - un jour petit déjeuner végétalien
-
-#alimentation . devenir végétalien . différence par semaine chocolat chaud:
-alimentation . devenir végétalien . différence par jour chocolat chaud:
-  applicable si:
-    toutes ces conditions:
-      - alimentation . type de lait = 'lait de vache'
-      - alimentation . boisson . chaude . chocolat chaud . nombre > 0
-#  formule: alimentation . boisson . chaude . chocolat chaud - une semaine chocolat chaud végétalien
-  formule: alimentation . boisson . chaude . chocolat chaud - un jour chocolat chaud végétalien
-
-#alimentation . une semaine chocolat chaud végétalien:
-alimentation . un jour chocolat chaud végétalien:
-  valeur: boisson . chaude . chocolat chaud
-  contexte:
-    alimentation . type de lait: "'lait d'avoine'"
-
-#alimentation . une semaine petit déjeuner végétalien:
-#  valeur: petit déjeuner . par semaine
-#  contexte:
-#    alimentation . petit déjeuner . type: "'végétalien'"
+  formule: (alimentation . petit déjeuner . par jour - un jour petit déjeuner végétalien) * transport . durée séjour
 
 alimentation . un jour petit déjeuner végétalien:
   valeur: petit déjeuner . par jour
   contexte:
     alimentation . petit déjeuner . type: "'végétalien'"
+
+alimentation . devenir végétalien . différence séjour repas:
+  formule: plats - recalcul
+
+alimentation . devenir végétalien . différence séjour repas . recalcul:
+  valeur: plats
+  contexte:
+    plats . végétalien . nombre: nouveau nombre plats végétalien
+    plats . végétarien: 0
+    plats . viande blanche: 0
+    plats . viande rouge: 0
+    plats . poisson gras: 0
+    plats . poisson blanc: 0
+
+alimentation . devenir végétalien . différence séjour repas . nouveau nombre plats végétalien:
+  formule: plats . végétalien . nombre + plats . végétarien . nombre + nombre plats non végétal
+  unité: repas
+
+alimentation . devenir végétalien . différence séjour repas . nombre plats non végétal:
+  formule: nombre de plats viande + nombre de plats poisson
+  unité: repas
+
+alimentation . devenir végétalien . différence séjour chocolat chaud:
+  applicable si:
+    toutes ces conditions:
+      - alimentation . type de lait = 'lait de vache'
+      - alimentation . boisson . chaude . chocolat chaud . nombre > 0
+  formule: alimentation . boisson . chaude . chocolat chaud - séjour chocolat chaud végétalien
+
+alimentation . séjour chocolat chaud végétalien:
+  valeur: boisson . chaude . chocolat chaud
+  contexte:
+    alimentation . type de lait: "'lait d'avoine'"
 
 alimentation . boisson . réduire café:
 alimentation . boisson . réduire café . max deux par jour:
@@ -318,26 +295,24 @@ alimentation . boisson . réduire café . max deux par jour:
   titre: Se limiter à deux cafés par jour
   icônes: ☕️2️⃣
   formule: (boisson . chaude . café - (2 * boisson . tasse de café)) * transport . durée séjour
-#  formule: (boisson . chaude . café . nombre - 2 tasse/jour) * boisson . tasse de café * commun . jours par an
   description: |
     Saviez-vous que la consommation de café pouvait avoir une importance non négligeable dans le calcul de votre empreinte carbone ? Chaque tasse de café ajoute 120 grammes de CO₂e à votre empreinte carbone.
 
     Et si vous commenciez par diminuer votre consommation en ne dépassant pas deux cafés par jour ?
 
-alimentation . boisson . réduire café . max un par jour:
-  applicable si: boisson . chaude . café . nombre > 1 tasse/jour
-  action:
-    dépasse:
-      - alimentation . boisson . réduire café . max deux par jour
-      - alimentation . boisson . réduire café . remplace un café par jour par thé
-  titre: Se limiter à un café par jour
-  icônes: ☕️1️⃣
-  formule: (boisson . chaude . café - boisson . tasse de café) * transport . durée séjour
-#  formule: (boisson . chaude . café . nombre - 1 tasse/jour) * boisson . tasse de café * commun . jours par an
-  description: |
-    Saviez-vous que la consommation de café pouvait avoir une importance non négligeable dans le calcul de votre empreinte carbone ? Chaque tasse de café ajoute 120 grammes de CO₂e à votre empreinte carbone.
-
-    Et si vous commenciez par diminuer votre consommation en ne buvant qu’un café par jour ?
+#alimentation . boisson . réduire café . max un par jour:
+#  applicable si: boisson . chaude . café . nombre > 1 tasse/jour
+#  action:
+#    dépasse:
+#      - alimentation . boisson . réduire café . max deux par jour
+#      - alimentation . boisson . réduire café . remplace un café par jour par thé
+#  titre: Se limiter à un café par jour
+#  icônes: ☕️1️⃣
+#  formule: (boisson . chaude . café - boisson . tasse de café) * transport . durée séjour
+#  description: |
+#    Saviez-vous que la consommation de café pouvait avoir une importance non négligeable dans le calcul de votre empreinte carbone ? Chaque tasse de café ajoute 120 grammes de CO₂e à votre empreinte carbone.
+#
+#    Et si vous commenciez par diminuer votre consommation en ne buvant qu’un café par jour ?
 
 alimentation . boisson . réduire café . remplace un café par jour par thé:
   applicable si: boisson . chaude . café . nombre > 1 tasse/jour
@@ -349,21 +324,21 @@ alimentation . boisson . réduire café . remplace un café par jour par thé:
 
     Et si vous buviez moins de café et plus souvent du thé ? C’est une solution pour réduire l’empreinte carbone de votre alimentation.
 
-alimentation . boisson . réduire café . remplace par thé:
-  applicable si: boisson . chaude . café . nombre >= 1 tasse/jour
-  action:
-    dépasse:
-      - alimentation . boisson . réduire café . max un par jour
-      - alimentation . boisson . réduire café . max deux par jour
-      - alimentation . boisson . réduire café . remplace par chicorée
-      - alimentation . boisson . réduire café . remplace un café par jour par thé
-  titre: Remplacer le café par du thé
-  icônes: ☕️🫖
-  formule: boisson . chaude . café . nombre * (boisson . tasse de café - boisson . tasse de thé) * transport . durée séjour
-  description: |
-    Le thé a une empreinte carbone moins élevée que le café.
-
-    Et si vous passiez du café au thé ?
+#alimentation . boisson . réduire café . remplace par thé:
+#  applicable si: boisson . chaude . café . nombre >= 1 tasse/jour
+#  action:
+#    dépasse:
+#      - alimentation . boisson . réduire café . max un par jour
+#      - alimentation . boisson . réduire café . max deux par jour
+#      - alimentation . boisson . réduire café . remplace par chicorée
+#      - alimentation . boisson . réduire café . remplace un café par jour par thé
+#  titre: Remplacer le café par du thé
+#  icônes: ☕️🫖
+#  formule: boisson . chaude . café . nombre * (boisson . tasse de café - boisson . tasse de thé) * transport . durée séjour
+#  description: |
+#    Le thé a une empreinte carbone moins élevée que le café.
+#
+#    Et si vous passiez du café au thé ?
 
 alimentation . boisson . réduire café . remplace par chicorée:
   applicable si: boisson . chaude . café . nombre >= 1 tasse/jour
@@ -380,13 +355,11 @@ alimentation . boisson . réduire café . remplace par chicorée:
     Et si vous goûtiez à la chicorée ?
 
 alimentation . boisson . réduire chocolat chaud:
-
 alimentation . boisson . réduire chocolat chaud . max un par jour:
   applicable si: boisson . chaude . chocolat chaud . nombre > 1 tasse/jour
   titre: Se limiter à un chocolat chaud par jour
   icônes: ☕️1️⃣
   formule: (boisson . chaude . chocolat chaud - boisson . tasse de chocolat chaud) * transport . durée séjour
-#  formule: (boisson . chaude . chocolat chaud . nombre - 1 tasse/jour) * boisson . tasse de chocolat chaud * commun . jours par an
   description: |
     Le chocolat chaud a une empreinte carbone non négligeable : près de 600 gCO2e / tasse !
 

@@ -2,7 +2,7 @@
 #Train et Car longue distance : checker les FE 
 #Voiture : poser la question de s'il s'agit du même véhicule ou si louez mais attention il faut affiner les réponses à la première question voiture car on n'est plus sur du proprio régulier non proprio et non régulier
 séjour:
-# Cette première mosaique concerne les modes de transport dit "secondaires", c.à.d ceux faits pendant le séjour dans la région Haut de France.
+# Cette première mosaique concerne les modes de transport dit "secondaires", c.à.d ceux faits pendant le séjour dans la région Hauts-de-France.
 # Sur avis de HdF Tourisme, on considère 6 modes de transport principaux : TER, voiture, deux roues motorisés, transport en commun, mobilité douce et taxi
   applicable si:
     une de ces conditions:
@@ -48,6 +48,46 @@ séjour:
       - mobilité douce
       - taxi
 
+séjour . notif mobilité douce dunkerquois:
+  type: notification
+  formule:
+    toutes ces conditions:
+      - transport . localisation séjour = 1
+      - séjour . mobilité douce . présent
+  description: |
+    Vélo ! Vous avez dit vélo ? Quelques adresses de loueurs ([ici](https://www.location-velo-dunkerque.fr/),[ici](https://www.station-velo-59.fr/) et [là](https://lepaarc.com/activites/velo/)) pour trouver le compagnon de route parfait !
+
+séjour . notif transport commun dunkerquois:
+  type: notification
+  formule:
+    toutes ces conditions:
+      - transport . localisation séjour = 1
+      - transports commun . présent
+  description:
+    Bravo ! Vous optez pour les transports en commun ? Pour planifier vos itinéraires, consulter les horaires, c'est [ici](https://www.dkbus.com/).
+
+séjour . notif train:
+  type: notification
+  formule:
+    toutes ces conditions:
+      - transport . localisation séjour = 1
+      - train . présent
+  description: |
+    Bravo ! Vous optez pour un mode de transport écologique pendant votre séjour. Pour trouver les horaires qui vous conviennent c'est [ici](https://www.ter.sncf.com/hauts-de-france).
+
+séjour . notif choix carboné dunkerquois:
+  type: notification
+  formule:
+    toutes ces conditions:
+      - transport . localisation séjour = 1
+      - une de ces conditions:
+          - voiture . présent
+          - deux roues . présent
+          - taxi . présent
+  description: |
+    Et si vous optiez pour des transports moins carbonés pendant votre séjour ? Le réseau de transport en commun [DK'Bus](https://www.dkbus.com/) ou la location de vélo ([ici](https://www.location-velo-dunkerque.fr/),[ici](https://www.station-velo-59.fr/) ou [là](https://lepaarc.com/activites/velo/)) sont
+    des gestes forts pour un séjour durable.
+
 séjour . notif voiture:
   type: notification
   formule:
@@ -55,20 +95,8 @@ séjour . notif voiture:
       - transport . voiture . utilisateur = 'non régulier'
       - séjour . voiture . présent = oui
   description: |
-    Vous avez dit faire du covoiturage pour vous rendre en Haut de France et vous comptez utiliser une voiture pendant votre séjour. Nous allons donc vous poser des questions sur les
+    Vous avez dit faire du covoiturage pour vous rendre en Hauts-de-France et vous comptez utiliser une voiture pendant votre séjour. Nous allons donc vous poser des questions sur les
     caractéristiques de la voiture que vous allez utiliser.
-
-séjour . notif actif:
-  type: notification
-  formule: séjour . mobilité douce . présent = 'oui'
-  description: |
-    **Vous avez renseigné marcher, faire du vélo ou de la trottinette ?**
-    Félicitations ! 👏
-
-    Le vélo et la trottinette sont des modes de transport super sobres : a peine quelques kilos de matériel pour déplacer un corps de ~70 kilos.
-    Quant à vos chaussures, elles sont un véhicule ultra léger !
-
-    💡 A noter que l'empreinte de la marche et de **l'usage** du vélo classique (et non la fabrication) est considérée comme nulle.
 
 ### Train ###
 séjour . train . présent:
@@ -76,11 +104,17 @@ séjour . train . présent:
   par défaut: non
 
 séjour . train:
-  applicable si: séjour . train . présent
+  applicable si: présent
   titre: TER
   icônes: 🚞
-  formule: transport . train . TER * km
+  formule: TER * km
   unité: kgCO2e
+
+séjour . train . TER: #On est obligé de créer la variable "séjour . train . TER" et d'y trouver les mêmes infos que "transport . train . TER" car si l'utilisateur ne coche pas "train" dans transport publicodes ne récupère pas les infos (du fait du applicable si: présent dans "transport . train")
+  formule: 0.0277
+  unité: kgCO2e/km
+  note: |
+    TER - 2022 - Traction moyenne ; 27.7 gCO2e/km/personne ; Base Carbone consultée le 19/11/2023 (Données SNCF)
 
 séjour . train . km:
   applicable si: séjour . train . présent
@@ -146,7 +180,7 @@ séjour . voiture . identique:
       - séjour . voiture . présent = oui
       - transport . voiture . présent = oui
   question: Allez-vous utiliser la même voiture pour vos déplacements pendant le séjour que pour faire l'aller-retour depuis votre domicile ?
-  description: Il est fort probable que si vous veniez en Haut de France en voiture vous 
+  description: Il est fort probable que si vous veniez en Hauts-de-France en voiture vous 
 
 # L'attribut empreinte moyenne est gardé uniquement pour un cas bien spécifique : A-R = voiture mais jnsp sur utilisateur + séjour = voiture
 séjour . voiture:

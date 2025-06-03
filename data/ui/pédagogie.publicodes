@@ -8,11 +8,16 @@ ui . pédagogie:
 
 ui . pédagogie . sous catégories:
 ui . pédagogie . sous catégories . transport:
+ui . pédagogie . sous catégories . séjour:
 ui . pédagogie . sous catégories . alimentation:
 ui . pédagogie . sous catégories . logement:
 ui . pédagogie . sous catégories . divers:
+#ui . pédagogie . sous catégories . divers . loisirs:
+#ui . pédagogie . sous catégories . divers . loisirs . activité:
 
-ui . pédagogie . sous catégories . transport . voiture:
+ui . pédagogie . sous catégories . transport . voiture dunkerquois:
+  titre: Voiture pour venir en Hauts-de-France
+#  applicable si: transport . localisation séjour = 1
   icônes: 🚗
   formule: transport . voiture
   actions:
@@ -25,39 +30,70 @@ ui . pédagogie . sous catégories . transport . voiture:
     - transport . voiture . voiture électrique
     - transport . voiture . limitation autoroute
   informations:
-    - informations regionales . transport . vélo . par défaut
-    - informations regionales . transport . marche . par défaut
-    - informations regionales . alimentation . achat produits locaux
+    - informations regionales . transport . alternartives
+    - informations regionales . transport . alternartives train
+#    - informations regionales . transport . vélo . par défaut
+#    - informations regionales . transport . marche . par défaut
+#    - informations regionales . alimentation . achat produits locaux . dunkerquois
+#    - informations regionales . transport . vélo . dunkerquois
+#    - informations regionales . transport . marche . dunkerquois
+#    - informations regionales . divers . loisir . dunkerquois . marche1
+#    - informations regionales . divers . loisir . dunkerquois . marche2
+
+ui . pédagogie . sous catégories . séjour . voiture dunkerquois:
+  titre: Voiture pendant votre séjour
+  applicable si: transport . localisation séjour = 1
+  icônes: 🚗
+  formule: séjour . voiture
+  actions:
+    - séjour . voiture . éco-conduite
+    - séjour . voiture . opter transport commun
+    - séjour . voiture . sans voiture
+  informations:
+#    - informations regionales . transport . vélo . par défaut
+#    - informations regionales . transport . marche . par défaut
+#    - informations regionales . alimentation . achat produits locaux
+    - informations regionales . séjour . vélo . dunkerquois
+    - informations regionales . séjour . marche . dunkerquois
+    - informations regionales . séjour . transport commun . dunkerquois
+    - informations regionales . séjour . train
+    - informations regionales . divers . loisir . dunkerquois . marche1
+    - informations regionales . divers . loisir . dunkerquois . marche2
 #    variations:
 #      - si: transport . localisation séjour = 1
 #        alors:
-#          - informations regionales . transport . vélo . nord
-#          - informations regionales . transport . marche . nord
+#          - informations regionales . séjour . vélo . dunkerquois
+#          - informations regionales . séjour . marche . dunkerquois
 #      - si: transport . localisation séjour = 2
 #        alors:
-#          - informations regionales . transport . vélo . pas de calais
-#          - informations regionales . transport . marche . pas de calais
+#          - informations regionales . séjour . vélo . pas de calais
+#          - informations regionales . séjour . marche . pas de calais
 #      - si: transport . localisation séjour = 3
 #        alors:
-#          - informations regionales . transport . vélo . somme
-#          - informations regionales . transport . marche . somme
+#          - informations regionales . séjour . vélo . somme
+#          - informations regionales . séjour . marche . somme
 #      - si: transport . localisation séjour = 4
 #        alors:
-#          - informations regionales . transport . vélo . aisne
-#          - informations regionales . transport . marche . aisne
+#          - informations regionales . séjour . vélo . aisne
+#          - informations regionales . séjour . marche . aisne
 #      - si: transport . localisation séjour = 5
 #        alors:
-#          - informations regionales . transport . vélo . oise
-#          - informations regionales . transport . marche . oise
+#          - informations regionales . séjour . vélo . oise
+#          - informations regionales . séjour . marche . oise
 #      - sinon:
-#          - informations regionales . transport . vélo . par défaut
-#          - informations regionales . transport . marche . par défaut
+#          - informations regionales . séjour . vélo . par défaut
+#          - informations regionales . séjour . marche . par défaut
 
-ui . pédagogie . sous catégories . transport . deux roues:
+ui . pédagogie . sous catégories . transport . deux roues dunkerquois:
+  titre: Moto pour venir en Hauts-de-France
   icônes: 🏍️
   formule: transport . deux roues
   actions:
-    - transport . deux roues . scooter électrique
+    - transport . deux roues . limitation autoroute:
+  informations:
+    - informations regionales . transport . alternartives
+    - informations regionales . transport . alternartives train
+
 ui . pédagogie . sous catégories . transport . mobilité douce:
   icônes: 🚲
   formule: transport . mobilité douce
@@ -67,37 +103,66 @@ ui . pédagogie . sous catégories . transport . bus:
   formule: transport . bus
 
 ui . pédagogie . sous catégories . transport . train:
+  titre: Train pour venir en Hauts-de-France
   icônes: 🚋
   formule: transport . train
+  actions:
+    - transport . train HdF
 
-ui . pédagogie . sous catégories . alimentation . viande:
-  titre: Repas avec viande
-  icônes: 🥩
+ui . pédagogie . sous catégories . alimentation . découverte:
+  applicable si: transport . localisation séjour = 1
+  titre: Votre alimentation pendant le séjour
+  icônes: 🎯
   formule:
-    somme:
-      - alimentation . plats . viande rouge
-      - alimentation . plats . viande blanche
+    somme: #Obliger de passer par une somme car la variable alimentation dans "formule" ne fonctionne pas
+      - alimentation . repas
+      - alimentation . boisson 
   actions:
     - alimentation . repas . réduire viande . max 1 par jour
-    - alimentation . repas . réduire viande . max 2 par semaine
     - alimentation . repas . viande faible empreinte
     - alimentation . devenir végétarien
-    #  Pour le moment, nous ne souhaitons pas afficher cette action pour cette sous-catégorie
-    # - alimentation . devenir végétalien
+    # - alimentation . devenir végétalien #  Pour le moment, nous ne souhaitons pas afficher cette action pour cette sous-catégorie
+    - alimentation . boisson . réduire café . max deux par jour
+    - alimentation . boisson . réduire café . remplace un café par jour par thé
+    - alimentation . boisson . réduire café . remplace par chicorée
+    - alimentation . boisson . réduire chocolat chaud . max un par jour
     - alimentation . bonus . manger de saison
     - alimentation . bonus . manger local
   informations:
-    - informations regionales . alimentation . rhubarbe
-    - informations regionales . alimentation . fraise
-    - informations regionales . alimentation . chou fleur
-    - informations regionales . alimentation . pomme
-    - informations regionales . alimentation . miel
-    - informations regionales . alimentation . pomme de terre
-    - informations regionales . alimentation . saint jacques
-    - informations regionales . alimentation . hareng
-    - informations regionales . alimentation . endive
-    - informations regionales . alimentation . licques
-    - informations regionales . alimentation . soissons
+    - informations regionales . alimentation . achat produits locaux . dunkerquois
+    - informations regionales . alimentation . chicorée
+    - informations regionales . alimentation . liste aop . dunkerquois
+
+#ui . pédagogie . sous catégories . alimentation . viande:
+#  applicable si: transport . localisation séjour = 1
+#  titre: Repas avec viande
+#  icônes: 🥩
+#  formule:
+#    somme:
+#      - alimentation . plats . viande rouge
+#      - alimentation . plats . viande blanche
+#  actions:
+#    - alimentation . repas . réduire viande . max 1 par jour
+#    - alimentation . repas . réduire viande . max 2 par semaine
+#    - alimentation . repas . viande faible empreinte
+#    - alimentation . devenir végétarien
+#    #  Pour le moment, nous ne souhaitons pas afficher cette action pour cette sous-catégorie
+#    # - alimentation . devenir végétalien
+#    - alimentation . bonus . manger de saison
+#    - alimentation . bonus . manger local
+#  informations:
+#    - informations regionales . alimentation . achat produits locaux . dunkerquois
+#    - informations regionales . alimentation . rhubarbe
+#    - informations regionales . alimentation . hareng
+#    - informations regionales . alimentation . licques
+#    - informations regionales . alimentation . soissons
+##    - informations regionales . alimentation . fraise
+##    - informations regionales . alimentation . chou fleur
+##    - informations regionales . alimentation . pomme
+##    - informations regionales . alimentation . miel
+##    - informations regionales . alimentation . pomme de terre
+##    - informations regionales . alimentation . saint jacques
+##    - informations regionales . alimentation . endive
 
 ui . pédagogie . sous catégories . alimentation . poisson:
   titre: Repas avec poisson
@@ -115,17 +180,17 @@ ui . pédagogie . sous catégories . alimentation . poisson:
     - alimentation . bonus . manger de saison
     - alimentation . bonus . manger local
 
-ui . pédagogie . sous catégories . alimentation . végé:
-  titre: Repas végétariens
-  icônes: 🥦
-  formule:
-    somme:
-      - alimentation . plats . végétalien
-      - alimentation . plats . végétarien
+#ui . pédagogie . sous catégories . alimentation . végé:
+#  titre: Repas végétariens
+#  icônes: 🥦
+#  formule:
+#    somme:
+#      - alimentation . plats . végétalien
+#      - alimentation . plats . végétarien
 
-ui . pédagogie . sous catégories . alimentation . petit déjeuner:
-  icônes: 🥐
-  formule: alimentation . petit déjeuner séjour
+#ui . pédagogie . sous catégories . alimentation . petit déjeuner:
+#  icônes: 🥐
+#  formule: alimentation . petit déjeuner séjour
 
 ui . pédagogie . sous catégories . alimentation . boisson:
   icônes: 🥤
@@ -142,46 +207,47 @@ ui . pédagogie . sous catégories . alimentation . boisson:
     - alimentation . boisson . réduire alcool . max un litres par semaine
     - alimentation . boisson . eau en bouteille . arrêter
 
-ui . pédagogie . sous catégories . alimentation . déchets:
-  icônes: 🚮
-  formule: alimentation . déchets
-  actions:
-    - alimentation . déchets . devenir zéro déchet
-    - alimentation . déchets . réduire gaspillage
-    - alimentation . déchets . composter
-    - alimentation . déchets . avoir un stop pub
+#ui . pédagogie . sous catégories . alimentation . déchets:
+#  icônes: 🚮
+#  formule: alimentation . déchets
+#  actions:
+#    - alimentation . déchets . devenir zéro déchet
+#    - alimentation . déchets . réduire gaspillage
+#    - alimentation . déchets . composter
+#    - alimentation . déchets . avoir un stop pub
 
-ui . pédagogie . sous catégories . logement . hébergement:
-  applicable si: 
-    une de ces conditions:
-      - logement . hébergement . nuitées . hotel . nombre de nuitées > 0
-      - logement . hébergement . nuitées . résidence de tourisme . nombre de nuitées > 0
-      - logement . hébergement . nuitées . camping . nombre de nuitées > 0
-      - logement . hébergement . nuitées . locations . nombre de nuitées > 0
-  icônes: 🏨
-  formule: logement . hébergement
-  actions:
-    - logement . hébergement . écogestes
-  informations:
-    - informations regionales . hébergement . nuitées . par défaut
-#    variations:
-#      - si: transport . localisation séjour = 1
-#        alors:
-#          - informations regionales . hébergement . nuitées . nord
-#      - si: transport . localisation séjour = 2
-#        alors:
-#          - informations regionales . hébergement . nuitées . pas de calais
-#      - si: transport . localisation séjour = 3
-#        alors:
-#          - informations regionales . hébergement . nuitées . somme
-#      - si: transport . localisation séjour = 4
-#        alors:
-#          - informations regionales . hébergement . nuitées . aisne
-#      - si: transport . localisation séjour = 5
-#        alors:
-#          - informations regionales . hébergement . nuitées . oise
-#      - sinon:
-#          - informations regionales . hébergement . nuitées . par défaut
+### On commente car pour l'instant on ne pousse pas d'actions/messages sur l'hébergement
+#ui . pédagogie . sous catégories . logement . hébergement: 
+#  applicable si: 
+#    une de ces conditions:
+#      - logement . hébergement . nuitées . hotel . nombre de nuitées > 0
+#      - logement . hébergement . nuitées . résidence de tourisme . nombre de nuitées > 0
+#      - logement . hébergement . nuitées . camping . nombre de nuitées > 0
+#      - logement . hébergement . nuitées . locations . nombre de nuitées > 0
+#  icônes: 🏨
+#  formule: logement . hébergement
+#  actions:
+#    - logement . hébergement . écogestes
+#  informations:
+#    - informations regionales . hébergement . nuitées . par défaut
+##    variations:
+##      - si: transport . localisation séjour = 1
+##        alors:
+##          - informations regionales . hébergement . nuitées . nord
+##      - si: transport . localisation séjour = 2
+##        alors:
+##          - informations regionales . hébergement . nuitées . pas de calais
+##      - si: transport . localisation séjour = 3
+##        alors:
+##          - informations regionales . hébergement . nuitées . somme
+##      - si: transport . localisation séjour = 4
+##        alors:
+##          - informations regionales . hébergement . nuitées . aisne
+##      - si: transport . localisation séjour = 5
+##        alors:
+##          - informations regionales . hébergement . nuitées . oise
+##      - sinon:
+##          - informations regionales . hébergement . nuitées . par défaut
 
 # Réfléchir aux informations qu'on pourrait pousser ici 
 #ui . pédagogie . sous catégories . logement . aquatique:
@@ -191,10 +257,32 @@ ui . pédagogie . sous catégories . logement . hébergement:
 #     - opter pour un hébergement sans piscine
 #     - etc.
 
-# Réfléchir aux informations qu'on pourrait pousser ici  
-#ui . pédagogie . sous catégories . divers . loisirs:
-#  icônes: 🎭
-#  formule: divers . loisirs
+# Réfléchir aux informations qu'on pourrait pousser ici
+ui . pédagogie . sous catégories . divers . activités décarbonées dunkerquois:
+  applicable si: transport . localisation séjour = 1
+  titre: Activités culturelles et de loisirs
+  icônes: 🌳
+  formule: divers . loisirs - divers . loisirs . activité . empreinte activité motorisée #On fait cette soustraction pour que si empreinte "activité motorisée" est cochée ça soit l'ui juste après qui s'affiche (pour l'instant "activité motorisée a plus d'empreinte que toutes les autres activités).
+  actions:
+    - divers . loisirs . activité décarbonée
+  informations:
+    - informations regionales . divers . loisir . dunkerquois . marche
+    - informations regionales . divers . loisir . dunkerquois . vélo
+    - informations regionales . divers . loisir . dunkerquois . nautique
+    - informations regionales . divers . loisir . dunkerquois . parcs et jardins
+#    - informations regionales . divers . loisir . dunkerquois . marche1
+#    - informations regionales . divers . loisir . dunkerquois . marche2
+
+ui . pédagogie . sous catégories . divers . activités carbonées dunkerquois:
+  applicable si: transport . localisation séjour = 1
+  titre: Activités carbonées durant votre séjour
+  icônes: 🛻
+  formule: divers . loisirs . activité . empreinte activité motorisée
+  actions:
+    - divers . loisirs . activité moins carbonée
+  informations:
+    - informations regionales . divers . loisir . dunkerquois . marche1
+    - informations regionales . divers . loisir . dunkerquois . marche2
 
 ##########################################################################################################
 ### On commente car ces sous catégories et les actions qu'elle contiennent car elles ne sont pas utiles ici (car reprises de NGC)

@@ -54,7 +54,7 @@ logement . hébergement . nuitées . empreinte par défaut:
     somme:
       - 2 * empreinte hotel par nuit
   unité: kgCO2e
-  note: On considère que le séjour moyen en Haut de France est de 3 nuits en hôtel. A caler avec Christophe.
+  note: On considère que le séjour moyen en Hauts-de-France est de 3 nuits en hôtel. A caler avec Christophe.
 
 logement . hébergement . nuitées . choix utilisateur:
   titre: Choix utilisateur pour les nuitées
@@ -344,7 +344,7 @@ logement . hébergement . nuitées . famille ou amis . notif:
 # Pour être parfaitement exacte côté modèle, il faudrait que je divise cette empreinte d'un ratio j_séjour/365 car je crois que l'empreinte de la piscine est calculée sur une année
 logement . hébergement . aquatique:
   titre: Piscines, spa, jacuzzi
-  question: Votre logement sera-t-il équipé d'une piscine ou d'un spa/jacuzzi ?
+  question: Votre logement sera-t-il équipé d'une piscine ou d'un spa, sauna, bain nordique, etc. ?
   mosaique:
     type: selection
     options:
@@ -354,7 +354,7 @@ logement . hébergement . aquatique:
     suggestions:
       aucun:
         piscine non chauffée . présent: non
-        piscine  chauffée . présent: non
+        piscine chauffée . présent: non
         spa jacuzzi . présent: non
   description: |
     Même si vous ne comptez pas les utiliser, renseignez quand même ce dont votre hébergement est équipé.
@@ -381,26 +381,32 @@ logement . hébergement . aquatique . choix utilisateur:
 logement . hébergement . aquatique . empreinte totale:
   formule:
     somme:
-      - piscine non chauffée . empreinte
-      - piscine chauffée . empreinte
-      - spa jacuzzi . empreinte
+      - empreinte piscine non chauffée
+      - empreinte piscine chauffée
+      - empreinte spa jacuzzi
   unité: kgCO2e
 
 logement . hébergement . aquatique . empreinte par défaut:
   formule: 100
   unité: kgCO2e
     
+logement . hébergement . aquatique . empreinte piscine non chauffée:
+  applicable si:
+    toutes ces conditions:
+      - est défini: piscine non chauffée . présent
+      - piscine non chauffée . présent
+  titre: Empreinte piscine non chauffée
+  formule: 10 #Retravailler la fonction 'contexte' dans piscine non chauffée . empreinte pour qu'elle fonctionne
+  unité: kgCO2e
+
 logement . hébergement . aquatique . piscine non chauffée:
   titre: Piscine non chauffée
   icônes: 🏊‍♀️
-#  formule: piscine non chauffée . empreinte
 
 logement . hébergement . aquatique . piscine non chauffée . présent:
   question: Allez-vous disposer d'une piscine non chauffée ?
 
-logement . hébergement . aquatique . piscine non chauffée . empreinte:
-  formule: 10 #Retravailler la fonction 'contexte' pour qu'elle fonctionne
-  unité: kgCO2e
+#logement . hébergement . aquatique . piscine non chauffée . empreinte:
 #  valeur: logement . piscine
 #  contexte:
 #    métrique: "'carbone'"
@@ -410,18 +416,24 @@ logement . hébergement . aquatique . piscine non chauffée . empreinte:
 #      valeur: voiture . électrique . consommation estimée
 #      contexte:
 #        voiture . utilisateur: "'propriétaire'"
+
+logement . hébergement . aquatique . empreinte piscine chauffée:
+  applicable si:
+    toutes ces conditions:
+      - est défini: piscine chauffée . présent
+      - piscine chauffée . présent
+  titre: Empreinte piscine chauffée
+  formule: 10 #Retravailler la fonction 'contexte' dans piscine chauffée . empreinte pour qu'elle fonctionne
+  unité: kgCO2e
 
 logement . hébergement . aquatique . piscine chauffée:
   titre: Piscine chauffée
   icônes: 🏊‍♀️🌡️
-#  formule: piscine chauffée . empreinte
 
 logement . hébergement . aquatique . piscine chauffée . présent:
   question: Allez-vous disposer d'une piscine chauffée ?
 
-logement . hébergement . aquatique . piscine chauffée . empreinte:
-  formule: 10 #Retravailler la fonction 'contexte' pour qu'elle fonctionne
-  unité: kgCO2e
+#logement . hébergement . aquatique . piscine chauffée . empreinte:
 #  valeur: logement . piscine
 #  contexte:
 #    métrique: "'carbone'"
@@ -432,17 +444,24 @@ logement . hébergement . aquatique . piscine chauffée . empreinte:
 #      contexte:
 #        voiture . utilisateur: "'propriétaire'"
 
-logement . hébergement . aquatique . spa jacuzzi:
-  titre: Spa et/ou jacuzzi
+logement . hébergement . aquatique . empreinte spa jacuzzi:
+  applicable si:
+    toutes ces conditions:
+      - est défini: spa jacuzzi . présent
+      - spa jacuzzi . présent
+  titre: Empreinte spa jacuzzi
   icônes: 🧖‍♂️♨️
-#  formule: spa jacuzzi . empreinte
+  formule: 10 #Retravailler la fonction 'contexte' dans spa jacuzzi . empreinte pour qu'elle fonctionne
+  unité: kgCO2e
+
+logement . hébergement . aquatique . spa jacuzzi:
+  titre: Spa, sauna, hammam, bain nordique
+  icônes: 🧖‍♂️♨️
 
 logement . hébergement . aquatique . spa jacuzzi . présent:
   question: Allez-vous disposer d'un spa/jacuzzi ?
 
-logement . hébergement . aquatique . spa jacuzzi . empreinte:
-  formule: 10 #Retravailler la fonction 'contexte' pour qu'elle fonctionne
-  unité: kgCO2e
+#logement . hébergement . aquatique . spa jacuzzi . empreinte:
 #  valeur: logement . piscine
 #  contexte:
 #    métrique: "'carbone'"
