@@ -5,7 +5,17 @@ séjour . voiture . éco-conduite:
       - séjour . voiture . présent
       - séjour . voiture . km > 0
   icônes: 🚗☮
-  formule: voiture . empreinte au kilomètre * voiture . km * réduction / séjour . voiture . voyageurs
+  formule: 
+    variations:
+      - si: 
+          une de ces conditions:
+            - est non défini: transport . voiture . utilisateur
+            - transport . voiture . utilisateur = 'non régulier'
+            - transport . train . présent
+            - transport . car longue distance . présent
+            - transport . deux roues . présent
+        alors: voiture . empreinte au kilomètre * voiture . km * réduction / séjour . voiture . voyageurs
+      - sinon: transport . voiture . empreinte au kilomètre * voiture . km * réduction / séjour . voiture . voyageurs
   unité: kgCO2e
   description: |
     Sécurité, réduction des émissions de gaz à effet de serre, économies de carburant : l’écoconduite n’a que des avantages. 
@@ -22,6 +32,36 @@ séjour . voiture . éco-conduite . réduction:
   note: |
     Hypothèse de réduction de 15% ([Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter))
 
+séjour . voiture . opter transport commun:
+  titre: Se déplacer en transport en commun
+  applicable si: 
+    toutes ces conditions:
+      - séjour . voiture . présent
+      - séjour . voiture . km > 0
+  icônes: 🚌
+  formule: ((voiture . empreinte au kilomètre * voiture . km) - (transports commun . type . bus . impact par km * voiture . km)) * part report modal
+  unité: kgCO2e
+  description: |
+
+séjour . voiture . opter transport commun . part report modal:
+  titre: Part de déplacements en voiture faisable en TC #A variabiliser selon le lieu ? Pas pour une v1
+  formule: 15% #Valeur arbitraire et non sourcée
+  note: |
+    Valeur choisie arbitrairement et non (encore) sourcée
+
+séjour . voiture . sans voiture:
+  titre: Essayez un séjour sans voiture 
+  icônes: 🚗❌
+  applicable si:
+    toutes ces conditions:
+      - séjour . voiture . présent
+      - séjour . voiture . km > 0
+  formule: séjour . voiture # A vérifier s'il ne faut pas des variations en fonction des différents choix utilisateur
+  unité: kgCO2e
+  description: |
+    Se passer de voiture c'est aussi un moyen de découvrir les beautés proches de votre hébergement. Ce n'est, certes, pas chose aisée mais pas impossible non plus : sorties pédestres,
+    balades à vélo, transport en commun, TER, les moyens de se passer de voiture existent.
+
 # Action à confirmer au regard des données GES utilisées qui semblait mettre en avant que les e-scooter shared avait un énorme impact car gros et à durée de vie très faible
 séjour . deux roues . location deux roues électrique:
   titre: Louer électrique plutôt que thermique
@@ -37,7 +77,7 @@ séjour . deux roues . location deux roues électrique:
       - séjour . deux roues . type = 'scooter électrique'
   formule: séjour . deux roues - recalcul
   description: |
-    Blabla sur l'autopartage électrique et sur le fait que l'autonomie sera suffisante pour vous rendre en Haut de France au regard des km renseignés
+    Blabla sur l'autopartage électrique et sur le fait que l'autonomie sera suffisante pour vous rendre en Hauts-de-France au regard des km renseignés
   note: |
     Blabla
 

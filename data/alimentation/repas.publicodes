@@ -104,7 +104,7 @@ alimentation . plats:
   titre: Empreinte des repas
   description: |
     En cohérence avec la durée de votre séjour, renseignez le nombre et les types de plats que vous allez probablement manger. Par exemple, si vous restez trois jours en 
-    Haut de France vous devez renseigner 6 repas.
+    Hauts-de-France vous devez renseigner 6 repas.
   formule:
     somme:
       - végétalien
@@ -126,6 +126,19 @@ alimentation . plats:
     💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
 
     🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit#gid=1235090355) sous forme de tableur.
+
+alimentation . notif alimentation dunkerquois:
+  type: notification
+  formule:
+    toutes ces conditions:
+      - transport . localisation séjour = 1
+      - est défini: alimentation . plats
+      - alimentation . nombre plats >= 1
+  description: |
+    Si vous voulez mangez en cicruit court et soutenir l'économie locale, voici les horaires des marchés du Dunkerquois :
+    - Marché de Dunkerque, mercredi / samedi: 8h-13h,  Place du Général de Gaulle
+    - Marché Bray-Dunes, jeudi: 8h-12h30, Place du 26 février 1883
+    - Marché de Malo-les-Bains, mardi: 8h-13h, Place Turenne 
 
 alimentation . plats . végétalien:
   titre: Végétalien
@@ -712,7 +725,7 @@ alimentation . local . consommation:
     > ⚠️ Attention, si vous faites vos courses en voiture à plusieurs km de chez vous chaque semaine, il est possible que l'empreinte du dernier km dépasse les gains d'une alimentation locale !
 
   note: Voir détail de l'approche de calcul [ici](http://nosgestesclimat/documentation/alimentation/local/part-locale)
-  par défaut: "'jamais'"
+  par défaut: "'parfois'" #Obliger de mettre "parfois" et non "jamais" car sinon la notif s'affiche tout de suite
   formule:
     une possibilité:
       choix obligatoire: oui
@@ -721,6 +734,15 @@ alimentation . local . consommation:
         - parfois
         - souvent
         - oui toujours
+
+alimentation . notif local:
+  type: notification
+  formule:
+    toutes ces conditions:
+      - est défini: local . consommation
+      - local . consommation = 'jamais'
+  description: |
+    Et si vous consommiez des produits de chez nous ! Trouvez un point de vente à côté de votre hébergement sur [ouacheterlocal.fr](https://ouacheterlocal.fr/nos-points-de-vente/)
 
 alimentation . local . consommation . jamais:
   titre: Jamais
@@ -860,3 +882,13 @@ alimentation . de saison . pourcentage de saison:
     Elle a cependant le mérite de donner un premier ordre de grandeur.
 
     🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1SVYvBaaYDOUDcg5jX0eZFEColnWWIL8PCLMGrPR000o/edit#gid=1694091424) sous forme de tableur.
+
+alimentation . nombre plats:
+  formule:
+    somme:
+      - plats . végétalien . nombre
+      - plats . végétarien . nombre
+      - plats . viande blanche . nombre
+      - plats . viande rouge . nombre
+      - plats . poisson gras . nombre
+      - plats . poisson blanc . nombre
