@@ -16,6 +16,7 @@ jobs:
       check-translation-result: ${{ steps.check-translation.outputs.result }}
       check-personas-result: ${{ steps.check-personas.outputs.result }}
       test-personas-nightly-result: ${{ steps.test-personas-nightly.outputs.result }}
+      test-personas-nightly-eau-result: ${{ steps.test-personas-nightly-eau.outputs.result }}
       test-personas-latest-result: ${{ steps.test-personas-latest.outputs.result }}
       test-url: ${{ steps.set-test-url.outputs.fr }}
     steps:
@@ -73,6 +74,15 @@ jobs:
           body="${body//$'\n'/'%0A'}"
           body="${body//$'\r'/'%0D'}"
           echo "::set-output name=result::${body}"
+      - id: test-personas-nightly-eau
+        name: Test the personas bilans against develop for water metric
+        run: |
+          yarn test:personas --markdown -v nightly -i 'eau' > test-personas-nightly-eau.res
+          body="$(cat test-personas-nightly-eau.res | tail --lines=+3 | head --lines=-1)"
+          body="${body//'%'/'%25'}"
+          body="${body//$'\n'/'%0A'}"
+          body="${body//$'\r'/'%0D'}"
+          echo "::set-output name=result::${body}"
       - id: set-test-url
         # Setups the NGC url with the corresponding PR number: https://nosgestesclimat.fr?PR=<pr_number>
         run: echo "::set-output name=fr::${{ steps.deploy-env.outputs.name == 'master' && 'https://preprod.nosgestesclimat.fr' || format('https://preprod.nosgestesclimat.fr?PR={0}', github.event.pull_request.number) }}"
@@ -108,6 +118,17 @@ jobs:
           <summary>In details</summary>
 
           ${{ needs.compile.outputs.test-personas-nightly-result }}
+
+          </details>
+
+          ### Test personas bilans against [preprod](https://nosgestesclimat-api.osc-fr1.scalingo.io/nightly/fr/FR/rules) - métrique "eau"
+
+          <details>
+          <summary>Show</summary>
+
+          ${{ needs.compile.outputs.test-personas-nightly-eau-result }}
+
+          </details>
 
           </details>
 
