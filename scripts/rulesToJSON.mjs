@@ -123,27 +123,25 @@ try {
     logger: {
       log: (_) => {},
       warn: (message) => {
-        if (
-          !markdown &&
-          // Needs to be fixed, error raised with 1.8 publicodes version
-          !message.includes(
-            "Un cycle a été détecté lors de l'évaluation de cette règle"
-          )
-        ) {
+        if (!markdown) {
           console.warn(message)
         }
       },
       err: (_) => {}
     },
-    options: {
-      strict: {
-        noOrphanRule: true,
-        checkPossibleValues: true,
-        noCycleRuntime: false
-      }
+    strict: {
+      situation: false,
+      noOrphanRule: true,
+      checkPossibleValues: true,
+      noCycleRuntime: false
+    },
+    warn: {
+      // Needs to be fixed, error raised with 1.8 publicodes version
+      cyclicReferences: false
     }
   })
 
+  engine.setSituation({})
   engine.evaluate({ valeur: 'bilan', contexte: { métrique: "'carbone'" } })
   engine.evaluate({ valeur: 'bilan', contexte: { métrique: "'eau'" } })
   engine.evaluate('actions')
