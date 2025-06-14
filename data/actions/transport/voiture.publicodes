@@ -66,12 +66,17 @@ transport . voiture . covoiturage un:
     toutes ces conditions:
       - voiture . km > 0
       - est défini: voiture . utilisateur
-      - voiture . utilisateur = 'propriétaire'
       - voiture . voyageurs < 4 #On ne prend un covoit que si 3 ou en dessous ? Descendre la limite à 2 ?
+      - une de ces conditions:
+        - voiture . utilisateur = 'propriétaire'
+        - voiture . utilisateur = 'régulier non propriétaire'
   non applicable si:
     toutes ces conditions:
       - est défini: voiture . utilisateur
-      - voiture . utilisateur = 'non régulier'
+      - une de ces conditions:
+        - voiture . utilisateur = 'non régulier'
+        - voiture . utilisateur = 'propriétaire covoit'
+        - voiture . utilisateur = 'régulier non propriétaire covoit'
   icônes: 🚗👥
 #  formule: transport . voiture * réduction covoiturage
   formule: transport . voiture - recalcul
@@ -98,12 +103,17 @@ transport . voiture . covoiturage deux:
     toutes ces conditions:
       - voiture . km > 0
       - est défini: voiture . utilisateur
-      - voiture . utilisateur = 'propriétaire'
       - voiture . voyageurs < 3  #On ne prend un covoit que si 2 ou en dessous ? Descendre la limite à 1 ?
+      - une de ces conditions:
+        - voiture . utilisateur = 'propriétaire'
+        - voiture . utilisateur = 'régulier non propriétaire'
   non applicable si:
     toutes ces conditions:
       - est défini: voiture . utilisateur
-      - voiture . utilisateur = 'non régulier'
+      - une de ces conditions:
+        - voiture . utilisateur = 'non régulier'
+        - voiture . utilisateur = 'propriétaire covoit'
+        - voiture . utilisateur = 'régulier non propriétaire covoit'
   action:
     dépasse:
       - transport . voiture . covoiturage un
@@ -246,10 +256,11 @@ transport . voiture . location voiture électrique:
   applicable si:
     toutes ces conditions:
       - voiture . km > 0
-      - voiture . km < 400
+      - voiture . km < 401
       - est défini: voiture . utilisateur
-      - voiture . utilisateur = 'régulier non propriétaire'
-# Ajouter une condition sur un nombre de km max (transport . km) ? Car le véhicule élec n'aura pas l'autonomie pour faire plusieurs centaines de km 
+      - une de ces conditions:
+        - voiture . utilisateur = 'régulier non propriétaire'
+        - voiture . utilisateur = 'régulier non propriétaire covoit'
   non applicable si:
     une de ces conditions:
       - transport . voiture . motorisation = 'électrique'
@@ -257,12 +268,13 @@ transport . voiture . location voiture électrique:
           - est défini: voiture . utilisateur
           - une de ces conditions:
               - voiture . utilisateur = 'propriétaire'
+              - voiture . utilisateur = 'propriétaire covoit'
               - voiture . utilisateur = 'non régulier'
   formule: transport . voiture - recalcul
   description: |
-    Blabla sur l'électrique et sur le fait que l'autonomie sera suffisante pour vous rendre en Hauts-de-France au regard des km renseignés
+    Les véhicules électriques sont des modes de transport écologiques notamment si ces derniers sont partagés et c'est ce que vous faites, bravo ! Et ne vous inquiètez pas, au regard des km que vous avez renseignés, l'autonomie de la batterie sera suffisante pour vous rendre dans la région des Hauts-de-France.
   note: |
-    Blabla
+    On considère une autonomie de la batterie de 400 km. Cette hypothèse n'est pas issue de la littérature mais arrêtée arbitrairement
 
 transport . voiture . location voiture électrique . recalcul:
   valeur: transport . voiture
@@ -298,25 +310,29 @@ transport . voiture . location voiture électrique . recalcul:
 #  contexte:
 #    transport . voiture . motorisation: "'électrique'"
 
-
 transport . voiture . location réduire taille:
   titre: Louer une petite voiture pour le séjour
   applicable si:
     toutes ces conditions : 
       - voiture . km > 0
       - est défini: voiture . utilisateur
-      - voiture . utilisateur = 'régulier non propriétaire'
+      - une de ces conditions:
+        - voiture . utilisateur = 'régulier non propriétaire'
+        - voiture . utilisateur = 'régulier non propriétaire covoit'
   non applicable si:
     une de ces conditions:
       - transport . voiture . motorisation = 'petite'
+      - transport . voiture . voyageurs > 3 #Si plus de 3 passagers on considère qu'on ne peut pas prendre une petite voiture
       - toutes ces conditions:
           - est défini: voiture . utilisateur
           - une de ces conditions:
               - voiture . utilisateur = 'propriétaire'
+              - voiture . utilisateur = 'propriétaire covoit'
               - voiture . utilisateur = 'non régulier'
   formule: transport . voiture - recalcul
   description: |
-    Blabla sur le fait que les voitures sont de plus en plus grosse et que la sobriété sur les véhicules c'est important (=taille adaptée au nombre de voyageurs).
+    Les voitures sont de plus en plus grosses et de plus en plus lourdes. L'impact de leur fabrication sur le climat augmente donc en conséquence. A cela
+     s'ajoute le fait que ces voitures sont de moins en moins adaptées à la ville. Tournez vous donc vers un véhicule de taille raisonnable pour votre location.
 
 transport . voiture . location réduire taille . recalcul:
   valeur: transport . voiture

@@ -85,3 +85,64 @@ séjour . deux roues . location deux roues électrique . recalcul:
   valeur: séjour . deux roues
   contexte:
     séjour . deux roues . type: "'scooter électrique'"
+
+séjour . voiture . location réduire taille:
+  titre: Louer une petite voiture pendant le séjour
+  applicable si:
+    toutes ces conditions : 
+      - séjour . voiture . km > 0
+      - une de ces conditions:
+          - est non défini: transport . voiture . utilisateur
+          - transport . voiture . utilisateur = 'non régulier'
+  non applicable si:
+    une de ces conditions:
+      - séjour . voiture . motorisation = 'petite'
+      - séjour . voiture . voyageurs > 3 #Si plus de 3 passagers on considère qu'on ne peut pas prendre une petite voiture
+      - toutes ces conditions:
+          - est défini: transport . voiture . utilisateur
+          - une de ces conditions:
+              - transport . voiture . utilisateur = 'propriétaire'
+              - transport . voiture . utilisateur = 'propriétaire covoit'
+              - transport . voiture . utilisateur = 'régulier non propriétaire'
+              - transport . voiture . utilisateur = 'régulier non propriétaire covoit'
+  formule: séjour . voiture - recalcul
+  description: |
+    Les voitures sont de plus en plus grosses et de plus en plus lourdes. L'impact de leur fabrication sur le climat augmente donc en conséquence. A cela
+     s'ajoute le fait que ces voitures sont de moins en moins adaptées à la ville. Tournez vous donc vers un véhicule de taille raisonnable pour votre location.
+
+séjour . voiture . location réduire taille . recalcul:
+  valeur: séjour . voiture
+  contexte:
+    séjour . voiture . gabarit: "'petite'"
+
+séjour . voiture . location voiture électrique:
+  titre: Louer électrique plutôt que thermique
+  icônes: 🔌🚗
+  applicable si:
+    toutes ces conditions:
+      - voiture . km > 0
+      - voiture . km < 401
+      - une de ces conditions:
+          - est non défini: transport . voiture . utilisateur
+          - transport . voiture . utilisateur = 'non régulier'
+  non applicable si:
+    une de ces conditions:
+      - séjour . voiture . motorisation = 'électrique'
+      - toutes ces conditions:
+          - est défini: transport . voiture . utilisateur
+          - une de ces conditions:
+              - transport . voiture . utilisateur = 'propriétaire'
+              - transport . voiture . utilisateur = 'propriétaire covoit'
+              - transport . voiture . utilisateur = 'régulier non propriétaire'
+              - transport . voiture . utilisateur = 'régulier non propriétaire covoit'
+  formule: transport . voiture - recalcul
+  description: |
+    Les véhicules électriques sont des modes de transport écologiques notamment si ces derniers sont partagés et c'est ce que vous faites, bravo ! Et ne vous inquiètez pas, au regard des km que vous avez renseignés, l'autonomie de la batterie sera suffisante pour votre séjour en Hauts-de-France.
+  note: |
+    On considère une autonomie de la batterie de 400 km. Cette hypothèse n'est pas issue de la littérature mais arrêtée arbitrairement
+
+
+séjour . voiture . location voiture électrique . recalcul:
+  valeur: séjour . voiture
+  contexte:
+    séjour . voiture . motorisation: "'électrique'"
