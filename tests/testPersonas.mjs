@@ -67,11 +67,11 @@ for (const personaName in localPersonas) {
     const safeSituation = localEngine.getSituation()
 
     const wrongLocalKeys = Object.keys(localSituation).filter(
-      (key) => !(key in safeSituation)
+      (key) => !(key in safeSituation) && key !== 'métrique'
     )
 
     if (wrongLocalKeys.length > 0) {
-      if (version === 'nightly') {
+      if (version === 'nightly' && markdown) {
         console.log(
           `Les règles suivantes n'existent pas dans le modèle ou leur valeur est impossible (_**${version}**_):`
         )
@@ -87,11 +87,11 @@ for (const personaName in localPersonas) {
     const safeProdSituation = prodEngine.getSituation()
 
     const wrongProdKeys = Object.keys(prodSituation).filter(
-      (key) => !(key in safeProdSituation)
+      (key) => !(key in safeProdSituation) && key !== 'métrique'
     )
 
     if (wrongProdKeys.length > 0) {
-      if (version === 'latest') {
+      if (version === 'latest' && markdown) {
         console.log(
           `Les règles suivantes n'existent pas dans le modèle ou leur valeur est impossible (_**${version}**_):`
         )
