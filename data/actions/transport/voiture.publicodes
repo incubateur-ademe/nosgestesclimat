@@ -103,7 +103,7 @@ transport . réduction covoiturage:
 transport . voiture . autopartage:
   titre: Se mettre à l'autopartage
   icônes: 🚗🤝
-  formule: transport . voiture - recalcul
+  formule: recalcul
   applicable si:
     toutes ces conditions:
       - voiture . km > 0
@@ -121,9 +121,7 @@ transport . voiture . autopartage:
   unité: kgCO2e
 
 transport . voiture . autopartage . recalcul:
-  valeur: transport . voiture
-  contexte:
-    transport . voiture . km: transport . voiture . km * (1 - 0.41)
+  formule: ((construction au kilomètre + usage au kilomètre) / voyageurs) * transport . voiture . km * 0.41
   note: |
     L'auto-partage permet de réduire le nombre de km parcourus dans l'année (l'usage de la voiture est moins systématique).
     En moyenne, on compte une baisse de 41% des kilomètres par an d'après [cette étude ADEME](https://presse.ademe.fr/wp-content/uploads/2013/03/ena_4pages_presse_130306.pdf).
@@ -156,9 +154,7 @@ transport . voiture . voiture 5km:
     > Pour encore plus de solutions et découvrir les aides disponibles, [consultez notre article](https://agirpourlatransition.ademe.fr/particuliers/bureau/deplacements/changons-air-changeons-mobilite).
 
 transport . voiture . voiture 5km . recalcul:
-  valeur: transport . voiture
-  contexte:
-    transport . voiture . km: transport . voiture . voiture 5km . distance totale
+  formule: (construction au kilomètre + usage au kilomètre) / voyageurs * transport . voiture . voiture 5km . distance totale
 
 transport . seuil d'activation 5km:
   titre: Seuil d'activation actions liées aux courts trajets
