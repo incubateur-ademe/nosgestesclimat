@@ -91,6 +91,9 @@ jobs:
     runs-on: ubuntu-22.04
     needs: compile
     steps:
+      - id: pr
+        name: Set PR base branch
+        run: echo "base_ref=${{ github.event.pull_request.base.ref }}" >> "$GITHUB_OUTPUT"
       - name: Create artifact
         run: |
           echo "
@@ -111,11 +114,15 @@ jobs:
           ${{ needs.compile.outputs.check-personas-result }}
 
           ## :couple: Personas changes
-
+          " > result.md
+      - name: Add nightly results
+        if: steps.pr.outputs.base_ref != 'master'
+        run: |
+          echo "
           ### Test personas bilans against [preprod](https://nosgestesclimat-api.osc-fr1.scalingo.io/nightly/fr/FR/rules)
 
           <details open=true>
-          <summary>In details</summary>
+          <summary>Show</summary>
 
           ${{ needs.compile.outputs.test-personas-nightly-result }}
 
@@ -130,18 +137,20 @@ jobs:
 
           </details>
 
-          </details>
-
+          " >> result.md
+      - name: Add prod results
+        if: steps.pr.outputs.base_ref == 'master'
+        run: |
+          echo "
           ### Test personas bilans against [production](https://nosgestesclimat-api.osc-fr1.scalingo.io/latest/fr/FR/rules)
 
-          <details>
+          <details open=true>
           <summary>Show</summary>
 
           ${{ needs.compile.outputs.test-personas-latest-result }}
 
           </details>
-
-          " > result.md
+          " >> result.md
       - name: Updating the PR
         uses: actions/github-script@v6
         with:
