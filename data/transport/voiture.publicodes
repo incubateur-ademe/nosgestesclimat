@@ -774,14 +774,10 @@ transport . voiture . construction:
   # mais il est plus simple ici de comprendre la méhotodo avec `variations`.
 
 transport . voiture . construction . seuil km:
-  formule: voiture . durée de vie en km / durée de vie moyenne
-  plafond: voiture . km annuels moyen
+  description: |
+    Valeur seuil qui permet d'attribuer un minimum d'empreinte de construction de la voiture pour les propriétaires, même si la voiture roule peu.
+  formule: voiture . km annuels moyen
   unité: km
-
-transport . voiture . durée de vie moyenne:
-  formule: 20
-  note: |
-    On considère que l'âge moyen d'une voiture qui part à la casse est de 20 ans. Néanmoins, c'est une hypothèse forte car on peut légitimement penser qu'une voiture électrique possède une durée de vie plus longue qu'une voiture thermique. Il faudrait cependant considérer une valeur plus importante également pour la durée de vie en km.
 
 transport . voiture . construction au kilomètre:
   formule: barème construction * amortissement
@@ -991,24 +987,12 @@ transport . voiture . amortissement:
   formule: 1 / durée de vie en km
 
 transport . voiture . durée de vie en km:
-  formule:
-    variations:
-      - si: gabarit = 'petite'
-        alors: 150000
-      - si:
-          une de ces conditions:
-            - gabarit = 'moyenne'
-            - gabarit = 'berline'
-        alors: 225000
-      - sinon: 270000
+  formule: 230000
   unité: km
   note: |
-    Nous nous appuyons sur le référentiel (durée de vie, kilométrage) que reprend la [plateforme automobile de préconisations européennes](https://pfa-auto.fr/wp-content/uploads/2023/04/DT_Me%CC%81thodologie_2023_V15_FRANCAIS.pdf), avec les segments suivants :
+    Nous proposons ici de nous appuyer sur la durée de vie moyenne d'une voiture qui part à la casse (~19 ans, https://www.ecologie.gouv.fr/politiques-publiques/vehicules-hors-dusage-vhu) et le nombre de kilomètres moyen parcourus par an (~12 000 km, Données sur le parc automobile français au 1er janvier 2024](https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2024?rubrique=&dossier=1348)) pour en déduire une durée de vie en km de 230 000 km.
 
-    - Gabarit "petit" : correspondant au segment A, soit 150000 km
-    - Gabarit "moyen" : correspondant au segment B ou C, soit 225000 km
-    - Gabarit "VUL" : correspondant au segment CDV (Car-Derived Vehicle), soit 270000 km
-    - Gabarit "berline" : correspondant au segment B ou C, soit 225000 km
-    - Gabarit "SUV" : correspondant au segment E ou F, soit 270000 km
-
-    Pour le moment, nous ne faisons pas la différence entre thermique et électrique. C'est une hypothèse très forte.
+transport . voiture . durée de vie en années:
+  formule: 19
+  note: |
+    La durée de vie moyenne d'une voiture qui part à la casse est de 19 ans (https://www.ecologie.gouv.fr/politiques-publiques/vehicules-hors-dusage-vhu).
