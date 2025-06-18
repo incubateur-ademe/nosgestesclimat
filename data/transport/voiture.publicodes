@@ -869,23 +869,44 @@ transport . voiture . barème construction . barème électrique . batterie . ca
     La capacité de la batterie est exprimée en kWh, elle varie considérablement selon les modèles de véhicules.
 
     Les constructeurs distinguent parfois une capacité brute et une capacité nette, réellement disponible. Si vous avez les deux valeurs, choisissez la capacité brute.
+  note: |
+    D’après [les données IEA "Share of battery capacity of electric vehicle sales by chemistry and region, 2021-2023"](https://www.iea.org/data-and-statistics/charts/share-of-battery-capacity-of-electric-vehicle-sales-by-chemistry-and-region-2021-2023) (source partagée par le service transport de l'ADEME), on a, en 2023:
+
+    | Type de batterie | Référence BE | Conversion poids - kWh (kWh/kg) | Répartition 2023 |
+    | --- | --- | --- | --- |
+    | LFP | Production d'une batterie rechargeable Li-ion, LFP | 0.116 | 6% |
+    | Low nickel | Production d'une batterie rechargeable Li-ion, NMC532 | 0.144 | 16% |
+    | High nickel | Production d'une batterie rechargeable Li-ion, NMC622 | 0.155 | 79% |
+
+    Ce qui donne, en moyenne, une capacité par kg de 0.152 kWh/kg.
+
+    A partir des [données Carculator](https://carculator.readthedocs.io/en/latest/modeling.html#sizing-of-battery) (source partagée également par le service transport de l'ADEME), on a :
+
+    | **Catégorie de véhicule** | Capacité batterie |
+    | --- | --- |
+    | **Citadine** | 291 kg → 44 kWh |
+    | **Compact / “moyenne”** | 375 kg → 57 kWh |
+    | **Berline** (voiture type “break”) | 583 kg → 89 kWh |
+    | **VUL** | 583 kg →  89 kWh |
+    | **Grande berline** | 660 kg → 100 kWh |
+
   unité: kWh
   par défaut:
     variations:
-      - si:
-          une de ces conditions:
-            - gabarit = 'petite'
-            - gabarit = 'moyenne'
-        alors: 40
+      - si: gabarit = 'petite'
+        alors: 44
+      - si: gabarit = 'moyenne'
+        alors: 57
       - si:
           une de ces conditions:
             - gabarit = 'berline'
             - gabarit = 'SUV'
-            - gabarit = 'VUL'
-        alors: 65
+        alors: 89
+      - si: gabarit = 'SUV'
+        alors: 100
   suggestions:
-    petite autonomie: 40
-    autonomie moyenne: 65
+    petite autonomie: 50
+    autonomie moyenne: 80
     grande autonomie: 100
 
 transport . voiture . barème construction . barème hybride:
