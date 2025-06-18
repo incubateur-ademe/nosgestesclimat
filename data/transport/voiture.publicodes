@@ -714,31 +714,25 @@ transport . voiture . base au kilomètre:
           - utilisateur = 'propriétaire'
           - utilisateur = 'régulier non propriétaire'
   titre: Entretien et climatisation au kilomètre
-  formule: entretien pondéré + climatisation
+  formule: entretien + climatisation
   unité: kgCO2e/km
 
-transport . voiture . entretien pondéré:
+transport . voiture . entretien:
   formule:
     variations:
       - si: motorisation = 'thermique'
-        alors: entretien
+        alors: 0.0067
       - si: motorisation = 'hybride'
-        alors: entretien * 0.90
+        alors: 0.0066
       - si: motorisation = 'électrique'
-        alors: entretien * 0.75
+        alors: 0.0066
   unité: kgCO2e/km
   note: |
-    Plusieurs sources s'accordent pour dire que l'entretien d'un véhicule électrique est inférieur à celui d'un véhicule thermique de 25%. Comme [celle-ci](https://izi-by-edf.fr/blog/voiture-hybride-entretien/).
+    La mise à jour de la Base Empreinte avec les données ecoinvent d'avril 2025 a mis à disposition la donnée "Maintenance d'une voiture particulière électrique (sans batterie)" (maintenance, passenger car, electric, without battery). Nous avons fait le choix d'utiliser son pendant thermique directement depuis ecoinvent (maintenance, passenger car).
 
-    Pour ce qui est d'un véhicule hybride, son entretien se situe entre celui d'un véhicule électrique et celui d'un véhicule thermique. Cela dépend de l'utilisation du moteur électrique ou thermique.
-    Nous choisissons de partir sur une hypothèse conservatrice de -10% de coût d'entretien par rapport aux véhicules thermiques.
+    > Ces données sont soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peuvent pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
 
-transport . voiture . entretien:
-  formule: ((empreinte branche . G45 * 1000000 kgCO2e/ktCO2e * 0.07) / nombre véhicules circulation) / transport . voiture . km annuels moyen
-  unité: kgCO2e/km
-  note: |
-    Dans le poste G45, nous prenons la part Entretien et réparation de véhicules automobiles (7%).
-    Nous le divisons par le nombre de véhicules en circulation, puis par 12200 km (la moyenne de km effectués par véhicule) pour obtenir une empreinte en kgCO2e / km.
+    Pour ce qui est d'un véhicule hybride, nous considérons que l'entretien est le même que pour un véhicule électrique.
 
 transport . voiture . climatisation:
   formule: (émissions gaz fluorés transport / nombre véhicules circulation) / transport . voiture . km annuels moyen
