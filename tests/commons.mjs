@@ -150,7 +150,11 @@ An error occured while testing the model:
 
   const fails = []
 
-  results.sort((a, b) => a.rule.localeCompare(b.rule))
+  results.sort((a, b) => {
+    if (a.rule.includes('bilan') && !b.rule.includes('bilan')) return -1
+    if (!a.rule.includes('bilan') && b.rule.includes('bilan')) return 1
+    return a.rule.localeCompare(b.rule)
+  })
   let nbDiff = 0
 
   for (const result of results) {
@@ -269,7 +273,8 @@ function fmtGHActionErr(
   // const color =
   //   diffPercent <= 1 ? 'sucess' : diffPercent > 5 ? 'critical' : 'important'
   // const sign = diff > 0 ? '%2B' : '-'
-  return `| ${name} | ${formatValue(actual)} ${actualUnit ? `_${actualUnit}_` : ''} | ${formatValue(expected)} ${expectedUnit ? `_${expectedUnit}_` : ''} | **${
+  const row = `| ${name === 'bilan' ? '🟪 bilan' : name} | ${formatValue(actual)} ${actualUnit ? `_${actualUnit}_` : ''} | ${formatValue(expected)} ${expectedUnit ? `_${expectedUnit}_` : ''} | **${
     diff > 0 ? '+' : '-'
   }${diffPercent}%** |`
+  return row
 }
