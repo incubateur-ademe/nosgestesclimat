@@ -816,8 +816,11 @@ transport . voiture . barème construction:
     - Pour les véhicules thermiques, nous utilisons les données de la Base Empreinte de l'ADEME donnant une valeur de 4,5 kgCO2e/kg pour la construction d'une voiture. Nous appliquons ce facteur à la masse de la voiture pour obtenir l'empreinte de la construction, masse étant déterminée par le gabarit du véhicule.
     - Pour les véhicules électriques, nous calculons l'empreinte de la batterie en fonction de sa capacité, puis nous ajoutons l'empreinte de la construction d'une voiture thermique de gamme équivalente.
     - Pour les véhicules hybrides, nous utilisons les mêmes données que pour les véhicules électriques (hypothèse forte, voir note sur le barème hybride).
-
 transport . voiture . barème construction . barème thermique:
+  formule: production
+  unité: kgCO2e
+
+transport . voiture . barème construction . barème thermique . production:
   formule:
     variations:
       - si: gabarit = 'petite'
@@ -833,12 +836,15 @@ transport . voiture . barème construction . barème thermique:
   unité: kgCO2e
 
 transport . voiture . barème construction . barème thermique . empreinte par kg:
-  formule: 4.5
+  formule: 7.29
   unité: kgCO2e/kg
-  note: Facteur d'émission issu de la Base Empreinte.
+  note: |
+    La mise à jour de la Base Empreinte avec les données ecoinvent d'avril 2025 a mis à disposition la donnée "Production d'une voiture particulière électrique (sans batterie)" (passenger car production, electric, without battery). Nous avons fait le choix d'utiliser son pendant thermique directement depuis ecoinvent (passenger car production, diesel).
+
+    > Ces données sont soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peuvent pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
 
 transport . voiture . barème construction . barème électrique:
-  formule: barème thermique + batterie
+  formule: production hors batterie + batterie
   unité: kgCO2e
   note: |
     La construction d'une voiture électrique émet plus de gaz à effet de serre qu'une voiture thermique de gamme équivalente.
@@ -847,14 +853,58 @@ transport . voiture . barème construction . barème électrique:
     > Ce surplus d'émissions est d'environ +50% (mais varie d'environ +20% à plus d'une multiplication par 2 selon les études).
     https://bonpote.com/la-voiture-electrique-solution-ideale-pour-le-climat/
 
+transport . voiture . barème construction . barème électrique . production hors batterie:
+  formule:
+    variations:
+      - si: gabarit = 'petite'
+        alors: empreinte par kg * gabarit . petite . poids
+      - si: gabarit = 'moyenne'
+        alors: empreinte par kg * gabarit . moyenne . poids
+      - si: gabarit = 'VUL'
+        alors: empreinte par kg * gabarit . VUL . poids
+      - si: gabarit = 'berline'
+        alors: empreinte par kg * gabarit . berline . poids
+      - si: gabarit = 'SUV'
+        alors: empreinte par kg * gabarit . SUV . poids
+  unité: kgCO2e
+
+transport . voiture . barème construction . barème électrique . empreinte par kg:
+  formule: 7.63
+  unité: kgCO2e/kg
+  note: |
+    Nous utilisons ici la donnée Ecoinvent "Production d'une voiture particulière électrique (sans batterie)" (passenger car production, electric, without battery) mise à disposition dans la Base Empreinte.
+
+    > Ces données sont soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peuvent pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
+
 transport . voiture . barème construction . barème électrique . batterie:
-  formule: capacité * barème construction . batterie . empreinte par kWh
+  formule: capacité * empreinte batterie par kWh
   unité: kgCO2e
   note: |
     L'empreinte carbone d'une batterie augmente avec sa capacité, car une capacité plus élevée nécessite l'utilisation d'un plus grand nombre de cellules lithium-ion.
 
     La capacité de la batterie est exprimée en kWh, elle peut varier considérablement selon les modèles de voitures électriques.
     Pour réduire l'impact de la voiture électrique il faut privilégier les modèles avec une batterie de petite capacité.
+
+transport . voiture . barème construction . barème électrique . empreinte batterie par kWh:
+  formule: 142.7
+  unité: kgCO2e/kWh
+  note: |
+    Nous utilisons ici les données Ecoinvent mise à disposition dans la Base Empreinte:
+      - Production d'une batterie rechargeable Li-ion, LFP
+      - Production d'une batterie rechargeable Li-ion, NMC532
+      - Production d'une batterie rechargeable Li-ion, NMC622
+
+    Couplée avec [les données IEA "Share of battery capacity of electric vehicle sales by chemistry and region, 2021-2023"](https://www.iea.org/data-and-statistics/charts/share-of-battery-capacity-of-electric-vehicle-sales-by-chemistry-and-region-2021-2023) (source partagée par le service transport de l'ADEME), on a, en 2023:
+
+    | Type de batterie | Référence BE | FE (kgCO2e/kg) | Conversion poids - kWh (kWh/kg) | FE (kgCO2e/kWh) | Répartition 2023 |
+    | --- | --- | --- | --- | --- | --- |
+    | LFP | Production d'une batterie rechargeable Li-ion, LFP | 15.1 | 0.116 | 130 | 6% |
+    | Low nickel | Production d'une batterie rechargeable Li-ion, NMC532 | 21.1 | 0.144 | 147 | 16% |
+    | High nickel | Production d'une batterie rechargeable Li-ion, NMC622 | 21.8 | 0.155 | 141 | 79% |
+
+    Ce qui donne, en moyenne, une empreinte batterie de **142.7 kgCO2e/kWh**.
+
+    > Ces données sont soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peuvent pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
 
 transport . voiture . barème construction . barème électrique . batterie . capacité:
   applicable si:
@@ -916,27 +966,12 @@ transport . voiture . barème construction . barème hybride:
     On fait l'hypothèse forte que la construction d'un véhicule hybride correspond à l'empreinte d'un véhicule électrique équipé d'une petite batterie. Néanmoins, le calcul est plus complexe, notamment car le type de véhicule hybride (rechargeable ou non) sur la composition de la voiture. On a également 2 moteurs...
 
 transport . voiture . barème construction . barème hybride . batterie:
-  formule: capacité * barème construction . batterie . empreinte par kWh
+  formule: capacité * barème construction . barème électrique . empreinte batterie par kWh
   unité: kgCO2e
 
 transport . voiture . barème construction . barème hybride . capacité:
   valeur: 40
   unité: kWh
-
-transport . voiture . barème construction . batterie:
-transport . voiture . barème construction . batterie . empreinte par kWh:
-  formule: 100
-  unité: kgCO2e/kWh
-  note: |
-    Les études académiques sur l'empreinte carbone des batteries des véhicules électriques sont nombreuses, mais leurs résultats sont très variables.
-
-    Les valeurs varient de 60 kgCO2e/kWh à 150 kgCO2e/kWh. Une [méta-étude de l'IFPEN](https://www.sciencedirect.com/science/article/abs/pii/S0959652622006291)
-    (Institut Français du Pétrole et des Énergies Nouvelles) calcule une valeur médiane de 83 kgCO2e/kWh, en précisant que les résultats différent selons les chimies de batteries,
-    les pays de productions, le pays des auteurs de l'étude, et que même ces facteurs intégrés il reste une grande variabilité des résultats.
-
-    Compte tenu de l'incertitude et des variations observées dans les études, nous adoptons une valeur prudente de 100 kgCO2e/kWh pour l'empreinte carbone des batteries.
-
-    [Étude Carbone 4 sur l'empreinte des batteries (en)](https://www.carbone4.com/publication-liion-battery-carbon-footprint)
 
 transport . voiture . amortissement:
   description: |
