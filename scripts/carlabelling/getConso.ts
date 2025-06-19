@@ -5,7 +5,8 @@ type PublicodesMotorisation =
   | 'thermique (essence)'
   | 'thermique (diesel)'
   | 'électrique'
-  | 'hybride'
+  | 'hybride (HR)'
+  | 'hybride (HNR)'
 
 type PublicodesSizes = 'petite' | 'moyenne' | 'VUL' | 'berline' | 'SUV'
 
@@ -55,8 +56,10 @@ type Car = {
 const getMotorisation = (energie: Energie): PublicodesMotorisation | null => {
   if (energie === 'ELECTRIC') {
     return 'électrique'
-  } else if (energie?.includes('HR') || energie?.includes('HNR')) {
-    return 'hybride'
+  } else if (energie?.includes('HR')) {
+    return 'hybride (HR)'
+  } else if (energie?.includes('HNR')) {
+    return 'hybride (HNR)'
   } else if (energie === 'GAZOLE') {
     return 'thermique (diesel)'
   } else if (energie === 'ESSENCE' || energie === 'SUPERETHANOL') {
@@ -125,13 +128,8 @@ fs.createReadStream('./scripts/carlabelling/ademe-car-labelling.csv')
           return acc
         }
 
-        if (motorisation === 'hybride' && Energie.includes('HR')) {
-          // ignore hybrid cars with HR (hybride rechargeable)
-          return acc
-        }
-
         const conso =
-          motorisation === 'électrique'
+          motorisation === 'électrique' || motorisation === 'hybride (HR)'
             ? consoElecMin
               ? (consoElecMin + consoElecMax) / 2
               : consoElecMax
@@ -180,31 +178,36 @@ fs.createReadStream('./scripts/carlabelling/ademe-car-labelling.csv')
             'thermique (essence)': 0,
             'thermique (diesel)': 0,
             électrique: 0,
-            hybride: 0
+            'hybride (HR)': 0,
+            'hybride (HNR)': 0
           },
           moyenne: {
             'thermique (essence)': 0,
             'thermique (diesel)': 0,
             électrique: 0,
-            hybride: 0
+            'hybride (HR)': 0,
+            'hybride (HNR)': 0
           },
           VUL: {
             'thermique (essence)': 0,
             'thermique (diesel)': 0,
             électrique: 0,
-            hybride: 0
+            'hybride (HR)': 0,
+            'hybride (HNR)': 0
           },
           berline: {
             'thermique (essence)': 0,
             'thermique (diesel)': 0,
             électrique: 0,
-            hybride: 0
+            'hybride (HR)': 0,
+            'hybride (HNR)': 0
           },
           SUV: {
             'thermique (essence)': 0,
             'thermique (diesel)': 0,
             électrique: 0,
-            hybride: 0
+            'hybride (HR)': 0,
+            'hybride (HNR)': 0
           }
         },
         effectifParPoids: {
@@ -212,31 +215,36 @@ fs.createReadStream('./scripts/carlabelling/ademe-car-labelling.csv')
             'thermique (essence)': 0,
             'thermique (diesel)': 0,
             électrique: 0,
-            hybride: 0
+            'hybride (HR)': 0,
+            'hybride (HNR)': 0
           },
           moyenne: {
             'thermique (essence)': 0,
             'thermique (diesel)': 0,
             électrique: 0,
-            hybride: 0
+            'hybride (HR)': 0,
+            'hybride (HNR)': 0
           },
           VUL: {
             'thermique (essence)': 0,
             'thermique (diesel)': 0,
             électrique: 0,
-            hybride: 0
+            'hybride (HR)': 0,
+            'hybride (HNR)': 0
           },
           berline: {
             'thermique (essence)': 0,
             'thermique (diesel)': 0,
             électrique: 0,
-            hybride: 0
+            'hybride (HR)': 0,
+            'hybride (HNR)': 0
           },
           SUV: {
             'thermique (essence)': 0,
             'thermique (diesel)': 0,
             électrique: 0,
-            hybride: 0
+            'hybride (HR)': 0,
+            'hybride (HNR)': 0
           }
         }
       }
