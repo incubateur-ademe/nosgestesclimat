@@ -16,6 +16,7 @@ jobs:
       check-translation-result: ${{ steps.check-translation.outputs.result }}
       check-personas-result: ${{ steps.check-personas.outputs.result }}
       test-personas-nightly-result: ${{ steps.test-personas-nightly.outputs.result }}
+      test-personas-nightly-eau-result: ${{ steps.test-personas-nightly-eau.outputs.result }}
       test-personas-latest-result: ${{ steps.test-personas-latest.outputs.result }}
       test-url: ${{ steps.set-test-url.outputs.fr }}
     steps:
@@ -73,6 +74,15 @@ jobs:
           body="${body//$'\n'/'%0A'}"
           body="${body//$'\r'/'%0D'}"
           echo "::set-output name=result::${body}"
+      - id: test-personas-nightly-eau
+        name: Test the personas bilans against develop for water metric
+        run: |
+          yarn test:personas --markdown -v nightly -i 'eau' > test-personas-nightly-eau.res
+          body="$(cat test-personas-nightly-eau.res | tail --lines=+3 | head --lines=-1)"
+          body="${body//'%'/'%25'}"
+          body="${body//$'\n'/'%0A'}"
+          body="${body//$'\r'/'%0D'}"
+          echo "::set-output name=result::${body}"
       - id: set-test-url
         # Setups the NGC url with the corresponding PR number: https://nosgestesclimat.fr?PR=<pr_number>
         run: echo "::set-output name=fr::${{ steps.deploy-env.outputs.name == 'master' && 'https://preprod.nosgestesclimat.fr' || format('https://preprod.nosgestesclimat.fr?PR={0}', github.event.pull_request.number) }}"
@@ -81,6 +91,9 @@ jobs:
     runs-on: ubuntu-22.04
     needs: compile
     steps:
+      - id: pr
+        name: Set PR base branch
+        run: echo "base_ref=${{ github.event.pull_request.base.ref }}" >> "$GITHUB_OUTPUT"
       - name: Create artifact
         run: |
           echo "
@@ -101,26 +114,43 @@ jobs:
           ${{ needs.compile.outputs.check-personas-result }}
 
           ## :couple: Personas changes
-
+          " > result.md
+      - name: Add nightly results
+        if: steps.pr.outputs.base_ref != 'master'
+        run: |
+          echo "
           ### Test personas bilans against [preprod](https://nosgestesclimat-api.osc-fr1.scalingo.io/nightly/fr/FR/rules)
 
           <details open=true>
-          <summary>In details</summary>
+          <summary>Show</summary>
 
           ${{ needs.compile.outputs.test-personas-nightly-result }}
 
           </details>
 
-          ### Test personas bilans against [production](https://nosgestesclimat-api.osc-fr1.scalingo.io/latest/fr/FR/rules)
+          ### Test personas bilans against [preprod](https://nosgestesclimat-api.osc-fr1.scalingo.io/nightly/fr/FR/rules) - métrique "eau"
 
           <details>
+          <summary>Show</summary>
+
+          ${{ needs.compile.outputs.test-personas-nightly-eau-result }}
+
+          </details>
+
+          " >> result.md
+      - name: Add prod results
+        if: steps.pr.outputs.base_ref == 'master'
+        run: |
+          echo "
+          ### Test personas bilans against [production](https://nosgestesclimat-api.osc-fr1.scalingo.io/latest/fr/FR/rules)
+
+          <details open=true>
           <summary>Show</summary>
 
           ${{ needs.compile.outputs.test-personas-latest-result }}
 
           </details>
-
-          " > result.md
+          " >> result.md
       - name: Updating the PR
         uses: actions/github-script@v6
         with:

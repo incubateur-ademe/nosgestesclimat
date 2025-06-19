@@ -29,11 +29,7 @@ divers . loisirs . culture:
         pratique de la musique . présent: non
   question: Quelles sont vos pratiques culturelles ?
   titre: Pratiques culturelles
-  formule:
-    variations:
-      - si: choix utilisateur
-        alors: empreinte totale
-      - sinon: empreinte par défaut
+  formule: empreinte totale
 
 divers . loisirs . culture . empreinte totale:
   formule:
@@ -47,33 +43,15 @@ divers . loisirs . culture . empreinte totale:
     Pour le moment, nous prenons en compte les concerts et spectacles, musées, l'édition (presse, livres), la pratique de la musique.
     Les achats d'abonnements TV ou les jeux d'argents sont exclus pour le moment.
 
-divers . loisirs . culture . empreinte par défaut:
-  description: Un calcul statistique des pratiques culturelles pour un Français moyen.
-  formule:
-    somme:
-      - concerts et spectacles . moyenne macro française
-      - musées et monuments . moyenne macro française
-      - édition . moyenne macro française
-      - pratique de la musique . moyenne macro française
-  unité: kgCO2e
-
-divers . loisirs . culture . choix utilisateur:
-  titre: Choix utilisateur pour les pratiques culturelles
-  formule:
-    une de ces conditions:
-      - est défini: concerts et spectacles . présent
-      - est défini: musées et monuments . présent
-      - est défini: édition . présent
-      - est défini: pratique de la musique . présent
-
 divers . loisirs . culture . empreinte concerts et spectacles:
   titre: Empreinte concerts et spectacles
   icônes: 🎟
-  applicable si:
-    toutes ces conditions:
-      - est défini: concerts et spectacles . présent
-      - concerts et spectacles . présent
-  formule: concerts et spectacles . moyenne macro pondérée
+  formule:
+    variations:
+      - si: concerts et spectacles . présent = oui
+        alors: concerts et spectacles . moyenne macro pondérée
+      - sinon: 0
+  par défaut: concerts et spectacles . moyenne macro française
   unité: kgCO2e
   note: Cette catégorie comprend les concerts, théâtres, opéras, ballets, spectacles de rue et cinémas.
 
@@ -116,11 +94,12 @@ divers . loisirs . culture . concerts et spectacles . fréquence:
 divers . loisirs . culture . empreinte musées et monuments:
   titre: Empreinte musées et monuments
   icônes: 🖼️
-  applicable si:
-    toutes ces conditions:
-      - est défini: musées et monuments . présent
-      - musées et monuments . présent
-  formule: musées et monuments . moyenne macro pondérée
+  formule:
+    variations:
+      - si: musées et monuments . présent = oui
+        alors: musées et monuments . moyenne macro pondérée
+      - sinon: 0
+  par défaut: musées et monuments . moyenne macro française
   unité: kgCO2e
   note: Cette catégorie comprend les visites de musées et monuments nationaux, de parcs et zoos.
 
@@ -182,11 +161,12 @@ divers . loisirs . culture . musées et monuments . proportion de visiteurs:
 divers . loisirs . culture . empreinte édition:
   titre: Empreinte édition (livres, presse et logiciels)
   icônes: 📚
-  applicable si:
-    toutes ces conditions:
-      - est défini: édition . présent
-      - édition . présent
-  formule: édition . moyenne macro pondérée
+  formule:
+    variations:
+      - si: édition . présent = oui
+        alors: édition . moyenne macro pondérée
+      - sinon: 0
+  par défaut: édition . moyenne macro française
   unité: kgCO2e
   note: Il s'agit ici de comptabiliser l'empreinte carbone liée à l'achat de livres, de journaux et revues.
 
@@ -236,11 +216,12 @@ divers . loisirs . culture . édition . fréquence . très élevée:
 
 divers . loisirs . culture . empreinte pratique de la musique:
   titre: Empreinte de la pratique de la musique
-  applicable si:
-    toutes ces conditions:
-      - est défini: pratique de la musique . présent
-      - pratique de la musique . présent
-  formule: pratique de la musique . moyenne macro pondérée
+  formule:
+    variations:
+      - si: pratique de la musique . présent = oui
+        alors: pratique de la musique . moyenne macro pondérée
+      - sinon: 0
+  par défaut: pratique de la musique . moyenne macro française
   unité: kgCO2e
   note: Nous comptons ici la pratique de la musique, au travers de la possession d'un ou plusieurs instruments de musique.
 

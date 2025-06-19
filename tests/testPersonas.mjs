@@ -19,7 +19,7 @@ import {
  * TODO: add the possibility to test only a subset of the rules
  */
 
-const { country, language, markdown, version, persona } = getArgs()
+const { country, language, markdown, version, persona, metric } = getArgs()
 
 const localRules = await getLocalRules(country, language)
 let localPersonas = await getLocalPersonas(country, language)
@@ -44,8 +44,14 @@ const prodEngine = new Engine(prodRules, {
 const nbRules = Object.keys(localRules).length
 
 for (const personaName in localPersonas) {
-  const { situation: localSituation } = localPersonas[personaName]
-  const { situation: prodSituation } = prodPersonas[personaName]
+  const localSituation = {
+    ...localPersonas[personaName].situation,
+    métrique: `'${metric}'`
+  }
+  const prodSituation = {
+    ...prodPersonas[personaName].situation,
+    métrique: `'${metric}'`
+  }
   const results = []
 
   if (markdown) {
@@ -61,11 +67,11 @@ for (const personaName in localPersonas) {
     const safeSituation = localEngine.getSituation()
 
     const wrongLocalKeys = Object.keys(localSituation).filter(
-      (key) => !(key in safeSituation)
+      (key) => !(key in safeSituation) && key !== 'métrique'
     )
 
     if (wrongLocalKeys.length > 0) {
-      if (version === 'nightly') {
+      if (version === 'nightly' && markdown) {
         console.log(
           `Les règles suivantes n'existent pas dans le modèle ou leur valeur est impossible (_**${version}**_):`
         )
@@ -81,11 +87,11 @@ for (const personaName in localPersonas) {
     const safeProdSituation = prodEngine.getSituation()
 
     const wrongProdKeys = Object.keys(prodSituation).filter(
-      (key) => !(key in safeProdSituation)
+      (key) => !(key in safeProdSituation) && key !== 'métrique'
     )
 
     if (wrongProdKeys.length > 0) {
-      if (version === 'latest') {
+      if (version === 'latest' && markdown) {
         console.log(
           `Les règles suivantes n'existent pas dans le modèle ou leur valeur est impossible (_**${version}**_):`
         )

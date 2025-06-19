@@ -147,17 +147,24 @@ divers . textile . empreinte . garde robe importante . nombre total:
 divers . textile . facteur qualité:
   formule:
     variations:
-      - si: qualité = "neuf fast fashion"
+      - si:
+          une de ces conditions:
+            - qualité = "neuf fast fashion"
+            - qualité = "occasion"
         alors: 0.67
-      - si: qualité = "neuf éthique"
+      - si:
+          une de ces conditions:
+            - qualité = "neuf éthique"
+            - qualité = "occasion réfléchie"
         alors: 1.33
       - sinon: 1
+  par défaut: 1
   description: |
     On calcule ces facteurs de qualité à partir du simulateur Ecoablyse :
       - "neuf fast fashion": -33% (Grande entreprise sans service de réparation, t-shirt à 10€, pas de traçabilité, nombre de référence très élevé, 100000)
       - "neuf éthique": +33% (Entreprise avec service de réparation, t-shirt à 20€, traçabilité, nombre de référence peu élevé, 1000)
 
-    Le caractère seconde main impacte la taille de la garde robe.
+    Le caractère seconde main impacte la taille de la garde robe. Nous avons également choisi de travailler un facteur qualité spécifique pour les vêtements d'occasion en considérant que lors des achats d'occasion, la qualité n'est pas le premier critère. En revanche, si l'achat est réfléchi, on fait l'hypothèse que la qualité des pièces achetées est meilleure.
 
 divers . textile . indice de durabilité moyen:
   formule:
@@ -190,9 +197,9 @@ divers . textile . indice de durabilité moyen:
   description: |
     Nous avons choisi de travailler avec un indice de durabilité global sur l'ensemble des vêtements, contrairement à une approche plus spécifique, item par item. En effet, il n'y a pas de raison d'avoir une pratique d'achat différente pour ses tee-shirts par rapport à ses pantalons
 
-    Nous avons décidé de travailler avec 2 jeux de données: le nombre de portés moyen par vêtement, issu d'une étude ADEME récente (à paraître courant juin) et également le nombre de vêtements réellement achetés par an. Croisés avec le nombre de fois dans l'année pendant lesquels le vêtement peut être porté et le nombre de vêtements "actifs" dans la garde-robe, on obtient un nombre de portés réels.
+    Nous avons décidé de travailler avec 2 jeux de données: le nombre de portés moyen par vêtement, issu du [PEFCR](https://pefapparelandfootwear.eu/), méthodologies européennes pour l'industrie textile, et également le nombre de vêtements réellement achetés par an. Croisés avec le nombre de fois dans l'année pendant lesquels le vêtement peut être porté et le nombre de vêtements "actifs" dans la garde-robe, on obtient un nombre de portés réels.
 
-    Pour chaque vêtement, nous avons calculé un indice de durabilité moyen selon la formule : `indice de durabilité = nombre de portés réel / nombre de portés moyen`, sachant que la valeur de cet indice est retreint entre 0,67 et 1,45. On obtient en moyenne un chiffre de 0.95 pour les achats moyens.
+    Pour chaque vêtement, nous avons calculé un indice de durabilité moyen selon la formule : `indice de durabilité = nombre de portés réel / nombre de portés moyen`, sachant que la valeur de cet indice est retreint entre 0,67 et 1,45. On obtient en moyenne un chiffre de 0.91 pour les achats moyens.
 
 divers . textile . facteur garde robe:
   formule: 1.5
@@ -211,6 +218,7 @@ divers . textile . facteur garde robe corrigé:
       - si: qualité = "occasion"
         alors: 1.3
       - sinon: 1.5
+  par défaut: 1.5
 
 divers . textile . volume:
   question: Pour quelle raison achetez-vous de nouveaux vêtements ?
@@ -254,6 +262,7 @@ divers . textile . qualité:
     - neuf fast fashion
     - neuf éthique
     - occasion
+    - occasion réfléchie
   description: |
     On entend derrière "grandes enseignes" des marques qui possèdent un nombre de références très élevé, qui ont peu de traçabilité. A l'inverse, une enseigne de plus petite taille produit moins et est en mesure de garantir la traçabilité de ses pièces, éventuellement un service de réparation.
 
@@ -262,7 +271,9 @@ divers . textile . qualité . neuf fast fashion:
 divers . textile . qualité . neuf éthique:
   titre: Neufs, chez des enseignes proposant une gamme travaillée (Lacoste, Patagonia, Petit Bateau...)
 divers . textile . qualité . occasion:
-  titre: D'occasion
+  titre: D'occasion, tous tyes de vêtements
+divers . textile . qualité . occasion réfléchie:
+  titre: D'occasion, en sélectionnant mes pièces avec soin
 
 divers . textile . empreinte calculée:
   titre: Empreinte de sa garde-robe
@@ -340,8 +351,8 @@ divers . textile . t-shirt . nombre de portés réel:
   formule: nombre de portés potentiel / nombre garde robe
 
 divers . textile . t-shirt . durée moyenne:
-  description: Nombre de portés annuel moyen suivant l'achat
-  formule: 59.6
+  description: Nombre de portés annuel moyen
+  formule: 45
 
 divers . textile . t-shirt . indice de durabilité:
   description: Indice de durabilité du t-shirt
@@ -413,8 +424,8 @@ divers . textile . pantalon . nombre de portés réel:
   formule: nombre de portés potentiel / nombre garde robe
 
 divers . textile . pantalon . durée moyenne:
-  description: Nombre de portés annuel moyen suivant l'achat
-  formule: 73.4
+  description: Nombre de portés annuel moyen
+  formule: 70
 
 divers . textile . pantalon . indice de durabilité:
   description: Indice de durabilité du pantalon
@@ -487,8 +498,8 @@ divers . textile . short . nombre de portés réel:
   formule: nombre de portés potentiel / nombre garde robe
 
 divers . textile . short . durée moyenne:
-  description: Nombre de portés annuel moyen suivant l'achat
-  formule: 19.7
+  description: Nombre de portés annuel moyen
+  formule: 70
 
 divers . textile . short . indice de durabilité:
   description: Indice de durabilité du short
@@ -561,8 +572,8 @@ divers . textile . sweat . nombre de portés réel:
   formule: nombre de portés potentiel / nombre garde robe
 
 divers . textile . sweat . durée moyenne:
-  description: Nombre de portés annuel moyen suivant l'achat
-  formule: 47.7
+  description: Nombre de portés annuel moyen
+  formule: 85
 
 divers . textile . sweat . indice de durabilité:
   description: Indice de durabilité du sweat
@@ -634,8 +645,8 @@ divers . textile . robe . nombre de portés réel:
   formule: nombre de portés potentiel / nombre garde robe
 
 divers . textile . robe . durée moyenne:
-  description: Nombre de portés annuel moyen suivant l'achat
-  formule: 19.7
+  description: Nombre de portés annuel moyen
+  formule: 70
 
 divers . textile . robe . indice de durabilité:
   description: Indice de durabilité de la robe
@@ -707,8 +718,8 @@ divers . textile . chemise . nombre de portés réel:
   formule: nombre de portés potentiel / nombre garde robe
 
 divers . textile . chemise . durée moyenne:
-  description: Nombre de portés annuel moyen suivant l'achat
-  formule: 38.8
+  description: Nombre de portés annuel moyen
+  formule: 40
 
 divers . textile . chemise . indice de durabilité:
   description: Indice de durabilité de la chemise
@@ -781,8 +792,8 @@ divers . textile . pull . nombre de portés réel:
   formule: nombre de portés potentiel / nombre garde robe
 
 divers . textile . pull . durée moyenne:
-  description: Nombre de portés annuel moyen suivant l'achat
-  formule: 47.7
+  description: Nombre de portés annuel moyen
+  formule: 85
 
 divers . textile . pull . indice de durabilité:
   description: Indice de durabilité de la pull
@@ -889,8 +900,8 @@ divers . textile . manteau . nombre de portés réel:
   formule: nombre de portés potentiel / nombre garde robe
 
 divers . textile . manteau . durée moyenne:
-  description: Nombre de portés annuel moyen suivant l'achat
-  formule: 56.9
+  description: Nombre de portés annuel moyen
+  formule: 100
 
 divers . textile . manteau . indice de durabilité:
   description: Indice de durabilité du manteau
@@ -964,8 +975,8 @@ divers . textile . petit article . nombre de portés réel:
   formule: nombre de portés potentiel / nombre garde robe
 
 divers . textile . petit article . durée moyenne:
-  description: Nombre de portés annuel moyen suivant l'achat
-  formule: 59.6
+  description: Nombre de portés annuel moyen
+  formule: 60
 
 divers . textile . petit article . indice de durabilité:
   description: Indice de durabilité du petit article
@@ -1039,8 +1050,8 @@ divers . textile . gros article . nombre de portés réel:
   formule: nombre de portés potentiel / nombre garde robe
 
 divers . textile . gros article . durée moyenne:
-  description: Nombre de portés annuel moyen suivant l'achat
-  formule: 56.9
+  description: Nombre de portés annuel moyen
+  formule: 100
 
 divers . textile . gros article . indice de durabilité:
   description: Indice de durabilité du gros article
