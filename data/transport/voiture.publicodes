@@ -379,42 +379,29 @@ transport . voiture . thermique . consommation estimée:
   note: |
     > Si nous avons travaillé les propositions de consommation moyenne, l'idéal au vu de l'impact de cette donnée est bien que l'utilisateur ou l'utilisatrice saisisse sa propre consommation réelle, moyennée sur son usage.
 
-    Pour obtenir nos propositions pour les voitures individuelles, nous avons croisé deux sources de données :
+    Le calcul des consommations moyennes est basé sur la base de données ADEME [Car Labelling](https://carlabelling.ademe.fr/index/). Nous avons utilisé directement les [données brutes](https://explore.data.gouv.fr/fr/datasets/607d3dfa434fd3f49e61436c/#/resources/e85bd68f-0690-4753-adb9-ce1f5eab7a58) via un script permettant d'extraire directement les consommations moyennes pour chaque gabarit et motorisation sur la base de ce mapping:
 
-    - Les données moyennes de consommation des véhicules essence et diesel, [fournies par l'ADEME](https://carlabelling.ademe.fr/chiffrescles/r/evolutionConsoMoyenne)
-    - Les données des "meilleures consommations" par gabarit et par carburant, fournies par [cet article de CAROOM](https://www.caroom.fr/guide/voiture-neuve/comment-choisir/carburant/faible-consommation):
+      - Carosserie = COMBISPACE : "VUL"
+      - Poids < 1400kg : "petite"
+      - Poids 1400-1600kg: "moyenne"
+      - Poids > 1600kg et gamme Luxe ou Supérieure: "SUV"
+      - Poids > 1600kg, autre gammes: "berline"
 
-    Nous n'avons pas trouvé d'autre source pour obtenir la consommation moyenne par type de véhicule. Dans l'article de CAROOM, sont donnés les chiffres des meilleures performances par véhicule:
+    | **Catégorie de véhicule** | Conso si essence en L/100km (effectif) | Conso si diesel en L/100km (effectif) |
+    | --- | --- | --- |
+    | **Petite** | 5.46 L/100km (933) | 3.95 L/100km (92) |
+    | **mMoyenne** | 6.49 L/100km (394) | 4.68 L/100km (174) |
+    | **VUL** | 6.34 L/100km (60) | 4.7 L/100km (82) |
+    | **Berline** (voiture type “break”) | 7.06 L/100km (75) | 6.16 L/100km (151) |
+    | **SUV** | 10.38 L/100km (119) | 5.55 L/100km (71) |
 
-      |                  | E5 ou E10 | Diesel | % circulation |
-      |------------------|-----------|--------|---------------|
-      | Petite           | 5,07      | 3,65   | 25,29%        |
-      | Moyenne          | 4,70      | 3,75   | 10,30%        |
-      | Berline          | 4,70      | 3,75   | 49,81%        |
-      | SUV              | 5,08      | 4,14   | 14,60%        |
-      | Moyenne pondérée | 4,85      | 3,78   |               |
+    Cette consommation est une consommation "constructeur". En lien avec le service Transport de l'ADEME, il a été décidé de les corriger via un facteur permettant d’approcher la consommation réelle à partir des consommation d’homologation (constructeur). 
 
-    D'un autre côté, nous avons les données fournies par l'ADEME qui donnent des consommations moyennes de 6,8 L/100km pour une essence, 5 L/100km pour un diesel.
-    On remarque bien que les consommations moyennes calculées via les données de CAROOM (4,85 L/100km et 3,78 L/100km) sont bien plus basses que celles
-    de l'ADEME, ce sont les voitures les plus performantes.
+    D’après [EAA](https://climate-energy.eea.europa.eu/topics/transport/real-world-emissions/data) (source fournie par le service transport de l'ADEME), on a:
+      - Essence: +21%
+      - Diesel: +17%
 
-    Nous avons donc retravaillé les chiffres via un ratio (conso moyenne / conso moyenne performante) pour mettre à jour les consommations moyennes par véhicules :
-    A titre d'exemple, pour une citadine essence, on obtient le chiffre de 7,11 L/100km via la formule suivante : 5,07 / 4,85 * 6,8.
-
-    - Moyennes corrigées (et utilisées dans NGC):
-
-      |                  | E5 ou E10 | Diesel | % circulation |
-      |------------------|-----------|--------|---------------|
-      | Petite           | 7,11      | 4,83   | 25,29%        |
-      | Moyenne          | 6,59      | 4,96   | 10,30%        |
-      | Berline          | 6,59      | 4,96   | 49,81%        |
-      | SUV              | 7,13      | 5,48   | 14,60%        |
-      | Moyenne pondérée | 6,80      | 5,00   |               |
-
-    Pour les véhicules utilitaires légers, nous avons utilisé cette source :
-    - [Consommation des véhicules utilitaires légers](https://www.webfleet.com/fr_fr/webfleet/blog/consommation-utilitaire/)
-
-    > Nous avons bien noté que la consomation d'une citadine essence est plus élevée que celle d'une berline, ce qui semble contre-intuitif mais nous n'avons pas d'autres sources pour l'instant.
+    Une autre limite reste tout de même: cette base rassemble des données de véhicules récents, pas forcément représentatifs des véhicules en circulation.
 
     Enfin, pour obtenir les consommations des véhicules roulant à l'essence E85, nous avons appliqué une **surconsommation de 25%** par rapport aux véhicules essence, chiffre qui semble faire consensus.
 
@@ -454,18 +441,18 @@ transport . voiture . thermique . consommation estimée:
             - si: thermique . carburant = 'essence E85'
               alors: VUL essence * 1.25
             - si: thermique . carburant = 'GPL'
-              alors: 13
+              alors: VUL essence * 1.15
       - si: gabarit = 'berline'
         alors:
           variations:
             - si: thermique . carburant = 'gazole B7 ou B10'
-              alors: moyenne diesel
+              alors: berline diesel
             - si: thermique . carburant = 'essence E5 ou E10'
-              alors: moyenne essence
+              alors: berline essence
             - si: thermique . carburant = 'essence E85'
-              alors: moyenne essence * 1.25
+              alors: berline essence * 1.25
             - si: thermique . carburant = 'GPL'
-              alors: moyenne essence * 1.15
+              alors: berline essence * 1.15
       - si: gabarit = 'SUV'
         alors:
           variations:
@@ -480,42 +467,52 @@ transport . voiture . thermique . consommation estimée:
 
 transport . voiture . thermique . consommation estimée . petite diesel:
   titre: Consommation moyenne petite voiture diesel
-  formule: 4.83
+  formule: 3.95 * 1.17
   unité: l/centkm
 
 transport . voiture . thermique . consommation estimée . petite essence:
   titre: Consommation moyenne petite voiture essence
-  formule: 7.11
+  formule: 5.46 * 1.21
   unité: l/centkm
 
 transport . voiture . thermique . consommation estimée . moyenne diesel:
   titre: Consommation moyenne voiture "moyenne" diesel
-  formule: 4.96
+  formule: 4.68 * 1.17
   unité: l/centkm
 
 transport . voiture . thermique . consommation estimée . moyenne essence:
   titre: Consommation moyenne voiture "moyenne" essence
-  formule: 6.59
+  formule: 6.49 * 1.21
   unité: l/centkm
 
 transport . voiture . thermique . consommation estimée . VUL diesel:
   titre: Consommation moyenne VUL diesel
-  formule: 7.7
+  formule: 4.7 * 1.17
   unité: l/centkm
 
 transport . voiture . thermique . consommation estimée . VUL essence:
   titre: Consommation moyenne VUL essence
-  formule: 9
+  formule: 6.34 * 1.21
+  unité: l/centkm
+
+transport . voiture . thermique . consommation estimée . berline diesel:
+  titre: Consommation moyenne petite voiture diesel
+  formule: 6.16 * 1.17
+  unité: l/centkm
+
+transport . voiture . thermique . consommation estimée . berline essence:
+  titre: Consommation moyenne petite voiture essence
+  formule: 7.06 * 1.21
   unité: l/centkm
 
 transport . voiture . thermique . consommation estimée . SUV diesel:
   titre: Consommation moyenne SUV diesel
-  formule: 5.48
+  formule: 5.55 * 1.17
   unité: l/centkm
 
 transport . voiture . thermique . consommation estimée . SUV essence:
   titre: Consommation moyenne SUV essence
-  formule: 7.13
+  formule: 10.38 * 1.21
   unité: l/centkm
 
 transport . voiture . thermique . empreinte au litre:
@@ -628,19 +625,67 @@ transport . voiture . électrique . consommation aux 100:
   unité: kWh/centkm
 
 transport . voiture . électrique . consommation estimée:
+  note: |
+    Nous adoptons ici une approche similaire à celle des voitures thermiques.
+
+    > Si nous avons travaillé les propositions de consommation moyenne, l'idéal au vu de l'impact de cette donnée est bien que l'utilisateur ou l'utilisatrice saisisse sa propre consommation réelle, moyennée sur son usage.
+
+    Le calcul des consommations moyennes est basé sur la base de données ADEME [Car Labelling](https://carlabelling.ademe.fr/index/). Nous avons utilisé directement les [données brutes](https://explore.data.gouv.fr/fr/datasets/607d3dfa434fd3f49e61436c/#/resources/e85bd68f-0690-4753-adb9-ce1f5eab7a58) via un script permettant d'extraire directement les consommations moyennes pour chaque gabarit et motorisation sur la base de ce mapping:
+
+      - Carosserie = COMBISPACE : "VUL"
+      - Poids < 1400kg : "petite"
+      - Poids 1400-1600kg: "moyenne"
+      - Poids > 1600kg et gamme Luxe ou Supérieure: "SUV"
+      - Poids > 1600kg, autre gammes: "berline"
+
+    | **Catégorie de véhicule** | Conso si électrique en kWh/100km (effectif) |
+    | --- | --- |
+    | **Petite** | 14.5 kWh/100km (20) |
+    | **Moyenne** | 16 kWh/100km (42) |
+    | **VUL** | 20.6 kWh/100km (6) |
+    | **Berline** (voiture type “break”) | 19.3 kWh/100km (40) |
+    | **SUV** | 21.2 kWh/100km (26) |
+
+    Cette consommation est une consommation "constructeur". En lien avec le service Transport de l'ADEME, il a été décidé de les corriger via un facteur permettant d’approcher la consommation réelle à partir des consommation d’homologation (constructeur). Il a été décidé de conserver l’ordre de grandeur de 20% même si l'électrique est assez sensible à la température extérieure (le chauffage n'est pas "gratuit" en énergie comme avec un moteur thermique sur lequel on vient récupérer la chaleur perdue pour chauffer l'habitacle).
+
+    Une autre limite reste tout de même: cette base rassemble des données de véhicules récents, pas forcément représentatifs des véhicules en circulation.
   variations:
     - si: gabarit = 'petite'
-      alors: 15
+      alors: petite
     - si: gabarit = 'moyenne'
-      alors: 17
-    - si: gabarit = 'berline'
-      alors: 25
-    - si: gabarit = 'SUV'
-      alors: 25
+      alors: moyenne
     - si: gabarit = 'VUL'
-      alors: 25
+      alors: VUL
+    - si: gabarit = 'berline'
+      alors: berline
+    - si: gabarit = 'SUV'
+      alors: SUV
   unité: kWh/centkm
-  note: Données moyennes fournies par le service Transport et Mobilité de l'ADEME.
+
+transport . voiture . électrique . consommation estimée . petite:
+  titre: Consommation moyenne petite voiture électrique
+  formule: 14.5 * 1.2
+  unité: kWh/centkm
+
+transport . voiture . électrique . consommation estimée . moyenne:
+  titre: Consommation moyenne voiture "moyenne" électrique
+  formule: 16 * 1.2
+  unité: kWh/centkm
+
+transport . voiture . électrique . consommation estimée . VUL:
+  titre: Consommation moyenne VUL électrique
+  formule: 20.6 * 1.2
+  unité: kWh/centkm
+
+transport . voiture . électrique . consommation estimée . berline:
+  titre: Consommation moyenne petite voiture électrique
+  formule: 19.3 * 1.2
+  unité: kWh/centkm
+
+transport . voiture . électrique . consommation estimée . SUV:
+  titre: Consommation moyenne SUV électrique
+  formule: 21.2 * 1.2
+  unité: kWh/centkm
 
 transport . voiture . gabarit:
   question: Quel est le gabarit de la voiture ?
