@@ -101,7 +101,7 @@ transport . voiture . nombre véhicules circulation:
 transport . voiture . nombre véhicules circulation . véhicules légers:
   formule: 38970771
   note: |
-    Ce chiffre concerne les véhicules en circulation (voitures et VUL).
+    Ce chiffre concerne les véhicules en circulation (légers).
     Il est issu des [Données sur le parc automobile français au 1er janvier 2024](https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2024?rubrique=&dossier=1348).
 
     Nous considérons néanmoins les données pour l'année 2023 car la distance moyenne parcourue par véhicule n'est dispo que pour 2023.
@@ -109,7 +109,7 @@ transport . voiture . nombre véhicules circulation . véhicules légers:
 transport . voiture . nombre véhicules circulation . VUL:
   formule: 6428321
   note: |
-    Ce chiffre concerne les véhicules en circulation (voitures et VUL).
+    Ce chiffre concerne les véhicules en circulation de type VUL.
     Il est issu des [Données sur le parc automobile français au 1er janvier 2024](https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2024?rubrique=&dossier=1348).
 
     Nous considérons néanmoins les données pour l'année 2023 car la distance moyenne parcourue par véhicule n'est dispo que pour 2023.
@@ -121,6 +121,7 @@ transport . voiture . utilisateur:
     - propriétaire
     - régulier non propriétaire
     - non régulier
+  par défaut: "'propriétaire'"
   note: |
     Deux données sont importantes dans le cadre du calcul de l'empreinte liée à la construction :
 
@@ -296,8 +297,11 @@ transport . voiture . empreinte au kilomètre calculée:
     variations:
       - si: motorisation = 'thermique'
         alors: thermique . empreinte au kilomètre
-      - si: motorisation = 'hybride'
-        alors: thermique . empreinte au kilomètre * 0.85
+      - si:
+          une de ces conditions:
+            - motorisation = 'hybride non rechargeable'
+            - motorisation = 'hybride rechargeable'
+        alors: hybride . empreinte au kilomètre
       - si: motorisation = 'électrique'
         alors: électrique . empreinte au kilomètre
   unité: kgCO2e/km
@@ -327,17 +331,20 @@ transport . voiture . motorisation:
           - utilisateur = 'régulier non propriétaire'
       - km > 0
   description: 💡 **Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
-  par défaut: "'thermique'"
+  par défaut: "'hybride rechargeable'"
   une possibilité:
     - thermique
-    - hybride
     - électrique
+    - hybride non rechargeable
+    - hybride rechargeable
 transport . voiture . motorisation . thermique:
   titre: Thermique (diesel/essence/GPL)
 transport . voiture . motorisation . électrique:
   titre: Électrique
-transport . voiture . motorisation . hybride:
-  titre: Hybride
+transport . voiture . motorisation . hybride non rechargeable:
+  titre: Hybride non rechargeable
+transport . voiture . motorisation . hybride rechargeable:
+  titre: Hybride rechargeable
 
 transport . voiture . thermique:
   titre: Voiture thermique
@@ -362,7 +369,8 @@ transport . voiture . thermique . consommation aux 100:
           - utilisateur = 'régulier non propriétaire'
       - une de ces conditions:
           - motorisation = 'thermique'
-          - motorisation = 'hybride'
+          - motorisation = 'hybride non rechargeable'
+          - motorisation = 'hybride rechargeable'
       - km > 0
   description: |
     **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
@@ -546,11 +554,11 @@ transport . voiture . thermique . carburant:
           - utilisateur = 'régulier non propriétaire'
       - une de ces conditions:
           - motorisation = 'thermique'
-          - motorisation = 'hybride'
+          - motorisation = 'hybride non rechargeable'
+          - motorisation = 'hybride rechargeable'
       - km > 0
   description: |
     > Attention, si le type de carburant fait varier de façon significative l'empreinte climat au litre, la consommation en litre par 100km elle aussi varie. Veillez à saisir une consommation au litre basée sur votre moyenne réelle.
-
   par défaut: "'essence E5 ou E10'"
   une possibilité:
     - gazole B7 ou B10
@@ -591,6 +599,164 @@ transport . voiture . notif carburant:
     C'est ce qu'on appelle le "changement d'affectation des sols" ici à des fins de production de biocarburants. Malheureusement, l'impact sur le climat de ce changement d'affectation est difficile à quantifier et particulièrement incertain.
 
     Nous avons fait le choix d'ajouter cette option dans le test, mais il faut savoir que ce résultat **n'est pas représentatif des conséquences environnementales probables liées à l'utilisation de biocarburants.**
+
+transport . voiture . hybride:
+  titre: Voiture hybride
+
+transport . voiture . hybride . empreinte au kilomètre:
+  formule:
+    variations:
+      - si: motorisation = 'hybride non rechargeable'
+        alors: empreinte thermique au kilomètre
+      - si: motorisation = 'hybride rechargeable'
+        alors: empreinte électrique au kilomètre + empreinte thermique au kilomètre
+  unité: kgCO2e/km
+
+transport . voiture . hybride . empreinte thermique au kilomètre:
+  formule: thermique . empreinte au kilomètre
+  contexte:
+    transport . voiture . motorisation: "'thermique'"
+    transport . voiture . thermique . consommation estimée: hybride . consommation thermique estimée
+
+transport . voiture . hybride . empreinte électrique au kilomètre:
+  formule: électrique . empreinte au kilomètre
+  contexte:
+    transport . voiture . motorisation: "'électrique'"
+    transport . voiture . électrique . consommation aux 100: hybride rechargeable . consommation elec estimée
+
+transport . voiture . hybride . consommation thermique estimée:
+  titre: Consommation estimée voiture
+  note: |
+    TODO
+  unité: l/centkm
+  formule:
+    variations:
+      - si: gabarit = 'petite'
+        alors:
+          variations:
+            - si: motorisation = 'hybride non rechargeable'
+              alors: petite HNR
+            - si: motorisation = 'hybride rechargeable'
+              alors: petite HR
+      - si: gabarit = 'moyenne'
+        alors:
+          variations:
+            - si: motorisation = 'hybride non rechargeable'
+              alors: moyenne HNR
+            - si: motorisation = 'hybride rechargeable'
+              alors: moyenne HR
+      - si: gabarit = 'VUL'
+        alors:
+          variations:
+            - si: motorisation = 'hybride non rechargeable'
+              alors: VUL HNR
+            - si: motorisation = 'hybride rechargeable'
+              alors: VUL HR
+      - si: gabarit = 'berline'
+        alors:
+          variations:
+            - si: motorisation = 'hybride non rechargeable'
+              alors: berline HNR
+            - si: motorisation = 'hybride rechargeable'
+              alors: berline HR
+      - si: gabarit = 'SUV'
+        alors:
+          variations:
+            - si: motorisation = 'hybride non rechargeable'
+              alors: SUV HNR
+            - si: motorisation = 'hybride rechargeable'
+              alors: SUV HR
+
+transport . voiture . hybride . consommation thermique estimée . petite HNR:
+  titre: Consommation moyenne petite voiture HNR
+  formule: 4.37 * 1.2
+  unité: l/centkm
+
+transport . voiture . hybride . consommation thermique estimée . petite HR:
+  titre: Consommation moyenne petite voiture HR
+  formule: consommation thermique estimée . moyenne HR
+  unité: l/centkm
+
+transport . voiture . hybride . consommation thermique estimée . moyenne HNR:
+  titre: Consommation moyenne voiture "moyenne" HNR
+  formule: 4.69 * 1.2
+  unité: l/centkm
+
+transport . voiture . hybride . consommation thermique estimée . moyenne HR:
+  titre: Consommation moyenne voiture "moyenne" HR
+  formule: 1 * 4.25
+  unité: l/centkm
+
+transport . voiture . hybride . consommation thermique estimée . VUL HNR:
+  titre: Consommation moyenne VUL HNR
+  formule: consommation thermique estimée . berline HNR
+  unité: l/centkm
+
+transport . voiture . hybride . consommation thermique estimée . VUL HR:
+  titre: Consommation moyenne VUL HR
+  formule: consommation thermique estimée . berline HR
+  unité: l/centkm
+
+transport . voiture . hybride . consommation thermique estimée . berline HNR:
+  titre: Consommation moyenne petite voiture HNR
+  formule: 5.4 * 1.2
+  unité: l/centkm
+
+transport . voiture . hybride . consommation thermique estimée . berline HR:
+  titre: Consommation moyenne petite voiture HR
+  formule: 1.23 * 4.25
+  unité: l/centkm
+
+transport . voiture . hybride . consommation thermique estimée . SUV HNR:
+  titre: Consommation moyenne SUV HNR
+  formule: 5.92 * 1.2
+  unité: l/centkm
+
+transport . voiture . hybride . consommation thermique estimée . SUV HR:
+  titre: Consommation moyenne SUV HR
+  formule: 1.52 * 4.25
+
+transport . voiture . hybride rechargeable:
+transport . voiture . hybride rechargeable . consommation elec estimée:
+  note: |
+    TODO
+  variations:
+    - si: gabarit = 'petite'
+      alors: petite
+    - si: gabarit = 'moyenne'
+      alors: moyenne
+    - si: gabarit = 'VUL'
+      alors: VUL
+    - si: gabarit = 'berline'
+      alors: berline
+    - si: gabarit = 'SUV'
+      alors: SUV
+  unité: kWh/centkm
+
+transport . voiture . hybride rechargeable . consommation elec estimée . petite:
+  titre: Consommation moyenne petite voiture hybride rechargeable
+  formule: consommation elec estimée . moyenne
+  unité: kWh/centkm
+
+transport . voiture . hybride rechargeable . consommation elec estimée . moyenne:
+  titre: Consommation moyenne voiture "moyenne" hybride rechargeable
+  formule: 14.2 * 1.2
+  unité: kWh/centkm
+
+transport . voiture . hybride rechargeable . consommation elec estimée . VUL:
+  titre: Consommation moyenne VUL hybride rechargeable
+  formule: consommation elec estimée . berline
+  unité: kWh/centkm
+
+transport . voiture . hybride rechargeable . consommation elec estimée . berline:
+  titre: Consommation moyenne petite voiture hybride rechargeable
+  formule: 17 * 1.2
+  unité: kWh/centkm
+
+transport . voiture . hybride rechargeable . consommation elec estimée . SUV:
+  titre: Consommation moyenne SUV hybride rechargeable
+  formule: 20.4 * 1.2
+  unité: kWh/centkm
 
 transport . voiture . électrique:
   titre: Voiture électrique
@@ -767,9 +933,11 @@ transport . voiture . entretien:
     variations:
       - si: motorisation = 'thermique'
         alors: 0.0067
-      - si: motorisation = 'hybride'
-        alors: 0.0066
-      - si: motorisation = 'électrique'
+      - si:
+          une de ces conditions:
+            - motorisation = 'hybride non rechargeable'
+            - motorisation = 'hybride rechargeable'
+            - motorisation = 'électrique'
         alors: 0.0066
   unité: kgCO2e/km
   note: |
@@ -828,7 +996,10 @@ transport . voiture . barème construction:
         alors: barème thermique
       - si: motorisation = 'électrique'
         alors: barème électrique
-      - si: motorisation = 'hybride'
+      - si:
+          une de ces conditions:
+            - motorisation = 'hybride non rechargeable'
+            - motorisation = 'hybride rechargeable'
         alors: barème hybride
   unité: kgCO2e
   description: |
@@ -994,18 +1165,49 @@ transport . voiture . barème construction . barème électrique . batterie . ca
     grande autonomie: 100
 
 transport . voiture . barème construction . barème hybride:
-  formule: barème thermique + batterie
+  formule: barème thermique + batterie + moteur électrique
   unité: kgCO2e
   note: |
-    On fait l'hypothèse forte que la construction d'un véhicule hybride correspond à l'empreinte d'un véhicule électrique équipé d'une petite batterie. Néanmoins, le calcul est plus complexe, notamment car le type de véhicule hybride (rechargeable ou non) sur la composition de la voiture. On a également 2 moteurs...
+    On distingue les hybrides rechargeables (HR) et les hybrides non rechargeables (HNR). Pour les HR, on considère un chassis de voiture thermique auquel on ajoute une batterie et un moteur électrique. Pour les HNR, on ajoute également un moteur électrique et une batterie au poids respectif plus faible. Les données sont issues de cette [Publication JEC 2020](https://publications.jrc.ec.europa.eu/repository/bitstream/JRC117560/jec_ttw_v5_pc_117560_final.pdf).
+
+    | Véhicule | Poids moteur électrique | Capacité batterie |
+    | --- | --- | --- |
+    | HR | 42 kg | 146 kg → 22kWh |
+    | HNR | 25 kg | 19 kg → 3 kWh  |
 
 transport . voiture . barème construction . barème hybride . batterie:
   formule: capacité * barème construction . barème électrique . empreinte batterie par kWh
   unité: kgCO2e
 
-transport . voiture . barème construction . barème hybride . capacité:
-  valeur: 40
+transport . voiture . barème construction . barème hybride . batterie . capacité:
+  formule:
+    variations:
+      - si: motorisation = 'hybride non rechargeable'
+        alors: 3
+      - si: motorisation = 'hybride rechargeable'
+        alors: 22
   unité: kWh
+
+transport . voiture . barème construction . barème hybride . moteur électrique:
+  formule: poids * empreinte
+  unité: kgCO2e
+
+transport . voiture . barème construction . barème hybride . moteur électrique . poids:
+  formule:
+    variations:
+      - si: motorisation = 'hybride non rechargeable'
+        alors: 25
+      - si: motorisation = 'hybride rechargeable'
+        alors: 42
+  unité: kg
+
+transport . voiture . barème construction . barème hybride . moteur électrique . empreinte:
+  formule: 4.43
+  unité: kgCO2e/kg
+  note: |
+    Nous utilisons ici la donnée Ecoinvent "Production d'un moteur électrique" (production, electric motor).
+
+    > Ces données sont soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peuvent pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
 
 transport . voiture . amortissement:
   description: |

@@ -14,7 +14,7 @@ type Energie =
   | 'ESSENCE'
   | 'GAZOLE'
   | 'ELECTRIC'
-  | 'ELEC+ESSENCE HR'
+  | 'ELEC+ESSENC HR'
   | 'ELEC+GAZOLE HR'
   | 'ESS+ELEC HNR'
   | 'ESS+G.P.L.'
@@ -49,6 +49,8 @@ type Car = {
   'Poids à vide': number
   'Conso moyenne vitesse Min': number
   'Conso moyenne vitesse Max': number
+  'Conso vitesse mixte Min': number
+  'Conso vitesse mixte Max': number
   'Conso elec Min': number
   'Conso elec Max': number
 }
@@ -56,7 +58,7 @@ type Car = {
 const getMotorisation = (energie: Energie): PublicodesMotorisation | null => {
   if (energie === 'ELECTRIC') {
     return 'électrique'
-  } else if (energie?.includes('HR')) {
+  } else if (energie === 'ELEC+ESSENC HR') {
     return 'hybride (HR)'
   } else if (energie?.includes('HNR')) {
     return 'hybride (HNR)'
@@ -100,6 +102,8 @@ fs.createReadStream('./scripts/voiture/ademe-car-labelling.csv')
       ...row,
       'Conso moyenne vitesse Min': parseFloat(row['Conso moyenne vitesse Min']),
       'Conso moyenne vitesse Max': parseFloat(row['Conso moyenne vitesse Max']),
+      'Conso vitesse mixte Min': parseFloat(row['Conso vitesse mixte Min']),
+      'Conso vitesse mixte Max': parseFloat(row['Conso vitesse mixte Max']),
       'Conso elec Min': parseFloat(row['Conso elec Min']),
       'Conso elec Max': parseFloat(row['Conso elec Max']),
       'Poids à vide': parseFloat(row['Poids à vide'])
@@ -113,6 +117,8 @@ fs.createReadStream('./scripts/voiture/ademe-car-labelling.csv')
         const {
           'Conso moyenne vitesse Min': consoMin,
           'Conso moyenne vitesse Max': consoMax,
+          'Conso vitesse mixte Min': consoHybridMin,
+          'Conso vitesse mixte Max': consoHybridMax,
           'Conso elec Min': consoElecMin,
           'Conso elec Max': consoElecMax,
           'Poids à vide': poids,
@@ -128,14 +134,26 @@ fs.createReadStream('./scripts/voiture/ademe-car-labelling.csv')
           return acc
         }
 
-        const conso =
-          motorisation === 'électrique' || motorisation === 'hybride (HR)'
-            ? consoElecMin
-              ? (consoElecMin + consoElecMax) / 2
-              : consoElecMax
-            : consoMin
-              ? (consoMin + consoMax) / 2
-              : consoMax
+        let conso = 0
+        let consoElec = 0
+
+        if (motorisation === 'hybride (HR)') {
+          conso = consoHybridMin
+            ? (consoHybridMin + consoHybridMax) / 2
+            : consoHybridMax
+          consoElec = consoElecMin
+            ? (consoElecMin + consoElecMax) / 2
+            : consoElecMax
+        } else {
+          conso =
+            motorisation === 'électrique'
+              ? consoElecMin
+                ? (consoElecMin + consoElecMax) / 2
+                : consoElecMax
+              : consoMin
+                ? (consoMin + consoMax) / 2
+                : consoMax
+        }
 
         if (!conso || isNaN(conso)) {
           console.warn(
@@ -156,18 +174,38 @@ fs.createReadStream('./scripts/voiture/ademe-car-labelling.csv')
         if (poids < 1250) {
           acc.consoParPoids[size][motorisation] += conso
           acc.effectifParPoids[size][motorisation] += 1
+          if (motorisation === 'hybride (HR)') {
+            acc.consoParPoids[size]['hybride (HR - elec)'] += consoElec
+            acc.effectifParPoids[size]['hybride (HR - elec)'] += 1
+          }
         } else if (poids < 1500) {
           acc.consoParPoids[size][motorisation] += conso
           acc.effectifParPoids[size][motorisation] += 1
+          if (motorisation === 'hybride (HR)') {
+            acc.consoParPoids[size]['hybride (HR - elec)'] += consoElec
+            acc.effectifParPoids[size]['hybride (HR - elec)'] += 1
+          }
         } else if (poids < 1750) {
           acc.consoParPoids[size][motorisation] += conso
           acc.effectifParPoids[size][motorisation] += 1
+          if (motorisation === 'hybride (HR)') {
+            acc.consoParPoids[size]['hybride (HR - elec)'] += consoElec
+            acc.effectifParPoids[size]['hybride (HR - elec)'] += 1
+          }
         } else if (poids < 2000) {
           acc.consoParPoids[size][motorisation] += conso
           acc.effectifParPoids[size][motorisation] += 1
+          if (motorisation === 'hybride (HR)') {
+            acc.consoParPoids[size]['hybride (HR - elec)'] += consoElec
+            acc.effectifParPoids[size]['hybride (HR - elec)'] += 1
+          }
         } else {
           acc.consoParPoids[size][motorisation] += conso
           acc.effectifParPoids[size][motorisation] += 1
+          if (motorisation === 'hybride (HR)') {
+            acc.consoParPoids[size]['hybride (HR - elec)'] += consoElec
+            acc.effectifParPoids[size]['hybride (HR - elec)'] += 1
+          }
         }
 
         return acc
@@ -179,6 +217,7 @@ fs.createReadStream('./scripts/voiture/ademe-car-labelling.csv')
             'thermique (diesel)': 0,
             électrique: 0,
             'hybride (HR)': 0,
+            'hybride (HR - elec)': 0,
             'hybride (HNR)': 0
           },
           moyenne: {
@@ -186,6 +225,7 @@ fs.createReadStream('./scripts/voiture/ademe-car-labelling.csv')
             'thermique (diesel)': 0,
             électrique: 0,
             'hybride (HR)': 0,
+            'hybride (HR - elec)': 0,
             'hybride (HNR)': 0
           },
           VUL: {
@@ -193,6 +233,7 @@ fs.createReadStream('./scripts/voiture/ademe-car-labelling.csv')
             'thermique (diesel)': 0,
             électrique: 0,
             'hybride (HR)': 0,
+            'hybride (HR - elec)': 0,
             'hybride (HNR)': 0
           },
           berline: {
@@ -200,6 +241,7 @@ fs.createReadStream('./scripts/voiture/ademe-car-labelling.csv')
             'thermique (diesel)': 0,
             électrique: 0,
             'hybride (HR)': 0,
+            'hybride (HR - elec)': 0,
             'hybride (HNR)': 0
           },
           SUV: {
@@ -207,6 +249,7 @@ fs.createReadStream('./scripts/voiture/ademe-car-labelling.csv')
             'thermique (diesel)': 0,
             électrique: 0,
             'hybride (HR)': 0,
+            'hybride (HR - elec)': 0,
             'hybride (HNR)': 0
           }
         },
@@ -216,6 +259,7 @@ fs.createReadStream('./scripts/voiture/ademe-car-labelling.csv')
             'thermique (diesel)': 0,
             électrique: 0,
             'hybride (HR)': 0,
+            'hybride (HR - elec)': 0,
             'hybride (HNR)': 0
           },
           moyenne: {
@@ -223,6 +267,7 @@ fs.createReadStream('./scripts/voiture/ademe-car-labelling.csv')
             'thermique (diesel)': 0,
             électrique: 0,
             'hybride (HR)': 0,
+            'hybride (HR - elec)': 0,
             'hybride (HNR)': 0
           },
           VUL: {
@@ -230,6 +275,7 @@ fs.createReadStream('./scripts/voiture/ademe-car-labelling.csv')
             'thermique (diesel)': 0,
             électrique: 0,
             'hybride (HR)': 0,
+            'hybride (HR - elec)': 0,
             'hybride (HNR)': 0
           },
           berline: {
@@ -237,6 +283,7 @@ fs.createReadStream('./scripts/voiture/ademe-car-labelling.csv')
             'thermique (diesel)': 0,
             électrique: 0,
             'hybride (HR)': 0,
+            'hybride (HR - elec)': 0,
             'hybride (HNR)': 0
           },
           SUV: {
@@ -244,6 +291,7 @@ fs.createReadStream('./scripts/voiture/ademe-car-labelling.csv')
             'thermique (diesel)': 0,
             électrique: 0,
             'hybride (HR)': 0,
+            'hybride (HR - elec)': 0,
             'hybride (HNR)': 0
           }
         }
