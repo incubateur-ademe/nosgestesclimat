@@ -205,15 +205,17 @@ transport . voiture . voiture 5km . fréquence:
 transport . voiture . voiture électrique:
   titre: Rouler en voiture électrique
   icônes: 🔌🚗
-  applicable si: voiture . km > 0
+  applicable si:
+    toutes ces conditions:
+      - voiture . km > 0
+      - est défini: transport . voiture . motorisation
+      - est défini: transport . voiture . gabarit
+      - est défini: voiture . utilisateur
   non applicable si:
     une de ces conditions:
       - transport . voiture . motorisation = 'électrique'
-      - toutes ces conditions:
-          - est défini: voiture . utilisateur
-          - une de ces conditions:
-              - voiture . utilisateur = 'non régulier'
-              - voiture . utilisateur = 'régulier non propriétaire'
+      - voiture . utilisateur = 'non régulier'
+      - voiture . utilisateur = 'régulier non propriétaire'
   formule: transport . voiture - recalcul
   description: |
     Les véhicules électriques sont désormais dotés de moteurs de puissance comparable aux voitures thermiques. Alimentés par des batteries rechargeables sur le réseau électrique domestique ou des bornes de recharge, qui commencent à être installées un peu partout sur le territoire, ces véhicules ont aujourd’hui une autonomie de plusieurs centaines de kilomètres.
@@ -229,6 +231,11 @@ transport . voiture . voiture électrique . recalcul:
   valeur: transport . voiture
   contexte:
     transport . voiture . motorisation: "'électrique'"
+    transport . voiture . électrique . consommation aux 100: transport . voiture . électrique . consommation estimée
+    transport . voiture . barème construction . barème électrique . batterie . capacité:
+      valeur: transport . voiture . barème construction . barème électrique . batterie . capacité
+      contexte:
+        transport . voiture . motorisation: "'électrique'"
 
 transport . voiture . réduire taille:
   titre: Choisir une petite voiture
