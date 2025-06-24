@@ -627,7 +627,39 @@ transport . voiture . hybride . empreinte électrique au kilomètre:
 transport . voiture . hybride . consommation thermique estimée:
   titre: Consommation estimée voiture
   note: |
-    TODO
+    > Si nous avons travaillé les propositions de consommation moyenne, l'idéal au vu de l'impact de cette donnée est bien que l'utilisateur ou l'utilisatrice saisisse sa propre consommation réelle, moyennée sur son usage.
+
+    Le calcul des consommations moyennes est basé sur la base de données ADEME [Car Labelling](https://carlabelling.ademe.fr/index/). Nous avons utilisé directement les [données brutes](https://explore.data.gouv.fr/fr/datasets/607d3dfa434fd3f49e61436c/#/resources/e85bd68f-0690-4753-adb9-ce1f5eab7a58) via un script permettant d'extraire directement les consommations moyennes pour chaque gabarit et motorisation sur la base de ce mapping:
+
+      - Carosserie = COMBISPACE : "VUL"
+      - Poids < 1400kg : "petite"
+      - Poids 1400-1600kg: "moyenne"
+      - Poids > 1600kg et gamme Luxe ou Supérieure: "SUV"
+      - Poids > 1600kg, autre gammes: "berline"
+
+    | **Catégorie de véhicule** | Hybride (HR) en L/100km (effectif) | Hybride | Hybride (HNR) en L/100km (effectif) |
+    | --- | --- | --- |
+    | **Citadine** | / | 4.37 (304) |
+    | **Compact / “moyenne”** | 1 (22) | 4.69 (134) |
+    | **VUL** | / | / |
+    | **Berline** (voiture type “break”) | 1.23 (263) | 5.4 (263) |
+    | **Grande berline** | 1.52 (417) | 5.92 (417) |
+
+    > Une approximation est sans doute faite ici sur les choix de gabarits étant donné que le poids des véhicules hybrides et plus élevé que les véhicules thermiques ce qui peut impacter le rapprochement consommation / gabarit.
+
+    Cette consommation est une consommation "constructeur". En lien avec le service Transport de l'ADEME, il a été décidé de les corriger via un facteur permettant d’approcher la consommation réelle à partir des consommation d’homologation (constructeur).
+
+    D’après [EAA](https://climate-energy.eea.europa.eu/topics/transport/real-world-emissions/data) (source fournie par le service transport de l'ADEME), on a, pour les hybrides rechargeables :
+      - HR (essence): +306%
+      - HR (diesel): +348%
+
+    On considère une augmentation de 325%.
+
+    Enfin pour la consommation des hybrides non rechargeables, nous avons appliqué une augmentation de 20%, chiffre qui reste dans l'ordre de grandeur des surconsommations pour le thermique.
+
+    Car Labelling ne propose pas de données pour les hybrides "petites" et "VUL", nous avons choisi d'appliquer respectivement les données "moyenne" et "berline" pour ces deux gabarits.
+
+    Une autre limite reste tout de même: cette base rassemble des données de véhicules récents, pas forcément représentatifs des véhicules en circulation.
   unité: l/centkm
   formule:
     variations:
@@ -719,7 +751,31 @@ transport . voiture . hybride . consommation thermique estimée . SUV HR:
 transport . voiture . hybride rechargeable:
 transport . voiture . hybride rechargeable . consommation elec estimée:
   note: |
-    TODO
+    > Si nous avons travaillé les propositions de consommation moyenne, l'idéal au vu de l'impact de cette donnée est bien que l'utilisateur ou l'utilisatrice saisisse sa propre consommation réelle, moyennée sur son usage.
+
+    Le calcul des consommations moyennes est basé sur la base de données ADEME [Car Labelling](https://carlabelling.ademe.fr/index/). Nous avons utilisé directement les [données brutes](https://explore.data.gouv.fr/fr/datasets/607d3dfa434fd3f49e61436c/#/resources/e85bd68f-0690-4753-adb9-ce1f5eab7a58) via un script permettant d'extraire directement les consommations moyennes pour chaque gabarit et motorisation sur la base de ce mapping:
+
+      - Carosserie = COMBISPACE : "VUL"
+      - Poids < 1400kg : "petite"
+      - Poids 1400-1600kg: "moyenne"
+      - Poids > 1600kg et gamme Luxe ou Supérieure: "SUV"
+      - Poids > 1600kg, autre gammes: "berline"
+
+    | **Catégorie de véhicule**  | Hybride (HR) en kWh/100km (effectif) |
+    | --- | --- |
+    | **Citadine** | / |
+    | **Compact / “moyenne”** | 14.2 (22) |
+    | **VUL** | / |
+    | **Berline** (voiture type “break”) | 17 (49) |
+    | **Grande berline** | 20.4 (100) |
+
+    > Une approximation est sans doute faite ici sur les choix de gabarits étant donné que le poids des véhicules hybrides et plus élevé que les véhicules thermiques ce qui peut impacter le rapprochement consommation / gabarit.
+
+    Cette consommation est une consommation "constructeur". En lien avec le service Transport de l'ADEME, il a été décidé de les corriger via un facteur permettant d’approcher la consommation réelle à partir des consommation d’homologation (constructeur). Il a été décidé de conserver l’ordre de grandeur de 20% même si l'électrique est assez sensible à la température extérieure (le chauffage n'est pas "gratuit" en énergie comme avec un moteur thermique sur lequel on vient récupérer la chaleur perdue pour chauffer l'habitacle).
+
+    Car Labelling ne propose pas de données pour les hybrides "petites" et "VUL", nous avons choisi d'appliquer respectivement les données "moyenne" et "berline" pour ces deux gabarits.
+
+    Une autre limite reste tout de même: cette base rassemble des données de véhicules récents, pas forcément représentatifs des véhicules en circulation.
   variations:
     - si: gabarit = 'petite'
       alors: petite
@@ -811,6 +867,8 @@ transport . voiture . électrique . consommation estimée:
     | **VUL** | 20.6 kWh/100km (6) |
     | **Berline** (voiture type “break”) | 19.3 kWh/100km (40) |
     | **SUV** | 21.2 kWh/100km (26) |
+
+    > Une approximation est sans doute faite ici sur les choix de gabarits étant donné que le poids des véhicules électriques et plus élevé que les véhicules thermiques ce qui peut impacter le rapprochement consommation / gabarit.
 
     Cette consommation est une consommation "constructeur". En lien avec le service Transport de l'ADEME, il a été décidé de les corriger via un facteur permettant d’approcher la consommation réelle à partir des consommation d’homologation (constructeur). Il a été décidé de conserver l’ordre de grandeur de 20% même si l'électrique est assez sensible à la température extérieure (le chauffage n'est pas "gratuit" en énergie comme avec un moteur thermique sur lequel on vient récupérer la chaleur perdue pour chauffer l'habitacle).
 
