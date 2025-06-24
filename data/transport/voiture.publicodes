@@ -3,22 +3,24 @@ transport . voiture:
   icônes: 🚘
   formule:
     variations:
-      - si: km = 0
+      - si:
+          toutes ces conditions:
+            - est défini: km
+            - km = 0
         alors: 0
-      - sinon:
-          variations:
-            - si:
-                est défini: utilisateur
-              alors:
-                variations:
-                  - si:
-                      une de ces conditions:
-                        - utilisateur = 'propriétaire'
-                        - utilisateur = 'régulier non propriétaire'
-                    alors: empreinte calculée
-                  - si: utilisateur = 'non régulier'
-                    alors: empreinte moyenne non régulier
-            - sinon: empreinte moyenne
+      - si:
+          toutes ces conditions:
+            - est défini: utilisateur
+            - une de ces conditions:
+                - utilisateur = 'propriétaire'
+                - utilisateur = 'régulier non propriétaire'
+        alors: empreinte calculée
+      - si:
+          toutes ces conditions:
+            - est défini: utilisateur
+            - utilisateur = 'non régulier'
+        alors: empreinte moyenne non régulier
+      - sinon: empreinte moyenne
   unité: kgCO2e
   description: |
     ![](https://upload.wikimedia.org/wikipedia/commons/9/9a/Congestion_caused_by_a_road_accident%2C_Algarve%2C_Portugal.jpg)
@@ -114,7 +116,6 @@ transport . voiture . nombre véhicules circulation . VUL:
 
 transport . voiture . utilisateur:
   question: Utilisez-vous majoritairement la même voiture pour vous déplacer ?
-  applicable si: km > 0
   une possibilité:
     - propriétaire
     - régulier non propriétaire
@@ -145,7 +146,6 @@ transport . voiture . notif utilsateur irrégulier:
     toutes ces conditions:
       - est défini: voiture . utilisateur
       - utilisateur = 'non régulier'
-      - km > 0
   description: |
     Vous roulez avec des véhicules différents : nous vous avons donc attribué les caractéristiques d'une voiture "moyenne".
 
@@ -186,7 +186,6 @@ transport . voiture . empreinte calculée:
 transport . voiture . voyageurs:
   titre: Nombre de voyageurs
   question: Quel est le nombre moyen de voyageurs dans la voiture ?
-  applicable si: km > 0
   description: |
     🤔 Il est fort probable que vos trajets ne se ressemblent pas, et que vous rouliez parfois seul, parfois à plusieurs.
 
@@ -321,7 +320,6 @@ transport . voiture . motorisation:
       - une de ces conditions:
           - utilisateur = 'propriétaire'
           - utilisateur = 'régulier non propriétaire'
-      - km > 0
   description: 💡 **Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
   par défaut: "'thermique'"
   une possibilité:
@@ -359,7 +357,6 @@ transport . voiture . thermique . consommation aux 100:
       - une de ces conditions:
           - motorisation = 'thermique'
           - motorisation = 'hybride'
-      - km > 0
   description: |
     **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
   suggestions:
@@ -546,7 +543,6 @@ transport . voiture . thermique . carburant:
       - une de ces conditions:
           - motorisation = 'thermique'
           - motorisation = 'hybride'
-      - km > 0
   description: |
     > Attention, si le type de carburant fait varier de façon significative l'empreinte climat au litre, la consommation en litre par 100km elle aussi varie. Veillez à saisir une consommation au litre basée sur votre moyenne réelle.
 
@@ -615,7 +611,6 @@ transport . voiture . électrique . consommation aux 100:
           - utilisateur = 'propriétaire'
           - utilisateur = 'régulier non propriétaire'
       - motorisation = 'électrique'
-      - km > 0
   suggestions:
     15 kWh/100km: 15
     20 kWh/100km: 20
@@ -646,7 +641,6 @@ transport . voiture . gabarit:
       - une de ces conditions:
           - utilisateur = 'propriétaire'
           - utilisateur = 'régulier non propriétaire'
-      - km > 0
   description: |
     **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
   par défaut: "'berline'"
