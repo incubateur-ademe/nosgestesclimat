@@ -29,8 +29,8 @@ jobs:
       - run: git log | head && git status
 
       - id: compilation
-        name: Compile
-        run: yarn compile
+        name: Compile and prepare pre-release
+        run: yarn package
 
       - id: check-translation
         name: Checks the rules translation
@@ -207,3 +207,11 @@ jobs:
             } catch (error) {
               core.setFailed(`Error updating PR comment: ${error.message}`);
             }
+
+  prerelease:
+    if: ${{!(github.actor == 'dependabot[bot]' || github.event.pull_request.user.login == 'dependabot[bot]')}}
+    runs-on: ubuntu-latest
+    needs: compile
+    steps:
+      - name: Continuously Release
+        run: npx pkg-pr-new publish
