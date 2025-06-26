@@ -91,7 +91,7 @@ logement . vacances . empreinte hotel:
               alors: 2 * hotel . nombre de nuitées * empreinte hotel par nuit
             - sinon: hotel . nombre de nuitées * empreinte hotel par nuit
       - sinon: 0
-  par défaut: hotel . nombre de nuitées . moyenne * empreinte hotel par nuit
+  par défaut: hotel . moyenne nombre de nuitées * empreinte hotel par nuit
   note: |
     ### Les paramètres du calcul
 
@@ -174,12 +174,15 @@ logement . vacances . empreinte hotel par nuit:
       > Point publicodes : Cette règle étant utilisée dans d'autres espaces nom que `logement . vacances . hotel` c'est important ici de ne pas l'inclure dans cet espace non qui rendrait l'empreinte de la nuitée non applicable si la règle hotel est elle aussi non applicable.
 
 logement . vacances . hotel . nombre de nuitées:
-  non applicable si: hotel . présent = non
+  applicable si:
+    toutes ces conditions:
+      - est défini: hotel . présent
+      - hotel . présent
   question: Combien de nuits passez-vous à l'hôtel ou en chambre d'hôtes par an ?
   unité: nuit
   plancher: 0
   plafond: 365
-  par défaut: moyenne
+  par défaut: moyenne nombre de nuitées
   note: |
     En combinant plusieurs données de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345),
     on peut retrouver une valeur moyenne en nuitées / pers / an dans les hébergements hôtel, pension de famille, village de vacances ou gîte.
@@ -189,11 +192,11 @@ logement . vacances . hotel . nombre de nuitées:
     deux semaines: 14
     un week-end par mois: 24
 
-logement . vacances . hotel . nombre de nuitées . moyenne:
+logement . vacances . hotel . moyenne nombre de nuitées:
   titre: Nombre de nuitées en moyenne par français
   formule: nombre de nuits hors logement * part mode d'hébergement hotel
 
-logement . vacances . hotel . nombre de nuitées . moyenne . part mode d'hébergement hotel:
+logement . vacances . hotel . moyenne nombre de nuitées . part mode d'hébergement hotel:
   formule: 0.157 + 0.02
   note: |
     Excel "Caractéristiques des voyageurs personnels et professionnels - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
@@ -209,7 +212,7 @@ logement . vacances . empreinte camping:
       - sinon: 0
   # NOTE: il y a peut-être moyen de factoriser le calcul car seul le nombre
   # nuitées diffère pour la valeur par défaut.
-  par défaut: camping . empreinte par nuit * camping . nombre de nuitées . moyenne
+  par défaut: camping . empreinte par nuit * camping . moyenne nombre de nuitées
 
 logement . vacances . camping:
   titre: Emplacement en camping
@@ -227,12 +230,15 @@ logement . vacances . camping . empreinte par nuit:
     Le référentiel ADEME est présent dans la base Impacts depuis mai 2023.
 
 logement . vacances . camping . nombre de nuitées:
-  non applicable si: camping . présent = non
+  applicable si:
+    toutes ces conditions:
+      - est défini: camping . présent
+      - camping . présent
   question: Combien de nuits passez-vous en camping par an ?
   unité: nuit
   plancher: 0
   plafond: 365
-  par défaut: moyenne
+  par défaut: moyenne nombre de nuitées
   note: |
     En combinant plusieurs données de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345),
     on peut retrouver une valeur moyenne en nuitées / pers / an dans les hébergements camping.
@@ -242,11 +248,11 @@ logement . vacances . camping . nombre de nuitées:
     deux semaines: 14
     un week-end par mois: 24
 
-logement . vacances . camping . nombre de nuitées . moyenne:
+logement . vacances . camping . moyenne nombre de nuitées:
   titre: Nombre de nuitées en moyenne par français
   formule: nombre de nuits hors logement * part mode d'hébergement camping
 
-logement . vacances . camping . nombre de nuitées . moyenne . part mode d'hébergement camping:
+logement . vacances . camping . moyenne nombre de nuitées . part mode d'hébergement camping:
   formule: 0.066
   note: |
     Excel "Caractéristiques des voyageurs personnels et professionnels - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
@@ -260,7 +266,7 @@ logement . vacances . empreinte auberge de jeunesse:
       - si: auberge de jeunesse . présent
         alors: auberge de jeunesse . empreinte par nuit * auberge de jeunesse . nombre de nuitées
       - sinon: 0
-  par défaut: auberge de jeunesse . empreinte par nuit * auberge de jeunesse . nombre de nuitées . moyenne
+  par défaut: auberge de jeunesse . empreinte par nuit * auberge de jeunesse . moyenne nombre de nuitées
 
 logement . vacances . auberge de jeunesse:
   titre: Auberge de jeunesse
@@ -281,12 +287,15 @@ logement . vacances . auberge de jeunesse . nombre de personnes dans le dortoir:
   note: On considère ici qu'un dortoir "classique" comprend 6 personnes.
 
 logement . vacances . auberge de jeunesse . nombre de nuitées:
-  non applicable si: auberge de jeunesse . présent = non
+  applicable si:
+    toutes ces conditions:
+      - est défini: auberge de jeunesse . présent
+      - auberge de jeunesse . présent
   question: Combien de nuits passez-vous en auberge de jeunesse par an ?
   unité: nuit
   plancher: 0
   plafond: 365
-  par défaut: moyenne
+  par défaut: moyenne nombre de nuitées
   note: |
     En combinant plusieurs données de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345),
     on peut retrouver une valeur moyenne en nuitées / pers / an dans les hébergements auberge de jeunesse.
@@ -296,11 +305,11 @@ logement . vacances . auberge de jeunesse . nombre de nuitées:
     deux semaines: 14
     un week-end par mois: 24
 
-logement . vacances . auberge de jeunesse . nombre de nuitées . moyenne:
+logement . vacances . auberge de jeunesse . moyenne nombre de nuitées:
   titre: Nombre de nuitées en moyenne par français
   formule: nombre de nuits hors logement * part mode d'hébergement auberge de jeunesse
 
-logement . vacances . auberge de jeunesse . nombre de nuitées . moyenne . part mode d'hébergement auberge de jeunesse:
+logement . vacances . auberge de jeunesse . moyenne nombre de nuitées . part mode d'hébergement auberge de jeunesse:
   formule: 0.03
   note: |
     Excel "Caractéristiques des voyageurs personnels et professionnels - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
@@ -314,7 +323,7 @@ logement . vacances . empreinte locations:
       - si: locations . présent
         alors: locations . empreinte par nuit * locations . nombre de nuitées
       - sinon: 0
-  par défaut: locations . nombre de nuitées . moyenne * locations . empreinte par nuit
+  par défaut: locations . moyenne nombre de nuitées * locations . empreinte par nuit
 
 logement . vacances . locations:
   titre: Locations meublées
@@ -337,14 +346,17 @@ logement . vacances . locations . empreinte par nuit:
     Le chiffre obtenu par l'approche top-down, 5,8 kg éqCO2, est tout à fait cohérent avec le reste des données disponibles sur les autres types de logement touristiques, et nous paraît un bon début pour approximer cette donnée complexe.
 
 logement . vacances . locations . nombre de nuitées:
-  non applicable si: locations . présent = non
+  applicable si:
+    toutes ces conditions:
+      - est défini: locations . présent
+      - locations . présent
   question: Combien de nuits passez-vous en locations meublées par an ?
   unité: nuit
   description: |
     💡 Déclarez ici les nuits réservées via des platerformes de type Airbnb, Abritel...
   plancher: 0
   plafond: 365
-  par défaut: moyenne
+  par défaut: moyenne nombre de nuitées
   note: |
     En combinant plusieurs données de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345),
     on peut retrouver une valeur moyenne en nuitées / pers / an dans les hébergements location.
@@ -354,11 +366,11 @@ logement . vacances . locations . nombre de nuitées:
     deux semaines: 14
     un week-end par mois: 24
 
-logement . vacances . locations . nombre de nuitées . moyenne:
+logement . vacances . locations . moyenne nombre de nuitées:
   titre: Nombre de nuitées en moyenne par français
   formule: nombre de nuits hors logement * part mode d'hébergement locations
 
-logement . vacances . locations . nombre de nuitées . moyenne . part mode d'hébergement locations:
+logement . vacances . locations . moyenne nombre de nuitées . part mode d'hébergement locations:
   formule: 0.091
   note: |
     Excel "Caractéristiques des voyageurs personnels et professionnels - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
@@ -372,7 +384,7 @@ logement . vacances . empreinte échange:
       - si: échange . présent
         alors: échange . empreinte par nuit * échange . nombre de nuitées
       - sinon: 0
-  par défaut: échange . nombre de nuitées . moyenne * échange . empreinte par nuit
+  par défaut: échange . moyenne nombre de nuitées * échange . empreinte par nuit
 
 logement . vacances . échange:
   titre: Échange de maison
@@ -388,14 +400,17 @@ logement . vacances . échange . empreinte par nuit:
     Ces données sont issues de l'[étude d'impact réalisée par l'entreprise HomeExchange avec l'ADEME et rendue publique en 2023](https://www.homeexchange.fr/p/homeexchange-etude-impact-carbone?ref=homeexchange.fr)
 
 logement . vacances . échange . nombre de nuitées:
-  non applicable si: échange . présent = non
+  applicable si:
+    toutes ces conditions:
+      - est défini: échange . présent
+      - échange . présent
   question: Combien de nuits passez-vous en échange de maison par an ?
   unité: nuit
   description: |
     💡 Comptez toutes les nuits, même si les échanges ne sont pas simultanés.
   plancher: 0
   plafond: 365
-  par défaut: moyenne
+  par défaut: moyenne nombre de nuitées
   note: |
     En combinant plusieurs données de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345),
     on peut retrouver une valeur moyenne en nuitées / pers / an dans les hébergements de tous types. Que répondent les échangeurs de maison ? Nous faisons le pari que cela rentre dans la catégorie "autre".
@@ -405,11 +420,11 @@ logement . vacances . échange . nombre de nuitées:
     deux semaines: 14
     un week-end par mois: 24
 
-logement . vacances . échange . nombre de nuitées . moyenne:
+logement . vacances . échange . moyenne nombre de nuitées:
   titre: Nombre de nuitées en moyenne par français
   formule: nombre de nuits hors logement * part mode d'hébergement échange
 
-logement . vacances . échange . nombre de nuitées . moyenne . part mode d'hébergement échange:
+logement . vacances . échange . moyenne nombre de nuitées . part mode d'hébergement échange:
   formule: 0.008
   note: |
     Excel "Caractéristiques des voyageurs personnels et professionnels - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
@@ -583,7 +598,7 @@ logement . vacances . résidence secondaire . nombre de nuitées . moyenne . par
     On considère ici les hébergements "résidence secondaire".
 
 logement . vacances . résidence secondaire . durée:
-  non applicable si: résidence secondaire . présent = non
+  applicable si: résidence secondaire . présent
   mosaique:
     type: nombre
     options:
