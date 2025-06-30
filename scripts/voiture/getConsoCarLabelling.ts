@@ -74,15 +74,28 @@ const getMotorisation = (energie: Energie): PublicodesMotorisation | null => {
 const getSize = (
   Gamme: Gamme,
   Carosserie: Carrosserie,
-  poids: number
+  poids: number,
+  motorisation: PublicodesMotorisation
 ): PublicodesSizes | null => {
+  const petiteTreshold =
+    motorisation === 'électrique'
+      ? 1700
+      : motorisation === 'hybride (HR)'
+        ? 1550
+        : 1400
+  const moyenneTreshold =
+    motorisation === 'électrique'
+      ? 2000
+      : motorisation === 'hybride (HR)'
+        ? 1750
+        : 1600
   if (Carosserie === 'COMBISPACE') {
     return 'VUL'
-  } else if (poids < 1400) {
+  } else if (poids < petiteTreshold) {
     return 'petite'
-  } else if (poids >= 1400 && poids < 1600) {
+  } else if (poids >= petiteTreshold && poids < moyenneTreshold) {
     return 'moyenne'
-  } else if (poids >= 1600) {
+  } else if (poids >= moyenneTreshold) {
     if (Gamme === 'LUXE' || Gamme === 'SUPERIEURE') {
       return 'SUV'
     } else {
@@ -162,7 +175,7 @@ fs.createReadStream('./scripts/voiture/ademe-car-labelling.csv')
           return acc
         }
 
-        const size = getSize(Gamme, Carrosserie, poids)
+        const size = getSize(Gamme, Carrosserie, poids, motorisation)
 
         if (!size) {
           console.warn(
@@ -171,41 +184,11 @@ fs.createReadStream('./scripts/voiture/ademe-car-labelling.csv')
           return acc
         }
 
-        if (poids < 1250) {
-          acc.consoParPoids[size][motorisation] += conso
-          acc.effectifParPoids[size][motorisation] += 1
-          if (motorisation === 'hybride (HR)') {
-            acc.consoParPoids[size]['hybride (HR - elec)'] += consoElec
-            acc.effectifParPoids[size]['hybride (HR - elec)'] += 1
-          }
-        } else if (poids < 1500) {
-          acc.consoParPoids[size][motorisation] += conso
-          acc.effectifParPoids[size][motorisation] += 1
-          if (motorisation === 'hybride (HR)') {
-            acc.consoParPoids[size]['hybride (HR - elec)'] += consoElec
-            acc.effectifParPoids[size]['hybride (HR - elec)'] += 1
-          }
-        } else if (poids < 1750) {
-          acc.consoParPoids[size][motorisation] += conso
-          acc.effectifParPoids[size][motorisation] += 1
-          if (motorisation === 'hybride (HR)') {
-            acc.consoParPoids[size]['hybride (HR - elec)'] += consoElec
-            acc.effectifParPoids[size]['hybride (HR - elec)'] += 1
-          }
-        } else if (poids < 2000) {
-          acc.consoParPoids[size][motorisation] += conso
-          acc.effectifParPoids[size][motorisation] += 1
-          if (motorisation === 'hybride (HR)') {
-            acc.consoParPoids[size]['hybride (HR - elec)'] += consoElec
-            acc.effectifParPoids[size]['hybride (HR - elec)'] += 1
-          }
-        } else {
-          acc.consoParPoids[size][motorisation] += conso
-          acc.effectifParPoids[size][motorisation] += 1
-          if (motorisation === 'hybride (HR)') {
-            acc.consoParPoids[size]['hybride (HR - elec)'] += consoElec
-            acc.effectifParPoids[size]['hybride (HR - elec)'] += 1
-          }
+        acc.consoParPoids[size][motorisation] += conso
+        acc.effectifParPoids[size][motorisation] += 1
+        if (motorisation === 'hybride (HR)') {
+          acc.consoParPoids[size]['hybride (HR - elec)'] += consoElec
+          acc.effectifParPoids[size]['hybride (HR - elec)'] += 1
         }
 
         return acc
