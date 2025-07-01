@@ -1,6 +1,10 @@
 transport . voiture . éco-conduite:
   titre: Adopter une éco-conduite
   icônes: 🚗☮
+  non applicable si:
+    toutes ces conditions:
+      - est défini: utilisateur
+      - utilisateur = 'jamais'
   formule: voiture . usage au kilomètre * voiture . km * réduction / transport . voiture . voyageurs
   unité: kgCO2e
   description: |
@@ -21,6 +25,10 @@ transport . voiture . éco-conduite . réduction:
 transport . voiture . limitation autoroute:
   titre: Ne pas dépasser 110 km/h sur l'autoroute
   icônes: 🚗🛣️
+  non applicable si:
+    toutes ces conditions:
+      - est défini: utilisateur
+      - utilisateur = 'jamais'
   formule: transport . voiture . usage au kilomètre * km autoroute * réduction / transport . voiture . voyageurs
   description: |
     Diminuer sa vitesse de 20 km/h sur l’autoroute permet de réduire sa consommation de carburant de l’ordre de 20 %.
@@ -70,7 +78,9 @@ transport . voiture . covoiturage:
   non applicable si:
     toutes ces conditions:
       - est défini: voiture . utilisateur
-      - voiture . utilisateur = 'non régulier'
+      - une de ces conditions:
+          - voiture . utilisateur = 'non régulier'
+          - voiture . utilisateur = 'jamais'
   action:
     dépasse:
       - transport . voiture . boulot . covoiturage
@@ -106,7 +116,9 @@ transport . voiture . autopartage:
   non applicable si:
     toutes ces conditions:
       - est défini: voiture . utilisateur
-      - voiture . utilisateur = 'non régulier'
+      - une de ces conditions:
+          - voiture . utilisateur = 'non régulier'
+          - voiture . utilisateur = 'jamais'
   description: |
     On peut être un grand adepte de la marche, du vélo et des transports en communs et avoir parfois besoin d’une voiture ; pour les loisirs, les déplacements longs ou pour aller faire de grosses courses.
 
@@ -205,11 +217,8 @@ transport . voiture . voiture électrique:
       - est défini: transport . voiture . motorisation
       - est défini: transport . voiture . gabarit
       - est défini: voiture . utilisateur
-  non applicable si:
-    une de ces conditions:
-      - transport . voiture . motorisation = 'électrique'
-      - voiture . utilisateur = 'non régulier'
-      - voiture . utilisateur = 'régulier non propriétaire'
+      - voiture . utilisateur = 'propriétaire'
+  non applicable si: transport . voiture . motorisation = 'électrique'
   formule: transport . voiture - recalcul
   description: |
     Les véhicules électriques sont désormais dotés de moteurs de puissance comparable aux voitures thermiques. Alimentés par des batteries rechargeables sur le réseau électrique domestique ou des bornes de recharge, qui commencent à être installées un peu partout sur le territoire, ces véhicules ont aujourd’hui une autonomie de plusieurs centaines de kilomètres.
@@ -237,14 +246,13 @@ transport . voiture . réduire taille:
     Le prix, la dimension, le confort, l’esthétisme, ça compte mais ce ne peut plus être les seuls critères de choix. La consommation de carburant et les faibles émissions de CO₂ sont tout aussi essentielles !
 
     Rendez-vous [sur le site Je Change ma Voiture](https://jechangemavoiture.gouv.fr/) pour une mobilité plus propre et plus économe.
-  non applicable si:
-    une de ces conditions:
-      - transport . voiture . gabarit = 'petite'
-      - toutes ces conditions:
-          - est défini: voiture . utilisateur
-          - une de ces conditions:
-              - voiture . utilisateur = 'non régulier'
-              - voiture . utilisateur = 'régulier non propriétaire'
+  applicable si:
+    toutes ces conditions:
+      - est défini: transport . voiture . motorisation
+      - est défini: transport . voiture . gabarit
+      - est défini: voiture . utilisateur
+      - voiture . utilisateur = 'propriétaire'
+  non applicable si: transport . voiture . gabarit = 'petite'
   formule: transport . voiture - recalcul
 
 transport . voiture . réduire taille . recalcul:
@@ -256,6 +264,8 @@ transport . voiture . faire durer:
   titre: Faire durer son véhicule
   applicable si:
     toutes ces conditions:
+      - est défini: transport . voiture . motorisation
+      - est défini: transport . voiture . gabarit
       - est défini: voiture . utilisateur
       - voiture . utilisateur = 'propriétaire'
   description: |
