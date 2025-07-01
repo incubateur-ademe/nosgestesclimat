@@ -36,7 +36,9 @@ transport . voiture . empreinte:
         alors: empreinte moyenne non régulier
 
 transport . voiture . utilisateur:
-  question: Utilisez-vous majoritairement la même voiture pour vous déplacer ?
+  question: Vous arrive t-il de vous déplacer en voiture ?
+  description: |
+    Choisissez ce qui correspond à la majorité de vos trajets.
   une possibilité:
     - propriétaire
     - régulier non propriétaire
@@ -56,13 +58,13 @@ transport . voiture . utilisateur:
     > Pour pallier ces deux problèmes, et mieux représenter qu'un véhicule possédé mais sous-utilisé s'use plus vite et mérite une empreinte de construction plus importante, **nous appliquons un seuil pour la partie construction de l'empreinte, pour les propriétaires**.
 
 transport . voiture . utilisateur . propriétaire:
-  titre: Oui et j'en suis propriétaire
+  titre: Oui, avec mon propre véhicule
 transport . voiture . utilisateur . régulier non propriétaire:
-  titre: Oui mais c'est celle d'un proche
+  titre: Oui, avec le véhicule d'un proche
 transport . voiture . utilisateur . non régulier:
-  titre: Non, je change souvent (autopartage, proches, taxi...)
+  titre: Oui, avec des voitures différentes (location, covoiturage, taxi...)
 transport . voiture . utilisateur . jamais:
-  titre: Non, je n'utilise jamais de voiture
+  titre: Non, je ne monte jamais en voiture
 
 transport . voiture . notif utilsateur irrégulier:
   type: notification
@@ -72,6 +74,15 @@ transport . voiture . notif utilsateur irrégulier:
       - utilisateur = 'non régulier'
   description: |
     Vous roulez avec des véhicules différents : nous vous avons donc attribué les caractéristiques d'une voiture "moyenne".
+
+transport . voiture . notif non utilisateur:
+  type: notification
+  formule:
+    toutes ces conditions:
+      - est défini: voiture . utilisateur
+      - voiture . utilisateur = 'jamais'
+  description: |
+    Même en tant que passager ou passagère, les kilomètres parcourus comptent pour le calcul.
 
 transport . voiture . empreinte moyenne:
   valeur: voiture . empreinte calculée
