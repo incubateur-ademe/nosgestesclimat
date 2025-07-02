@@ -27,11 +27,19 @@ jobs:
           cache: 'yarn'
       - run: yarn install --immutable
       - run: git log | head && git status
-
       - id: compilation
-        name: Compile
+        name: Compile and prepare pre-release
         run: yarn compile
-
+      - name: Upload compiled artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiled-artifact
+          path: |
+            nosgestesclimat.model.json
+            public/*.json
+            index.js
+            index.d.ts
+            types/*.d.ts
       - id: check-translation
         name: Checks the rules translation
         run: |
@@ -207,3 +215,29 @@ jobs:
             } catch (error) {
               core.setFailed(`Error updating PR comment: ${error.message}`);
             }
+
+  prerelease:
+    if: ${{!(github.actor == 'dependabot[bot]' || github.event.pull_request.user.login == 'dependabot[bot]')}}
+    needs: compile
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 22
+          cache: 'yarn'
+
+      - run: yarn install --immutable
+
+      - name: Download compiled artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: compiled-artifact
+          path: .
+
+      - name: Run prepack step
+        run: node prepack.mjs
+
+      - name: Continuously Release
+        run: npx pkg-pr-new publish --compact --packageManager=yarn
