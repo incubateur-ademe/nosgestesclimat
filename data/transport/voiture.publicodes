@@ -670,7 +670,7 @@ transport . voiture . hybride . consommation thermique estimée:
 
     Enfin pour la consommation des hybrides non rechargeables, nous avons appliqué une augmentation de 20%, chiffre qui reste dans l'ordre de grandeur des surconsommations pour le thermique.
 
-    Car Labelling ne propose pas de données pour les hybrides "VUL", nous avons choisi d'appliquer respectivement les données "berline" pour ce gabarit.
+    Car Labelling ne propose pas de données pour les hybrides "VUL", nous avons choisi d'appliquer les données "moyenne" pour ce gabarit.
 
     Une autre limite reste tout de même: cette base rassemble des données de véhicules récents, pas forcément représentatifs des véhicules en circulation.
   unité: l/centkm
@@ -734,12 +734,12 @@ transport . voiture . hybride . consommation thermique estimée . moyenne HR:
 
 transport . voiture . hybride . consommation thermique estimée . VUL HNR:
   titre: Consommation moyenne VUL HNR
-  formule: consommation thermique estimée . berline HNR
+  formule: consommation thermique estimée . moyenne HNR
   unité: l/centkm
 
 transport . voiture . hybride . consommation thermique estimée . VUL HR:
   titre: Consommation moyenne VUL HR
-  formule: consommation thermique estimée . berline HR
+  formule: consommation thermique estimée . moyenne HR
   unité: l/centkm
 
 transport . voiture . hybride . consommation thermique estimée . berline HNR:
@@ -786,7 +786,7 @@ transport . voiture . hybride rechargeable . consommation elec estimée:
 
     Cette consommation est une consommation "constructeur". En lien avec le service Transport de l'ADEME, il a été décidé de les corriger via un facteur permettant d’approcher la consommation réelle à partir des consommation d’homologation (constructeur). Il a été décidé de conserver l’ordre de grandeur de 20% même si l'électrique est assez sensible à la température extérieure (le chauffage n'est pas "gratuit" en énergie comme avec un moteur thermique sur lequel on vient récupérer la chaleur perdue pour chauffer l'habitacle).
 
-    Car Labelling ne propose pas de données pour les hybrides "VUL", nous avons choisi d'appliquer respectivement les données "berline" pour ce gabarit.
+    Car Labelling ne propose pas de données pour les hybrides "VUL", nous avons choisi d'appliquer les données "VUL" pour ce gabarit.
 
     Une autre limite reste tout de même: cette base rassemble des données de véhicules récents, pas forcément représentatifs des véhicules en circulation.
   variations:
@@ -814,7 +814,7 @@ transport . voiture . hybride rechargeable . consommation elec estimée . moyenn
 
 transport . voiture . hybride rechargeable . consommation elec estimée . VUL:
   titre: Consommation moyenne VUL hybride rechargeable
-  formule: consommation elec estimée . berline
+  formule: consommation elec estimée . moyenne
   unité: kWh/centkm
 
 transport . voiture . hybride rechargeable . consommation elec estimée . berline:
@@ -935,7 +935,7 @@ transport . voiture . gabarit:
           - utilisateur = 'régulier non propriétaire'
   description: |
     **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
-  par défaut: "'berline'"
+  par défaut: "'VUL'"
   note: |
     Nous considérons que la voiture par défaut est une "Berline", en témoigne [une étude menée par AAA Data](https://www.alphabet.com/fr-fr/parc-automobile-roulant-les-donnees-cles)
     qui indique que "Si les SUV ont représenté 38 % des ventes de véhicules en 2019, ils ne représentent que 16 % de la totalité des véhicules en circulation, loin derrière les berlines qui comptent pour 58 %, soit 23 millions de véhicules."
@@ -1221,12 +1221,12 @@ transport . voiture . barème construction . barème électrique . batterie . ca
     variations:
       - si: gabarit = 'petite'
         alors: 44
-      - si: gabarit = 'moyenne'
-        alors: 57
       - si:
           une de ces conditions:
-            - gabarit = 'berline'
-            - gabarit = 'SUV'
+            - gabarit = 'moyenne'
+            - gabarit = 'VUL'
+        alors: 57
+      - si: gabarit = 'berline'
         alors: 89
       - si: gabarit = 'SUV'
         alors: 100
