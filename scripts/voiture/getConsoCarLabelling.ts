@@ -96,7 +96,11 @@ const getSize = (
   } else if (poids >= petiteTreshold && poids < moyenneTreshold) {
     return 'moyenne'
   } else if (poids >= moyenneTreshold) {
-    if (Gamme === 'LUXE' || Gamme === 'SUPERIEURE') {
+    if (
+      (Gamme === 'LUXE' || Gamme === 'SUPERIEURE') &&
+      Carosserie !== 'CABRIOLET' &&
+      Carosserie !== 'COUPE'
+    ) {
       return 'SUV'
     } else {
       return 'berline'
