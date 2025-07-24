@@ -18,6 +18,9 @@ Modèle de calcul de l'empreinte climat personnelle.
 
 ## Utilisation
 
+> [!WARNING]
+> Le modèle Nos Gestes Climat est open source. Néanmoins, certaines données sont soumises à des conditions d'utilisation spécifiques. Par essence, le modèle publicodes ne cache aucun facteur d'émission mais les données issues d'ecoinvent ne peuvent pas être réutilisées librement, l'ADEME ne disposant pas de la proppriété intellectuelle de cette donnée (voir [mentions légales](https://nosgestesclimat.fr/mentions-legales-base-empreinte)). Ces conditions sont rappelées au niveau des règles concernées.
+
 Vous pouvez parcourir le modèle grâce à sa [documentation en
 ligne](https://nosgestesclimat.fr/documentation) ou bien utiliser le paquet npm
 `@incubateur-ademe/nosgestesclimat` :
@@ -42,45 +45,51 @@ const engine = new Engine(rules)
 console.log(engine.evaluate('bilan'))
 ```
 
+Il est possible également de créer un nouveau modèle de calcul publicodes à partir des règles du modèle Nos Gestes Climat.
+
+Pour cela, il est possible d'utiliser la CLI `publicodes`:
+
+```sh
+npx publicodes init mon-nouveau-modèle
+```
+
+Puis d'importer les règles que l'on souhaite utiliser en installant le paquet `@incubateur-ademe/nosgestesclimat` (comme dans le projet [Ekofest](https://github.com/ekofest/publicodes-evenements)) :
+
+```yaml
+importer!:
+  depuis:
+    nom: '@incubateur-ademe/nosgestesclimat'
+  dans: ngc
+  les règles:
+    - alimentation . plats . végétalien . empreinte carbone
+    - alimentation . plats . végétarien . empreinte carbone
+    - alimentation . plats . viande blanche . empreinte carbone
+    - alimentation . plats . viande rouge . empreinte carbone
+    - alimentation . plats . poisson gras . empreinte carbone
+    - alimentation . plats . poisson blanc . empreinte carbone
+```
+
 ## Écriture des modèles du simulateur en bref
 
 Le modèle d'empreinte climat personnelle est écrit dans un français le plus
-lisible possible :
+lisible possible, poar exemple, pour l'électricité du logement :
 
 ```yaml
-# Premier extrait
-douche . litres par minute:
-  unité: l/minute
-  formule:
-    variations:
-      - si: pomme de douche économe
-        alors: 9
-      - sinon: 18
+logement . électricité:
+  icônes: ⚡
+  formule: empreinte / habitants
 
-# Deuxième extrait
-transport . avion . coefficient de forçage radiatif:
-  description: >
-    Le forçage radiatif, c'est la capacité d'une émission de gaz à rechauffer la
-    terre.
-    Un vol émet du CO₂, mais aussi d'autres gaz, ainsi que de la vapeur libérée en haute altitude. Le forçage radiatif de ces émissions est conséquent et doit donc être pris en compte, mais c'est une estimation très compliquée.
-    L'effet de la vapeur d'eau est temporaire : elle disparaît à court-terme par rapport au CO₂ qui reste très longtemps présent. Son effet n'en reste pas moins massif.
-  formule: 2
-  note: |
-    Plus d'informations ici:
-    - https://www.carbonindependent.org/sources_aviation.html
-    - http://www.bilans-ges.ademe.fr/forum/viewtopic.php?f=20&t=4009&sid=dea7e08c81c2f723b803d27e7e2a8797
-    - https://fr.wikipedia.org/wiki/Impact_climatique_du_transport_a%C3%A9rien#Pond%C3%A9ration_des_%C3%A9missions
+logement . électricité . empreinte:
+  formule: consommation totale * empreinte au kWh
+  description: |
+    L'empreinte de l'électricité du logement est la somme des empreintes de l'électricité du réseau et de l'électricité produite par les panneaux photovoltaïques.
 ```
 
-:pen: Suivez [le guide pour
-contribuer](https://github.com/incubateur-ademe/nosgestesclimat/blob/master/CONTRIBUTING.md).
-
-Tous les modèles sont dans [le dossier
+Toutes les règles du modèle sont dans [le dossier
 `data`](https://github.com/incubateur-ademe/nosgestesclimat/tree/master/data).
 
-Ils reposent sur le nouveau langage de programmation
-[`publicodes`](https://publi.codes) et développé dans le cadre de
-https://beta.gouv.fr.
+Ils reposent sur le langage de programmation
+[`publicodes`](https://publi.codes).
 
 ## Développement
 
