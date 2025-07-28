@@ -43,18 +43,17 @@ logement . vacances:
 
     Sont donc exclues les nuits en hôtel pour **raisons professionnelles**.
 
-    ### Vers une première version
+    ### Quelles données utilisons nous ?
 
-    Dans un premier temps, l'idée est de restreindre le périmètre de la V1 au secteur du tourisme (résidence secondaire exclue).
+    Une étude ADEME sur le secteur du tourisme en France sortie fin 2024, [Bilan des émissions de gaz à effet de serre du secteur du tourisme en France](https://librairie.ademe.fr/changement-climatique/7637-bilan-des-emissions-de-gaz-a-effet-de-serre-du-secteur-du-tourisme-en-france-en-2022.html), fournit divers chiffres relatifs aux nuitées des logements touristiques. Néanmoins, en général, les chiffres avancés dans l'étude ne sont pas étayés par des sources précises, et ne sont pas en mesure de "vérifier" leur contenu pour éviter le double comptage par exemple. Malheureusement, le service en charge de l'étude n'a pas pu nous fournir de données brutes. Nous avons donc retravaillé certains mode d'hébergement à partir de données plus transparentes lorsque c'était possible.
 
-    Pour l'empreinte d'une nuit au sein de sa famille ou chez des amis, l'empreinte est aujourd'hui indirectement comptée dans l'empreinte des accueillants.
+    ### Nos hypothèses en bref
 
-    En ce qui concerne les hôtels et les chambres privées / chambres d'hôtes, nous considérons un facteur d'émission commun pour le moment.
+    - Pour l'empreinte d'une nuit au sein de sa famille ou chez des amis, l'empreinte est aujourd'hui indirectement comptée dans l'empreinte des accueillants.
 
-    Dans cette première version, l'empreinte de l'hôtel sera divisée par le nombre d'habitants du logement. C'est une hypothèse forte car on peut facilement imaginer que le famille / foyer ne voyage pas toujours au complet !
-    De même, on fait l'hypothèse qu'une famille composée de plus de 4 personnes prendra 2 chambres.
+    - Pour les hôtels et les chambres privées / chambres d'hôtes, nous considérons un facteur d'émission commun pour le moment.
 
-    On doit introduire ici, dans la formule, le nombre d'habitants du logement car une nuit une auberge de jeunesse est généralement caractérisée par un lit seul dans un dortoir.
+    - L'empreinte des logements de vacances (hors auberge de jeunesse et croisière) est divisée par le nombre d'habitants du logement. C'est une hypothèse forte car on peut facilement imaginer que le famille / foyer ne voyage pas toujours au complet ! Néanmoins, on considère tout de qu'une famille composée de plus de 4 personnes prendra 2 chambres.
 
 logement . vacances . empreinte totale:
   formule:
@@ -66,7 +65,7 @@ logement . vacances . empreinte totale:
       - empreinte échange
       - empreinte famille ou amis
       - empreinte résidence secondaire
-      - empreinte croisière
+      - empreinte croisière * logement . habitants
   unité: kgCO2e
 
 logement . vacances . nombre de nuits hors logement:
@@ -210,8 +209,6 @@ logement . vacances . empreinte camping:
       - si: camping . présent
         alors: camping . empreinte par nuit * camping . nombre de nuitées
       - sinon: 0
-  # NOTE: il y a peut-être moyen de factoriser le calcul car seul le nombre
-  # nuitées diffère pour la valeur par défaut.
   par défaut: camping . empreinte par nuit * camping . moyenne nombre de nuitées
 
 logement . vacances . camping:
@@ -336,14 +333,15 @@ logement . vacances . locations . présent:
     💡 Déclarez ici les nuits passées en locations meublées de type Airbnb ou Abritel.
 
 logement . vacances . locations . empreinte par nuit:
-  formule: 5.8
+  formule: 5.3
   unité: kgCO2e/nuit
   note: |
-    Ces données sont issues du [Bilan des émissions de gaz à effet de serre du secteur du tourisme en France](https://librairie.ademe.fr/changement-climatique-et-energie/4688-bilan-des-emissions-de-gaz-a-effet-de-serre-du-secteur-du-tourisme-en-france.html)
+    Ces données sont issues du [Bilan des émissions de gaz à effet de serre du secteur du tourisme en France](https://librairie.ademe.fr/changement-climatique/7637-bilan-des-emissions-de-gaz-a-effet-de-serre-du-secteur-du-tourisme-en-france-en-2022.html).
+
     Elles représentent une approche dite "top-down", que voici. On considère d'abord que les surfaces fournies par Airbnb en France sont représentatives de la location saisonnière dans le Pays. On applique à ces surfaces les facteurs d'émission de la base Carbone correspondant aux résidences secondaires en France. Enfin, on applique un taux d'occupation des locations saisonnières de 25%.
     L'approche de Nos GEStes Climat, habituellement, est plutôt "bottom-up" : nous partons de l'usage, appliquons les facteurs d'émission et obtenons une empreinte.
     Néanmoins, l'approche bottom-up est ici très complexe à implémenter : elle supposerait de poser une quantité importante de questions à l'utilisateur (surface, mode de chauffage des locations saisonnières louées...).
-    Le chiffre obtenu par l'approche top-down, 5,8 kg éqCO2, est tout à fait cohérent avec le reste des données disponibles sur les autres types de logement touristiques, et nous paraît un bon début pour approximer cette donnée complexe.
+    Le chiffre obtenu par l'approche top-down, 5,3 kg éqCO2, est tout à fait cohérent avec le reste des données disponibles sur les autres types de logement touristiques, et nous paraît un bon début pour approximer cette donnée complexe.
 
 logement . vacances . locations . nombre de nuitées:
   applicable si:
@@ -433,11 +431,6 @@ logement . vacances . échange . moyenne nombre de nuitées . part mode d'héber
 
 logement . vacances . empreinte famille ou amis:
   titre: Empreinte famille ou amis
-  # NOTE: est-ce nécessaire pour faire remonter `famille ou amis . présent` dans les missings variables ?
-  # applicable si:
-  #   toutes ces conditions:
-  #     - est défini: famille ou amis . présent
-  #     - famille ou amis . présent
   formule: 0
   note: Nous considérons que l'empreinte de la nuit est aujourd'hui indirectement comptée dans l'empreinte des accueillants.
 
