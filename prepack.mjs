@@ -31,6 +31,12 @@ if (!fs.existsSync('types')) {
 // Generate the DottedName type
 fs.writeFileSync('./types/dottedNames.d.ts', generateDottedNamesType(model))
 
+// Generate the QuestionDottedName type
+fs.writeFileSync(
+  './types/questionDottedName.d.ts',
+  generateQuestionDottedNameTypes(model)
+)
+
 // Generate the Categories type
 fs.writeFileSync('./types/categories.d.ts', generateCategoriesTypes(model))
 
@@ -40,7 +46,9 @@ fs.writeFileSync(
   generateSubcategoriesTypes(model)
 )
 
-console.log(`✅ dottedNames, categories and subcategories types generated`)
+console.log(
+  `✅ dottedNames, question dottedNames, categories and subcategories types generated`
+)
 console.log('➡️ Packaging done')
 
 function generateDottedNamesType(model) {
@@ -80,5 +88,27 @@ function generateSubcategoriesTypes(model) {
   export type Subcategories =
   ${subcategories.map((subcategory) => `  | "${subcategory}"`).join('\n')}
   `
+  return dFile
+}
+
+function generateQuestionDottedNameTypes(model) {
+  const questionDottedName = Object.keys(model).filter((dottedName) => {
+    if (!model[dottedName]) {
+      return false
+    }
+    // A bit hacky, but we want to exclude imported questions from futureco-data
+    if (dottedName.startsWith('futureco-data')) {
+      return false
+    }
+
+    return (
+      Object.keys(model[dottedName]).includes('question') &&
+      !Object.keys(model[dottedName]).includes('mosaique')
+    )
+  })
+  const dFile = `
+export type QuestionDottedName =
+${questionDottedName.map((dottedName) => `  | "${dottedName}"`).join('\n')}
+`
   return dFile
 }
