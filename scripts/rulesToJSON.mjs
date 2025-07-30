@@ -25,6 +25,8 @@ import {
 
 import rulesToJSONWorker from './rulesToJSON.worker.mjs'
 
+import generateExtendedSituationDottedNames from './generateExtendedSituationDottedNames.mjs'
+
 const t9nDir = 'data/i18n/t9n'
 
 const {
@@ -92,6 +94,40 @@ function logPublicodesError(err) {
   console.error('')
 }
 
+function writeExtendedSituationDottedNames(questionDottedNameList) {
+  const destinationPath = 'public/initialExtendedSituation.json'
+  const initialExtendedSituation = questionDottedNameList.reduce(
+    (acc, dottedName) => {
+      acc[dottedName] = {
+        source: 'omitted'
+      }
+      return acc
+    },
+    {}
+  )
+  try {
+    fs.writeFileSync(destinationPath, JSON.stringify(initialExtendedSituation))
+    console.log(
+      markdown
+        ? `| Extended Situation | :heavy_check_mark: | Ø |`
+        : `✅ The initial extended situation have been correctly written in: ${destinationPath}`
+    )
+  } catch (err) {
+    if (markdown) {
+      console.log(
+        `| Extended Situation | ❌ | <details><summary>See error:</summary><br /><br /><code>${err}</code></details> |`
+      )
+    } else {
+      console.log(
+        '❌ An error occured while writting rules in:',
+        destinationPath
+      )
+      console.log(err.message)
+    }
+    exit(-1)
+  }
+}
+
 /// ---------------------- Main ----------------------
 
 if (!markdown) {
@@ -117,6 +153,9 @@ try {
   console.error(err.message)
   exit(-1)
 }
+
+const questionDottedNameList = generateExtendedSituationDottedNames(baseRules)
+writeExtendedSituationDottedNames(questionDottedNameList)
 
 try {
   const engine = new Engine(baseRules, {

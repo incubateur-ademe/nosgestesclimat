@@ -4,6 +4,7 @@
  */
 import fs from 'fs'
 import path from 'path'
+import generateExtendedSituationDottedNames from './scripts/generateExtendedSituationDottedNames.mjs'
 
 const everyModelFolder = 'public'
 const originModelFile = 'co2-model.FR-lang.fr.json'
@@ -31,10 +32,10 @@ if (!fs.existsSync('types')) {
 // Generate the DottedName type
 fs.writeFileSync('./types/dottedNames.d.ts', generateDottedNamesType(model))
 
-// Generate the QuestionDottedName type
+// Generate the ExtendedSituationDottedNames type
 fs.writeFileSync(
-  './types/questionDottedName.d.ts',
-  generateQuestionDottedNameTypes(model)
+  './types/extendedSituationDottedNames.d.ts',
+  generateExtendedSituationDottedNamesTypes(model)
 )
 
 // Generate the Categories type
@@ -47,8 +48,9 @@ fs.writeFileSync(
 )
 
 console.log(
-  `✅ dottedNames, question dottedNames, categories and subcategories types generated`
+  `✅ dottedNames, extendedSituationDottedNames, categories and subcategories types generated`
 )
+
 console.log('➡️ Packaging done')
 
 function generateDottedNamesType(model) {
@@ -91,21 +93,8 @@ function generateSubcategoriesTypes(model) {
   return dFile
 }
 
-function generateQuestionDottedNameTypes(model) {
-  const questionDottedName = Object.keys(model).filter((dottedName) => {
-    if (!model[dottedName]) {
-      return false
-    }
-    // A bit hacky, but we want to exclude imported questions from futureco-data
-    if (dottedName.startsWith('futureco-data')) {
-      return false
-    }
-
-    return (
-      Object.keys(model[dottedName]).includes('question') &&
-      !Object.keys(model[dottedName]).includes('mosaique')
-    )
-  })
+function generateExtendedSituationDottedNamesTypes(model) {
+  const questionDottedName = generateExtendedSituationDottedNames(model)
   const dFile = `
 export type QuestionDottedName =
 ${questionDottedName.map((dottedName) => `  | "${dottedName}"`).join('\n')}
