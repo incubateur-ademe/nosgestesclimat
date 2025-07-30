@@ -13,7 +13,11 @@ export type ExtendedSituation = {
   [dottedName: QuestionDottedName]:
     | {
         nodeValue: NonNullable<Evaluation>
-        source: 'default' | 'answered'
+        source: 'answered'
+      }
+    | {
+        nodeValue: Evaluation
+        source: 'default'
       }
     | {
         nodeValue?: undefined
