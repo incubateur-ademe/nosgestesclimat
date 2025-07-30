@@ -4,7 +4,7 @@
  */
 import fs from 'fs'
 import path from 'path'
-import generateExtendedSituationDottedNames from './scripts/generateExtendedSituationDottedNames.mjs'
+import generateExtendedSituationDottedNames from './scripts/situation/generateExtendedSituationDottedNames.mjs'
 
 const everyModelFolder = 'public'
 const originModelFile = 'co2-model.FR-lang.fr.json'
