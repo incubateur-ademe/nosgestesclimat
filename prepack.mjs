@@ -96,7 +96,7 @@ function generateSubcategoriesTypes(model) {
 function generateExtendedSituationDottedNamesTypes(model) {
   const questionDottedName = generateExtendedSituationDottedNames(model)
   const dFile = `
-export type QuestionDottedName =
+export type ExtendedSituationDottedNames =
 ${questionDottedName.map((dottedName) => `  | "${dottedName}"`).join('\n')}
 `
   return dFile
