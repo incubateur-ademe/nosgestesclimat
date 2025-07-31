@@ -14,7 +14,7 @@ logement . vacances:
       - famille ou amis . présent
       - échange . présent
       - résidence secondaire . présent
-      - bateau croisière . présent
+      - croisière . présent
     suggestions:
       aucun:
         hotel . présent: non
@@ -24,7 +24,7 @@ logement . vacances:
         famille ou amis . présent: non
         échange . présent: non
         résidence secondaire . présent: non
-        bateau croisière . présent: non
+        croisière . présent: non
   description: |
     Renseignez ici les différents types de logement que vous occupez pour vos voyages (à motif **personnel**).
 
@@ -43,18 +43,17 @@ logement . vacances:
 
     Sont donc exclues les nuits en hôtel pour **raisons professionnelles**.
 
-    ### Vers une première version
+    ### Quelles données utilisons nous ?
 
-    Dans un premier temps, l'idée est de restreindre le périmètre de la V1 au secteur du tourisme (résidence secondaire exclue).
+    Une étude ADEME sur le secteur du tourisme en France sortie fin 2024, [Bilan des émissions de gaz à effet de serre du secteur du tourisme en France](https://librairie.ademe.fr/changement-climatique/7637-bilan-des-emissions-de-gaz-a-effet-de-serre-du-secteur-du-tourisme-en-france-en-2022.html), fournit divers chiffres relatifs aux nuitées des logements touristiques. Néanmoins, nous manquons d'hypothèses d'arrière plan et ne sommes pas en mesure de "vérifier" leur contenu pour éviter le double comptage par exemple. Malheureusement, le service en charge de l'étude n'a pas pu nous fournir de données plus précises. Nous avons donc retravaillé certains mode d'hébergement à partir de données plus transparentes lorsque c'était possible.
 
-    Pour l'empreinte d'une nuit au sein de sa famille ou chez des amis, l'empreinte est aujourd'hui indirectement comptée dans l'empreinte des accueillants.
+    ### Nos hypothèses en bref
 
-    En ce qui concerne les hôtels et les chambres privées / chambres d'hôtes, nous considérons un facteur d'émission commun pour le moment.
+    - Pour l'empreinte d'une nuit au sein de sa famille ou chez des amis, l'empreinte est aujourd'hui indirectement comptée dans l'empreinte des accueillants.
 
-    Dans cette première version, l'empreinte de l'hôtel sera divisée par le nombre d'habitants du logement. C'est une hypothèse forte car on peut facilement imaginer que le famille / foyer ne voyage pas toujours au complet !
-    De même, on fait l'hypothèse qu'une famille composée de plus de 4 personnes prendra 2 chambres.
+    - Pour les hôtels et les chambres privées / chambres d'hôtes, nous considérons un facteur d'émission commun pour le moment.
 
-    On doit introduire ici, dans la formule, le nombre d'habitants du logement car une nuit une auberge de jeunesse est généralement caractérisée par un lit seul dans un dortoir.
+    - L'empreinte des logements de vacances (hors auberge de jeunesse et croisière) est divisée par le nombre d'habitants du logement. C'est une hypothèse forte car on peut facilement imaginer que le famille / foyer ne voyage pas toujours au complet ! Néanmoins, on considère tout de qu'une famille composée de plus de 4 personnes prendra 2 chambres.
 
 logement . vacances . empreinte totale:
   formule:
@@ -66,13 +65,13 @@ logement . vacances . empreinte totale:
       - empreinte échange
       - empreinte famille ou amis
       - empreinte résidence secondaire
-      - empreinte bateau croisière
+      - empreinte croisière * logement . habitants
   unité: kgCO2e
 
 logement . vacances . nombre de nuits hors logement:
   formule: 26.5
   unité: nuit
-  description: Variable utilisée pour le calcul de la moyenne pour chaque hébergement.
+  description: Variable utilisée pour le calcul de la moyenne pour chaque hébergement (hors croisière).
   note: |
     Excel "Voyages et caractéristiques sociodémographiques des individus - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
 
@@ -210,8 +209,6 @@ logement . vacances . empreinte camping:
       - si: camping . présent
         alors: camping . empreinte par nuit * camping . nombre de nuitées
       - sinon: 0
-  # NOTE: il y a peut-être moyen de factoriser le calcul car seul le nombre
-  # nuitées diffère pour la valeur par défaut.
   par défaut: camping . empreinte par nuit * camping . moyenne nombre de nuitées
 
 logement . vacances . camping:
@@ -336,14 +333,15 @@ logement . vacances . locations . présent:
     💡 Déclarez ici les nuits passées en locations meublées de type Airbnb ou Abritel.
 
 logement . vacances . locations . empreinte par nuit:
-  formule: 5.8
+  formule: 5.3
   unité: kgCO2e/nuit
   note: |
-    Ces données sont issues du [Bilan des émissions de gaz à effet de serre du secteur du tourisme en France](https://librairie.ademe.fr/changement-climatique-et-energie/4688-bilan-des-emissions-de-gaz-a-effet-de-serre-du-secteur-du-tourisme-en-france.html)
+    Ces données sont issues du [Bilan des émissions de gaz à effet de serre du secteur du tourisme en France](https://librairie.ademe.fr/changement-climatique/7637-bilan-des-emissions-de-gaz-a-effet-de-serre-du-secteur-du-tourisme-en-france-en-2022.html).
+
     Elles représentent une approche dite "top-down", que voici. On considère d'abord que les surfaces fournies par Airbnb en France sont représentatives de la location saisonnière dans le Pays. On applique à ces surfaces les facteurs d'émission de la base Carbone correspondant aux résidences secondaires en France. Enfin, on applique un taux d'occupation des locations saisonnières de 25%.
     L'approche de Nos GEStes Climat, habituellement, est plutôt "bottom-up" : nous partons de l'usage, appliquons les facteurs d'émission et obtenons une empreinte.
     Néanmoins, l'approche bottom-up est ici très complexe à implémenter : elle supposerait de poser une quantité importante de questions à l'utilisateur (surface, mode de chauffage des locations saisonnières louées...).
-    Le chiffre obtenu par l'approche top-down, 5,8 kg éqCO2, est tout à fait cohérent avec le reste des données disponibles sur les autres types de logement touristiques, et nous paraît un bon début pour approximer cette donnée complexe.
+    Le chiffre obtenu par l'approche top-down, 5,3 kg éqCO2, est tout à fait cohérent avec le reste des données disponibles sur les autres types de logement touristiques, et nous paraît un bon début pour approximer cette donnée complexe.
 
 logement . vacances . locations . nombre de nuitées:
   applicable si:
@@ -433,11 +431,6 @@ logement . vacances . échange . moyenne nombre de nuitées . part mode d'héber
 
 logement . vacances . empreinte famille ou amis:
   titre: Empreinte famille ou amis
-  # NOTE: est-ce nécessaire pour faire remonter `famille ou amis . présent` dans les missings variables ?
-  # applicable si:
-  #   toutes ces conditions:
-  #     - est défini: famille ou amis . présent
-  #     - famille ou amis . présent
   formule: 0
   note: Nous considérons que l'empreinte de la nuit est aujourd'hui indirectement comptée dans l'empreinte des accueillants.
 
@@ -794,23 +787,56 @@ logement . vacances . résidence secondaire . saison . hiver:
   icônes: ❄️
   description: Vous ne vous rendez dans votre résidence secondaire qu'en hiver.
 
-logement . vacances . bateau croisière:
-  titre: Bateau de croisière
-  icônes: 🚢
-  applicable si: présent
-  formule: empreinte bateau croisière
+logement . vacances . empreinte croisière:
+  titre: Empreinte locations meublées
+  formule:
+    variations:
+      - si: croisière . présent
+        alors: croisière . empreinte par nuit * croisière . nombre de nuitées
+      - sinon: 0
+  par défaut: croisière . moyenne nombre de nuitées * croisière . empreinte par nuit
   note: |
     Les croisiéristes sont encore relativement peu nombreux en France, mais ce chiffre est en croissance constante. En 2022, ce sont 325 000 français⋅e⋅s qui ont choisi ce mode de vacances.
-    L'empreinte carbone d'une croisière est importante, d'où notre souhait de les ajouter au modèle, dès que nous mettons la main sur des données pertinentes.
 
-logement . vacances . bateau croisière . présent:
+logement . vacances . croisière:
+  titre: Bateau de croisière
+  icônes: 🚢
+
+logement . vacances . croisière . présent:
   question: Partez-vous en croisière pour les vacances ?
-  inactif: oui
 
-logement . vacances . bateau croisière . empreinte moyenne:
-  formule: 0
-  note: L'empreinte des bateaux de croisière n'est pas encore disponible.
+logement . vacances . croisière . empreinte par nuit:
+  formule: 103
+  unité: kgCO2e/nuit
+  note: |
+    Une étude sortie en septembre 2024 sur [l’impact du tourisme en France en 2022](https://librairie.ademe.fr/changement-climatique/7637-bilan-des-emissions-de-gaz-a-effet-de-serre-du-secteur-du-tourisme-en-france-en-2022.html) donne un facteur d’émission pour l’empreinte d’une croisière de 103 kgCO2e/nuitée (page 59).
 
-logement . vacances . empreinte bateau croisière:
-  formule: 0
-  note: L'empreinte des bateaux de croisière n'est pas encore disponible.
+    Il semble que les calculs se basent sur l'étude 2023 ["Return of the cruise"](https://www.transportenvironment.org/articles/return-of-the-cruise) permettant de déduire de l'ensemble des trajets de 176 navires de croisière, l'empreinte liées à la combustion des carburants. Le détail n'est pas transparent mais l'étude indique que l'empreinte par nuitée couvre l'exploitation, la restauration (hors alimentation à bord), les loisirs, l'énergie.
+
+    À première vue, il correspond à ce que nous avions pu lire par ailleurs, avec YachtCO2Tracker qui avait calculé un 107 kgCO2e/nuitée pour Icon of the Seas. Par contre, [une autre étude (américaine)](https://www.researchgate.net/publication/280008702_A_Life_Cycle_Assessment_of_the_Environmental_Impact_of_Cruise_Holidays) affiche plutôt un presque 200 kgCO2e/nuitée. Néanmoins, avec un double compte de transport vers destination et nourriture (mais ce ne sont pas les postes les plus importants).
+
+logement . vacances . croisière . nombre de nuitées:
+  applicable si:
+    toutes ces conditions:
+      - est défini: croisière . présent
+      - croisière . présent
+  question: Combien de nuits passez-vous en croisière par an ?
+  unité: nuit
+  description: |
+    💡 Déclarez ici les nuits passées en croisière.
+  plancher: 0
+  plafond: 365
+  par défaut: moyenne nombre de nuitées
+  suggestions:
+    un week-end: 2
+    une semaine: 7
+    deux semaines: 14
+
+logement . vacances . croisière . moyenne nombre de nuitées:
+  titre: Nombre de nuitées en moyenne par français
+  note: |
+    D'après la [CLIA (Cruise Lines International Association)](https://cruising.org/sites/default/files/2025-06/CLIA%20001%20Overview%20Global%202024%20Annual%20Report%20w%20Cover.pdf), en 2024, on comptait en France 573 000 passagers. Cette enquête donne également une durée moyenne de 9 jours par croisière, soit 8 nuitées.
+
+     On obtient donc un nombre de nuitées moyen par français. Néanmoins, il existe une limite sur cette valeur puisque nous n'avons pas d'information sur le caractère unique d'un passager : un individu peut éventuellement être plusieurs fois passager. Et nous ne savons pas si les passagers français sont de nationalités française ou embarquant en France.
+  formule: 573000 * 8 nuit / population
+  unité: nuit
