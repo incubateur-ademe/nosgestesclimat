@@ -58,9 +58,11 @@ importer!:
 divers . numérique:
   titre: Numérique
   abréviation: num.
-  description: |
-    Le numérique est au cœur de l'actualité environnementale ces dernières années.
   icônes: 📺
+  description: |
+    Pour ce poste, nous utilisons les données proposées par le service SoNum de l'ADEME, notamment:
+      - Les données d'ACV des équipements, téléchargeables sur le site de la Base Empreinte (section Documentation > 2- AE - Référentiels sectoriels & Echelles > Numérique). Ces données sont également dispoinbles via le modèle publicodes [@incubateur-ademe/publicodes-acv-numerique](https://github.com/incubateur-ademe/publicodes-acv-numerique).
+      - Le [baromètre du numérique](https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/barometre-du-numerique/le-barometre-du-numerique-edition-2025.html), piloté notamment par l'Arcep, fournissant des données sur la diffusion des équipements numériques, l’évolution de leurs usages et la perception de leur empreinte environnementale.
   formule:
     somme:
       - internet
@@ -70,48 +72,49 @@ divers . numérique . internet:
   icônes: 🌐
   formule: empreinte horaire * durée journalière * commun . jours par an
 
-divers . numérique . internet . consommation horaire:
-  formule: 0.077
-  unité: kWh/h
-  note: |
-    Ce chiffre est repris d'un [article de CarbonBrief utilisant des données AIE](https://www.carbonbrief.org/factcheck-what-is-the-carbon-footprint-of-streaming-video-on-netflix), et critiquant les calculs initiaux du Shift Project quant à l'empreinte carbone du streaming vidéo.
-
-    > "Taken together, my updated analysis suggests that streaming a Netflix video in 2019 typically consumed around 0.077kWh of electricity per hour."
-
-    Ce qui en considérant l'empreinte du mix électrique mondiale de l'année aboutit à 36 gCO₂/heure de streaming vidéo.
-
-    Nous choissisons de ne pas différencier les modes d'usage d'internet (et donc les consommations électriques horaires associées à chacun de ces usages) car la consommation électrique associée au streaming vidéo
-    est déjà faible (elle le serait encore plus faible pour une heure d'envoi de mail ou de lecture d'article de presse en ligne). Associé à un mix électrique peu carboné (c'est le cas de la France), cela ne
-    représente, in fine, que très peu d'émission de GES.
-    Attention toutefois, cette consommation électrique est sujette au terminal utilisé, et est donc beaucoup plus importante avec une TV 50 pouces ultra HD que sur un smartphone
-
-    Voici d'autres sources qui donnent des résultats sensiblement différents :
-      - 400 gCO₂/h pour le [Shift Project](https://theshiftproject.org/article/shift-project-vraiment-surestime-empreinte-carbone-video-analyse/) (après correction)
-      - 100 gCO₂/h pour [Netflix (DIMPACT)](https://www.wired.com/story/netflix-binge-watching-carbon-footprint/)
-      - 36 gCO₂/h pour l'[IEA](https://www.iea.org/commentaries/the-carbon-footprint-of-streaming-video-fact-checking-the-headlines) (même ramené à 4g pour la France si je comprends bien, en raison de l'intensité carbone du mix électrique)
-      - 28 gCO₂/h pour [Greenspector](https://greenspector.com/fr/impact-video-canal/) (pour l'utilisation de services Canal +)
-
 divers . numérique . internet . empreinte horaire:
   formule:
     variations:
       - si: métrique = "carbone"
-        alors: consommation horaire * logement . électricité . réseau . intensité carbone
+        alors:
+          moyenne:
+            - 0.0523 kgCO2e/h
+            - 0.0311 kgCO2e/h
       - si: métrique = "eau"
-        alors: consommation horaire * logement . électricité . empreinte eau mix électrique
-  note: C'est une hypothèse forte car nous considérons ici les empreintes de mix électrique français.
+        alors:
+          moyenne:
+            - 0.536 l/h
+            - 0.504 l/h
+  note: |
+    En octobre 2024, l'ADEME accompagné la sortie de l'[étude de l'impact environnemental des usages audiovisuels en France](https://www.arcom.fr/se-documenter/etudes-et-donnees/etudes-bilans-et-rapports-de-larcom/etude-de-limpact-environnemental-des-usages-audiovisuels-en-france) réalisée par l'Arcom et l'Arcep. Le rapport complet est disponible [ici](https://www.arcom.fr/sites/default/files/2024-10/Arcom-arcep-ademe-etude-impact-environnemental-des-usages-audiovisuels.pdf).
+
+    Cette étude propose différents scénarios d'usage d'internet et leurs impacts environnementaux. Nous avons retenu 2 scénarios:
+
+    - A4: Écoute de musique/podcast sur une plateforme de streaming (application) sur un smartphone connecté à internet via réseau mobile
+    - V5: Visionnage de vidéo en ligne sur une plateforme de partage de vidéos en HD sur un smartphone connecté à internet via réseau mobile
+
+    Pour le scénario A4, l'étude estime (cf page 329 du rapport):
+      - une empreinte carbone de 0.0131 kgCO2e/h soit 13.1 gCO2e/h.
+      - une empreinte eau de 0.000134 m3/h soit 0.134 l/h.
+      
+    Pour le scénario V5, l'étude estime (cf page 334 du rapport):
+      - une empreinte carbone de de 0.0523 kgCO2e/h soit 52.3 gCO2e/h.
+      - une empreinte eau de 0.000536 m3/h soit 0.536 l/h.
+
+    Nous utilisons une moyenne de ces scénarios, **c'est une hypothèse forte (mais conservatrice)** car l'usage d'un smartphone pour de l'écoute musical ou visionnage vidéo n'est pas forcément représentatif de l'ensemble des usages d'internet (envoi de mails, surf web, streaming vidéo sur TV ou ordinateur, etc.).
 
 divers . numérique . internet . durée journalière:
-  question: Combien d'heures passez-vous par jour sur Internet hors bureau (envoi de mails, surf Web, streaming vidéo, etc.) ?
+  question: Combien d'heures passez-vous par jour sur Internet hors bureau (envoi de mails, surf Web, musique, streaming vidéo, etc.) ?
   description: Les heures liées à votre activité professionnelle ne doivent pas être comptabilisées.
   unité: h/jour
   plancher: 0
   plafond: 16
-  par défaut: 2.3
+  par défaut: 3
   suggestions:
     zéro: 0
     modérément: 2
     je ne décroche pas: 8
-  note: D'après Médiamétrie, les français ont passé en 2022, en moyenne, 2h18 sur Internet ([source](https://www.mediametrie.fr/fr/lannee-internet-2022))
+  note: D'après le [baromètre du numérique 2025](https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/barometre-du-numerique/le-barometre-du-numerique-edition-2025.html), 72% des répondants déclarent passer plus de 2 heures par jour devant les écrans pour un usage personnel. En considérant le graphe page 16 du rapport complet, on peut estimer une médiane autour de 22h par semaine, soit 3 heures par jour environ.
 
 divers . numérique . appareils:
   mosaique:
