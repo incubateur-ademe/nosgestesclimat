@@ -3,22 +3,15 @@ transport . voiture:
   icônes: 🚘
   formule:
     variations:
-      - si: km = 0
+      - si:
+          toutes ces conditions:
+            - est défini: utilisateur
+            - utilisateur = 'jamais'
         alors: 0
-      - sinon:
-          variations:
-            - si:
-                est défini: utilisateur
-              alors:
-                variations:
-                  - si:
-                      une de ces conditions:
-                        - utilisateur = 'propriétaire'
-                        - utilisateur = 'régulier non propriétaire'
-                    alors: empreinte calculée
-                  - si: utilisateur = 'non régulier'
-                    alors: empreinte moyenne non régulier
-            - sinon: empreinte moyenne
+      - si:
+          est défini: utilisateur
+        alors: empreinte
+      - sinon: empreinte moyenne
   unité: kgCO2e
   description: |
     ![](https://upload.wikimedia.org/wikipedia/commons/9/9a/Congestion_caused_by_a_road_accident%2C_Algarve%2C_Portugal.jpg)
@@ -31,36 +24,193 @@ transport . voiture:
     Un peu comme si chaque midi, nous faisions à manger pour 10 avant de jeter 90% de la nourriture, ou que nous décidions de chauffer tout le pâté de maisons plutôt que l'intérieur de chacune des 10 maisons.
 
     Notons finalement qu'il est important de prendre en compte à la fois l'usage (les km parcourus) et la construction de ce véhicule de plus d'une tonne de matériaux divers.
+  note: |
+    Le calcul détaillé et l'ensemble des hypothèses sont disponibles dans cette [page récapitulative](https://accelerateur-transition-ecologique-ademe.notion.site/Mod-lisation-de-l-empreinte-carbone-de-la-voiture-1f46523d57d780b3a1a8f1ceb5ff7f87).
+
+transport . voiture . empreinte:
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - utilisateur = 'propriétaire'
+            - utilisateur = 'régulier non propriétaire'
+        alors: empreinte calculée
+      - si: utilisateur = 'non régulier'
+        alors: empreinte moyenne non régulier
+
+transport . voiture . utilisateur:
+  question: Vous arrive t-il de vous déplacer en voiture ?
+  description: |
+    Choisissez ce qui correspond à la majorité de vos trajets.
+  une possibilité:
+    - propriétaire
+    - régulier non propriétaire
+    - non régulier
+    - jamais
+  note: |
+    Deux données sont importantes dans le cadre du calcul de l'empreinte liée à la construction :
+
+    - L'usage ou non d'un même véhicule pour tous les kilomètres parcourus (si non : on vous attribue un véhicule "moyen")
+    - La propriété ou non dudit véhicule s'il s'agit toujours du même
+
+    Nous avons fait le choix d'attribuer l'empreinte de construction au pro-rata des kilomètres parcourus. Mais cette approche avait deux défauts :
+
+    - Elle était extrêmement avantageuse pour les petits rouleurs, alors que leur véhicule qui roule moins peut s'user plus vite (un moteur a besoin de tourner régulièrement) et donc avoir une durée de vie inférieure.
+    - Elle ne permettait pas de valoriser l'engagement de ne pas disposer de son propre véhicule, et de pratiquer à la place l'autopartage, ou la location ponctuelle (car l'empreinte de construction était la même, que l'on soit propriétaire ou non).
+
+    > Pour pallier ces deux problèmes, et mieux représenter qu'un véhicule possédé mais sous-utilisé s'use plus vite et mérite une empreinte de construction plus importante, **nous appliquons un seuil pour la partie construction de l'empreinte, pour les propriétaires**.
+
+transport . voiture . utilisateur . propriétaire:
+  titre: Oui, avec mon propre véhicule
+transport . voiture . utilisateur . régulier non propriétaire:
+  titre: Oui, avec le véhicule d'un proche
+transport . voiture . utilisateur . non régulier:
+  titre: Oui, avec des voitures différentes (location, covoiturage, taxi...)
+transport . voiture . utilisateur . jamais:
+  titre: Non, je ne monte jamais en voiture
+
+transport . voiture . notif utilsateur irrégulier:
+  type: notification
+  formule:
+    toutes ces conditions:
+      - est défini: voiture . utilisateur
+      - utilisateur = 'non régulier'
+  description: |
+    Vous roulez avec des véhicules différents : nous vous avons donc attribué les caractéristiques d'une voiture "moyenne".
+
+transport . voiture . notif non utilisateur:
+  type: notification
+  formule:
+    toutes ces conditions:
+      - est défini: voiture . utilisateur
+      - voiture . utilisateur = 'jamais'
+  description: |
+    Même en tant que passager ou passagère, les kilomètres parcourus comptent pour le calcul.
+
+transport . voiture . empreinte moyenne:
+  valeur: voiture . empreinte calculée
+  contexte:
+    voiture . voyageurs: voyageurs . nombre moyen
+    voiture . km: km annuels moyen réel
+    voiture . utilisateur: "'propriétaire'"
+    voiture . gabarit: "'berline'"
+    voiture . motorisation: "'thermique'"
+    voiture . thermique . carburant: "'essence E5 ou E10'"
+    voiture . thermique . consommation aux 100:
+      valeur: voiture . thermique . consommation estimée
+      contexte:
+        voiture . utilisateur: "'propriétaire'"
+        voiture . gabarit: "'berline'"
+        voiture . motorisation: "'thermique'"
+        voiture . thermique . carburant: "'essence E5 ou E10'"
+
+transport . voiture . empreinte moyenne non régulier:
+  valeur: voiture . empreinte calculée
+  contexte:
+    voiture . utilisateur: "'régulier non propriétaire'"
+    voiture . gabarit: "'berline'"
+    voiture . motorisation: "'thermique'"
+    voiture . thermique . carburant: "'essence E5 ou E10'"
+    voiture . thermique . consommation aux 100:
+      valeur: voiture . thermique . consommation estimée
+      contexte:
+        voiture . utilisateur: "'régulier non propriétaire'"
+        voiture . gabarit: "'berline'"
+        voiture . motorisation: "'thermique'"
+        voiture . thermique . carburant: "'essence E5 ou E10'"
+
+transport . voiture . empreinte calculée:
+  formule: (usage + construction) / voyageurs
+  unité: kgCO2e
+
+transport . voiture . voyageurs:
+  non applicable si:
+    toutes ces conditions:
+      - est défini: utilisateur
+      - utilisateur = 'jamais'
+  titre: Nombre de voyageurs
+  question: Quel est le nombre moyen de voyageurs dans la voiture ?
+  description: |
+    🤔 Il est fort probable que vos trajets ne se ressemblent pas, et que vous rouliez parfois seul, parfois à plusieurs.
+
+    Sachez qu'en moyenne en France, le taux de remplissage d'une voiture est de 1,4 personnes sur des trajets courts, et 2,25 personnes sur des trajets longs. Ce taux augmente légèrement pour les familles, particulièrement les foyers monoparentaux (chiffres issus  https://www.statistiques.developpement-durable.gouv.fr/se-deplacer-en-voiture-seul-plusieurs-ou-en-covoiturage-0).
+
+    Par défaut, nous considérons un taux d'occupation moyen de 1,6.
+  plancher: 1
+  plafond: 9
+  avertissement: |
+    Le nombre de voyageurs est compris entre 1 (vous) et 9 (8 passagers au plus).
+  note: |
+    On considère que le nombre maximal de voyageurs est de 9 (limite du permis B).
+
+    Néanmoins, cette question est souvent mal répondue car les utilisateurs.rices ne considèrent pas le nombre de voyageurs moyen : ils répondront 3 s'ils emmènent leurs enfants à l'école sans prendre en compte qu'ils sont seuls dans leur voiture la majorité du temps.
+  par défaut: nombre moyen
+  suggestions:
+    je suis seul: 1
+    deux: 2
+    cinq: 5
+
+transport . voiture . voyageurs . nombre moyen:
+  formule: 1.6
+
+transport . voiture . notif nombreux voyageurs:
+  type: notification
+  formule:
+    toutes ces conditions:
+      - transport . voiture . voyageurs >= 3
+      - transport . voiture . voyageurs < 9
+      # C'est un hack.. On devrait avoir <= 9. Pas de notif si "9" renseigné mais au moins, la notif n'est pas présente si 12 renseigné (car derrière le 12 de l'interface, c'est bien le plafond qui est considéré dans le moteur).
+  description: |
+    > Bravo ! Vous optimisez bien vos trajets en voiture !
+
+    > Est-ce bien votre taux de remplissage moyen ? Celui-ci est malheureusement souvent surévalué.
+
+    > Pour rappel, voici les chiffres moyens en France :
+
+    - pour les trajets longs : 2,25 passagers/voiture
+    - pour les trajets courts : 1,43 passagers/voiture
+  note: |
+    C'est bien dommage, mais il n'est pas possible d'extrapoler un taux de remplissage moyen en fonction de la taille du foyer. Mais le passage "Les voitures des familles, les plus remplies" nous donne pas mal de billes sur les trajets remplis ou autosolistes.
+
+    Voici le texte en question :
+
+      "Les déplacements en voiture à plusieurs sont effectués beaucoup plus souvent en famille (37 %) qu’en dehors (22 %), le reste des déplacements concernant des conducteurs seuls. Il en découle que les célibataires, qui ont par ailleurs moins recours à la voiture pour leurs déplacements, sont plus souvent seuls en voiture (63 %). En revanche, l’autosolisme est plus rare pour les individus d’une famille monoparentale (41 %) et d’un couple avec ou sans enfant (respectivement 38 % et 36 %). De même, la part des déplacements avec trois personnes ou plus à bord augmente graduellement avec le nombre d’enfants du ménage, passant de 15 % pour les ménages sans enfant à 43 % pour ceux qui en comptent deux et même à 47 % pour les familles nombreuses.
+
+      Il est bien plus courant d’être seul à bord d’une petite voiture (mini ou citadine) que d’une grande (grand monospace, berline familiale ou routière, SUV non urbain, routière, etc.) - (57 % contre 36 %). Ces écarts s’expliquent en partie par la structure familiale (les grandes voitures sont souvent utilisées par les familles avec enfants), ainsi que par la distance et le motif des déplacements. Les petites voitures sont en effet plus fréquemment utilisées pour les déplacements courts et professionnels, eux-mêmes plus favorables à l’autosolisme."
+
+    [Source](https://www.statistiques.developpement-durable.gouv.fr/se-deplacer-en-voiture-seul-plusieurs-ou-en-covoiturage-0)
 
 transport . voiture . km:
+  non applicable si:
+    toutes ces conditions:
+      - est défini: utilisateur
+      - utilisateur = 'jamais'
   titre: Km en voiture
   question: Quelle distance parcourez-vous à l'année en voiture ?
   description: |
     Ne comptez que les kilomètres de déplacement personnel (courses, loisirs, famille, etc.) et de déplacement domicile-travail.
 
     Si une mission professionnelle vous amène à vous déplacer plus loin que votre lieu de travail habituel, ne comptez pas ici les km concernés.
-  # It seems that there is a [publicodes bug](https://github.com/publicodes/publicodes/issues/517). For now, we can't use `km annuels moyen réel` directly here, until the problem is fixed.
-  par défaut: 8090
+  par défaut: km annuels moyen
   unité: km
-  plancher: 0
+  plancher: 1
   plafond: 99999
   suggestions:
-    zéro: 0
     vacances: 2000
     10km / jour: 3600
     1000km / mois: 12000
     20 000km / an: 20000
 
 transport . voiture . km annuels moyen réel:
-  #8090
   formule: km annuels moyen * nombre véhicules circulation / population
+  arrondi: 0 décimale
 
 transport . voiture . km annuels moyen:
-  #11985
   formule:
     somme:
       - km annuels moyen . véhicules légers * nombre véhicules circulation . véhicules légers / nombre véhicules circulation
       - km annuels moyen . VUL * nombre véhicules circulation . VUL / nombre véhicules circulation
+  arrondi: 0 décimale
   unité: km
   note: |
     Ce chiffre concerne les véhicules en circulation (voitures et VUL).
@@ -114,138 +264,12 @@ transport . voiture . nombre véhicules circulation . VUL:
 
     Nous considérons néanmoins les données pour l'année 2023 car la distance moyenne parcourue par véhicule n'est dispo que pour 2023.
 
-transport . voiture . utilisateur:
-  question: Utilisez-vous majoritairement la même voiture pour vous déplacer ?
-  applicable si: km > 0
-  une possibilité:
-    - propriétaire
-    - régulier non propriétaire
-    - non régulier
-  note: |
-    Deux données sont importantes dans le cadre du calcul de l'empreinte liée à la construction :
-
-    - L'usage ou non d'un même véhicule pour tous les kilomètres parcourus (si non : on vous attribue un véhicule "moyen")
-    - La propriété ou non dudit véhicule s'il s'agit toujours du même
-
-    Nous avons fait le choix d'attribuer l'empreinte de construction au pro-rata des kilomètres parcourus. Mais cette approche avait deux défauts :
-
-    - Elle était extrêmement avantageuse pour les petits rouleurs, alors que leur véhicule qui roule moins peut s'user plus vite (un moteur a besoin de tourner régulièrement) et donc avoir une durée de vie inférieure.
-    - Elle ne permettait pas de valoriser l'engagement de ne pas disposer de son propre véhicule, et de pratiquer à la place l'autopartage, ou la location ponctuelle (car l'empreinte de construction était la même, que l'on soit propriétaire ou non).
-
-    > Pour pallier ces deux problèmes, et mieux représenter qu'un véhicule possédé mais sous-utilisé s'use plus vite et mérite une empreinte de construction plus importante, **nous appliquons un seuil pour la partie construction de l'empreinte, pour les propriétaires**.
-
-transport . voiture . utilisateur . propriétaire:
-  titre: Oui et j'en suis propriétaire
-transport . voiture . utilisateur . régulier non propriétaire:
-  titre: Oui mais c'est celle d'un proche
-transport . voiture . utilisateur . non régulier:
-  titre: Non, je change souvent (autopartage, proches, taxi...)
-
-transport . voiture . notif utilsateur irrégulier:
-  type: notification
-  formule:
-    toutes ces conditions:
-      - est défini: voiture . utilisateur
-      - utilisateur = 'non régulier'
-      - km > 0
-  description: |
-    Vous roulez avec des véhicules différents : nous vous avons donc attribué les caractéristiques d'une voiture "moyenne".
-
-transport . voiture . empreinte moyenne:
-  valeur: voiture . empreinte calculée
-  contexte:
-    voiture . utilisateur: "'propriétaire'"
-    voiture . gabarit: "'berline'"
-    voiture . motorisation: "'thermique'"
-    voiture . thermique . carburant: "'essence E5 ou E10'"
-    voiture . thermique . consommation aux 100:
-      valeur: voiture . thermique . consommation estimée
-      contexte:
-        voiture . utilisateur: "'propriétaire'"
-        voiture . gabarit: "'berline'"
-        voiture . motorisation: "'thermique'"
-        voiture . thermique . carburant: "'essence E5 ou E10'"
-
-transport . voiture . empreinte moyenne non régulier:
-  valeur: voiture . empreinte calculée
-  contexte:
-    voiture . utilisateur: "'régulier non propriétaire'"
-    voiture . gabarit: "'berline'"
-    voiture . motorisation: "'thermique'"
-    voiture . thermique . carburant: "'essence E5 ou E10'"
-    voiture . thermique . consommation aux 100:
-      valeur: voiture . thermique . consommation estimée
-      contexte:
-        voiture . utilisateur: "'régulier non propriétaire'"
-        voiture . gabarit: "'berline'"
-        voiture . motorisation: "'thermique'"
-        voiture . thermique . carburant: "'essence E5 ou E10'"
-
-transport . voiture . empreinte calculée:
-  formule: (usage + construction) / voyageurs
-  unité: kgCO2e
-
-transport . voiture . voyageurs:
-  titre: Nombre de voyageurs
-  question: Quel est le nombre moyen de voyageurs dans la voiture ?
-  applicable si: km > 0
-  description: |
-    🤔 Il est fort probable que vos trajets ne se ressemblent pas, et que vous rouliez parfois seul, parfois à plusieurs.
-
-    Sachez qu'en moyenne en France, le taux de remplissage d'une voiture est de 1,4 personnes sur des trajets courts, et 2,25 personnes sur des trajets longs. Ce taux augmente légèrement pour les familles, particulièrement les foyers monoparentaux (chiffres issus  https://www.statistiques.developpement-durable.gouv.fr/se-deplacer-en-voiture-seul-plusieurs-ou-en-covoiturage-0).
-
-    Par défaut, nous considérons un taux d'occupation moyen de 1,6.
-  plancher: 1
-  plafond: 9
-  avertissement: |
-    Le nombre de voyageurs est compris entre 1 (vous) et 9 (8 passagers au plus).
-  note: |
-    On considère que le nombre maximal de voyageurs est de 9 (limite du permis B).
-
-    Néanmoins, cette question est souvent mal répondue car les utilisateurs.rices ne considèrent pas le nombre de voyageurs moyen : ils répondront 3 s'ils emmènent leurs enfants à l'école sans prendre en compte qu'ils sont seuls dans leur voiture la majorité du temps.
-  par défaut: 1.6
-  suggestions:
-    je suis seul: 1
-    deux: 2
-    cinq: 5
-
-transport . voiture . notif nombreux voyageurs:
-  type: notification
-  formule:
-    toutes ces conditions:
-      - transport . voiture . voyageurs >= 3
-      - transport . voiture . voyageurs < 9
-      # C'est un hack.. On devrait avoir <= 9. Pas de notif si "9" renseigné mais au moins, la notif n'est pas présente si 12 renseigné (car derrière le 12 de l'interface, c'est bien le plafond qui est considéré dans le moteur).
-  description: |
-    > Bravo ! Vous optimisez bien vos trajets en voiture !
-
-    > Est-ce bien votre taux de remplissage moyen ? Celui-ci est malheureusement souvent surévalué.
-
-    > Pour rappel, voici les chiffres moyens en France :
-
-    - pour les trajets longs : 2,25 passagers/voiture
-    - pour les trajets courts : 1,43 passagers/voiture
-  note: |
-    C'est bien dommage, mais il n'est pas possible d'extrapoler un taux de remplissage moyen en fonction de la taille du foyer. Mais le passage "Les voitures des familles, les plus remplies" nous donne pas mal de billes sur les trajets remplis ou autosolistes.
-
-    Voici le texte en question :
-
-      "Les déplacements en voiture à plusieurs sont effectués beaucoup plus souvent en famille (37 %) qu’en dehors (22 %), le reste des déplacements concernant des conducteurs seuls. Il en découle que les célibataires, qui ont par ailleurs moins recours à la voiture pour leurs déplacements, sont plus souvent seuls en voiture (63 %). En revanche, l’autosolisme est plus rare pour les individus d’une famille monoparentale (41 %) et d’un couple avec ou sans enfant (respectivement 38 % et 36 %). De même, la part des déplacements avec trois personnes ou plus à bord augmente graduellement avec le nombre d’enfants du ménage, passant de 15 % pour les ménages sans enfant à 43 % pour ceux qui en comptent deux et même à 47 % pour les familles nombreuses.
-
-      Il est bien plus courant d’être seul à bord d’une petite voiture (mini ou citadine) que d’une grande (grand monospace, berline familiale ou routière, SUV non urbain, routière, etc.) - (57 % contre 36 %). Ces écarts s’expliquent en partie par la structure familiale (les grandes voitures sont souvent utilisées par les familles avec enfants), ainsi que par la distance et le motif des déplacements. Les petites voitures sont en effet plus fréquemment utilisées pour les déplacements courts et professionnels, eux-mêmes plus favorables à l’autosolisme."
-
-    [Source](https://www.statistiques.developpement-durable.gouv.fr/se-deplacer-en-voiture-seul-plusieurs-ou-en-covoiturage-0)
-
 transport . voiture . usage:
   titre: Usage de la voiture
   formule: usage au kilomètre * km
   unité: kgCO2e
 
 transport . voiture . usage au kilomètre:
-  formule: empreinte au kilomètre + base au kilomètre
-  unité: kgCO2e/km
-
-transport . voiture . empreinte au kilomètre:
   formule:
     variations:
       - si:
@@ -256,13 +280,16 @@ transport . voiture . empreinte au kilomètre:
                 une de ces conditions:
                   - utilisateur = 'propriétaire'
                   - utilisateur = 'régulier non propriétaire'
-              alors: empreinte au kilomètre calculée
+              alors: usage au kilomètre calculé
             - si: utilisateur = 'non régulier'
-              alors: empreinte au kilomètre non régulier
-      - sinon: empreinte au kilomètre moyenne
+              alors: usage au kilomètre non régulier
+      - sinon: usage au kilomètre moyen
+  unité: kgCO2e/km
+  note: |
+    On utilise ici une variations + contexte pour garantir le bon fonctionnement des actions.
 
-transport . voiture . empreinte au kilomètre moyenne:
-  valeur: voiture . empreinte au kilomètre calculée
+transport . voiture . usage au kilomètre moyen:
+  valeur: voiture . usage au kilomètre calculé
   contexte:
     voiture . utilisateur: "'propriétaire'"
     voiture . gabarit: "'berline'"
@@ -276,8 +303,8 @@ transport . voiture . empreinte au kilomètre moyenne:
         voiture . motorisation: "'thermique'"
         voiture . thermique . carburant: "'essence E5 ou E10'"
 
-transport . voiture . empreinte au kilomètre non régulier:
-  valeur: voiture . empreinte au kilomètre calculée
+transport . voiture . usage au kilomètre non régulier:
+  valeur: voiture . usage au kilomètre calculé
   contexte:
     voiture . utilisateur: "'régulier non propriétaire'"
     voiture . gabarit: "'berline'"
@@ -291,18 +318,18 @@ transport . voiture . empreinte au kilomètre non régulier:
         voiture . motorisation: "'thermique'"
         voiture . thermique . carburant: "'essence E5 ou E10'"
 
-transport . voiture . empreinte au kilomètre calculée:
+transport . voiture . usage au kilomètre calculé:
   formule:
     variations:
       - si: motorisation = 'thermique'
-        alors: thermique . empreinte au kilomètre
+        alors: thermique . empreinte au kilomètre + base au kilomètre
       - si:
           une de ces conditions:
             - motorisation = 'hybride non rechargeable'
             - motorisation = 'hybride rechargeable'
-        alors: hybride . empreinte au kilomètre
+        alors: hybride . empreinte au kilomètre + base au kilomètre
       - si: motorisation = 'électrique'
-        alors: électrique . empreinte au kilomètre
+        alors: électrique . empreinte au kilomètre + base au kilomètre
   unité: kgCO2e/km
   note: |
     Pour la voiture hybride, nous n'avons pour l'instant pas utilisé les valeurs de la base bilan-GES, car elles sont compliquées à interpréter :
@@ -328,7 +355,6 @@ transport . voiture . motorisation:
       - une de ces conditions:
           - utilisateur = 'propriétaire'
           - utilisateur = 'régulier non propriétaire'
-      - km > 0
   description: 💡 **Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
   par défaut: "'thermique'"
   une possibilité:
@@ -367,7 +393,6 @@ transport . voiture . thermique . consommation aux 100:
           - utilisateur = 'propriétaire'
           - utilisateur = 'régulier non propriétaire'
       - motorisation = 'thermique'
-      - km > 0
   description: |
     **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
   suggestions:
@@ -551,7 +576,6 @@ transport . voiture . thermique . carburant:
           - utilisateur = 'propriétaire'
           - utilisateur = 'régulier non propriétaire'
       - motorisation = 'thermique'
-      - km > 0
   description: |
     > Attention, si le type de carburant fait varier de façon significative l'empreinte climat au litre, la consommation en litre par 100km elle aussi varie. Veillez à saisir une consommation au litre basée sur votre moyenne réelle.
   par défaut: "'essence E5 ou E10'"
@@ -836,7 +860,6 @@ transport . voiture . électrique . consommation aux 100:
           - utilisateur = 'propriétaire'
           - utilisateur = 'régulier non propriétaire'
       - motorisation = 'électrique'
-      - km > 0
   suggestions:
     15 kWh/100km: 15
     20 kWh/100km: 20
@@ -919,7 +942,6 @@ transport . voiture . gabarit:
       - une de ces conditions:
           - utilisateur = 'propriétaire'
           - utilisateur = 'régulier non propriétaire'
-      - km > 0
   description: |
     **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
   par défaut: "'VUL'"
@@ -998,10 +1020,10 @@ transport . voiture . entretien:
             - motorisation = 'électrique'
         alors: 0.0066
   unité: kgCO2e/km
+  description: |
+    > Ces données sont soumises à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peuvent pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
   note: |
     La mise à jour de la Base Empreinte avec les données ecoinvent d'avril 2025 a mis à disposition la donnée "Maintenance d'une voiture particulière électrique (sans batterie)" (maintenance, passenger car, electric, without battery). Nous avons fait le choix d'utiliser son pendant thermique directement depuis ecoinvent (maintenance, passenger car).
-
-    > Ces données sont soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peuvent pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
 
     Pour ce qui est d'un véhicule hybride, nous considérons que l'entretien est le même que pour un véhicule électrique.
 
@@ -1101,10 +1123,10 @@ transport . voiture . barème construction . barème thermique . production:
 transport . voiture . barème construction . barème thermique . empreinte par kg:
   formule: 7.29
   unité: kgCO2e/kg
+  description: |
+    > Cette donnée est soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peut pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
   note: |
     La mise à jour de la Base Empreinte avec les données ecoinvent d'avril 2025 a mis à disposition la donnée "Production d'une voiture particulière électrique (sans batterie)" (passenger car production, electric, without battery). Nous avons fait le choix d'utiliser son pendant thermique directement depuis ecoinvent (passenger car production, diesel).
-
-    > Ces données sont soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peuvent pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
 
 transport . voiture . barème construction . barème électrique:
   formule: production hors batterie + batterie
@@ -1134,10 +1156,10 @@ transport . voiture . barème construction . barème électrique . production ho
 transport . voiture . barème construction . barème électrique . empreinte par kg:
   formule: 7.63
   unité: kgCO2e/kg
+  description: |
+    > Cette donnée est soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peut pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
   note: |
     Nous utilisons ici la donnée Ecoinvent "Production d'une voiture particulière électrique (sans batterie)" (passenger car production, electric, without battery) mise à disposition dans la Base Empreinte.
-
-    > Ces données sont soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peuvent pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
 
 transport . voiture . barème construction . barème électrique . batterie:
   formule: capacité * empreinte batterie par kWh
@@ -1151,6 +1173,8 @@ transport . voiture . barème construction . barème électrique . batterie:
 transport . voiture . barème construction . barème électrique . empreinte batterie par kWh:
   formule: 142.7
   unité: kgCO2e/kWh
+  description: |
+    > Cette donnée est soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peut pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
   note: |
     Nous utilisons ici les données Ecoinvent mise à disposition dans la Base Empreinte:
       - Production d'une batterie rechargeable Li-ion, LFP
@@ -1166,8 +1190,6 @@ transport . voiture . barème construction . barème électrique . empreinte bat
     | High nickel | Production d'une batterie rechargeable Li-ion, NMC622 | 21.8 | 0.155 | 141 | 79% |
 
     Ce qui donne, en moyenne, une empreinte batterie de **142.7 kgCO2e/kWh**.
-
-    > Ces données sont soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peuvent pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
 
 transport . voiture . barème construction . barème électrique . batterie . capacité:
   applicable si:
@@ -1262,10 +1284,10 @@ transport . voiture . barème construction . barème hybride . moteur électriqu
 transport . voiture . barème construction . barème hybride . moteur électrique . empreinte:
   formule: 4.43
   unité: kgCO2e/kg
+  description: |
+    > Cette donnée est soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peut pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
   note: |
     Nous utilisons ici la donnée Ecoinvent "Production d'un moteur électrique" (production, electric motor).
-
-    > Ces données sont soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peuvent pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
 
 transport . voiture . amortissement:
   description: |
