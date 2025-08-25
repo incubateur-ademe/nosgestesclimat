@@ -62,7 +62,7 @@ divers . numérique:
   description: |
     Pour ce poste, nous utilisons les données proposées par le service SoNum de l'ADEME, notamment:
       - Les données d'ACV des équipements, téléchargeables sur le site de la Base Empreinte (section Documentation > 2- AE - Référentiels sectoriels & Echelles > Numérique). Ces données sont également dispoinbles via le modèle publicodes [@incubateur-ademe/publicodes-acv-numerique](https://github.com/incubateur-ademe/publicodes-acv-numerique).
-      - Le [baromètre du numérique](https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/barometre-du-numerique/le-barometre-du-numerique-edition-2025.html), piloté notamment par l'Arcep, fournissant des données sur la diffusion des équipements numériques, l’évolution de leurs usages et la perception de leur empreinte environnementale.
+      - Le [baromètre du numérique](https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/barometre-du-numerique/le-barometre-du-numerique-edition-2025.html), piloté notamment par l'Arcep, fournissant des données sur la diffusion des équipements numériques (nombre d'équipements au sein des foyers), l’évolution de leurs usages et la perception de leur empreinte environnementale.
   formule:
     somme:
       - internet
@@ -152,39 +152,37 @@ divers . numérique . appareils:
         imprimante . nombre: 0
       vie connectée:
         téléphone . nombre: 1
-        TV . nombre: 1
-        ordinateur portable . nombre: 1
-        ordinateur fixe . nombre: 0
-        tablette . nombre: 1
-        enceinte bluetooth . nombre: 1
-        console de salon . nombre: 0
-        console portable . nombre: 0
-        imprimante . nombre: 1
-      gamer:
-        téléphone . nombre: 1
-        TV . nombre: 1
+        TV . nombre: 2
         ordinateur portable . nombre: 1
         ordinateur fixe . nombre: 1
         tablette . nombre: 1
         enceinte bluetooth . nombre: 1
-        console de salon . nombre: 1
+        console de salon . nombre: 0
         console portable . nombre: 1
-        imprimante . nombre: 0
+        imprimante . nombre: 1
+      gamer:
+        téléphone . nombre: 1
+        TV . nombre: 3
+        ordinateur portable . nombre: 1
+        ordinateur fixe . nombre: 1
+        tablette . nombre: 1
+        enceinte bluetooth . nombre: 1
+        console de salon . nombre: 2
+        console portable . nombre: 1
+        imprimante . nombre: 1
   question: Quels appareils numériques possédez-vous ?
   description: |
     L'empreinte des **appareils partagés** au niveau du foyer (télévision ou ordinateur fixe par exemple) est **divisée par le nombre d'habitants**.
 
     L'empreinte des **appareils individuels** (comme le téléphone portable) vous est **attribuée personnellement**.
   note: |
-    Cette catégorie est un peu particulière au niveau de l'amortissement. En effet, à l'inverse de l'ameublement ou l'on considère que tout est partagé au sein du foyer,
-    ici, certains appareils sont partagés alors que d'autres sont considérés comme étant individuels.
+    Cette catégorie est un peu particulière au niveau de l'amortissement. En effet, à l'inverse de l'ameublement ou l'on considère que tout est partagé au sein du foyer, ici, certains appareils sont partagés alors que d'autres sont considérés comme étant individuels.
 
-    Ainsi nous avons défini arbitrairement les appareils individuels (téléphone, tablette, appareil photo)
-    et collectifs (TV, ordinateur fixe, vidéoprojecteur, home cinéma, enceinte bluetooth, enceinte vocale, console de salon).
-
-    Pour le choix des facteurs d'émissions utilisés, nous nous appuyons sur les données Negaoctet issues d'une étude portées par l'ADEME, qui sont les plus récentes et les plus précises que nous ayons à disposition.
+    Ainsi nous avons défini arbitrairement les appareils individuels (téléphone, tablette, enceinte bluetooth, ordinateur portable, console portable) et collectifs (TV, ordinateur fixe, console de salon).
 
     Pour le moment, nous ne considérons pas la fin de vie des appareils ici mais dans le poste "déchets".
+
+    Selon [le baromètre du numérique 2025](https://www.arcep.fr/uploads/tx_gspublication/barometre-du-numerique_edition_2025_RAPPORT_mars2025.pdf), un foyer français possède en moyenne 9,6 équipements numériques avec écran, soit 4,4 équipements par personne. Selon ce même rapport, parmi ces 9,6 équipements, 1,8 sont inutilisés, ce qui peut laisser penser que les saisies seront souvent sous-estimées.
   formule:
     somme:
       - téléphone
@@ -208,10 +206,12 @@ divers . numérique . appareils . téléphone:
     Si vous n'avez pas de téléphone mobile, il y a de grandes chances pour que vous ayez un fixe.
 divers . numérique . appareils . téléphone . nombre:
   titre: Nombre de smartphones
-  question: Utilisez-vous un smartphone ?
+  question: Nombre de smartphones
   plancher: 0
   plafond: 5
-  par défaut: 1
+  par défaut: 2.8 / logement . habitants
+  note: |
+    D'après le [baromètre du numérique 2025](https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/barometre-du-numerique/le-barometre-du-numerique-edition-2025.html), un foyer français possède en moyenne 2,8 smartphones (voir 19 du rapport complet).
 divers . numérique . appareils . téléphone . durée:
   titre: Durée de vie d'un smartphone
   formule: acv numerique . acv . smartphone . durée de vie théorique / 1 an
@@ -225,14 +225,7 @@ divers . numérique . appareils . téléphone . empreinte:
     - Smartphone classique (milieu de gamme, qui représente l'écrasante majorité des ventes. Tous les smartphones vendus en 2021 ou presque ont un écran supérieur à 5.5 pouces)
     - Smartphone haut de gamme (la base bilan-GES n'inclut pas de catégories "téléphone haut de gamme" ou "écran > 6 pouces". De plus, l'empreinte d'un iPhone 11 estimée par Apple elle-même est de 72kg de CO₂, dont 79% donc ~57kg juste pour la production.
 
-    À moins que le périmètre des études ne soit pas le même, mais un périmètre plus important pris par l'entreprise que par l'autorité environnementale est pour le moins étonnant, nous retenons la valeur du fabricant.
-
-    Néanmoins, les dernières données NegaOctet (voir base Empreinte), à l'image des constructeurs, semblent donner une valeur plus élevée que les chiffres de la base Carbone. Nous considérons donc les dernières données NegaOctet.
-
-    Voir :
-      - https://www.bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=Smartphone
-      - https://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/produits_informatiques__electr
-      - https://www.apple.com/environment/pdf/products/iphone/iPhone_11_PER_sept2019.pdf
+    Néanmoins, les dernières données ADEME (voir base Empreinte), à l'image des [constructeurs](https://www.apple.com/environment/pdf/products/iphone/iPhone_11_PER_sept2019.pdf), semblent donner une valeur plus élevée que les chiffres de la base Carbone.
   formule:
     variations:
       - si: métrique = "carbone"
@@ -253,10 +246,12 @@ divers . numérique . appareils . ordinateur portable:
   formule: empreinte * nombre / (durée * coefficient préservation)
 divers . numérique . appareils . ordinateur portable . nombre:
   titre: Nombre d'ordinateurs portables
-  question: Utilisez-vous un ordinateur portable ?
+  question: Nombre d'ordinateurs portables
   plancher: 0
   plafond: 5
-  par défaut: 1
+  par défaut: 0.95 / logement . habitants
+  note: |
+    D'après le [baromètre du numérique 2025](https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/barometre-du-numerique/le-barometre-du-numerique-edition-2025.html), un foyer français possède en moyenne 1,9 ordinateurs portables / fixe (voir 19 du rapport complet). On considère, en moyenne, 1 ordinateur fixe et un ordinateur portable par foyer.
 divers . numérique . appareils . ordinateur portable . durée:
   titre: Durée de vie d'un ordinateur portable
   formule: acv numerique . acv . ordinateur portable . durée de vie théorique / 1 an
@@ -284,10 +279,12 @@ divers . numérique . appareils . ordinateur fixe:
     Nous considérons qu'un ordinateur fixe c'est une tour et un écran détaché (même s'il existe des ordinateurs fixes où tout est "intégré" dans l'écran).
 divers . numérique . appareils . ordinateur fixe . nombre:
   titre: Nombre d'ordinateurs fixes
-  question: Utilisez-vous un ordinateur fixe ?
+  question: Nombre d'ordinateurs fixes
   plancher: 0
   plafond: 5
-  par défaut: 1
+  par défaut: 0.95
+  note: |
+    D'après le [baromètre du numérique 2025](https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/barometre-du-numerique/le-barometre-du-numerique-edition-2025.html), un foyer français possède en moyenne 1,9 ordinateurs portables / fixe (voir 19 du rapport complet). On considère, en moyenne, 1 ordinateur fixe et un ordinateur portable par foyer.
 divers . numérique . appareils . ordinateur fixe . durée:
   titre: Durée de vie d'un ordinateur fixe
   formule:
@@ -335,10 +332,12 @@ divers . numérique . appareils . tablette:
   formule: empreinte * nombre / (durée * coefficient préservation)
 divers . numérique . appareils . tablette . nombre:
   titre: Nombre de tablettes
-  question: Utilisez-vous une tablette ?
+  question: Nombre de tablettes
   plancher: 0
   plafond: 5
-  par défaut: 0
+  par défaut: 1.2 / logement . habitants
+  note: |
+    D'après le [baromètre du numérique 2025](https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/barometre-du-numerique/le-barometre-du-numerique-edition-2025.html), un foyer français possède en moyenne 1,2 tablettes (voir 19 du rapport complet).
 divers . numérique . appareils . tablette . durée:
   titre: Durée de vie d'une tablette
   formule: acv numerique . acv . tablette . durée de vie théorique / 1 an
@@ -368,10 +367,12 @@ divers . numérique . appareils . TV:
       - la technologie d'affichage (LED, plasma, etc.)
 divers . numérique . appareils . TV . nombre:
   titre: Nombre de TV
-  question: Utilisez-vous une TV ?
+  question: Nombre de TV
   plancher: 0
   plafond: 10
-  par défaut: 1
+  par défaut: 2
+  note: |
+    D'après le [baromètre du numérique 2025](https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/barometre-du-numerique/le-barometre-du-numerique-edition-2025.html), un foyer français possède en moyenne 2,8 télévisions (voir 19 du rapport complet).
 divers . numérique . appareils . TV . durée:
   titre: Durée de vie d'une TV
   formule: acv numerique . acv . TV . durée de vie théorique / 1 an
@@ -394,11 +395,13 @@ divers . numérique . appareils . enceinte bluetooth:
   icônes: 🎵
   formule: empreinte * nombre / (durée * coefficient préservation)
 divers . numérique . appareils . enceinte bluetooth . nombre:
-  titre: Nombre d'enceinte bluetooth
-  question: Utilisez-vous une enceinte bluetooth ?
+  titre: Nombre d'enceintes bluetooth
+  question: Nombre d'enceintes bluetooth
   plancher: 0
   plafond: 5
-  par défaut: 0
+  par défaut: 1
+  note: |
+    Le baromètre du numérique 2025 ne donne pas d'information sur la possession d'enceintes bluetooth. Nous considérons une enceinte bluetooth par personne en moyenne, qui peut couvrir d'autres types d'enceintes à défaut de les compter ailleurs.
 divers . numérique . appareils . enceinte bluetooth . durée:
   titre: Durée de vie d'une enceinte bluetooth
   formule: acv numerique . acv . enceinte . durée de vie théorique / 1 an
@@ -422,10 +425,12 @@ divers . numérique . appareils . console de salon:
   formule: empreinte * nombre / (durée * coefficient préservation * logement . habitants)
 divers . numérique . appareils . console de salon . nombre:
   titre: Nombre de consoles de salon
-  question: Utilisez-vous une console de salon ?
+  question: Nombre de consoles de salon
   plancher: 0
   plafond: 5
-  par défaut: 0
+  par défaut: 0.45
+  note: |
+    D'après le [baromètre du numérique 2025](https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/barometre-du-numerique/le-barometre-du-numerique-edition-2025.html), un foyer français possède en moyenne 0,9 consoles de jeu (voir 19 du rapport complet).
 divers . numérique . appareils . console de salon . durée:
   titre: Durée de vie d'une console de salon
   formule: acv numerique . acv . console de salon . durée de vie théorique / 1 an
@@ -449,10 +454,12 @@ divers . numérique . appareils . console portable:
   formule: empreinte * nombre / (durée * coefficient préservation)
 divers . numérique . appareils . console portable . nombre:
   titre: Nombre de consoles portables
-  question: Utilisez-vous un console portable ?
+  question: Nombre de consoles portables
   plancher: 0
   plafond: 10
-  par défaut: 0
+  par défaut: 0.45 / logement . habitants
+  note: |
+    D'après le [baromètre du numérique 2025](https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/barometre-du-numerique/le-barometre-du-numerique-edition-2025.html), un foyer français possède en moyenne 0,9 consoles de jeu (voir 19 du rapport complet).
 divers . numérique . appareils . console portable . durée:
   titre: Durée de vie d'une console portable
   formule: acv numerique . acv . console portable . durée de vie théorique / 1 an
@@ -475,11 +482,13 @@ divers . numérique . appareils . imprimante:
   icônes: 🖨
   formule: empreinte * nombre / (durée * coefficient préservation)
 divers . numérique . appareils . imprimante . nombre:
-  titre: Nombre de consoles portables
-  question: Utilisez-vous un imprimante ?
+  titre: Nombre d'imprimantes
+  question: Nombre d'imprimantes
   plancher: 0
   plafond: 5
   par défaut: 0
+  note: |
+    Le baromètre du numérique 2025 ne donne pas d'information sur la possession d'imprimantes. Nous considérons qu'un foyer moyen ne possède pas d'imprimante.
 divers . numérique . appareils . imprimante . durée:
   titre: Durée de vie d'une imprimante
   formule: acv numerique . acv . imprimante . durée de vie théorique / 1 an
