@@ -14,8 +14,6 @@ transport . voiture:
       - sinon: empreinte moyenne
   unité: kgCO2e
   description: |
-    ![](https://upload.wikimedia.org/wikipedia/commons/9/9a/Congestion_caused_by_a_road_accident%2C_Algarve%2C_Portugal.jpg)
-
     La voiture est aujourd'hui en France essentiellement thermique (essence, diesel), bien que l'électrique progresse lentement.
 
     Pourtant, électrique ou thermique, elle reste un moyen de déplacement très peu efficient :
@@ -24,6 +22,8 @@ transport . voiture:
     Un peu comme si chaque midi, nous faisions à manger pour 10 avant de jeter 90% de la nourriture, ou que nous décidions de chauffer tout le pâté de maisons plutôt que l'intérieur de chacune des 10 maisons.
 
     Notons finalement qu'il est important de prendre en compte à la fois l'usage (les km parcourus) et la construction de ce véhicule de plus d'une tonne de matériaux divers.
+  note: |
+    Le calcul détaillé et l'ensemble des hypothèses sont disponibles dans cette [page récapitulative](https://accelerateur-transition-ecologique-ademe.notion.site/Mod-lisation-de-l-empreinte-carbone-de-la-voiture-1f46523d57d780b3a1a8f1ceb5ff7f87).
 
 transport . voiture . empreinte:
   formule:
@@ -122,6 +122,10 @@ transport . voiture . empreinte calculée:
   unité: kgCO2e
 
 transport . voiture . voyageurs:
+  non applicable si:
+    toutes ces conditions:
+      - est défini: utilisateur
+      - utilisateur = 'jamais'
   titre: Nombre de voyageurs
   question: Quel est le nombre moyen de voyageurs dans la voiture ?
   description: |
@@ -175,6 +179,10 @@ transport . voiture . notif nombreux voyageurs:
     [Source](https://www.statistiques.developpement-durable.gouv.fr/se-deplacer-en-voiture-seul-plusieurs-ou-en-covoiturage-0)
 
 transport . voiture . km:
+  non applicable si:
+    toutes ces conditions:
+      - est défini: utilisateur
+      - utilisateur = 'jamais'
   titre: Km en voiture
   question: Quelle distance parcourez-vous à l'année en voiture ?
   description: |
@@ -186,7 +194,6 @@ transport . voiture . km:
   plancher: 1
   plafond: 99999
   suggestions:
-    zéro: 0
     vacances: 2000
     10km / jour: 3600
     1000km / mois: 12000
@@ -1011,10 +1018,10 @@ transport . voiture . entretien:
             - motorisation = 'électrique'
         alors: 0.0066
   unité: kgCO2e/km
+  description: |
+    > Ces données sont soumises à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peuvent pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
   note: |
     La mise à jour de la Base Empreinte avec les données ecoinvent d'avril 2025 a mis à disposition la donnée "Maintenance d'une voiture particulière électrique (sans batterie)" (maintenance, passenger car, electric, without battery). Nous avons fait le choix d'utiliser son pendant thermique directement depuis ecoinvent (maintenance, passenger car).
-
-    > Ces données sont soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peuvent pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
 
     Pour ce qui est d'un véhicule hybride, nous considérons que l'entretien est le même que pour un véhicule électrique.
 
@@ -1074,8 +1081,6 @@ transport . voiture . barème construction:
         alors: barème hybride
   unité: kgCO2e
   description: |
-    ![](https://i.imgur.com/uIlZcEjl.jpg)
-
     Une voiture est un gros, très gros objet, qui pèse souvent plus d'une tonne et demie. En conséquence, sa construction a une empreinte importante.
 
     En particulier, la construction d'une voiture électrique de gamme équivalente à une thermique émet plus de gaz à effet de serre. C'est notamment dû à la batterie et son poids important.
@@ -1114,10 +1119,10 @@ transport . voiture . barème construction . barème thermique . production:
 transport . voiture . barème construction . barème thermique . empreinte par kg:
   formule: 7.29
   unité: kgCO2e/kg
+  description: |
+    > Cette donnée est soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peut pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
   note: |
     La mise à jour de la Base Empreinte avec les données ecoinvent d'avril 2025 a mis à disposition la donnée "Production d'une voiture particulière électrique (sans batterie)" (passenger car production, electric, without battery). Nous avons fait le choix d'utiliser son pendant thermique directement depuis ecoinvent (passenger car production, diesel).
-
-    > Ces données sont soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peuvent pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
 
 transport . voiture . barème construction . barème électrique:
   formule: production hors batterie + batterie
@@ -1147,10 +1152,10 @@ transport . voiture . barème construction . barème électrique . production ho
 transport . voiture . barème construction . barème électrique . empreinte par kg:
   formule: 7.63
   unité: kgCO2e/kg
+  description: |
+    > Cette donnée est soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peut pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
   note: |
     Nous utilisons ici la donnée Ecoinvent "Production d'une voiture particulière électrique (sans batterie)" (passenger car production, electric, without battery) mise à disposition dans la Base Empreinte.
-
-    > Ces données sont soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peuvent pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
 
 transport . voiture . barème construction . barème électrique . batterie:
   formule: capacité * empreinte batterie par kWh
@@ -1164,6 +1169,8 @@ transport . voiture . barème construction . barème électrique . batterie:
 transport . voiture . barème construction . barème électrique . empreinte batterie par kWh:
   formule: 142.7
   unité: kgCO2e/kWh
+  description: |
+    > Cette donnée est soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peut pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
   note: |
     Nous utilisons ici les données Ecoinvent mise à disposition dans la Base Empreinte:
       - Production d'une batterie rechargeable Li-ion, LFP
@@ -1179,8 +1186,6 @@ transport . voiture . barème construction . barème électrique . empreinte bat
     | High nickel | Production d'une batterie rechargeable Li-ion, NMC622 | 21.8 | 0.155 | 141 | 79% |
 
     Ce qui donne, en moyenne, une empreinte batterie de **142.7 kgCO2e/kWh**.
-
-    > Ces données sont soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peuvent pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
 
 transport . voiture . barème construction . barème électrique . batterie . capacité:
   applicable si:
@@ -1275,10 +1280,10 @@ transport . voiture . barème construction . barème hybride . moteur électriqu
 transport . voiture . barème construction . barème hybride . moteur électrique . empreinte:
   formule: 4.43
   unité: kgCO2e/kg
+  description: |
+    > Cette donnée est soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peut pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
   note: |
     Nous utilisons ici la donnée Ecoinvent "Production d'un moteur électrique" (production, electric motor).
-
-    > Ces données sont soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peuvent pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
 
 transport . voiture . amortissement:
   description: |
