@@ -1,8 +1,10 @@
 logement . électricité:
+  titre: Électricité du logement
   icônes: ⚡
   formule: empreinte / habitants
 
 logement . électricité . empreinte:
+  titre: Empreinte de l'électricité
   formule: consommation totale * empreinte au kWh
   description: |
     L'empreinte de l'électricité du logement est la somme des empreintes de l'électricité du réseau et de l'électricité produite par les panneaux photovoltaïques.
@@ -17,6 +19,7 @@ logement . électricité . empreinte:
     Mais cela ne nous paraissait pas très juste, ni très incitatif à l'installation de panneaux photovoltaïque, alors que cette dernière contribue effectivement à l'amélioration de l'intensité carbone en France et est donc à valoriser.
 
 logement . électricité . empreinte au kWh:
+  titre: Empreinte de l'électricité au kWh
   formule:
     variations:
       - si: métrique = "carbone"
@@ -25,6 +28,7 @@ logement . électricité . empreinte au kWh:
         alors: empreinte eau mix électrique
 
 logement . électricité . intensité carbone équivalente:
+  titre: Empreinte carbone équivalente de l'électricité consommée
   formule:
     variations:
       - si: photovoltaique . présent
@@ -40,6 +44,7 @@ logement . électricité . intensité carbone équivalente:
       - sinon: réseau . intensité carbone
 
 logement . électricité . consommation totale:
+  titre: Consommation totale d'électricité
   formule:
     somme:
       - photovoltaique . autoconsommation
@@ -50,6 +55,7 @@ logement . électricité . réseau:
   icônes: ⚡
 
 logement . électricité . réseau . consommation:
+  titre: Consommation d'électricité du réseau
   question: Quelle est la consommation annuelle d'électricité (réseau) de votre foyer ?
   aide: logement . électricité . réseau . consommation estimée via le coût . saisie
   plancher: 0
@@ -101,11 +107,13 @@ logement . électricité . réseau . consommation estimée via le coût:
   note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
 
 logement . électricité . réseau . consommation estimée via le coût . saisie:
+  titre: Saisie des dépenses d'électricité
   question: Pas de facture ? Entrez vos dépenses approximatives par mois
   plancher: 0
   unité: €/mois
 
 logement . électricité . réseau . consommation estimée via le coût . facteur:
+  titre: Facteur de conversion €/mois vers kWh/an
   formule: 0.2317
   unité: €/kWh
   note: |
@@ -116,6 +124,7 @@ logement . électricité . réseau . consommation estimée via le coût . facteu
     Chiffre issu de [Eurostat, household, first half 2023](https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Electricity_price_statistics).
 
 logement . électricité . réseau . intensité carbone:
+  titre: Empreinte carbone du mix électrique
   formule: commun . mix électrique . empreinte carbone
   unité: kgCO2e/kWh
   description: |
@@ -126,6 +135,7 @@ logement . électricité . réseau . intensité carbone:
     > A titre d'exemple, l'intensité carbone du chauffage résidentiel est ainsi définie à 80gCO2e/kWh en France par la RE2020, [source](https://www.batiactu.com/edito/facteur-energie-primaire-contenu-carbone-electricite-58485.php).
 
 logement . électricité . empreinte eau mix électrique:
+  titre: Empreinte eau du mix électrique
   formule: commun . mix électrique . empreinte eau * 1000 l/m3
   unité: l/kWh
   description: |
@@ -136,11 +146,13 @@ logement . électricité . photovoltaique:
   icônes: 🌞⚡️
 
 logement . électricité . photovoltaique . présent:
+  titre: Présence de panneaux photovoltaïques
   non applicable si: logement . est un appartement
   question: Votre logement dispose-t-il de panneaux photovoltaïques ?
   par défaut: non
 
 logement . électricité . photovoltaique . production:
+  titre: Production d'électricité photovoltaïque
   applicable si: photovoltaique . présent
   icônes: 🌞⚡️
   question: Quelle est la production annuelle d'électricité de vos panneaux solaires photovoltaïques, qu'elle soit autoconsommée ou réinjectée dans le réseau ?
@@ -170,6 +182,7 @@ logement . électricité . photovoltaique . production estimée via la puissance
   note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
 
 logement . électricité . photovoltaique . production estimée via la puissance installée . saisie:
+  titre: Saisie de la puissance installée
   question: |
     Pas de relevé ? Entrez ici votre puissance installée.
 
@@ -178,13 +191,16 @@ logement . électricité . photovoltaique . production estimée via la puissance
   unité: Wc
 
 logement . électricité . photovoltaique . production estimée via la puissance installée . facteur:
+  titre: Facteur de conversion Wc vers kWh
   formule: 1.3
   unité: kWh/Wc
 
 logement . électricité . photovoltaique . autoconsommation:
+  titre: Autoconsommation photovoltaïque
   formule: production * part autoconsommation
 
 logement . électricité . photovoltaique . part autoconsommation:
+  titre: Part d'autoconsommation
   applicable si:
     toutes ces conditions:
       - photovoltaique . présent
@@ -205,6 +221,7 @@ logement . électricité . photovoltaique . part autoconsommation:
     je consomme 100% de ce que je produis: 100
 
 logement . électricité . photovoltaique . intensité carbone:
+  titre: Intensité carbone du photovoltaïque
   formule: 0.0291
   unité: kgCO2e/kWh
   note: D'après l'ADEME, nous considérons que la zone H1C (est de la France) est représentative d'un logement moyen standard en France, ce qui correspond à une empreinte moyenne de 29,1 gCO2e / kWh produit.

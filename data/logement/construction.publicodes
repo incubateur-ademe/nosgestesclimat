@@ -1,4 +1,5 @@
 logement . construction:
+  titre: Construction du logement
   non applicable si: métrique != "carbone"
   icônes: 🧱
   formule: surface * empreinte amortie / habitants
@@ -13,6 +14,7 @@ logement . construction:
     Cette étude proposait également de nouveaux facteurs d'émission pour la construction des logements. Néanmoins, ces données sourcées "ADEME" ne se rapportent à aucune étude permettant de les justifier et les utiliser avec confiance. Nous avons donc choisi de suivre les chiffres issues des recommandations de la [loi RE2020](https://www.ecologie.gouv.fr/politiques-publiques/reglementation-environnementale-re2020) même si elle concerne les nouveaux bâtiments, et que par nature, sous estiment à piori les émissions liées à la construction de bâtiments plus anciens.
 
 logement . construction . empreinte amortie:
+  titre: Empreinte amortie de la construction
   formule:
     somme:
       - base
@@ -23,6 +25,7 @@ logement . construction . empreinte amortie:
   unité: kgCO2e/m2
 
 logement . construction . base:
+  titre: Empreinte de base de la construction
   formule:
     variations:
       - si: logement . âge < plafond
@@ -40,6 +43,7 @@ logement . construction . base:
   unité: kgCO2e/m2
 
 logement . construction . base . plafond:
+  titre: Plafond d'âge pour la construction
   formule: amortissement
 
 logement . construction . base . appartement:
@@ -59,6 +63,7 @@ logement . construction . base . maison:
     Bien que conscients qu'utiliser ces seuils max pour évaluer l'empreinte des constructions passées consiste très probablement à sous-évaluer l'empreinte de construction, nous ne disposons pas d'études chiffrées sur les logements plus anciens nous permettant d'avancer un chiffre plus fiable.
 
 logement . construction . base . amortissement:
+  titre: Amortissement de la construction
   formule:
     variations:
       - si: rénovation . travaux . travaux réalisés
@@ -83,9 +88,11 @@ logement . construction . rafraichissement . seuil:
   formule: 10
 
 logement . construction . rafraichissement . amortissement:
+  titre: Amortissement du rafraîchissement
   formule: 10
 
 logement . construction . rénovation:
+  titre: Travaux de rénovation
   applicable si: logement . âge >= seuil
   formule: travaux / amortissement
   unité: kgCO2e/m2
@@ -95,9 +102,11 @@ logement . construction . rénovation . seuil:
   formule: 25
 
 logement . construction . rénovation . amortissement:
+  titre: Amortissement de la rénovation
   formule: 25
 
 logement . construction . rénovation . travaux:
+  titre: Travaux de rénovation réalisés
   applicable si: logement . âge > seuil
   question: Des travaux de rénovation ont-ils été réalisés dans votre logement (hors rafraîchissement) depuis 2000 ?
   mosaique:
@@ -141,6 +150,7 @@ logement . construction . rénovation . travaux . rénovation:
     Ce facteur d'émission est issu d'une [étude croisée entre CentraleSupélec et l'Observatoire de l'Immobilier Durable (OID)](https://www.architectes.org/actualites/quel-est-le-poids-carbone-des-logements-avec-ou-sans-renovation-92667).
 
 logement . construction . rénovation . travaux . rénovation . présent:
+  titre: Présence de travaux de rénovation
   question: Avez-vous réalisé des travaux de rénovation (second d'oeuvre) ?
   par défaut: oui
 
@@ -155,6 +165,7 @@ logement . construction . rénovation . travaux . isolation:
     Ce facteur d'émission est issu d'une [étude croisée entre CentraleSupélec et l'Observatoire de l'Immobilier Durable (OID)](https://www.architectes.org/actualites/quel-est-le-poids-carbone-des-logements-avec-ou-sans-renovation-92667).
 
 logement . construction . rénovation . travaux . isolation . présent:
+  titre: Présence de travaux d'isolation
   question: Avez-vous réalisé des travaux d'isolation ?
   par défaut: non
 
@@ -168,6 +179,7 @@ logement . construction . rénovation . travaux . chauffage:
     Ce facteur d'émission est issu d'une [étude croisée entre CentraleSupélec et l'Observatoire de l'Immobilier Durable (OID)](https://www.architectes.org/actualites/quel-est-le-poids-carbone-des-logements-avec-ou-sans-renovation-92667).
 
 logement . construction . rénovation . travaux . chauffage . présent:
+  titre: Présence de changement de chauffage
   question: Avez-vous changé de système de chauffage ?
   par défaut: non
 
@@ -187,19 +199,23 @@ logement . construction . rénovation . travaux . extension:
   unité: kgCO2e/m2
 
 logement . construction . rénovation . travaux . extension . présent:
+  titre: Présence d'extension
   question: Avez-vous réalisé une extension de votre logement ?
   par défaut: non
 
 logement . construction . rénovation . travaux . extension . ratio:
+  titre: Ratio de l'extension
   formule: taille / logement . surface
 
 logement . construction . rénovation . travaux . extension . taille:
+  titre: Taille de l'extension
   question: Quelle est la taille de l'extension réalisée (en m²) ?
   par défaut: 0.2 * logement . surface
   unité: m2
   note: En moyenne, on considère que l'extension représente 20% de la surface du logement (le max étant fixé à 30%).
 
 logement . construction . déforestation:
+  titre: Déforestation importée
   applicable si: logement . âge < plafond
   formule: 37 kgCO2e * logement . habitants . moyen / parc français . surface moyenne
   unité: kgCO2e/m2
@@ -209,6 +225,7 @@ logement . construction . déforestation:
     Pour appliquer ce facteur au m2, nous nous basons sur la surface d'un logement moyen et un nombre d'habitants moyen.
 
 logement . construction . déforestation . plafond:
+  titre: Plafond d'âge pour la déforestation
   formule: 50
   note: |
     L'empreinte de la déforestation importée est amortie sur 50 ans.
@@ -228,12 +245,14 @@ logement . construction . artificialisation sols . plafond:
   formule: amortissement
 
 logement . construction . artificialisation sols . empreinte:
+  titre: Empreinte carbone de l'artificialisation des sols
   formule: 19
   unité: kgCO2e/m2
   note: |
     D'après [l'ADEME et le CITEPA](https://www.ecologie.gouv.fr/sites/default/files/sobriete_fonciere_-_vers_le_zero_artificialisation_nette_zan_des_sols_0.pdf), l'artificialisation d'un hectare de terrain agricole émet de 190 à 290 tonnes de CO2e selon le type de sol artificialisé. Nous partons du principe que la plus grande part des sols artificialisés pour la création de nouveaux logements est de la zone agricole.
 
 logement . construction . artificialisation sols . amortissement:
+  titre: Amortissement de l'artificialisation des sols
   formule: 10
   note: |
     Nous faisons le choix d'amortir l'empreinte liée à l'artificialisation des sols d'une nouvelle construction sur les 10 premières années du logement, bien que l'émission associée soit bien faite au moment même de cette artificialisation.

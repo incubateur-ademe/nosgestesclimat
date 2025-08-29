@@ -4,10 +4,16 @@ importer!:
     url: https://github.com/laem/futureco-data
   dans: logement
   les règles:
+    - piscine . construction:
+        titre: Construction d'une piscine
     - piscine . empreinte eau froide
-    - piscine . traitement chimique
-    - piscine . construction
+        titre: Empreinte eau froide d'une piscine
+    - piscine . traitement chimique:
+        titre: Traitement chimique d'une piscine
+    - piscine . profondeur:
+        titre: Profondeur d'une piscine
     - piscine . surface:
+        titre: Surface d'une piscine
         applicable si: piscine . type = 'creusée'
         question: Quelle est la taille de votre piscine ?
         unité: m2
@@ -16,6 +22,7 @@ importer!:
           5 x 5 mètres: 25
           5 x 8 mètres: 40
     - piscine . volume:
+        titre: Volume d'une piscine
         formule:
           variations:
             - si: piscine . type = 'creusée'
@@ -28,6 +35,7 @@ importer!:
     #     formule: logement . électricité . empreinte
 
 logement . piscine:
+  titre: Piscine
   icônes: 🏊‍♀️
   applicable si: logement . est une maison
   formule: empreinte / habitants
@@ -39,6 +47,7 @@ logement . piscine:
     Ce sont les travaux de construction, d'entretien, d'achat du matériel divers nécessaire (sureté, gestion de l'eau, produits chimiques sanitaires), et de chauffage qui sont les plus impactants pour le climat.
 
 logement . piscine . type:
+  titre: Type de piscine
   question: Votre logement dispose-t-il d'une piscine privée ?
   une possibilité:
     - pas de piscine
@@ -53,11 +62,14 @@ logement . piscine . type:
     on pourrait filtrer l'affichage de la question selon la surface de la maison par exemple.
 
 logement . piscine . type . creusée:
+  titre: Piscine creusée
 logement . piscine . type . hors sol:
+  titre: Piscine hors-sol
 logement . piscine . type . pas de piscine:
-  titre: Non
+  titre: Pas de piscine
 
 logement . piscine . empreinte:
+  titre: Empreinte d'une piscine
   formule:
     variations:
       - si: métrique = "carbone"
@@ -66,6 +78,7 @@ logement . piscine . empreinte:
         alors: empreinte eau
 
 logement . piscine . empreinte carbone:
+  titre: Empreinte carbone d'une piscine
   formule:
     variations:
       - si: piscine . type = 'pas de piscine'
@@ -105,6 +118,7 @@ logement . piscine . empreinte carbone:
     Il est important de noter que ce modèle de calcul est amélioré en continu. (Voir https://github.com/laem/futureco-data/issues/97)
 
 logement . piscine . empreinte eau:
+  titre: Empreinte eau d'une piscine
   formule:
     variations:
       - si: piscine . type = 'pas de piscine'
