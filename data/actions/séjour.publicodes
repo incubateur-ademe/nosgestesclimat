@@ -14,7 +14,7 @@ séjour . voiture . éco-conduite:
             - transport . train . présent
             - transport . car longue distance . présent
             - transport . deux roues . présent
-        alors: voiture . empreinte au kilomètre * voiture . km * réduction / séjour . voiture . voyageurs
+        alors: voiture . empreinte au kilomètre * voiture . km * réduction / séjour . voiture . voyageurs #Cas ou l'utilisateur vient en Hauts-de-France autrement qu'en voiture (proprio ; non proprio régulier)
       - sinon: transport . voiture . empreinte au kilomètre * voiture . km * réduction / séjour . voiture . voyageurs
   unité: kgCO2e
   description: |
@@ -38,16 +38,56 @@ séjour . voiture . opter transport commun:
     toutes ces conditions:
       - séjour . voiture . présent
       - séjour . voiture . km > 0
+  non applicable si: séjour . transports commun . présent
   icônes: 🚌
-  formule: ((voiture . empreinte au kilomètre * voiture . km) - (transports commun . type . bus . impact par km * voiture . km)) * part report modal
+  formule:
+    variations:
+      - si: 
+          toutes ces conditions:
+            - séjour . voiture . présent
+            - est défini: séjour . voiture . empreinte au kilomètre calculée
+            - séjour . voiture . empreinte au kilomètre calculée > 0
+        alors: ((séjour . voiture . empreinte au kilomètre calculée * voiture . km) - (impact par km bus * voiture . km)) * 15%
+      - sinon: ((transport . voiture . empreinte au kilomètre calculée * voiture . km) - (impact par km bus * voiture . km)) * part report modal
+#  formule: ((séjour . voiture . empreinte au kilomètre calculée * voiture . km) - (séjour . transports commun . type . bus . impact par km * voiture . km)) * séjour . voiture . opter transport commun . part report modal
+#  formule: 85% * séjour . voiture
   unité: kgCO2e
   description: |
 
-séjour . voiture . opter transport commun . part report modal:
-  titre: Part de déplacements en voiture faisable en TC #A variabiliser selon le lieu ? Pas pour une v1
-  formule: 15% #Valeur arbitraire et non sourcée
+séjour . voiture . part report modal:
+  titre: Part de déplacements en voiture faisables en TC #A variabiliser selon le lieu ? Pas pour une v1
+  formule: 15%
   note: |
     Valeur choisie arbitrairement et non (encore) sourcée
+
+séjour . voiture . opter transport commun . impact par km bus:
+# On copie colle la variable "séjour . transports commun . type . bus . impact par km". Cf. note pour les explication
+  formule: 0.113
+  unité: kgCO2e/km
+  note: |
+    Copié collé de la variable "séjour . transports commun . type . bus . impact par km"
+    On recrée une variable au sein de actions/séjour.publicodes pour palier au fait que publicodes ne lit pas la variable dans séjour.publicodes
+    si le choix transport commun n'est pas coché par l'utilisateur
+
+séjour . voiture . intensifier transport commun:
+  titre: Intensifier l'usage des transports en commun
+  applicable si: 
+    toutes ces conditions:
+      - séjour . voiture . présent
+      - séjour . voiture . km > 0
+      - séjour . transports commun . présent
+  icônes: 🚌↗️
+  formule:
+    variations:
+      - si: 
+          toutes ces conditions:
+            - séjour . voiture . présent
+            - est défini: séjour . voiture . empreinte au kilomètre calculée
+            - séjour . voiture . empreinte au kilomètre calculée > 0
+        alors: ((séjour . voiture . empreinte au kilomètre calculée * voiture . km) - (séjour . transports commun . type . bus . impact par km * voiture . km)) * part report modal
+      - sinon: ((transport . voiture . empreinte au kilomètre calculée * voiture . km) - (séjour . transports commun . type . bus . impact par km * voiture . km)) * part report modal
+  unité: kgCO2e
+  description: |
 
 séjour . voiture . sans voiture:
   titre: Essayez un séjour sans voiture 
@@ -76,10 +116,8 @@ séjour . deux roues . location deux roues électrique:
       - est défini: séjour . deux roues . type
       - séjour . deux roues . type = 'scooter électrique'
   formule: séjour . deux roues - recalcul
-  description: |
-    Blabla sur l'autopartage électrique et sur le fait que l'autonomie sera suffisante pour vous rendre en Hauts-de-France au regard des km renseignés
-  note: |
-    Blabla
+#  description: |
+#  note: |
 
 séjour . deux roues . location deux roues électrique . recalcul:
   valeur: séjour . deux roues

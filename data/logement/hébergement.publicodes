@@ -9,7 +9,7 @@ logement . hébergement:
       - aquatique
 
 logement . hébergement . nuitées:
-  question: Dans quel(s) type(s) d'hébergements allez-vous loger pendant votre séjour ?
+  question: Dans quel(s) type(s) d'hébergement(s) allez-vous loger pendant votre séjour ?
   titre: Nuitées d'hébergement
   mosaique:
     type: selection
@@ -30,7 +30,7 @@ logement . hébergement . nuitées:
 #        famille ou amis . présent: non
   icônes: 🏨
   description: |
-    Renseignez ici les différents types d'hébergements que vous occuperez pendant votre séjour.
+    Si jamais vous allez utiliser plusieurs types d'hébergements pendant votre séjour, cochez plusieurs réponses.
   formule:
     variations:
       - si: choix utilisateur
@@ -168,12 +168,12 @@ logement . hébergement . nuitées . hotel . nombre de nuitées:
   description: |
     Renseignez ici les nuits passées dans un hôtel, une chambre privée ou chambre d'hôtes.
   plancher: 0
-  par défaut: 1
+  par défaut: transport . durée séjour - 1
   note: La valeur par défaut est arbitraire et doit être calée avec HdF Tourisme.
-  suggestions:
-    un week-end: 1
-    un week-end prolongé: 2
-    une semaine: 6
+#  suggestions:
+#    un week-end: 1
+#    un week-end prolongé: 2
+#    une semaine: 6
 
 logement . hébergement . nuitées . empreinte résidence de tourisme:
   titre: Empreinte résidence de tourisme
@@ -196,12 +196,12 @@ logement . hébergement . nuitées . résidence de tourisme . nombre de nuitées
   description: |
     Renseignez ici les nuits passées en résidence de tourisme, apparhôtel ou vilage vacances
   plancher: 0
-  par défaut: 2
+  par défaut: transport . durée séjour - 1
   note: La valeur par défaut est arbitraire et doit être calée avec HdF Tourisme.
-  suggestions:
-    un week-end: 1
-    un week-end prolongé: 2
-    une semaine: 6
+#  suggestions:
+#    un week-end: 1
+#    un week-end prolongé: 2
+#    une semaine: 6
 
 logement . hébergement . nuitées . empreinte camping:
   titre: Empreinte emplacement en camping
@@ -232,12 +232,12 @@ logement . hébergement . nuitées . camping . nombre de nuitées:
   description: |
     Renseignez ici les nuits passées en camping (tente, hamac, bungalow...).
   plancher: 0
-  par défaut: 2
+  par défaut: transport . durée séjour - 1
   note: La valeur par défaut est arbitraire et doit être calée avec HdF Tourisme.
-  suggestions:
-    un week-end: 1
-    un week-end prolongé: 2
-    une semaine: 6
+#  suggestions:
+#    un week-end: 1
+#    un week-end prolongé: 2
+#    une semaine: 6
 
 logement . hébergement . nuitées . empreinte auberge de jeunesse:
   titre: Empreinte auberge de jeunesse
@@ -271,12 +271,12 @@ logement . hébergement . nuitées . auberge de jeunesse . nombre de nuitées:
   description: |
     Renseignez ici les nuits passées en auberge de jeunesse (dortoir).
   plancher: 0
-  par défaut: 2
+  par défaut: transport . durée séjour - 1
   note: La valeur par défaut est arbitraire et doit être calée avec HdF Tourisme.
-  suggestions:
-    un week-end: 1
-    un week-end prolongé: 2
-    une semaine: 6
+#  suggestions:
+#    un week-end: 1
+#    un week-end prolongé: 2
+#    une semaine: 6
 
 logement . hébergement . nuitées . empreinte locations:
   titre: Empreinte locations meublées
@@ -312,12 +312,12 @@ logement . hébergement . nuitées . locations . nombre de nuitées:
   description: |
     Renseignez ici les nuits passées en location meublée (Airbnb, Abritel...).
   plancher: 0
-  par défaut: 2
+  par défaut: transport . durée séjour - 1
   note: La valeur par défaut est arbitraire et doit être calée avec HdF Tourisme.
-  suggestions:
-    un week-end: 1
-    un week-end prolongé: 2
-    une semaine: 6
+#  suggestions:
+#    un week-end: 1
+#    un week-end prolongé: 2
+#    une semaine: 6
 
 logement . hébergement . nuitées . empreinte famille ou amis:
   titre: Empreinte famille ou amis
@@ -347,8 +347,13 @@ logement . hébergement . aquatique:
     toutes ces conditions:
       - est défini: nuitées . famille ou amis . présent
       - nuitées . famille ou amis . présent
+      - est non défini: nuitées . hotel . présent
+      - est non défini: nuitées . camping . présent
+      - est non défini: nuitées . résidence de tourisme . présent
+      - est non défini: nuitées . locations . présent
+      
   titre: Piscines, spa, jacuzzi
-  question: Votre logement est-t-il équipé d'une piscine ou d'un spa, sauna, bain nordique, etc. ?
+  question: Votre hébergement est-t-il équipé d'une piscine ou d'un spa, sauna, bain nordique, etc. ?
   mosaique:
     type: selection
     options:
@@ -381,7 +386,7 @@ logement . hébergement . aquatique . choix utilisateur:
       - est défini: piscine chauffée . présent
       - est défini: spa jacuzzi . présent
 
-#Idéalement il faudrait aussi diviser par un nombre d'usager moyen par jour --> faute de données on divise une uniquement par le nombre de jours d'utilisabilité de la piscine
+#Idéalement il faudrait aussi diviser par un nombre d'usager moyen par jour --> faute de données on divise une uniquement par le nombre de jours d'utilisabilité de la piscine (ce qui est bien aussi car on impute l'empreinte que le répondant l'utilise ou pas pendant son séjour)
 logement . hébergement . aquatique . empreinte totale:
   formule:
     somme:
@@ -409,10 +414,10 @@ logement . hébergement . aquatique . piscine non chauffée . présent:
 ###Impossible de faire fonctionner une fonction 'contexte' ou les règles importées de futureco-data 
 ###--> on inscrit en dur l'empreinte
 logement . hébergement . aquatique . piscine non chauffée . empreinte annuelle:
-  formule: 538.51
+  formule: 538
   unité: kgCO2e
   note: |
-    Impossible de faire fonctionner une fonction 'contexte' ou les règles importées de futureco-data --> on inscrit en dur l'empreinte
+    Impossible de faire fonctionner une fonction 'contexte' ou les règles importées de futureco-data --> on inscrit en dur l'empreinte dans le modèle
     On considère donc une piscine de 60 m2 utilisée seulement 4 mois dans l'année, ce qui semble raisonnable pour une piscine non chaufée dans les Hauts-de-France
     L'empreinte se décompose comme telle : 
      - Empreinte eau froide : 35.46
@@ -449,10 +454,10 @@ logement . hébergement . aquatique . piscine chauffée . présent:
 ###Impossible de faire fonctionner une fonction 'contexte' ou les règles importées de futureco-data 
 ###--> on inscrit en dur l'empreinte
 logement . hébergement . aquatique . piscine chauffée . empreinte annuelle:
-  formule: 2042.06
+  formule: 2042
   unité: kgCO2e
   note: |
-    Impossible de faire fonctionner une fonction 'contexte' ou les règles importées de futureco-data --> on inscrit en dur l'empreinte
+    Impossible de faire fonctionner une fonction 'contexte' ou les règles importées de futureco-data --> on inscrit en dur l'empreinte dans le modèle
     On considère donc une piscine de 60 m2 utilisée 12 mois dans l'année, ce qui semble logique pour une piscine chaufée
     L'empreinte se décompose comme telle : 
      - Empreinte eau froide : 35.46
@@ -490,19 +495,19 @@ logement . hébergement . aquatique . spa jacuzzi . présent:
 ###Impossible de faire fonctionner une fonction 'contexte' ou les règles importées de futureco-data 
 ###--> on inscrit en dur l'empreinte
 logement . hébergement . aquatique . spa jacuzzi . empreinte annuelle:
-  formule: 1647.96
+  formule: 1701
   unité: kgCO2e
   note: |
     Impossible de faire fonctionner une fonction 'contexte' ou les règles importées de futureco-data --> on inscrit en dur l'empreinte
-    On considère donc une piscine de 60 m2 utilisée 12 mois dans l'année, ce qui semble logique pour une piscine chaufée
+    On considère donc un spa d'environ 20 m2 (5m de diamètre) utilisée 12 mois dans l'année, ce qui semble logique pour une piscine chaufée
     L'empreinte se décompose comme telle : 
-     - Empreinte eau froide : 35.46
+     - Empreinte eau froide : 11.82
      - Chauffage : 1374,71 (chauffage sans pompe à chaleur)
      - Traitement chimique : 24.31
      - Pompe de filtrage	: 194,08
-     - Construction : 414.04
+     - Construction : 96.16
     /!\ L'estimation de l'empreinte du chauffage, du traitement chimique et du filtrage n'est pas fonction du volume d'eau à traiter 
-    --> l'empreinte de ces trois traitements est donc identique entre une piscine chaufée de 60 m2 et un spa.
+    --> l'empreinte de ces trois traitements est donc identique entre une piscine chaufée de 60 m2 et un spa d'environ 20 m2.
 #  valeur: logement . piscine
 #  contexte:
 #    métrique: "'carbone'"

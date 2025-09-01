@@ -47,7 +47,7 @@ divers . loisirs . activité:
   question: Quelles types d'activités comptez-vous faire pendant votre séjour ?
   titre: Activités culturelles et de loisirs
   description: |
-    Blablabla
+    Renseignez ce que vous pensez faire pendant votre séjour. 
   formule:
     variations:
       - si: choix utilisateur
@@ -567,7 +567,7 @@ divers . loisirs . notif hainaut:
     🌳 Espaces verts :
       - [Jardin de la Rhônelle (Valenciennes)](https://www.tourisme-en-hautsdefrance.com/offres/jardin-de-la-rhonelle-valenciennes-fr-3493379/)
 
-divers . loisirs . notif lens henin:
+divers . loisirs . notif lens-hénin:
   type: notification
   formule:
     toutes ces conditions:
@@ -875,8 +875,8 @@ divers . loisirs . notif villes soeurs:
 divers . loisirs . activité . empreinte par défaut:
   formule:
     somme:
-      - empreinte concerts et spectacles
       - empreinte musées et monuments
+      - empreinte activité nature
   unité: kgCO2e
   note: Valeur non sourcée. A discuter avec Hauts-de-France Tourisme !
 
@@ -930,6 +930,7 @@ divers . loisirs . activité . concerts et spectacles . moyenne macro unité:
 
 divers . loisirs . activité . concerts et spectacles . moyenne macro française:
   formule: empreinte branche . R90 * 1000000 kgCO2e/ktCO2e + empreinte branche . J59 * 1000000 kgCO2e/ktCO2e * 0.92
+# formule: empreinte branche . R90 par hab + empreinte branche . J59 par hab * 0.92
   unité: kgCO2e
   note: |
     Nous tirons la moyenne française des calculs effectués par le SDES (Service des Données et Études Statistiques). Elle correspond à la somme des domaines correspondant aux codes NAF R90 ("Activités créatives, artistiques et de spectacles") et J59.1 ("Activités cinématographiques, vidéo et de télévision").
@@ -1080,8 +1081,11 @@ divers . loisirs . activité . empreinte activité nature:
     toutes ces conditions:
       - est défini: activité nature . présent
       - activité nature . présent
-  formule: 1
+  formule: 0
   unité: kgCO2e
+  note: |
+    On considère que les activités de pleines natures ne sont pas carbonées (il y a le choix activités motorisées pour ça) et qu'elles se
+    font à pied ou à vélo (dont les km sont pris en compte dans les questions séjour)
 
 divers . loisirs . activité . naviguation:
   titre: Activités de naviguation (barque, voile, etc.)
@@ -1098,6 +1102,7 @@ divers . loisirs . activité . empreinte naviguation:
       - naviguation . présent
   formule: 1
   unité: kgCO2e
+  note: L'empreinte d'une journée de naviguation est fixée à 1 en attendant de mieux sourcer cette donnée.
 
 #divers . loisirs . activité . tourisme:
 #  titre: Activités de tourisme (motorisées ou non)
@@ -1128,8 +1133,17 @@ divers . loisirs . activité . empreinte activité motorisée:
     toutes ces conditions:
       - est défini: activité motorisée . présent
       - activité motorisée . présent
-  formule: 20
+  formule: estimation
   unité: kgCO2e
+  note: |
+    On considère en première approximation l'empreinte de 30 km fait en moto de 125 cm3
+
+divers . loisirs . activité . empreinte activité motorisée . estimation:
+  valeur: transport . deux roues . empreinte
+  contexte:
+    transport . deux roues . présent: oui
+    transport . deux roues . type: "'moto inf 250'"
+    transport . deux roues . km: 50
 
 divers . loisirs . activité . footing:
   titre: Activités sportives (footing, vélo)
@@ -1144,8 +1158,9 @@ divers . loisirs . activité . empreinte footing:
     toutes ces conditions:
       - est défini: footing . présent
       - footing . présent
-  formule: 1
+  formule: 0
   unité: kgCO2e
+  note: Nous considérons l'empreinte du footing comme nulle et nous ne cherchons pas à évaluer une hypothétique surconsommation de nourriture
 
 divers . loisirs . activité . journée spa:
   titre: Détente en établissements spécialisés (spa, thalassothérapie, etc.)
@@ -1154,14 +1169,25 @@ divers . loisirs . activité . journée spa:
 divers . loisirs . activité . journée spa . présent:
   question: Allez-vous faire des activités sportives  
 
+#Idéalement il faudrait aussi diviser par un nombre d'usager moyen par jour su spa --> faute de données on divise une uniquement par le nombre de jours d'utilisabilité de la piscine fixé à 365
 divers . loisirs . activité . empreinte journée spa:
   titre: Empreinte journée spa
   applicable si:
     toutes ces conditions:
       - est défini: journée spa . présent
       - journée spa . présent
-  formule: 1
+  formule: 
+    variations:
+      - si: logement . hébergement . aquatique . spa jacuzzi . présent
+        alors: 0 #On considère que l'utilisateur utilise le spa/jacuzzi qu'il a renseigné dans son hébergement (l'empreinte est pris en compte à ce moment là)
+      - sinon: estimation / 365 #L'empreinte est considérée sur 1 an d'utilisation
   unité: kgCO2e
+
+divers . loisirs . activité . empreinte journée spa . estimation:
+  valeur: logement . hébergement . aquatique . empreinte spa jacuzzi
+  contexte:
+    logement . hébergement . nuitées . hotel . présent: oui
+    logement . hébergement . aquatique . spa jacuzzi . présent: oui
 
 divers . loisirs . activité . empreinte édition:
   titre: Empreinte édition (livres, presse et logiciels)
