@@ -7,8 +7,8 @@ It could be extended to publish more rules used in the UI.
 
 import fs from 'fs'
 import path from 'path'
-import generateExtendedSituationDottedNames from './situation/generateExtendedSituationDottedNames.mjs'
-import { getLocalRules, getArgs } from '../tests/commons.mjs'
+import generateExtendedSituationDottedNames from '../situation/generateExtendedSituationDottedNames.mjs'
+import { getLocalRules, getArgs } from '../../tests/commons.mjs'
 
 const { country, language, markdown } = getArgs()
 const localRules = await getLocalRules(country, language)
