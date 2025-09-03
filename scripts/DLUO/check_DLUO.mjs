@@ -38,21 +38,70 @@ const DLUOCalendar = Object.fromEntries(
     .sort(([a], [b]) => new Date(a) - new Date(b))
 )
 
+const cardProperties = {
+  'Nom de la tâche': {
+    title: [
+      {
+        text: {
+          content: `DLUO - ${new Date().toLocaleDateString('fr-FR')}`
+        }
+      }
+    ]
+  },
+  'Sprint associé': {
+    relation: [
+      {
+        id: '1cb6523d57d7805db51ef8cbeef7162e'
+      }
+    ]
+  },
+  'Personne assignée': {
+    people: [
+      // Clément
+      {
+        object: 'user',
+        id: '4136a322774447a993e5d1c6e996f3cb'
+      },
+      // Julie
+      {
+        object: 'user',
+        id: '55897f63c5d343af86415bfb291c8765'
+      },
+      // Quentin
+      {
+        object: 'user',
+        id: '1f8d872b594c81229c630002eff848ba'
+      }
+    ]
+  },
+  Etat: {
+    status: {
+      name: 'En spécification'
+    }
+  },
+  Etiquette: {
+    multi_select: [
+      {
+        name: '🍃 Modèle'
+      }
+    ]
+  },
+  Prio: {
+    select: {
+      name: 'P1'
+    }
+  }
+}
+
 if (Object.keys(DLUOCalendar).length === 0) {
   // Générer un objet Notion même quand il n'y a pas de DLUO dépassée
   const notionPayload = {
     parent: { database_id: 'NOTION_DATABASE_PLACEHOLDER' },
-    properties: {
-      Nom: {
-        title: [
-          {
-            text: {
-              content: `DLUO - ${new Date().toLocaleDateString('fr-FR')}`
-            }
-          }
-        ]
-      }
+    icon: {
+      type: 'emoji',
+      emoji: '📅'
     },
+    properties: cardProperties,
     children: [
       {
         object: 'block',
@@ -149,17 +198,11 @@ if (Object.keys(DLUOCalendar).length === 0) {
   // --- Objet JavaScript pour Notion ---
   const notionPayload = {
     parent: { database_id: 'NOTION_DATABASE_PLACEHOLDER' },
-    properties: {
-      Nom: {
-        title: [
-          {
-            text: {
-              content: `DLUO - ${new Date().toLocaleDateString('fr-FR')}`
-            }
-          }
-        ]
-      }
+    icon: {
+      type: 'emoji',
+      emoji: '📅'
     },
+    properties: cardProperties,
     children: [
       {
         object: 'block',
