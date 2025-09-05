@@ -6,6 +6,23 @@ commun . mix électrique . empreinte carbone:
   titre: Intensité carbone du mix électrique brésilien
   formule: 0.045
   [Electricity Map](https://app.electricitymaps.com/zone/BR-NE/all/yearly),2024
+
+transport . uber . km:
+titre: Trajets en Uber (ou applis similaires)
+question: Combien de kilomètres parcourez-vous en Uber (ou équivalent) par an ?
+description: |
+Les services de VTC comme Uber ou 99 sont très utilisés dans les grandes villes brésiliennes.
+Leur empreinte carbone est proche de celle d’une voiture thermique, car la majorité des
+véhicules roulent à l’essence ou à l’éthanol.
+unité: km
+type: nombre
+par défaut: 0
+formule: nombre * 0.18 / 1000
+note: |
+Facteur d’émission basé sur une moyenne essence/éthanol : ~0,18 kgCO₂/km.
+À affiner avec des données spécifiques au parc automobile brésilien.
+source: |
+IPEA - Mobilidade Urbana no Brasil
   
   transport . train . km:
   suggestions:
@@ -28,12 +45,42 @@ transport . avion . moyen courrier . heures de vol:
 alimentation. boissons. chaudes.
   suggestions:
 Retirer chicorée
+
+alimentation . viande . boeuf:
+titre: Viande bovine
+description: |
+L’élevage bovin brésilien a un impact carbone particulièrement élevé,
+notamment en raison de la déforestation et de l’élevage extensif.
+facteur: 35 # kgCO₂e/kg (moyenne Brésil, contre ~25 en Europe)
+source: |
+Our World in Data - Environmental impacts of beef
+EMBRAPA - Pecuária e emissões de GEE
   
 logement. consommation. électricité : 
   suggestions:
   1 kWh = 0.909 R$
     Dépenses entrées R$/0.909 = Conso kWh
     https://fr.globalpetrolprices.com/Brazil/electricity_prices/
+
+logement . consommation . ventilation:
+titre: Ventilation (ventilateurs)
+question: Combien de ventilateurs utilisez-vous dans votre logement ?
+description: |
+Dans le Nordeste brésilien, les ventilateurs sont très utilisés pour le confort thermique.
+Un ventilateur standard de 45 W, utilisé environ 10 heures par jour pendant 60 jours,
+consomme environ 30 kWh par an.
+Cette consommation reste nettement inférieure à celle de la climatisation.
+unité: kWh/an
+type: nombre
+par défaut: 0
+formule: nombre * 30
+note: |
+- Consommation moyenne par ventilateur estimée à 30 kWh/an
+- Source : Vattenfall - Consommation d’un ventilateur,
+Butagaz - Consommation d’un ventilateur.
+
+Logement. consommation. chauffage :
+On peut le retirer, presque personne n'utilise de chauffage à Bahia.
   
 logement.consommation. produits. neufs :
  suggestions:
@@ -42,19 +89,26 @@ Moins de 200$R/mois
  Plus de 500$R/mois 
 (Avec taux de conversion et prise en compte coût de la vie)
 
-services.sociétaux :
-suggestions : 
-  Nous attribuons l'empreinte des services publics (éducation, santé...) et marchands (télécom, assurance...) à chaque citoyenne et citoyen de façon égale.
-  Au Brésil, cela représente environ 0,37 tonne de CO₂e par personne et par an.
-Note :  
-Valeur estimée en appliquant un ratio des dépenses publiques (BR / FR)
-et un ajustement selon l'intensité carbone du mix électrique (BR vs FR).
-Voir hypothèses : dépense BR = 4336 €/hab ; dépense FR (OCDE) = 23477 €/hab ; intensités mix elec = 0.045 (BR) / 0.034 (FR) kgCO2/kWh.
-Calcul : 
-Ratio = Dépenses France / Dépenses Brésil = 4336/23477 ≈ 0,185
-Ratio énergie = Intensite France /Intensite Brésil =0,0340/0,045 ≈ 1,324
-Empreinte Brésil = 1,5×0,185×1,324≈0,37 tCO₂e / pers
-https://fr.countryeconomy.com/gouvernement/depenses?anio=2023
+services.sociétaux:
+description:  
+Nous attribuons l'empreinte des services publics (éducation, santé...) et marchands (télécoms, assurance...) à chaque citoyenne et citoyen de façon égale cela représente autour de 0,3 tonnes de CO2e par personne.
+> Le calcul de l'empreinte des services sociétaux pour le Brésil est basé sur celui des services sociétaux français.
+C'est donc une première estimation qui pourra être affinée dans le futur.
+
+Ce poste inclut l'empreinte des services publics et des services marchands
+essentiels (télécom, assurances, poste, etc.), répartie par habitant.
+
+formule: (services_publics + services_marchands) * (budget_Brésil / population_Brésil) / (budget_France / population_France)
+avec:
+E_FR: 1.5 # tCO2e / personne / an
+budget_Bresil_per_habitant: 4336 € / hab 
+budget_France_per_habitant: 23477 € / hab 
+calcul:
+ratio_depenses: 4336 / 23477 ≈ 0.1847
+Empreinte_Bresil: 1.5 * 0.1847 ≈ 0.3 tCO2e / personne / an
+note: 
+Estimation de premier ordre — méthode proportionnelle aux dépenses publiques
+(approche identique à l'exemple Tunisie).
 
 actions . transport . uber . réduire:
   titre: Remplacer certains trajets Uber par le bus ou le métro
