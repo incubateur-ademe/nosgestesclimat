@@ -4,6 +4,7 @@
  */
 import fs from 'fs'
 import path from 'path'
+import generateExtendedSituationDottedNames from './scripts/situation/generateExtendedSituationDottedNames.mjs'
 
 const everyModelFolder = 'public'
 const originModelFile = 'co2-model.FR-lang.fr.json'
@@ -31,6 +32,12 @@ if (!fs.existsSync('types')) {
 // Generate the DottedName type
 fs.writeFileSync('./types/dottedNames.d.ts', generateDottedNamesType(model))
 
+// Generate the ExtendedSituationDottedNames type
+fs.writeFileSync(
+  './types/extendedSituationDottedNames.d.ts',
+  generateExtendedSituationDottedNamesTypes(model)
+)
+
 // Generate the Categories type
 fs.writeFileSync('./types/categories.d.ts', generateCategoriesTypes(model))
 
@@ -40,7 +47,10 @@ fs.writeFileSync(
   generateSubcategoriesTypes(model)
 )
 
-console.log(`✅ dottedNames, categories and subcategories types generated`)
+console.log(
+  `✅ dottedNames, extendedSituationDottedNames, categories and subcategories types generated`
+)
+
 console.log('➡️ Packaging done')
 
 function generateDottedNamesType(model) {
@@ -80,5 +90,14 @@ function generateSubcategoriesTypes(model) {
   export type Subcategories =
   ${subcategories.map((subcategory) => `  | "${subcategory}"`).join('\n')}
   `
+  return dFile
+}
+
+function generateExtendedSituationDottedNamesTypes(model) {
+  const questionDottedName = generateExtendedSituationDottedNames(model)
+  const dFile = `
+export type ExtendedSituationDottedNames =
+${questionDottedName.map((dottedName) => `  | "${dottedName}"`).join('\n')}
+`
   return dFile
 }
