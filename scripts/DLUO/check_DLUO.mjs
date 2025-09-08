@@ -142,7 +142,7 @@ if (Object.keys(DLUOCalendar).length === 0) {
     )
 
     const rulesList = rulesFromParent.map(([name]) => name)
-    let content = rulesList.join(', ')
+    let content = rulesList.join('\n')
 
     // Limitation à 1900 caractères (marge de sécurité sous les 2000 de Notion)
     if (content.length > 1900) {
@@ -161,9 +161,8 @@ if (Object.keys(DLUOCalendar).length === 0) {
 
       const remainingCount = rulesList.length - truncatedRules.length
       content =
-        truncatedRules.join(', ') + ` ... (+${remainingCount} autres règles)`
+        truncatedRules.join('\n') + ` \n... (+${remainingCount} autres règles)`
     }
-
     return content
   }
 
@@ -194,7 +193,6 @@ if (Object.keys(DLUOCalendar).length === 0) {
       })
     })
   })
-
   // --- Objet JavaScript pour Notion ---
   const notionPayload = {
     parent: { database_id: 'NOTION_DATABASE_PLACEHOLDER' },
