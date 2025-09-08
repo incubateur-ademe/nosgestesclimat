@@ -31,6 +31,7 @@ const baseEngine = new Engine(baseRules, {
   logger: disabledLogger,
   strict: { situation: false }
 })
+
 const optimEngine = new Engine(optimRules, {
   logger: disabledLogger,
   strict: { situation: false, noOrphanRule: false }

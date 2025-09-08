@@ -63,11 +63,7 @@ export function compressRules(engine, jsonPathWithoutExtension) {
     )
   }
   const toAvoid = (ruleNode) => {
-    return (
-      rulesToAvoid.includes(ruleNode.dottedName) ||
-      ruleNode.rawNode['par défaut']?.['variations'] ||
-      ruleNode.rawNode['par défaut']?.['contexte']
-    )
+    return rulesToAvoid.includes(ruleNode.dottedName)
   }
 
   const foldedRules = serializeParsedRules(
