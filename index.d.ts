@@ -2,14 +2,26 @@ import { Evaluation, Rule, RuleNode, Situation } from 'publicodes'
 import { Categories as GeneratedCategories } from './types/categories.d'
 import { DottedName as GeneratedDottedName } from './types/dottedNames'
 import { Subcategories as GeneratedSubcategories } from './types/subcategories.d'
+import { ExtendedSituationDottedNames as GeneratedExtendedSituationDottedNames } from './types/extendedSituationDottedNames'
 
 export type DottedName = GeneratedDottedName
 export type Categories = GeneratedCategories
 export type Subcategories = GeneratedSubcategories
+export type ExtendedSituationDottedNames = GeneratedExtendedSituationDottedNames
 
-export type NGCRuleNode = RuleNode & {
-  rawNode: NGCRule
-}
+export type ExtendedSituation = Record<
+  ExtendedSituationDottedNames,
+  | {
+      nodeValue: Evaluation
+      source: 'answered' | 'default'
+    }
+  | {
+      nodeValue?: undefined
+      source: 'omitted'
+    }
+>
+
+export type NGCRuleNode = RuleNode & { rawNode: NGCRule }
 
 export type NGCRulesNodes = Record<DottedName, NGCRuleNode>
 
@@ -54,10 +66,7 @@ export type migrationType = {
   valuesToMigrate: Record<DottedName, Record<string, NodeValue>>
 }
 
-export type RegionAuthor = {
-  nom: string
-  url?: string
-}
+export type RegionAuthor = { nom: string; url?: string }
 
 export type RegionCode = string
 
