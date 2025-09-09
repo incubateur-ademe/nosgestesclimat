@@ -14,8 +14,10 @@ séjour . voiture . éco-conduite:
             - transport . train . présent
             - transport . car longue distance . présent
             - transport . deux roues . présent
-        alors: voiture . empreinte au kilomètre * voiture . km * réduction / séjour . voiture . voyageurs #Cas ou l'utilisateur vient en Hauts-de-France autrement qu'en voiture (proprio ; non proprio régulier)
-      - sinon: transport . voiture . empreinte au kilomètre * voiture . km * réduction / séjour . voiture . voyageurs
+        alors: séjour . voiture - recalcul séjour
+      - sinon: transport . voiture - recalcul transport 
+#        alors: voiture . empreinte au kilomètre * voiture . km * réduction / séjour . voiture . voyageurs #Cas ou l'utilisateur vient en Hauts-de-France autrement qu'en voiture (proprio ; non proprio régulier)
+#      - sinon: transport . voiture . empreinte au kilomètre * voiture . km * réduction / séjour . voiture . voyageurs
   unité: kgCO2e
   description: |
     Sécurité, réduction des émissions de gaz à effet de serre, économies de carburant : l’écoconduite n’a que des avantages. 
@@ -26,6 +28,21 @@ séjour . voiture . éco-conduite:
   note: |
     Voir le [Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter)
 
+séjour . voiture . éco-conduite . recalcul séjour:
+  valeur: séjour . voiture
+  contexte:
+    séjour . voiture . empreinte au kilomètre calculée: 85% * séjour . voiture . empreinte au kilomètre calculée
+  note: |
+    Hypothèse de réduction de 15% ([Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter))
+
+séjour . voiture . éco-conduite . recalcul transport:
+  valeur: transport . voiture
+  contexte:
+    transport . voiture . empreinte au kilomètre calculée: 85% * transport . voiture . empreinte au kilomètre calculée
+  note: |
+    Hypothèse de réduction de 15% ([Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter))
+
+
 séjour . voiture . éco-conduite . réduction:
   titre: Gain de consommation éco-conduite
   formule: 15%
@@ -33,7 +50,7 @@ séjour . voiture . éco-conduite . réduction:
     Hypothèse de réduction de 15% ([Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter))
 
 séjour . voiture . opter transport commun:
-  titre: Se déplacer en transport en commun
+  titre: Se déplacer (en partie) en transport en commun
   applicable si: 
     toutes ces conditions:
       - séjour . voiture . présent
@@ -129,9 +146,9 @@ séjour . voiture . location réduire taille:
   applicable si:
     toutes ces conditions : 
       - séjour . voiture . km > 0
-      - une de ces conditions:
-          - est non défini: transport . voiture . utilisateur
-          - transport . voiture . utilisateur = 'non régulier'
+#      - une de ces conditions:
+#          - est non défini: transport . voiture . utilisateur
+#          - transport . voiture . utilisateur = 'non régulier'
   non applicable si:
     une de ces conditions:
       - séjour . voiture . motorisation = 'petite'
@@ -158,11 +175,11 @@ séjour . voiture . location voiture électrique:
   icônes: 🔌🚗
   applicable si:
     toutes ces conditions:
-      - voiture . km > 0
-      - voiture . km < 401
-      - une de ces conditions:
-          - est non défini: transport . voiture . utilisateur
-          - transport . voiture . utilisateur = 'non régulier'
+      - séjour . voiture . km > 0
+      - séjour . voiture . km < 401
+#      - une de ces conditions:
+#          - est non défini: transport . voiture . utilisateur
+#          - transport . voiture . utilisateur = 'non régulier'
   non applicable si:
     une de ces conditions:
       - séjour . voiture . motorisation = 'électrique'
@@ -173,12 +190,11 @@ séjour . voiture . location voiture électrique:
               - transport . voiture . utilisateur = 'propriétaire covoit'
               - transport . voiture . utilisateur = 'régulier non propriétaire'
               - transport . voiture . utilisateur = 'régulier non propriétaire covoit'
-  formule: transport . voiture - recalcul
+  formule: séjour . voiture - recalcul
   description: |
     Les véhicules électriques sont des modes de transport écologiques notamment si ces derniers sont partagés et c'est ce que vous faites, bravo ! Et ne vous inquiètez pas, au regard des km que vous avez renseignés, l'autonomie de la batterie sera suffisante pour votre séjour en Hauts-de-France.
   note: |
     On considère une autonomie de la batterie de 400 km. Cette hypothèse n'est pas issue de la littérature mais arrêtée arbitrairement
-
 
 séjour . voiture . location voiture électrique . recalcul:
   valeur: séjour . voiture
