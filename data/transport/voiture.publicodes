@@ -1,6 +1,6 @@
 ### Il faut revoir le modèle en fonction des différentes possibilités (proprio, covoit ou location/empreint)
 transport . voiture:
-  applicable si: présent
+#  applicable si: présent
   titre: Voiture
   icônes: 🚘
   formule:
@@ -10,7 +10,9 @@ transport . voiture:
       - sinon:
           variations:
             - si:
-                est défini: utilisateur
+                toutes ces conditions:
+                  - transport . voiture . présent
+                  - est défini: utilisateur
               alors:
                 variations:
                   - si:
@@ -31,8 +33,25 @@ transport . voiture:
                         - une de ces conditions:
                           - utilisateur = 'régulier non propriétaire'
                           - utilisateur = 'régulier non propriétaire covoit'
+                        - motorisation = 'hybride'
+                    alors: empreinte régulier non propriétaire hybride                    
+#                  - si:
+#                      toutes ces conditions:
+#                        - utilisateur = 'régulier non propriétaire covoit'
+#                        - motorisation = 'thermique'
+#                    alors: empreinte régulier non propriétaire thermique covoit
+                  - si:
+                      toutes ces conditions:
+                        - une de ces conditions:
+                          - utilisateur = 'régulier non propriétaire'
+                          - utilisateur = 'régulier non propriétaire covoit'
                         - motorisation = 'électrique'
                     alors: empreinte régulier non propriétaire électrique
+#                  - si:
+#                      toutes ces conditions:
+#                        - utilisateur = 'régulier non propriétaire covoit'
+#                        - motorisation = 'électrique'
+#                    alors: empreinte régulier non propriétaire électrique covoit
                   - si: 
                       toutes ces conditions:
                         - utilisateur = 'non régulier'
@@ -41,9 +60,29 @@ transport . voiture:
                   - si: 
                       toutes ces conditions:
                         - utilisateur = 'non régulier'
+                        - motorisation = 'hybride'
+                    alors: empreinte non régulier hybride  
+                  - si: 
+                      toutes ces conditions:
+                        - utilisateur = 'non régulier'
                         - motorisation = 'électrique'
                     alors: empreinte non régulier électrique
-            - sinon: empreinte moyenne
+#            - sinon: empreinte moyenne        
+            - si:
+                toutes ces conditions:
+                  - transport . voiture . présent
+                  - est non défini: utilisateur
+              alors: empreinte moyenne
+            - sinon: #On introduit une différence dans la valeur par défaut car en entrée de la variable "voiture" on n'a pas de applicable si: voiture . présent --> la valeur par défaut est alors imputée aussi si l'utilisateur coche train, deux roues ou car, ce qu'on ne veut pas
+                variations:
+                  - si:
+                      une de ces conditions:
+                        - transport . train . présent
+                        - transport . deux roues . présent
+                        - transport . car longue distance . présent
+                    alors: 0
+                  - sinon: empreinte par défaut #pour le cas où l'utilisateur répond "jnsp" à la mosaique de transport pour venir en HdF
+#            - sinon: empreinte par défaut #pour le cas où l'utilisateur répond "jnsp" à la mosaique de transport pour venir en HdF
   unité: kgCO2e
 #  description: |
 #    ![](https://upload.wikimedia.org/wikipedia/commons/9/9a/Congestion_caused_by_a_road_accident%2C_Algarve%2C_Portugal.jpg)
@@ -60,6 +99,7 @@ transport . voiture:
 transport . voiture . km:
 #  ordre: 1
   titre: Km en voiture
+  applicable si: voiture . présent
   question: Quelle distance allez-vous parcourir en voiture pour aller et revenir de votre lieu de séjour  ?
   description: |
     Ne cherchez pas à renseignez le kilométrage exact, l'arrondi à la dizaine ou centaine supérieure fera l'affaire.
@@ -190,6 +230,24 @@ transport . voiture . empreinte moyenne:
         voiture . motorisation: "'thermique'"
         voiture . thermique . carburant: "'essence E5 ou E10'"
 
+transport . voiture . empreinte par défaut:
+  valeur: voiture . empreinte calculée
+  contexte:
+    voiture . présent: oui
+    voiture . km: 500
+    voiture . voyageurs: transport . voyageurs
+    voiture . utilisateur: "'propriétaire'"
+    voiture . gabarit: "'berline'"
+    voiture . motorisation: "'thermique'"
+    voiture . thermique . carburant: "'essence E5 ou E10'"
+    voiture . thermique . consommation aux 100:
+      valeur: voiture . thermique . consommation estimée
+      contexte:
+        voiture . utilisateur: "'propriétaire'"
+        voiture . gabarit: "'berline'"
+        voiture . motorisation: "'thermique'"
+        voiture . thermique . carburant: "'essence E5 ou E10'"
+
 transport . voiture . empreinte régulier non propriétaire thermique:
   valeur: voiture . empreinte calculée
   contexte:
@@ -198,8 +256,30 @@ transport . voiture . empreinte régulier non propriétaire thermique:
     voiture . thermique . consommation aux 100:
       valeur: voiture . thermique . consommation estimée
       contexte:
-        voiture . utilisateur: "'propriétaire'" #Nécessaire pour la variable "consommation au 100"
+        voiture . utilisateur: "'propriétaire'" #Nécessaire pour la variable "consommation aux 100"
         voiture . thermique . carburant: "'essence E5 ou E10'"
+
+transport . voiture . empreinte régulier non propriétaire hybride:
+  valeur: voiture . empreinte calculée
+  contexte:
+    voiture . utilisateur: "'propriétaire'" #Nécessaire pour la variable "carburant"
+    voiture . thermique . carburant: "'essence E5 ou E10'"
+    voiture . thermique . consommation aux 100:
+      valeur: voiture . thermique . consommation estimée
+      contexte:
+        voiture . utilisateur: "'propriétaire'" #Nécessaire pour la variable "consommation aux 100"
+        voiture . thermique . carburant: "'essence E5 ou E10'" 
+
+#transport . voiture . empreinte régulier non propriétaire thermique covoit:
+#  valeur: voiture . empreinte calculée
+#  contexte:
+#    voiture . utilisateur: "'propriétaire covoit'" #Nécessaire pour la variable "carburant"
+#    voiture . thermique . carburant: "'essence E5 ou E10'"
+#    voiture . thermique . consommation aux 100:
+#      valeur: voiture . thermique . consommation estimée
+#      contexte:
+#        voiture . utilisateur: "'propriétaire covoit'" #Nécessaire pour la variable "consommation aux 100"
+#        voiture . thermique . carburant: "'essence E5 ou E10'"
 
 transport . voiture . empreinte régulier non propriétaire électrique:
   valeur: voiture . empreinte calculée
@@ -210,23 +290,47 @@ transport . voiture . empreinte régulier non propriétaire électrique:
       contexte:
         voiture . utilisateur: "'propriétaire'"
 
+#transport . voiture . empreinte régulier non propriétaire électrique covoit:
+#  valeur: voiture . empreinte calculée
+#  contexte:
+#    voiture . utilisateur: "'propriétaire covoit'" #On spécifie "propriétaire" ici aussi car celui spécifié dans le contexte de "consommation estimée" ne suffit pas
+#    voiture . électrique . consommation aux 100:
+#      valeur: voiture . électrique . consommation estimée
+#      contexte:
+#        voiture . utilisateur: "'propriétaire'"
+
 transport . voiture . empreinte non régulier thermique:
   valeur: voiture . empreinte calculée
   contexte:
+    voiture . voyageurs: transport . voyageurs + 1 #Non régulier implique une personne de plus dans la voiture (le conducteur qui prend en covoit)
     voiture . construction: 0 #En vérifiant dans quick-doc le 0 ici n'est pas overuled par le "propriétaire" de voiture . utilisateur (dans cette fonction contexte) qui aurait pu se répercuter dans la variable voiture . construction:
-    voiture . utilisateur: "'propriétaire'" #Nécessaire pour la variable "carburant"
+    voiture . utilisateur: "'propriétaire'" #Nécessaire pour les variables "carburant" et "consommation aux 100"
     voiture . thermique . carburant: "'essence E5 ou E10'"
     voiture . thermique . consommation aux 100:
       valeur: voiture . thermique . consommation estimée
       contexte:
-        voiture . utilisateur: "'propriétaire'" #Nécessaire pour la variable "consommation au 100"
+        voiture . utilisateur: "'propriétaire'" #Nécessaire pour la variable "consommation aux 100"
+        voiture . thermique . carburant: "'essence E5 ou E10'"
+
+transport . voiture . empreinte non régulier hybride:
+  valeur: voiture . empreinte calculée
+  contexte:
+    voiture . voyageurs: transport . voyageurs + 1 #Non régulier implique une personne de plus dans la voiture (le conducteur qui prend en covoit)
+    voiture . construction: 0 #En vérifiant dans quick-doc le 0 ici n'est pas overuled par le "propriétaire" de voiture . utilisateur (dans cette fonction contexte) qui aurait pu se répercuter dans la variable voiture . construction:
+    voiture . utilisateur: "'propriétaire'" #Nécessaire pour les variables "carburant" et "consommation aux 100"
+    voiture . thermique . carburant: "'essence E5 ou E10'"
+    voiture . thermique . consommation aux 100:
+      valeur: voiture . thermique . consommation estimée
+      contexte:
+        voiture . utilisateur: "'propriétaire'" #Nécessaire pour la variable "consommation aux 100"
         voiture . thermique . carburant: "'essence E5 ou E10'"
 
 transport . voiture . empreinte non régulier électrique:
   valeur: voiture . empreinte calculée
   contexte:
+    voiture . voyageurs: transport . voyageurs + 1 #Non régulier implique une personne de plus dans la voiture (le conducteur qui prend en covoit)
     voiture . construction: 0 #En vérifiant dans quick-doc le 0 ici n'est pas overuled par le "propriétaire" de voiture . utilisateur (dans cette fonction contexte) qui aurait pu se répercuter dans la variable voiture . construction:
-    voiture . utilisateur: "'propriétaire'"
+    voiture . utilisateur: "'propriétaire'" # Nécessaire pour la variable "consommation aux 100"
     voiture . électrique . consommation aux 100:
       valeur: voiture . électrique . consommation estimée
       contexte:
@@ -239,9 +343,12 @@ transport . voiture . empreinte calculée:
 
 transport . voiture . voyageurs:
 #  ordre: 3
-  titre: Nombre de voyageurs
-  question: Quel sera le nombre moyen de voyageurs dans la voiture ?
-  applicable si: km > 0
+  titre: Nombre de voyageurs pour venir en Hauts-de-France
+#  question: Quel sera le nombre moyen de voyageurs dans la voiture ?
+  applicable si: transport . voiture . présent
+# Suite à une demande des Hauts-de-France on affecte directement "transport . voyageurs" (nombre de personnes qui voyageront sur la durée du séjour) --> En conséquence si l'utilisateur choisit covoiturage dans "utilisateurs" on considère un covoitureur
+# On garde quand même la variable "transport . voiture . voyageurs" pour simplifier d'éventuelles futures modif plus tard (ex : retour du questionnement)
+  formule : transport . voyageurs + covoitureurs #Suite à une demande des Hauts-de-France on affecte directement "transport . voyageurs" (nombre de personnes qui voyageront sur la durée du séjour) --> En conséquence si l'utilisateur choisit covoiturage dans "utilisateurs" on considère un covoitureur
   description: |
     Pensez à vous inclure ! Ainsi, si vous voyagez en couple, renseignez 2. Si vous êtes une famille de quatre, renseignez 4, etc.
     
@@ -249,12 +356,25 @@ transport . voiture . voyageurs:
   plancher: 1
   avertissement: |
     Le nombre de voyageurs ne peut pas être nul. Il y a forcément un conducteur derrière le volant.
-  par défaut: 2
+  par défaut: transport . voyageurs
 #  par défaut: 1.2
   suggestions:
     je suis seul: 1
     deux: 2
     quatre: 4
+
+transport . voiture . covoitureurs:
+  titre: Nombre de covoitureurs
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: utilisateur
+            - une de ces conditions:
+              - utilisateur = 'propriétaire covoit'
+              - utilisateur = 'régulier non propriétaire covoit'
+        alors: 1
+      - sinon: 0
 
 transport . voiture . usage:
   titre: Usage de la voiture
@@ -381,6 +501,7 @@ transport . voiture . thermique . consommation aux 100:
   question: Connaissez-vous la consommation moyenne de la voiture ?
   applicable si:
     toutes ces conditions:
+      - voiture . présent
       - est défini: utilisateur
       - une de ces conditions:
           - utilisateur = 'propriétaire'
@@ -390,8 +511,12 @@ transport . voiture . thermique . consommation aux 100:
           - motorisation = 'thermique'
           - motorisation = 'hybride'
       - km > 0
+  non applicable si: #On met cette condition car, sans savoir pourquoi, la question apparait alors qu'on calcule l'empreinte par défaut via le cheminement [voiture/jnsp]
+    toutes ces conditions:
+      - est non défini: voiture . présent
   description: |
-    **💡 Si vous utilisez plusieurs voitures (par exemple dans le cas où vous n'en possédez pas une), choisissez la réponse la plus représentative de votre usage.**
+    Si vous ne savez pas, cliquez sur _Passer la question_ et nous vous attribuerons une consommation en lien avec le gabarit
+    de la voiture que vous avez renseigné.
   suggestions:
     5 l/100km: 5
     7 l/100km: 7
@@ -644,6 +769,9 @@ transport . voiture . électrique . consommation au kilomètre:
 transport . voiture . électrique . consommation aux 100:
   titre: Consommation électrique au km
   question: Connaissez-vous la consommation moyenne de la voiture ?
+  description: |
+    Si vous ne savez pas, cliquez sur _Passer la question_ et nous vous attribuerons une consommation en lien avec le gabarit
+    de la voiture que vous avez renseigné.
   applicable si:
     toutes ces conditions:
       - est défini: utilisateur

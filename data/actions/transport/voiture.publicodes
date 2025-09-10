@@ -1,9 +1,23 @@
 transport . voiture . éco-conduite:
   titre: Adopter une éco-conduite pendant votre séjour
-  applicable si: voiture . km > 0
+  applicable si:
+    toutes ces conditions:
+      - voiture . km > 0
+      - une de ces conditions:
+        - voiture . utilisateur = 'propriétaire'
+        - voiture . utilisateur = 'propriétaire covoit'
+        - voiture . utilisateur = 'régulier non propriétaire'
+        - voiture . utilisateur = 'régulier non propriétaire covoit'
   icônes: 🚗☮
-  formule: voiture . empreinte au kilomètre * voiture . km * réduction / transport . voiture . voyageurs
-  unité: kgCO2e
+  ### 1. Formule initiale qui n'est pas calculée par publicodes (je la reformule en 4.)  --> j'ai donc les emojis (normal) 
+  #formule: (transport . voiture . empreinte au kilomètre calculée * transport . voiture . km * transport . voiture . éco-conduite . réduction) / transport . voiture . voyageurs
+  ### 2. Formule qui est bien calculée par publicodes et pour laquelle le % d'empreinte affiché est correct --> je n'ai donc pas les emojis (normal)
+  #formule: 10% * transport . voiture
+  ### 3. Formule qui est bien calculée par publicodes et pour laquelle le % d'empreinte affiché n'est pas correct --> je n'ai donc pas les emojis (normal)
+  #formule: 10% * transport . voiture . usage
+  ### 4. Formule qui est bien calculée par publicodes mais pour laquelle le % d'empreinte ne s'affiche pas --> j'ai donc les emojis (ce n'est pas normal). Après vérif de la doc j'ai un chiffrage de l'action mais des variables sont "non applicables" notamment 'transport . voiture . empreinte au kilomètre calculée'
+  formule: transport . voiture - recalcul
+  #unité: kgCO2e
   description: |
     Sécurité, réduction des émissions de gaz à effet de serre, économies de carburant : l’écoconduite n’a que des avantages. 
 
@@ -13,33 +27,49 @@ transport . voiture . éco-conduite:
   note: |
     Voir le [Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter)
 
-transport . voiture . éco-conduite . réduction:
-  titre: Gain de consommation éco-conduite
-  formule: 15%
+transport . voiture . éco-conduite . recalcul:
+  valeur: transport . voiture
+  contexte:
+    transport . voiture . empreinte au kilomètre calculée: 85% * transport . voiture . empreinte au kilomètre calculée
   note: |
     Hypothèse de réduction de 15% ([Guide de formation à l'éco-conduite ADEME-LaPoste](https://expertises.ademe.fr/air-mobilites/mobilite-transports/passer-a-laction/solutions-technologiques/dossier/optimiser-lutilisation-lentretien-vehicule/lecoconduite-attitude-a-adopter))
 
 transport . voiture . limitation autoroute:
   titre: Rouler à 110km/h sur l'autoroute pour venir en Hauts-de-France
   icônes: 🚗🛣️
-  applicable si: voiture . km > 0
-  formule: transport . voiture . empreinte au kilomètre * km autoroute * réduction / transport . voiture . voyageurs
+  applicable si:
+    toutes ces conditions:
+      - voiture . km > 0
+      - une de ces conditions:
+        - voiture . utilisateur = 'propriétaire'
+        - voiture . utilisateur = 'propriétaire covoit'
+        - voiture . utilisateur = 'régulier non propriétaire'
+        - voiture . utilisateur = 'régulier non propriétaire covoit'
+  ### 1. Formule qui n'est pas calculée par publicodes (je ne comprends pas pourquoi) et je reformule en 2. --> j'ai donc les emojis (normal)
+  #ormule: transport . voiture . empreinte au kilomètre calculée * réduction * km autoroute / transport . voiture . voyageurs
+  ### 2. Formule qui est bien calculée par publicodes mais pour laquelle le % d'empreinte ne s'affiche pas --> j'ai donc les emojis (ce n'est pas normal). Après vérif de la doc j'ai un chiffrage de l'action mais des variables sont "non applicables" notamment 'transport . voiture . empreinte au kilomètre calculée'
+  formule: transport . voiture - recalcul
   description: |
     Diminuer sa vitesse de 20 km/h sur l’autoroute permet de réduire sa consommation de carburant de l’ordre de 20 %. En ville, il est conseillé de rouler à 30 km/h pour moins consommer, fluidifier le trafic et mieux partager la route avec les vélos, les trottinettes et les piétons.
 
     > Pour découvrir tous les conseils pour économiser du carburant, [consultez notre fiche](https://librairie.ademe.fr/mobilite-et-transport/5886-10-gestes-pour-economiser-de-l-energie-lors-de-ses-deplacements.html).
 
+transport . voiture . limitation autoroute . recalcul:
+  valeur: transport . voiture
+  contexte:
+    transport . voiture . km: km autoroute
+    transport . voiture . empreinte au kilomètre calculée: réduction
+
 transport . voiture . limitation autoroute . km autoroute:
-#  question: Combien de km à l'année faites-vous sur autoroute (à peu près) ?
-#  par défaut: voiture . km * 0.1
-  formule: voiture . km * 0.9
+  formule: transport . voiture . km * 0.9
   note: |
     On considère que 90 % des km faits pour venir en Hauts-de-France le seront sur autoroute.
   unité: km
 
 transport . voiture . limitation autoroute . réduction:
   titre: Gain de consommation 130 -> 110
-  formule: 25%
+  #formule: 25%
+  formule: 75% * transport . voiture . empreinte au kilomètre calculée
   description: |
     ![](https://imgur.com/NB9CUUt.jpg)
     D'après ce graphique, par déduction graphique (nous n'avons pas encore remonté aux données [de l'étude](http://theses.univ-lyon2.fr/documents/getpart.php?id=1026&action=pdf), page 151 figure 26), on trouve les données ci-dessous.
@@ -313,7 +343,7 @@ transport . voiture . location voiture électrique . recalcul:
 transport . voiture . location réduire taille:
   titre: Louer une petite voiture pour le séjour
   applicable si:
-    toutes ces conditions : 
+    toutes ces conditions: 
       - voiture . km > 0
       - est défini: voiture . utilisateur
       - une de ces conditions:
@@ -321,7 +351,7 @@ transport . voiture . location réduire taille:
         - voiture . utilisateur = 'régulier non propriétaire covoit'
   non applicable si:
     une de ces conditions:
-      - transport . voiture . motorisation = 'petite'
+      - transport . voiture . gabarit = 'petite'
       - transport . voiture . voyageurs > 3 #Si plus de 3 passagers on considère qu'on ne peut pas prendre une petite voiture
       - toutes ces conditions:
           - est défini: voiture . utilisateur
@@ -330,6 +360,7 @@ transport . voiture . location réduire taille:
               - voiture . utilisateur = 'propriétaire covoit'
               - voiture . utilisateur = 'non régulier'
   formule: transport . voiture - recalcul
+#  formule: 99% * transport . voiture
   description: |
     Les voitures sont de plus en plus grosses et de plus en plus lourdes. L'impact de leur fabrication sur le climat augmente donc en conséquence. A cela
      s'ajoute le fait que ces voitures sont de moins en moins adaptées à la ville. Tournez vous donc vers un véhicule de taille raisonnable pour votre location.
@@ -392,7 +423,8 @@ transport . voiture . prendre le train:
   titre: Aller en Hauts-de-France en train
   icônes: 🚆
   description: |
-    Blabla sur le fait que le train est écolo mais oui plus cher (quoique pas tous le temps)
+    Le train est vraiment LE mode de transport écologique ! Mais nous le savons, il est parfois plus cher et tous les trajets n'ont pas forcément de connexions simples par rail.
+    Consultez ce [calculateur d'itinéraire)(https://www.rome2rio.com) pour trouver les alternatives à la voiture possibles.
   non applicable si: 
     une de ces conditions:
       - transport . train . présent

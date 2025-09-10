@@ -5,14 +5,19 @@ séjour:
 # Cette première mosaique concerne les modes de transport dit "secondaires", c.à.d ceux faits pendant le séjour dans la région Hauts-de-France.
 # Sur avis de HdF Tourisme, on considère 6 modes de transport principaux : TER, voiture, deux roues motorisés, transport en commun, mobilité douce et taxi
   applicable si:
-    une de ces conditions:
-      - transport . train . présent
-      - transport . car longue distance . présent
-      - transport . voiture . présent
-      - transport . deux roues . présent
-#      - transport . transports commun . présent
-#      - transport . mobilité douce . présent
-#      - transport . taxi . présent
+    toutes ces conditions:
+      - transport . durée séjour > 0
+      - transport . localisation séjour > 0
+#  applicable si:
+#    une de ces conditions:
+#      - transport . train . présent
+#      - transport . car longue distance . présent
+#      - transport . voiture . présent
+#      - transport . deux roues . présent
+##      - est défini: transport . empreinte moyenne
+##      - transport . transports commun . présent
+##      - transport . mobilité douce . présent
+##      - transport . taxi . présent
   titre: Transport pendant le séjour
   mosaique:
     type: selection
@@ -38,15 +43,49 @@ séjour:
   description: |
     Renseignez les différents types de transport que vous allez utiliser **pendant votre séjour uniquement**. Comme expliqué Précédemment les trajets aller-retour entre 
     votre domicile et votre (premier) lieu d'hébergement sont à prendre en compte à la première question.
+#  formule:
+#    variations:
+#      - si: choix utilisateur
+#        alors: empreinte totale séjour
+#      - sinon: empreinte par défaut
   formule:
     somme:
       - train
-#      - car longue distance
       - voiture
       - deux roues
       - transports commun
       - mobilité douce
       - taxi
+
+séjour . choix utilisateur:  ### Enlever les par défaut: non 
+  titre: Choix utilisateur pour les modes de transport du séjour
+  formule:
+    une de ces conditions:
+      - est défini: séjour . train . présent
+      - est défini: séjour . voiture . présent
+      - est défini: séjour . deux roues . présent
+      - est défini: séjour . transports commun . présent
+      - est défini: séjour . mobilité douce . présent
+
+séjour . empreinte totale séjour:
+  formule: 
+    somme:
+      - train
+      - voiture
+      - deux roues
+      - transports commun
+      - mobilité douce
+      - taxi
+  unité: kgCO2e
+
+séjour . empreinte par défaut:
+  formule: séjour . voiture . empreinte par défaut
+#    variations:
+#      - si: # Si A-R = jnsp (et séjour = jnsp donc) --> on considère que l'utilisateur ne fait aucun effort et on impute en plus des déplacements en voiture pour A-R des déplacements pendant le séjour
+#          toutes ces conditions:
+#            - est non défini: transport . choix utilisateur
+#        alors: séjour . voiture . empreinte par défaut
+#      - sinon: 0 #Si A-R = défini --> on considère qu'on peut dire jnsp à séjour (car on ne sait pas ce qu'on va faire) et donc attribuer 0
 
 séjour . notif choix carboné arras pays d'artois:
   type: notification
@@ -168,7 +207,7 @@ séjour . notif choix carboné chaunois:
   description: |
     Et si vous optiez pour des transports moins carbonés pendant votre séjour ? Le réseau de transport en commun ([Lyneo](https://www.bus-lyneo.fr/)) ou la location de vélo sont des gestes forts pour un séjour durable !
 
-séjour . notif choix carboné cœur des hauts de france:
+séjour . notif choix carboné coeur des hauts de france:
   type: notification
   formule:
     toutes ces conditions:
@@ -432,7 +471,7 @@ séjour . notif choix carboné vexin sablons:
   description: |
     Et si vous optiez pour des transports moins carbonés pendant votre séjour ? Le réseau de transport en commun ([Sablons bus](https://sablons-bus.fr/)) ou la location de vélo (Avec [Vél'ofil du Vexin](https://www.velofilduvexin.com/)) sont des gestes forts pour un séjour durable !
 
-séjour . notif choix carboné villes sœurs:
+séjour . notif choix carboné villes soeurs:
   type: notification
   formule:
     toutes ces conditions:
@@ -535,7 +574,7 @@ séjour . notif transport commun chaunois:
   description: |
     Bravo ! Vous optez pour les transports en commun ? Pour planifier vos itinéraires, consulter les horaires, c'est [Lyneo](https://www.bus-lyneo.fr/).
 
-séjour . notif transport commun cœur des hauts de france:
+séjour . notif transport commun coeur des hauts de france:
   type: notification
   formule:
     toutes ces conditions:
@@ -733,7 +772,7 @@ séjour . notif transport commun vexin sablons:
   description: |
     Bravo ! Vous optez pour les transports en commun ? Pour planifier vos itinéraires, consulter les horaires, c'est [Sablons bus](https://sablons-bus.fr/).
 
-séjour . notif transport commun villes sœurs:
+séjour . notif transport commun villes soeurs:
   type: notification
   formule:
     toutes ces conditions:
@@ -833,7 +872,7 @@ séjour . notif mobilité douce chaunois:
   description: |
     Vélo ! Vous avez dit vélo ? Quelques adresses de loueurs : location de vélo (non précisé) pour trouver le compagnon de route parfait !
 
-séjour . notif mobilité douce cœur des hauts de france:
+séjour . notif mobilité douce coeur des hauts de france:
   type: notification
   formule:
     toutes ces conditions:
@@ -1031,7 +1070,7 @@ séjour . notif mobilité douce vexin sablons:
   description: |
     Vélo ! Vous avez dit vélo ? Quelques adresses de loueurs : [Vél'ofil du Vexin](https://www.velofilduvexin.com/) pour trouver le compagnon de route parfait !
 
-séjour . notif mobilité douce villes sœurs:
+séjour . notif mobilité douce villes soeurs:
   type: notification
   formule:
     toutes ces conditions:
@@ -1040,10 +1079,7 @@ séjour . notif mobilité douce villes sœurs:
   description: |
     Vélo ! Vous avez dit vélo ? Quelques adresses de loueurs : [La ville de mers les bains](https://www.merslesbains.fr/cabine-a-vel-eau/), [Criel en Selle](https://criel-en-selle.lokki.rent/?context=RENTAL_PLACE_LOKKI&referrer=https://www.google.com/), [Normandie tourisme](https://www.normandie-tourisme.fr/activite/atelier-mobile-du-cycle/) pour trouver le compagnon de route parfait !
 
-
-
-
-séjour . notif train:
+séjour . notif train région générale: #"région générale" = hack pour la lecture des notifs par le front
   type: notification
   formule:
     toutes ces conditions:
@@ -1051,8 +1087,7 @@ séjour . notif train:
   description: |
     Bravo ! Vous optez pour un mode de transport écologique pendant votre séjour. Pour trouver les horaires qui vous conviennent c'est sur [TER Hauts-de-France](https://www.ter.sncf.com/hauts-de-france).
 
-
-séjour . notif voiture:
+séjour . notif voiture région générale: #"région générale" = hack pour la lecture des notifs par le front
   type: notification
   formule:
     toutes ces conditions:
@@ -1068,7 +1103,7 @@ séjour . train . présent:
   par défaut: non
 
 séjour . train:
-  applicable si: présent
+  applicable si: séjour . train . présent
   titre: TER
   icônes: 🚞
   formule: TER * km
@@ -1136,19 +1171,9 @@ séjour . voiture . présent:
   question: Allez-vous utiliser une voiture pour vous déplacer pendant votre séjour ?
   par défaut: non
 
-### A caler les possibilités existantes entre les types de déplacements en voiture possible pour venir (proprio, covoit, location) et pendant le séjour (oui je garde ma voiture perso, non je continue de louer la même ?; non je loue une nouvelle voiture ?)
-### --> La solution la plus simple semble de poser la question de la location de véhicule si en Q1 on dit "pas voiture" ou covoit car si on vient en voiture (que ça soit la sienne, louée ou empruntée) il quasi certains que les gens la garderont pour leur séjour
-séjour . voiture . identique:
-  applicable si:
-    toutes ces conditions:
-      - séjour . voiture . présent = oui
-      - transport . voiture . présent = oui
-  question: Allez-vous utiliser la même voiture pour vos déplacements pendant le séjour que pour faire l'aller-retour depuis votre domicile ?
-  description: Il est fort probable que si vous veniez en Hauts-de-France en voiture vous 
-
 # L'attribut empreinte moyenne est gardé uniquement pour un cas bien spécifique : A-R = voiture mais jnsp sur utilisateur + séjour = voiture
 séjour . voiture:
-  applicable si: séjour . voiture . présent
+#  applicable si: séjour . voiture . présent
   titre: Voiture
   icônes: 🚘
   formule:
@@ -1157,42 +1182,98 @@ séjour . voiture:
         alors: 0
       - sinon:
           variations:
-            - si:
-                est défini: transport . voiture . utilisateur
+            - si: #A-R voiture (complété en entier) + séjour = voiture
+                toutes ces conditions:
+                  - transport . voiture . présent
+                  - est défini: transport . voiture . utilisateur
+                  - séjour . voiture . présent
               alors:
                 variations:
                   - si:
                       toutes ces conditions:
-                        - transport . voiture . utilisateur = 'propriétaire'
+                        - une de ces conditions:
+                          - transport . voiture . utilisateur = 'propriétaire'
+                          - transport . voiture . utilisateur = 'propriétaire covoit'
                         - transport . voiture . motorisation = 'thermique'
                     alors: empreinte séjour propriétaire thermique
                   - si:
                       toutes ces conditions:
-                        - transport . voiture . utilisateur = 'propriétaire'
+                        - une de ces conditions:
+                          - transport . voiture . utilisateur = 'propriétaire'
+                          - transport . voiture . utilisateur = 'propriétaire covoit'
                         - transport . voiture . motorisation = 'hybride'
                     alors: empreinte séjour propriétaire hybride
                   - si:
                       toutes ces conditions:
-                        - transport . voiture . utilisateur = 'propriétaire'
+                        - une de ces conditions:
+                          - transport . voiture . utilisateur = 'propriétaire'
+                          - transport . voiture . utilisateur = 'propriétaire covoit'
                         - transport . voiture . motorisation = 'électrique'
                     alors: empreinte séjour propriétaire électrique
                   - si:
                       toutes ces conditions:
-                        - transport . voiture . utilisateur = 'régulier non propriétaire'
+                        - une de ces conditions:
+                          - transport . voiture . utilisateur = 'régulier non propriétaire'
+                          - transport . voiture . utilisateur = 'régulier non propriétaire covoit'
                         - transport . voiture . motorisation = 'thermique'
                     alors: empreinte séjour régulier non propriétaire thermique
                   - si:
                       toutes ces conditions:
-                        - transport . voiture . utilisateur = 'régulier non propriétaire'
+                        - une de ces conditions:
+                          - transport . voiture . utilisateur = 'régulier non propriétaire'
+                          - transport . voiture . utilisateur = 'régulier non propriétaire covoit'
                         - transport . voiture . motorisation = 'hybride'
                     alors: empreinte séjour régulier non propriétaire hybride
                   - si:
                       toutes ces conditions:
-                        - transport . voiture . utilisateur = 'régulier non propriétaire'
+                        - une de ces conditions:
+                          - transport . voiture . utilisateur = 'régulier non propriétaire'
+                          - transport . voiture . utilisateur = 'régulier non propriétaire covoit'
                         - transport . voiture . motorisation = 'électrique'
                     alors: empreinte séjour régulier non propriétaire électrique
-                  - sinon: empreinte calculée ### Attribut servant pour 3 cas : A-R = autres que voiture ; A-R = voiture/non régulier + séjour = voiture ; pour le cas spécifique : A-R = voiture/jnsp sur voiture . utilisateur + séjour = voiture
-            - sinon: empreinte moyenne
+                  - sinon: empreinte calculée #A-R = voiture/non régulier + séjour = voiture
+            - si: #A-R = voiture/jnsp sur voiture . utilisateur + séjour = voiture
+                toutes ces conditions:
+                  - transport . voiture . présent
+                  - est non défini: transport . voiture . utilisateur
+                  - séjour . voiture . présent
+              alors: empreinte moyenne #Si utilisateur n'est pas défini en AR on attribue une empreinte moyenne en AR --> on fait de même dans séjour
+            - sinon:
+                variations:
+                  - si: #Pour le cas A-R = défini et autres que voiture + séjour = voiture (+ autres éventuellement)
+                      une de ces conditions:
+                        - séjour . train . présent
+                        - séjour . deux roues . présent
+                        - séjour . mobilité douce . présent
+                        - séjour . transports commun . présent
+                        - séjour . taxi . présent
+                        - séjour . voiture . présent
+                    alors: empreinte calculée #(devrait renvoyer 0 si uniquement train ou autre de sélectionnés)
+                  - si: #Pour le cas A-R = défini + séjour = jnsp
+                      une de ces conditions:
+                        - transport . train . présent
+                        - transport . deux roues . présent
+                        - transport . car longue distance . présent
+                        - transport . voiture . présent
+                    alors: 0 #On accepte que l'utilisateur ne sache pas ce qu'il va faire pendant son séjour. On lui impute donc 0
+                  - sinon: empreinte par défaut #Pour le cas A-R = jnsp + séjour = jnsp
+#            - si: séjour . voiture . présent #A-R = autres que voiture OU voiture/jnsp
+#                une de ces conditions:
+#                  - est non défini: transport . voiture . présent
+#                  - transport . train . présent
+#                  - transport . car longue distance . présent
+#                  - transport . deux roues . présent
+#               alors: 
+##            - si: #A-R voiture (complété en entier) + séjour = voiture/jnsp (probablement que marchera pas avec les non défini)
+##                toutes ces conditions:
+##                  - transport . voiture . présent
+##                  - est défini: transport . voiture . utilisateur
+##                  - toutes ces conditions:
+##                      - est non défini:  transport . train . présent
+##                      - est non défini:  transport . car longue distance . présent
+##                      - est non défini:  transport . deux roues . présent
+##              alors: #mettre les mêmes fonctions contexte que si séjour . présent mais avec des km considérés
+###            - sinon: empreinte par défaut ### Empreinte par défaut pour le cas A-R = jnsp + séjour = jnsp
   unité: kgCO2e
 #  description: |
 #    ![](https://upload.wikimedia.org/wikipedia/commons/9/9a/Congestion_caused_by_a_road_accident%2C_Algarve%2C_Portugal.jpg)
@@ -1208,6 +1289,11 @@ séjour . voiture:
 
 séjour . voiture . km:
   titre: Km en voiture
+  applicable si: séjour . voiture . présent
+#  non applicable si: #On met cette condition car la question, sans savoir pourquoi, apparait alors qu'on calcule une empreinte moyenne ("contexte") via le cheminement [voiture/jnsp sur voiture . utilisateur + séjour = voiture]
+#    toutes ces conditions:
+#      - transport . voiture . présent
+#      - est non défini: transport . voiture . utilisateur
   question: Quelle distance allez-vous parcourir en voiture pendant votre séjour ?
   description: |
     Sommez la distance des différents trajets effectués pendant votre séjour mais ne cherchez pas à renseignez le kilométrage exact, l'arrondi à la dizaine ou centaine supérieure fera l'affaire.
@@ -1350,45 +1436,93 @@ séjour . voiture . empreinte séjour propriétaire électrique:
 séjour . voiture . empreinte séjour régulier non propriétaire thermique:
   valeur: transport . voiture . empreinte calculée
   contexte:
+#    séjour . voiture . présent: oui #je dois rajouter ça car on a commenté la condition "voiture . présent" en entrée de "séjour . voiture". La valeur voiture . présent renvoie alors la valeur par défaut à non (ce qui ne calcule pas les km) quand bien même on sélectionne voiture comme mode de transport pendant le séjour (probablement un lien avec le par défaut: non de "séjour . voiture . présent" mais on laisse comme ça)
     transport . voiture . km: séjour . voiture . km
     transport . voiture . voyageurs: séjour . voiture . voyageurs
+    transport . voiture . utilisateur: "'propriétaire'" #Nécessaire pour les variables "carburant" et "consommation aux 100" sinon ça bug avec les conditions d'entrée de ces variables
+    transport . voiture . thermique . carburant: "'essence E5 ou E10'"
+    transport . voiture . thermique . consommation aux 100:
+      valeur: transport . voiture . thermique . consommation estimée
+      contexte:
+        transport . voiture . utilisateur: "'propriétaire'" #Nécessaire pour la variable "consommation aux 100"
+        transport . voiture . thermique . carburant: "'essence E5 ou E10'"
 
 séjour . voiture . empreinte séjour régulier non propriétaire hybride:
   valeur: transport . voiture . empreinte calculée
   contexte:
+#    séjour . voiture . présent: oui #je dois rajouter ça car on a commenté la condition "voiture . présent" en entrée de "séjour . voiture". La valeur voiture . présent renvoie alors la valeur par défaut à non (ce qui ne calcule pas les km) quand bien même on sélectionne voiture comme mode de transport pendant le séjour (probablement un lien avec le par défaut: non de "séjour . voiture . présent" mais on laisse comme ça)
     transport . voiture . km: séjour . voiture . km
     transport . voiture . voyageurs: séjour . voiture . voyageurs
+    transport . voiture . utilisateur: "'propriétaire'" #Nécessaire pour les variables "carburant" et "consommation aux 100" sinon ça bug avec les conditions d'entrée de ces variables
+    transport . voiture . thermique . carburant: "'essence E5 ou E10'"
+    transport . voiture . thermique . consommation aux 100:
+      valeur: transport . voiture . thermique . consommation estimée
+      contexte:
+        transport . voiture . utilisateur: "'propriétaire'" #Nécessaire pour la variable "consommation aux 100"
+        transport . voiture . thermique . carburant: "'essence E5 ou E10'"
 
 séjour . voiture . empreinte séjour régulier non propriétaire électrique:
   valeur: transport . voiture . empreinte calculée
   contexte:
+#    séjour . voiture . présent: oui #je dois rajouter ça car on a commenté la condition "voiture . présent" en entrée de "séjour . voiture". La valeur voiture . présent renvoie alors la valeur par défaut à non (ce qui ne calcule pas les km) quand bien même on sélectionne voiture comme mode de transport pendant le séjour (probablement un lien avec le par défaut: non de "séjour . voiture . présent" mais on laisse comme ça)
     transport . voiture . km: séjour . voiture . km
     transport . voiture . voyageurs: séjour . voiture . voyageurs
+    transport . voiture . utilisateur: "'propriétaire'" #Nécessaire pour la variable "consommation aux 100" sinon ça bug avec les conditions d'entrée de ces variables
+    transport . voiture . électrique . consommation aux 100:
+      valeur: transport . voiture . électrique . consommation estimée
+      contexte:
+        transport . voiture . utilisateur: "'propriétaire'" #Nécessaire pour la variable "consommation aux 100"
 # Fin du bloc
 
+#Je n'arrive pas à faire fonctionner la fonction contexte en pointant sur les variables "séjour . voiture . XXX". Je recalcul donc avec les variables "transport . voiture . XXX"
 séjour . voiture . empreinte moyenne:
-  valeur: voiture . empreinte calculée
+  valeur: transport . voiture . empreinte calculée
   contexte:
-#    voiture . utilisateur: "'propriétaire'"
-    voiture . gabarit: "'berline'"
-    voiture . motorisation: "'thermique'"
-    voiture . thermique . carburant: "'essence E5 ou E10'"
-    voiture . thermique . consommation aux 100:
-      valeur: voiture . thermique . consommation estimée
+    transport . voiture . présent: oui
+    transport . voiture . km: séjour . voiture . km
+    transport . voiture . voyageurs: transport . voyageurs
+    transport . voiture . utilisateur: "'propriétaire'"
+    transport . voiture . gabarit: "'berline'"
+    transport . voiture . motorisation: "'thermique'"
+    transport . voiture . thermique . carburant: "'essence E5 ou E10'"
+    transport . voiture . thermique . consommation aux 100:
+      valeur: transport . voiture . thermique . consommation estimée
       contexte:
-#        voiture . utilisateur: "'propriétaire'"
-        voiture . gabarit: "'berline'"
-        voiture . motorisation: "'thermique'"
-        voiture . thermique . carburant: "'essence E5 ou E10'"
+        transport . voiture . utilisateur: "'propriétaire'"
+        transport . voiture . gabarit: "'berline'"
+        transport . voiture . motorisation: "'thermique'"
+        transport . voiture . thermique . carburant: "'essence E5 ou E10'"
+
+#Je n'arrive pas à faire fonctionner la fonction contexte en pointant sur les variables "séjour . voiture . XXX". Je recalcul donc avec les variables "transport . voiture . XXX"
+séjour . voiture . empreinte par défaut:
+  valeur: transport . voiture . empreinte calculée
+  contexte:
+    transport . voiture . présent: oui
+    transport . voiture . km: 200
+    transport . voiture . voyageurs: 2
+    transport . voiture . utilisateur: "'propriétaire'"
+    transport . voiture . gabarit: "'berline'"
+    transport . voiture . motorisation: "'thermique'"
+    transport . voiture . thermique . carburant: "'essence E5 ou E10'"
+    transport . voiture . thermique . consommation aux 100:
+      valeur: transport . voiture . thermique . consommation estimée
+      contexte:
+        transport . voiture . utilisateur: "'propriétaire'"
+        transport . voiture . gabarit: "'berline'"
+        transport . voiture . motorisation: "'thermique'"
+        transport . voiture . thermique . carburant: "'essence E5 ou E10'"
 
 séjour . voiture . empreinte calculée:
   formule: (usage + construction) / voyageurs
   unité: kgCO2e
 
 séjour . voiture . voyageurs:
-  titre: Nombre de voyageurs
-  question: Quel sera le nombre moyen de voyageurs dans la voiture pendant votre séjour ?
-  applicable si: km > 0
+  titre: Nombre de voyageurs trajets séjour
+#  question: Quel sera le nombre moyen de voyageurs dans la voiture pendant votre séjour ?
+# Suite à une demande des Hauts-de-France on affecte directement "transport . voyageurs" (nombre de personnes qui voyageront sur la durée du séjour)
+# On garde quand même la variable "séjour . voiture . voyageurs" pour simplifier d'éventuelles futures modif plus tard (ex : retour du questionnement)
+  formule: transport . voyageurs #Suite à une demande des Hauts-de-France on affecte directement "transport . voyageurs" (nombre de personnes qui voyageront sur la durée du séjour)
+#  applicable si: séjour . voiture . présent
   description: |
     Si vous voyagerez avec les mêmes personnes pendant votre séjour que pour les trajets aller-retour entre votre domicile et votre (premier) lieu d'hébergement, renseignez le même nombre de voyageurs (en vous incluant).
   plancher: 1
@@ -1479,13 +1613,14 @@ séjour . voiture . motorisation:
   applicable si:
     toutes ces conditions:
       - km > 0
-      - une de ces conditions:
-          - est non défini: transport . voiture . utilisateur
-          - transport . voiture . utilisateur = 'non régulier'
-          - transport . train . présent
-          - transport . car longue distance . présent
-          - transport . deux roues . présent
-#          - transport . taxi . présent
+      - séjour . voiture . présent
+#      - une de ces conditions:
+#          - est non défini: transport . voiture . utilisateur
+#          - transport . voiture . utilisateur = 'non régulier'
+#          - transport . train . présent
+#          - transport . car longue distance . présent
+#          - transport . deux roues . présent
+##          - transport . taxi . présent
   par défaut: "'thermique'"
   formule:
     une possibilité:
@@ -1855,13 +1990,14 @@ séjour . voiture . gabarit:
   applicable si:
     toutes ces conditions:
       - km > 0
-      - une de ces conditions:
-          - est non défini: transport . voiture . utilisateur
-          - transport . voiture . utilisateur = 'non régulier'
-          - transport . train . présent
-          - transport . car longue distance . présent
-          - transport . deux roues . présent
-#          - transport . taxi . présent   
+      - séjour . voiture . présent
+#      - une de ces conditions:
+#          - est non défini: transport . voiture . utilisateur
+#          - transport . voiture . utilisateur = 'non régulier'
+#          - transport . train . présent
+#          - transport . car longue distance . présent
+#          - transport . deux roues . présent
+##          - transport . taxi . présent   
 #Je pense qu'on peut supprimer le bloc de conditions ci-dessous
 #  applicable si:
 #    toutes ces conditions:
@@ -2332,14 +2468,16 @@ séjour . taxi . présent:
   par défaut: non
 
 séjour . taxi:
-  applicable si: présent
+  applicable si: séjour . taxi . présent
   titre: Taxi
   icônes: 🚕
   formule: heures * impact par heure
 
 séjour . taxi . heures:
   question: Combien d'heures allez vous parcourir en taxi pour aller et revenir de votre lieu de séjour ?
-  description: Blablabla
+  description: |
+    Si vous y passez une demi-heure renseignez 0.5. Pour 15 minutes renseignez 0.25 et ainsi de suite.
+    Ne prenez pas en compte le temps d'attente.
   suggestions:
     15 min: 0.25
     30 min: 0.5
@@ -2348,10 +2486,16 @@ séjour . taxi . heures:
   par défaut: 0.25
 
 séjour . taxi . impact par heure:
-  formule: 1
+  formule: 5.7
   unité: kgCO2e/h
   note: |
-    FE à consulter
+    On considère que le temps passé dans un taxi est proportionnel à la distance parcourue.
+    On considère un taxi fonctionnant au gazole et roulant à une vitesse moyenne de 30km/h, en supposant qu'il roule à la fois en ville et sur des axes plus rapides.
+    On utilise le FE suivant : [Voiture/Motorisation gazole/2023](https://base-empreinte.ademe.fr/donnees/jeu-donnees/f1f98cd7-362f-3e73-b4c0-3b3ff2850806/0/false/null) qui est de 0.190kgCO2e/km 
+    On considère que le taxi est occupé par un seul passager, on alloue donc toutes les émissions au passager.
+    On ne prend pas en compte les émissions liées à la venue du taxi jusqu'au point de prise en charge du passager, ni les émissions liées à la fin de course (retour à la base ou à un autre point de prise en charge).
+    On utilise la formule suivante : 0.190kgCO2e/km * 30km/h = 5.7kgCO2e/h
+
 
 ### Transport en commun ###
 séjour . transports commun . présent:
@@ -2602,7 +2746,7 @@ séjour . mobilité douce . présent:
 
 séjour . mobilité douce:
 # Cette variable "intermédiaire" est un hack pour réussir à mettre une mosaique fille après une mosaique mère (même si le choix mobilité douce n'est pas à l'heure actuelle proposé dans la mosaique mère)
-  applicable si: présent
+  applicable si: séjour . mobilité douce . présent
   titre: Actifs (marche, vélo, trottinette, etc.)
   icônes: 🚲🛴
   formule: séjour . mobilité douce . type * 1
