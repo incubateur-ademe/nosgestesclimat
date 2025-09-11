@@ -12,6 +12,7 @@ logement . eau domestique:
       - hydratation
       - voiture
       - jardin
+      - piscine
   description: |
     L'eau **directe** correspond à l'eau qui sort de votre robinet au quotidien.
     Il n'est donc pas question ici de l'eau **virtuelle** qui se cache derrière votre alimentation ou vos biens de consommation.
@@ -353,3 +354,17 @@ logement . eau domestique . jardin . type arrosage . récupérateur eau de pluie
   titre: Récupérateur d'eau de pluie
 logement . eau domestique . jardin . type arrosage . tuyau d'arrosage:
   titre: Tuyau d'arrosage
+
+logement . eau domestique . piscine:
+  formule:
+    variations:
+      - si: piscine . type = 'pas de piscine'
+        alors: 0
+      - si: piscine . type = 'creusée'
+        alors: piscine . volume * 0.3
+      - si: piscine . type = 'hors sol'
+        alors: piscine . volume
+  # TODO : ajouter la source
+  note: |
+    Pour le piscine hors sol, on considère que 100% de l'eau est renouvelée chaque année. Pour la piscine creusée, on considère que 30% de l'eau est renouvelée chaque année.
+  unité: l
