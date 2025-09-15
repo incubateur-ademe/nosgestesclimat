@@ -508,6 +508,43 @@ divers . numérique . appareils . imprimante . empreinte eau:
   formule: acv numerique . acv . imprimante . eau . fabrication + acv numerique . acv . imprimante . eau . distribution
   unité: l
 
+divers . numérique . appareils . renouvellement téléphone:
+  applicable si:
+    toutes ces conditions:
+      - numérique . appareils . nombre total > 0
+      - numérique . appareils . téléphone . nombre > 0
+  question: En 5 ans, combien de fois avez-vous changé de téléphone ?
+  description: |
+    Indiquez la fréquence de renouvellement de votre téléphone. Cette information nous aide à mieux estimer l'empreinte de vos appareils numériques.
+  note: |
+    La durée de vie d'un smartphone est de 2,5 ans environ selon les dernières données ADEME.
+    Pour le moment, nous ne posons pas de question sur le caractère reconditionné de ses appareils, faute de données notamment.
+  par défaut: "'moyen'"
+  une possibilité:
+    - faible
+    - moyen
+    - élevé
+
+divers . numérique . appareils . renouvellement téléphone . faible:
+  titre: 0 ou 1 fois
+divers . numérique . appareils . renouvellement téléphone . moyen:
+  titre: 2 à 3 fois
+divers . numérique . appareils . renouvellement téléphone . élevé:
+  titre: 4 fois ou plus
+
+divers . numérique . appareils . coefficient préservation:
+  note: |
+    Dans un souci de pédagogie, nous avons choisi d'appliquer un coefficient de préservation basé sur le taux de renouvellement de son téléphone. C'est une hypothèse forte car il n'est pas certain que le taux de renouvellement du téléphone soit corrélé avec celui des autres appareils, d'autant que le téléphone est souvent "le pire élève".
+
+    Nous considérons que la personne qui déclare renouveller souvent son téléphone garde ses appareils la moitié de leur durée de vie moyenne constatée, à l'inverse celui qui conserve son téléphone au maximum repousse leur durée de vie moyenne. Cette grille pourra évoluer si de nouvelles sources ou études viennent compléter tout cela.
+  formule:
+    variations:
+      - si: renouvellement téléphone = 'élevé'
+        alors: 1 / 2
+      - si: renouvellement téléphone = 'faible'
+        alors: 4 / 3
+      - sinon: 1
+
 divers . numérique . appareils . nombre total:
   titre: Nombre d'appareils numériques dans le logement
   formule:
