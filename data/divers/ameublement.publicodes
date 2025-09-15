@@ -10,10 +10,7 @@ divers . ameublement:
     Ces FE ne considèrent donc pas la "fin de vie" qui est prise en compte via [le modèle déchets de NGC](https://nosgestesclimat.fr/documentation/alimentation/d%C3%A9chets) (qui prend en compte les quantités de déchets amenés en déchetterie, là ou sont (théoriquement) amenés les meubles en fin de vie).
 
     Nous considérons que tous les meubles sont utilisés par l'ensemble du foyer, même si potentiellement, certains ne le sont qu'à titre individuel, c'est une limitation du test.
-  formule:
-    somme:
-      - meubles / logement . habitants
-      - déforestation / logement . habitants
+  formule: meubles / logement . habitants
 
 divers . ameublement . meubles:
   titre: Ameublement
@@ -104,7 +101,9 @@ divers . ameublement . meubles . armoire . nombre:
   question: Combien d'armoires possédez-vous ?
   plancher: 0
   plafond: 20
-  par défaut: 1
+  contexte:
+    nombre par tranche de x m2 . tranche: 40 m2
+  par défaut: nombre par tranche de x m2
 
 divers . ameublement . meubles . armoire:
   titre: Armoire, dressing
@@ -155,10 +154,12 @@ divers . ameublement . meubles . canapé . nombre:
   question: Combien de canapés possédez-vous ?
   plancher: 0
   plafond: 10
-  par défaut: 1
+  contexte:
+    nombre par tranche de x m2 . tranche: 100 m2
+  par défaut: nombre par tranche de x m2
 
 divers . ameublement . meubles . canapé:
-  titrre: Canapé
+  titre: Canapé
   icônes: 🛋️
   formule: empreinte amortie * nombre
   unité: kgCO2e
@@ -200,7 +201,9 @@ divers . ameublement . meubles . matelas . nombre:
   question: Combien de matelas possédez-vous ?
   plancher: 0
   plafond: 20
-  par défaut: 1
+  contexte:
+    nombre par tranche de x m2 . tranche: 40 m2
+  par défaut: nombre par tranche de x m2
 
 divers . ameublement . meubles . matelas:
   titre: Matelas
@@ -252,7 +255,9 @@ divers . ameublement . meubles . lit . nombre:
   question: Combien de lits possédez-vous ?
   plancher: 0
   plafond: 20
-  par défaut: 1
+  contexte:
+    nombre par tranche de x m2 . tranche: 40 m2
+  par défaut: nombre par tranche de x m2
 
 divers . ameublement . meubles . lit:
   titre: Lit (sommier, cadre)
@@ -284,7 +289,9 @@ divers . ameublement . meubles . table . nombre:
   question: Combien de tables possédez-vous ?
   plancher: 0
   plafond: 20
-  par défaut: 1
+  contexte:
+    nombre par tranche de x m2 . tranche: 60 m2
+  par défaut: nombre par tranche de x m2
 
 divers . ameublement . meubles . table:
   titre: Table, bureau
@@ -335,7 +342,9 @@ divers . ameublement . meubles . chaise . nombre:
   question: Combien de chaises possédez-vous ?
   plancher: 0
   plafond: 50
-  par défaut: 4
+  contexte:
+    nombre par tranche de x m2 . tranche: 20 m2
+  par défaut: 2 * nombre par tranche de x m2
 
 divers . ameublement . meubles . chaise:
   titre: Chaise, tabouret
@@ -379,7 +388,9 @@ divers . ameublement . meubles . petit meuble . nombre:
   question: Combien de petits meubles possédez-vous ?
   plancher: 0
   plafond: 30
-  par défaut: 3
+  contexte:
+    nombre par tranche de x m2 . tranche: 30 m2
+  par défaut: nombre par tranche de x m2
 
 divers . ameublement . meubles . petit meuble:
   titre: Petit meuble
@@ -415,7 +426,9 @@ divers . ameublement . meubles . grand meuble . nombre:
   question: Combien de grands meubles (non inclu ailleurs) possédez-vous ?
   plancher: 0
   plafond: 30
-  par défaut: 5
+  contexte:
+    nombre par tranche de x m2 . tranche: 30 m2
+  par défaut: 1 + nombre par tranche de x m2
 
 divers . ameublement . meubles . grand meuble:
   titre: Grand meuble
@@ -436,24 +449,3 @@ divers . ameublement . meubles . nombre total:
       - chaise . nombre
       - petit meuble . nombre
       - grand meuble . nombre
-
-divers . ameublement . déforestation:
-  formule:
-    variations:
-      - si: déforestation
-        alors:
-          variations:
-            - si: divers . ameublement . meubles . nombre total <= 5
-              alors: facteur meubles * 0.5
-            - si: divers . ameublement . meubles . nombre total > 15
-              alors: facteur meubles * 1.5
-            - sinon: facteur meubles
-      - sinon: 0
-  unité: kgCO2e
-  note: |
-    L'étude [Pendril & al.](https://iopscience.iop.org/article/10.1088/1748-9326/ab0d41) montre que l'empreinte de la déforestation importée est de 81 kgCO2e en moyenne par français.
-    Nous considérons qu'en moyenne, un foyer français possède de 5 à 15 meubles de moins de 10 ans. Si l'utilisateur en possède moins, nous réduisons la part de déforestation, et inversement s'il en possède plus.
-
-divers . ameublement . déforestation . facteur meubles:
-  formule: 81
-  unité: kgCO2e
