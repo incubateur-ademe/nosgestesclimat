@@ -1,13 +1,11 @@
-const path = require('path')
-const R = require('ramda')
-const fs = require('fs')
-const c = require('ansi-colors')
+import path from 'path'
+import fs from 'fs'
+import c from 'ansi-colors'
 
-const utils = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
-const cli = require('@incubateur-ademe/nosgestesclimat-scripts/cli')
-const {
-  addTranslationToBasePersonas
-} = require('./i18n/addTranslationToBasePersonas')
+import utils from '@incubateur-ademe/nosgestesclimat-scripts/utils'
+import cli from '@incubateur-ademe/nosgestesclimat-scripts/cli'
+import { addTranslationToBasePersonas } from './i18n/addTranslationToBasePersonas.js'
+import { getPersonaExtendedSituation } from './situation/getExtendedSituationFromSituation.mjs'
 
 const outputJSONPath = './public'
 
@@ -50,8 +48,18 @@ const basePersonas = utils.readYAML(
   path.resolve(`personas/personas-${srcLang}.yaml`)
 )
 
+const basePersonasWithExtendedSituation = Object.fromEntries(
+  Object.entries(basePersonas).map(([personaId, personaAttrs]) => [
+    personaId,
+    {
+      ...personaAttrs,
+      extendedSituation: getPersonaExtendedSituation(personaAttrs.situation)
+    }
+  ])
+)
+
 writePersonas(
-  basePersonas,
+  basePersonasWithExtendedSituation,
   path.join(outputJSONPath, `personas-${srcLang}.json`),
   srcLang
 )
@@ -61,7 +69,7 @@ destLangs.forEach((destLang) => {
   const translatedPersonasAttrs =
     utils.readYAML(path.resolve(`personas/personas-${destLang}.yaml`)) ?? {}
   const translatedPersonas = addTranslationToBasePersonas(
-    basePersonas,
+    basePersonasWithExtendedSituation,
     translatedPersonasAttrs
   )
   writePersonas(translatedPersonas, destPath, destLang)
