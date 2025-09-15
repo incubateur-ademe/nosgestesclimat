@@ -57,6 +57,7 @@ export type Persona = {
   icônes: string
   résumé?: string
   situation: Situation<DottedName>
+  extendedSituation: ExtendedSituation
 }
 
 export type Personas = Record<string, Persona>

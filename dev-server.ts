@@ -147,7 +147,7 @@ function compilePersonas() {
     type: 'compiling',
     message: 'Personas en cours de compilation'
   })
-  const proc = Bun.spawn(['bun', './scripts/personasToJSON.js'], {
+  const proc = Bun.spawn(['bun', './scripts/personasToJSON.mjs'], {
     onExit: async ({ exitCode }) => {
       // TODO: find a way to send the error message to the client
       if (exitCode !== 0) {
