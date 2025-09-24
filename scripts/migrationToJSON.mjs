@@ -44,6 +44,14 @@ function checkMigrationFile() {
           console.error(`❌ The rule ${ruleName} is not present in model`)
         }
       }
+      if (parsedRules.includes(ruleName) && !localRules[ruleName].question) {
+        shouldTrhowError = true
+        if (markdown) {
+          console.log(`> ❌ The rule ${ruleName} is not a question anymore`)
+        } else {
+          console.error(`❌ The rule ${ruleName} is not a question anymore`)
+        }
+      }
     })
 
   Object.entries(baseMigration.valuesToMigrate).forEach(
