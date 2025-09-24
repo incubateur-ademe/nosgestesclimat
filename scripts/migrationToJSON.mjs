@@ -96,8 +96,11 @@ function checkMigrationCoverage() {
       continue
     }
 
-    if ((rule['question'] || rule['par défaut']) && !rule['mosaique']) {
-      if (!localRules[ruleName]) {
+    if (rule['question']) {
+      if (
+        !localRules[ruleName] ||
+        (localRules[ruleName] && !localRules[ruleName]['question'])
+      ) {
         if (Object.keys(baseMigration['keysToMigrate']).includes(ruleName)) {
           continue
         }
