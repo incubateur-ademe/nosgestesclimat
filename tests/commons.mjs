@@ -83,6 +83,18 @@ export function getLocalPersonas(region, lang) {
     })
 }
 
+export function getLocalInitialExtendedSituation() {
+  return readFile(`./public/initialExtendedSituation.json`, {
+    encoding: 'utf8'
+  })
+    .then((res) => JSON.parse(res))
+    .catch((e) => {
+      console.error(`No local initial extended situation found:`)
+      console.error(e.message)
+      process.exit(1)
+    })
+}
+
 export function getLocalMigrationTable() {
   return readFile(`./public/migration.json`, {
     encoding: 'utf8'

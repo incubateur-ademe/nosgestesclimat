@@ -14,9 +14,9 @@ divers:
       - animaux domestiques
       - loisirs
       - numérique
-      - textile
       - électroménager
       - ameublement
+      - textile
       - produits consommables
       - tabac
       - autres produits
@@ -27,8 +27,8 @@ divers . ameublement . préservation:
     une de ces conditions:
       - ameublement . meubles . nombre total > 0
       - électroménager . appareils . nombre total > 0
-      - numérique . appareils . nombre total > 0
-  question: Quelle relation entretenez-vous à vos objets, vos appareils, vos meubles ?
+  question: |
+    Les meubles et les appareils électroménagers sont des objets qu'on renouvelle peu fréquemment. Quelle a été la raison de votre dernier achat ?
   description: |
     Le but de cette question est de saisir si vous êtes dans une démarche de prolongation de la vie de vos objets, au-delà de leur durée de vie "classique".
   note: |
@@ -40,17 +40,11 @@ divers . ameublement . préservation:
     - maximum
 
 divers . ameublement . préservation . faible:
-  titre: Je m’en sépare facilement
+  titre: L’ancien n’était plus à votre goût
 divers . ameublement . préservation . moyen:
-  titre: J’essaie d’en prendre soin et de réparer
+  titre: Vous en aviez besoin (déménagement, travaux, objet défectueux...)
 divers . ameublement . préservation . maximum:
-  titre: Je me sépare seulement des objets irréparables ou usés à la corde
-
-divers . ameublement . notif préservation:
-  type: notification
-  formule: préservation = 'maximum'
-  description: |
-    Vous avez indiqué préserver au maximum vos biens. Il faut savoir que ce niveau d'engagement correspond à une personne qui a l'habitude de réparer ses objets et qui ne les jette que lorsque ce n'est plus possible de le faire.
+  titre: Vous n'avez pas réussi à réparer le précédent
 
 divers . coefficient préservation:
   note: |
@@ -64,3 +58,15 @@ divers . coefficient préservation:
       - si: divers . ameublement . préservation = 'maximum'
         alors: 4 / 3
       - sinon: 1
+
+divers . nombre par tranche de x m2:
+  note: |
+    Cette règle permet de définir un nombre d'objets (meubles, appareils électroménagers, etc.) en fonction de la surface du logement.
+    L'idée est de compter un appareil par tranche de x m2.
+  formule: 1 + nombre de tranches
+  arrondi: oui
+  avec:
+    tranche: 1 m2
+    nombre de tranches:
+      formule: (logement . surface / tranche) - 0.5
+      arrondi: oui
