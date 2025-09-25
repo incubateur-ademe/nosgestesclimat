@@ -6,6 +6,9 @@ import c from 'ansi-colors'
 import yargs from 'yargs'
 import { readFile } from 'fs/promises'
 import { serializeUnit } from 'publicodes'
+import tar from 'tar-stream'
+import zlib from 'zlib'
+import { Readable } from 'stream'
 
 const PREPROD_PREVIEW_URL =
   'https://nosgestesclimat-dev.s3.fr-par.scw.cloud/model/nightly/'
@@ -119,6 +122,48 @@ export function getRulesFromDist(version, region, lang) {
       console.error(e.message)
       process.exit(1)
     })
+}
+
+export async function getRulesFromPreviousRelease(version, region, lang) {
+  const url = `https://registry.npmjs.org/@incubateur-ademe/nosgestesclimat/-/nosgestesclimat-${version}.tgz`
+  const fileName = 'nosgestesclimat.model.json'
+  const res = await fetch(url)
+  if (!res.ok) {
+    throw new Error(
+      `Impossible de télécharger le tarball npm depuis ${url}: ${res.status}`
+    )
+  }
+
+  const extract = tar.extract()
+  const gunzip = zlib.createGunzip()
+
+  return new Promise((resolve, reject) => {
+    let found = false
+
+    extract.on('entry', (header, stream, next) => {
+      if (header.name === `package/${fileName}`) {
+        let data = ''
+        stream.on('data', (chunk) => (data += chunk))
+        stream.on('end', () => {
+          found = true
+          try {
+            resolve(JSON.parse(data))
+          } catch (e) {
+            reject(new Error(`Erreur de parsing JSON: ${e.message}`))
+          }
+        })
+      }
+      stream.on('end', next)
+      stream.resume()
+    })
+
+    extract.on('finish', () => {
+      if (!found)
+        reject(new Error(`Fichier ${fileName} introuvable dans le package`))
+    })
+
+    Readable.fromWeb(res.body).pipe(gunzip).pipe(extract)
+  })
 }
 
 export function getPersonasFromDist(version, region, lang) {
