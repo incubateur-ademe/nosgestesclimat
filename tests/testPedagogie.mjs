@@ -11,7 +11,7 @@ const baseRules = await getLocalRules(country, language)
 const actionRules = baseRules['actions']?.formule?.somme
 
 const pedagogieActionRules = Object.keys(baseRules).reduce((acc, rule) => {
-  if (rule.startsWith('ui . pédagogie . sous catégories')) {
+  if (rule.startsWith('ui . pédagogie')) {
     const actions = baseRules[rule]?.actions || []
     return acc.concat(actions)
   }
