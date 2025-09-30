@@ -7,6 +7,7 @@
 
 const utils = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
 const cli = require('@incubateur-ademe/nosgestesclimat-scripts/cli')
+const { utils: publicodesUtils } = require('publicodes')
 
 const attrSuffixesToIgnore = ['.lock', '.auto', '.previous_review']
 
@@ -45,8 +46,56 @@ const addTranslationToBaseRules = (baseRules, translatedRules) => {
     updateBaseRules(baseRuleName, baseRuleAttributes, translatedSuggestions)
   }
 
+  const updateBaseRulesWithAvec = (
+    baseRuleNameAvec,
+    baseRuleAttributesAvec,
+    transVal
+  ) => {
+    const parentRuleName = publicodesUtils.ruleParent(baseRuleNameAvec)
+    const leafRuleName = publicodesUtils.nameLeaf(baseRuleNameAvec)
+    if (
+      typeof baseRules[parentRuleName]?.['avec']?.[leafRuleName] !== 'object'
+    ) {
+      // for rules with formula directly implemented (ex: transport . empreinte au km covoiturage: 0.2 kgCO2e/km)
+      baseRules[parentRuleName]['avec'][leafRuleName] = {
+        valeur: baseRules[parentRuleName]['avec'][leafRuleName]
+      }
+    }
+    if (
+      utils.objPath(
+        [parentRuleName, 'avec', leafRuleName, baseRuleAttributesAvec],
+        baseRules
+      ) ||
+      // When the base rule hasn't a 'titre' attribute, it is automatically
+      // added during the translation process.
+      // Therefore, we need to add the 'titre' attribute to the base rule.
+      baseRuleAttributesAvec.includes('titre')
+    ) {
+      baseRules = utils.customAssocPath(
+        [parentRuleName, 'avec', leafRuleName, baseRuleAttributesAvec],
+        transVal,
+        baseRules
+      )
+    }
+  }
+
   Object.entries(translatedRules).forEach(([rule, attrs]) => {
     let baseRule = baseRules[rule]
+    if (
+      baseRule === undefined &&
+      Object.keys(
+        baseRules[publicodesUtils.ruleParent(rule)]?.['avec'] || {}
+      ).includes(publicodesUtils.nameLeaf(rule))
+    ) {
+      Object.entries(attrs)
+        .filter(([attr, _]) =>
+          attrSuffixesToIgnore.every((s) => !attr.endsWith(s))
+        )
+        .forEach(([attr, transVal]) => {
+          updateBaseRulesWithAvec(rule, attr, transVal)
+        })
+      return
+    }
     if (baseRule !== undefined) {
       Object.entries(attrs)
         .filter(([attr, _]) =>
