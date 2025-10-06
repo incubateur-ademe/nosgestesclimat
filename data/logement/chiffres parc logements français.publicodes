@@ -1,12 +1,12 @@
 parc français:
-  DLUO: 01/09/2025
+  DLUO: 01/09/2026
   description: |
     L'objectif de ce petit modèle est d'estimer les valeurs moyennes associées au logement (surface, surface chauffée au gaz, consommation par chauffage...) pour obtenir une empreinte moyenne totale du logement qui soit représentative du français moyen. 
 
     La difficulté en effet, c'est que certains foyers se chauffent au gaz (~40%), à l'électricité (~40%), au fioul, au bois, etc. 
 
     Nous attribuons donc comme moyenne d'empreinte climat l'empreinte des kWh de ces énergies pondérées par leur usage réel dans le parc français.
-  note: Ce modèle est basé sur le jeu de données du Ceren et SDES [Consommation d'énergie par usage du résidentiel](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel).
+  note: Ce modèle est basé sur le jeu de données du Ceren et SDES [Consommation d'énergie par usage du résidentiel](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel), pour l'année 2023.
 
 parc français . surface moyenne:
   titre: Surface moyenne par logement
@@ -29,12 +29,12 @@ parc français . surface totale:
   note: Surface totale habitable en France
 
 parc français . surface totale appartements:
-  formule: 819081251
+  formule: 872718132
   unité: m2
   note: Surface totale habitable en France
 
 parc français . surface totale maisons:
-  formule: 1887756548
+  formule: 1909015144
   unité: m2
   note: Surface totale habitable en France
 
@@ -44,11 +44,11 @@ parc français . nombre logements:
 
 parc français . nombre appartements:
   titre: Nombre d'appartements en France
-  formule: 13142142
+  formule: 13489038
 
 parc français . nombre maisons:
   titre: Nombre de maisons en France
-  formule: 16699885
+  formule: 16916999
 
 parc français . surface:
   titre: Surface totale par somme des énergies
@@ -63,27 +63,35 @@ parc français . surface:
   note: on considère ici toutes les sources d'énergie servant à chauffer le parc français.
 
 parc français . surface . électricité:
-  formule: 980364088
+  formule: électricité hors PAC + électricité PAC
+  unité: m2
+
+parc français . surface . électricité hors PAC:
+  formule: 705753117
+  unité: m2
+
+parc français . surface . électricité PAC:
+  formule: 342034860
   unité: m2
 
 parc français . surface . gaz:
-  formule: 957251338
+  formule: 954498123
   unité: m2
 
 parc français . surface . fioul:
-  formule: 296898719
+  formule: 250118076
   unité: m2
 
 parc français . surface . bois:
-  formule: 319546177
+  formule: 365026770
   unité: m2
 
 parc français . surface . réseau de chaleur:
-  formule: 97385759
+  formule: 107964972
   unité: m2
 
 parc français . surface . GPL:
-  formule: 47600352
+  formule: 46304442
   unité: m2
 
 parc français . surface . part électricité:
@@ -104,21 +112,9 @@ parc français . surface . part réseau de chaleur:
 parc français . surface . part GPL:
   formule: GPL / surface
 
-parc français . empreinte électricité totale par m2:
-  formule:
-    somme:
-      - chauffage . empreinte électricité par m2
-      - empreinte électricité autre par m2
-
-parc français . empreinte électricité relative par m2:
-  formule:
-    somme:
-      - chauffage . empreinte électricité moyenne par m2
-      - empreinte électricité autre par m2
-
 parc français . chauffage:
   note: |
-    La consommation pour l'eau chaude sanitaire (ECS) et pour la cuisson sont également intégrées dans les consommations.
+    La consommation pour l'eau chaude sanitaire (ECS) et pour la cuisson sont également intégrées dans les consommations sous l'intitulé "chauffage".
 
 parc français . chauffage . empreinte moyenne par m2:
   formule: empreinte moyenne par m2 hors électricité + empreinte électricité moyenne par m2
@@ -133,6 +129,7 @@ parc français . chauffage . empreinte moyenne par m2 hors électricité:
       - surface . part bois * empreinte granulés par m2 / 2
       - surface . part réseau de chaleur * empreinte réseau de chaleur par m2
       - surface . part GPL * empreinte GPL par m2
+  unité: kgCO2e/m2
 
 parc français . chauffage . empreinte électricité moyenne par m2:
   formule: surface . part électricité * empreinte électricité par m2
@@ -144,17 +141,37 @@ parc français . chauffage . consommation électricité:
 
 parc français . chauffage . consommation électricité . chauffage:
   titre: conso électrique liée au chauffage
-  formule: 54859667824
+  formule: consommation électricité hors PAC . chauffage + consommation électricité PAC . chauffage
+  unité: kWh
+
+parc français . chauffage . consommation électricité hors PAC . chauffage:
+  titre: conso électrique hors PAC liée au chauffage
+  formule: 32767771470
+  unité: kWh
+
+parc français . chauffage . consommation électricité PAC . chauffage:
+  titre: conso électrique via PAC liée au chauffage
+  formule: 10764437339
   unité: kWh
 
 parc français . chauffage . consommation électricité . ecs:
   titre: conso électrique liée à l'eau chaude sanitaire
-  formule: 23584851016
+  formule: consommation électricité hors PAC . ecs + consommation électricité PAC . ecs
+  unité: kWh
+
+parc français . chauffage . consommation électricité hors PAC . ecs:
+  titre: conso électrique hors PAC liée à l'eau chaude sanitaire
+  formule: 15371034254
+  unité: kWh
+
+parc français . chauffage . consommation électricité PAC . ecs:
+  titre: conso électrique via PAC liée à l'eau chaude sanitaire
+  formule: 1223271923
   unité: kWh
 
 parc français . chauffage . consommation électricité . cuisson:
   titre: conso électrique liée à la cuisson
-  formule: 11416870555
+  formule: 12675049858
   unité: kWh
 
 parc français . chauffage . consommation gaz:
@@ -163,17 +180,17 @@ parc français . chauffage . consommation gaz:
 
 parc français . chauffage . consommation gaz . chauffage:
   titre: conso gaz liée au chauffage
-  formule: 127612842299
+  formule: 79188175605
   unité: kWh
 
 parc français . chauffage . consommation gaz . ecs:
   titre: conso gaz liée à l'eau chaude sanitaire
-  formule: 16352819408
+  formule: 12567904383
   unité: kWh
 
 parc français . chauffage . consommation gaz . cuisson:
   titre: conso gaz liée à la cuisson
-  formule: 8782069682
+  formule: 7262314502
   unité: kWh
 
 parc français . chauffage . consommation moyenne gaz cuisson:
@@ -187,12 +204,12 @@ parc français . chauffage . consommation fioul:
 
 parc français . chauffage . consommation fioul . chauffage:
   titre: conso fioul liée au chauffage
-  formule: 34411968770
+  formule: 27080257431
   unité: kWh
 
 parc français . chauffage . consommation fioul . ecs:
   titre: conso fioul liée à l'eau chaude sanitaire
-  formule: 4966662524
+  formule: 3479038952
   unité: kWh
 
 parc français . chauffage . consommation bois:
@@ -201,12 +218,12 @@ parc français . chauffage . consommation bois:
 
 parc français . chauffage . consommation bois . chauffage:
   titre: conso bois liée au chauffage
-  formule: 78131629948
+  formule: 67495214834
   unité: kWh
 
 parc français . chauffage . consommation bois . ecs:
   titre: conso bois liée à l'eau chaude sanitaire
-  formule: 471619496
+  formule: 681666471
   unité: kWh
 
 parc français . chauffage . consommation réseau de chaleur:
@@ -215,12 +232,12 @@ parc français . chauffage . consommation réseau de chaleur:
 
 parc français . chauffage . consommation réseau de chaleur . chauffage:
   titre: conso réseau de chaleur liée au chauffage
-  formule: 13510305626
+  formule: 10583771417
   unité: kWh
 
 parc français . chauffage . consommation réseau de chaleur . ecs:
   titre: conso réseau de chaleur liée à l'eau chaude sanitaire
-  formule: 3539548818
+  formule: 3540333431
   unité: kWh
 
 parc français . chauffage . consommation GPL:
@@ -229,17 +246,17 @@ parc français . chauffage . consommation GPL:
 
 parc français . chauffage . consommation GPL . chauffage:
   titre: conso GPL liée au chauffage
-  formule: 3650724623
+  formule: 3183923897
   unité: kWh
 
 parc français . chauffage . consommation GPL . ecs:
   titre: conso GPL liée à l'eau chaude sanitaire
-  formule: 724781874
+  formule: 472256142
   unité: kWh
 
 parc français . chauffage . consommation GPL . cuisson:
   titre: conso GPL liée à la cuisson
-  formule: 4268583298
+  formule: 3329319018
   unité: kWh
 
 parc français . chauffage . consommation électricité par m2:
@@ -280,8 +297,12 @@ parc français . chauffage . empreinte fioul par m2:
   unité: kgCO2e/m2
 
 parc français . chauffage . empreinte fioul par m2 . intensité carbone fioul:
-  formule: 0.324
+  formule: 0.323 * 1.111
   unité: kgCO2e/kWh
+  note: |
+    Documentation de la Base Empreinte: Rapport PCS/PCI = 1,111
+
+    Base Empreinte : Fioul domestique (en kWh PCI)
 
 parc français . chauffage . empreinte buches par m2:
   formule: consommation bois par m2 * logement . chauffage . bois . fe bûches
@@ -300,11 +321,14 @@ parc français . chauffage . empreinte GPL par m2:
   unité: kgCO2e/m2
 
 parc français . chauffage . empreinte GPL par m2 . intensité carbone GPL:
-  formule: 0.272
+  formule: 0.271 * 1.111
   unité: kgCO2e/kWh
   note: |
-    Facteur d'émission issu de le Base Carbone (GPL pour véhicule routier). 
-    Il n'y a pas de GPL de "maison" dans la Base Carbone. Une solution pourrait être de pointer directement sur le facteur d'émission gaz naturel ?
+    Documentation de la Base Empreinte: Rapport PCS/PCI = 1,111
+
+    Base Empreinte : GPL pour véhicule routier (en kWh PCI)
+
+    Il n'y a pas de GPL domestique dans la Base Empreinte. Une solution pourrait être de pointer directement sur le facteur d'émission gaz naturel ?
 
 parc français . chauffage . consommation électricité moyenne:
   formule: consommation électricité par m2 * logement . surface
@@ -332,13 +356,22 @@ parc français . chauffage . consommation GPL moyenne:
   unité: kWh
 
 parc français . consommation électricité autre:
-  formule: 74810546534 + 2000000000
-  note: spécifique + climatisation
+  formule: spécifique + climatisation
   unité: kWh
 
 parc français . consommation électricité autre par m2:
   formule: consommation électricité autre / surface totale
   unité: kWh/m2
+
+parc français . consommation électricité autre . spécifique:
+  titre: conso électrique liée aux usages spécifiques (éclairage, appareils électriques, etc.)
+  formule: 73037440099
+  unité: kWh
+
+parc français . consommation électricité autre . climatisation:
+  titre: conso électrique liée à la climatisation
+  formule: 2141336346
+  unité: kWh
 
 parc français . empreinte électricité autre par m2:
   formule: consommation électricité autre par m2 * logement . électricité . intensité carbone équivalente
@@ -395,15 +428,6 @@ parc français . chauffage . empreinte GPL chauffage air par m2:
 
 ### Focus PAC
 
-parc français . surface . électricité hors PAC:
-  formule: surface . électricité - surface . électricité PAC
-  unité: m2
-
-parc français . surface . électricité PAC:
-  formule: 301589218
-  unité: m2
-  note: Cette surface est compris dans `surface . électricité`.
-
 parc français . surface . part hors PAC électricité:
   formule: surface . électricité hors PAC / surface . électricité
 
@@ -414,21 +438,9 @@ parc français . chauffage . consommation électricité hors PAC:
   formule: consommation électricité hors PAC . chauffage + surface . part hors PAC électricité * (consommation électricité . ecs + consommation électricité . cuisson)
   unité: kWh
 
-parc français . chauffage . consommation électricité hors PAC . chauffage:
-  titre: conso électrique hors PAC liée au chauffage
-  formule: consommation électricité . chauffage - consommation électricité PAC . chauffage
-  unité: kWh
-  note: Cette consommation est compris dans `consommation électricité . chauffage`.
-
 parc français . chauffage . consommation électricité PAC:
   formule: consommation électricité PAC . chauffage + surface . part PAC électricité * (consommation électricité . ecs + consommation électricité . cuisson)
   unité: kWh
-
-parc français . chauffage . consommation électricité PAC . chauffage:
-  titre: conso électrique via PAC liée au chauffage
-  formule: 14077969585
-  unité: kWh
-  note: Cette consommation est compris dans `consommation électricité . chauffage`.
 
 parc français . chauffage . consommation électricité hors PAC par m2:
   formule: consommation électricité hors PAC / surface . électricité hors PAC
