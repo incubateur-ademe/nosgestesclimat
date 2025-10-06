@@ -12,7 +12,7 @@ const engineFr = new Engine(localFrRules, { logger: disabledLogger })
 const engineEn = new Engine(localEnRules, { logger: disabledLogger })
 
 const nbRules = Object.keys(localFrRules).length
-const errors = { en: [], es: [] }
+const errors = { en: [] }
 
 for (const rule in localFrRules) {
   try {
