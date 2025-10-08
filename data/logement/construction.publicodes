@@ -126,8 +126,8 @@ logement . construction . rénovation . travaux . travaux réalisés:
     une de ces conditions:
       - rénovation . présent
       - isolation . présent
-      - chauffage . présent
-      - extension . présent
+  note: |
+    Cette variable est utilisée pour ajuster la durée d'amortissement de la construction de base. Si des travaux de rénovation ou d'isolation ont été réalisés, on considère que la durée d'amortissement de la construction est rallongée de 25 ans.
 
 logement . construction . rénovation . travaux . rénovation:
   titre: Rénovation
@@ -182,7 +182,7 @@ logement . construction . rénovation . travaux . extension:
         alors: ratio * logement . construction . base . maison
       - sinon: 0
   note: |
-    Si le logement n'est pas encore amorti, on considère que l'extension est comprise dans la construction de base.
+    On ne considère pas de cas où l'extension est déjà amortie. L'extension est considérée comme une nouvelle construction, avec un facteur d'émission identique à celui d'une maison neuve. Néanmoins, cette empreinte est vraissemblablement déjà prise en compte dans la surface du logement renseignée. Il s'agit donc d'ajouter une empreinte supplémentaire dans le cas où le logement de base est déjà amorti.
   unité: kgCO2e/m2
 
 logement . construction . rénovation . travaux . extension . présent:
@@ -191,6 +191,7 @@ logement . construction . rénovation . travaux . extension . présent:
 
 logement . construction . rénovation . travaux . extension . ratio:
   formule: taille / logement . surface
+  plafond: 0.3
 
 logement . construction . rénovation . travaux . extension . taille:
   question: Quelle est la taille de l'extension réalisée (en m²) ?
