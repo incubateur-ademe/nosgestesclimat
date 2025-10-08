@@ -25,7 +25,7 @@ logement . construction . empreinte amortie:
 logement . construction . base:
   formule:
     variations:
-      - si: logement . âge < plafond
+      - si: logement . âge équivalent < plafond
         alors:
           variations:
             - si: logement . est un appartement
@@ -62,15 +62,15 @@ logement . construction . base . amortissement:
   formule:
     variations:
       - si: rénovation . travaux . travaux réalisés
-        alors: 75
+        alors: 70
       - sinon: 50
   note: |
-    La durée de vie d'un bâtiment est fixée à 50 ans (voir la [documentation de la base empreinte, onglet Achats de bien/ Bâtiments](https://prod-basecarbonesolo.ademe-dri.fr/documentation/UPLOAD_DOC_FR/)). Si le logement est rénové, cette durée est rallongée de 25 ans.
+    La durée de vie d'un bâtiment est fixée à 50 ans (voir la [documentation de la base empreinte, onglet Achats de bien/ Bâtiments](https://prod-basecarbonesolo.ademe-dri.fr/documentation/UPLOAD_DOC_FR/)). Si le logement est rénové ou isolé, nous faisons l'hypothèse que cette durée est rallongée de 20 ans.
 
 logement . construction . rafraichissement:
   titre: Travaux de rafraîchissement
   icônes: 🎨
-  applicable si: logement . âge >= seuil
+  applicable si: logement . âge équivalent >= seuil
   formule: 40 kgCO2e/m2 / amortissement
   unité: kgCO2e/m2
   description: |
@@ -86,7 +86,7 @@ logement . construction . rafraichissement . amortissement:
   formule: 10
 
 logement . construction . rénovation:
-  applicable si: logement . âge >= seuil
+  applicable si: logement . âge équivalent >= seuil
   formule: travaux / amortissement
   unité: kgCO2e/m2
 
@@ -98,7 +98,7 @@ logement . construction . rénovation . amortissement:
   formule: 25
 
 logement . construction . rénovation . travaux:
-  applicable si: logement . âge > seuil
+  applicable si: logement . âge équivalent > seuil
   question: Des travaux de rénovation ont-ils été réalisés dans votre logement (hors rafraîchissement) depuis 2000 ?
   mosaique:
     type: selection
@@ -179,7 +179,7 @@ logement . construction . rénovation . travaux . extension:
   applicable si: extension . présent
   formule:
     variations:
-      - si: logement . âge > logement . construction . base . plafond
+      - si: logement . âge équivalent > logement . construction . base . plafond
         alors: ratio * logement . construction . base . maison
       - sinon: 0
   note: |
@@ -204,7 +204,7 @@ logement . construction . artificialisation sols:
   applicable si: logement . est une maison
   formule:
     variations:
-      - si: logement . âge < plafond
+      - si: logement . âge équivalent < plafond
         alors: empreinte / amortissement
       - sinon: 0
   unité: kgCO2e/m2
