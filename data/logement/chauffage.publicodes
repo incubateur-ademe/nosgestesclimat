@@ -13,6 +13,7 @@ logement . chauffage:
       - bouteille gaz . présent
       - fioul . présent
       - citerne propane . présent
+      - chauffe eau solaire . présent
       - aucun . présent
   icônes: 🌡️
   question: Quel type d'énergie utilisez-vous pour le chauffage de votre logement, eau chaude, cuisson, etc. ?
@@ -60,6 +61,8 @@ logement . chauffage . choix utilisateur:
       - est défini: citerne propane . présent
       - est défini: fioul . présent
       - est défini: bois . présent
+      - est défini: chauffe eau solaire . présent
+      - est défini: aucun . présent
 
 logement . chauffage . aucun:
   titre: Aucun
@@ -118,7 +121,10 @@ logement . chauffage . gaz . consommation:
   non applicable si: gaz . présent = non
   question: Quelle est la consommation annuelle de gaz de votre foyer ?
   aide: logement . chauffage . gaz . consommation estimée via le coût . saisie
-  par défaut: parc français . chauffage . consommation gaz par m2 * surface
+  par défaut:
+    somme:
+      - consommation par défaut
+      - (-1) * consommation par défaut * parc français . chauffage . part ecs gaz * chauffe eau solaire . taux réduction ecs
   plancher: 0
   plafond: 150000
   unité: kWh
@@ -126,6 +132,9 @@ logement . chauffage . gaz . consommation:
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
 
     > Il se peut que votre copropriété ne vous communique pas la consommation en kWh de votre logement, quand la chaudière est centralisée. Cela dit, elle doit vous fournir le montant en €, que vous pourrez saisir ci-dessous pour estimer vos kWh.
+
+logement . chauffage . gaz . consommation par défaut:
+  formule: parc français . chauffage . consommation gaz par m2 * surface
 
 logement . chauffage . gaz . consommation estimée via le coût:
   titre: Consommation estimée via le coût
@@ -441,7 +450,13 @@ logement . chauffage . fioul . consommation:
   unité: l
   description: |
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur votre facture de fioul ou sur votre compte en ligne sur le site de votre fournisseur.
-  par défaut: parc français . chauffage . consommation fioul par m2 * fioul kWh au litre * surface
+  par défaut:
+    somme:
+      - consommation par défaut
+      - (-1) * consommation par défaut * parc français . chauffage . part ecs fioul * chauffe eau solaire . taux réduction ecs
+
+logement . chauffage . fioul . consommation par défaut:
+  formule: parc français . chauffage . consommation fioul par m2 * fioul kWh au litre * surface
 
 logement . chauffage . fioul . consommation estimée via le coût:
   titre: Consommation estimée via le coût
@@ -660,12 +675,18 @@ logement . chauffage . réseau de chaleur . consommation:
   aide: logement . chauffage . réseau de chaleur . consommation estimée via le coût . saisie
   plancher: 0
   plafond: 150000
-  par défaut: parc français . chauffage . consommation réseau de chaleur par m2 * surface
+  par défaut:
+    somme:
+      - consommation par défaut
+      - (-1) * consommation par défaut * parc français . chauffage . part ecs réseau de chaleur * chauffe eau solaire . taux réduction ecs
   unité: kWh
   description: |
     Vous trouverez vos consommations annuelles d'énergie sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
 
     > Il se peut que votre copropriété ne vous communique pas la consommation en kWh de votre logement, quand la chaudière est centralisée. Cela dit, elle doit vous fournir le montant en €, que vous pourrez saisir ci-dessous pour estimer vos kWh.
+
+logement . chauffage . réseau de chaleur . consommation par défaut:
+  formule: parc français . chauffage . consommation réseau de chaleur par m2 * surface
 
 logement . chauffage . réseau de chaleur . consommation estimée via le coût:
   titre: Consommation estimée via le coût
@@ -704,3 +725,21 @@ logement . chauffage . réseau de chaleur . intensité carbone:
   unité: kgCO2e/kWh
   note: |
     Facteur d'émission issu de l'[enquête FEDEN sur les réseaux de chaleur en France 2024](https://fedene.fr/ressource/enquete-annuelle-des-reseaux-de-chaleur-et-de-froid-2024/), page 4.
+
+logement . chauffage . chauffe eau solaire:
+  icônes: ☀️💧
+  titre: Chauffe-eau solaire
+
+logement . chauffage . chauffe eau solaire . présent:
+  question: Avez-vous un chauffe-eau solaire individuel (CESI) ?
+
+logement . chauffage . chauffe eau solaire . taux réduction ecs:
+  applicable si:
+    toutes ces conditions:
+      - est défini: chauffe eau solaire . présent
+      - chauffe eau solaire . présent
+  titre: Économie d'énergie grâce au chauffe-eau solaire
+  note: |
+    En moyenne, un chauffe-eau solaire individuel (CESI) permet de couvrir 60% des besoins en eau chaude sanitaire (voir [cet article de l'ADEME](https://agirpourlatransition.ademe.fr/particuliers/maison/chauffage/chauffer-leau-solei)). On évite donc une part des consommations d'énergie liées à l'eau chaude sanitaire. Cette valeur est utilisée uniquement dans le cas où l'utilisateurice ne connaît pas précisément ses consommations d'énergie, et pour les énergie permettant de chauffer l'eau chaude sanitaire à savoir l'électricité, le gaz, le fioul et le réseau de chaleur.
+  formule: 60%
+  unité: '%'
