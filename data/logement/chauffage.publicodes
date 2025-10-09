@@ -13,6 +13,7 @@ logement . chauffage:
       - bouteille gaz . présent
       - fioul . présent
       - citerne propane . présent
+      - aucun . présent
   icônes: 🌡️
   question: Quel type d'énergie utilisez-vous pour le chauffage de votre logement, eau chaude, cuisson, etc. ?
   description: |
@@ -25,14 +26,21 @@ logement . chauffage:
 
 logement . chauffage . empreinte totale:
   formule:
-    somme:
-      - gaz . empreinte
-      - bouteille gaz . empreinte
-      - citerne propane . empreinte
-      - fioul . empreinte
-      - bois . empreinte
-      - réseau de chaleur . empreinte
-      # chauffage électrique et PAC déjà compté dans la conso électrique
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: aucun . présent
+            - aucun . présent
+        alors: 0
+      - sinon:
+          somme:
+            - gaz . empreinte
+            - bouteille gaz . empreinte
+            - citerne propane . empreinte
+            - fioul . empreinte
+            - bois . empreinte
+            - réseau de chaleur . empreinte
+            # chauffage électrique et PAC déjà compté dans la conso électrique
   unité: kgCO2e
 
 logement . chauffage . empreinte par défaut:
@@ -52,6 +60,13 @@ logement . chauffage . choix utilisateur:
       - est défini: citerne propane . présent
       - est défini: fioul . présent
       - est défini: bois . présent
+
+logement . chauffage . aucun:
+  titre: Aucun
+  icônes: ❌
+
+logement . chauffage . aucun . présent:
+  question: Votre logement ne dispose d'aucune source d'énergie pour le chauffage, l'eau chaude ou la cuisson ?
 
 logement . chauffage . PAC:
   titre: Pompe à chaleur
