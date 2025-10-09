@@ -4,7 +4,7 @@ import { getArgs, getLocalRules, printResults } from './commons.mjs'
  * Check pédagogie.publicodes file to ensure that all actions are still valid
  */
 
-const { country, language, markdown } = getArgs()
+const { country, language } = getArgs()
 
 const baseRules = await getLocalRules(country, language)
 
