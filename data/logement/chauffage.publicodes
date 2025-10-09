@@ -15,10 +15,12 @@ logement . chauffage:
       - citerne propane . présent
       - chauffe eau solaire . présent
       - aucun . présent
+      - logement . climatisation . présent
+      - logement . électricité . photovoltaique . présent
   icônes: 🌡️
-  question: Quel type d'énergie utilisez-vous pour le chauffage de votre logement, eau chaude, cuisson, etc. ?
+  question: Quel système d'énergie utilisez-vous pour le chauffage ou la climatisation, l'eau chaude, la cuisson ?
   description: |
-    Cochez l'ensemble des sources d'énergie qui alimentent vos chauffages, votre chauffe-eau, vos plaques de cuisson.
+    Cochez l'ensemble des sources d'énergie qui alimentent vos **chauffages**, **climatisation**, **chauffe-eau**, plaques de **cuisson**.
   formule:
     variations:
       - si: choix utilisateur
@@ -41,7 +43,8 @@ logement . chauffage . empreinte totale:
             - fioul . empreinte
             - bois . empreinte
             - réseau de chaleur . empreinte
-            # chauffage électrique et PAC déjà compté dans la conso électrique
+            # chauffage électrique, PAC, climatisation, PV déjà compté dans la conso électrique
+            # chauffe eau solaire réduit la conso moyenne du gaz, élec, fioul, bois
   unité: kgCO2e
 
 logement . chauffage . empreinte par défaut:
@@ -77,18 +80,6 @@ logement . chauffage . PAC:
 
 logement . chauffage . PAC . présent:
   question: Votre logement est-il chauffé via une pompe à chaleur ?
-
-logement . chauffage . notif électrique:
-  type: notification
-  formule:
-    toutes ces conditions:
-      - est défini: PAC . présent
-      - est défini: électricité . présent
-      - une de ces conditions:
-          - PAC . présent = oui
-          - électricité . présent = oui
-  description: |
-    Vous avez renseigné une pompe à chaleur ou un chauffage électrique : leur consommation est prise en compte via votre facture globale d'électricité.
 
 logement . chauffage . électricité:
   icônes: ⚡️
