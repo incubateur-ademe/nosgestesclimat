@@ -5,30 +5,22 @@ logement . chauffage:
   mosaique:
     type: selection
     options:
-      - PAC . présent
       - électricité . présent
       - gaz . présent
+      - PAC . présent
+      - bois . présent
       - réseau de chaleur . présent
       - bouteille gaz . présent
-      - citerne propane . présent
       - fioul . présent
-      - bois . présent
-    suggestions:
-      pas de chauffage:
-        PAC . présent: non
-        électricité . présent: non
-        gaz . présent: non
-        réseau de chaleur . présent: non
-        bouteille gaz . présent: non
-        citerne propane . présent: non
-        fioul . présent: non
-        bois . présent: non
+      - citerne propane . présent
+      - chauffe eau solaire . présent
+      - aucun . présent
+      - logement . climatisation . présent
+      - logement . électricité . photovoltaique . présent
   icônes: 🌡️
-  question: Quel type d'énergie utilisez-vous pour le chauffage de votre logement, eau chaude, cuisson, etc. ?
+  question: De quelles sources et systèmes d'énergie disposez-vous dans votre logement pour la cuisson, le chauffage, l'eau chaude, la climatisation ?
   description: |
-    > Cette question couvre l'ensemble des sources d'énergie qui vous permet d'alimenter vos chauffages, votre chauffe-eau, vos plaques de cuisson, etc.
-
-    Cochez tous les modes que vous utilisez.
+    **Ne sélectionnez pas "électricité"** si elle alimente seulement vos appareils électriques quotidiens (éclairage, électroménager, etc.).
   formule:
     variations:
       - si: choix utilisateur
@@ -37,14 +29,22 @@ logement . chauffage:
 
 logement . chauffage . empreinte totale:
   formule:
-    somme:
-      - gaz . empreinte
-      - bouteille gaz . empreinte
-      - citerne propane . empreinte
-      - fioul . empreinte
-      - bois . empreinte
-      - réseau de chaleur . empreinte
-      # chauffage électrique et PAC déjà compté dans la conso électrique
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: aucun . présent
+            - aucun . présent
+        alors: 0
+      - sinon:
+          somme:
+            - gaz . empreinte
+            - bouteille gaz . empreinte
+            - citerne propane . empreinte
+            - fioul . empreinte
+            - bois . empreinte
+            - réseau de chaleur . empreinte
+            # chauffage électrique, PAC, climatisation, PV déjà compté dans la conso électrique
+            # chauffe eau solaire réduit la conso moyenne du gaz, élec, fioul, bois
   unité: kgCO2e
 
 logement . chauffage . empreinte par défaut:
@@ -64,6 +64,15 @@ logement . chauffage . choix utilisateur:
       - est défini: citerne propane . présent
       - est défini: fioul . présent
       - est défini: bois . présent
+      - est défini: chauffe eau solaire . présent
+      - est défini: aucun . présent
+
+logement . chauffage . aucun:
+  titre: Aucun
+  icônes: ❌
+
+logement . chauffage . aucun . présent:
+  question: Votre logement ne dispose d'aucune source d'énergie pour le chauffage, l'eau chaude ou la cuisson ?
 
 logement . chauffage . PAC:
   titre: Pompe à chaleur
@@ -72,18 +81,6 @@ logement . chauffage . PAC:
 logement . chauffage . PAC . présent:
   question: Votre logement est-il chauffé via une pompe à chaleur ?
 
-logement . chauffage . notif électrique:
-  type: notification
-  formule:
-    toutes ces conditions:
-      - est défini: PAC . présent
-      - est défini: électricité . présent
-      - une de ces conditions:
-          - PAC . présent = oui
-          - électricité . présent = oui
-  description: |
-    Vous avez renseigné une pompe à chaleur ou un chauffage électrique : leur consommation est prise en compte via votre facture globale d'électricité.
-
 logement . chauffage . électricité:
   icônes: ⚡️
 
@@ -91,7 +88,7 @@ logement . chauffage . électricité . présent:
   question: Votre logement est-il chauffé à l'électricité ?
 
 logement . chauffage . gaz:
-  titre: Réseau de gaz
+  titre: Gaz de ville
   icônes: 🔥
   unité: kgCO2e
 
@@ -115,7 +112,10 @@ logement . chauffage . gaz . consommation:
   non applicable si: gaz . présent = non
   question: Quelle est la consommation annuelle de gaz de votre foyer ?
   aide: logement . chauffage . gaz . consommation estimée via le coût . saisie
-  par défaut: parc français . chauffage . consommation gaz par m2 * surface
+  par défaut:
+    somme:
+      - consommation par défaut
+      - (-1) * consommation par défaut * parc français . chauffage . part ecs gaz * chauffe eau solaire . taux réduction ecs
   plancher: 0
   plafond: 150000
   unité: kWh
@@ -123,6 +123,9 @@ logement . chauffage . gaz . consommation:
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
 
     > Il se peut que votre copropriété ne vous communique pas la consommation en kWh de votre logement, quand la chaudière est centralisée. Cela dit, elle doit vous fournir le montant en €, que vous pourrez saisir ci-dessous pour estimer vos kWh.
+
+logement . chauffage . gaz . consommation par défaut:
+  formule: parc français . chauffage . consommation gaz par m2 * surface
 
 logement . chauffage . gaz . consommation estimée via le coût:
   titre: Consommation estimée via le coût
@@ -167,7 +170,7 @@ logement . chauffage . gaz . avertissement biogaz:
   formule: biogaz
   type: notification
   description: |
-    Vous constaterez que le choix du biogaz réduit énormément l'empreinte climat du gaz que vous consommez, mais notez bien que la production actuelle est incapable de passer à l'échelle : la réduction globale de toute consommation de gaz reste essentielle, que l'on consomme du biogaz ou du gaz fossile.
+    Vous constaterez que le choix du biogaz réduit énormément l'empreinte climat du gaz que vous consommez. Néanmoins, la production annuelle n'est pas suffisante pour passer à l'échelle. La réduction de gaz reste aujourd'hui essentielle pour limiter son empreinte sur le climat.
 
 logement . chauffage . gaz . intensité carbone gaz utilisateur:
   formule:
@@ -256,7 +259,7 @@ logement . chauffage . biogaz . part:
   unité: '%'
 
 logement . chauffage . bouteille gaz:
-  icônes: 🛢️🔥
+  icônes: 🛢️
   titre: Bouteille de gaz
   unité: kgCO2e
 
@@ -349,7 +352,7 @@ logement . chauffage . empreinte propane:
   note: Base Empreinte - Propane/inclus maritime (2020).
 
 logement . chauffage . citerne propane:
-  icônes: 🛢️🔥
+  icônes: 🚛
   titre: Gaz propane en citerne
   unité: kgCO2e
 
@@ -438,7 +441,13 @@ logement . chauffage . fioul . consommation:
   unité: l
   description: |
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur votre facture de fioul ou sur votre compte en ligne sur le site de votre fournisseur.
-  par défaut: parc français . chauffage . consommation fioul par m2 * fioul kWh au litre * surface
+  par défaut:
+    somme:
+      - consommation par défaut
+      - (-1) * consommation par défaut * parc français . chauffage . part ecs fioul * chauffe eau solaire . taux réduction ecs
+
+logement . chauffage . fioul . consommation par défaut:
+  formule: parc français . chauffage . consommation fioul par m2 * fioul kWh au litre * surface
 
 logement . chauffage . fioul . consommation estimée via le coût:
   titre: Consommation estimée via le coût
@@ -657,12 +666,18 @@ logement . chauffage . réseau de chaleur . consommation:
   aide: logement . chauffage . réseau de chaleur . consommation estimée via le coût . saisie
   plancher: 0
   plafond: 150000
-  par défaut: parc français . chauffage . consommation réseau de chaleur par m2 * surface
+  par défaut:
+    somme:
+      - consommation par défaut
+      - (-1) * consommation par défaut * parc français . chauffage . part ecs réseau de chaleur * chauffe eau solaire . taux réduction ecs
   unité: kWh
   description: |
     Vous trouverez vos consommations annuelles d'énergie sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
 
     > Il se peut que votre copropriété ne vous communique pas la consommation en kWh de votre logement, quand la chaudière est centralisée. Cela dit, elle doit vous fournir le montant en €, que vous pourrez saisir ci-dessous pour estimer vos kWh.
+
+logement . chauffage . réseau de chaleur . consommation par défaut:
+  formule: parc français . chauffage . consommation réseau de chaleur par m2 * surface
 
 logement . chauffage . réseau de chaleur . consommation estimée via le coût:
   titre: Consommation estimée via le coût
@@ -701,3 +716,21 @@ logement . chauffage . réseau de chaleur . intensité carbone:
   unité: kgCO2e/kWh
   note: |
     Facteur d'émission issu de l'[enquête FEDEN sur les réseaux de chaleur en France 2024](https://fedene.fr/ressource/enquete-annuelle-des-reseaux-de-chaleur-et-de-froid-2024/), page 4.
+
+logement . chauffage . chauffe eau solaire:
+  icônes: ☀️
+  titre: Chauffe-eau solaire
+
+logement . chauffage . chauffe eau solaire . présent:
+  question: Avez-vous un chauffe-eau solaire individuel (CESI) ?
+
+logement . chauffage . chauffe eau solaire . taux réduction ecs:
+  applicable si:
+    toutes ces conditions:
+      - est défini: chauffe eau solaire . présent
+      - chauffe eau solaire . présent
+  titre: Économie d'énergie grâce au chauffe-eau solaire
+  note: |
+    En moyenne, un chauffe-eau solaire individuel (CESI) permet de couvrir 60% des besoins en eau chaude sanitaire (voir [cet article de l'ADEME](https://agirpourlatransition.ademe.fr/particuliers/maison/chauffage/chauffer-leau-solei)). On évite donc une part des consommations d'énergie liées à l'eau chaude sanitaire. Cette valeur est utilisée uniquement dans le cas où l'utilisateurice ne connaît pas précisément ses consommations d'énergie, et pour les énergie permettant de chauffer l'eau chaude sanitaire à savoir l'électricité, le gaz, le fioul et le réseau de chaleur.
+  formule: 60%
+  unité: '%'
