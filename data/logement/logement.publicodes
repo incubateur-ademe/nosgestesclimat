@@ -63,6 +63,8 @@ logement . surface:
         alors: parc français . surface moyenne appartement
       - si: logement . est une maison
         alors: parc français . surface moyenne maison
+      - si: logement . est un autre logement
+        alors: 20 m2
       - sinon: parc français . surface moyenne
   note: |
     Valeur par défaut obtenue dans [ce jeu de données du Ceren et SDES](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel).
@@ -79,11 +81,7 @@ logement . type:
     - appartement
     - autre
   description: |
-    L'augmentation de l'habitat en appartements peut nous faire oublier que la maison reste le logement majoritaire des foyers français en 2018.
-
     Cette information influence notamment l'empreinte de construction, mais aussi les possibilités de travaux d'isolation par exemple.
-
-    > Si vous vivez dans un habitat original, par exemple un camping-car / un camion / une péniche, pas de problème : choisissez "appartement" et saisissez les m² de ce qui constitue quand même votre logement.
   note: |
     En 2018, l’habitat individuel représente 56 % des logements ([Source INSEE](https://www.insee.fr/fr/statistiques/3676693?sommaire=3696937)) : il est majoritaire parmi les résidences principales comme parmi les résidences secondaires et logements occasionnels. Après avoir progressé entre 1999 et 2008 sa part recule légèrement, car le nombre de logements collectifs augmente plus vite que celui des logements individuels du fait des évolutions récentes de la construction neuve.
     Notons qu'il s'agit d'une proportion de logements ; or on peut s'attendre (à vérifier) à ce que les maisons contiennent davantage de gens en moyenne que les appartements, ce qui renforce le choix de la valeur par défaut.
@@ -97,12 +95,6 @@ logement . type . appartement:
 logement . type . autre:
   titre: Autre (van, mobilhome, yourte, tiny house)
 
-logement . type . notification autre:
-  type: notification
-  formule: logement . type = 'autre'
-  description: |
-    Malheureusement, nous ne disposons pas encore de parcours pour les personnes ne vivant pas en maison ou en appartement. Mais nous y travaillons !
-
 logement . est une maison:
   valeur:
     toutes ces conditions:
@@ -115,6 +107,13 @@ logement . est un appartement:
     toutes ces conditions:
       - est défini: logement . type
       - logement . type = 'appartement'
+      - logement . type moyen = non
+
+logement . est un autre logement:
+  valeur:
+    toutes ces conditions:
+      - est défini: logement . type
+      - logement . type = 'autre'
       - logement . type moyen = non
 
 logement . type moyen:
