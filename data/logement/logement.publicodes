@@ -50,6 +50,8 @@ logement . habitants . moyen:
 logement . surface:
   titre: Surface
   question: Quelle est la surface de votre logement ?
+  description: |
+    Si vous êtes en colocation, chez vos parents, ou habitat partagé, renseignez la surface totale du logement. Le nombre de personnes sera pris en compte par la suite.
   plancher: 1
   plafond: 999
   avertissement: |
@@ -61,6 +63,8 @@ logement . surface:
         alors: parc français . surface moyenne appartement
       - si: logement . est une maison
         alors: parc français . surface moyenne maison
+      - si: logement . est un autre logement
+        alors: 20 m2
       - sinon: parc français . surface moyenne
   note: |
     Valeur par défaut obtenue dans [ce jeu de données du Ceren et SDES](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel).
@@ -68,24 +72,16 @@ logement . surface:
     > Les logements ont une surface moyenne d’environ 91 m2.
 
     > Si vous vivez dans un logement original, par exemple un camping-car / un camion / une péniche, renseignez simplement les m² de ce logement.
-  suggestions:
-    studio: 25
-    3 pièces: 70
-    6 pièces: 130
-    Château 🏰: 500
   unité: m2
 
 logement . type:
-  question: Dans quel type de logement vivez-vous ?
+  question: Dans quel type de logement vivez-vous principalement ?
   une possibilité:
     - maison
     - appartement
+    - autre
   description: |
-    L'augmentation de l'habitat en appartements peut nous faire oublier que la maison reste le logement majoritaire des foyers français en 2018.
-
     Cette information influence notamment l'empreinte de construction, mais aussi les possibilités de travaux d'isolation par exemple.
-
-    > Si vous vivez dans un habitat original, par exemple un camping-car / un camion / une péniche, pas de problème : choisissez "appartement" et saisissez les m² de ce qui constitue quand même votre logement.
   note: |
     En 2018, l’habitat individuel représente 56 % des logements ([Source INSEE](https://www.insee.fr/fr/statistiques/3676693?sommaire=3696937)) : il est majoritaire parmi les résidences principales comme parmi les résidences secondaires et logements occasionnels. Après avoir progressé entre 1999 et 2008 sa part recule légèrement, car le nombre de logements collectifs augmente plus vite que celui des logements individuels du fait des évolutions récentes de la construction neuve.
     Notons qu'il s'agit d'une proportion de logements ; or on peut s'attendre (à vérifier) à ce que les maisons contiennent davantage de gens en moyenne que les appartements, ce qui renforce le choix de la valeur par défaut.
@@ -95,6 +91,9 @@ logement . type . maison:
 
 logement . type . appartement:
   titre: Appartement
+
+logement . type . autre:
+  titre: Autre (van, mobilhome, yourte, tiny house)
 
 logement . est une maison:
   valeur:
@@ -110,33 +109,78 @@ logement . est un appartement:
       - logement . type = 'appartement'
       - logement . type moyen = non
 
+logement . est un autre logement:
+  valeur:
+    toutes ces conditions:
+      - est défini: logement . type
+      - logement . type = 'autre'
+      - logement . type moyen = non
+
 logement . type moyen:
-  description: >
+  description: |
     Règle permettant de forcer le calcul de la valeur moyenne du logement
     (appartement/maison) sans pour autant ajouter une possibilité dans la règle
     `logement . type`.
-  valeur:
+  formule:
     est non défini: logement . type
 
 logement . âge:
-  DLUO: 01/09/2025
+  DLUO: 01/01/2026
   question: Quel est l'âge de votre logement ?
   description: |
-    Un petit doute ? L'info sera sûrement dans votre contrat d'assurance
-    logement.
-  plancher: 0
-  plafond: 1000
-  avertissement: |
-    Nous considérons qu'un millénaire est la limite haute pour l'âge d'un logement. Si votre logement est plus vieux, vous pouvez saisir 1000 ans.
-  par défaut: 45
-  unité: an
+    Un petit doute ? La date de construction de votre logement apparaît sans doute sur votre contrat d'assurance.
+  une possibilité:
+    - très récent
+    - récent
+    - ancien
+  par défaut: "'récent'"
   note: |
-    En France, 24% du parc de logements date d'avant 1949 et 24% entre 1949 et 1974 selon l'[INSEE](https://www.insee.fr/fr/statistiques/fichier/2586377/LOGFRA17.pdf).
+    Il n'est pas évident de trouver un "chiffre moyen" pour l'âge des logements en France. Néanmoins, l'[INSEE](https://www.insee.fr/fr/statistiques/7632072?geo=EPCI-242900553&sommaire=7632098) fournit, jusqu'à 2018, les tranches d'ancienneté des résidences principales en France métropolitaine, à savoir :
 
-    Pour Paris, [cette carte](https://www.comeetie.fr/galerie/BatiParis) interactive est fascinante si la question de l'âge de ses logements vous intéresse.
-  suggestions:
-    neuf: 0
-    récent: 10
-    années 70: 50
-    années 50: 70
-    un siècle: 100
+    | Période        | Répartition (%) |
+    |----------------|----------------|
+    | Avant 1919     | 7,2            |
+    | 1919–1945      | 5,4            |
+    | 1946–1970      | 15,7           |
+    | 1971–1990      | 32,0           |
+    | 1991–2005      | 21,3           |
+    | 2006–2017      | 18,4           |
+
+    En affectant une tranche médiane pour chaque période, on obtient un âge moyen pondéré d'environ 41 ans. En considérant que le parc de logements s'agrandit chaque année tout en vieillissant de manière générale, on peut arrondir cette valeur à 45 ans pour 2025.
+
+    NB: Pour Paris, [cette carte](https://www.comeetie.fr/galerie/BatiParis) interactive est fascinante si la question de l'âge de ses logements vous intéresse.
+
+logement . âge . très récent:
+  titre: Moins de 10 ans (après 2015)
+
+logement . âge . récent:
+  titre: Entre 10 et 50 ans
+
+logement . âge . ancien:
+  titre: Plus de 50 ans (avant 1975)
+
+logement . âge équivalent:
+  titre: Âge équivalent du logement
+  description: |
+    Les règles d'atttribution de l'âge du logement sont primordiales ici puisque les postes de constructions et rénovation sont directement liées à l'ancienneté du logement via les seuils d'amortissement.
+  note: |
+    Cette variable intermédiaire est nécessaire car elle permet de considérer l'âge renseigné dans les anciennes simulations, tout en permettant d'utiliser les 3 nouvelles possibilités d'ancienneté du logement (on conserve la même règle `logement . âge`, on peut même toujours utiliser cette règle pour un input numérique).
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - logement . âge < 10
+            - logement . âge = 'très récent'
+        alors: 5
+      - si:
+          une de ces conditions:
+            - toutes ces conditions:
+                - logement . âge >= 10
+                - logement . âge < 50
+            - logement . âge = 'récent'
+        alors: 30
+      - si:
+          une de ces conditions:
+            - logement . âge >= 50
+            - logement . âge = 'ancien'
+        alors: 75
