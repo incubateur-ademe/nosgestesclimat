@@ -67,12 +67,104 @@ logement . chauffage . choix utilisateur:
       - est défini: chauffe eau solaire . présent
       - est défini: aucun . présent
 
+# logement . chauffage . nombre sources chauffage air:
+#   formule:
+#     somme:
+#       - électricité . présent
+#       - gaz . présent
+#       - réseau de chaleur . présent
+#       -
+
+logement . chauffage . nombre sources ecs:
+  par défaut: 1
+  formule:
+    somme:
+      - électricité . présent
+      - gaz . présent
+      - fioul . présent
+      - réseau de chaleur . présent
+
+logement . chauffage . nombre sources cuisson:
+  par défaut: 1
+  formule:
+    somme:
+      - électricité . présent
+      - gaz . présent
+      - bouteille gaz . présent
+
 logement . chauffage . aucun:
   titre: Aucun
   icônes: ❌
 
 logement . chauffage . aucun . présent:
   question: Votre logement ne dispose d'aucune source d'énergie pour le chauffage, l'eau chaude ou la cuisson ?
+
+logement . chauffage . précision consommation:
+  question: Connaissez-vous précisément vos consommations ou factures d'énergie ? Votre DPE ?
+  une possibilité:
+    - conso exactes
+    - DPE
+    - aide
+  par défaut: "'aide'"
+
+logement . chauffage . précision consommation . conso exactes:
+  titre: J'ai en tête mes factures ou consommations
+
+logement . chauffage . précision consommation . DPE:
+  titre:: Je connais mon DPE
+
+logement . chauffage . précision consommation . aide:
+  titre: J'ai besoin d'aide pour estimer mes consommations
+
+logement . chauffage . DPE:
+  applicable si: précision consommation = 'DPE'
+  question: Quelle est le DPE de votre logement ?
+  une possibilité:
+    - A
+    - B
+    - C
+    - D
+    - E
+    - F
+    - G
+  par défaut: "'D'"
+  avec:
+    A:
+    B:
+    C:
+    D:
+    E:
+    F:
+    G:
+
+logement . chauffage . ressenti:
+  applicable si: précision consommation = 'aide'
+  question: Quel est votre ressenti sur le confort thermique de votre logement en hiver ?
+  note: |
+    L'idée est d'utiliser cette variable pour pondérer les consommations d'un logement moyen estimées via les consommations réelles du parc français, en considérant un DPE moyen en France à D. Ainsi, on peut ajuster la valeur moyenne de consommation avec un saut de classe de D vers A ou de D vers G selon le ressenti de l'utilisateur.
+  une possibilité:
+    - passoire thermique
+    - moyen
+    - confortable
+  par défaut: "'moyen'"
+
+logement . chauffage . ressenti . passoire thermique:
+  titre: Je chauffe mais j'ai froid
+  note: On considère dans ce cas un DPE A-B.
+
+logement . chauffage . ressenti . moyen:
+  titre: Je chauffe normalement, je n'ai pas froid
+  note: On considère dans ce cas un DPE D
+
+logement . chauffage . ressenti . confortable:
+  titre: Je chauffe peu et c'est très confortable
+  note: On considère dans ce cas un DPE F-G
+
+logement . chauffage . ressenti . saut D vers A:
+  formule: 80 kWh/m2 / 220 kWh/m2
+
+logement . chauffage . ressenti . saut D vers G:
+  formule: 400 kWh/m2 / 220 kWh/m2
 
 logement . chauffage . PAC:
   titre: Pompe à chaleur
@@ -86,6 +178,7 @@ logement . chauffage . électricité:
 
 logement . chauffage . électricité . présent:
   question: Votre logement est-il chauffé à l'électricité ?
+  par défaut: oui
 
 logement . chauffage . gaz:
   titre: Gaz de ville
@@ -103,19 +196,57 @@ logement . chauffage . gaz . empreinte:
 
 logement . chauffage . gaz . présent:
   question: Votre logement est-il chauffé au gaz ?
+  par défaut: oui
   note: |
     Bien que le chauffage majoritaire en France soit électrique [source](https://fr.statista.com/statistiques/856283/types-chauffage-logement-principal-france), nous mettons ici la valeur par défaut à oui pour se rapprocher de la moyenne d'empreinte du logement.
 
     On touche aux limites actuelles de ce système de situation par défaut.
 
 logement . chauffage . gaz . consommation:
-  non applicable si: gaz . présent = non
+  par défaut: consommation par défaut
+
+logement . chauffage . gaz . consommation par défaut:
+  titre: Consommation moyenne de gaz
+  formule:
+    somme:
+      - consommation moyenne
+      - (-1) * consommation moyenne * parc français . chauffage . part ecs gaz * chauffe eau solaire . taux réduction ecs
+  unité: kWh
+
+logement . chauffage . gaz . consommation moyenne réelle:
+  titre: Consommation moyenne réelle de gaz en tenant compte des autres modes de chauffage
+  formule:
+    somme:
+      - consommation moyenne chauffage
+      - consommation moyenne ecs / nombre sources ecs
+      - consommation moyenne cuisson / nombre sources cuisson
+
+logement . chauffage . gaz . consommation moyenne:
+  formule: parc français . chauffage . consommation gaz par m2 * surface
+  unité: kWh
+
+logement . chauffage . gaz . consommation moyenne chauffage:
+  formule: parc français . chauffage . part chauffage air gaz * consommation moyenne
+  unité: kWh
+
+logement . chauffage . gaz . consommation moyenne ecs:
+  formule:
+    somme:
+      - parc français . chauffage . part ecs gaz * consommation moyenne
+      - (-1) * parc français . chauffage . part ecs gaz * consommation moyenne * chauffe eau solaire . taux réduction ecs * consommation moyenne
+  unité: kWh
+
+logement . chauffage . gaz . consommation moyenne cuisson:
+  formule: parc français . chauffage . part cuisson gaz * consommation moyenne
+  unité: kWh
+
+logement . chauffage . gaz . consommation précise:
+  # non applicable si: gaz . présent = non
+  applicable si: précision consommation = 'conso exactes'
+  remplace: gaz . consommation
   question: Quelle est la consommation annuelle de gaz de votre foyer ?
   aide: logement . chauffage . gaz . consommation estimée via le coût . saisie
-  par défaut:
-    somme:
-      - consommation par défaut
-      - (-1) * consommation par défaut * parc français . chauffage . part ecs gaz * chauffe eau solaire . taux réduction ecs
+  par défaut: consommation par défaut
   plancher: 0
   plafond: 150000
   unité: kWh
@@ -124,8 +255,27 @@ logement . chauffage . gaz . consommation:
 
     > Il se peut que votre copropriété ne vous communique pas la consommation en kWh de votre logement, quand la chaudière est centralisée. Cela dit, elle doit vous fournir le montant en €, que vous pourrez saisir ci-dessous pour estimer vos kWh.
 
-logement . chauffage . gaz . consommation par défaut:
-  formule: parc français . chauffage . consommation gaz par m2 * surface
+logement . chauffage . gaz . consommation via DPE:
+  applicable si: précision consommation = 'DPE'
+  remplace: gaz . consommation
+  formule:
+    variations:
+      - si: DPE = 'A'
+        alors: 100
+      - sinon: 100000
+  unité: kWh
+
+logement . chauffage . gaz . consommation via ressenti:
+  applicable si: précision consommation = 'aide'
+  remplace: gaz . consommation
+  formule:
+    variations:
+      - si: ressenti = 'passoire thermique'
+        alors: consommation moyenne * ressenti . saut D vers G
+      - si: ressenti = 'confortable'
+        alors: consommation moyenne * ressenti . saut D vers A
+      - sinon: consommation moyenne
+  unité: kWh
 
 logement . chauffage . gaz . consommation estimée via le coût:
   titre: Consommation estimée via le coût
@@ -274,6 +424,7 @@ logement . chauffage . bouteille gaz . empreinte:
 
 logement . chauffage . bouteille gaz . présent:
   question: Utilisez-vous des bouteille de gaz ?
+  par défaut: non
 
 logement . chauffage . bouteille gaz . consommation:
   non applicable si: bouteille gaz . présent = non
