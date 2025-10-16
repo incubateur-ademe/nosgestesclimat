@@ -50,16 +50,19 @@ logement . électricité . réseau:
   icônes: ⚡
 
 logement . électricité . réseau . consommation:
-  DLUO: 01/09/2025
+  DLUO: 01/09/2026
   question: Quelle est la consommation annuelle d'électricité (réseau) de votre foyer ?
   aide: logement . électricité . réseau . consommation estimée via le coût . saisie
   plancher: 0
   plafond: 99999
   unité: kWh
-  par défaut: consommation par défaut
-  note: on considère que seule la consommation d'électricité liée au chauffage est dépendante de la surface du logement
+  par défaut:
+    somme:
+      - consommation par défaut
+      - (-1) * consommation par défaut * parc français . chauffage . part ecs électricité * chauffage . chauffe eau solaire . taux réduction ecs
   description: |
     Astuce : vous trouverez la consommation annuelle d'électricité sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
+
 logement . électricité . réseau . consommation par défaut:
   titre: Consommation par défaut électricité
   note: |
@@ -108,14 +111,14 @@ logement . électricité . réseau . consommation estimée via le coût . saisie
   unité: €/mois
 
 logement . électricité . réseau . consommation estimée via le coût . facteur:
-  formule: 0.2317
+  formule: 0.2678
   unité: €/kWh
   note: |
     Cette formule nous permet de passer des €/mois aux kWh/an.
 
     Le chiffre inclut un coût de l'abonnement, et représente donc une moyenne. Ce n'est pas le prix du kWh marginal. Il inclut les taxes.
 
-    Chiffre issu de [Eurostat, household, first half 2023](https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Electricity_price_statistics).
+    Chiffre issu de [Eurostat, household, second half 2024](https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Electricity_price_statistics), plus précisément, de [cette carte](https://ec.europa.eu/eurostat/statistics-explained/index.php?title=File:Electricity-prices-households-s2-2024.png).
 
 logement . électricité . réseau . intensité carbone:
   formule: commun . mix électrique . empreinte carbone
@@ -135,17 +138,15 @@ logement . électricité . empreinte eau mix électrique:
 
 logement . électricité . photovoltaique:
   DLUO: 01/04/2026
-  titre: Panneaux solaires photovoltaïques
-  icônes: 🌞⚡️
+  titre: Panneaux solaires
+  icônes: 🌞
 
 logement . électricité . photovoltaique . présent:
-  non applicable si: logement . est un appartement
   question: Votre logement dispose-t-il de panneaux photovoltaïques ?
   par défaut: non
 
 logement . électricité . photovoltaique . production:
   applicable si: photovoltaique . présent
-  icônes: 🌞⚡️
   question: Quelle est la production annuelle d'électricité de vos panneaux solaires photovoltaïques, qu'elle soit autoconsommée ou réinjectée dans le réseau ?
   plancher: 0
   plafond: 40000

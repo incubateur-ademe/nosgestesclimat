@@ -25,7 +25,7 @@ logement . construction . empreinte amortie:
 logement . construction . base:
   formule:
     variations:
-      - si: logement . âge < plafond
+      - si: logement . âge équivalent < plafond
         alors:
           variations:
             - si: logement . est un appartement
@@ -62,31 +62,30 @@ logement . construction . base . amortissement:
   formule:
     variations:
       - si: rénovation . travaux . travaux réalisés
-        alors: 75
+        alors: 70
       - sinon: 50
   note: |
-    La durée de vie d'un bâtiment est fixée à 50 ans (voir la [documentation de la base empreinte, onglet Achats de bien/ Bâtiments](https://prod-basecarbonesolo.ademe-dri.fr/documentation/UPLOAD_DOC_FR/)). Si le logement est rénové, cette durée est rallongée de 25 ans.
+    La durée de vie d'un bâtiment est fixée à 50 ans (voir la [documentation de la base empreinte, onglet Achats de bien/ Bâtiments](https://prod-basecarbonesolo.ademe-dri.fr/documentation/UPLOAD_DOC_FR/)). Si le logement est rénové ou isolé, nous faisons l'hypothèse que cette durée est rallongée de 20 ans.
 
 logement . construction . rafraichissement:
   titre: Travaux de rafraîchissement
   icônes: 🎨
-  applicable si: logement . âge >= seuil
   formule: 40 kgCO2e/m2 / amortissement
   unité: kgCO2e/m2
   description: |
-    Au dessus de 10 ans, on considère _par défaut_ que des travaux de rafraîchissement sont réalisés. On parle de petits travaux pour le confort du logement (peintures, revêtement de sol, etc.).
+    Tous les 10 ans, on considère _par défaut_ que des travaux de rafraîchissement sont réalisés. On parle de petits travaux pour le confort du logement (peintures, revêtement de sol, etc.).
+
+    Ces travaux sont également attribués aux logements très récents : on peut considérer que ce sont les travaux de second d'oeuvre qui ne sont pas pris en compte dans l'empreinte de construction définie par la RE2020.
+
+    Ils sont donc toujours pris en compte dans le calcul de l'empreinte.
   note: |
     Ce facteur d'émission est issu d'une [étude croisée entre CentraleSupélec et l'Observatoire de l'Immobilier Durable (OID)](https://www.architectes.org/actualites/quel-est-le-poids-carbone-des-logements-avec-ou-sans-renovation-92667).
-
-logement . construction . rafraichissement . seuil:
-  titre: Âge seuil pour le rafraîchissement
-  formule: 10
 
 logement . construction . rafraichissement . amortissement:
   formule: 10
 
 logement . construction . rénovation:
-  applicable si: logement . âge >= seuil
+  applicable si: logement . âge équivalent >= seuil
   formule: travaux / amortissement
   unité: kgCO2e/m2
 
@@ -98,7 +97,7 @@ logement . construction . rénovation . amortissement:
   formule: 25
 
 logement . construction . rénovation . travaux:
-  applicable si: logement . âge > seuil
+  applicable si: logement . âge équivalent > seuil
   question: Des travaux de rénovation ont-ils été réalisés dans votre logement (hors rafraîchissement) depuis 2000 ?
   mosaique:
     type: selection
@@ -127,8 +126,8 @@ logement . construction . rénovation . travaux . travaux réalisés:
     une de ces conditions:
       - rénovation . présent
       - isolation . présent
-      - chauffage . présent
-      - extension . présent
+  note: |
+    Cette variable est utilisée pour ajuster la durée d'amortissement de la construction de base. Si des travaux de rénovation ou d'isolation ont été réalisés, on considère que la durée d'amortissement de la construction est rallongée de 25 ans.
 
 logement . construction . rénovation . travaux . rénovation:
   titre: Rénovation
@@ -179,11 +178,11 @@ logement . construction . rénovation . travaux . extension:
   applicable si: extension . présent
   formule:
     variations:
-      - si: logement . âge > logement . construction . base . plafond
+      - si: logement . âge équivalent > logement . construction . base . plafond
         alors: ratio * logement . construction . base . maison
       - sinon: 0
   note: |
-    Si le logement n'est pas encore amorti, on considère que l'extension est comprise dans la construction de base.
+    On ne considère pas de cas où l'extension est déjà amortie. L'extension est considérée comme une nouvelle construction, avec un facteur d'émission identique à celui d'une maison neuve. Néanmoins, cette empreinte est vraissemblablement déjà prise en compte dans la surface du logement renseignée. Il s'agit donc d'ajouter une empreinte supplémentaire dans le cas où le logement de base est déjà amorti.
   unité: kgCO2e/m2
 
 logement . construction . rénovation . travaux . extension . présent:
@@ -192,6 +191,7 @@ logement . construction . rénovation . travaux . extension . présent:
 
 logement . construction . rénovation . travaux . extension . ratio:
   formule: taille / logement . surface
+  plafond: 0.3
 
 logement . construction . rénovation . travaux . extension . taille:
   question: Quelle est la taille de l'extension réalisée (en m²) ?
@@ -204,7 +204,7 @@ logement . construction . artificialisation sols:
   applicable si: logement . est une maison
   formule:
     variations:
-      - si: logement . âge < plafond
+      - si: logement . âge équivalent < plafond
         alors: empreinte / amortissement
       - sinon: 0
   unité: kgCO2e/m2
