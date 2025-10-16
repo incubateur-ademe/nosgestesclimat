@@ -198,7 +198,23 @@ logement . chauffage . ressenti:
     - passoire thermique
     - moyen
     - confortable
-  par défaut: "'moyen'"
+  par défaut:
+    variations:
+      - si:
+          une de ces conditions:
+            - travaux réalisés
+            - âge = 'très récent'
+        alors: "'confortable'"
+      - sinon: "'moyen'"
+
+logement . chauffage . ressenti . travaux réalisés:
+  titre: L'utilisateur a-t-il réalisé des travaux pour améliorer le confort thermique de son logement ?
+  formule:
+    une de ces conditions:
+      - construction . rénovation . travaux . isolation . présent
+      - construction . rénovation . travaux . chauffage . présent
+  note: |
+    Cette variable est utilisée pour ajuster la durée d'amortissement de la construction de base. Si des travaux de rénovation ou d'isolation ont été réalisés, on considère que la durée d'amortissement de la construction est rallongée de 25 ans.
 
 logement . chauffage . ressenti . passoire thermique:
   titre: Je chauffe mais j'ai froid
