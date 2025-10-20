@@ -1,55 +1,3 @@
-logement . chauffage . baisse température:
-  titre: Baisser la consigne de son chauffage
-  icônes: 🏠🌡
-  description: |
-    Le chauffage représente 66 % de la dépense énergétique d’un ménage. De nombreux foyers sont encore équipés de chaudières au gaz et au fioul qui émettent d’importantes quantités de gaz à effet de serre. En faisant des économies de chauffage, on peut donc limiter de manière importante son impact sur le climat.
-
-    Baisser la température d'un degré permet de réaliser 7% d'économies d'énergie.
-
-    > Pour mieux maîtriser la température de votre logement, pensez à installer une régulation et une programmation.
-
-    > Pour en savoir plus, consultez [notre guide « Un hiver tout confort »](https://librairie.ademe.fr/changement-climatique-et-energie/5100-un-hiver-tout-confort-9791029718984.html) et [notre guide « Changer de chauffage »](https://librairie.ademe.fr/urbanisme-et-batiment/5099-changer-de-chauffage-9791029718731.html)
-  applicable si: température > 19
-  formule: (nombre degrés * gains 1 degré * empreinte chauffage air) / habitants
-  unité: kgCO2e
-
-logement . chauffage . baisse température . nombre degrés:
-  question: De combien de degrés seriez-vous prêt à diminuer la température de votre logement ?
-  icônes: ↘️🌡
-  description: |
-    Les ¾ de la consommation d’énergie d’un ménage sont consacrés au chauffage et à l’eau chaude.
-
-    Cette consommation d’énergie, en plus d’avoir un coût financier non négligeable, augmente l’empreinte carbone des ménages.
-
-    Elle peut toutefois facilement être limitée en diminuant la température des pièces occupées sans perdre de confort thermique ou bien ressentir une sensation de froid (à condition d’avoir des logements bien isolés).
-
-    Par exemple, régler la température entre 19° et 21°C dans les pièces occupées la journée (et 17°C la nuit ou dans les pièces peu occupées).
-
-    En effet, baisser la température de chauffage d’1°C représente une économie d’énergie de 7%.
-  par défaut: 1
-  unité: degré
-  suggestions:
-    1 degré: 1
-    2 degrés: 2
-    3 degrés: 3
-
-logement . température:
-  question: À quelle température chauffez-vous votre logement ?
-  description: Cette question nous permet simplement de ne pas vous proposer de baisser la température quand elle est déjà relativement faible.
-  icônes: 🌡
-  par défaut: 20
-  unité: degrés
-
-logement . chauffage . baisse température . gains 1 degré:
-  formule: 7
-  unité: '%/degré'
-  description: |
-    C'est la baisse estimée de dépense d'énergie quand on baisse la température de notre foyer chauffé de 1°C dans la gamme de température usuelle (autour de 20°).
-
-    Nous retenons l'estimation donnée dans le [guide ADEME](https://www.ademe.fr/40-trucs-astuces-economiser-leau-lenergie) "40 trucs pour économiser l'eau et l'énergie".
-  note: |
-    Où est la source pour ces 7% ? Peut-on décliner ce chiffre pour chaque type d'énergie (bois, gaz, etc.) ? Quelle est la sensibilité de ce chiffre au type de logement, son isolation, etc. ?
-
 logement . empreinte chauffage air:
   formule:
     variations:
@@ -65,35 +13,14 @@ logement . empreinte chauffage air:
 logement . empreinte chauffage air utilisateur:
   formule:
     somme:
-      - chauffage . électricité . présent * électricité * parc français . chauffage . part chauffage air électricité
-      - (chauffage . gaz . empreinte + chauffage . citerne propane . empreinte) * parc français . chauffage . part chauffage air gaz
+      - chauffage . électricité . présent * logement . électricité . empreinte * parc français . chauffage . part chauffage air électricité
+      - chauffage . gaz . empreinte * parc français . chauffage . part chauffage air gaz
+      - chauffage . citerne propane . empreinte * parc français . chauffage . part chauffage air gaz
       - chauffage . bois . empreinte * parc français . chauffage . part chauffage air bois
       - chauffage . fioul . empreinte * parc français . chauffage . part chauffage air fioul
       - chauffage . réseau de chaleur . empreinte * parc français . chauffage . part chauffage air réseau de chaleur
-
-logement . chauffage . installer thermostat:
-  titre: Installer un thermostat programmable
-  icônes: 🌡️🖥️
-  description: |
-    Le saviez-vous ? L'installation d'un thermostat programmable permet de faire jusqu'à 15% d'économies de chauffage.
-
-    > Pour en savoir plus le fonctionnement du thermostat et sur son installation, [consultez notre article](https://agirpourlatransition.ademe.fr/particuliers/maison/economies-denergie-deau/reduire-facture-chauffage-thermostat-programmable).
-
-  note: Nous choisissons de partir sur une réduction de 12% de l'énergie liée au chauffage.
-  formule: empreinte chauffage air * 0.12 / habitants
-  unité: kgCO2e
-
-logement . chauffage . installer chauffe-eau solaire:
-  titre: S’équiper d’un chauffe-eau solaire
-  icônes: 🌡️🛁☀️
-  description: |
-    C'est la solution solaire thermique la plus simple à mettre en œuvre. Elle permet de couvrir une bonne partie des besoins d'eau chaude de la maison.
-
-    Il permet aussi de diviser les dépenses d’eau chaude par 2 voire par 3 par rapport à un système électrique, au gaz ou au fioul.
-
-    > Pour en savoir plus sur la technologie, son fonctionnement et les coûts d’installation, consultez [notre guide "Adopter le solaire thermique"](https://librairie.ademe.fr/energies-renouvelables-reseaux-et-stockage/6136-adopter-le-solaire-thermique.html).
-
-  formule: empreinte eau chaude sanitaire * chauffage . chauffe eau solaire . taux réduction ecs / habitants
+  note: |
+    Dans le cas des utilisateurs ayant répondu connaître leur DPE ou avoir besoin d'aide pour estimer leurs consommations, on fait ici une légère approximation en appliquant le ratio "chauffage air" à l'empreinte globale du chauffage pour chaque type d'énergie plutôt que de repartir de l'ensemble des consommations spécifiques au chauffage de l'air. Néanmoins, on considère que l'impact sur le résultat final n'est pas significatif.
 
 logement . chauffage . empreinte eau chaude sanitaire:
   formule:
@@ -111,55 +38,50 @@ logement . chauffage . empreinte eau chaude sanitaire:
 logement . chauffage . empreinte eau chaude sanitaire utilisateur:
   formule:
     somme:
-      - chauffage . électricité . présent * électricité * parc français . chauffage . part ecs électricité
-      - (chauffage . gaz . empreinte + chauffage . citerne propane . empreinte) * parc français . chauffage . part ecs gaz
-      - chauffage . bois . empreinte * parc français . chauffage . part ecs bois
+      - chauffage . électricité . présent * logement . électricité . empreinte * parc français . chauffage . part ecs électricité
+      - chauffage . gaz . empreinte * parc français . chauffage . part ecs gaz
+      - chauffage . citerne propane . empreinte * parc français . chauffage . part ecs gaz
       - chauffage . fioul . empreinte * parc français . chauffage . part ecs fioul
       - chauffage . réseau de chaleur . empreinte * parc français . chauffage . part ecs réseau de chaleur
-
-logement . électricité . éteindre appareils:
-  formule: empreinte du foyer / habitants
-  titre: Éteindre ses appareils en veille
-  icônes: 🏠📺
-  description: |
-    Nos appartements et nos maisons sont de plus en plus équipés d'appareils électriques et électroniques, qui souvent restent allumés inutilement ou en veille.
-
-    En les branchant sur une multiprise avec un interrupteur, vous pourrez les éteindre complètement en un clin d'œil.
-
-    Les veilles ont fait des progrès et consomment moins que par le passé : une directive européenne applicable depuis janvier 2017 limite leur puissance à 0,5 W pour un certain nombre d’appareilsPour les appareils qui restent connectés à Internet ou à des réseaux de données, la puissance est cependant encore de 3 W.
-
-    > Pour en savoir plus sur les différentes solutions pour réduire votre consommation d’électricité, consultez [les articles du site Agir](https://agirpourlatransition.ademe.fr/particuliers/maison/economies-denergie-deau) ainsi que [notre guide « Réduire sa facture d’électricité »](https://librairie.ademe.fr/consommer-autrement/5696-reduire-sa-facture-d-electricite.html).
-
-logement . électricité . éteindre appareils . empreinte du foyer:
-  formule: énergie de veille * logement . électricité . empreinte au kWh
-
-logement . énergie de veille:
-  formule: puissance * temps d'absence
-  unité: kWh
-
-logement . énergie de veille . puissance:
-  formule: 0.050
-  unité: kW
-  description: |
-    > La puissance totale de ces veilles pour un ménage dépasse souvent 50 Watt
   note: |
-    Il est bien possible que l'on sous-estime le nombre de Watt en veille. Notamment, il apparait que les box internet et TV à elle-seules en consomme plus que 50.
+    Dans le cas des utilisateurs ayant répondu connaître leur DPE ou avoir besoin d'aide pour estimer leurs consommations, on fait ici une légère approximation en appliquant le ratio "ecs" à l'empreinte globale du chauffage pour chaque type d'énergie plutôt que de repartir de l'ensemble des consommations spécifiques à l'ECS. Néanmoins, on considère que l'impact sur le résultat final n'est pas significatif.
 
-    > La « box » est un équipement de plus en plus courant, qui reste souvent allumé 24 h sur 24 et qui génère une consommation pou-vant dépasser 200 kWh / an, soit autant que le lave-linge. Sa consommation totale sur un an se situe entre 150 et 300 kWh* : c'est autant qu'un grand réfrigérateur
+logement . chauffage . installer thermostat:
+  titre: Installer un thermostat programmable
+  icônes: 🌡️🖥️
+  description: |
+    Le saviez-vous ? L'installation d'un thermostat programmable permet de faire jusqu'à 15% d'économies de chauffage.
 
-logement . énergie de veille . temps d'absence:
-  formule: commun . jours par an * journalier
-  unité: h
-logement . énergie de veille . temps d'absence . journalier:
-  formule: 12
-  unité: h/jour
-  description: On suppose qu'en moyenne, on n'est pas présent chez soi la moitié du temps, ou on dort. La nuit (8h) et en moyenne 4h en journée, pour prendre en compte les weekends qui compensent les journées de travail de 8h, et le fait que tout le monde dans le foyer n'est pas absent au même moment.
+    > Pour en savoir plus le fonctionnement du thermostat et sur son installation, [consultez notre article](https://agirpourlatransition.ademe.fr/particuliers/maison/economies-denergie-deau/reduire-facture-chauffage-thermostat-programmable).
+
+  note: Nous choisissons de partir sur une réduction de 12% de l'énergie liée au chauffage pour être plus conservateur.
+  formule: empreinte chauffage air * 0.12 / habitants
+  unité: kgCO2e
+
+logement . chauffage . chauffe eau solaire . installer chauffe-eau solaire:
+  applicable si:
+    toutes ces conditions:
+      - propriétaire
+      - est une maison
+      - est défini: chauffe eau solaire . présent
+      - chauffe eau solaire . présent = non
+  titre: S’équiper d’un chauffe-eau solaire
+  icônes: 🌡️🛁☀️
+  description: |
+    C'est la solution solaire thermique la plus simple à mettre en œuvre. Elle permet de couvrir une bonne partie des besoins d'eau chaude de la maison.
+
+    Il permet aussi de diviser les dépenses d’eau chaude par 2 voire par 3 par rapport à un système électrique, au gaz ou au fioul.
+
+    > Pour en savoir plus sur la technologie, son fonctionnement et les coûts d’installation, consultez [notre guide "Adopter le solaire thermique"](https://librairie.ademe.fr/energies-renouvelables-reseaux-et-stockage/6136-adopter-le-solaire-thermique.html).
+
+  formule: empreinte eau chaude sanitaire * chauffage . chauffe eau solaire . taux réduction ecs / habitants
 
 logement . chauffage . se chauffer au bois:
   titre: Se chauffer au bois
   applicable si:
     toutes ces conditions:
       - propriétaire
+      - est une maison
       - une de ces conditions:
           - toutes ces conditions:
               - est défini: chauffage . gaz . présent

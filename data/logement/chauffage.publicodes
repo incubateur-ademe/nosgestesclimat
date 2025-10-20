@@ -52,7 +52,7 @@ logement . chauffage . empreinte par défaut:
   formule:
     somme:
       - parc français . chauffage . empreinte moyenne par m2 hors électricité * logement . surface
-      - (-1) * chauffe eau solaire . taux réduction ecs * parc français . chauffage . empreinte moyenne ecs par m2 hors électricité * logement . surface
+      - (-1) * chauffe eau solaire . est présent * chauffe eau solaire . taux réduction ecs * parc français . chauffage . empreinte moyenne ecs par m2 hors électricité * logement . surface
   unité: kgCO2e
 
 logement . chauffage . choix utilisateur:
@@ -302,7 +302,7 @@ logement . chauffage . gaz . consommation moyenne ecs:
   formule:
     somme:
       - parc français . chauffage . part ecs gaz * consommation moyenne
-      - (-1) * parc français . chauffage . part ecs gaz * consommation moyenne * chauffe eau solaire . taux réduction ecs
+      - (-1) * chauffe eau solaire . est présent * parc français . chauffage . part ecs gaz * consommation moyenne * chauffe eau solaire . taux réduction ecs
   unité: kWh
 
 logement . chauffage . gaz . consommation moyenne cuisson:
@@ -731,7 +731,7 @@ logement . chauffage . fioul . consommation moyenne ecs:
   formule:
     somme:
       - parc français . chauffage . part ecs fioul * consommation moyenne
-      - (-1) * parc français . chauffage . part ecs fioul * consommation moyenne * chauffe eau solaire . taux réduction ecs
+      - (-1) * chauffe eau solaire . est présent * parc français . chauffage . part ecs fioul * consommation moyenne * chauffe eau solaire . taux réduction ecs
   unité: l
 
 logement . chauffage . fioul . consommation précise:
@@ -1103,7 +1103,7 @@ logement . chauffage . réseau de chaleur . consommation moyenne ecs:
   formule:
     somme:
       - parc français . chauffage . part ecs réseau de chaleur * consommation moyenne
-      - (-1) * parc français . chauffage . part ecs réseau de chaleur * consommation moyenne * chauffe eau solaire . taux réduction ecs
+      - (-1) * chauffe eau solaire . est présent * parc français . chauffage . part ecs réseau de chaleur * consommation moyenne * chauffe eau solaire . taux réduction ecs
   unité: kWh
 
 logement . chauffage . réseau de chaleur . consommation précise:
@@ -1190,11 +1190,13 @@ logement . chauffage . chauffe eau solaire:
 logement . chauffage . chauffe eau solaire . présent:
   question: Avez-vous un chauffe-eau solaire individuel (CESI) ?
 
-logement . chauffage . chauffe eau solaire . taux réduction ecs:
-  applicable si:
+logement . chauffage . chauffe eau solaire . est présent:
+  formule:
     toutes ces conditions:
       - est défini: chauffe eau solaire . présent
       - chauffe eau solaire . présent
+
+logement . chauffage . chauffe eau solaire . taux réduction ecs:
   titre: Économie d'énergie grâce au chauffe-eau solaire
   note: |
     En moyenne, un chauffe-eau solaire individuel (CESI) permet de couvrir 60% des besoins en eau chaude sanitaire (voir [cet article de l'ADEME](https://agirpourlatransition.ademe.fr/particuliers/maison/chauffage/chauffer-leau-solei)). On évite donc une part des consommations d'énergie liées à l'eau chaude sanitaire. Cette valeur est utilisée uniquement dans le cas où l'utilisateurice ne connaît pas précisément ses consommations d'énergie, et pour les énergie permettant de chauffer l'eau chaude sanitaire à savoir l'électricité, le gaz, le fioul et le réseau de chaleur.
