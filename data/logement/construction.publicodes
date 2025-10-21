@@ -86,8 +86,13 @@ logement . construction . rafraichissement . amortissement:
 
 logement . construction . rénovation:
   applicable si: logement . âge équivalent >= seuil
-  formule: travaux / amortissement
-  unité: kgCO2e/m2
+  formule:
+    variations:
+      - si: logement . propriétaire = 'propriétaire'
+        alors: travaux de rénovation / amortissement
+      - sinon: rénovation . travaux . rénovation / rénovation . amortissement
+  note: |
+    Par défaut, et donc pour les locataires, on considère que des travaux de rénovation ont été réalisés tous les 25 ans.
 
 logement . construction . rénovation . seuil:
   titre: Âge seuil pour la rénovation
@@ -96,30 +101,31 @@ logement . construction . rénovation . seuil:
 logement . construction . rénovation . amortissement:
   formule: 25
 
-logement . construction . rénovation . travaux:
-  applicable si: logement . âge équivalent > seuil
-  question: Des travaux de rénovation ont-ils été réalisés dans votre logement (hors rafraîchissement) depuis 2000 ?
+logement . construction . travaux de rénovation:
+  applicable si: logement . propriétaire = 'propriétaire'
+  question: Des travaux de rénovation ont-ils été réalisés dans votre logement (hors rafraîchissement) sur les 25 dernières années ?
   mosaique:
     type: selection
     options:
-      - rénovation . présent
-      - isolation . présent
-      - chauffage . présent
-      - extension . présent
+      - rénovation . travaux . rénovation . présent
+      - rénovation . travaux . isolation . présent
+      - rénovation . travaux . chauffage . présent
+      - rénovation . travaux . extension . présent
     suggestions:
       aucun:
-        rénovation . présent: non
-        isolation . présent: non
-        chauffage . présent: non
-        extension . présent: non
+        rénovation . travaux . rénovation . présent: non
+        rénovation . travaux . isolation . présent: non
+        rénovation . travaux . chauffage . présent: non
+        rénovation . travaux . extension . présent: non
   formule:
     somme:
-      - rénovation
-      - isolation
-      - chauffage
-      - extension
-  unité: kgCO2e/m2
+      - rénovation . travaux . rénovation
+      - rénovation . travaux . isolation
+      - rénovation . travaux . chauffage
+      - rénovation . travaux . extension
+  # unité: kgCO2e/m2
 
+logement . construction . rénovation . travaux:
 logement . construction . rénovation . travaux . travaux réalisés:
   titre: L'utilisateur a-t-il réalisé des travaux ?
   formule:
