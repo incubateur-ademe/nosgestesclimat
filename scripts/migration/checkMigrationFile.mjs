@@ -1,5 +1,3 @@
-import { RULES_TO_KEEP_AS_QUESTION } from './constants.mjs'
-
 export function checkMigrationFile(
   localRules,
   parsedRules,
@@ -19,11 +17,7 @@ export function checkMigrationFile(
           console.error(`❌ The rule ${ruleName} is not present in model`)
         }
       }
-      if (
-        parsedRules.includes(ruleName) &&
-        !localRules[ruleName].question &&
-        !RULES_TO_KEEP_AS_QUESTION.includes(ruleName)
-      ) {
+      if (parsedRules.includes(ruleName) && !localRules[ruleName].question) {
         shouldThrowError = true
         if (markdown) {
           console.log(`> ❌ The rule ${ruleName} is not a question anymore`)

@@ -1,5 +1,4 @@
 import c from 'ansi-colors'
-import { RULES_TO_KEEP_AS_QUESTION } from './constants.mjs'
 
 export function checkMigrationCoverage(
   localRules,
@@ -19,9 +18,6 @@ export function checkMigrationCoverage(
     }
 
     if (rule['question']) {
-      if (RULES_TO_KEEP_AS_QUESTION.includes(ruleName)) {
-        continue
-      }
       if (
         !localRules[ruleName] ||
         (localRules[ruleName] && !localRules[ruleName]['question'])
