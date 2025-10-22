@@ -18,27 +18,36 @@ divers . loisirs . culture:
   mosaique:
     type: selection
     options:
+      - aucun . présent
       - concerts et spectacles . présent
       - musées et monuments . présent
       - édition . présent
       - pratique de la musique . présent
-    suggestions:
-      aucun:
-        concerts et spectacles . présent: non
-        musées et monuments . présent: non
-        édition . présent: non
-        pratique de la musique . présent: non
   question: Quelles sont vos pratiques culturelles ?
   titre: Pratiques culturelles
   formule: empreinte totale
 
+divers . loisirs . culture . aucun:
+  titre: Je ne suis pas concerné(e)
+  icônes: ❌
+
+divers . loisirs . culture . aucun . présent:
+  question: Vous n'avez pas particulièrement de sorties ou pratique culturelle ?
+
 divers . loisirs . culture . empreinte totale:
   formule:
-    somme:
-      - empreinte concerts et spectacles
-      - empreinte musées et monuments
-      - empreinte édition
-      - empreinte pratique de la musique
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: aucun . présent
+            - aucun . présent
+        alors: 0
+      - sinon:
+          somme:
+            - empreinte concerts et spectacles
+            - empreinte musées et monuments
+            - empreinte édition
+            - empreinte pratique de la musique
   unité: kgCO2e
   note: |
     Pour le moment, nous prenons en compte les concerts et spectacles, musées, l'édition (presse, livres), la pratique de la musique.
