@@ -129,7 +129,7 @@ logement . chauffage . précision consommation . DPE:
 logement . chauffage . précision consommation . aide:
   titre: Non, j’ai besoin d’aide pour estimer mes consommations
 
-logement . chauffage . DPE:
+logement . chauffage . précision consommation . saisie DPE:
   applicable si: précision consommation = 'DPE'
   question: Quelle est le DPE de votre logement ?
   note: |
@@ -156,7 +156,7 @@ logement . chauffage . DPE:
     F:
     G:
 
-logement . chauffage . DPE . consommation via DPE par m2:
+logement . chauffage . précision consommation . DPE . consommation via DPE par m2:
   note: |
     Les bornes observées selon les classes de DPE sont les suivantes. Nous avons choisi d'utiliser une valeur moyenne réaliste dans chaque classe.
 
@@ -189,7 +189,7 @@ logement . chauffage . DPE . consommation via DPE par m2:
         alors: 500
   unité: kWh/m2
 
-logement . chauffage . ressenti:
+logement . chauffage . précision consommation . ressenti:
   applicable si: précision consommation = 'aide'
   question: Quel est votre ressenti sur le confort thermique de votre logement en hiver ?
   note: |
@@ -207,7 +207,7 @@ logement . chauffage . ressenti:
         alors: "'confortable'"
       - sinon: "'moyen'"
 
-logement . chauffage . ressenti . travaux réalisés:
+logement . chauffage . précision consommation . ressenti . travaux réalisés:
   titre: L'utilisateur a-t-il réalisé des travaux pour améliorer le confort thermique de son logement ?
   formule:
     une de ces conditions:
@@ -216,22 +216,22 @@ logement . chauffage . ressenti . travaux réalisés:
   note: |
     Cette variable est utilisée pour ajuster la durée d'amortissement de la construction de base. Si des travaux de rénovation ou d'isolation ont été réalisés, on considère que la durée d'amortissement de la construction est rallongée de 25 ans.
 
-logement . chauffage . ressenti . passoire thermique:
+logement . chauffage . précision consommation . ressenti . passoire thermique:
   titre: Je chauffe mais j'ai froid
   note: On considère dans ce cas un DPE G.
 
-logement . chauffage . ressenti . moyen:
+logement . chauffage . précision consommation . ressenti . moyen:
   titre: Je chauffe normalement
   note: On considère dans ce cas un DPE D
 
-logement . chauffage . ressenti . confortable:
+logement . chauffage . précision consommation . ressenti . confortable:
   titre: Je chauffe peu, il fait bon naturellement
   note: On considère dans ce cas un DPE A.
 
-logement . chauffage . ressenti . saut D vers A:
+logement . chauffage . précision consommation . ressenti . saut D vers A:
   formule: 55 kWh/m2 / 215 kWh/m2
 
-logement . chauffage . ressenti . saut D vers G:
+logement . chauffage . précision consommation . ressenti . saut D vers G:
   formule: 500 kWh/m2 / 215 kWh/m2
 
 logement . chauffage . PAC:
@@ -327,8 +327,8 @@ logement . chauffage . gaz . consommation via DPE:
   par défaut: consommation moyenne réelle
   formule:
     somme:
-      - parc français . chauffage . part chauffage air gaz * DPE . consommation via DPE par m2 * surface / nombre sources chauffage air
-      - parc français . chauffage . part ecs gaz * DPE . consommation via DPE par m2 * surface / nombre sources ecs
+      - parc français . chauffage . part chauffage air gaz * précision consommation . DPE . consommation via DPE par m2 * surface / nombre sources chauffage air
+      - parc français . chauffage . part ecs gaz * précision consommation . DPE . consommation via DPE par m2 * surface / nombre sources ecs
       - consommation moyenne cuisson / nombre sources cuisson
   note: |
     Cette valeur semble importante, mais les calculs semblent justes. Néanmoins, on pourrait aller plus loin car le DPE est une valeur théorique, qui ne reflète pas l'usage réel du logement.
@@ -341,14 +341,14 @@ logement . chauffage . gaz . consommation via ressenti:
       - si: ressenti = 'passoire thermique'
         alors:
           somme:
-            - consommation moyenne chauffage * ressenti . saut D vers G / nombre sources chauffage air
-            - consommation moyenne ecs * ressenti . saut D vers G / nombre sources ecs
+            - consommation moyenne chauffage * précision consommation . ressenti . saut D vers G / nombre sources chauffage air
+            - consommation moyenne ecs * précision consommation . ressenti . saut D vers G / nombre sources ecs
             - consommation moyenne cuisson / nombre sources cuisson
       - si: ressenti = 'confortable'
         alors:
           somme:
-            - consommation moyenne chauffage * ressenti . saut D vers A / nombre sources chauffage air
-            - consommation moyenne ecs * ressenti . saut D vers A / nombre sources ecs
+            - consommation moyenne chauffage * précision consommation . ressenti . saut D vers A / nombre sources chauffage air
+            - consommation moyenne ecs * précision consommation . ressenti . saut D vers A / nombre sources ecs
             - consommation moyenne cuisson / nombre sources cuisson
       - sinon: consommation moyenne réelle
   unité: kWh
@@ -750,8 +750,8 @@ logement . chauffage . fioul . consommation via DPE:
   par défaut: consommation moyenne réelle
   formule:
     somme:
-      - parc français . chauffage . part chauffage air fioul * DPE . consommation via DPE par m2 * surface * fioul kWh au litre / nombre sources chauffage air
-      - parc français . chauffage . part ecs fioul * DPE . consommation via DPE par m2 * surface * fioul kWh au litre / nombre sources ecs
+      - parc français . chauffage . part chauffage air fioul * précision consommation . DPE . consommation via DPE par m2 * surface * fioul kWh au litre / nombre sources chauffage air
+      - parc français . chauffage . part ecs fioul * précision consommation . DPE . consommation via DPE par m2 * surface * fioul kWh au litre / nombre sources ecs
   unité: l
 
 logement . chauffage . fioul . consommation via ressenti:
@@ -761,13 +761,13 @@ logement . chauffage . fioul . consommation via ressenti:
       - si: ressenti = 'passoire thermique'
         alors:
           somme:
-            - consommation moyenne chauffage * ressenti . saut D vers G / nombre sources chauffage air
-            - consommation moyenne ecs * ressenti . saut D vers G / nombre sources ecs
+            - consommation moyenne chauffage * précision consommation . ressenti . saut D vers G / nombre sources chauffage air
+            - consommation moyenne ecs * précision consommation . ressenti . saut D vers G / nombre sources ecs
       - si: ressenti = 'confortable'
         alors:
           somme:
-            - consommation moyenne chauffage * ressenti . saut D vers A / nombre sources chauffage air
-            - consommation moyenne ecs * ressenti . saut D vers A / nombre sources ecs
+            - consommation moyenne chauffage * précision consommation . ressenti . saut D vers A / nombre sources chauffage air
+            - consommation moyenne ecs * précision consommation . ressenti . saut D vers A / nombre sources ecs
       - sinon: consommation moyenne réelle
   unité: l
 
@@ -888,7 +888,7 @@ logement . chauffage . bois . type . granulés . consommation précise:
 logement . chauffage . bois . type . granulés . consommation via DPE:
   applicable si: précision consommation = 'DPE'
   par défaut: consommation moyenne réelle
-  formule: parc français . chauffage . part chauffage air bois * DPE . consommation via DPE par m2 * surface / nombre sources chauffage air
+  formule: parc français . chauffage . part chauffage air bois * précision consommation . DPE . consommation via DPE par m2 * surface / nombre sources chauffage air
   unité: kWh
 
 logement . chauffage . bois . type . granulés . consommation via ressenti:
@@ -896,9 +896,9 @@ logement . chauffage . bois . type . granulés . consommation via ressenti:
   formule:
     variations:
       - si: ressenti = 'passoire thermique'
-        alors: consommation moyenne chauffage * ressenti . saut D vers G / nombre sources chauffage air
+        alors: consommation moyenne chauffage * précision consommation . ressenti . saut D vers G / nombre sources chauffage air
       - si: ressenti = 'confortable'
-        alors: consommation moyenne chauffage * ressenti . saut D vers A / nombre sources chauffage air
+        alors: consommation moyenne chauffage * précision consommation . ressenti . saut D vers A / nombre sources chauffage air
       - sinon: consommation moyenne réelle
   unité: kWh
 
@@ -990,7 +990,7 @@ logement . chauffage . bois . type . bûches . consommation précise:
 logement . chauffage . bois . type . bûches . consommation via DPE:
   applicable si: précision consommation = 'DPE'
   par défaut: consommation moyenne réelle
-  formule: parc français . chauffage . part chauffage air bois * DPE . consommation via DPE par m2 * surface / intensité énergétique * nombre sources chauffage air
+  formule: parc français . chauffage . part chauffage air bois * précision consommation . DPE . consommation via DPE par m2 * surface / intensité énergétique * nombre sources chauffage air
   unité: stère
 
 logement . chauffage . bois . type . bûches . consommation via ressenti:
@@ -998,9 +998,9 @@ logement . chauffage . bois . type . bûches . consommation via ressenti:
   formule:
     variations:
       - si: ressenti = 'passoire thermique'
-        alors: consommation moyenne chauffage * ressenti . saut D vers G / nombre sources chauffage air
+        alors: consommation moyenne chauffage * précision consommation . ressenti . saut D vers G / nombre sources chauffage air
       - si: ressenti = 'confortable'
-        alors: consommation moyenne chauffage * ressenti . saut D vers A / nombre sources chauffage air
+        alors: consommation moyenne chauffage * précision consommation . ressenti . saut D vers A / nombre sources chauffage air
       - sinon: consommation moyenne réelle
   unité: stère
 
@@ -1124,8 +1124,8 @@ logement . chauffage . réseau de chaleur . consommation via DPE:
   par défaut: consommation moyenne réelle
   formule:
     somme:
-      - parc français . chauffage . part chauffage air fioul * DPE . consommation via DPE par m2 * surface / nombre sources chauffage air
-      - parc français . chauffage . part ecs fioul * DPE . consommation via DPE par m2 * surface / nombre sources ecs
+      - parc français . chauffage . part chauffage air fioul * précision consommation . DPE . consommation via DPE par m2 * surface / nombre sources chauffage air
+      - parc français . chauffage . part ecs fioul * précision consommation . DPE . consommation via DPE par m2 * surface / nombre sources ecs
   unité: kWh
 
 logement . chauffage . réseau de chaleur . consommation via ressenti:
@@ -1135,13 +1135,13 @@ logement . chauffage . réseau de chaleur . consommation via ressenti:
       - si: ressenti = 'passoire thermique'
         alors:
           somme:
-            - consommation moyenne chauffage * ressenti . saut D vers G / nombre sources chauffage air
-            - consommation moyenne ecs * ressenti . saut D vers G / nombre sources ecs
+            - consommation moyenne chauffage * précision consommation . ressenti . saut D vers G / nombre sources chauffage air
+            - consommation moyenne ecs * précision consommation . ressenti . saut D vers G / nombre sources ecs
       - si: ressenti = 'confortable'
         alors:
           somme:
-            - consommation moyenne chauffage * ressenti . saut D vers A / nombre sources chauffage air
-            - consommation moyenne ecs * ressenti . saut D vers A / nombre sources ecs
+            - consommation moyenne chauffage * précision consommation . ressenti . saut D vers A / nombre sources chauffage air
+            - consommation moyenne ecs * précision consommation . ressenti . saut D vers A / nombre sources ecs
       - sinon: consommation moyenne réelle
   unité: kWh
 
