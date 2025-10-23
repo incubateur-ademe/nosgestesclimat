@@ -453,12 +453,19 @@ logement . installer photovoltaique:
     Pour en savoir plus, consulter le guide ADEME ["L'électricité photovoltaïque en 10 questions"](https://librairie.ademe.fr/7545-l-electricite-photovoltaique-en-10-questions.html)
 
   non applicable si: électricité . photovoltaique . présent
-  applicable si: logement . est une maison
-  formule:
-    variations:
-      - si: énergie produite < logement . électricité . consommation totale
-        alors: énergie produite * (logement . électricité . réseau . intensité carbone)
-      - sinon: logement . électricité . consommation totale * (logement . électricité . réseau . intensité carbone - facteur émission)
+  applicable si:
+    toutes ces conditions:
+      - logement . est une maison
+      - logement . propriétaire = 'propriétaire'
+  formule: électricité - recalcul
+  unité: kgCO2e
+
+logement . installer photovoltaique . recalcul:
+  valeur: logement . électricité
+  contexte:
+    logement . électricité . photovoltaique . présent: oui
+    logement . électricité . photovoltaique . production: logement . installer photovoltaique . énergie produite
+    logement . électricité . photovoltaique . intensité carbone: logement . installer photovoltaique . intensité carbone
 
 logement . installer photovoltaique . énergie produite:
   formule: puissance installée * productible
@@ -500,7 +507,7 @@ logement . installer photovoltaique . zone climatique . centre et littoral atlan
 logement . installer photovoltaique . zone climatique . littoral méditerranéen:
   titre: Littoral méditerranéen et Corse
 
-logement . installer photovoltaique . facteur émission:
+logement . installer photovoltaique . intensité carbone:
   formule:
     variations:
       - si: zone climatique = 'bretagne et nord de la france'
