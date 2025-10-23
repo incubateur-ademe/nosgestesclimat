@@ -1,4 +1,5 @@
 logement . électricité:
+  DLUO: 01/09/2026
   icônes: ⚡
   formule: empreinte / habitants
 
@@ -9,7 +10,7 @@ logement . électricité . empreinte:
 
     Si vous disposez de panneaux photovoltaïques. L'empreinte de l'électricité produite par ces panneaux peut être jusqu'à 2 fois plus faible que celle du réseau.
 
-    Pour calculer votre empreinte, nous vous attribuons l'empreinte de l'électricité liée à la productuion de vos panneaux, **à hauteur maximum de ce que vous consommez comme énergie au total**.
+    Pour calculer votre empreinte, nous vous attribuons l'empreinte de l'électricité liée à la production de vos panneaux, **à hauteur maximum de ce que vous consommez comme énergie au total**.
     Nous n'attachons pas d'importance au fait que cette électricité soit consommée, ou non, par vous ou réinjectée dans le réseau avant d'être retirée plus tard.
 
     S'il avait fallu être exacts, nous nous serions restreints à la seule partie de la production auto-consommée. Nous ne vous aurions rien attribué pour les kWh réinjectés dans le réseau (car il est très difficile d'imaginer un calcul juste de leur contribution à la décarbonation du mix français), et vous aurions attribué l'empreinte du mix électrique français pour tout ce que vous tirez du réseau. Plus généralement, la notion de compensation n'est pas considérée dans la philosophie de ce calculateur.
@@ -41,62 +42,167 @@ logement . électricité . intensité carbone équivalente:
 
 logement . électricité . consommation totale:
   formule:
-    somme:
-      - photovoltaique . autoconsommation
-      - réseau . consommation
-
-logement . électricité . réseau:
-  titre: Électricité du réseau
-  icônes: ⚡
-
-logement . électricité . réseau . consommation:
-  DLUO: 01/09/2026
-  question: Quelle est la consommation annuelle d'électricité (réseau) de votre foyer ?
-  aide: logement . électricité . réseau . consommation estimée via le coût . saisie
-  plancher: 0
-  plafond: 99999
+    variations:
+      - si: chauffage . précision consommation = 'conso exactes'
+        alors:
+          somme:
+            - photovoltaique . autoconsommation
+            - réseau . consommation précise
+      - si: chauffage . précision consommation = 'DPE'
+        alors: consommation via DPE
+      - si: chauffage . précision consommation = 'aide'
+        alors: consommation via ressenti
   unité: kWh
-  par défaut:
-    somme:
-      - consommation par défaut
-      - (-1) * consommation par défaut * parc français . chauffage . part ecs électricité * chauffage . chauffe eau solaire . taux réduction ecs
-  description: |
-    Astuce : vous trouverez la consommation annuelle d'électricité sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
+  par défaut: consommation par défaut
 
-logement . électricité . réseau . consommation par défaut:
+logement . électricité . consommation par défaut:
   titre: Consommation par défaut électricité
-  note: |
-    Dans l'état actuel du test NGC, la question du chauffage est posée après la question de la consommation d'électricité. Or, la valeur par défaut de cette question dépend du mode de chauffage. Si l'utilisateur répond "Je ne sais pas" à cette question, il y a des chances que la valeur attribuée change après coup.
-  arrondi: oui
   formule:
     variations:
       - si: logement . chauffage . choix utilisateur = non
         alors: surface * (parc français . consommation électricité autre par m2 + parc français . surface . part électricité * parc français . chauffage . consommation électricité par m2)
+      - si: logement . chauffage . choix utilisateur = oui
+        alors: consommation moyenne réelle
+  unité: kWh
+
+logement . électricité . consommation moyenne réelle:
+  titre: Consommation moyenne réelle d'électricité en tenant compte des autres modes de chauffage
+  formule:
+    somme:
+      - consommation moyenne chauffage / chauffage . nombre sources chauffage air
+      - consommation moyenne ecs / chauffage . nombre sources ecs
+      - consommation moyenne cuisson / chauffage . nombre sources cuisson
+      - consommation moyenne spécifique
+      - consommation moyenne climatisation
+  unité: kWh
+
+logement . électricité . consommation moyenne:
+  titre: Consommation moyenne d'électricité (hors spécifique et climatisation)
+  formule:
+    variations:
       - si:
           toutes ces conditions:
             - logement . chauffage . choix utilisateur = oui
             - est défini: logement . chauffage . électricité . présent
             - est défini: logement . chauffage . PAC . présent
-            - logement . chauffage . électricité . présent
-            - logement . chauffage . PAC . présent
-        alors: surface * (parc français . consommation électricité autre par m2 + parc français . chauffage . consommation électricité par m2)
+            - logement . chauffage . électricité . présent = oui
+            - logement . chauffage . PAC . présent = oui
+        alors: surface * parc français . chauffage . consommation électricité par m2
       - si:
           toutes ces conditions:
             - logement . chauffage . choix utilisateur = oui
             - est défini: logement . chauffage . électricité . présent
             - est défini: logement . chauffage . PAC . présent
-            - logement . chauffage . électricité . présent
+            - logement . chauffage . électricité . présent = oui
             - logement . chauffage . PAC . présent = non
-        alors: surface * (parc français . consommation électricité autre par m2 + parc français . chauffage . consommation électricité hors PAC par m2)
+        alors: surface * parc français . chauffage . consommation électricité hors PAC par m2
       - si:
           toutes ces conditions:
             - logement . chauffage . choix utilisateur = oui
             - est défini: logement . chauffage . électricité . présent
             - est défini: logement . chauffage . PAC . présent
             - logement . chauffage . électricité . présent = non
-            - logement . chauffage . PAC . présent
-        alors: surface * (parc français . consommation électricité autre par m2 + parc français . chauffage . consommation électricité PAC par m2)
-      - sinon: surface * parc français . consommation électricité autre par m2
+            - logement . chauffage . PAC . présent = oui
+        alors: surface * parc français . chauffage . consommation électricité PAC par m2
+      - sinon: 0
+  unité: kWh
+
+logement . électricité . consommation moyenne chauffage:
+  formule: parc français . chauffage . part chauffage air électricité * consommation moyenne
+  unité: kWh
+
+logement . électricité . consommation moyenne ecs:
+  formule:
+    somme:
+      - parc français . chauffage . part ecs électricité * consommation moyenne
+      - (-1) * parc français . chauffage . part ecs électricité * consommation moyenne * chauffage . chauffe eau solaire . taux réduction ecs
+  unité: kWh
+
+logement . électricité . consommation moyenne cuisson:
+  formule: parc français . chauffage . part cuisson électricité * consommation moyenne
+  unité: kWh
+
+logement . électricité . consommation moyenne spécifique:
+  formule: parc français . consommation électricité spécifique par m2 * surface
+  unité: kWh
+
+logement . électricité . consommation moyenne climatisation:
+  applicable si:
+    toutes ces conditions:
+      - est défini: climatisation . présent
+      - climatisation . présent
+  formule: parc français . consommation électricité climatisation par m2 * surface
+  unité: kWh
+
+logement . électricité . consommation via DPE:
+  applicable si: chauffage . précision consommation = 'DPE'
+  par défaut: consommation par défaut
+  formule:
+    somme:
+      - parc français . chauffage . part chauffage air électricité * chauffage . précision consommation . DPE . consommation via DPE par m2 * surface / chauffage . nombre sources chauffage air
+      - parc français . chauffage . part ecs électricité * chauffage . précision consommation . DPE . consommation via DPE par m2 * surface / chauffage . nombre sources ecs
+      - consommation moyenne cuisson / chauffage . nombre sources cuisson
+      - consommation moyenne spécifique
+      - consommation via DPE . climatisation
+  unité: kWh
+
+logement . électricité . consommation via DPE . climatisation:
+  applicable si:
+    toutes ces conditions:
+      - est défini: climatisation . présent
+      - climatisation . présent
+  formule: parc français . part climatisation électricité * chauffage . précision consommation . DPE . consommation via DPE par m2 * surface / chauffage . nombre sources chauffage air
+  unité: kWh
+
+logement . électricité . consommation via ressenti:
+  applicable si: chauffage . précision consommation = 'aide'
+  formule:
+    variations:
+      - si: chauffage . précision consommation . ressenti = 'passoire thermique'
+        alors:
+          somme:
+            - consommation moyenne chauffage * chauffage . précision consommation . ressenti . saut D vers G / chauffage . nombre sources chauffage air
+            - consommation moyenne ecs * chauffage . précision consommation . ressenti . saut D vers G / chauffage . nombre sources ecs
+            - consommation moyenne cuisson / chauffage . nombre sources cuisson
+            - consommation moyenne spécifique
+            - consommation moyenne climatisation * chauffage . précision consommation . ressenti . saut D vers G
+      - si: chauffage . précision consommation . ressenti = 'confortable'
+        alors:
+          somme:
+            - consommation moyenne chauffage * chauffage . précision consommation . ressenti . saut D vers A / chauffage . nombre sources chauffage air
+            - consommation moyenne ecs * chauffage . précision consommation . ressenti . saut D vers A / chauffage . nombre sources ecs
+            - consommation moyenne cuisson / chauffage . nombre sources cuisson
+            - consommation moyenne spécifique
+            - consommation moyenne climatisation * chauffage . précision consommation . ressenti . saut D vers A
+      - sinon: consommation par défaut
+  unité: kWh
+
+logement . électricité . réseau:
+  titre: Électricité du réseau
+  icônes: ⚡
+
+logement . électricité . réseau . consommation:
+  par défaut: réseau . consommation moyenne réelle
+
+logement . électricité . réseau . consommation moyenne réelle:
+  titre: Consommation moyenne réelle d'électricité du réseau
+  formule:
+    somme:
+      - électricité . consommation par défaut
+      - (-1) * photovoltaique . autoconsommation
+  note: Il est question ici de l'électricité consommée depuis le réseau, ie, hors autoconsommation photovoltaïque.
+  unité: kWh
+
+logement . électricité . réseau . consommation précise:
+  applicable si: chauffage . précision consommation = 'conso exactes'
+  par défaut: réseau . consommation moyenne réelle
+  question: Quelle est la consommation annuelle d'électricité (réseau) de votre foyer ?
+  aide: logement . électricité . réseau . consommation estimée via le coût . saisie
+  plancher: 0
+  plafond: 99999
+  unité: kWh
+  description: |
+    Astuce : vous trouverez la consommation annuelle d'électricité sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
 
 logement . électricité . réseau . consommation estimée via le coût:
   titre: Consommation estimée via le coût
@@ -138,7 +244,7 @@ logement . électricité . empreinte eau mix électrique:
 
 logement . électricité . photovoltaique:
   DLUO: 01/04/2026
-  titre: Panneaux solaires
+  titre: Panneaux photovoltaïques
   icônes: 🌞
 
 logement . électricité . photovoltaique . présent:
