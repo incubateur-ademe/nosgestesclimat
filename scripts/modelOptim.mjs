@@ -43,7 +43,8 @@ const rulesToKeep = [
   'ui . pédagogie . empreinte faible',
   'divers . textile . empreinte précise',
   'divers . textile . choix précis',
-  'divers . textile . nombre total'
+  'divers . textile . nombre total',
+  'logement . construction . rénovation . travaux'
 ]
 
 // Rule names which should be avoided in the optimized model.

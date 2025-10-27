@@ -366,6 +366,16 @@ parc français . consommation électricité autre par m2:
   formule: consommation électricité autre / surface totale
   unité: kWh/m2
 
+parc français . consommation électricité spécifique par m2:
+  formule: consommation électricité autre . spécifique / surface totale
+  unité: kWh/m2
+
+parc français . consommation électricité climatisation par m2:
+  note: |
+    Selon des [données ADEME issues de Batizoom](https://batizoom.ademe.fr/indicateurs/part-des-logements-climatises), 18% des logements en France disposent d'un système de climatisation (on ne sait pas si les PAC sont comptées ici).
+  formule: consommation électricité autre . climatisation / (18% * surface totale)
+  unité: kWh/m2
+
 parc français . consommation électricité autre . spécifique:
   titre: conso électrique liée aux usages spécifiques (éclairage, appareils électriques, etc.)
   formule: 73037440099
@@ -375,6 +385,9 @@ parc français . consommation électricité autre . climatisation:
   titre: conso électrique liée à la climatisation
   formule: 2141336346
   unité: kWh
+
+parc français . part climatisation électricité:
+  formule: consommation électricité autre . climatisation / consommation électricité totale
 
 parc français . empreinte électricité autre par m2:
   formule: consommation électricité autre par m2 * logement . électricité . intensité carbone équivalente
@@ -476,13 +489,23 @@ parc français . chauffage . empreinte électricité chauffage air PAC par m2:
 parc français . chauffage . empreinte moyenne ecs par m2:
   formule:
     somme:
-      - empreinte électricité ecs par m2
-      - empreinte gaz ecs par m2
-      - empreinte fioul ecs par m2
-      - empreinte buches ecs par m2 / 2
-      - empreinte granulés ecs par m2 / 2
-      - empreinte réseau de chaleur ecs par m2
-      - empreinte GPL ecs par m2
+      - surface . part électricité * empreinte électricité ecs par m2
+      - surface . part gaz * empreinte gaz ecs par m2
+      - surface . part fioul * empreinte fioul ecs par m2
+      - surface . part bois * empreinte buches ecs par m2 / 2
+      - surface . part bois * empreinte granulés ecs par m2 / 2
+      - surface . part réseau de chaleur * empreinte réseau de chaleur ecs par m2
+      - surface . part GPL * empreinte GPL ecs par m2
+
+parc français . chauffage . empreinte moyenne ecs par m2 hors électricité:
+  formule:
+    somme:
+      - surface . part gaz * empreinte gaz ecs par m2
+      - surface . part fioul * empreinte fioul ecs par m2
+      - surface . part bois * empreinte buches ecs par m2 / 2
+      - surface . part bois * empreinte granulés ecs par m2 / 2
+      - surface . part réseau de chaleur * empreinte réseau de chaleur ecs par m2
+      - surface . part GPL * empreinte GPL ecs par m2
 
 parc français . chauffage . empreinte électricité ecs par m2:
   formule: empreinte électricité par m2 * part ecs électricité
@@ -522,3 +545,12 @@ parc français . chauffage . part ecs réseau de chaleur:
 
 parc français . chauffage . part ecs GPL:
   formule: consommation GPL . ecs / consommation GPL
+
+parc français . chauffage . part cuisson électricité:
+  formule: consommation électricité . cuisson / consommation électricité totale
+
+parc français . chauffage . part cuisson gaz:
+  formule: consommation gaz . cuisson / consommation gaz
+
+parc français . chauffage . part cuisson GPL:
+  formule: consommation GPL . cuisson / consommation GPL
