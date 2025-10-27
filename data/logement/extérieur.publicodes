@@ -9,6 +9,7 @@ logement . extérieur:
   mosaique:
     type: selection
     options:
+      - aucun . présent
       - salon de jardin bois . présent
       - salon de jardin résine ou métal . présent
       - tondeuse électrique ou robot . présent
@@ -16,13 +17,6 @@ logement . extérieur:
       - barbecue électrique ou gaz . présent
       - barbecue charbon . présent
     suggestions:
-      aucun:
-        salon de jardin bois . présent: non
-        salon de jardin résine ou métal . présent: non
-        tondeuse électrique ou robot . présent: non
-        tondeuse thermique . présent: non
-        barbecue électrique ou gaz . présent: non
-        barbecue charbon . présent: non
       juste une terrasse:
         salon de jardin bois . présent: non
         salon de jardin résine ou métal . présent: oui
@@ -49,14 +43,28 @@ logement . extérieur:
 
 logement . extérieur . empreinte:
   formule:
-    somme:
-      - empreinte calculée salon de jardin bois
-      - empreinte calculée salon de jardin résine ou métal
-      - empreinte calculée tondeuse électrique ou robot
-      - empreinte calculée tondeuse thermique
-      - empreinte calculée barbecue électrique ou gaz
-      - empreinte calculée barbecue charbon
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: aucun . présent
+            - aucun . présent
+        alors: 0
+      - sinon:
+          somme:
+            - empreinte calculée salon de jardin bois
+            - empreinte calculée salon de jardin résine ou métal
+            - empreinte calculée tondeuse électrique ou robot
+            - empreinte calculée tondeuse thermique
+            - empreinte calculée barbecue électrique ou gaz
+            - empreinte calculée barbecue charbon
   unité: kgCO2e
+
+logement . extérieur . aucun:
+  titre: Aucun
+  icônes: ❌
+
+logement . extérieur . aucun . présent:
+  question: Avez-vous des équipements d'extérieur ?
 
 logement . extérieur . salon de jardin bois:
   titre: Salon de jardin en bois
