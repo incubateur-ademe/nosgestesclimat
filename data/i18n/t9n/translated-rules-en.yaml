@@ -159,19 +159,16 @@ alimentation . boisson . chaude:
     Si vous buvez du chocolat chaud, nous vous demanderons le type de lait dans une autre question !
   mosaique:
     suggestions:
-      - no hot drinks
       - a coffee
       - lots of coffee
       - coffee and tea
       - a hot chocolate
     suggestions.auto:
-      - no hot drinks
       - a coffee
       - lots of coffee
       - coffee and tea
       - a hot chocolate
     suggestions.lock:
-      - pas de boisson chaude
       - un café
       - beaucoup de café
       - un café et un thé
@@ -4077,7 +4074,7 @@ divers . numérique . appareils:
   titre.lock: appareils
   mosaique:
     suggestions:
-      - none
+      - no
       - life without a screen
       - connected life
       - gamer
@@ -14528,7 +14525,6 @@ logement . chauffage . raccordement réseau de chaleur:
   titre.auto: Connecting to a heating network
   titre.lock: Se raccorder à un réseau de chaleur
 logement . chauffage . raccordement réseau de chaleur . recalcul:
-  note: it is assumed that the gas/oil consumption will be identical after a connection to the heating network.
   note.auto: it is assumed that the gas/oil consumption will be identical after a connection to the heating network.
   note.lock: on considère que la consommation de gaz/fioul sera identique suite à un raccordement au réseau de chaleur.
   titre: recalculation
@@ -16136,21 +16132,15 @@ transport . train . km:
   titre.lock: km
 transport . vacances:
   description: |
-    The "converted van" category includes converted vans and lorries.
-
-    If you have already entered the kilometres travelled in a converted van previously, indicating "light commercial vehicle" as the main vehicle used, then you can tick "none" here.
+    The "converted van" category includes converted vans and lorries. If you have already entered the kilometres travelled in a converted van previously, indicating "light commercial vehicle" as the main vehicle used, then you can tick "none" here.
 
     💡 If you have hired any of this equipment, tick "none". The hire is not yet taken into account in the calculator.
   description.auto: |
-    The "converted van" category includes converted vans and lorries.
-
-    If you have already entered the kilometres travelled in a converted van previously, indicating "light commercial vehicle" as the main vehicle used, then you can tick "none" here.
+    The "converted van" category includes converted vans and lorries. If you have already entered the kilometres travelled in a converted van previously, indicating "light commercial vehicle" as the main vehicle used, then you can tick "none" here.
 
     💡 If you have hired any of this equipment, tick "none". The hire is not yet taken into account in the calculator.
   description.lock: |
-    La catégorie "van aménagé" comprend les fourgons et camionettes aménagés.
-
-    Si vous avez déjà renseigné les kilomètres parcourus en van aménagé précédemment, en indiquant "véhicule utilitaire léger" comme véhicule principal de déplacement, alors vous pouvez ici cocher "aucun".
+    La catégorie "van aménagé" comprend les fourgons et camionettes aménagés. Si vous avez déjà renseigné les kilomètres parcourus en van aménagé précédemment, en indiquant "véhicule utilitaire léger" comme véhicule principal de déplacement, alors vous pouvez ici cocher "aucun".
 
     💡 Si vous avez loué un de ces équipements, cochez "aucun". La location n'est pas encore prise en compte dans le calculateur.
   question: What vehicles do you own for leisure (excluding your main vehicle)?
@@ -16159,6 +16149,66 @@ transport . vacances:
   titre: vacations
   titre.auto: vacations
   titre.lock: vacances
+  note: |
+    @Clément: for the moment, we're keeping the default value for `transport . holiday` at false for reasons of complexity:
+    - The default footprint is relatively small given the proportions of users of these vehicles
+    transport . holiday . default footprint:
+      formula:
+        sum:
+          - caravan . footprint . actual use * caravan . percentage caravanners
+          - camping car . footprint . actual use * camping car . percentage camping car users
+          - van * van . percentage of van users
+
+    transport . holiday . user choice:
+      formula :
+        variations :
+          - if :
+              one of these conditions :
+                - caravan . owner
+                - camping car . owner
+                - van . owner
+            then: yes
+        - otherwise: no
+  note.auto: |
+    @Clément: for the moment, we're keeping the default value for `transport . holiday` at false for reasons of complexity:
+    - The default footprint is relatively small given the proportions of users of these vehicles
+    transport . holiday . default footprint:
+      formula:
+        sum:
+          - caravan . footprint . actual use * caravan . percentage caravanners
+          - camping car . footprint . actual use * camping car . percentage camping car users
+          - van * van . percentage of van users
+
+    transport . holiday . user choice:
+      formula :
+        variations :
+          - if :
+              one of these conditions :
+                - caravan . owner
+                - camping car . owner
+                - van . owner
+            then: yes
+        - otherwise: no
+  note.lock: |
+    @Clément: pour l'instant, nous gardons la valeur par défaut pour `transport . vacances` à false pour des raison de complexité :
+    - L'empreinte par défaut est relativement faible au vu des proportions d'usagers de ces véhicules
+    transport . vacances . empreinte par défaut:
+      formule:
+        somme:
+          - caravane . empreinte . usage réel * caravane . pourcentage caravaniers
+          - camping car . empreinte . usage réel * camping car . pourcentage camping-caristes
+          - van * van . pourcentage usagers van
+
+    transport . vacances . choix utilisateur:
+      formule:
+        variations:
+          - si:
+              une de ces conditions:
+                - caravane . propriétaire
+                - camping car . propriétaire
+                - van . propriétaire
+            alors: oui
+        - sinon: non
 transport . vacances . camping car:
   titre: Camping Car
   titre.auto: Camping Car
@@ -17163,13 +17213,6 @@ divers . animaux domestiques . empreinte:
   question: How many pets live with you in your home?
   question.auto: How many pets live with you in your home?
   question.lock: Combien d'animaux vivent avec vous, au sein de votre foyer ?
-  mosaique:
-    suggestions:
-      - no animals
-    suggestions.auto:
-      - no animals
-    suggestions.lock:
-      - aucun animal
   description: |
     Do you have any other pets? We consider their footprint to be negligible.
 
@@ -17706,9 +17749,9 @@ divers . animaux domestiques . empreinte . chiens . alimentation . besoin journa
   titre.auto: daily requirement food
   titre.lock: besoin journalier nourriture
 divers . animaux domestiques . empreinte . chien moyen:
-  titre: Medium-sized dog
-  titre.auto: Medium-sized dog
-  titre.lock: Chien de taille moyenne
+  titre: Medium dog
+  titre.auto: Medium dog
+  titre.lock: Chien moyen
   description: Between 10 and 30kg (Beagle, Bulldog, Poodle...)
   description.auto: Between 10 and 30kg (Beagle, Bulldog, Poodle...)
   description.lock: Entre 10 et 30kg (Beagle, Bouledogue, Caniche...)
@@ -23623,9 +23666,9 @@ logement . extérieur:
       - juste une terrasse
       - petit jardin
       - grand jardin
-  question: What do you have outside (garden, balcony)?
-  question.auto: What do you have outside (garden, balcony)?
-  question.lock: Que possédez-vous dans votre extérieur (jardin, balcon) ?
+  question: What do you have outside (garden, terrace)?
+  question.auto: What do you have outside (garden, terrace)?
+  question.lock: Que possédez-vous dans votre extérieur (jardin, terrasse) ?
   description: |
     Here we try to cover the main elements of a typical individual garden. There are still some elements missing, which will be added gradually.
   description.auto: |
@@ -32940,3 +32983,124 @@ logement . installer photovoltaique . recalcul:
   titre: recalculation
   titre.auto: recalculation
   titre.lock: recalcul
+logement . vacances . aucun:
+  titre: I am not concerned
+  titre.auto: I am not concerned
+  titre.lock: Je ne suis pas concerné·e
+transport . transports commun . aucun . présent:
+  titre: present
+  titre.auto: present
+  titre.lock: présent
+  question: You don't use public transport?
+  question.auto: You don't use public transport?
+  question.lock: Vous n'utilisez pas les transports en commun ?
+transport . vacances . aucun:
+  titre: No
+  titre.auto: No
+  titre.lock: Aucun
+transport . transports commun . aucun:
+  titre: I am not concerned
+  titre.auto: I am not concerned
+  titre.lock: Je ne suis pas concerné·e
+divers . numérique . appareils . aucun:
+  titre: No
+  titre.auto: No
+  titre.lock: Aucun
+alimentation . boisson . chaude . aucun . présent:
+  titre: present
+  titre.auto: present
+  titre.lock: présent
+  question: Don't drink hot beverages?
+  question.auto: Don't drink hot beverages?
+  question.lock: Vous ne buvez pas de boissons chaudes ?
+logement . vacances . aucun . présent:
+  titre: present
+  titre.auto: present
+  titre.lock: présent
+  question: Do you spend weekends or holidays away from your main home?
+  question.auto: Do you spend weekends or holidays away from your main home?
+  question.lock: Partez-vous en week-end ou en vacances hors de votre logement principal ?
+transport . vacances . aucun . propriétaire:
+  titre: owner
+  titre.auto: owner
+  titre.lock: propriétaire
+  question: Don't have a car for your holidays?
+  question.auto: Don't have a car for your holidays?
+  question.lock: Vous ne possédez pas de véhicule pour vos vacances ?
+logement . extérieur . aucun:
+  titre: I am not concerned
+  titre.auto: I am not concerned
+  titre.lock: Je ne suis pas concerné·e
+logement . extérieur . aucun . présent:
+  titre: present
+  titre.auto: present
+  titre.lock: présent
+  question: Do you have any outdoor equipment?
+  question.auto: Do you have any outdoor equipment?
+  question.lock: Avez-vous des équipements d'extérieur ?
+divers . animaux domestiques . aucun:
+  titre: No
+  titre.auto: No
+  titre.lock: Aucun
+divers . numérique . appareils . aucun . présent:
+  titre: present
+  titre.auto: present
+  titre.lock: présent
+  question: Don't have any digital equipment?
+  question.auto: Don't have any digital equipment?
+  question.lock: Vous n'avez pas d'appareils numériques ?
+alimentation . déchets . gestes . aucun . présent:
+  titre: present
+  titre.auto: present
+  titre.lock: présent
+  question: Are you doing nothing to reduce your waste?
+  question.auto: Are you doing nothing to reduce your waste?
+  question.lock: Vous ne mettez en place aucun geste pour réduire vos déchets ?
+divers . loisirs . sports . aucun . présent:
+  question: You don't particularly do sport?
+  question.auto: You don't particularly do sport?
+  question.lock: Vous ne pratiquez pas particulièrement de sport ?
+  titre: present
+  titre.auto: present
+  titre.lock: présent
+logement . construction . rénovation . travaux . aucun:
+  titre: No
+  titre.auto: No
+  titre.lock: Aucun
+alimentation . déchets . gestes . aucun:
+  titre: No
+  titre.auto: No
+  titre.lock: Aucun
+logement . construction . rénovation . travaux . aucun . présent:
+  titre: present
+  titre.auto: present
+  titre.lock: présent
+  question: Have you carried out any renovation work (finishing, insulation, heating, extension) in your home in the last 25 years?
+  question.auto: Have you carried out any renovation work (finishing, insulation, heating, extension) in your home in the last 25 years?
+  question.lock: Avez-vous réalisé des travaux de rénovation (second d'oeuvre, isolation, chauffage, extension) dans votre logement au cours des 25 dernières années ?
+divers . animaux domestiques . aucun . présent:
+  titre: present
+  titre.auto: present
+  titre.lock: présent
+  question: Don't have any pets?
+  question.auto: Don't have any pets?
+  question.lock: Vous ne possédez pas d'animaux domestiques ?
+divers . loisirs . culture . aucun . présent:
+  titre: present
+  titre.auto: present
+  titre.lock: présent
+  question: You don't particularly like going out or cultural activities?
+  question.auto: You don't particularly like going out or cultural activities?
+  question.lock: Vous n'avez pas particulièrement de sorties ou pratique culturelle ?
+divers . loisirs . sports . aucun:
+  titre: I am not concerned
+  titre.auto: I am not concerned
+  titre.lock: Je ne suis pas concerné·e
+alimentation . boisson . chaude . aucun:
+  titre: I am not concerned
+  titre.auto: I am not concerned
+  titre.lock: Je ne suis pas concerné·e
+divers . loisirs . culture . aucun:
+  titre: I am not concerned
+  titre.auto: I am not concerned
+  titre.lock: Je ne suis pas concerné·e
