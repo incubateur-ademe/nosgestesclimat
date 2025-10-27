@@ -1,55 +1,3 @@
-logement . chauffage . baisse température:
-  titre: Baisser la consigne de son chauffage
-  icônes: 🏠🌡
-  description: |
-    Le chauffage représente 66 % de la dépense énergétique d’un ménage. De nombreux foyers sont encore équipés de chaudières au gaz et au fioul qui émettent d’importantes quantités de gaz à effet de serre. En faisant des économies de chauffage, on peut donc limiter de manière importante son impact sur le climat.
-
-    Baisser la température d'un degré permet de réaliser 7% d'économies d'énergie.
-
-    > Pour mieux maîtriser la température de votre logement, pensez à installer une régulation et une programmation.
-
-    > Pour en savoir plus, consultez [notre guide « Un hiver tout confort »](https://librairie.ademe.fr/changement-climatique-et-energie/5100-un-hiver-tout-confort-9791029718984.html) et [notre guide « Changer de chauffage »](https://librairie.ademe.fr/urbanisme-et-batiment/5099-changer-de-chauffage-9791029718731.html)
-  applicable si: température > 19
-  formule: (nombre degrés * gains 1 degré * empreinte chauffage air) / habitants
-  unité: kgCO2e
-
-logement . chauffage . baisse température . nombre degrés:
-  question: De combien de degrés seriez-vous prêt à diminuer la température de votre logement ?
-  icônes: ↘️🌡
-  description: |
-    Les ¾ de la consommation d’énergie d’un ménage sont consacrés au chauffage et à l’eau chaude.
-
-    Cette consommation d’énergie, en plus d’avoir un coût financier non négligeable, augmente l’empreinte carbone des ménages.
-
-    Elle peut toutefois facilement être limitée en diminuant la température des pièces occupées sans perdre de confort thermique ou bien ressentir une sensation de froid (à condition d’avoir des logements bien isolés).
-
-    Par exemple, régler la température entre 19° et 21°C dans les pièces occupées la journée (et 17°C la nuit ou dans les pièces peu occupées).
-
-    En effet, baisser la température de chauffage d’1°C représente une économie d’énergie de 7%.
-  par défaut: 1
-  unité: degré
-  suggestions:
-    1 degré: 1
-    2 degrés: 2
-    3 degrés: 3
-
-logement . température:
-  question: À quelle température chauffez-vous votre logement ?
-  description: Cette question nous permet simplement de ne pas vous proposer de baisser la température quand elle est déjà relativement faible.
-  icônes: 🌡
-  par défaut: 20
-  unité: degrés
-
-logement . chauffage . baisse température . gains 1 degré:
-  formule: 7
-  unité: '%/degré'
-  description: |
-    C'est la baisse estimée de dépense d'énergie quand on baisse la température de notre foyer chauffé de 1°C dans la gamme de température usuelle (autour de 20°).
-
-    Nous retenons l'estimation donnée dans le [guide ADEME](https://www.ademe.fr/40-trucs-astuces-economiser-leau-lenergie) "40 trucs pour économiser l'eau et l'énergie".
-  note: |
-    Où est la source pour ces 7% ? Peut-on décliner ce chiffre pour chaque type d'énergie (bois, gaz, etc.) ? Quelle est la sensibilité de ce chiffre au type de logement, son isolation, etc. ?
-
 logement . empreinte chauffage air:
   formule:
     variations:
@@ -65,35 +13,14 @@ logement . empreinte chauffage air:
 logement . empreinte chauffage air utilisateur:
   formule:
     somme:
-      - chauffage . électricité . présent * électricité * parc français . chauffage . part chauffage air électricité
-      - (chauffage . gaz . empreinte + chauffage . citerne propane . empreinte) * parc français . chauffage . part chauffage air gaz
+      - chauffage . électricité . présent * logement . électricité . empreinte * parc français . chauffage . part chauffage air électricité
+      - chauffage . gaz . empreinte * parc français . chauffage . part chauffage air gaz
+      - chauffage . citerne propane . empreinte * parc français . chauffage . part chauffage air gaz
       - chauffage . bois . empreinte * parc français . chauffage . part chauffage air bois
       - chauffage . fioul . empreinte * parc français . chauffage . part chauffage air fioul
       - chauffage . réseau de chaleur . empreinte * parc français . chauffage . part chauffage air réseau de chaleur
-
-logement . chauffage . installer thermostat:
-  titre: Installer un thermostat programmable
-  icônes: 🌡️🖥️
-  description: |
-    Le saviez-vous ? L'installation d'un thermostat programmable permet de faire jusqu'à 15% d'économies de chauffage.
-
-    > Pour en savoir plus le fonctionnement du thermostat et sur son installation, [consultez notre article](https://agirpourlatransition.ademe.fr/particuliers/maison/economies-denergie-deau/reduire-facture-chauffage-thermostat-programmable).
-
-  note: Nous choisissons de partir sur une réduction de 12% de l'énergie liée au chauffage.
-  formule: empreinte chauffage air * 0.12 / habitants
-  unité: kgCO2e
-
-logement . chauffage . installer chauffe-eau solaire:
-  titre: S’équiper d’un chauffe-eau solaire
-  icônes: 🌡️🛁☀️
-  description: |
-    C'est la solution solaire thermique la plus simple à mettre en œuvre. Elle permet de couvrir une bonne partie des besoins d'eau chaude de la maison.
-
-    Il permet aussi de diviser les dépenses d’eau chaude par 2 voire par 3 par rapport à un système électrique, au gaz ou au fioul.
-
-    > Pour en savoir plus sur la technologie, son fonctionnement et les coûts d’installation, consultez [notre guide "Adopter le solaire thermique"](https://librairie.ademe.fr/energies-renouvelables-reseaux-et-stockage/6136-adopter-le-solaire-thermique.html).
-
-  formule: empreinte eau chaude sanitaire * chauffage . chauffe eau solaire . taux réduction ecs / habitants
+  note: |
+    Dans le cas des utilisateurs ayant répondu connaître leur DPE ou avoir besoin d'aide pour estimer leurs consommations, on fait ici une légère approximation en appliquant le ratio "chauffage air" à l'empreinte globale du chauffage pour chaque type d'énergie plutôt que de repartir de l'ensemble des consommations spécifiques au chauffage de l'air. Néanmoins, on considère que l'impact sur le résultat final n'est pas significatif.
 
 logement . chauffage . empreinte eau chaude sanitaire:
   formule:
@@ -111,55 +38,48 @@ logement . chauffage . empreinte eau chaude sanitaire:
 logement . chauffage . empreinte eau chaude sanitaire utilisateur:
   formule:
     somme:
-      - chauffage . électricité . présent * électricité * parc français . chauffage . part ecs électricité
-      - (chauffage . gaz . empreinte + chauffage . citerne propane . empreinte) * parc français . chauffage . part ecs gaz
-      - chauffage . bois . empreinte * parc français . chauffage . part ecs bois
+      - chauffage . électricité . présent * logement . électricité . empreinte * parc français . chauffage . part ecs électricité
+      - chauffage . gaz . empreinte * parc français . chauffage . part ecs gaz
+      - chauffage . citerne propane . empreinte * parc français . chauffage . part ecs gaz
       - chauffage . fioul . empreinte * parc français . chauffage . part ecs fioul
       - chauffage . réseau de chaleur . empreinte * parc français . chauffage . part ecs réseau de chaleur
-
-logement . électricité . éteindre appareils:
-  formule: empreinte du foyer / habitants
-  titre: Éteindre ses appareils en veille
-  icônes: 🏠📺
-  description: |
-    Nos appartements et nos maisons sont de plus en plus équipés d'appareils électriques et électroniques, qui souvent restent allumés inutilement ou en veille.
-
-    En les branchant sur une multiprise avec un interrupteur, vous pourrez les éteindre complètement en un clin d'œil.
-
-    Les veilles ont fait des progrès et consomment moins que par le passé : une directive européenne applicable depuis janvier 2017 limite leur puissance à 0,5 W pour un certain nombre d’appareilsPour les appareils qui restent connectés à Internet ou à des réseaux de données, la puissance est cependant encore de 3 W.
-
-    > Pour en savoir plus sur les différentes solutions pour réduire votre consommation d’électricité, consultez [les articles du site Agir](https://agirpourlatransition.ademe.fr/particuliers/maison/economies-denergie-deau) ainsi que [notre guide « Réduire sa facture d’électricité »](https://librairie.ademe.fr/consommer-autrement/5696-reduire-sa-facture-d-electricite.html).
-
-logement . électricité . éteindre appareils . empreinte du foyer:
-  formule: énergie de veille * logement . électricité . empreinte au kWh
-
-logement . énergie de veille:
-  formule: puissance * temps d'absence
-  unité: kWh
-
-logement . énergie de veille . puissance:
-  formule: 0.050
-  unité: kW
-  description: |
-    > La puissance totale de ces veilles pour un ménage dépasse souvent 50 Watt
   note: |
-    Il est bien possible que l'on sous-estime le nombre de Watt en veille. Notamment, il apparait que les box internet et TV à elle-seules en consomme plus que 50.
+    Dans le cas des utilisateurs ayant répondu connaître leur DPE ou avoir besoin d'aide pour estimer leurs consommations, on fait ici une légère approximation en appliquant le ratio "ecs" à l'empreinte globale du chauffage pour chaque type d'énergie plutôt que de repartir de l'ensemble des consommations spécifiques à l'ECS. Néanmoins, on considère que l'impact sur le résultat final n'est pas significatif.
 
-    > La « box » est un équipement de plus en plus courant, qui reste souvent allumé 24 h sur 24 et qui génère une consommation pou-vant dépasser 200 kWh / an, soit autant que le lave-linge. Sa consommation totale sur un an se situe entre 150 et 300 kWh* : c'est autant qu'un grand réfrigérateur
+logement . chauffage . installer thermostat:
+  titre: Installer un thermostat programmable
+  icônes: 🌡️🖥️
+  description: |
+    Le saviez-vous ? L'installation d'un thermostat programmable permet de faire jusqu'à 15% d'économies de chauffage.
 
-logement . énergie de veille . temps d'absence:
-  formule: commun . jours par an * journalier
-  unité: h
-logement . énergie de veille . temps d'absence . journalier:
-  formule: 12
-  unité: h/jour
-  description: On suppose qu'en moyenne, on n'est pas présent chez soi la moitié du temps, ou on dort. La nuit (8h) et en moyenne 4h en journée, pour prendre en compte les weekends qui compensent les journées de travail de 8h, et le fait que tout le monde dans le foyer n'est pas absent au même moment.
+    > Pour en savoir plus le fonctionnement du thermostat et sur son installation, [consultez notre article](https://agirpourlatransition.ademe.fr/particuliers/maison/economies-denergie-deau/reduire-facture-chauffage-thermostat-programmable).
+
+  note: Nous choisissons de partir sur une réduction de 12% de l'énergie liée au chauffage pour être plus conservateur.
+  formule: empreinte chauffage air * 0.12 / habitants
+  unité: kgCO2e
+
+logement . chauffage . chauffe eau solaire . installer chauffe-eau solaire:
+  applicable si:
+    toutes ces conditions:
+      - propriétaire = 'propriétaire'
+      - est une maison
+      - est défini: chauffe eau solaire . présent
+      - chauffe eau solaire . présent = non
+  titre: S’équiper d’un chauffe-eau solaire
+  icônes: 🌡️🛁☀️
+  description: |
+    C'est la solution solaire thermique la plus simple à mettre en œuvre. Elle permet de couvrir une bonne partie des besoins d'eau chaude de la maison et permet également de diviser les dépenses d’eau chaude par 2 voire par 3 par rapport à un système électrique, au gaz ou au fioul.
+
+    > Pour en savoir plus sur la technologie, son fonctionnement et les coûts d’installation, consultez [notre guide "Adopter le solaire thermique"](https://librairie.ademe.fr/energies-renouvelables-reseaux-et-stockage/6136-adopter-le-solaire-thermique.html).
+
+  formule: empreinte eau chaude sanitaire * chauffage . chauffe eau solaire . taux réduction ecs / habitants
 
 logement . chauffage . se chauffer au bois:
   titre: Se chauffer au bois
   applicable si:
     toutes ces conditions:
       - propriétaire = 'propriétaire'
+      - est une maison
       - une de ces conditions:
           - toutes ces conditions:
               - est défini: chauffage . gaz . présent
@@ -171,11 +91,15 @@ logement . chauffage . se chauffer au bois:
               - est défini: chauffage . citerne propane . présent
               - chauffage . citerne propane . présent
   non applicable si:
-    toutes ces conditions:
-      - est défini: logement . construction . rénovation . travaux . chauffage . présent
-      - logement . construction . rénovation . travaux . chauffage . présent
+    une de ces conditions:
+      - toutes ces conditions:
+          - est défini: logement . construction . rénovation . travaux . chauffage . présent
+          - logement . construction . rénovation . travaux . chauffage . présent
+      - toutes ces conditions:
+          - est défini: chauffage . bois . présent
+          - chauffage . bois . présent
   icônes: 🔄🪵
-  formule: (logement . chauffage - recalcul) / habitants
+  formule: (empreinte chauffage air - recalcul - empreinte travaux) / habitants
   unité: kgCO2e
   description: |
     S’équiper d’un poêle ou d’une chaudière à bois permet de ne plus dépendre des énergies fossiles (fuel, gaz) ou de l’électricité pour se chauffer. C’est un mode de chauffage économique.
@@ -185,9 +109,11 @@ logement . chauffage . se chauffer au bois:
     > Par ailleurs, si vous vous demandez comment est gérée la ressource en bois, voici notre guide ["La forêt française en 10 questions"](https://librairie.ademe.fr/agriculture-alimentation-foret-bioeconomie/7440-la-foret-francaise-en-10-questions-9791029722660.html).
 
     Attention toutefois à vous équipez d’un appareil moderne et performant car les vieux poêles libèrent des polluants dans l’air. Pour en savoir plus sur les appareils les plus performants, [consultez notre guide](https://librairie.ademe.fr/urbanisme-et-batiment/5667-adopter-le-chauffage-au-bois-9791029719769.html).
-  note: |
-    Nous considérons pour l'instant que le remplacement des kWh dédiés au chauffage par la même quantité de kWh de bois est une bonne approximation de premier ordre.
-    Nous pourrons par la suite l'adapter en fonction du rendement des installations résidentielles.
+
+logement . chauffage . se chauffer au bois . empreinte travaux:
+  valeur: logement . surface * logement . construction . rénovation . travaux . chauffage / logement . construction . rénovation . amortissement
+  contexte:
+    logement . construction . rénovation . travaux . chauffage . présent: oui
 
 logement . chauffage . se chauffer au bois . recalcul:
   valeur: logement . chauffage . bois . empreinte
@@ -198,29 +124,49 @@ logement . chauffage . se chauffer au bois . recalcul:
   note: On considère un chauffage via granulés.
 
 logement . chauffage . se chauffer au bois . recalcul . consommation:
-  formule:
-    somme:
-      - chauffage . gaz . présent * chauffage . gaz . consommation
-      - chauffage . fioul . présent * chauffage . fioul . consommation / chauffage . fioul kWh au litre
-      - chauffage . citerne propane . présent * chauffage . citerne propane . consommation * logement . chauffage . citerne propane . énergie par kg
+  valeur: logement . chauffage . bois . type . granulés . consommation
+  contexte:
+    logement . chauffage . bois . présent: oui
+    logement . chauffage . bois . type: "'granulés'"
+    logement . chauffage . gaz . présent: non
+    logement . chauffage . fioul . présent: non
+    logement . chauffage . citerne propane . présent: non
+  note: On considère la valeur moyenne de la consommation mais on pourrait également jouer avec les rendements et les consommations exactes renseignées pour les autres modes de chauffage.
 
-logement . chauffage . remplacer gaz par PAC:
-  titre: Remplacer une chaudière gaz par une pompe à chaleur
+logement . chauffage . installer une PAC:
+  titre: Installer une pompe à chaleur
   action:
     dépasse:
       - logement . chauffage . rénovation énergétique
-      - logement . chauffage . rénovation énergétique BBC
   applicable si:
     toutes ces conditions:
       - propriétaire = 'propriétaire'
-      - est défini: chauffage . gaz . présent
-      - chauffage . gaz . présent
+      - une de ces conditions:
+          - toutes ces conditions:
+              - est défini: chauffage . électricité . présent
+              - chauffage . électricité . présent
+          - toutes ces conditions:
+              - est défini: chauffage . gaz . présent
+              - chauffage . gaz . présent
+          - toutes ces conditions:
+              - est défini: chauffage . fioul . présent
+              - chauffage . fioul . présent
+          - toutes ces conditions:
+              - est défini: chauffage . citerne propane . présent
+              - chauffage . citerne propane . présent
   non applicable si:
-    toutes ces conditions:
-      - est défini: logement . construction . rénovation . travaux . chauffage . présent
-      - logement . construction . rénovation . travaux . chauffage . présent
+    une de ces conditions:
+      - toutes ces conditions:
+          - est défini: logement . construction . rénovation . travaux . chauffage . présent
+          - logement . construction . rénovation . travaux . chauffage . présent
+      - toutes ces conditions:
+          - est défini: chauffage . PAC . présent
+          - chauffage . PAC . présent
+      - toutes ces conditions:
+          - est défini: chauffage . réseau de chaleur . présent
+          - chauffage . réseau de chaleur . présent
   icônes: 🔥🔄
-  formule: (chauffage . gaz . empreinte - PAC) / habitants
+  formule: (empreinte chauffage air + empreinte eau chaude sanitaire - recalcul - empreinte travaux) / habitants
   unité: kgCO2e
   description: |
     Remplacer un système de chauffage fonctionnant avec une énergie fossile (comme le gaz) par un système fonctionnant grâce à une énergie renouvelable permet de limiter de façon importante ses émissions de gaz à effet de serre.
@@ -230,78 +176,27 @@ logement . chauffage . remplacer gaz par PAC:
   note: |
     Nous considérons pour l'instant que le remplacement des kWh de gaz par la même quantité de kWh électrique est une bonne approximation de premier ordre. Nous pourrons par la suite l'adapter en fonction du rendement des installations résidentielles.
 
-    Cette action chiffre le remplacement de la chaudière gaz, si vous chauffez aussi votre eau au gaz il faudra choisir une PAC qui peut aussi chauffer l'eau.
+    Cette action chiffre le remplacement du système de chauffage de l'air mais aussi de l'eau chaude sanitaire. Nous faisons le pari que la PAC installée est une PAC air-eau, qui chauffe aussi l'eau sanitaire, mais ce n'est pas nécessairement le cas.
 
     Voir [le guide ADEME sur les pompes à chaleur](https://librairie.ademe.fr/energies/7749-tout-comprendre-les-pompes-a-chaleur-9791029724145.html)
 
-logement . chauffage . remplacer gaz par PAC . PAC:
-  formule: (chauffage . gaz . consommation / coefficient COP) * logement . électricité . empreinte au kWh
+logement . chauffage . installer une PAC . empreinte travaux:
+  valeur: logement . surface * logement . construction . rénovation . travaux . chauffage / logement . construction . rénovation . amortissement
+  contexte:
+    logement . construction . rénovation . travaux . chauffage . présent: oui
 
-logement . chauffage . remplacer gaz par PAC . PAC . coefficient COP:
-  titre: Coefficient de performance réel
-  formule: 2
-  description: Pour 1kWh d'électricité consommée, combien de kWh de chaleur fournis ?
-  note: |
-    Nous choississons un coefficient conservateur (l'ADEME conseille un COP > 3).
-    Voir le [Guide EDF](https://particulier.edf.fr/fr/accueil/guide-energie/electricite/pompe-a-chaleur.html).
-    Plus d'informations également sur l'article [Pompe à chaleur ou radiateurs électriques ?](https://conseils-thermiques.org/contenu/pompe-a-chaleur-ou-radiateur-electrique.php)
+logement . chauffage . installer une PAC . recalcul:
+  formule: recalcul . consommation * logement . électricité . empreinte au kWh
+  note: On ne considère pas ici la notion de rendement (COP) mais nous nous basons sur les estimations de consommations moyennes selon les caractéristiques du logement fournies par l'utilisateur.
 
-logement . chauffage . remplacer chauffage électrique par PAC:
-  titre: Passer du chauffage électrique à une pompe à chaleur
-  action:
-    dépasse:
-      - logement . chauffage . rénovation énergétique
-      - logement . chauffage . rénovation énergétique BBC
-  applicable si:
-    toutes ces conditions:
-      - propriétaire = 'propriétaire'
-      - est défini: chauffage . électricité . présent
-      - chauffage . électricité . présent
-  non applicable si:
-    toutes ces conditions:
-      - est défini: logement . construction . rénovation . travaux . chauffage . présent
-      - logement . construction . rénovation . travaux . chauffage . présent
-  icônes: 🔥🔄
-  formule: (électricité . consommation totale * part consommation remplacable - consommation via PAC) * logement . électricité . empreinte au kWh / habitants
-  unité: kgCO2e
-  description: |
-    Le chauffage électrique est assez simple à installer mais il est cher à l’usage. Pour diminuer ses factures d’électricité et bénéficier d’un moyen de chauffage fonctionnant grâce aux énergies renouvelables, vous pouvez vous équiper d’une pompe à chaleur.
-
-    > Pour découvrir les différentes pompes à chaleur, leurs avantages et leurs inconvénients, en savoir plus sur leurs coûts, leur installation et leur entretien, [consultez notre guide](https://librairie.ademe.fr/energies/7749-tout-comprendre-les-pompes-a-chaleur-9791029724145.html).
-  note: |
-    Nous considérons pour l'instant que le remplacement des kWh de gaz par la même quantité de kWh électrique est une bonne approximation de premier ordre. Nous pourrons par la suite l'adapter en fonction du rendement des installations résidentielles.
-
-    Cette action chiffre le remplacement de la chaudière électrique, si vous chauffez aussi votre eau via un chauffe-eau il faudra choisir une PAC qui peut aussi chauffer l'eau.
-
-    Voir [Guide ADEME PAC](https://librairie.ademe.fr/energies/7749-tout-comprendre-les-pompes-a-chaleur-9791029724145.html)
-
-logement . chauffage . remplacer chauffage électrique par PAC . part consommation remplacable:
-  formule: parc français . chauffage . part chauffage air électricité + parc français . chauffage . part ecs électricité
-
-logement . chauffage . remplacer chauffage électrique par PAC . consommation via PAC:
-  formule: (logement . électricité . consommation totale * part consommation remplacable / coefficient COP)
-
-logement . chauffage . remplacer chauffage électrique par PAC . consommation via PAC . coefficient COP:
-  titre: Coefficient de performance réel
-  formule: 2
-  description: Pour 1kWh d'électricité consommée, combien de kWh de chaleur fournis ?
-  note: |
-    Nous choississons un coefficient conservateur (l'ADEME conseille un COP > 3).
-    Voir le [Guide EDF](https://particulier.edf.fr/fr/accueil/guide-energie/electricite/pompe-a-chaleur.html).
-    > Plus d'informations également sur l'article [Pompe à chaleur ou radiateurs électriques ?](https://conseils-thermiques.org/contenu/pompe-a-chaleur-ou-radiateur-electrique.php)
-
-logement . électricité . séchage air libre:
-  titre: Privilégier l'étendoir au sèche-linge
-  applicable si: divers . électroménager . appareils . sèche-linge . nombre > 0
-  icônes: 💨👗
-  description: |
-    Faire sécher son linge à l'air libre plutôt qu’au sèche-linge, c'est économiser de l'énergie.
-
-    Découvrez [de nombreux conseils pour réduire vos dépenses d’eau et d’énergie]( https://agirpourlatransition.ademe.fr/particuliers/maison/economies-denergie-deau).
-  formule: (300 kWh * logement . électricité . empreinte au kWh) / habitants
-  note: |
-    D'après l'étude [ADEME Panel ElecDom 2020](https://librairie.ademe.fr/changement-climatique-et-energie/4473-panel-usages-electrodomestiques.html),
-    un sèche-linge a une [consommation moyenne de 300 kWh/an](https://agirpourlatransition.ademe.fr/particuliers/maison/economies-denergie-deau/electricite-combien-consomment-appareils-maison).
+logement . chauffage . installer une PAC . recalcul . consommation:
+  valeur: logement . électricité . consommation totale * (parc français . chauffage . part chauffage air électricité + parc français . chauffage . part ecs électricité)
+  contexte:
+    logement . chauffage . PAC . présent: oui
+    logement . chauffage . électricité . présent: non
+    logement . chauffage . gaz . présent: non
+    logement . chauffage . fioul . présent: non
+    logement . chauffage . citerne propane . présent: non
 
 logement . climatisation . réduction:
   titre: Se passer de la climatisation
@@ -325,15 +220,17 @@ logement . climatisation . part électricité climatisation:
     Nous partons donc sur une moyenne de 400 kWh/an par climatiseur installé.
 
 logement . chauffage . rénovation énergétique:
-  titre: Rénover son logement
+  titre: Isoler son logement
   icônes: 🏚️✨
-  formule: (logement . empreinte chauffage air * gain rénovation) / habitants
+  formule: (logement . empreinte chauffage air * gain rénovation - empreinte travaux) / habitants
   unité: kgCO2e
   applicable si: propriétaire = 'propriétaire'
   non applicable si:
-    toutes ces conditions:
-      - est défini: logement . construction . rénovation . travaux . isolation . présent
-      - logement . construction . rénovation . travaux . isolation . présent
+    une de ces conditions:
+      - toutes ces conditions:
+          - est défini: logement . construction . rénovation . travaux . isolation . présent
+          - logement . construction . rénovation . travaux . isolation . présent
+      - logement . âge = 'très récent'
   description: |
     Mieux isoler, ventiler et équiper son logement apporte du confort et permet de diminuer ses factures d’énergie. Plus efficace, le logement sera en effet moins gourmand en énergie.
 
@@ -347,54 +244,46 @@ logement . chauffage . rénovation énergétique:
 
     > Parce qu’une rénovation demande de la réflexion, des connaissances techniques et financières, l’Etat a mis en place un service public de la rénovation qui peut vous accompagner dans votre projet. Pour contacter le conseiller le plus proche de chez vous, rendez-vous sur le site [France Rénov'](https://france-renov.gouv.fr/).
 
-logement . gain rénovation:
+logement . chauffage . rénovation énergétique . empreinte travaux:
+  valeur: logement . surface * logement . construction . rénovation . travaux . chauffage / logement . construction . rénovation . amortissement
+  contexte:
+    logement . construction . rénovation . travaux . chauffage . présent: oui
+
+logement . chauffage . rénovation énergétique . gain rénovation:
   formule: 39%
   note: |
     Gain énergétique moyen après rénovation sur un programme de l'ANAH de 13 000 logements ciblant les "passoires thermiques".
     Plus d'informations dans le programme [MaPrimeRénov’ Sérénité](https://france-renov.gouv.fr/aides/mpr/serenite) (ex Habiter Mieux de L’Anah).
-
-logement . chauffage . rénovation énergétique BBC:
-  action:
-    dépasse:
-      - logement . chauffage . rénovation énergétique
-  titre: Rénover son logement en BBC
-  icônes: 🏠✨
-  formule: (logement . empreinte chauffage air * gain rénovation) / habitants
-  unité: kgCO2e
-  applicable si: propriétaire = 'propriétaire'
-  non applicable si:
-    toutes ces conditions:
-      - est défini: logement . construction . rénovation . travaux . isolation . présent
-      - logement . construction . rénovation . travaux . isolation . présent
-  description: |
-    Une rénovation très performante peut mettre de diviser par 6 les besoins énergétiques de son logement. En consommant moins de 50 kWh par m² par an, le logement sera classé en A sur l’étiquette énergie du Diagnostic de Performance Energétique et atteindra le niveau exigé par la certification Bâtiment Basse Consommation (BBC).
-
-    Votre logement ne consommera presque plus d’énergie pour le chauffage tout en restant très confortable.
-
-    > Découvrez [tous nos conseils pour réussir votre rénovation](https://agirpourlatransition.ademe.fr/particuliers/maison/renovation).
-
-    Plusieurs aides financières sont disponibles pour soutenir votre investissement.
-
-    > Parce qu’une rénovation demande de la réflexion, des connaissances techniques et financières, l’Etat a mis en place un service public de la rénovation qui peut vous accompagner dans votre projet. Pour contacter le conseiller le plus proche de chez vous, rendez-vous sur le site [France Rénov'](https://france-renov.gouv.fr/).
-
-logement . chauffage . rénovation énergétique BBC . gain rénovation:
-  formule: 70%
-  note: Gain énergétique maximal atteint après une rénovation BBC, source à préciser.
 
 logement . chauffage . raccordement réseau de chaleur:
   titre: Se raccorder à un réseau de chaleur
   icônes: 👥🏭
   applicable si:
     toutes ces conditions:
-      - type = 'appartement'
+      - est un appartement
       - chauffage collectif = 'collectif'
-      - est défini: chauffage . gaz . présent
-      - est défini: chauffage . fioul . présent
       - une de ces conditions:
-          - chauffage . gaz . présent
-          - chauffage . fioul . présent
-  non applicable si: chauffage . réseau de chaleur . présent
-  formule: (logement . chauffage - recalcul / habitants)
+          - toutes ces conditions:
+              - est défini: chauffage . gaz . présent
+              - chauffage . gaz . présent
+          - toutes ces conditions:
+              - est défini: chauffage . fioul . présent
+              - chauffage . fioul . présent
+          - toutes ces conditions:
+              - est défini: chauffage . citerne propane . présent
+              - chauffage . citerne propane . présent
+  non applicable si:
+    une de ces conditions:
+      - toutes ces conditions:
+          - est défini: logement . construction . rénovation . travaux . chauffage . présent
+          - logement . construction . rénovation . travaux . chauffage . présent
+      - toutes ces conditions:
+          - est défini: chauffage . PAC . présent
+          - chauffage . PAC . présent
+      - toutes ces conditions:
+          - est défini: chauffage . électricité . présent
+          - chauffage . électricité . présent
+  formule: (empreinte chauffage air + empreinte eau chaude sanitaire - recalcul) / habitants
   unité: kgCO2e
   # TODO : Cette `note` est plus grand public que technique, à voir si ce texte n'a pas sa place ailleurs.
   note: |
@@ -426,13 +315,20 @@ logement . chauffage . raccordement réseau de chaleur:
     Le raccordement de logements individuels à un réseau de chaleur est encore rare mais pas impossible.
 
     > Pour savoir où se renseigner et comment se raccorder, [consultez cet article](https://agirpourlatransition.ademe.fr/particuliers/maison/travaux/comment-se-raccorder-a-un-reseau-de-chaleur).
+
 logement . chauffage . raccordement réseau de chaleur . recalcul:
-  titre: Recalcul émissions via le raccordement à un réseau de chaleur
-  note: on considère que la consommation de gaz/fioul sera identique suite à un raccordement au réseau de chaleur.
-  formule:
-    somme:
-      - chauffage . gaz . présent * chauffage . réseau de chaleur . intensité carbone * chauffage . gaz . consommation
-      - chauffage . fioul . présent * chauffage . réseau de chaleur . intensité carbone * chauffage . fioul . consommation / chauffage . fioul kWh au litre
+  valeur: logement . chauffage . réseau de chaleur . empreinte
+  contexte:
+    logement . chauffage . réseau de chaleur . présent: oui
+    logement . chauffage . réseau de chaleur . consommation: recalcul . consommation
+
+logement . chauffage . raccordement réseau de chaleur . recalcul . consommation:
+  valeur: logement . chauffage . réseau de chaleur . consommation
+  contexte:
+    logement . chauffage . réseau de chaleur . présent: oui
+    logement . chauffage . gaz . présent: non
+    logement . chauffage . fioul . présent: non
+    logement . chauffage . citerne propane . présent: non
 
 logement . chauffage collectif:
   avec:
@@ -557,12 +453,19 @@ logement . installer photovoltaique:
     Pour en savoir plus, consulter le guide ADEME ["L'électricité photovoltaïque en 10 questions"](https://librairie.ademe.fr/7545-l-electricite-photovoltaique-en-10-questions.html)
 
   non applicable si: électricité . photovoltaique . présent
-  applicable si: logement . est une maison
-  formule:
-    variations:
-      - si: énergie produite < logement . électricité . consommation totale
-        alors: énergie produite * (logement . électricité . réseau . intensité carbone)
-      - sinon: logement . électricité . consommation totale * (logement . électricité . réseau . intensité carbone - facteur émission)
+  applicable si:
+    toutes ces conditions:
+      - logement . est une maison
+      - logement . propriétaire = 'propriétaire'
+  formule: électricité - recalcul
+  unité: kgCO2e
+
+logement . installer photovoltaique . recalcul:
+  valeur: logement . électricité
+  contexte:
+    logement . électricité . photovoltaique . présent: oui
+    logement . électricité . photovoltaique . production: logement . installer photovoltaique . énergie produite
+    logement . électricité . photovoltaique . intensité carbone: logement . installer photovoltaique . intensité carbone
 
 logement . installer photovoltaique . énergie produite:
   formule: puissance installée * productible
@@ -604,7 +507,7 @@ logement . installer photovoltaique . zone climatique . centre et littoral atlan
 logement . installer photovoltaique . zone climatique . littoral méditerranéen:
   titre: Littoral méditerranéen et Corse
 
-logement . installer photovoltaique . facteur émission:
+logement . installer photovoltaique . intensité carbone:
   formule:
     variations:
       - si: zone climatique = 'bretagne et nord de la france'
