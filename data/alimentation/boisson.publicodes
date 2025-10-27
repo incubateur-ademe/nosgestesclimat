@@ -14,12 +14,8 @@ alimentation . boisson . chaude:
       - thé . nombre
       - chocolat chaud . nombre
       - chicorée . nombre
+      - aucun . présent
     suggestions:
-      pas de boisson chaude:
-        café . nombre: 0
-        thé . nombre: 0
-        chocolat chaud . nombre: 0
-        chicorée . nombre: 0
       un café:
         café . nombre: 1
         thé . nombre: 0
@@ -46,7 +42,21 @@ alimentation . boisson . chaude:
     Renseignez ici ce que vous consommez lors d'une journée type (dont le petit-déjeuner). Vos consommations occasionnelles sont considérées comme négligeables.
 
     Si vous buvez du chocolat chaud, nous vous demanderons le type de lait dans une autre question !
-  formule: par jour * commun . jours par an
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: boisson . chaude . aucun
+            - boisson . chaude . aucun
+        alors: 0
+      - sinon: boisson . chaude . par jour * commun . jours par an
+
+alimentation . boisson . chaude . aucun:
+  titre: Je ne suis pas concerné·e
+  icônes: ❌
+
+alimentation . boisson . chaude . aucun . présent:
+  question: Vous ne buvez pas de boissons chaudes ?
 
 alimentation . boisson . chaude . par jour:
   titre: Empreinte boissons chaudes par jour
