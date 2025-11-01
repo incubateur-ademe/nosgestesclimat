@@ -8,47 +8,53 @@ transport . vacances:
       - camping car . propriétaire
       - van . propriétaire
       - bateau plaisance . propriétaire
-    suggestions:
-      aucun:
-        caravane . propriétaire: non
-        camping car . propriétaire: non
-        van . propriétaire: non
-        bateau plaisance . propriétaire: non
+      - aucun . propriétaire
   question: Quels véhicules possédez-vous pour vos loisirs (hors véhicule principal) ?
   icônes: 🏖
   description: |
-    La catégorie "van aménagé" comprend les fourgons et camionettes aménagés.
-
-    Si vous avez déjà renseigné les kilomètres parcourus en van aménagé précédemment, en indiquant "véhicule utilitaire léger" comme véhicule principal de déplacement, alors vous pouvez ici cocher "aucun".
+    La catégorie "van aménagé" comprend les fourgons et camionettes aménagés. Si vous avez déjà renseigné les kilomètres parcourus en van aménagé précédemment, en indiquant "véhicule utilitaire léger" comme véhicule principal de déplacement, alors vous pouvez ici cocher "aucun".
 
     💡 Si vous avez loué un de ces équipements, cochez "aucun". La location n'est pas encore prise en compte dans le calculateur.
+  note: |
+    @Clément: pour l'instant, nous gardons la valeur par défaut pour `transport . vacances` à false pour des raison de complexité :
+    - L'empreinte par défaut est relativement faible au vu des proportions d'usagers de ces véhicules
+    transport . vacances . empreinte par défaut:
+      formule:
+        somme:
+          - caravane . empreinte . usage réel * caravane . pourcentage caravaniers
+          - camping car . empreinte . usage réel * camping car . pourcentage camping-caristes
+          - van * van . pourcentage usagers van
+
+    transport . vacances . choix utilisateur:
+      formule:
+        variations:
+          - si:
+              une de ces conditions:
+                - caravane . propriétaire
+                - camping car . propriétaire
+                - van . propriétaire
+            alors: oui
+        - sinon: non
   formule:
-    somme:
-      - caravane
-      - camping car
-      - van
-      - bateau plaisance
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: aucun . propriétaire
+            - aucun . propriétaire
+        alors: 0
+      - sinon:
+          somme:
+            - caravane
+            - camping car
+            - van
+            - bateau plaisance
 
-# @Clément: pour l'instant, nous gardons la valeur par défaut pour `transport . vacances` à false pour des raison de complexité :
-# - L'empreinte est divisée entre 2 catégorie : nous ne pouvons appliqué le même comportement / contournement que pour la mosaïque "chauffage" par exemple.
-# - L'empreinte par défaut est relativement faible au vu des proportions d'usagers de ces véhicules
-# transport . vacances . empreinte par défaut:
-#   formule:
-#     somme:
-#       - caravane . empreinte . usage réel * caravane . pourcentage caravaniers
-#       - camping car . empreinte . usage réel * camping car . pourcentage camping-caristes
-#       - van * van . pourcentage usagers van
+transport . vacances . aucun:
+  titre: Aucun
+  icônes: ❌
 
-# transport . vacances . choix utilisateur:
-#   formule:
-#     variations:
-#       - si:
-#           une de ces conditions:
-#             - caravane . propriétaire
-#             - camping car . propriétaire
-#             - van . propriétaire
-#         alors: oui
-#       - sinon: non
+transport . vacances . aucun . propriétaire:
+  question: Vous ne possédez pas de véhicule pour vos vacances ?
 
 transport . vacances . caravane:
   titre: Caravane
