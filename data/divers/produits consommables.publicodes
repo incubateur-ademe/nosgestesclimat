@@ -7,32 +7,34 @@ divers . produits consommables:
     L'objectif ici est de sortir de la question "dépenses" les produits consommables, qui ne sont donc pas amortis,
     au même titre que les achats "long terme" comme un instrument de musique.
     Le deuxième enjeu est de permettre de quantifier l'empreinte climat des produits d'hygiène et d'entretien via une approche
-    "consommation" : les facteurs d'émission existent pour ces produits.
-    En revanche, la difficulté de ce sujet réside dans la question posée à l'utilisateur : qui est en mesure de répondre facilement
-    sur sa consommation en poids, volume ou € ? L'objectif ici est de faciliter la réponse en définissant différent niveaux de consommation
-    basé sur une quantité consommée (les FE étant définis en kgCO2e/kg de produit).
+    "bottom-up" : les facteurs d'émission existent pour ces produits.
+    En revanche, la difficulté de ce sujet réside dans la manière de capter l'information de consommation auprès des utilisateurs.
+    Nous avons choisi de proposer une approche par "niveaux de consommation" (faible, normale, élevée) basée la réponse à la question "zéro déchet". On fait donc une hypothèse forte en corrélant consommation de produits consommables et production de déchets.
 
 divers . produits consommables . empreinte par mois:
   titre: Empreinte des produits consommables sur un mois
   icônes: 🧴
   formule:
     variations:
-      - si: consommation = 'faible'
+      - si: alimentation . déchets . quantité jetée = 'zéro déchet'
         alors: empreinte * 1 kg/mois
-      - si: consommation = 'normale'
+      - si: alimentation . déchets . quantité jetée = 'réduction'
         alors: empreinte * 2 kg/mois
-      - si: consommation = 'élevée'
+      - si: alimentation . déchets . quantité jetée = 'base'
         alors: empreinte * 5 kg/mois
   note: |
-    Pour cette question et afin de faciliter la réponse, nous avons décidé de proposer un choix prédéfini (arbitrairement) parmi 3 niveaux de réponse,
-    en considérant qu'un produit fait environ 500 grammes.
+    Pour cette question et afin de faciliter la réponse, nous nous basons sur 3 niveaux de réponse, en considérant qu'un produit fait environ 500 grammes.
 
       - Une consommation faible à raison de 1 kg de produits par mois
       - Une consommation normale à raison de 2 kg par mois
       - Une consommation élevée à raison de 5 kg par mois
 
-    Afin de nous aider dans la définition de ces niveaux et sur la base de recherches internet,
-    nous avons fait l'hypothèse qu'une consommation "normale" de ces produits par personne et par an est:
+    Ces niveaux de consommations sont reliés au niveau de production de déchets de la manière suivante :
+      - "zéro déchet" correspond à une consommation faible
+      - "réduction" correspond à une consommation normale
+      - "base" correspond à une consommation élevée
+
+    Afin de nous aider dans la définition de ces niveaux, nous avons fait l'hypothèse qu'une consommation "normale" de ces produits par personne et par an est:
 
     Pour les produits d'hygiène:
       - la parfumerie (parfums, eaux de toilette, etc.) : 500g
@@ -47,23 +49,7 @@ divers . produits consommables . empreinte par mois:
       - Nettoyant multi-usages: 5kg
 
     Ainsi, on estime à 2kg par mois une "quantité normale" consommée pour une personne.
-
   unité: kgCO2e/mois
-
-divers . produits consommables . consommation:
-  question: Comment estimeriez-vous votre consommation de produits d'hygiène (savon, maquillage...) et d'entretien (lessive, produits ménagers...) par mois ?
-  par défaut: "'normale'"
-  une possibilité:
-    - faible
-    - normale
-    - élevée
-
-divers . produits consommables . consommation . faible:
-  titre: 1 à 2 produits / mois
-divers . produits consommables . consommation . normale:
-  titre: Environ 5 produits / mois
-divers . produits consommables . consommation . élevée:
-  titre: Environ 10 produits / mois
 
 divers . produits consommables . empreinte:
   titre: Empreinte des produits consommables
@@ -92,25 +78,30 @@ divers . produits consommables . produits hygiène:
 
 divers . produits consommables . nettoyant multi usages:
   titre: Empreinte nettoyant multi-usages
-  formule: 0.656
+  formule: 0.64
   unité: kgCO2e/kg
+  note: Facteur d'émission issu de la Base Empreinte (Nettoyant multi-usages).
 
 divers . produits consommables . liquide vaisselle:
   titre: Empreinte liquide vaisselle
-  formule: 1.48
+  formule: 1.47
   unité: kgCO2e/kg
+  note: Facteur d'émission issu de la Base Empreinte (Produit vaisselle liquide).
 
 divers . produits consommables . lessive liquide:
   titre: Empreinte lessive liquide
-  formule: 0.838
+  formule: 0.82
   unité: kgCO2e/kg
+  note: Facteur d'émission issu de la Base Empreinte (Lessive liquide).
 
 divers . produits consommables . gel douche:
   titre: Empreinte gel douche
-  formule: 1.77
+  formule: 1.72
   unité: kgCO2e/kg
+  note: Facteur d'émission issu de la Base Empreinte (Gel douche).
 
 divers . produits consommables . shampoing:
   titre: Empreinte shampoing
-  formule: 0.595
+  formule: 0.59
   unité: kgCO2e/kg
+  note: Facteur d'émission issu de la Base Empreinte (Shampooing).
