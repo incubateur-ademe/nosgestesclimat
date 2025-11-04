@@ -4,60 +4,38 @@ transport . mobilité douce:
   mosaique:
     type: selection
     options:
-      - marche . présent
       - vélo . présent
       - vae . présent
       - autres véhicules à moteur . présent
-    suggestions:
-      aucun:
-        marche . présent: non
-        vélo . présent: non
-        vae . présent: non
-        autres véhicules à moteur . présent: non
+      - aucun . présent
   question: Parmi ces modes de déplacement, lesquels utilisez-vous ?
   titre: Déplacements efficaces
   description: |
-    💡 La catégorie "Petit véhicule électrique" inclut la trottinette électrique, mais également gyropode, monocycle électrique, hoverboard...
-
-    Note : Si votre vélo-cargo dispose d'une assistance électrique, classez-le dans la catégorie VAE ! Sinon, il est du côté des vélos "classiques".
+    Si vous possédez un vélo-cargo disposant d'une assistance électrique, classez-le dans la catégorie VAE ! Sinon, il est du côté des vélos "classiques".
   formule:
-    somme:
-      - marche
-      - vélo
-      - vae
-      - autres véhicules à moteur
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: aucun . présent
+            - aucun . présent
+        alors: 0
+      - sinon:
+          somme:
+            - vélo
+            - vae
+            - autres véhicules à moteur
 
-transport . mobilité douce . notif marche ou vélo:
-  type: notification
-  formule:
-    une de ces conditions:
-      - marche . présent = oui
-      - vélo . présent = oui
-  description: |
-    **Vous avez renseigné marcher ou faire du vélo ?**
-    Félicitations ! 👏
+transport . mobilité douce . aucun:
+  titre: Je ne suis pas concerné·e
+  icônes: ❌
 
-    Le vélo est un mode de transport super sobre : on utilise 15 kilos de matériel pour déplacer un corps de ~70 kilos.
-    Quant à vos chaussures, elles sont un véhicule ultra léger !
-
-    💡 A noter que l'empreinte de la marche et de **l'usage** du vélo classique (et non la fabrication) est considérée comme nulle.
-
-transport . mobilité douce . marche:
-  titre: Marche
-  applicable si: présent
-  icônes: 👟
-  formule: 0
-  unité: kgCO2e
-  note: L'empreinte de la marche est considérée comme nulle.
-
-transport . mobilité douce . marche . présent:
-  question: Vous déplacez-vous en marchant ?
-  par défaut: non
+transport . mobilité douce . aucun . présent:
+  question: Vous n'utilisez pas de mode de déplacement doux ?
 
 transport . mobilité douce . vélo:
-  titre: Vélo (classique 🦵)
+  titre: Vélo (classique)
   applicable si: présent
-  icônes: 🚲
+  icônes: 🦵
   formule: construction amortie
   unité: kgCO2e
   note: |
@@ -94,7 +72,7 @@ transport . mobilité douce . vélo . durée de vie:
     Chiffres tirés de l'étude ADEME de 2019 ["Modélisation et évaluation environnementale de produits de consommation et biens d'équipement"](https://librairie.ademe.fr/dechets-economie-circulaire/127-modelisation-et-evaluation-environnementale-de-produits-de-consommation-et-biens-d-equipement.html)
 
 transport . mobilité douce . vae:
-  titre: Vélo à Assistance Électrique (VAE)
+  titre: Vélo électrique (VAE)
   icônes: 🚲
   applicable si: présent
   formule: empreinte * km + construction amortie
@@ -141,7 +119,7 @@ transport . mobilité douce . vae . durée de vie:
 
 transport . mobilité douce . autres véhicules à moteur:
   titre: Petit véhicule électrique
-  description: Trottinette électrique, gyropode, monocycle électrique, hoverboard...
+  description: Trottinette, gyropode, hoverboard...
   icônes: 🛴
   applicable si: présent
   formule: empreinte * km + construction amortie
@@ -160,7 +138,7 @@ transport . mobilité douce . autres véhicules à moteur . présent:
 transport . mobilité douce . autres véhicules à moteur . empreinte:
   formule: 0.002
   unité: kgCO2e/km
-  note: FE issu de la base empreinte (Trotinette)
+  note: FE issu de la base empreinte (Trottinette)
 
 transport . mobilité douce . autres véhicules à moteur . km:
   question: Combien de kilomètres faites-vous à l'année avec votre trottinette électrique, gyropode, monocycle électrique, hoverboard...?
@@ -180,7 +158,7 @@ transport . mobilité douce . autres véhicules à moteur . construction amortie
 transport . mobilité douce . autres véhicules à moteur . construction:
   formule: 91.9
   unité: kgCO2e
-  note: FE issu de la base empreinte (Trotinette)
+  note: FE issu de la base empreinte (Trottinette)
 
 transport . mobilité douce . autres véhicules à moteur . durée de vie:
   formule: 4

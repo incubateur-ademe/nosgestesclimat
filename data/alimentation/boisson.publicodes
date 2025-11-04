@@ -6,7 +6,7 @@ alimentation . boisson:
       - froide
 
 alimentation . boisson . chaude:
-  DLUO: 01/11/2025
+  DLUO: 01/06/2026
   mosaique:
     type: nombre
     options:
@@ -14,12 +14,8 @@ alimentation . boisson . chaude:
       - thé . nombre
       - chocolat chaud . nombre
       - chicorée . nombre
+      - aucun . présent
     suggestions:
-      pas de boisson chaude:
-        café . nombre: 0
-        thé . nombre: 0
-        chocolat chaud . nombre: 0
-        chicorée . nombre: 0
       un café:
         café . nombre: 1
         thé . nombre: 0
@@ -46,7 +42,21 @@ alimentation . boisson . chaude:
     Renseignez ici ce que vous consommez lors d'une journée type (dont le petit-déjeuner). Vos consommations occasionnelles sont considérées comme négligeables.
 
     Si vous buvez du chocolat chaud, nous vous demanderons le type de lait dans une autre question !
-  formule: par jour * commun . jours par an
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: boisson . chaude . aucun
+            - boisson . chaude . aucun
+        alors: 0
+      - sinon: boisson . chaude . par jour * commun . jours par an
+
+alimentation . boisson . chaude . aucun:
+  titre: Je ne suis pas concerné·e
+  icônes: ❌
+
+alimentation . boisson . chaude . aucun . présent:
+  question: Vous ne buvez pas de boissons chaudes ?
 
 alimentation . boisson . chaude . par jour:
   titre: Empreinte boissons chaudes par jour
@@ -231,12 +241,12 @@ alimentation . boisson . tasse de chicorée . empreinte chicorée instantanée:
         alors: empreinte eau chicorée instantanée
 
 alimentation . boisson . tasse de chicorée . empreinte carbone chicorée instantanée:
-  formule: 6.49
+  formule: 7.87
   unité: kgCO2e/kg
   note: Facteur d'émission issu d'[Agribalyse, chicorée, poudre soluble, non réhydratée](https://agribalyse.ademe.fr/app/aliments/18152_1#Chicor%C3%A9e,_poudre_soluble,_non_r%C3%A9hydrat%C3%A9e).
 
 alimentation . boisson . tasse de chicorée . empreinte eau chicorée instantanée:
-  formule: 980
+  formule: 1420
   unité: l/kg
   note: Facteur d'émission issu d'[Agribalyse, chicorée, poudre soluble, non réhydratée](https://agribalyse.ademe.fr/app/aliments/18152_1#Chicor%C3%A9e,_poudre_soluble,_non_r%C3%A9hydrat%C3%A9e).
 
@@ -273,12 +283,12 @@ alimentation . empreinte lait de vache:
         alors: empreinte eau lait de vache
 
 alimentation . empreinte carbone lait de vache:
-  formule: 1.28
+  formule: 1.27
   unité: kgCO2e/kg
   note: Facteur d'émission issu d'[Agribalyse, lait demi-écrémé pasteurisé](https://agribalyse.ademe.fr/app/aliments/19042#Lait_demi-%C3%A9cr%C3%A9m%C3%A9,_pasteuris%C3%A9).
 
 alimentation . empreinte eau lait de vache:
-  formule: 326
+  formule: 156
   unité: l/kg
   note: Facteur d'émission issu d'[Agribalyse, lait demi-écrémé pasteurisé](https://agribalyse.ademe.fr/app/aliments/19042#Lait_demi-%C3%A9cr%C3%A9m%C3%A9,_pasteuris%C3%A9).
 
@@ -291,12 +301,12 @@ alimentation . empreinte lait de soja:
         alors: empreinte eau lait de soja
 
 alimentation . empreinte carbone lait de soja:
-  formule: 0.43
+  formule: 0.427
   unité: kgCO2e/kg
   note: Facteur d'émission issu d'[Agribalyse, boisson au soja nature](https://agribalyse.ademe.fr/app/aliments/18900#Boisson_au_soja,_nature).
 
 alimentation . empreinte eau lait de soja:
-  formule: 185
+  formule: 78.6
   unité: l/kg
   note: Facteur d'émission issu d'[Agribalyse, boisson au soja nature](https://agribalyse.ademe.fr/app/aliments/18900#Boisson_au_soja,_nature).
 
@@ -309,12 +319,12 @@ alimentation . empreinte lait d'avoine:
         alors: empreinte eau lait d'avoine
 
 alimentation . empreinte carbone lait d'avoine:
-  formule: 0.58
+  formule: 0.566
   unité: kgCO2e/kg
   note: Facteur d'émission issu d'[Agribalyse, boisson à base d'avoine nature](https://agribalyse.ademe.fr/app/aliments/18905#Boisson_à_base_d'avoine,_nature).
 
 alimentation . empreinte eau lait d'avoine:
-  formule: 380
+  formule: 382
   unité: l/kg
   note: Facteur d'émission issu d'[Agribalyse, boisson à base d'avoine nature](https://agribalyse.ademe.fr/app/aliments/18905#Boisson_à_base_d'avoine,_nature).
 
@@ -332,7 +342,7 @@ alimentation . boisson . froide:
       - eau en bouteille
 
 alimentation . boisson . eau en bouteille:
-  DLUO: 01/11/2025
+  DLUO: 01/06/2026
   titre: Eau en bouteille
   formule:
     variations:
@@ -384,7 +394,7 @@ alimentation . boisson . eau en bouteille . consommation annuelle:
   description: On considère que chacun boit 1,5 litres d'eau par jour.
 
 alimentation . boisson . sucrées:
-  DLUO: 01/11/2025
+  DLUO: 01/06/2026
   description: |
     Des alternatives au soda, très simples à préparer maison, sont possibles : c'est le cas du [kéfir](https://fr.wikipedia.org/wiki/K%C3%A9fir) ou [Kombucha](https://fr.wikipedia.org/wiki/Kombucha).
 
@@ -408,12 +418,12 @@ alimentation . boisson . sucrées . facteur sodas:
         alors: facteur sodas eau
 
 alimentation . boisson . sucrées . facteur sodas carbone:
-  formule: 0.49
+  formule: 0.493
   unité: kgCO2e/l
   note: Facteur d'émission issu d'[Agribalyse, Cola, sucré](https://agribalyse.ademe.fr/app/aliments/18037#Cola,_sucr%C3%A9,_avec_%C3%A9dulcorants), 0.51 kgCO2e/kg. On considère que la masse volumique est de 1kg/l.
 
 alimentation . boisson . sucrées . facteur sodas eau:
-  formule: 306
+  formule: 307
   unité: l/l
   note: Facteur d'émission issu d'[Agribalyse, Cola, sucré](https://agribalyse.ademe.fr/app/aliments/18037#Cola,_sucr%C3%A9,_avec_%C3%A9dulcorants). On considère que la masse volumique est de 1kg/l.
 
@@ -449,7 +459,7 @@ alimentation . boisson . sucrées . litres:
   note: La consommation de sodas et boissons sucrées en France est en moyenne de 50,9 litres par habitant ([source](https://www.sante-et-nutrition.com/consommation-soda-france/)) soit à peu près 1 litre par semaine.
 
 alimentation . boisson . alcool:
-  DLUO: 01/11/2025
+  DLUO: 01/06/2026
   description: |
     Étonnamment, notre consommation d'alcool prend un rôle important dans notre empreinte.
 
@@ -477,12 +487,12 @@ alimentation . boisson . alcool . facteur bière:
         alors: facteur bière eau
 
 alimentation . boisson . alcool . facteur bière carbone:
-  formule: 1.30
+  formule: 1.35
   unité: kgCO2e/l
   note: Facteur d'émission issu d'[Agribalyse, bière coeur de marché](https://agribalyse.ademe.fr/app/aliments/5001#Bi%C3%A8re_%22coeur_de_march%C3%A9%22_(4-5%C2%B0_alcool)), 1.12 kgCO2e/kg. On considère que la masse volumique de la bière est de 1kg/l.
 
 alimentation . boisson . alcool . facteur bière eau:
-  formule: 244
+  formule: 258
   unité: l/l
   note: Facteur d'émission issu d'[Agribalyse, bière coeur de marché](https://agribalyse.ademe.fr/app/aliments/5001#Bi%C3%A8re_%22coeur_de_march%C3%A9%22_(4-5%C2%B0_alcool)), 1.12 kgCO2e/kg. On considère que la masse volumique de la bière est de 1kg/l.
 
@@ -495,12 +505,12 @@ alimentation . boisson . alcool . facteur vin:
         alors: facteur vin eau
 
 alimentation . boisson . alcool . facteur vin carbone:
-  formule: 1.48
+  formule: 1.5
   unité: kgCO2e/l
   note: Facteur d'émission issu d'[Agribalyse, vin blanc sec](https://agribalyse.ademe.fr/app/aliments/5215#Vin_blanc_sec), 1.22 kgCO2e/kg. On considère que la masse volumique du vin est de 1kg/l.
 
 alimentation . boisson . alcool . facteur vin eau:
-  formule: 256
+  formule: 265
   unité: l/l
   note: Facteur d'émission issu d'[Agribalyse, vin blanc sec](https://agribalyse.ademe.fr/app/aliments/5215#Vin_blanc_sec), 1.22 kgCO2e/kg. On considère que la masse volumique du vin est de 1kg/l.
 
@@ -513,12 +523,12 @@ alimentation . boisson . alcool . facteur cocktail:
         alors: facteur cocktail eau
 
 alimentation . boisson . alcool . facteur cocktail carbone:
-  formule: 1.09
+  formule: 1.1
   unité: kgCO2e/l
   note: Facteur d'émission issu d'[Agribalyse, cocktail base rhum](https://agribalyse.ademe.fr/app/aliments/1012#Cocktail_%C3%A0_base_de_rhum), 0.91 kgCO2e/kg. On considère que la masse volumique d'un cocktail est de 1kg/l.
 
 alimentation . boisson . alcool . facteur cocktail eau:
-  formule: 693
+  formule: 695
   unité: l/l
   note: Facteur d'émission issu d'[Agribalyse, cocktail base rhum](https://agribalyse.ademe.fr/app/aliments/1012#Cocktail_%C3%A0_base_de_rhum), 0.91 kgCO2e/kg. On considère que la masse volumique d'un cocktail est de 1kg/l.
 
