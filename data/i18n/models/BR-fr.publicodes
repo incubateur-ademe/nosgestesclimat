@@ -7,28 +7,67 @@ commun . mix électrique . empreinte carbone:
   formule: 0.045
   [Electricity Map](https://app.electricitymaps.com/zone/BR-NE/all/yearly),2024
 
-transport . uber . km:
-titre: Trajets en Uber (ou applis similaires)
-question: Combien de kilomètres parcourez-vous en Uber (ou équivalent) par an ?
-description: |
-Les services de VTC comme Uber ou 99 sont très utilisés dans les grandes villes brésiliennes.
-Leur empreinte carbone est proche de celle d’une voiture thermique, car la majorité des
-véhicules roulent à l’essence ou à l’éthanol.
-unité: km
-type: nombre
-par défaut: 0
-formule: nombre * 0.18 / 1000
-note: |
+transport. déplacements. voiture 
+*Choisissez ce qui correspond à la majorité de vos trajets. Ne comptez pas ici les kilomètres effectués en Uber, taxi, 99 ou autre service de transport de passagers à la demande.*
+
+- Oui, avec mon propre véhicule
+
+- Oui, avec le véhicule d'un proche
+
+- Oui, avec des voitures différentes (location, covoiturage...)
+
+- Non, je ne monte jamais en voiture
+
+transport. voiture. passagers 
+
+Pas de statistique sur le remplissage moyen d'une voiture au brésil. 
+
+transport . voiture . type
+
+- Flex (essence et/ou éthanol)
+
+- Essence uniquement
+
+- Diesel
+
+- Électrique
+
+- Hybride non rechargeable
+
+- Hybride rechargeable (plug-in)
+
+explication : 
+Le carburant éthanol (alcool / “etanol”) est très répandu, souvent en moteur “flex” (qui fonctionne à essence et/ou éthanol). Représente majorité du parc auto brésilien.
 Facteur d’émission basé sur une moyenne essence/éthanol : ~0,18 kgCO₂/km.
-À affiner avec des données spécifiques au parc automobile brésilien.
-source: |
+source: 
 IPEA - Mobilidade Urbana no Brasil
+https://www.econstor.eu/bitstream/10419/91332/1/664398472.pdf
+
+transport. voiture. gabarit
+
+-Petite
+(i) : Fiat Mobi, Renault Kwid, Chevrolet Onix Joy
+
+-Moyenne
+(i) : Volkswagen Polo/Virtus, Toyota Yaris hatch/sedan, Chevrolet Onix
+
+-Véhicule utilitaire
+(i) : Camionnette type Fiat Fiorino, Renault Kangoo Express, Fiat Strada
+
+-Berline
+(i) : Toyota Corolla, Honda Civic, Chevrolet Cruze
+
+-SUV
+(i) : Jeep Renegade, Honda HR-V, Hyundai Creta, Ford EcoSport, Toyota Corolla Cross
+
+
   
   transport . train . km:
   suggestions:
   retirer cette question, pas de trains au brésil.
   
   transport . avion . court courrier . heures de vol:
+(i) Si vous avez fait Salvador-Buenos Aires via Brasilia, le Salvador-Brasilia est à inclure ici (et le Salvador-Buenos Aires dans les vols longs-courriers)
   suggestions:
     🚫✈️: 0
     Salvador ⇄ Rio de Janeiro: 2
@@ -38,23 +77,95 @@ IPEA - Mobilidade Urbana no Brasil
 transport . avion . moyen courrier . heures de vol:
   suggestions:
     🚫✈️: 0
+    Salvador ⇄ Porto Alegre : 3,5
+    Salvador ⇄ Buenos Aires : 4,5
+
+transport . avion . long courrier 
+(i) Pour rappel, si vous avez fait un Salvador-Buenos Aires via Brasilia, renseignez ici le Brasilia-Buenos Aires, et dans la partie "court-courrier" le Salvador-Brasilia. Ou si vous avez été à New York en 3 vols de 5h chacun, ils sont à renseigner dans la partie "moyen-courrier".
+suggestions:
+    🚫✈️: 0
     Salvador ⇄ Paris: 9,5
     Salvador ⇄ Lisbonne: 8
     Salvador ⇄ Madrid: 9
 
-alimentation. boissons. chaudes.
-  suggestions:
-Retirer chicorée
+transport . uber . km:
+titre: Trajets en taxi, Uber/99 (ou applis similaires)
 
-alimentation . viande . boeuf:
-titre: Viande bovine
-description: |
+question: Combien de kilomètres parcourez-vous en Uber (ou équivalent) par an ? (Transporte de passageiros com motorista)
+
+Suggestions : 10km/jour (3600km/an), 30km/semaine (1560km/an), 50km/mois (600km/an)
+-...km en Uber voiture
+
+Suggestions : 10km/jour (3600km/an), 30km/semaine (1560km/an), 50km/mois (600km/an)
+-...km en Uber moto
+
+Formule voiture : 
+(nombre de km \* 0.18 / 1000) \* 1.1
+
+Formule moto :
+(nombre de km \* 0.07 / 1000) \* 1.1 
+
+explication : 
+Les services de VTC comme Uber ou 99 sont très utilisés dans les grandes villes brésiliennes.
+L'empreinte carbone d'un Uber voiture est proche de celle d’une voiture flex-fuel, car la majorité des véhicules roulent à l’essence et/ou à l’éthanol.
+L'émission relative de polluant d'une moto au Brésil est de 0,07kgCO2/km
+> https://repositorio.ipea.gov.br/bitstream/11058/11625/1/TD_2824_Web.pdf
+Ajout d'un facteur correctif de 10% du trajet total pour prendre en compte les km vides (effectués pour venir chercher le client à son domicile et repartir de la destination). 
+Choix méthodologique de ne compter que le passager payant malgré la présence d'un chauffeur, cela s'explique par le fait que le trajet est créé par la demande du client.
+
+transport. bus
+Calcul :
+Selon IPEA, le taux d'émission de CO2/passager/km d'un bus au brésil est de 0,0160kg/km. En prenant une occupation moyenne de 80 personnes. 
+Selon une étude de C40 cities le STCO (réseau de transport salvador) dispose d'une flotte de 2 348 bus qui parcourent collectivement 563 776 km par jour, ce qui donne une moyenne d'environ 240 km par bus par jour. Si l'on considère une journée de travail de 10 heures, cela correspond à une moyenne d'environ 24 km par heure par bus. https://www.c40.org/wp-content/uploads/2022/02/Salvador-%E2%80%93-Upgrading-the-Municipal-Bus-Fleet.pdf
+Ainsi : empreinte d'une personne dans un bus = 24 * 0,0160 = 0,384kg/heure
+
+transport. car
+Calcul :
+Pas de données d'émissions pour les cars, gérés par de nombreuses sociétés privés différentes. On considère que le taux d'émission est équivalent à celui d'un bus (1,28kg CO2/km) mais divisé par un nombre plus faible de passagers (40).
+1,28/40 = 0,032 kgC02/passager/km 
+
+transport. véhicules. loisirs
+Pas de données pour Caravane, Camping Car et Van.
+
+transport. ferry. heures passées
+suggestions:
+Salvador (Terminal São Joaquim) ⇄ Itaparica (Bom Despacho) = 1 heure
+https://www.ba.gov.br/infraestrutura/noticia/2024-03/10923/novo-ferry-boat-e-mais-rapido-e-nao-polui-o-meio-ambiente
+
+alimentation. repas. semaine
 L’élevage bovin brésilien a un impact carbone particulièrement élevé,
 notamment en raison de la déforestation et de l’élevage extensif.
 facteur: 35 # kgCO₂e/kg (moyenne Brésil, contre ~25 en Europe)
 source: |
 Our World in Data - Environmental impacts of beef
 EMBRAPA - Pecuária e emissões de GEE
+Facteur 1,4 à ajouter sur repas viande rouge
+
+alimentation. huile
+Quelle huile utilisez vous le plus pour votre cuisine : 
+
+- Soja (6,3 Kg CO2e/L) https://www.co2data.org/c/soybean-oil
+- Dendê (Huile de Palme non-raffinée) (3,59 kg/CO2e/L) https://apps.carboncloud.com/climatehub/product-reports/id/6688517618269
+- Tournesol (12,25 Kg CO2e/L) https://apps.carboncloud.com/climatehub/product-reports/id/23853646162
+- Olive (5,4 Kg CO2e/L) https://www.co2data.org/c/olive-oil
+- Maïs (3 Kg CO2e/L) ?
+- Coco (2,64 Kg CO2e/L) https://apps.carboncloud.com/climatehub/product-reports/id/109323882343
+- Pépin de raison (0,86 Kg CO2e/L)https://apps.carboncloud.com/climatehub/product-reports/id/21583392975
+
+alimentation. huile. quantité
+Combien de litres de cette huile consommez-vous annuellement ? 
+Suggestions : 
+0,5L/mois = 6L par an 
+1L/mois = 12L par an
+2L/mois = 24L par an
+
+Calcul : 
+nb litres annuels * KgCO2e/L émis par huile choisie
+
+
+alimentation. boissons. chaudes.
+  suggestions:
+Retirer chicorée
   
 logement. consommation. électricité : 
   suggestions:
