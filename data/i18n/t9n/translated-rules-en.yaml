@@ -159,19 +159,16 @@ alimentation . boisson . chaude:
     Si vous buvez du chocolat chaud, nous vous demanderons le type de lait dans une autre question !
   mosaique:
     suggestions:
-      - no hot drinks
       - a coffee
       - lots of coffee
       - coffee and tea
       - a hot chocolate
     suggestions.auto:
-      - no hot drinks
       - a coffee
       - lots of coffee
       - coffee and tea
       - a hot chocolate
     suggestions.lock:
-      - pas de boisson chaude
       - un café
       - beaucoup de café
       - un café et un thé
@@ -1803,13 +1800,6 @@ alimentation . déchets . gestes:
   titre: gestures
   titre.auto: gestures
   titre.lock: gestes
-  mosaique:
-    suggestions:
-      - none
-    suggestions.auto:
-      - no
-    suggestions.lock:
-      - aucun
 alimentation . déchets . gestes . acheter en vrac:
   titre: I buy in bulk
   titre.auto: I buy in bulk
@@ -4084,7 +4074,7 @@ divers . numérique . appareils:
   titre.lock: appareils
   mosaique:
     suggestions:
-      - none
+      - no
       - life without a screen
       - connected life
       - gamer
@@ -14535,7 +14525,6 @@ logement . chauffage . raccordement réseau de chaleur:
   titre.auto: Connecting to a heating network
   titre.lock: Se raccorder à un réseau de chaleur
 logement . chauffage . raccordement réseau de chaleur . recalcul:
-  note: it is assumed that the gas/oil consumption will be identical after a connection to the heating network.
   note.auto: it is assumed that the gas/oil consumption will be identical after a connection to the heating network.
   note.lock: on considère que la consommation de gaz/fioul sera identique suite à un raccordement au réseau de chaleur.
   titre: recalculation
@@ -16143,36 +16132,83 @@ transport . train . km:
   titre.lock: km
 transport . vacances:
   description: |
-    The "converted van" category includes converted vans and lorries.
-
-    If you have already entered the kilometres travelled in a converted van previously, indicating "light commercial vehicle" as the main vehicle used, then you can tick "none" here.
+    The "converted van" category includes converted vans and lorries. If you have already entered the kilometres travelled in a converted van previously, indicating "light commercial vehicle" as the main vehicle used, then you can tick "none" here.
 
     💡 If you have hired any of this equipment, tick "none". The hire is not yet taken into account in the calculator.
   description.auto: |
-    The "converted van" category includes converted vans and lorries.
-
-    If you have already entered the kilometres travelled in a converted van previously, indicating "light commercial vehicle" as the main vehicle used, then you can tick "none" here.
+    The "converted van" category includes converted vans and lorries. If you have already entered the kilometres travelled in a converted van previously, indicating "light commercial vehicle" as the main vehicle used, then you can tick "none" here.
 
     💡 If you have hired any of this equipment, tick "none". The hire is not yet taken into account in the calculator.
   description.lock: |
-    La catégorie "van aménagé" comprend les fourgons et camionettes aménagés.
-
-    Si vous avez déjà renseigné les kilomètres parcourus en van aménagé précédemment, en indiquant "véhicule utilitaire léger" comme véhicule principal de déplacement, alors vous pouvez ici cocher "aucun".
+    La catégorie "van aménagé" comprend les fourgons et camionettes aménagés. Si vous avez déjà renseigné les kilomètres parcourus en van aménagé précédemment, en indiquant "véhicule utilitaire léger" comme véhicule principal de déplacement, alors vous pouvez ici cocher "aucun".
 
     💡 Si vous avez loué un de ces équipements, cochez "aucun". La location n'est pas encore prise en compte dans le calculateur.
-  question: What vehicles do you own for leisure (excluding your main vehicle)?
-  question.auto: What vehicles do you own for leisure (excluding your main vehicle)?
-  question.lock: Quels véhicules possédez-vous pour vos loisirs (hors véhicule principal) ?
+  question: Do you own one (or more) of these vehicles?
+  question.auto: Do you own one (or more) of these vehicles?
+  question.lock: Possédez-vous l’un (ou plusieurs) de ces véhicules ?
   titre: vacations
   titre.auto: vacations
   titre.lock: vacances
-  mosaique:
-    suggestions:
-      - none
-    suggestions.auto:
-      - no
-    suggestions.lock:
-      - aucun
+  note: |
+    @Clément: for the moment, we're keeping the default value for `transport . holiday` at false for reasons of complexity:
+    - The default footprint is relatively small given the proportions of users of these vehicles
+    transport . holiday . default footprint:
+      formula:
+        sum:
+          - caravan . footprint . actual use * caravan . percentage caravanners
+          - camping car . footprint . actual use * camping car . percentage camping car users
+          - van * van . percentage of van users
+
+    transport . holiday . user choice:
+      formula :
+        variations :
+          - if :
+              one of these conditions :
+                - caravan . owner
+                - camping car . owner
+                - van . owner
+            then: yes
+        - otherwise: no
+  note.auto: |
+    @Clément: for the moment, we're keeping the default value for `transport . holiday` at false for reasons of complexity:
+    - The default footprint is relatively small given the proportions of users of these vehicles
+    transport . holiday . default footprint:
+      formula:
+        sum:
+          - caravan . footprint . actual use * caravan . percentage caravanners
+          - camping car . footprint . actual use * camping car . percentage camping car users
+          - van * van . percentage of van users
+
+    transport . holiday . user choice:
+      formula :
+        variations :
+          - if :
+              one of these conditions :
+                - caravan . owner
+                - camping car . owner
+                - van . owner
+            then: yes
+        - otherwise: no
+  note.lock: |
+    @Clément: pour l'instant, nous gardons la valeur par défaut pour `transport . vacances` à false pour des raison de complexité :
+    - L'empreinte par défaut est relativement faible au vu des proportions d'usagers de ces véhicules
+    transport . vacances . empreinte par défaut:
+      formule:
+        somme:
+          - caravane . empreinte . usage réel * caravane . pourcentage caravaniers
+          - camping car . empreinte . usage réel * camping car . pourcentage camping-caristes
+          - van * van . pourcentage usagers van
+
+    transport . vacances . choix utilisateur:
+      formule:
+        variations:
+          - si:
+              une de ces conditions:
+                - caravane . propriétaire
+                - camping car . propriétaire
+                - van . propriétaire
+            alors: oui
+        - sinon: non
 transport . vacances . camping car:
   titre: Camping Car
   titre.auto: Camping Car
@@ -17177,13 +17213,6 @@ divers . animaux domestiques . empreinte:
   question: How many pets live with you in your home?
   question.auto: How many pets live with you in your home?
   question.lock: Combien d'animaux vivent avec vous, au sein de votre foyer ?
-  mosaique:
-    suggestions:
-      - no animals
-    suggestions.auto:
-      - no animals
-    suggestions.lock:
-      - aucun animal
   description: |
     Small animals (hamsters, canaries, etc.) are not taken into account, as their footprint is negligible. As for farmyard animals such as chickens, their low impact is offset by other benefits.
   description.auto: |
@@ -17714,9 +17743,9 @@ divers . animaux domestiques . empreinte . chiens . alimentation . besoin journa
   titre.auto: daily requirement food
   titre.lock: besoin journalier nourriture
 divers . animaux domestiques . empreinte . chien moyen:
-  titre: Medium-sized dog
-  titre.auto: Medium-sized dog
-  titre.lock: Chien de taille moyenne
+  titre: Medium dog
+  titre.auto: Medium dog
+  titre.lock: Chien moyen
   description: Between 10 and 30kg (Beagle, Bulldog, Poodle...)
   description.auto: Between 10 and 30kg (Beagle, Bulldog, Poodle...)
   description.lock: Entre 10 et 30kg (Beagle, Bouledogue, Caniche...)
@@ -18835,13 +18864,6 @@ logement . vacances:
     Renseignez ici les différents types de logement que vous occupez pour vos voyages (à motif **personnel**).
 
     > 💡 Si vous ne partez jamais en week-end ou en vacances, vous pouvez cliquer sur "aucun" juste en dessous de cette question, puis "Suivant".
-  mosaique:
-    suggestions:
-      - none
-    suggestions.auto:
-      - no
-    suggestions.lock:
-      - aucun
 logement . vacances . empreinte hotel par nuit:
   titre: hotel footprint per night
   titre.auto: hotel footprint per night
@@ -19442,70 +19464,15 @@ transport . mobilité douce:
   titre.auto: Efficient travel
   titre.lock: Déplacements efficaces
   description: |
-    💡 The "Small electric vehicle" category includes electric scooters, but also gyropods, electric unicycles, hoverboards...
-
-    Note: If your cargo bike has electric assistance, classify it in the EAB category! Otherwise, it belongs in the "classic" bike category.
+    If you own a cargo bike with electric assistance, classify it as an EAB! Otherwise, it belongs in the "classic" category.
   description.auto: |
-    💡 The "Small electric vehicle" category includes electric scooters, but also gyropods, electric unicycles, hoverboards...
-
-    Note: If your cargo bike has electric assistance, classify it in the EAB category! Otherwise, it belongs in the "classic" bike category.
+    If you own a cargo bike with electric assistance, classify it as an EAB! Otherwise, it belongs in the "classic" category.
   description.lock: |
-    💡 La catégorie "Petit véhicule électrique" inclut la trottinette électrique, mais également gyropode, monocycle électrique, hoverboard...
-
-    Note : Si votre vélo-cargo dispose d'une assistance électrique, classez-le dans la catégorie VAE ! Sinon, il est du côté des vélos "classiques".
-  mosaique:
-    suggestions:
-      - none
-    suggestions.auto:
-      - no
-    suggestions.lock:
-      - aucun
-transport . mobilité douce . marche:
-  titre: Walk
-  titre.auto: Walk
-  titre.lock: Marche
-  note: The walking footprint is considered to be zero.
-  note.auto: The walking footprint is considered to be zero.
-  note.lock: L'empreinte de la marche est considérée comme nulle.
-transport . mobilité douce . marche . présent:
-  titre: present
-  titre.auto: present
-  titre.lock: présent
-  question: Do you walk?
-  question.auto: Do you walk?
-  question.lock: Vous déplacez-vous en marchant ?
+    Si vous possédez un vélo-cargo disposant d'une assistance électrique, classez-le dans la catégorie VAE ! Sinon, il est du côté des vélos "classiques".
 transport . voiture . boulot . recalcul autres véhicules à moteur:
   titre: recalculation other motor vehicles
   titre.auto: recalculation other motor vehicles
   titre.lock: recalcul autres véhicules à moteur
-transport . mobilité douce . notif marche ou vélo:
-  titre: walk or bike notification
-  titre.auto: walk or bike notification
-  titre.lock: notif marche ou vélo
-  description: |
-    **You have ticked walking or cycling ?
-    Congratulations! 👏
-
-    Cycling is a super sober mode of transport: you use 15 kilos of material to move a ~70 kilo body.
-    As for your shoes, they're an ultra-lightweight vehicle!
-
-    💡 Note that the footprint of walking and the one for **using** the classic bicycle (not manufacturing) is considered zero.
-  description.auto: |
-    **You have entered walking or cycling ?
-    Congratulations! 👏
-
-    Cycling is a super sober mode of transport: you use 15 kilos of material to move a ~70 kilo body.
-    As for your shoes, they're an ultra-lightweight vehicle!
-
-    💡 Note that the footprint of walking and **using** the classic bicycle (not manufacturing) is considered zero.
-  description.lock: |
-    **Vous avez renseigné marcher ou faire du vélo ?**
-    Félicitations ! 👏
-
-    Le vélo est un mode de transport super sobre : on utilise 15 kilos de matériel pour déplacer un corps de ~70 kilos.
-    Quant à vos chaussures, elles sont un véhicule ultra léger !
-
-    💡 A noter que l'empreinte de la marche et de **l'usage** du vélo classique (et non la fabrication) est considérée comme nulle.
 transport . mobilité douce . vélo . construction:
   titre: construction
   titre.auto: construction
@@ -19532,9 +19499,9 @@ transport . mobilité douce . vélo . construction:
 
     Pour le plus populaire, l'empreinte affichée est de 116 kgCO2e.
 transport . mobilité douce . vélo:
-  titre: Bicycle (classic 🦵)
-  titre.auto: Bicycle (classic 🦵)
-  titre.lock: Vélo (classique 🦵)
+  titre: Cycling (classic)
+  titre.auto: Cycling (classic)
+  titre.lock: Vélo (classique)
   note: |
     We consider that **use** of the muscle bike has a zero footprint.
 
@@ -19631,9 +19598,9 @@ transport . mobilité douce . autres véhicules à moteur:
   titre: Small electric vehicle
   titre.auto: Small electric vehicle
   titre.lock: Petit véhicule électrique
-  description: Electric scooter, gyropod, electric unicycle, hoverboard...
-  description.auto: Electric scooter, gyropod, electric unicycle, hoverboard...
-  description.lock: Trottinette électrique, gyropode, monocycle électrique, hoverboard...
+  description: Scooter, gyropod, hoverboard...
+  description.auto: Scooter, gyropod, hoverboard...
+  description.lock: Trottinette, gyropode, hoverboard...
   note: |
     Small motorized vehicles are booming, driven largely by the explosion in sales of VAEs and electric scooters. But we can also find electric unicycles, gyropods, hoverboards...
 
@@ -19676,9 +19643,9 @@ transport . mobilité douce . vélo . durée de vie:
     Hypothèse issue du HBEFA (Manuel des facteurs d'émission pour le transport routier), d'après la documentation de la base empreinte.
     Chiffres tirés de l'étude ADEME de 2019 ["Modélisation et évaluation environnementale de produits de consommation et biens d'équipement"](https://librairie.ademe.fr/dechets-economie-circulaire/127-modelisation-et-evaluation-environnementale-de-produits-de-consommation-et-biens-d-equipement.html)
 transport . mobilité douce . vae:
-  titre: Electric Bikes
-  titre.auto: Electrically Assisted Bikes (VAE)
-  titre.lock: Vélo à Assistance Électrique (VAE)
+  titre: Electric bikes
+  titre.auto: Electric bikes
+  titre.lock: Vélo électrique (VAE)
   note: |
     Electrically-assisted cargo bikes belong in the EAB category. The difference in motorization and weight, and therefore footprint, is too slight to merit a separate category.
   note.auto: |
@@ -19718,9 +19685,9 @@ transport . mobilité douce . autres véhicules à moteur . construction:
   titre: construction
   titre.auto: construction
   titre.lock: construction
-  note: FE from footprint database (Trotinette)
-  note.auto: FE from footprint database (Trotinette)
-  note.lock: FE issu de la base empreinte (Trotinette)
+  note: FE from footprint database (Scooter)
+  note.auto: FE from footprint database (Scooter)
+  note.lock: FE issu de la base empreinte (Trottinette)
 transport . mobilité douce . autres véhicules à moteur . durée de vie:
   titre: service life
   titre.auto: service life
@@ -19738,9 +19705,9 @@ transport . mobilité douce . autres véhicules à moteur . empreinte:
   titre: footprint
   titre.auto: footprint
   titre.lock: empreinte
-  note: FE from footprint database (Trotinette)
-  note.auto: FE from footprint database (Trotinette)
-  note.lock: FE issu de la base empreinte (Trotinette)
+  note: FE from footprint database (Scooter)
+  note.auto: FE from footprint database (Scooter)
+  note.lock: FE issu de la base empreinte (Trottinette)
 transport . voiture . boulot . recalcul vélo:
   titre: bike recalculation
   titre.auto: bike recalculation
@@ -20697,13 +20664,6 @@ divers . loisirs . culture:
     By "cultural practice" we mean going to the theater, ballet, opera or cinema, attending a street performance, playing an instrument or visiting a museum or park.
   description.lock: |
     Nous entendons par "pratique culturelle" le fait d'aller au théâtre, au ballet, à l'opéra ou au cinéma, d'assister à du spectacle de rue, de pratiquer d'un instrument ou de visiter un musée ou un parc.
-  mosaique:
-    suggestions:
-      - none
-    suggestions.auto:
-      - no
-    suggestions.lock:
-      - aucun
 divers . loisirs . culture . empreinte totale:
   titre: total footprint
   titre.auto: total footprint
@@ -21467,13 +21427,6 @@ logement . eau . impact par litre froid . eau potable:
   titre.auto: drinking water
   titre.lock: eau potable
 divers . loisirs . sports:
-  mosaique:
-    suggestions:
-      - no sport
-    suggestions.auto:
-      - no sport
-    suggestions.lock:
-      - aucun sport
   titre: Sports
   titre.auto: Sports activities
   titre.lock: Pratiques sportives
@@ -23641,23 +23594,20 @@ logement . extérieur . salon de jardin résine ou métal . présent:
 logement . extérieur:
   mosaique:
     suggestions:
-      - none
       - just a terrace
       - small garden
       - large garden
     suggestions.auto:
-      - no
       - just a terrace
       - small garden
       - large garden
     suggestions.lock:
-      - aucun
       - juste une terrasse
       - petit jardin
       - grand jardin
-  question: What do you have outside (garden, balcony)?
-  question.auto: What do you have outside (garden, balcony)?
-  question.lock: Que possédez-vous dans votre extérieur (jardin, balcon) ?
+  question: What do you have outside (garden, terrace)?
+  question.auto: What do you have outside (garden, terrace)?
+  question.lock: Que possédez-vous dans votre extérieur (jardin, terrasse) ?
   description: |
     Here we try to cover the main elements of a typical individual garden. There are still some elements missing, which will be added gradually.
   description.auto: |
@@ -27024,13 +26974,6 @@ transport . transports commun:
   question: What public transport do you use regularly (at least once a month)?
   question.auto: What public transport do you use regularly (at least once a month)?
   question.lock: Quels transports en commun utilisez-vous régulièrement (au moins une fois par mois) ?
-  mosaique:
-    suggestions:
-      - none
-    suggestions.auto:
-      - no
-    suggestions.lock:
-      - aucun
   titre: Public transport
   titre.auto: Public transport
   titre.lock: Transports en commun
@@ -32711,13 +32654,6 @@ logement . propriétaire . propriétaire:
   titre.auto: I am an owner
   titre.lock: Je suis propriétaire
 logement . construction . travaux de rénovation:
-  mosaique:
-    suggestions:
-      - no
-    suggestions.auto:
-      - no
-    suggestions.lock:
-      - aucun
   titre: renovation works
   titre.auto: renovation works
   titre.lock: travaux de rénovation
@@ -32986,3 +32922,135 @@ logement . installer photovoltaique . recalcul:
   titre: recalculation
   titre.auto: recalculation
   titre.lock: recalcul
+logement . vacances . aucun:
+  titre: I am not concerned
+  titre.auto: I am not concerned
+  titre.lock: Je ne suis pas concerné·e
+transport . transports commun . aucun . présent:
+  titre: present
+  titre.auto: present
+  titre.lock: présent
+  question: You don't use public transport?
+  question.auto: You don't use public transport?
+  question.lock: Vous n'utilisez pas les transports en commun ?
+transport . vacances . aucun:
+  titre: No
+  titre.auto: No
+  titre.lock: Aucun
+transport . transports commun . aucun:
+  titre: I am not concerned
+  titre.auto: I am not concerned
+  titre.lock: Je ne suis pas concerné·e
+divers . numérique . appareils . aucun:
+  titre: No
+  titre.auto: No
+  titre.lock: Aucun
+alimentation . boisson . chaude . aucun . présent:
+  titre: present
+  titre.auto: present
+  titre.lock: présent
+  question: Don't drink hot beverages?
+  question.auto: Don't drink hot beverages?
+  question.lock: Vous ne buvez pas de boissons chaudes ?
+logement . vacances . aucun . présent:
+  titre: present
+  titre.auto: present
+  titre.lock: présent
+  question: Do you spend weekends or holidays away from your main home?
+  question.auto: Do you spend weekends or holidays away from your main home?
+  question.lock: Partez-vous en week-end ou en vacances hors de votre logement principal ?
+transport . vacances . aucun . propriétaire:
+  titre: owner
+  titre.auto: owner
+  titre.lock: propriétaire
+  question: Don't have a car for your holidays?
+  question.auto: Don't have a car for your holidays?
+  question.lock: Vous ne possédez pas de véhicule pour vos vacances ?
+logement . extérieur . aucun:
+  titre: I am not concerned
+  titre.auto: I am not concerned
+  titre.lock: Je ne suis pas concerné·e
+logement . extérieur . aucun . présent:
+  titre: present
+  titre.auto: present
+  titre.lock: présent
+  question: Do you have any outdoor equipment?
+  question.auto: Do you have any outdoor equipment?
+  question.lock: Avez-vous des équipements d'extérieur ?
+divers . animaux domestiques . aucun:
+  titre: No
+  titre.auto: No
+  titre.lock: Aucun
+divers . numérique . appareils . aucun . présent:
+  titre: present
+  titre.auto: present
+  titre.lock: présent
+  question: Don't have any digital equipment?
+  question.auto: Don't have any digital equipment?
+  question.lock: Vous n'avez pas d'appareils numériques ?
+alimentation . déchets . gestes . aucun . présent:
+  titre: present
+  titre.auto: present
+  titre.lock: présent
+  question: Are you doing nothing to reduce your waste?
+  question.auto: Are you doing nothing to reduce your waste?
+  question.lock: Vous ne mettez en place aucun geste pour réduire vos déchets ?
+divers . loisirs . sports . aucun . présent:
+  question: You don't particularly do sport?
+  question.auto: You don't particularly do sport?
+  question.lock: Vous ne pratiquez pas particulièrement de sport ?
+  titre: present
+  titre.auto: present
+  titre.lock: présent
+logement . construction . rénovation . travaux . aucun:
+  titre: No
+  titre.auto: No
+  titre.lock: Aucun
+alimentation . déchets . gestes . aucun:
+  titre: No
+  titre.auto: No
+  titre.lock: Aucun
+logement . construction . rénovation . travaux . aucun . présent:
+  titre: present
+  titre.auto: present
+  titre.lock: présent
+  question: Have you carried out any renovation work (finishing, insulation, heating, extension) in your home in the last 25 years?
+  question.auto: Have you carried out any renovation work (finishing, insulation, heating, extension) in your home in the last 25 years?
+  question.lock: Avez-vous réalisé des travaux de rénovation (second d'oeuvre, isolation, chauffage, extension) dans votre logement au cours des 25 dernières années ?
+divers . animaux domestiques . aucun . présent:
+  titre: present
+  titre.auto: present
+  titre.lock: présent
+  question: Don't have any pets?
+  question.auto: Don't have any pets?
+  question.lock: Vous ne possédez pas d'animaux domestiques ?
+divers . loisirs . culture . aucun . présent:
+  titre: present
+  titre.auto: present
+  titre.lock: présent
+  question: You don't particularly like going out or cultural activities?
+  question.auto: You don't particularly like going out or cultural activities?
+  question.lock: Vous n'avez pas particulièrement de sorties ou pratique culturelle ?
+divers . loisirs . sports . aucun:
+  titre: I am not concerned
+  titre.auto: I am not concerned
+  titre.lock: Je ne suis pas concerné·e
+alimentation . boisson . chaude . aucun:
+  titre: I am not concerned
+  titre.auto: I am not concerned
+  titre.lock: Je ne suis pas concerné·e
+divers . loisirs . culture . aucun:
+  titre: I am not concerned
+  titre.auto: I am not concerned
+  titre.lock: Je ne suis pas concerné·e
+transport . mobilité douce . aucun:
+  titre: I am not concerned
+  titre.auto: I am not concerned
+  titre.lock: Je ne suis pas concerné·e
+transport . mobilité douce . aucun . présent:
+  titre: present
+  titre.auto: present
+  titre.lock: présent
+  question: You don't use any soft modes of transport?
+  question.auto: You don't use any soft modes of transport?
+  question.lock: Vous n'utilisez pas de mode de déplacement doux ?
