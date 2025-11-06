@@ -10,7 +10,6 @@ divers . loisirs:
     somme:
       - culture
       - sports
-      # - bien-être
 
 divers . loisirs . culture:
   DLUO: 01/06/2026
@@ -22,23 +21,32 @@ divers . loisirs . culture:
       - musées et monuments . présent
       - édition . présent
       - pratique de la musique . présent
-    suggestions:
-      aucun:
-        concerts et spectacles . présent: non
-        musées et monuments . présent: non
-        édition . présent: non
-        pratique de la musique . présent: non
+      - aucun . présent
   question: Quelles sont vos pratiques culturelles ?
   titre: Pratiques culturelles
   formule: empreinte totale
 
+divers . loisirs . culture . aucun:
+  titre: Je ne suis pas concerné·e
+  icônes: ❌
+
+divers . loisirs . culture . aucun . présent:
+  question: Vous n'avez pas particulièrement de sorties ou pratique culturelle ?
+
 divers . loisirs . culture . empreinte totale:
   formule:
-    somme:
-      - empreinte concerts et spectacles
-      - empreinte musées et monuments
-      - empreinte édition
-      - empreinte pratique de la musique
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: aucun . présent
+            - aucun . présent
+        alors: 0
+      - sinon:
+          somme:
+            - empreinte concerts et spectacles
+            - empreinte musées et monuments
+            - empreinte édition
+            - empreinte pratique de la musique
   unité: kgCO2e
   note: |
     Pour le moment, nous prenons en compte les concerts et spectacles, musées, l'édition (presse, livres), la pratique de la musique.
@@ -172,7 +180,7 @@ divers . loisirs . culture . empreinte édition:
   note: Il s'agit ici de comptabiliser l'empreinte carbone liée à l'achat de livres, de journaux et revues.
 
 divers . loisirs . culture . édition:
-  titre: Lectures (livres, journaux et revues)
+  titre: Lectures (livres, journaux...)
   icônes: 📚
 
 divers . loisirs . culture . édition . présent:
@@ -257,88 +265,6 @@ divers . loisirs . culture . pratique de la musique . proportion de pratiquants:
     Cette [autre étude (malheureusement un peu datée)](https://www.ifop.com/wp-content/uploads/2018/03/3933-1-study_file.pdf) nous porte à croire que pourvu que l'individu ait appris la musique, il possède chez lui un instrument de musique (même proportion d'apprenants et de possédants).
     Nous pouvons donc estimer que 37% des Français possèdent un instrument de musique chez eux.
 
-# divers . loisirs . culture . télévision et radio:
-#   titre: Télévision et radio
-#   applicable si: présent
-#   icônes: 📺
-#   formule: moyenne macro pondérée
-#   unité: kgCO2e
-#   note: |
-#     Lorem ipsum
-
-# divers . loisirs . culture . télévision et radio . présent:
-#   question: Avez-vous des abonnements télévisuels ou radio ?
-#   par défaut: non
-
-# divers . loisirs . culture . télévision et radio . moyenne macro pondérée:
-#   formule: moyenne macro française * fréquence pondérée
-
-# divers . loisirs . culture . télévision et radio . moyenne macro française:
-#   formule: empreinte branche . J59 par hab + empreinte branche . J60 par hab
-#   unité: kgCO2e
-#   note: |
-#     Nous prenons ici en compte la branche "Production de films cinématographiques, de vidéo et de programmes de télévision ; enregistrement sonore et édition musicale" (J59) ainsi que la branche Programmation et diffusion (J60)
-
-# divers . loisirs . culture . télévision et radio . fréquence pondérée:
-#   formule:
-#     variations:
-#       - si: fréquence = 'faible'
-#         alors: 0.5
-#       - si: fréquence = 'normale'
-#         alors: 1
-#       - si: fréquence = 'élevée'
-#         alors: 2
-#       - si: fréquence = 'très élevée'
-#         alors: 3
-
-# divers . loisirs . culture . télévision et radio . fréquence:
-#   question: Quelle est votre consommation de produits télévisuels et radio chaque mois ?
-#   par défaut: "'normale'"
-#   une possibilité:
-#         - faible
-#         - normale
-#         - élevée
-#         - très élevée
-#   note: |
-#     En moyenne, [les ménages consacrent 1040€ par an aux achats de biens et services culturels](https://www.insee.fr/fr/statistiques/6535285?sommaire=6535307), dont 26% pour les services audiovisuels, soit 270€, soit un peu plus de 20€ par mois.
-#     La taille du foyer étant en moyenne de 2,2 personnes, nous pouvons estimer qu'un adulte dépense en moyenne un peu plus de 10€ par mois pour les services audiovisuels (abonnements à des chaînes, programmes de VOD...).
-
-# divers . loisirs . culture . télévision et radio . fréquence . faible:
-#   titre: J'en consomme peu (moins de 10€ par mois)
-# divers . loisirs . culture . télévision et radio . fréquence . normale:
-#   titre: J'en consomme régulièrement (autour de 10€ par mois)
-# divers . loisirs . culture . télévision et radio . fréquence . élevée:
-#   titre: J'en consomme beaucoup (de 10 à 30€ par mois)
-# divers . loisirs . culture . télévision et radio . fréquence . très élevée:
-#   titre: J'en consomme énormément (plus de 30€ par mois)
-
-# divers . loisirs . culture . jeux de hasard et d'argent:
-#   titre: Jeux de hasard et d'argent
-#   applicable si: présent
-#   icônes: 🎲
-#   formule: moyenne macro pondérée
-#   unité: kgCO2e
-#   note: |
-#     Nous répartissons l'empreinte du secteur sur l'ensemble des joueurs parmi la population.
-
-# divers . loisirs . culture . jeux de hasard et d'argent . présent:
-#   question: Vous  arrive t-il de jouer à des jeux de hasard et d'argent ?
-#   par défaut: non
-
-# divers . loisirs . culture . jeux de hasard et d'argent . moyenne macro pondérée:
-#   formule: moyenne macro française / proportion de pratiquants
-
-# divers . loisirs . culture . jeux de hasard et d'argent . moyenne macro française:
-#   formule: empreinte branche . R92 par hab
-#   unité: kgCO2e
-#   note: |
-#     Ici, nous prenons en compte toute la branche correspondant aux jeux de hasard et d'argent.
-
-# divers . loisirs . culture . jeux de hasard et d'argent . proportion de pratiquants:
-#   formule: 0.472
-#   note: |
-#     D'après [cette étude de 2020](https://www.vie-publique.fr/en-bref/274997-jeux-dargent-et-de-hasard-les-francais-jouent-moins-mais-misent-plus), à peu près la moitié des Français jouent à des jeux de hasard et d'argent.
-
 divers . loisirs . sports:
   DLUO: 01/06/2026
   mosaique:
@@ -356,20 +282,7 @@ divers . loisirs . sports:
       - hiver montagne . présent
       - sports énergivores . présent
       - autres sports . présent
-    suggestions:
-      aucun sport:
-        individuel extérieur . présent: non
-        balle ou ballon . présent: non
-        aquatique . présent: non
-        salle de sport . présent: non
-        martial ou combat . présent: non
-        athlétisme . présent: non
-        équitation . présent: non
-        golf . présent: non
-        nautique . présent: non
-        hiver montagne . présent: non
-        sports énergivores . présent: non
-        autres sports . présent: non
+      - aucun . présent
   question: Quels sont les sports que vous pratiquez régulièrement ?
   titre: Pratiques sportives
   formule:
@@ -384,14 +297,28 @@ divers . loisirs . sports:
 
     Également, un sportif "engagé" considérera qu'une pratique régulière implique plusieurs entraînements par semaine, quand un sportif plus amateur placera peut-être la barre un peu plus bas.
 
+divers . loisirs . sports . aucun:
+  titre: Je ne suis pas concerné·e
+  icônes: ❌
+
+divers . loisirs . sports . aucun . présent:
+  question: Vous ne pratiquez pas particulièrement de sport ?
+
 divers . loisirs . sports . empreinte sportif:
   titre: Empreinte des loisirs sportifs
   formule:
-    somme:
-      - empreinte répartie
-      - empreinte club
-      - empreinte fitness
-      - empreinte montagne
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: aucun . présent
+            - aucun . présent
+        alors: 0
+      - sinon:
+          somme:
+            - empreinte répartie
+            - empreinte club
+            - empreinte fitness
+            - empreinte montagne
   note: |
     > Il y aurait tant de questions à poser pour estimer l'empreinte liée aux loisirs sportifs...
 
@@ -506,7 +433,7 @@ divers . loisirs . sports . hiver montagne . présent:
   question: Pratiquez-vous un sport d'hiver ou de montagne ?
 
 divers . loisirs . sports . sports énergivores:
-  titre: Sports motorisés ou nécessitant un engin à moteur
+  titre: Sports motorisés
   icônes: 🚤🪂🏎️
   applicable si: présent
   note: Il est question ici de karting, parachute, ski-nautique...

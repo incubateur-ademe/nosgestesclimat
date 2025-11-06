@@ -18,7 +18,7 @@ alimentation . déchets . quantité jetée:
   question: Comment estimeriez-vous la quantité de déchets que vous jetez ?
   description: |
     Répondez 'Zéro Déchet' uniquement si vous traquez le moindre déchet et ne sortez (quasiment) jamais vos poubelles, et "je limite" sinon (nous vous questionnerons alors sur les actions que vous avez mises en œuvre).
-  par défaut: "'base'"
+  par défaut: "'réduction'"
   une possibilité:
     - base
     - réduction
@@ -74,22 +74,28 @@ alimentation . déchets . gestes:
       - gaspillage alimentaire . présent
       - stop pub . présent
       - acheter en vrac . présent
-    suggestions:
-      aucun:
-        compostage biodéchets . présent: non
-        gaspillage alimentaire: non
-        stop pub . présent: non
-        acheter en vrac . présent: non
+      - aucun . présent
   question: Quels éco-gestes mettez-vous en place pour réduire vos déchets ?
   description: Les différents gestes que vous pourriez déjà mettre en place pour réduire l'empreinte de votre poubelle.
   formule:
-    somme:
-      - compostage biodéchets
-      - gaspillage alimentaire
-      - stop pub
-      - acheter en vrac
+    variations:
+      - si: aucun . présent
+        alors: 0
+      - sinon:
+          somme:
+            - compostage biodéchets
+            - gaspillage alimentaire
+            - stop pub
+            - acheter en vrac
   note: |
     Une mosaïque pour les éco-gestes zéro-déchets.
+
+alimentation . déchets . gestes . aucun:
+  titre: Aucun
+  icônes: ❌
+alimentation . déchets . gestes . aucun . présent:
+  question: Vous ne mettez en place aucun geste pour réduire vos déchets ?
+  par défaut: non
 
 alimentation . déchets . gestes . compostage biodéchets . présent:
   question: Compostez-vous vos biodéchets ?
@@ -218,7 +224,7 @@ alimentation . déchets . gestes . bonus acheter en vrac:
 alimentation . déchets . gestes . bonus acheter en vrac . empreinte emballages évités:
   titre: Non production des l'emballage
   formule: 22% * empreinte carton + 78% * empreinte plastique
-  unité: kg
+  unité: kgCO2e/kg
   note: |
     Source : Page 47 de [l'étude ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/2520-etude-d-evaluation-des-gisements-d-evitement-des-potentiels-de-reduction-de-dechets-et-des-impacts-environnementaux-evites.html)
     Selon le tableau 22% des emballages évités sont en papier/carton, 78% sont en plastique.

@@ -16,16 +16,7 @@ logement . vacances:
       - échange . présent
       - résidence secondaire . présent
       - croisière . présent
-    suggestions:
-      aucun:
-        hotel . présent: non
-        camping . présent: non
-        auberge de jeunesse . présent: non
-        locations . présent: non
-        famille ou amis . présent: non
-        échange . présent: non
-        résidence secondaire . présent: non
-        croisière . présent: non
+      - aucun . présent
   description: |
     Renseignez ici les différents types de logement que vous occupez pour vos voyages (à motif **personnel**).
 
@@ -58,16 +49,30 @@ logement . vacances:
 
 logement . vacances . empreinte totale:
   formule:
-    somme:
-      - empreinte hotel
-      - empreinte camping
-      - empreinte auberge de jeunesse * logement . habitants
-      - empreinte locations
-      - empreinte échange
-      - empreinte famille ou amis
-      - empreinte résidence secondaire
-      - empreinte croisière * logement . habitants
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: aucun . présent
+            - aucun . présent
+        alors: 0
+      - sinon:
+          somme:
+            - empreinte hotel
+            - empreinte camping
+            - empreinte auberge de jeunesse * logement . habitants
+            - empreinte locations
+            - empreinte échange
+            - empreinte famille ou amis
+            - empreinte résidence secondaire
+            - empreinte croisière * logement . habitants
   unité: kgCO2e
+
+logement . vacances . aucun:
+  titre: Je ne suis pas concerné·e
+  icônes: ❌
+
+logement . vacances . aucun . présent:
+  question: Partez-vous en week-end ou en vacances hors de votre logement principal ?
 
 logement . vacances . nombre de nuits hors logement:
   formule: 26.5
@@ -137,7 +142,7 @@ logement . vacances . empreinte hotel:
     Par ailleurs, on fait également l'hypotèse qu'une famille de plus de 4 personnes prendra 2 chambres, plus de 8, 3 chambres, ce qui explique les facteurs 2 et 3 dans les formules.
 
 logement . vacances . hotel:
-  titre: Hôtel ou chambre d'hôtes
+  titre: Hôtel, chambre d'hôtes
   icônes: 🏨
 
 logement . vacances . hotel . présent:
