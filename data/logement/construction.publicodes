@@ -62,7 +62,7 @@ logement . construction . base . amortissement:
   formule:
     variations:
       - si: rénovation . travaux . travaux réalisés
-        alors: 70
+        alors: 75
       - sinon: 50
   note: |
     La durée de vie d'un bâtiment est fixée à 50 ans (voir la [documentation de la base empreinte, onglet Achats de bien/ Bâtiments](https://prod-basecarbonesolo.ademe-dri.fr/documentation/UPLOAD_DOC_FR/)). Si le logement est rénové ou isolé, nous faisons l'hypothèse que cette durée est rallongée de 20 ans.
@@ -85,7 +85,7 @@ logement . construction . rafraichissement . amortissement:
   formule: 10
 
 logement . construction . rénovation:
-  applicable si: logement . âge équivalent >= seuil
+  applicable si: logement . âge équivalent > seuil
   formule:
     variations:
       - si: logement . propriétaire = 'propriétaire'
@@ -96,10 +96,10 @@ logement . construction . rénovation:
 
 logement . construction . rénovation . seuil:
   titre: Âge seuil pour la rénovation
-  formule: 25
+  formule: 10
 
 logement . construction . rénovation . amortissement:
-  formule: 25
+  formule: 50
 
 logement . construction . travaux de rénovation:
   applicable si: logement . propriétaire = 'propriétaire'
@@ -212,7 +212,7 @@ logement . construction . artificialisation sols:
   applicable si: logement . est une maison
   formule:
     variations:
-      - si: logement . âge équivalent < plafond
+      - si: logement . âge équivalent <= plafond
         alors: empreinte / amortissement
       - sinon: 0
   unité: kgCO2e/m2
