@@ -1,8 +1,21 @@
 transport . train:
   DLUO: 01/09/2025
   titre: Train
-  icônes: 🚋
-  formule: km * impact par km
+  icônes: 🚄
+  formule:
+    variations:
+      - si:
+          est défini: train . usager
+        alors:
+          # This is a hack to make sure all branch is not desactivated: we need to have the value in a `somme`, if not, the value applicability is spread to the parent and all branch is desactivated.
+          somme:
+            - train . km * impact par km
+      - sinon: km par défaut * impact par km
+  note: |
+    Cette question fait désormais partie de la mosaïque "Transports en commun".
+
+transport . train . usager:
+  question: Utilisez-vous le train pour vos déplacements ?
 
 transport . train . impact par km:
   formule:
@@ -80,6 +93,10 @@ transport . train . passagers km intercités:
     On omet ici les trajets en RER et transilien.
 
 transport . train . km:
+  applicable si:
+    toutes ces conditions:
+      - est défini: train . usager
+      - train . usager
   question: Combien de kilomètres parcourez-vous en train par an ?
   description: Les suggestions sont sur la base d'un aller-retour.
   suggestions:
@@ -91,4 +108,10 @@ transport . train . km:
   unité: km
   plancher: 0
   plafond: 99999
-  par défaut: 1000
+  par défaut: km par défaut
+
+transport . train . km par défaut:
+  valeur: 107000000000 km / population
+  unité: km
+  note: |
+    Selon les ["Chiffres clés des transports" du SDES](https://www.statistiques.developpement-durable.gouv.fr/edition-numerique/chiffres-cles-transports/fr/16-transport-ferroviaire-de-voyageurs), le transport ferroviaire (hors Eurotunnel) représente 107 milliards de passagers-km en 2023. Ce chiffre prend vraisemblablement en compte les trajets effectués par des voyageurs étrangers mais on peut néanmoins utiliser ce chiffre pour obtenir une bonne approximation de la distance moyenne parcourue en train par français.
