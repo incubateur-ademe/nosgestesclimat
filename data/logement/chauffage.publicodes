@@ -14,9 +14,9 @@ logement . chauffage:
       - fioul . présent
       - citerne propane . présent
       - chauffe eau solaire . présent
-      - aucun . présent
       - logement . climatisation . présent
       - logement . électricité . photovoltaique . présent
+      - aucun . présent
   icônes: 🌡️
   question: Qu'utilisez vous pour la cuisson, l'eau chaude et chauffer ou climatiser votre logement ?
   description: |
@@ -255,7 +255,7 @@ logement . chauffage . électricité . présent:
   question: Votre logement est-il chauffé à l'électricité ?
 
 logement . chauffage . gaz:
-  titre: Gaz de ville
+  titre: Gaz naturel
   icônes: 🔥
   unité: kgCO2e
 
@@ -877,26 +877,28 @@ logement . chauffage . bois . type . granulés . consommation moyenne chauffage:
   unité: kWh
 
 logement . chauffage . bois . type . granulés . consommation précise:
-  applicable si: précision consommation = 'conso exactes'
-  par défaut: consommation moyenne réelle
-  question: Quelle est la consommation annuelle de bois en granulés de votre foyer ?
-  aide: logement . chauffage . bois . type . granulés . consommation estimée via le coût . saisie
-  plancher: 0
-  plafond: 200000
+  formule: consommation précise en kg * intensité énergétique
   unité: kWh
-  description: |
-    > 💡 Astuce : en moyenne, 1kg de granulés produisent 4.6 kWh. Vous pouvez donc multiplier votre consommation annuelle (en tonnes) par 4600 kWh.
-  note: |
-    La valeur par défaut ici est à priori largement sur-estimée. En effet, les données utilisées ([CEREN](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel)) reflètent mal la réalité de l'énergie bois.
-    Les données relatives aux consommations de bois des ménages aggrègent à la fois des données sur les granulés (performant en termes de combustion) et sur le bois bûches en foyer ouvert (peu performant).
 
-    Et donc probablement que si la discrimination par type de bois de chauffe était faite dans les données du CEREN (pour les kWh consommés et les surface chauffées) on aboutirait à une valeur en kWh/m2 beaucoup plus faible pour les granulés que pour le bois bûches.
+logement . chauffage . bois . type . granulés . consommation précise en kg:
+  applicable si: précision consommation = 'conso exactes'
+  question: Quelle est la consommation annuelle de granulés / pellets de votre foyer ?
+  aide: logement . chauffage . bois . type . granulés . consommation estimée via le coût . saisie
+  par défaut: consommation moyenne réelle / intensité énergétique
+  unité: kg
+  plancher: 0
+  plafond: 50000
 
 logement . chauffage . bois . type . granulés . consommation via DPE:
   applicable si: précision consommation = 'DPE'
   par défaut: consommation moyenne réelle
   formule: parc français . chauffage . part chauffage air bois * précision consommation . DPE . consommation via DPE par m2 * surface / nombre sources chauffage air
   unité: kWh
+  note: |
+    La valeur par défaut ici est à priori largement sur-estimée. En effet, les données utilisées ([CEREN](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel)) reflètent mal la réalité de l'énergie bois.
+    Les données relatives aux consommations de bois des ménages aggrègent à la fois des données sur les granulés (performant en termes de combustion) et sur le bois bûches en foyer ouvert (peu performant).
+
+    Et donc probablement que si la discrimination par type de bois de chauffe était faite dans les données du CEREN (pour les kWh consommés et les surface chauffées) on aboutirait à une valeur en kWh/m2 beaucoup plus faible pour les granulés que pour le bois bûches.
 
 logement . chauffage . bois . type . granulés . consommation via ressenti:
   applicable si: précision consommation = 'aide'
@@ -913,7 +915,7 @@ logement . chauffage . bois . type . granulés . consommation estimée via le co
   titre: Consommation estimée via le coût
   formule: saisie / facteur
   arrondi: oui
-  unité: kWh
+  unité: kg
   note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
 
 logement . chauffage . bois . type . granulés . consommation estimée via le coût . saisie:
@@ -922,8 +924,8 @@ logement . chauffage . bois . type . granulés . consommation estimée via le co
   unité: €
 
 logement . chauffage . bois . type . granulés . consommation estimée via le coût . facteur:
-  formule: granulés . prix tonne / intensité énergétique
-  unité: €/kWh
+  formule: granulés . prix tonne / 1000 kg/tonne
+  unité: €/kg
   note: |
     Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois.
 
@@ -951,8 +953,8 @@ logement . chauffage . bois . type . granulés sac . prix tonne:
     Granulés sac vendu au détail, prix livré, T3 2023.
 
 logement . chauffage . bois . type . granulés . intensité énergétique:
-  formule: 4600
-  unité: kWh/tonne
+  formule: 4600 kWh/tonne / 1000 kg/tonne
+  unité: kWh/kg
   note: D'après l'[étude ADEME "Situation du chauffage domestique au bois en 2022-2023"](https://librairie.ademe.fr/energies/7443-situation-du-chauffage-domestique-au-bois-en-2022-2023.html), synthèse, page 7.
 
 logement . chauffage . bois . type . bûches . consommation:
@@ -966,6 +968,7 @@ logement . chauffage . bois . type . bûches . consommation:
       - si: précision consommation = 'aide'
         alors: consommation via ressenti
   par défaut: consommation moyenne réelle
+  unité: stère
 
 logement . chauffage . bois . type . bûches . consommation moyenne réelle:
   titre: Consommation moyenne réelle de bûches en tenant compte des autres modes de chauffage
