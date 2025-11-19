@@ -1,5 +1,5 @@
 transport . transports commun:
-  DLUO: 01/09/2025
+  DLUO: 01/02/2026
   titre: Transports en commun
   mosaique:
     type: selection
@@ -69,15 +69,36 @@ transport . transports commun . bus . présent:
 transport . transports commun . bus . impact par heure:
   formule: impact par km * vitesse
   unité: kgCO2e/h
-  description: |
-    Sur la base de 113 gCO2e/(passager.km) et de 12 km/h de vitesse moyenne
+
 transport . transports commun . bus . impact par km:
-  formule: 0.113
+  formule:
+    somme:
+      - impact par km . gazole * 0.725
+      - impact par km . électrique * 0.075
+      - impact par km . gnv * 0.20
   unité: kgCO2e/km
   note: |
-    Autobus - Gazole ; 113 gCO2e/km/personne ; Base Carbone consultée le 04/04/2022
-    La flotte étant majoritairement Diesel en France (https://www.statistiques.developpement-durable.gouv.fr/69-000-autocars-en-circulation-au-1er-janvier-2020), on fait le choix de prendre ce FE (plus fiable que la référence "Autobus moyen" selon la base carbone)
-    La prise compte des autres motorisations de cette catégorie de la base carbone fera diminuer ce FE (en pondérant selon les caractéristiques de la flotte française). (Ex: Autobus - électrique = 21.7 gCO2e/km/personne)
+    D'après [les chiffres du SDES](https://www.statistiques.developpement-durable.gouv.fr/66-100-autocars-et-27-800-autobus-en-circulation-au-1er-janvier-2024), la flotte est composée d'environ:
+      - 7.5% de bus électriques
+      - 20% de bus GNV
+      - 72.5% de bus au gazole.
+
+transport . transports commun . bus . impact par km . gazole:
+  formule: 0.120
+  unité: kgCO2e/km
+  note: |
+    Facteur d'émission issu de la Base Empreinte (Autobus/Gazole)
+transport . transports commun . bus . impact par km . électrique:
+  formule: 0.0217
+  unité: kgCO2e/km
+  note: |
+    Facteur d'émission issu de la Base Empreinte (Autobus/Electrique)
+transport . transports commun . bus . impact par km . gnv:
+  formule: 0.120
+  unité: kgCO2e/km
+  note: |
+    Facteur d'émission issu de la Base Empreinte (Autobus/GNV)
+
 transport . transports commun . bus . vitesse:
   formule: 12
   unité: km/h
@@ -103,10 +124,11 @@ transport . transports commun . bus . distance moyenne hebdo:
   unité: km/semaine
 
 transport . transports commun . bus . distance moyenne annuelle:
-  formule: (15700000000 km / 2) / population
+  formule: 9050000000 km / population
   unité: km
   note: |
-    D'après [l'étude "Chiffres clef du transport 2021" (données de 2019)](https://www.statistiques.developpement-durable.gouv.fr/edition-numerique/chiffres-cles-transport-2021/13-transport-routier-de-voyageurs), les français parcourent 15,7 milliards de km en bus et tram chaque année.
+    D'après les ["Chiffres clés du transport 2025" (données de 2023)](https://www.statistiques.developpement-durable.gouv.fr/edition-numerique/chiffres-cles-transports/fr/15-transport-collectif-urbain-de-voyageurs), les français parcourent 9,05 milliards de km en bus chaque année.
+    L'idéal serait de diviser cette valeur par le nombre d'usagers, mais nous n'avons pas cette information.
 
 transport . transports commun . car:
   titre: Autocar
@@ -155,16 +177,19 @@ transport . transports commun . car . distance moyenne hebdo:
   unité: km/semaine
 
 transport . transports commun . car . distance moyenne annuelle:
-  formule: 45000000000 km / population
+  formule: 53300000000 km / population
   unité: km
   note: |
-    D'après [l'étude "Chiffres clef du transport 2021" (données de 2019)](https://www.statistiques.developpement-durable.gouv.fr/edition-numerique/chiffres-cles-transport-2021/13-transport-routier-de-voyageurs), les français parcourent en moyenne 45 milliards de km en car par an.
+    D'après les ["Chiffres clés du transport 2025" (données de 2023)](https://www.statistiques.developpement-durable.gouv.fr/edition-numerique/chiffres-cles-transports/fr/15-transport-collectif-urbain-de-voyageurs), les français parcourent 53,3 milliards de km en métro ou tramway chaque année.
+    L'idéal serait de diviser cette valeur par le nombre d'usagers, mais nous n'avons pas cette information.
 
 transport . transports commun . car . impact par km:
-  formule: 0.0295
+  formule: 0.0375
   unité: kgCO2e/km
   note: |
-    Autocar - Gazole ; 29,5 gCO2e/km.personne ; Base Empreinte consultée le 18/01/2024
+    Facteur d'émission issu de la Base Empreinte (Autocar/Gazole).
+
+    D'après [les chiffres du SDES](https://www.statistiques.developpement-durable.gouv.fr/66-100-autocars-et-27-800-autobus-en-circulation-au-1er-janvier-2024), la flotte est composée majoritairement de cars au gazole.
 
 transport . transports commun . métro ou tram:
   titre: Métro, tramway, RER
@@ -214,12 +239,14 @@ transport . transports commun . métro ou tram . impact par km:
 transport . transports commun . métro ou tram . impact par km métro:
   formule: 0.00503
   unité: kgCO2e/km
-  note: Métro, tramway, trolleybus/2018/Agglomération de 100 000 à 250 000 habitants ; Base Carbone consultée le 06/12/2023
+  note: |
+    Facteur d'émission issu de la Base Empreinte (Métro, tramway, trolleybus/2018/Agglomération de 100 000 à 250 000 habitants)
 
 transport . transports commun . métro ou tram . impact par km RER:
   formule: 0.00978
   unité: kgCO2e/km
-  note: RER et transilien/2022/Ile de France ; Base Carbone consultée le 06/12/2023
+  note: |
+    Facteur d'émission issu de la Base Empreinte (RER et transilien/2022/Ile de France)
 
 transport . transports commun . métro ou tram . vitesse:
   formule: 25
@@ -246,9 +273,8 @@ transport . transports commun . métro ou tram . distance moyenne hebdo:
   unité: km/semaine
 
 transport . transports commun . métro ou tram . distance moyenne annuelle:
-  formule: (15700000000 km / 2) / population
+  formule: 32350000000 km / population
   unité: km
   note: |
-    D'après [l'étude "Chiffres clef du transport 2021" (données de 2019)](https://www.statistiques.developpement-durable.gouv.fr/edition-numerique/chiffres-cles-transport-2021/13-transport-routier-de-voyageurs), les français parcourent 15,7 milliards de km en bus et tram chaque année.
-
-    Nous divisons cette valeur équitablement entre bus et métro ou tram.
+    D'après les ["Chiffres clés du transport 2025" (données de 2023)](https://www.statistiques.developpement-durable.gouv.fr/edition-numerique/chiffres-cles-transports/fr/15-transport-collectif-urbain-de-voyageurs), les français parcourent 32,35 milliards de km en métro ou tramway chaque année.
+    L'idéal serait de diviser cette valeur par le nombre d'usagers, mais nous n'avons pas cette information.
