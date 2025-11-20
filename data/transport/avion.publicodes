@@ -34,11 +34,16 @@ transport . avion . empreinte:
 transport . avion . usager:
   question: Avez-vous pris l'avion au moins une fois ces 3 dernières années ?
 
-transport . avion . proportion usagers:
-  titre: Fréquence de prise de l'avion par les usagers moyen et long courrier
-  formule: 0.495
+transport . avion . fréquence trajets:
+  titre: Fréquence moyenne de prise de l'avion par les passagers français
+  formule: 5.6
   note: |
-    D'après un [sondage IFOP pour La Fondation Jean Jaurès](https://www.jean-jaures.org/wp-content/uploads/2022/06/Enquete_Avions.pdf), 11% des répondants indiquent prendre l'avion de manière régulière, 21% une à deux fois par an, et 35% exceptionnellement. Nous faisons l'hypothèse que sur une année, 11 + 21 + (35 / 3) = 49.5% des français prennent l'avion.
+    L'[enquête nationale des passagers aériens](https://www.ecologie.gouv.fr/politiques-publiques/enquete-nationale-passagers-aeriens-enpa) 2023, donne un chiffre de 5.6 trajets par an en moyenne.
+
+transport . avion . proportion trajets perso:
+  formule: 0.81
+  note: |
+    L'[enquête nationale des passagers aériens](https://www.ecologie.gouv.fr/politiques-publiques/enquete-nationale-passagers-aeriens-enpa) 2023, donne un chiffre de 19% de trajets professionnels.
 
 transport . avion . court courrier:
   formule: heures de vol * vitesse moyenne * empreinte par km
@@ -106,12 +111,19 @@ transport . avion . court courrier . durée moyenne passager:
 
 transport . avion . court courrier . passager km moyen:
   titre: Distance moyenne parcourue un Français sur des vols court-courriers
-  formule: passager km total / passagers annuel
+  formule: proportion trajets perso * passager km total * proportions voyageurs français / passagers annuel français
+  note: |
+    On fait une grosse approximation en considérant que la proportion des kilomètres parcourus par des français est la même que la proportion des passagers français.
   unité: km
 
 transport . avion . court courrier . passagers annuel français:
   titre: Nombre de passagers court courrier français
-  formule: passagers annuel * proportions voyageurs français * proportion usagers
+  formule: passagers annuel * proportions voyageurs français / fréquence trajets
+  note: |
+    Un français peut être compté plusieurs fois dans l'année en tant que passager.
+
+transport . avion . court courrier . proportion voyageurs:
+  formule: passagers annuel français / population
 
 transport . avion . court courrier . passagers annuel:
   titre: Nombre de passagers court courrier
@@ -123,10 +135,10 @@ transport . avion . court courrier . proportions voyageurs français:
   titre: Proportion de voyageurs français sur les vols court courrier
   formule: 0.91
   note: |
-    Chiffre issu de l'[enquête nationle des passagers aériens](https://www.ecologie.gouv.fr/politiques-publiques/enquete-nationale-passagers-aeriens-enpa) 2023.
+    Chiffre issu de l'[enquête nationale des passagers aériens](https://www.ecologie.gouv.fr/politiques-publiques/enquete-nationale-passagers-aeriens-enpa) 2023.
 
 transport . avion . court courrier . passager km total:
-  titre: Distance totale parcourue par les Français sur des vols court courrier en 2023
+  titre: Distance totale parcourue par les voyageurs en France sur des vols court courrier en 2023
   formule: 384000000000 km * 0.072
   unité: km
   note: |
@@ -201,12 +213,16 @@ transport . avion . moyen et long courrier . durée moyenne passager:
 
 transport . avion . moyen et long courrier . passager km moyen:
   titre: Distance moyenne parcourue un Français sur des vols moyen et long courrier
-  formule: passager km total / passagers annuel
+  formule: proportion trajets perso * passager km total * proportion voyageurs français / passagers annuel français
+  note: |
+    On fait une grosse approximation en considérant que la proportion des kilomètres parcourus par des français est la même que la proportion des passagers français.
   unité: km
 
 transport . avion . moyen et long courrier . passagers annuel français:
   titre: Nombre de passagers moyen et long courrier français
-  formule: passagers annuel * proportion voyageurs français * proportion usagers
+  formule: passagers annuel * proportion voyageurs français / fréquence trajets
+  note: |
+    Un français peut être compté plusieurs fois dans l'année en tant que passager.
 
 transport . avion . moyen et long courrier . passagers annuel:
   titre: Nombre de passagers moyen et long courrier
@@ -218,10 +234,10 @@ transport . avion . moyen et long courrier . proportion voyageurs français:
   titre: Proportion de voyageurs français sur les vols moyen et long courrier
   formule: 0.53
   note: |
-    Chiffre issu de l'[enquête nationle des passagers aériens](https://www.ecologie.gouv.fr/politiques-publiques/enquete-nationale-passagers-aeriens-enpa) 2023.
+    Chiffre issu de l'[enquête nationale des passagers aériens](https://www.ecologie.gouv.fr/politiques-publiques/enquete-nationale-passagers-aeriens-enpa) 2023.
 
 transport . avion . moyen et long courrier . passager km total:
-  titre: Distance totale parcourue par les Français sur des vols moyen et long courrier en 2023
+  titre: Distance totale parcourue par les voyageurs en France sur des vols moyen et long courrier en 2023
   formule: 384000000000 km * (1 - 0.072)
   unité: km
   note: |
