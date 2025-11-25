@@ -124,7 +124,7 @@ export function getRulesFromDist(version, region, lang) {
     })
 }
 
-export async function getRulesFromPreviousRelease(version, region, lang) {
+export async function getRulesFromPreviousRelease(version) {
   const url = `https://registry.npmjs.org/@incubateur-ademe/nosgestesclimat/-/nosgestesclimat-${version}.tgz`
   const fileName = 'nosgestesclimat.model.json'
   const res = await fetch(url)

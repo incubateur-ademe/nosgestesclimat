@@ -4,8 +4,8 @@ import {
   getRulesFromPreviousRelease,
   getLocalRules,
   getArgs
-} from '../tests/commons.mjs'
-import { checkMigrationCoverage } from './migration/checkMigrationCoverage.mjs'
+} from '../../tests/commons.mjs'
+import { checkMigrationCoverage } from './checkMigrationCoverage.mjs'
 
 const { country, language } = getArgs()
 
@@ -101,7 +101,7 @@ const releaseTags = [
 for (const tag of releaseTags) {
   try {
     console.log(`\n=== Checking migration coverage for release: ${tag} ===`)
-    const oldRules = await getRulesFromPreviousRelease(tag, country, language)
+    const oldRules = await getRulesFromPreviousRelease(tag)
     checkMigrationCoverage(localRules, oldRules, baseMigration)
   } catch (e) {
     console.error(`Error for tag ${tag}:`, e)
