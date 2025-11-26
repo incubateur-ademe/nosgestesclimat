@@ -3,8 +3,10 @@ transport . avion . arrêter l'avion:
   titre: Voyager sans prendre l'avion
   applicable si:
     toutes ces conditions:
-      - est défini: avion . usager
-      - avion . usager
+      - est défini: usager
+      - une de ces conditions:
+          - usager = "fréquemment"
+          - usager = "occasionnellement"
   action:
     dépasse:
       - transport . avion . arrêter l'avion court
@@ -40,9 +42,13 @@ transport . avion . arrêter l'avion court:
   icônes: 🛬🚆
   applicable si:
     toutes ces conditions:
-      - est défini: avion . usager
-      - avion . usager
-      - transport . avion . court courrier . heures de vol > 0
+      - est défini: usager
+      - une de ces conditions:
+          - usager = "fréquemment"
+          - usager = "occasionnellement"
+      - une de ces conditions:
+          - vols annuels . heures court courrier > 0
+          - vols amortis . heures court courrier > 0
   formule: transport . avion . court courrier - compensation train
   unité: kgCO2e
   description: |
@@ -53,7 +59,19 @@ transport . avion . arrêter l'avion court:
     > Pour comparer l'impact CO2 des différents modes de transport, [utilisez notre  simulateur](https://impactco2.fr/transport).
 
 transport . avion . arrêter l'avion court . compensation train:
-  formule: avion . court courrier . heures de vol * avion . court courrier . vitesse moyenne * ratio distance supplémentaire train * transport . train . impact par km
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: usager
+            - usager = "fréquemment"
+        alors: vols annuels . heures court courrier * avion . court courrier . vitesse moyenne * ratio distance supplémentaire train * transport . train . impact par km
+      - si:
+          toutes ces conditions:
+            - est défini: usager
+            - usager = "occasionnellement"
+        alors: vols amortis . heures court courrier * avion . court courrier . vitesse moyenne * ratio distance supplémentaire train * transport . train . impact par km
+      - sinon: 0
   unité: kgCO2e
 
 transport . avion . arrêter l'avion court . ratio distance supplémentaire train:
@@ -65,8 +83,10 @@ transport . avion . prendre moins l'avion:
   icônes: 📉🛬
   applicable si:
     toutes ces conditions:
-      - est défini: avion . usager
-      - avion . usager
+      - est défini: usager
+      - une de ces conditions:
+          - usager = "fréquemment"
+          - usager = "occasionnellement"
   action:
     dépasse:
       - transport . avion . arrêter l'avion court

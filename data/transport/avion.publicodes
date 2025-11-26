@@ -8,7 +8,8 @@ transport . avion:
     Gardons aussi en tête que le Français moyen ne prend pas ou peu l'avion. L'essentiel de l'empreinte de l'aviation est donc concentrée sur 10% ou moins des Français.
   note: |
     Nous avons fait le choix de demander le total d'heures de vol, plutôt que de demander à l'utilisateur de renseigner chacun de ses vols
-    via l'aéroport de départ, d'arrivée et la classe économique. C'est une évolution possible par la suite. A noter aussi que les escales entrainent des décollages supplémentaires, qui consomment plus de carburant qu'une vitesse de croisière. C'est aussi un paramètre à prendre en compte par la suite.
+    via l'aéroport de départ, d'arrivée et la classe économique. C'est une évolution possible par la suite. A noter aussi que les escales entrainent des décollages supplémentaires, qui consomment plu
+    s de carburant qu'une vitesse de croisière. C'est aussi un paramètre à prendre en compte par la suite.
   formule:
     variations:
       - si:
@@ -19,20 +20,184 @@ transport . avion:
 transport . avion . empreinte moyenne:
   valeur: transport . avion . empreinte
   contexte:
-    transport . avion . usager: oui
-    transport . avion . court courrier . heures de vol: court courrier . durée moyenne
-    transport . avion . moyen et long courrier . heures de vol: moyen et long courrier . durée moyenne
+    transport . avion . usager: "'fréquemment'"
+    transport . avion . vols annuels . heures court courrier: court courrier . durée moyenne
+    transport . avion . vols annuels . heures moyen et long courrier: moyen et long courrier . durée moyenne
 
 transport . avion . empreinte:
   formule:
-    somme:
-      - court courrier
-      - moyen et long courrier
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: usager
+            - usager = "fréquemment"
+        alors:
+          valeur: vols annuels
+      - si:
+          toutes ces conditions:
+            - est défini: usager
+            - usager = "occasionnellement"
+        alors:
+          valeur: vols amortis
+      - sinon: 0
   note: |
     Nous avons choisi de conserver les trainées de condensation dans les facteurs d'émission utilisés, car elles contribuent à l'effet de serre, même si leur quantification reste incertaine, notamment pour des raisons conservatrices.
 
+## Un refacto publicodes serait nécessaire pour factoriser les éléments communs entre court et moyen/long courrier. On introduit une complexité supplémentaire car il n'est pas possible de variabiliser l'attribut question pour le moment.
+
 transport . avion . usager:
-  question: Avez-vous pris l'avion au moins une fois ces 3 dernières années ?
+  question: À quelle fréquence avez-vous voyagé en avion au cours des 3 dernières années ?
+  description: |
+    Considérez les vols personnels et non professionnels.
+  une possibilité:
+    - jamais
+    - occasionnellement
+    - fréquemment
+
+transport . avion . usager . fréquemment:
+  titre: Au moins une fois par an
+
+transport . avion . usager . occasionnellement:
+  titre: Moins d’une fois par an
+
+transport . avion . usager . jamais:
+  titre: Jamais
+
+transport . avion . vols annuels:
+  titre: Empreinte vols annuels
+  applicable si:
+    toutes ces conditions:
+      - est défini: usager
+      - usager = "fréquemment"
+  mosaique:
+    type: nombre
+    options:
+      - heures court courrier . saisie
+      - heures moyen et long courrier . saisie
+    suggestions:
+      Paris ⇄ Nice:
+        transport . avion . vols annuels . heures court courrier . saisie: 3
+        transport . avion . vols annuels . heures moyen et long courrier . saisie: 0
+      Nantes ⇄ Istanbul:
+        transport . avion . vols annuels . heures court courrier . saisie: 0
+        transport . avion . vols annuels . heures moyen et long courrier . saisie: 8
+      Lyon ⇄ Los Angeles avec 1 escale:
+        transport . avion . vols annuels . heures court courrier . saisie: 2.5
+        transport . avion . vols annuels . heures moyen et long courrier . saisie: 24
+  question: Combien d'heures avez-vous voyagé en avion cette année ?
+  description: |
+    Renseignez le total des heures de vols. Pour un aller-retour, il faut donc compter les heures aller **et** retour.
+  unité: kgCO2e
+  somme:
+    - heures court courrier * court courrier . empreinte par km * court courrier . vitesse moyenne
+    - heures moyen et long courrier * moyen et long courrier . empreinte par km * moyen et long courrier . vitesse moyenne
+
+transport . avion . vols annuels . heures court courrier:
+  titre: Sur des vols court-courrier
+  description: (national ou frontalier)
+  icônes: 🛩️
+  formule: saisie
+  unité: h
+
+transport . avion . vols annuels . heures court courrier . saisie:
+  description: Saisie des heures de vol cette année sur des vols court-courrier
+  applicable si:
+    toutes ces conditions:
+      - est défini: usager
+      - usager = "fréquemment"
+  question: Combien d'heures avez-vous voyagé en avion cette année sur des vols court-courrier ?
+  par défaut: court courrier . durée moyenne passager
+  plancher: 0
+  plafond: 200
+  unité: h
+
+transport . avion . vols annuels . heures moyen et long courrier:
+  titre: Sur des moyen ou long courrier
+  description: (trajet > 2h)
+  icônes: ✈️
+  formule: saisie
+  unité: h
+
+transport . avion . vols annuels . heures moyen et long courrier . saisie:
+  description: Saisie des heures de vol cette année sur des vols moyen ou long courrier
+  applicable si:
+    toutes ces conditions:
+      - est défini: usager
+      - usager = "fréquemment"
+  par défaut: moyen et long courrier . durée moyenne passager
+  plancher: 0
+  plafond: 600
+  question: Combien d'heures avez-vous voyagé en avion cette année sur des vols moyen ou long courrier ?
+
+transport . avion . vols amortis:
+  titre: Empreinte vols amortis
+  applicable si:
+    toutes ces conditions:
+      - est défini: usager
+      - usager = "occasionnellement"
+  mosaique:
+    type: nombre
+    options:
+      - heures court courrier . saisie
+      - heures moyen et long courrier . saisie
+    suggestions:
+      Paris ⇄ Nice:
+        transport . avion . vols amortis . heures court courrier . saisie: 3
+        transport . avion . vols amortis . heures moyen et long courrier . saisie: 0
+      Nantes ⇄ Istanbul:
+        transport . avion . vols amortis . heures court courrier . saisie: 0
+        transport . avion . vols amortis . heures moyen et long courrier . saisie: 8
+      Lyon ⇄ Los Angeles avec 1 escale:
+        transport . avion . vols amortis . heures court courrier . saisie: 2.5
+        transport . avion . vols amortis . heures moyen et long courrier . saisie: 24
+  question: Combien d'heures avez-vous voyagé en avion sur les 3 dernières années ?
+  description: |
+    Renseignez le total des heures de vols. Pour un aller-retour, il faut donc compter les heures aller **et** retour.
+  unité: kgCO2e
+  somme:
+    - heures court courrier * court courrier . empreinte par km * court courrier . vitesse moyenne
+    - heures moyen et long courrier * moyen et long courrier . empreinte par km * moyen et long courrier . vitesse moyenne
+
+transport . avion . vols amortis . amortissement:
+  valeur: 3
+
+transport . avion . vols amortis . heures court courrier:
+  titre: Sur des vols court-courrier
+  description: (national ou frontalier)
+  icônes: 🛩️
+  formule: saisie / amortissement
+  unité: h
+
+transport . avion . vols amortis . heures court courrier . saisie:
+  description: Saisie des heures de vol des 3 dernières années sur des vols court-courrier
+  applicable si:
+    toutes ces conditions:
+      - est défini: usager
+      - usager = "occasionnellement"
+  question: Combien d'heures avez-vous voyagé en avion sur les 3 dernières années sur des vols court-courrier ?
+  par défaut: court courrier . durée moyenne passager
+  plancher: 0
+  plafond: 200
+  unité: h
+
+transport . avion . vols amortis . heures moyen et long courrier:
+  titre: Sur des moyen ou long courrier
+  description: (trajet > 2h)
+  icônes: ✈️
+  formule: saisie / amortissement
+  unité: h
+
+transport . avion . vols amortis . heures moyen et long courrier . saisie:
+  description: Saisie des heures de vol des 3 dernières années sur des vols moyen ou long courrier
+  applicable si:
+    toutes ces conditions:
+      - est défini: usager
+      - usager = "occasionnellement"
+  par défaut: moyen et long courrier . durée moyenne passager
+  plancher: 0
+  plafond: 600
+  question: Combien d'heures avez-vous voyagé en avion sur les 3 dernières années sur des vols moyen ou long courrier ?
+  unité: h
 
 transport . avion . fréquence trajets:
   titre: Fréquence moyenne de prise de l'avion par les passagers français
@@ -46,8 +211,8 @@ transport . avion . proportion trajets perso:
     L'[enquête nationale des passagers aériens](https://www.ecologie.gouv.fr/politiques-publiques/enquete-nationale-passagers-aeriens-enpa) 2023, donne un chiffre de 19% de trajets professionnels.
 
 transport . avion . court courrier:
-  formule: heures de vol * vitesse moyenne * empreinte par km
-  description: |
+  titre: Vols court-courrier (trajet < 2h)
+  note: |
     Les vols court-courriers sont définis ici comme des vols de moins de 2h (environ 1000km).
     On considère que les appareils qui assurent ces vols possèdent une capacité de 101 à 220 sièges.
 
@@ -77,27 +242,6 @@ transport . avion . court courrier . empreinte par km . entre 1000 et 2000 km:
   description: |
     Facteur d'émission issu de la Base Empreinte (Avion passagers/101-220 sièges, 1000-2000 kms, 2023/AVEC trainées).
   unité: kgCO2e/km
-
-transport . avion . court courrier . heures de vol:
-  applicable si: usager
-  question: Sur une année, combien d'heures voyagez-vous sur des vols de moins de 2h (court-courrier) ?
-  description: |
-    Comptez les heures que vous avez passées dans un avion pour des vols de moins de 2h (pour une distance inférieure à 1000km environ).
-
-    Si vous avez fait Nice-Tokyo *via Paris*, le Nice-Paris est à inclure ici (et le Paris-Tokyo dans les vols longs-courriers).
-
-    💡 Ne comptez que les km de déplacement personnel.
-  suggestions:
-    Aucun: 0
-    Paris ⇄ Lyon: 2
-    Paris ⇄ Toulouse: 2.6
-    Paris ⇄ Nice: 2.8
-    Paris ⇄ Ajaccio: 3.2
-  unité: h
-  par défaut: durée moyenne passager
-  plancher: 0
-  plafond: 200
-  note: La caractérisation "court courrier" par le temps de trajet est donnée par la règle `court courrier . durée max`.
 
 transport . avion . court courrier . durée moyenne:
   titre: Durée moyenne passée par un Français dans les vols court-courriers
@@ -147,8 +291,8 @@ transport . avion . court courrier . passager km total:
     D'après les ["Chiffres clés du transport 2025" (données de 2023)](https://www.statistiques.developpement-durable.gouv.fr/edition-numerique/chiffres-cles-transports/fr/15-transport-collectif-urbain-de-voyageurs), le trafic métropolitain représente 7,2% du trafic total en passagers-km.
 
 transport . avion . moyen et long courrier:
-  formule: heures de vol * vitesse moyenne * empreinte par km
-  description: |
+  titre: Vols moyen ou long courrier (trajet > 2h)
+  note: |
     Les vols moyen-courriers sont définis ici comme des vols de plus de 2h (de 1000 à plus de 5000km).
     On considère que les appareils qui assurent ces vols possèdent une capacité de plus de 220 sièges.
 
@@ -178,28 +322,6 @@ transport . avion . moyen et long courrier . empreinte par km . plus de 5000 km:
   description: |
     Facteur d'émission issu de la Base Empreinte (Avion passagers/>220 sièges, >5000 kms, 2023/AVEC trainées).
   unité: kgCO2e/km
-
-transport . avion . moyen et long courrier . heures de vol:
-  applicable si: usager
-  question: Sur une année, combien d'heures voyagez-vous sur des vols entre 2 et 6h (moyen-courrier) ?
-  description: |
-    Comptez les heures que vous avez passées dans un avion pour des trajets entre 2h et 6h.
-
-    Si vous avez fait un trajet de 8h en deux vols de 4h, ils sont bien à comptabiliser ici.
-
-    💡 Ne comptez que les km de déplacement personnel.
-  suggestions:
-    Aucun: 0
-    Paris ⇄ Copenhague: 4
-    Paris ⇄ Alger: 5
-    Paris ⇄ Athènes: 6
-    Paris ⇄ Liban: 8
-  unité: h
-  par défaut: durée moyenne passager
-  plancher: 0
-  plafond: 600
-  note: |
-    La caractérisation "moyen et long courrier" par le temps de trajet est donnée par la règle `court courrier . durée max` : tous les vols de plus de 2h sont considérés comme moyen et long courrier.
 
 transport . avion . moyen et long courrier . durée moyenne:
   titre: Durée moyenne passée par un Français dans les vols moyen-courriers
