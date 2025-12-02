@@ -43,17 +43,17 @@ logement . électricité . intensité carbone équivalente:
 logement . électricité . consommation totale:
   formule:
     variations:
-      - si: chauffage . précision consommation = 'conso exactes'
+      - si: chauffage . saisie précision consommation = 'conso exactes'
         alors:
           somme:
             - photovoltaique . autoconsommation
             - réseau . consommation précise
-      - si: chauffage . précision consommation = 'DPE'
+      - si: chauffage . saisie précision consommation = 'DPE'
         alors: consommation via DPE
-      - si: chauffage . précision consommation = 'aide'
+      - si: chauffage . saisie précision consommation = 'aide'
         alors: consommation via ressenti
+      - sinon: consommation par défaut
   unité: kWh
-  par défaut: consommation par défaut
 
 logement . électricité . consommation par défaut:
   titre: Consommation par défaut électricité
@@ -135,7 +135,7 @@ logement . électricité . consommation moyenne climatisation:
   unité: kWh
 
 logement . électricité . consommation via DPE:
-  applicable si: chauffage . précision consommation = 'DPE'
+  applicable si: chauffage . saisie précision consommation = 'DPE'
   par défaut: consommation par défaut
   formule:
     somme:
@@ -155,25 +155,25 @@ logement . électricité . consommation via DPE . climatisation:
   unité: kWh
 
 logement . électricité . consommation via ressenti:
-  applicable si: chauffage . précision consommation = 'aide'
+  applicable si: chauffage . saisie précision consommation = 'aide'
   formule:
     variations:
       - si: chauffage . précision consommation . ressenti = 'passoire thermique'
         alors:
           somme:
-            - consommation moyenne chauffage * chauffage . précision consommation . ressenti . saut D vers G / chauffage . nombre sources chauffage air
-            - consommation moyenne ecs * chauffage . précision consommation . ressenti . saut D vers G / chauffage . nombre sources ecs
+            - consommation moyenne chauffage * chauffage . précision consommation . saut D vers G / chauffage . nombre sources chauffage air
+            - consommation moyenne ecs * chauffage . précision consommation . saut D vers G / chauffage . nombre sources ecs
             - consommation moyenne cuisson / chauffage . nombre sources cuisson
             - consommation moyenne spécifique
-            - consommation moyenne climatisation * chauffage . précision consommation . ressenti . saut D vers G
+            - consommation moyenne climatisation * chauffage . précision consommation . saut D vers G
       - si: chauffage . précision consommation . ressenti = 'confortable'
         alors:
           somme:
-            - consommation moyenne chauffage * chauffage . précision consommation . ressenti . saut D vers A / chauffage . nombre sources chauffage air
-            - consommation moyenne ecs * chauffage . précision consommation . ressenti . saut D vers A / chauffage . nombre sources ecs
+            - consommation moyenne chauffage * chauffage . précision consommation . saut D vers A / chauffage . nombre sources chauffage air
+            - consommation moyenne ecs * chauffage . précision consommation . saut D vers A / chauffage . nombre sources ecs
             - consommation moyenne cuisson / chauffage . nombre sources cuisson
             - consommation moyenne spécifique
-            - consommation moyenne climatisation * chauffage . précision consommation . ressenti . saut D vers A
+            - consommation moyenne climatisation * chauffage . précision consommation . saut D vers A
       - sinon: consommation par défaut
   unité: kWh
 
@@ -194,7 +194,7 @@ logement . électricité . réseau . consommation moyenne réelle:
   unité: kWh
 
 logement . électricité . réseau . consommation précise:
-  applicable si: chauffage . précision consommation = 'conso exactes'
+  applicable si: chauffage . saisie précision consommation = 'conso exactes'
   par défaut: réseau . consommation moyenne réelle
   question: Quelle est la consommation annuelle d'électricité (réseau) de votre foyer ?
   aide: logement . électricité . réseau . consommation estimée via le coût . saisie
