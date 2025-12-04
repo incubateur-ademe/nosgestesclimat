@@ -85,7 +85,6 @@ logement . construction . rafraichissement . amortissement:
   formule: 10
 
 logement . construction . rénovation:
-  applicable si: logement . âge équivalent > seuil
   formule:
     variations:
       - si: logement . propriétaire = 'propriétaire'
@@ -102,7 +101,10 @@ logement . construction . rénovation . amortissement:
   formule: 50
 
 logement . construction . travaux de rénovation:
-  applicable si: logement . propriétaire = 'propriétaire'
+  applicable si:
+    toutes ces conditions:
+      - logement . propriétaire = 'propriétaire'
+      - logement . âge équivalent > rénovation . seuil
   question: Des travaux de rénovation ont-ils été réalisés dans votre logement (hors rafraîchissement) sur les 25 dernières années ?
   mosaique:
     type: selection
