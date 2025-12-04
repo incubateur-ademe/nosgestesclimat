@@ -63,6 +63,25 @@ transport . avion . usager . occasionnellement:
 transport . avion . usager . jamais:
   titre: Jamais
 
+transport . avion . notif heures de vols:
+  type: notification
+  formule:
+    une de ces conditions:
+      - toutes ces conditions:
+          - transport . avion . vols annuels . heures court courrier . saisie <= 4
+          - transport . avion . vols annuels . heures moyen et long courrier . saisie != 0
+      - toutes ces conditions:
+          - transport . avion . vols annuels . heures court courrier . saisie != 0
+          - transport . avion . vols annuels . heures moyen et long courrier . saisie <= 10
+      - toutes ces conditions:
+          - transport . avion . vols amortis . heures court courrier . saisie <= 4
+          - transport . avion . vols amortis . heures moyen et long courrier . saisie != 0
+      - toutes ces conditions:
+          - transport . avion . vols amortis . heures moyen et long courrier . saisie <= 10
+          - transport . avion . vols amortis . heures court courrier . saisie != 0
+  description: |
+    Veillez à bien saisir le total des heures de vol (A/R) et non le nombre de trajets.
+
 transport . avion . vols annuels:
   titre: Empreinte vols annuels
   applicable si:
@@ -87,7 +106,7 @@ transport . avion . vols annuels:
   question: |
     Renseignez vos heures de vols (A/R) pour cette année:
   description: |
-    Renseignez le total des heures de vols. Pour un aller-retour, il faut donc compter les heures aller **et** retour.
+    Renseignez le total des heures de vols (et non le nombre de trajets). Pour un aller-retour, il faut donc compter les heures aller **et** retour.
   unité: kgCO2e
   somme:
     - heures court courrier * court courrier . empreinte par km * court courrier . vitesse moyenne
@@ -154,7 +173,7 @@ transport . avion . vols amortis:
   question: |
     Renseignez vos heures de vols (A/R) pour les 3 dernières années:
   description: |
-    Renseignez le total des heures de vols. Pour un aller-retour, il faut donc compter les heures aller **et** retour.
+    Renseignez le total des heures de vols (et non le nombre de trajets). Pour un aller-retour, il faut donc compter les heures aller **et** retour.
   unité: kgCO2e
   somme:
     - heures court courrier * court courrier . empreinte par km * court courrier . vitesse moyenne
