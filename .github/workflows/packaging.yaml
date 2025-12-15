@@ -10,6 +10,8 @@ on:
 jobs:
   check_if_version_upgraded:
     name: Check if version upgrade
+    permissions:
+      contents: read
     # When someone forks the repo and opens a PR we want to enables the tests to be run (the previous jobs)
     # but obviously only us should be allowed to release.
     # In the following check we make sure that we own the branch this CI workflow is running on before continuing.
@@ -57,6 +59,9 @@ jobs:
   publish_on_npm:
     name: Publish on NPM
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required for OIDC
+      contents: read
     needs:
       - create_github_release
       - check_if_version_upgraded
@@ -70,15 +75,13 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - uses: bahmutov/npm-install@v1
       - run: yarn package
+      - name: Update npm
+        run: npm install -g npm@latest
       - name: Publishing on NPM
         run: |
           if [ "$(npm show . version)" = "$VERSION" ]; then
             echo "This version is already published"
             exit 0
-          fi
-          if [ "$NODE_AUTH_TOKEN" = "" ]; then
-            echo "Can't publish on NPM, You must first create a secret called NPM_TOKEN that contains your NPM auth token. https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets"
-            false
           fi
           EXTRA_ARGS=""
           if [ "$IS_PRE_RELEASE" = "true" ]; then
@@ -86,6 +89,5 @@ jobs:
           fi
           npm publish $EXTRA_ARGS
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
           VERSION: ${{ needs.check_if_version_upgraded.outputs.to_version }}
           IS_PRE_RELEASE: ${{ needs.check_if_version_upgraded.outputs.is_pre_release }}
