@@ -40,6 +40,7 @@ const rulesToKeep = [
   'logement . chauffage . réseau de chaleur . consommation estimée via le coût',
   'logement . électricité . réseau . consommation estimée via le coût',
   'logement . électricité . photovoltaique . production estimée via la puissance installée',
+  'logement . chauffage . précision consommation',
   'ui . pédagogie . empreinte faible',
   'divers . textile . empreinte précise',
   'divers . textile . choix précis',
