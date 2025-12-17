@@ -1,7 +1,7 @@
 /*
 Aggregates the model to an unique JSON file for each targeted language.
 
-Command: yarn compile:rules -- [options]
+Command: pnpm compile:rules -- [options]
 */
 
 import fs from 'fs'

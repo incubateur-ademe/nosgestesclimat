@@ -2,7 +2,7 @@
 	Calls the DeepL API to translate the rule questions, titles, notes,
 	summaries and suggestions.
 
-	Command: yarn translate -- [options]
+	Command: pnpm translate -- [options]
 */
 
 import { resolve } from 'path'
@@ -174,7 +174,9 @@ const translateTo = async (
       try {
         const translatedValue = onlyNeedToUpdateLocks
           ? undefined
-          : 'description' === attr || 'note' === attr || 'avertissement' === attr
+          : 'description' === attr ||
+              'note' === attr ||
+              'avertissement' === attr
             ? await translateMarkdown(refVal)
             : await translate(refVal)
 

@@ -1,7 +1,7 @@
 /*
 	Checks all rules have been translated.
 
-	Command: yarn check:rules -- [options]
+	Command: pnpm check:rules -- [options]
 */
 import c from 'ansi-colors'
 import { resolve } from 'path'
