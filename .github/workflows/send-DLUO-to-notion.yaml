@@ -13,15 +13,18 @@ jobs:
       generate-dluo-table-result: ${{ steps.generate-dluo-table.outputs.result }}
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
-          cache: 'yarn'
-      - run: yarn install --immutable
+          node-version-file: './package.json'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
       - run: git log | head && git status
       - id: compilation
         name: Compile FR
-        run: yarn compile:fr
+        run: pnpm compile:fr
       - id: generate-dluo-table
         name: Generate DLUO table
         run: |
