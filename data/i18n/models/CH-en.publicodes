@@ -83,62 +83,36 @@ transport . avion . usager:
     So, whether you fly every year or not, answer "yes" and you'll then have the option of entering your flight times over the last 3 years.
 
     > If you flew from Zurich to New York in 2023 (approximately 19h return), your associated emissions (almost 2 tonnes) will be spread over the last 3 years.
+transport . avion . vols annuels:
+  mosaique:
+    type: nombre
+    options:
+      - heures court courrier . saisie
+      - heures moyen et long courrier . saisie
+    suggestions:
+transport . avion . vols amortis:
+  mosaique:
+    type: nombre
+    options:
+      - heures court courrier . saisie
+      - heures moyen et long courrier . saisie
+    suggestions:
 transport . avion . court courrier . durée moyenne:
   titre: Average time spent by a Swiss on short-haul flights
-transport . avion . court courrier . passager km moyen:
-  titre: Average distance travelled by a Swiss on short-haul flights
-  formule: 0.024 * 9000
-  description: |
-    <a href="https://www.bfs.admin.ch/bfs/fr/home/actualites/quoi-de-neuf.assetdetail.1840421.html">The Swiss Federal Statistical Office</a> reports that the Swiss travel 9,000km a year by air.
-    No distinction is made between types of journey (short, medium or long haul). We propose here to apply the ratios of the French model to obtain the average distance travelled
-    by the Swiss for each type of journey, i.e. :
-      - Short-haul: 2.4
-      - Medium-haul: 7.4
-      - Long-haul: 90.2%
-transport . avion . moyen courrier . durée moyenne:
-  titre: Average time spent by Swiss passengers on medium-haul flights
-transport . avion . moyen courrier . passager km moyen:
-  titre: Average distance travelled by a Swiss on medium-haul flights
-  formule: 0.074 * 9000
-  description: |
-    <a href="https://www.bfs.admin.ch/bfs/fr/home/actualites/quoi-de-neuf.assetdetail.1840421.html">The Swiss Federal Statistical Office</a> reports that the Swiss travel 9,000km a year by air.
-    No distinction is made between types of journey (short, medium or long haul). We propose here to apply the ratios of the French model to obtain the average distance travelled
-    by the Swiss for each type of journey, i.e. :
-      - Short-haul: 2.4
-      - Medium-haul: 7.4
-      - Long-haul: 90.2%
-transport . avion . long courrier . durée moyenne:
-  titre: Average time spent on long-haul flights by Swiss citizens
-transport . avion . long courrier . passager km moyen:
-  titre: Average distance travelled by a Swiss on long-haul flights
-  formule: 0.902 * 9000
-  description: |
-    <a href="https://www.bfs.admin.ch/bfs/fr/home/actualites/quoi-de-neuf.assetdetail.1840421.html">The Swiss Federal Statistical Office</a> reports that the Swiss travel 9,000km a year by air.
-    No distinction is made between types of journey (short, medium or long haul). We propose here to apply the ratios of the French model to obtain the average distance travelled
-    by the Swiss for each type of journey, i.e. :
-      - Short-haul: 2.4
-      - Medium-haul: 7.4
-      - Long-haul: 90.2%
-transport . avion . court courrier . heures de vol:
-  suggestions:
-    🚫✈️: 0
-    Geneva ⇄ Zurich: 1.5
-    Geneva ⇄ Paris: 2.5
-    Geneva ⇄ Brussels: 2.5
-    Geneva ⇄ Barcelona: 3
-transport . avion . moyen courrier . heures de vol:
-  suggestions:
-    🚫✈️: 0
-    Geneva ⇄ Madrid: 4
-    Geneva ⇄ Porto: 4
-    Geneva ⇄ Lisbon: 5
-    Geneva ⇄ Istanbul: 6
-transport . avion . long courrier . heures de vol:
-  suggestions:
-    🚫✈️: 0
-    Geneva ⇄ Dubai: 12.5
-    Geneva ⇄ New York: 17
-    Geneva ⇄ Beijing: 20.25
+  formule: 0.024 * 9000 / vitesse moyenne
+  unité: h
+transport . avion . court courrier . durée moyenne passager:
+  titre: Average time spent by Swiss passengers on short-haul flights
+  formule: 0.024 * 9000 / vitesse moyenne
+  unité: h
+transport . avion . moyen et long courrier . durée moyenne:
+  titre: Average time spent by a Swiss on medium-haul and long-haul flights
+  formule: 0.976 * 9000 / vitesse moyenne
+  unité: h
+transport . avion . moyen et long courrier . durée moyenne passager:
+  titre: Average time spent by Swiss passengers on medium-haul and long-haul flights
+  formule: 0.976 * 9000 / vitesse moyenne
+  unité: h
 transport . train . km:
   suggestions:
     Geneva ⇄ Nyon: 42
@@ -152,11 +126,8 @@ transport . transports commun . métro ou tram . heures par semaine:
 transport . avion . court courrier . empreinte par km:
   formule: 0.305
   description: We use the emission factor from the Mobitool platform - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
-transport . avion . moyen courrier . empreinte par km:
-  formule: 0.257
-  description: We use the emission factor from the Mobitool platform - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
-transport . avion . long courrier . empreinte par km:
-  formule: 0.235
+transport . avion . moyen et long courrier . empreinte par km:
+  formule: (0.257 + 0.235) / 2
   description: We use the emission factor from the Mobitool platform - https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
 transport . train . impact par km:
   formule: 0.002
@@ -573,18 +544,6 @@ transport . avion . prendre moins l'avion:
     > Try to make at least one of the journeys to your destination by train!
 
     Find out which destinations are accessible by train from your home: <a href="https://www.chronotrains.com/fr">Chronotrains</a>; <a href="https://www.sbb.ch/fr/">SBB (sbb.ch)</a>; <a href="https://www.sbb.ch/fr/loisirs-et-vacances/trains-excursions/interrail.html">Interrail</a>. A <a href="https://www.geneve.ch/document/carte-voyages-train-partance-geneve">map of train journeys from Geneva</a> is also available.
-  aller plus loin: |
-    ## Forçage radiatif total
-
-    L'avion a un impact important sur le climat à la fois à cause de ses émissions de CO₂ et d'autres effets (dit forçage radiatif additionnel).
-
-    Du fait que les avions volent en haute altitude, la combustion du kérosène crée des traînées et perturbe les cycles d'autres gaz à effet de serre que le CO₂ (vapeur d'eau, eau condensée sous diverses formes, NOx et méthane qui, ensemble, produisent de l'ozone, etc.).
-
-    ## Avion vs voiture
-
-    Ramené au passager, l'impact carbone d'un trajet en avion est dans certains cas du même ordre que celui d'un trajet en voiture. Toutefois, l'empreinte de la voiture elle-même est élevée. Comparer l'avion à la voiture ne rend pas ce premier vertueux.
-
-    Deuxièmement, un trajet en avion est en général bien plus long. Quand il s'agit de choisir la destination des vacances par exemple, un trajet en voiture a donc toutes les chances d'être beaucoup moins polluant. Cela dit, notons aussi que nos kilométrages en voiture sont tels que le match est relancé quand on regarde l'empreinte à l'année.
 transport . voiture . éco-conduite:
   description: |
     Eco-driving is a simple and effective action that everyone can take.  It involves a series of recommendations to adopt, such as checking tyre pressure or optimising gear ratios.
