@@ -61,12 +61,12 @@ importer!:
     nom: '@incubateur-ademe/nosgestesclimat'
   dans: ngc
   les règles:
-    - alimentation . plats . végétalien . empreinte carbone
-    - alimentation . plats . végétarien . empreinte carbone
-    - alimentation . plats . viande blanche . empreinte carbone
-    - alimentation . plats . viande rouge . empreinte carbone
-    - alimentation . plats . poisson gras . empreinte carbone
-    - alimentation . plats . poisson blanc . empreinte carbone
+    - alimentation . repas . végétalien . empreinte carbone
+    - alimentation . repas . végétarien . empreinte carbone
+    - alimentation . repas . viande blanche . empreinte carbone
+    - alimentation . repas . viande rouge . empreinte carbone
+    - alimentation . repas . poisson gras . empreinte carbone
+    - alimentation . repas . poisson blanc . empreinte carbone
 ```
 
 ## Écriture des modèles du simulateur en bref
