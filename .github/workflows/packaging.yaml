@@ -66,20 +66,20 @@ jobs:
       - create_github_release
       - check_if_version_upgraded
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
         with:
           ref: ${{ github.ref }}
-      - uses: actions/setup-node@v3
+      - name: Install pnpm
+        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061
+      - name: Use Node.js
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f
         with:
-          node-version: 22
-          registry-url: https://registry.npmjs.org/
-      - uses: bahmutov/npm-install@v1
-      - run: yarn package
-      - name: Update npm
-        run: npm install -g npm@latest
+          node-version-file: './package.json'
+          cache: 'pnpm'
+      - run: pnpm package
       - name: Publishing on NPM
         run: |
-          if [ "$(npm show . version)" = "$VERSION" ]; then
+          if [ "$(pnpm show . version)" = "$VERSION" ]; then
             echo "This version is already published"
             exit 0
           fi
@@ -87,7 +87,7 @@ jobs:
           if [ "$IS_PRE_RELEASE" = "true" ]; then
               EXTRA_ARGS="--tag next"
           fi
-          npm publish $EXTRA_ARGS
+          pnpm publish $EXTRA_ARGS
         env:
           VERSION: ${{ needs.check_if_version_upgraded.outputs.to_version }}
           IS_PRE_RELEASE: ${{ needs.check_if_version_upgraded.outputs.is_pre_release }}

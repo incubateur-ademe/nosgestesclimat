@@ -26,7 +26,7 @@ ligne](https://nosgestesclimat.fr/documentation) ou bien utiliser le paquet npm
 `@incubateur-ademe/nosgestesclimat` :
 
 ```sh
-yarn add @incubateur-ademe/nosgestesclimat
+pnpm add @incubateur-ademe/nosgestesclimat
 ```
 
 Chaque modèle régional peut être importé séparément en anglais ou en français en suivant la structure suivante :
@@ -107,13 +107,13 @@ résultats avec les versions en production.
 
 ```bash
 # installe les dépendances
-yarn && cd quick-doc && yarn
+pnpm && cd quick-doc && pnpm i
 
 # lance le serveur de développement en charge de compiler les modèles et les personas
-yarn dev
+pnpm dev
 
 # lance le client de la documentation
-yarn doc
+pnpm doc
 ```
 
 ### CI
@@ -123,8 +123,8 @@ développement.
 
 Pour chaque _pull request_, les actions suivantes sont exécutées :
 
-- `upload-compilation-result.yaml` : compile les modèles et les personas (`yarn compile`) et exécute
-  les tests (`yarn test:personas` et `yarn test:optim`)
+- `upload-compilation-result.yaml` : compile les modèles et les personas (`pnpm compile`) et exécute
+  les tests (`pnpm test:personas` et `pnpm test:optim`)
 - `pr-updater.yaml` : utilise l'artifact généré par
   `upload-compilation-result.yaml` pour mettre à jour la PR avec les résultats
   de la compilation et des tests

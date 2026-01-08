@@ -9,11 +9,11 @@ feedback.
 
 ```bash
 # install dependencies
-yarn && cd quick-doc && yarn
+pnpm && cd quick-doc && pnpm i
 
 # start the development server
-yarn dev
+pnpm dev
 
 # start the client
-yarn doc
+pnpm doc
 ```

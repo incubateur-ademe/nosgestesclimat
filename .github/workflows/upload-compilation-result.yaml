@@ -1,4 +1,4 @@
-# Generates an artifact containing the result of the `yarn compile` command.
+# Generates an artifact containing the result of the `pnpm compile` command.
 
 name: Generate compilation result
 
@@ -20,16 +20,19 @@ jobs:
       test-personas-latest-result: ${{ steps.test-personas-latest.outputs.result }}
       test-url: ${{ steps.set-test-url.outputs.fr }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+      - name: Install pnpm
+        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061
+      - name: Use Node.js
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f
         with:
-          node-version: 22
-          cache: 'yarn'
-      - run: yarn install --immutable
+          node-version-file: './package.json'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
       - run: git log | head && git status
       - id: compilation
         name: Compile and prepare pre-release
-        run: yarn compile
+        run: pnpm compile
       - name: Upload compiled artifact
         uses: actions/upload-artifact@v4
         with:
@@ -43,7 +46,7 @@ jobs:
       - id: check-translation
         name: Checks the rules translation
         run: |
-          yarn check:rules --markdown > check-rules.res
+          pnpm check:rules --markdown > check-rules.res
           body="$(cat check-rules.res | tail --lines=+3 | head --lines=-1)"
           body="${body//'%'/'%25'}"
           body="${body//$'\n'/'%0A'}"
@@ -52,7 +55,7 @@ jobs:
       - id: check-personas
         name: Checks the personas translation
         run: |
-          yarn check:personas --markdown > check-personas.res
+          pnpm check:personas --markdown > check-personas.res
           body="$(cat check-personas.res | tail --lines=+3 | head --lines=-1)"
           body="${body//'%'/'%25'}"
           body="${body//$'\n'/'%0A'}"
@@ -60,14 +63,14 @@ jobs:
           echo "::set-output name=result::${body}"
       - id: test-optim
         name: Test the optimized rules against base rules
-        run: yarn test:optim
+        run: pnpm test:optim
       - id: test-translation
         name: Test the translated rules against production
-        run: yarn test:translation
+        run: pnpm test:translation
       - id: test-personas-latest
         name: Test the personas bilans against production
         run: |
-          yarn test:personas --markdown -v latest > test-personas-latest.res
+          pnpm test:personas --markdown -v latest > test-personas-latest.res
           body="$(cat test-personas-latest.res | tail --lines=+3 | head --lines=-1)"
           body="${body//'%'/'%25'}"
           body="${body//$'\n'/'%0A'}"
@@ -76,7 +79,7 @@ jobs:
       - id: test-personas-nightly
         name: Test the personas bilans against develop
         run: |
-          yarn test:personas --markdown -v nightly > test-personas-nightly.res
+          pnpm test:personas --markdown -v nightly > test-personas-nightly.res
           body="$(cat test-personas-nightly.res | tail --lines=+3 | head --lines=-1)"
           body="${body//'%'/'%25'}"
           body="${body//$'\n'/'%0A'}"
@@ -85,7 +88,7 @@ jobs:
       - id: test-personas-nightly-eau
         name: Test the personas bilans against develop for water metric
         run: |
-          yarn test:personas --markdown -v nightly -i 'eau' > test-personas-nightly-eau.res
+          pnpm test:personas --markdown -v nightly -i 'eau' > test-personas-nightly-eau.res
           body="$(cat test-personas-nightly-eau.res | tail --lines=+3 | head --lines=-1)"
           body="${body//'%'/'%25'}"
           body="${body//$'\n'/'%0A'}"
@@ -162,7 +165,7 @@ jobs:
           </details>
           " >> result.md
       - name: Updating the PR
-        uses: actions/github-script@v6
+        uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -184,7 +187,7 @@ jobs:
 
             core.info('Found the corresponding PR: #' + triggered_pr.number);
 
-            const marker = 'yarn-compile-result';
+            const marker = 'pnpm-compile-result';
 
             if (!fs.existsSync('result.md')) {
               return core.info("Cannot find 'result.md', skipping")
@@ -225,14 +228,17 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
 
-      - uses: actions/setup-node@v3
+      - name: Install pnpm
+        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061
+      - name: Use Node.js
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f
         with:
-          node-version: 22
-          cache: 'yarn'
+          node-version-file: './package.json'
+          cache: 'pnpm'
 
-      - run: yarn install --immutable
+      - run: pnpm install --frozen-lockfile
 
       - name: Download compiled artifact
         uses: actions/download-artifact@v4
@@ -244,4 +250,4 @@ jobs:
         run: node prepack.mjs
 
       - name: Continuously Release
-        run: npx pkg-pr-new publish --packageManager=yarn
+        run: pnpx pkg-pr-new publish --packageManager=pnpm

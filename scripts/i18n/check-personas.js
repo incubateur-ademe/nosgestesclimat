@@ -1,7 +1,7 @@
 /*
 	Checks all personas have been translated.
 
-	Command: yarn check:personas -- [options]
+	Command: pnpm check:personas -- [options]
 */
 
 const path = require('path')

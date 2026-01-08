@@ -1,6 +1,6 @@
 {
   "name": "@incubateur-ademe/nosgestesclimat",
-  "version": "4.6.0",
+  "version": "4.7.0",
   "description": "Le modèle de calcul d'empreinte climat individuelle de consommation",
   "main": "index.js",
   "types": "index.d.ts",
@@ -14,10 +14,11 @@
     "types/*.d.ts"
   ],
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "dev": "bun dev-server.ts",
-    "doc": "yarn --cwd quick-doc run dev",
+    "doc": "pnpm --cwd quick-doc run dev",
     "clean": "rimraf public/*.json && rimraf types/ && rimraf nosgestesclimat.model.json && rimraf index.js",
-    "package": "yarn clean && yarn compile && node prepack.mjs",
+    "package": "pnpm clean && pnpm compile && node prepack.mjs",
     "compile:md": "node scripts/rulesToJSON.mjs --markdown && node scripts/initialExtendedSituationToJSON.mjs && node scripts/personasToJSON.mjs --markdown && node scripts/migrationToJSON.mjs --markdown",
     "compile": "node scripts/rulesToJSON.mjs && node scripts/initialExtendedSituationToJSON.mjs && node scripts/personasToJSON.mjs && node scripts/migrationToJSON.mjs && node scripts/uiToJSON.mjs && node -e \"console.log('➡️ Compilation done \\n')\"",
     "compile:fr": "node scripts/rulesToJSON.mjs -o FR && node scripts/initialExtendedSituationToJSON.mjs && node scripts/personasToJSON.mjs",
@@ -28,7 +29,7 @@
     "test:personas": "node tests/testPersonas.mjs",
     "test:optim": "node tests/testOptim.mjs",
     "test:translation": "node tests/testTranslation.mjs",
-    "test": "yarn test:personas && yarn test:optim && yarn test:translation",
+    "test": "pnpm test:personas && pnpm test:optim && pnpm test:translation",
     "translate": "node scripts/i18n/translate-rules.mjs && node scripts/i18n/translate-personas.js",
     "check:personas": "node scripts/i18n/check-personas.js ",
     "translate:personas": "node scripts/i18n/translate-personas.js",
@@ -36,7 +37,7 @@
     "translate:rules": "node scripts/i18n/translate-rules.mjs",
     "generate:servicesRules": "node scripts/services-societaux/analyze_naf_ca.js && node scripts/services-societaux/desagregate_naf_SDES.js && node scripts/services-societaux/generate_rules.js",
     "translate:model": "node scripts/i18n/translateRegionModel.js",
-    "convert:2T": "yarn compile:fr && node scripts/convertSituation/convertPersonasTo2Tonnes.mjs",
+    "convert:2T": "pnpm compile:fr && node scripts/convertSituation/convertPersonasTo2Tonnes.mjs",
     "format": "prettier . --write",
     "bench": "node --experimental-strip-types ./bench/index.ts",
     "check:dluo": "node scripts/DLUO/check_DLUO.mjs"
@@ -59,7 +60,7 @@
   "homepage": "https://github.com/incubateur-ademe/nosgestesclimat#readme",
   "devDependencies": {
     "@incubateur-ademe/nosgestesclimat-scripts": "^0.7.0",
-    "@incubateur-ademe/publicodes-acv-numerique": "^2.0.0",
+    "@incubateur-ademe/publicodes-acv-numerique": "2.0.0",
     "@incubateur-ademe/publicodes-commun": "2.0.1",
     "@publicodes/tools": "^1.8.0",
     "@types/bun": "^1.0.7",
@@ -103,5 +104,5 @@
   "peerDependencies": {
     "publicodes": "^1.8.5"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "packageManager": "pnpm@10.11.0"
 }
