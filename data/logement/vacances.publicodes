@@ -16,7 +16,7 @@ logement . vacances:
       - échange . présent
       - résidence secondaire . présent
       - croisière . présent
-      - aucun . présent
+    aucun: not concerned
   description: |
     Renseignez ici les différents types de logement que vous occupez pour vos voyages (à motif **personnel**).
 
@@ -49,30 +49,16 @@ logement . vacances:
 
 logement . vacances . empreinte totale:
   formule:
-    variations:
-      - si:
-          toutes ces conditions:
-            - est défini: aucun . présent
-            - aucun . présent
-        alors: 0
-      - sinon:
-          somme:
-            - empreinte hotel
-            - empreinte camping
-            - empreinte auberge de jeunesse * logement . habitants
-            - empreinte locations
-            - empreinte échange
-            - empreinte famille ou amis
-            - empreinte résidence secondaire
-            - empreinte croisière * logement . habitants
+    somme:
+      - empreinte hotel
+      - empreinte camping
+      - empreinte auberge de jeunesse * logement . habitants
+      - empreinte locations
+      - empreinte échange
+      - empreinte famille ou amis
+      - empreinte résidence secondaire
+      - empreinte croisière * logement . habitants
   unité: kgCO2e
-
-logement . vacances . aucun:
-  titre: Je ne suis pas concerné·e
-  icônes: ❌
-
-logement . vacances . aucun . présent:
-  question: Partez-vous en week-end ou en vacances hors de votre logement principal ?
 
 logement . vacances . nombre de nuits hors logement:
   formule: 26.5
@@ -449,7 +435,7 @@ logement . vacances . famille ou amis . présent:
 
 logement . vacances . famille ou amis . notif:
   type: notification
-  formule: famille ou amis . présent
+  formule: famille ou amis . présent = oui
   description: |
     Vous avez renseigné "Famille ou amis" : l'empreinte associée à ces nuits sera nulle, c'est compté dans l'empreinte des accueillants !
 
