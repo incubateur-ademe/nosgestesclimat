@@ -16,7 +16,7 @@ logement . chauffage:
       - chauffe eau solaire . présent
       - logement . climatisation . présent
       - logement . électricité . photovoltaique . présent
-      - aucun . présent
+    option aucun: aucun
   icônes: 🌡️
   question: Qu'utilisez vous pour la cuisson, l'eau chaude et chauffer ou climatiser votre logement ?
   description: |
@@ -29,22 +29,15 @@ logement . chauffage:
 
 logement . chauffage . empreinte totale:
   formule:
-    variations:
-      - si:
-          toutes ces conditions:
-            - est défini: aucun . présent
-            - aucun . présent
-        alors: 0
-      - sinon:
-          somme:
-            - gaz . empreinte
-            - bouteille gaz . empreinte
-            - citerne propane . empreinte
-            - fioul . empreinte
-            - bois . empreinte
-            - réseau de chaleur . empreinte
-            # chauffage électrique, PAC, climatisation, PV déjà compté dans la conso électrique
-            # chauffe eau solaire réduit la conso moyenne du gaz, élec, fioul, bois
+    somme:
+      - gaz . empreinte
+      - bouteille gaz . empreinte
+      - citerne propane . empreinte
+      - fioul . empreinte
+      - bois . empreinte
+      - réseau de chaleur . empreinte
+      # chauffage électrique, PAC, climatisation, PV déjà compté dans la conso électrique
+      # chauffe eau solaire réduit la conso moyenne du gaz, élec, fioul, bois
   unité: kgCO2e
 
 logement . chauffage . empreinte par défaut:
@@ -68,7 +61,6 @@ logement . chauffage . choix utilisateur:
       - est défini: fioul . présent
       - est défini: bois . présent
       - est défini: chauffe eau solaire . présent
-      - est défini: aucun . présent
 
 logement . chauffage . nombre sources chauffage air:
   par défaut: 1
@@ -104,13 +96,6 @@ logement . chauffage . nombre sources cuisson:
       - gaz . présent
       - citerne propane . présent
       - bouteille gaz . présent
-
-logement . chauffage . aucun:
-  titre: Aucun
-  icônes: ❌
-
-logement . chauffage . aucun . présent:
-  question: Votre logement ne dispose d'aucune source d'énergie pour le chauffage, l'eau chaude ou la cuisson ?
 
 logement . chauffage . saisie précision consommation:
   question: Connaissez-vous précisément vos consommations ou factures d'énergie ?
@@ -383,7 +368,7 @@ logement . chauffage . gaz . biogaz:
     Attention, il existe des offres à 10%, 20% de biométhane seulement. Si c'est le cas de votre contrat, répondez "non".
 
 logement . chauffage . gaz . avertissement biogaz:
-  formule: biogaz
+  formule: biogaz = oui
   type: notification
   description: |
     Vous constaterez que le choix du biogaz réduit énormément l'empreinte climat du gaz que vous consommez. Néanmoins, la production annuelle n'est pas suffisante pour passer à l'échelle. La réduction de gaz reste aujourd'hui essentielle pour limiter son empreinte sur le climat.
