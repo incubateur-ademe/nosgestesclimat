@@ -38,6 +38,7 @@ export type MosaiqueNode = {
   type: 'selection' | 'nombre'
   options: DottedName[]
   suggestions?: Suggestions
+  'option aucun'?: 'aucun' | 'non concerné'
 }
 
 export type MosaicInfos = {
