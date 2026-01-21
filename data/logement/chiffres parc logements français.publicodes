@@ -8,9 +8,45 @@ importer!:
     - CEREN . surface moyenne
     - CEREN . surface moyenne maison
     - CEREN . surface moyenne appartement
+    - CEREN . chauffage . consommation électricité par m2
+    - CEREN . chauffage . consommation électricité hors PAC par m2
+    - CEREN . chauffage . consommation électricité PAC par m2
+    - CEREN . chauffage . consommation gaz par m2
+    - CEREN . chauffage . consommation fioul par m2
+    - CEREN . chauffage . consommation bois par m2
+    - CEREN . chauffage . consommation réseau de chaleur par m2
+    - CEREN . chauffage . consommation GPL par m2
+    - CEREN . chauffage . consommation électricité chauffage air hors PAC par m2
+    - CEREN . chauffage . consommation électricité chauffage air PAC par m2
     - CEREN . consommation électricité autre par m2
     - CEREN . consommation électricité spécifique par m2
     - CEREN . consommation électricité climatisation par m2
+    - CEREN . surface . part électricité
+    - CEREN . surface . part hors PAC électricité:
+    - CEREN . surface . part PAC électricité
+    - CEREN . surface . part gaz
+    - CEREN . surface . part fioul
+    - CEREN . surface . part bois
+    - CEREN . surface . part réseau de chaleur
+    - CEREN . surface . part GPL
+    - CEREN . chauffage . part chauffage air électricité
+    - CEREN . chauffage . part chauffage air gaz
+    - CEREN . chauffage . part chauffage air fioul
+    - CEREN . chauffage . part chauffage air bois
+    - CEREN . chauffage . part chauffage air réseau de chaleur
+    - CEREN . chauffage . part chauffage air GPL
+    - CEREN . chauffage . part ecs électricité
+    - CEREN . chauffage . part ecs gaz
+    - CEREN . chauffage . part ecs fioul
+    - CEREN . chauffage . part ecs bois
+    - CEREN . chauffage . part ecs réseau de chaleur
+    - CEREN . chauffage . part cuisson gaz
+    - CEREN . chauffage . part ecs GPL
+    - CEREN . chauffage . part cuisson électricité
+    - CEREN . part climatisation électricité
+    - CEREN . chauffage . consommation moyenne gaz cuisson
+    - CEREN . saisie surface:
+        valeur: logement . surface
 
 parc français:
   DLUO: 01/09/2026
@@ -27,68 +63,6 @@ parc français . surface moyenne appartement:
   titre: Surface moyenne par appartement
   formule: CEREN . surface moyenne appartement
 
-parc français . surface:
-  titre: Surface totale par somme des énergies
-  formule:
-    somme:
-      - électricité
-      - gaz
-      - fioul
-      - bois
-      - réseau de chaleur
-      - GPL
-  note: on considère ici toutes les sources d'énergie servant à chauffer le parc français.
-
-parc français . surface . électricité:
-  formule: électricité hors PAC + électricité PAC
-  unité: m2
-
-parc français . surface . électricité hors PAC:
-  formule: 705753117
-  unité: m2
-
-parc français . surface . électricité PAC:
-  formule: 342034860
-  unité: m2
-
-parc français . surface . gaz:
-  formule: 954498123
-  unité: m2
-
-parc français . surface . fioul:
-  formule: 250118076
-  unité: m2
-
-parc français . surface . bois:
-  formule: 365026770
-  unité: m2
-
-parc français . surface . réseau de chaleur:
-  formule: 107964972
-  unité: m2
-
-parc français . surface . GPL:
-  formule: 46304442
-  unité: m2
-
-parc français . surface . part électricité:
-  formule: électricité / surface
-
-parc français . surface . part gaz:
-  formule: gaz / surface
-
-parc français . surface . part fioul:
-  formule: fioul / surface
-
-parc français . surface . part bois:
-  formule: bois / surface
-
-parc français . surface . part réseau de chaleur:
-  formule: réseau de chaleur / surface
-
-parc français . surface . part GPL:
-  formule: GPL / surface
-
 parc français . chauffage:
   note: |
     La consommation pour l'eau chaude sanitaire (ECS) et pour la cuisson sont également intégrées dans les consommations sous l'intitulé "chauffage".
@@ -100,177 +74,57 @@ parc français . chauffage . empreinte moyenne par m2 hors électricité:
   note: L'électricité est traitée séparément.
   formule:
     somme:
-      - surface . part gaz * empreinte gaz par m2
-      - surface . part fioul * empreinte fioul par m2
-      - surface . part bois * empreinte buches par m2 / 2
-      - surface . part bois * empreinte granulés par m2 / 2
-      - surface . part réseau de chaleur * empreinte réseau de chaleur par m2
-      - surface . part GPL * empreinte GPL par m2
+      - CEREN . surface . part gaz * empreinte gaz par m2
+      - CEREN . surface . part fioul * empreinte fioul par m2
+      - CEREN . surface . part bois * empreinte buches par m2 / 2
+      - CEREN . surface . part bois * empreinte granulés par m2 / 2
+      - CEREN . surface . part réseau de chaleur * empreinte réseau de chaleur par m2
+      - CEREN . surface . part GPL * empreinte GPL par m2
   unité: kgCO2e/m2
 
 parc français . chauffage . empreinte électricité moyenne par m2:
-  formule: surface . part électricité * empreinte électricité par m2
+  formule: CEREN . surface . part électricité * empreinte électricité par m2
 
-parc français . chauffage . consommation électricité:
-  formule: chauffage + ecs + cuisson
-  note: électricité et pompe à chaleur
-  unité: kWh
+parc français . chauffage . empreinte moyenne chauffage air par m2:
+  formule:
+    somme:
+      - CEREN . surface . part électricité * empreinte électricité chauffage air par m2
+      - CEREN . surface . part gaz * empreinte gaz chauffage air par m2
+      - CEREN . surface . part fioul * empreinte fioul chauffage air par m2
+      - CEREN . surface . part bois * empreinte buches chauffage air par m2 / 2
+      - CEREN . surface . part bois * empreinte granulés chauffage air par m2 / 2
+      - CEREN . surface . part réseau de chaleur * empreinte réseau de chaleur chauffage air par m2
+      - CEREN . surface . part GPL * empreinte GPL chauffage air par m2
 
-parc français . chauffage . consommation électricité . chauffage:
-  titre: conso électrique liée au chauffage
-  formule: consommation électricité hors PAC . chauffage + consommation électricité PAC . chauffage
-  unité: kWh
+parc français . chauffage . empreinte moyenne ecs par m2:
+  formule:
+    somme:
+      - CEREN . surface . part électricité * empreinte électricité ecs par m2
+      - CEREN . surface . part gaz * empreinte gaz ecs par m2
+      - CEREN . surface . part fioul * empreinte fioul ecs par m2
+      - CEREN . surface . part bois * empreinte buches ecs par m2 / 2
+      - CEREN . surface . part bois * empreinte granulés ecs par m2 / 2
+      - CEREN . surface . part réseau de chaleur * empreinte réseau de chaleur ecs par m2
+      - CEREN . surface . part GPL * empreinte GPL ecs par m2
 
-parc français . chauffage . consommation électricité hors PAC . chauffage:
-  titre: conso électrique hors PAC liée au chauffage
-  formule: 32767771470
-  unité: kWh
-
-parc français . chauffage . consommation électricité PAC . chauffage:
-  titre: conso électrique via PAC liée au chauffage
-  formule: 10764437339
-  unité: kWh
-
-parc français . chauffage . consommation électricité . ecs:
-  titre: conso électrique liée à l'eau chaude sanitaire
-  formule: consommation électricité hors PAC . ecs + consommation électricité PAC . ecs
-  unité: kWh
-
-parc français . chauffage . consommation électricité hors PAC . ecs:
-  titre: conso électrique hors PAC liée à l'eau chaude sanitaire
-  formule: 15371034254
-  unité: kWh
-
-parc français . chauffage . consommation électricité PAC . ecs:
-  titre: conso électrique via PAC liée à l'eau chaude sanitaire
-  formule: 1223271923
-  unité: kWh
-
-parc français . chauffage . consommation électricité . cuisson:
-  titre: conso électrique liée à la cuisson
-  formule: 12675049858
-  unité: kWh
-
-parc français . chauffage . consommation gaz:
-  formule: chauffage + ecs + cuisson
-  unité: kWh
-
-parc français . chauffage . consommation gaz . chauffage:
-  titre: conso gaz liée au chauffage
-  formule: 79188175605
-  unité: kWh
-
-parc français . chauffage . consommation gaz . ecs:
-  titre: conso gaz liée à l'eau chaude sanitaire
-  formule: 12567904383
-  unité: kWh
-
-parc français . chauffage . consommation gaz . cuisson:
-  titre: conso gaz liée à la cuisson
-  formule: 7262314502
-  unité: kWh
-
-parc français . chauffage . consommation moyenne gaz cuisson:
-  note: Variable utilisée pour la valeur par défaut de la consommation de bouteilles de gaz
-  formule: consommation gaz . cuisson / surface . gaz * logement . surface
-  unité: kWh
-
-parc français . chauffage . consommation fioul:
-  formule: chauffage + ecs
-  unité: kWh
-
-parc français . chauffage . consommation fioul . chauffage:
-  titre: conso fioul liée au chauffage
-  formule: 27080257431
-  unité: kWh
-
-parc français . chauffage . consommation fioul . ecs:
-  titre: conso fioul liée à l'eau chaude sanitaire
-  formule: 3479038952
-  unité: kWh
-
-parc français . chauffage . consommation bois:
-  formule: chauffage + ecs
-  unité: kWh
-
-parc français . chauffage . consommation bois . chauffage:
-  titre: conso bois liée au chauffage
-  formule: 67495214834
-  unité: kWh
-
-parc français . chauffage . consommation bois . ecs:
-  titre: conso bois liée à l'eau chaude sanitaire
-  formule: 681666471
-  unité: kWh
-
-parc français . chauffage . consommation réseau de chaleur:
-  formule: chauffage + ecs
-  unité: kWh
-
-parc français . chauffage . consommation réseau de chaleur . chauffage:
-  titre: conso réseau de chaleur liée au chauffage
-  formule: 10583771417
-  unité: kWh
-
-parc français . chauffage . consommation réseau de chaleur . ecs:
-  titre: conso réseau de chaleur liée à l'eau chaude sanitaire
-  formule: 3540333431
-  unité: kWh
-
-parc français . chauffage . consommation GPL:
-  formule: chauffage + ecs + cuisson
-  unité: kWh
-
-parc français . chauffage . consommation GPL . chauffage:
-  titre: conso GPL liée au chauffage
-  formule: 3183923897
-  unité: kWh
-
-parc français . chauffage . consommation GPL . ecs:
-  titre: conso GPL liée à l'eau chaude sanitaire
-  formule: 472256142
-  unité: kWh
-
-parc français . chauffage . consommation GPL . cuisson:
-  titre: conso GPL liée à la cuisson
-  formule: 3329319018
-  unité: kWh
-
-parc français . chauffage . consommation électricité par m2:
-  formule: consommation électricité / surface . électricité
-  note: électricité + pompe à chaleur
-  unité: kWh/m2
-
-parc français . chauffage . consommation gaz par m2:
-  formule: consommation gaz / surface . gaz
-  unité: kWh/m2
-  note: |
-    On retrouve à peu près la valeur donnée dans [cet article](https://selectra.info/energie/guides/conso/consommation-moyenne-gaz/tout-au-gaz) : "On estime en effet qu'il faut en moyenne 100 kWh de gaz pour chauffer 1 mètre carré".
-
-parc français . chauffage . consommation fioul par m2:
-  formule: consommation fioul / surface . fioul
-  unité: kWh/m2
-
-parc français . chauffage . consommation bois par m2:
-  formule: consommation bois / surface . bois
-  unité: kWh/m2
-
-parc français . chauffage . consommation réseau de chaleur par m2:
-  formule: consommation réseau de chaleur / surface . réseau de chaleur
-  unité: kWh/m2
-
-parc français . chauffage . consommation GPL par m2:
-  formule: consommation GPL / surface . GPL
-  unité: kWh/m2
+parc français . chauffage . empreinte moyenne ecs par m2 hors électricité:
+  formule:
+    somme:
+      - CEREN . surface . part gaz * empreinte gaz ecs par m2
+      - CEREN . surface . part fioul * empreinte fioul ecs par m2
+      - CEREN . surface . part bois * empreinte buches ecs par m2 / 2
+      - CEREN . surface . part bois * empreinte granulés ecs par m2 / 2
+      - CEREN . surface . part réseau de chaleur * empreinte réseau de chaleur ecs par m2
+      - CEREN . surface . part GPL * empreinte GPL ecs par m2
 
 parc français . chauffage . empreinte électricité par m2:
-  formule: consommation électricité par m2 * logement . électricité . intensité carbone équivalente
+  formule: CEREN . chauffage . consommation électricité par m2 * logement . électricité . intensité carbone équivalente
 
 parc français . chauffage . empreinte gaz par m2:
-  formule: consommation gaz par m2 * logement . chauffage . gaz . intensité carbone
+  formule: CEREN . chauffage . consommation gaz par m2 * logement . chauffage . gaz . intensité carbone
 
 parc français . chauffage . empreinte fioul par m2:
-  formule: consommation fioul par m2 * intensité carbone fioul
+  formule: CEREN . chauffage . consommation fioul par m2 * intensité carbone fioul
   unité: kgCO2e/m2
 
 parc français . chauffage . empreinte fioul par m2 . intensité carbone fioul:
@@ -282,19 +136,19 @@ parc français . chauffage . empreinte fioul par m2 . intensité carbone fioul:
     Base Empreinte : Fioul domestique (en kWh PCI)
 
 parc français . chauffage . empreinte buches par m2:
-  formule: consommation bois par m2 * logement . chauffage . bois . fe bûches
+  formule: CEREN . chauffage . consommation bois par m2 * logement . chauffage . bois . fe bûches
   unité: kgCO2e/m2
 
 parc français . chauffage . empreinte granulés par m2:
-  formule: consommation bois par m2 * logement . chauffage . bois . fe granulés
+  formule: CEREN . chauffage . consommation bois par m2 * logement . chauffage . bois . fe granulés
   unité: kgCO2e/m2
 
 parc français . chauffage . empreinte réseau de chaleur par m2:
-  formule: consommation réseau de chaleur par m2 * logement . chauffage . réseau de chaleur . intensité carbone
+  formule: CEREN . chauffage . consommation réseau de chaleur par m2 * logement . chauffage . réseau de chaleur . intensité carbone
   unité: kgCO2e/m2
 
 parc français . chauffage . empreinte GPL par m2:
-  formule: consommation GPL par m2 * intensité carbone GPL
+  formule: CEREN . chauffage . consommation GPL par m2 * intensité carbone GPL
   unité: kgCO2e/m2
 
 parc français . chauffage . empreinte GPL par m2 . intensité carbone GPL:
@@ -307,222 +161,59 @@ parc français . chauffage . empreinte GPL par m2 . intensité carbone GPL:
 
     Il n'y a pas de GPL domestique dans la Base Empreinte. Une solution pourrait être de pointer directement sur le facteur d'émission gaz naturel ?
 
-parc français . chauffage . consommation électricité moyenne:
-  formule: consommation électricité par m2 * logement . surface
-  note: électricité + pompe à chaleur
-  unité: kWh
-
-parc français . chauffage . consommation gaz moyenne:
-  formule: consommation gaz par m2 * logement . surface
-  unité: kWh
-
-parc français . chauffage . consommation fioul moyenne:
-  formule: consommation fioul par m2 * logement . surface
-  unité: kWh
-
-parc français . chauffage . consommation bois moyenne:
-  formule: consommation bois par m2 * logement . surface
-  unité: kWh
-
-parc français . chauffage . consommation réseau de chaleur moyenne:
-  formule: consommation réseau de chaleur par m2 * logement . surface
-  unité: kWh
-
-parc français . chauffage . consommation GPL moyenne:
-  formule: consommation GPL par m2 * logement . surface
-  unité: kWh
-
-parc français . consommation électricité totale:
-  formule: chauffage . consommation électricité + consommation électricité autre
-
-parc français . consommation électricité autre:
-  formule: spécifique + climatisation
-  unité: kWh
-
-parc français . consommation électricité autre par m2:
-  formule: CEREN . consommation électricité autre par m2
-
-parc français . consommation électricité spécifique par m2:
-  formule: CEREN . consommation électricité spécifique par m2
-
-parc français . consommation électricité climatisation par m2:
-  formule: CEREN . consommation électricité climatisation par m2
-
-parc français . consommation électricité autre . spécifique:
-  titre: conso électrique liée aux usages spécifiques (éclairage, appareils électriques, etc.)
-  formule: 73037440099
-  unité: kWh
-
-parc français . consommation électricité autre . climatisation:
-  titre: conso électrique liée à la climatisation
-  formule: 2141336346
-  unité: kWh
-
-parc français . part climatisation électricité:
-  formule: consommation électricité autre . climatisation / consommation électricité totale
-
 parc français . empreinte électricité autre par m2:
-  formule: consommation électricité autre par m2 * logement . électricité . intensité carbone équivalente
-
-parc français . chauffage . empreinte moyenne chauffage air par m2:
-  formule:
-    somme:
-      - surface . part électricité * empreinte électricité chauffage air par m2
-      - surface . part gaz * empreinte gaz chauffage air par m2
-      - surface . part fioul * empreinte fioul chauffage air par m2
-      - surface . part bois * empreinte buches chauffage air par m2 / 2
-      - surface . part bois * empreinte granulés chauffage air par m2 / 2
-      - surface . part réseau de chaleur * empreinte réseau de chaleur chauffage air par m2
-      - surface . part GPL * empreinte GPL chauffage air par m2
-
-parc français . chauffage . part chauffage air électricité:
-  formule: consommation électricité . chauffage / consommation électricité totale
-
-parc français . chauffage . part chauffage air gaz:
-  formule: consommation gaz . chauffage / consommation gaz
-
-parc français . chauffage . part chauffage air bois:
-  formule: consommation bois . chauffage / consommation bois
-
-parc français . chauffage . part chauffage air fioul:
-  formule: consommation fioul . chauffage / consommation fioul
-
-parc français . chauffage . part chauffage air réseau de chaleur:
-  formule: consommation réseau de chaleur . chauffage / consommation réseau de chaleur
-
-parc français . chauffage . part chauffage air GPL:
-  formule: consommation GPL . chauffage / consommation GPL
+  formule: CEREN . consommation électricité autre par m2 * logement . électricité . intensité carbone équivalente
 
 parc français . chauffage . empreinte électricité chauffage air par m2:
-  formule: empreinte électricité par m2 * part chauffage air électricité
+  formule: empreinte électricité par m2 * CEREN . chauffage . part chauffage air électricité
 
 parc français . chauffage . empreinte gaz chauffage air par m2:
-  formule: empreinte gaz par m2 * part chauffage air gaz
+  formule: empreinte gaz par m2 * CEREN . chauffage . part chauffage air gaz
 
 parc français . chauffage . empreinte fioul chauffage air par m2:
-  formule: empreinte fioul par m2 * part chauffage air fioul
+  formule: empreinte fioul par m2 * CEREN . chauffage . part chauffage air fioul
 
 parc français . chauffage . empreinte buches chauffage air par m2:
-  formule: empreinte buches par m2 * part chauffage air bois
+  formule: empreinte buches par m2 * CEREN . chauffage . part chauffage air bois
 
 parc français . chauffage . empreinte granulés chauffage air par m2:
-  formule: empreinte granulés par m2 * part chauffage air bois
+  formule: empreinte granulés par m2 * CEREN . chauffage . part chauffage air bois
 
 parc français . chauffage . empreinte réseau de chaleur chauffage air par m2:
-  formule: empreinte réseau de chaleur par m2 * part chauffage air réseau de chaleur
+  formule: empreinte réseau de chaleur par m2 * CEREN . chauffage . part chauffage air réseau de chaleur
 
 parc français . chauffage . empreinte GPL chauffage air par m2:
-  formule: empreinte GPL par m2 * part chauffage air GPL
-
-### Focus PAC
-
-parc français . surface . part hors PAC électricité:
-  formule: surface . électricité hors PAC / surface . électricité
-
-parc français . surface . part PAC électricité:
-  formule: surface . électricité PAC / surface . électricité
-
-parc français . chauffage . consommation électricité hors PAC:
-  formule: consommation électricité hors PAC . chauffage + surface . part hors PAC électricité * (consommation électricité . ecs + consommation électricité . cuisson)
-  unité: kWh
-
-parc français . chauffage . consommation électricité PAC:
-  formule: consommation électricité PAC . chauffage + surface . part PAC électricité * (consommation électricité . ecs + consommation électricité . cuisson)
-  unité: kWh
-
-parc français . chauffage . consommation électricité hors PAC par m2:
-  formule: consommation électricité hors PAC / surface . électricité hors PAC
-  unité: kWh/m2
-
-parc français . chauffage . consommation électricité PAC par m2:
-  formule: consommation électricité PAC / surface . électricité PAC
-  unité: kWh/m2
+  formule: empreinte GPL par m2 * CEREN . chauffage . part chauffage air GPL
 
 parc français . chauffage . empreinte électricité hors PAC par m2:
-  formule: consommation électricité hors PAC par m2 * logement . électricité . empreinte au kWh
+  formule: CEREN . chauffage . consommation électricité hors PAC par m2 * logement . électricité . empreinte au kWh
 
 parc français . chauffage . empreinte électricité PAC par m2:
-  formule: consommation électricité PAC par m2 * logement . électricité . empreinte au kWh
-
-parc français . chauffage . consommation électricité chauffage air hors PAC par m2:
-  formule: consommation électricité hors PAC . chauffage / surface . électricité hors PAC
-  unité: kWh/m2
-
-parc français . chauffage . consommation électricité chauffage air PAC par m2:
-  formule: consommation électricité PAC . chauffage / surface . électricité PAC
-  unité: kWh/m2
+  formule: CEREN . chauffage . consommation électricité PAC par m2 * logement . électricité . empreinte au kWh
 
 parc français . chauffage . empreinte électricité chauffage air hors PAC par m2:
-  formule: consommation électricité chauffage air hors PAC par m2 * logement . électricité . empreinte au kWh
+  formule: CEREN . chauffage . consommation électricité chauffage air hors PAC par m2 * logement . électricité . empreinte au kWh
 
 parc français . chauffage . empreinte électricité chauffage air PAC par m2:
-  formule: consommation électricité chauffage air PAC par m2 * logement . électricité . empreinte au kWh
-
-parc français . chauffage . empreinte moyenne ecs par m2:
-  formule:
-    somme:
-      - surface . part électricité * empreinte électricité ecs par m2
-      - surface . part gaz * empreinte gaz ecs par m2
-      - surface . part fioul * empreinte fioul ecs par m2
-      - surface . part bois * empreinte buches ecs par m2 / 2
-      - surface . part bois * empreinte granulés ecs par m2 / 2
-      - surface . part réseau de chaleur * empreinte réseau de chaleur ecs par m2
-      - surface . part GPL * empreinte GPL ecs par m2
-
-parc français . chauffage . empreinte moyenne ecs par m2 hors électricité:
-  formule:
-    somme:
-      - surface . part gaz * empreinte gaz ecs par m2
-      - surface . part fioul * empreinte fioul ecs par m2
-      - surface . part bois * empreinte buches ecs par m2 / 2
-      - surface . part bois * empreinte granulés ecs par m2 / 2
-      - surface . part réseau de chaleur * empreinte réseau de chaleur ecs par m2
-      - surface . part GPL * empreinte GPL ecs par m2
+  formule: CEREN . chauffage . consommation électricité chauffage air PAC par m2 * logement . électricité . empreinte au kWh
 
 parc français . chauffage . empreinte électricité ecs par m2:
-  formule: empreinte électricité par m2 * part ecs électricité
+  formule: empreinte électricité par m2 * CEREN . chauffage . part ecs électricité
 
 parc français . chauffage . empreinte gaz ecs par m2:
-  formule: empreinte gaz par m2 * part ecs gaz
+  formule: empreinte gaz par m2 * CEREN . chauffage . part ecs gaz
 
 parc français . chauffage . empreinte fioul ecs par m2:
-  formule: empreinte fioul par m2 * part ecs fioul
+  formule: empreinte fioul par m2 * CEREN . chauffage . part ecs fioul
 
 parc français . chauffage . empreinte buches ecs par m2:
-  formule: empreinte buches par m2 * part ecs bois
+  formule: empreinte buches par m2 * CEREN . chauffage . part ecs bois
 
 parc français . chauffage . empreinte granulés ecs par m2:
-  formule: empreinte granulés par m2 * part ecs bois
+  formule: empreinte granulés par m2 * CEREN . chauffage . part ecs bois
 
 parc français . chauffage . empreinte réseau de chaleur ecs par m2:
-  formule: empreinte réseau de chaleur par m2 * part ecs réseau de chaleur
+  formule: empreinte réseau de chaleur par m2 * CEREN . chauffage . part ecs réseau de chaleur
 
 parc français . chauffage . empreinte GPL ecs par m2:
-  formule: empreinte GPL par m2 * part ecs GPL
-
-parc français . chauffage . part ecs électricité:
-  formule: consommation électricité . ecs / consommation électricité totale
-
-parc français . chauffage . part ecs gaz:
-  formule: consommation gaz . ecs / consommation gaz
-
-parc français . chauffage . part ecs bois:
-  formule: consommation bois . ecs / consommation bois
-
-parc français . chauffage . part ecs fioul:
-  formule: consommation fioul . ecs / consommation fioul
-
-parc français . chauffage . part ecs réseau de chaleur:
-  formule: consommation réseau de chaleur . ecs / consommation réseau de chaleur
-
-parc français . chauffage . part ecs GPL:
-  formule: consommation GPL . ecs / consommation GPL
-
-parc français . chauffage . part cuisson électricité:
-  formule: consommation électricité . cuisson / consommation électricité totale
-
-parc français . chauffage . part cuisson gaz:
-  formule: consommation gaz . cuisson / consommation gaz
-
-parc français . chauffage . part cuisson GPL:
-  formule: consommation GPL . cuisson / consommation GPL
+  formule: empreinte GPL par m2 * CEREN . chauffage . part ecs GPL
