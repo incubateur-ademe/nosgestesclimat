@@ -41,6 +41,7 @@ const rulesToKeep = [
   'logement . électricité . réseau . consommation estimée via le coût',
   'logement . électricité . photovoltaique . production estimée via la puissance installée',
   'logement . chauffage . précision consommation',
+  'logement . chauffage . bois . type',
   'logement . chauffage . bois . système . poêle bûches',
   'logement . chauffage . bois . système . poêle granulés',
   'logement . chauffage . bois . système . chaudière bûches',
