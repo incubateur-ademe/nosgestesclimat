@@ -793,33 +793,76 @@ logement . chauffage . bois . empreinte:
       - est défini: bois . présent
       - bois . présent
   formule:
-    variations:
-      - si: type = 'bûches'
-        alors: type . bûches . consommation * bois . type . bûches . intensité énergétique * fe bûches
-      - si: type = 'granulés'
-        alors: type . granulés . consommation * fe granulés
+    somme:
+      - type . bûches . consommation * bois . fe bûches réel
+      - type . granulés . consommation * bois . fe granulés réel
   unité: kgCO2e
 
 logement . chauffage . bois . présent:
   question: Votre logement est-il chauffé au bois ?
 
+logement . chauffage . bois . système:
+  applicable si:
+    toutes ces conditions:
+      - est défini: bois . présent
+      - bois . présent
+  mosaique:
+    type: selection
+    options:
+      - poêle bûches . présent
+      - chaudière bûches . présent
+      - poêle granulés . présent
+      - chaudière granulés . présent
+    option aucun: aucun
+  question: Quel(s) système(s) de chauffage au bois utilisez-vous dans votre logement ?
+
+logement . chauffage . bois . système . poêle bûches:
+  titre: Poêle bûches
+logement . chauffage . bois . système . poêle bûches . présent:
+  question: Avez-vous un poêle à bûches dans votre logement ?
+
+logement . chauffage . bois . système . chaudière bûches:
+  titre: Chaudière bûches
+logement . chauffage . bois . système . chaudière bûches . présent:
+  question: Avez-vous une chaudière à bûches dans votre logement ?
+
+logement . chauffage . bois . système . chaudière granulés:
+  titre: Chaudière granulés
+logement . chauffage . bois . système . chaudière granulés . présent:
+  question: Avez-vous une chaudière à granulés dans votre logement ?
+
+logement . chauffage . bois . système . poêle granulés:
+  titre: Poêle granulés
+logement . chauffage . bois . système . poêle granulés . présent:
+  question: Avez-vous un poêle à granulés dans votre logement ?
+
 logement . chauffage . bois . type:
-  non applicable si: bois . présent = non
-  titre: type de bois
-  question: Quel type de bois utilisez-vous ?
-  une possibilité:
-    - bûches
-    - granulés
-  par défaut: "'bûches'"
-  note: Les poêles à bûches représentent [70% des poêles vendus](https://www.planetoscope.com/Source-d-energie/1521-.html).
+  titre: Type de bois
 
 logement . chauffage . bois . type . bûches:
   titre: Bûches
+  formule:
+    une de ces conditions:
+      - toutes ces conditions:
+          - est défini: système . poêle bûches . présent
+          - système . poêle bûches . présent
+      - toutes ces conditions:
+          - est défini: système . chaudière bûches . présent
+          - système . chaudière bûches . présent
+
 logement . chauffage . bois . type . granulés:
   titre: Granulés
+  formule:
+    une de ces conditions:
+      - toutes ces conditions:
+          - est défini: système . poêle granulés . présent
+          - système . poêle granulés . présent
+      - toutes ces conditions:
+          - est défini: système . chaudière granulés . présent
+          - système . chaudière granulés . présent
 
 logement . chauffage . bois . type . granulés . consommation:
-  applicable si: type = 'granulés'
+  applicable si: type . granulés
   formule:
     variations:
       - si: saisie précision consommation = 'conso exactes'
@@ -829,6 +872,7 @@ logement . chauffage . bois . type . granulés . consommation:
       - si: saisie précision consommation = 'aide'
         alors: consommation via ressenti
   par défaut: consommation moyenne réelle
+  unité: kWh
 
 logement . chauffage . bois . type . granulés . consommation moyenne réelle:
   titre: Consommation moyenne réelle de granulés en tenant compte des autres modes de chauffage
@@ -849,7 +893,10 @@ logement . chauffage . bois . type . granulés . consommation précise:
   unité: kWh
 
 logement . chauffage . bois . type . granulés . consommation précise en kg:
-  applicable si: saisie précision consommation = 'conso exactes'
+  applicable si:
+    toutes ces conditions:
+      - type . granulés
+      - saisie précision consommation = 'conso exactes'
   question: Quelle est la consommation annuelle de granulés / pellets de votre foyer ?
   aide: logement . chauffage . bois . type . granulés . consommation estimée via le coût . saisie
   par défaut: consommation moyenne réelle / intensité énergétique
@@ -926,7 +973,7 @@ logement . chauffage . bois . type . granulés . intensité énergétique:
   note: D'après l'[étude ADEME "Situation du chauffage domestique au bois en 2022-2023"](https://librairie.ademe.fr/energies/7443-situation-du-chauffage-domestique-au-bois-en-2022-2023.html), synthèse, page 7.
 
 logement . chauffage . bois . type . bûches . consommation:
-  applicable si: type = 'bûches'
+  applicable si: type . bûches
   formule:
     variations:
       - si: saisie précision consommation = 'conso exactes'
@@ -936,25 +983,32 @@ logement . chauffage . bois . type . bûches . consommation:
       - si: saisie précision consommation = 'aide'
         alors: consommation via ressenti
   par défaut: consommation moyenne réelle
-  unité: stère
+  unité: kWh
 
 logement . chauffage . bois . type . bûches . consommation moyenne réelle:
   titre: Consommation moyenne réelle de bûches en tenant compte des autres modes de chauffage
   formule: consommation moyenne chauffage / nombre sources chauffage air
-  unité: stère
+  unité: kWh
 
 logement . chauffage . bois . type . bûches . consommation moyenne:
   titre: Consommation moyenne de bûches
-  formule: parc français . CEREN . chauffage . consommation bois par m2 / intensité énergétique * surface
-  unité: stère
+  formule: parc français . CEREN . chauffage . consommation bois par m2 * surface
+  unité: kWh
 
 logement . chauffage . bois . type . bûches . consommation moyenne chauffage:
   formule: parc français . CEREN . chauffage . part chauffage air bois * consommation moyenne
-  unité: stère
+  unité: kWh
 
 logement . chauffage . bois . type . bûches . consommation précise:
-  applicable si: saisie précision consommation = 'conso exactes'
-  par défaut: consommation moyenne réelle
+  formule: consommation précise en stère * intensité énergétique
+  unité: kWh
+
+logement . chauffage . bois . type . bûches . consommation précise en stère:
+  applicable si:
+    toutes ces conditions:
+      - type . bûches
+      - saisie précision consommation = 'conso exactes'
+  par défaut: consommation moyenne réelle / intensité énergétique
   question: Quelle la consommation annuelle de bois en bûches de votre foyer ?
   aide: logement . chauffage . bois . type . bûches . consommation estimée via le coût . saisie
   plancher: 0
@@ -968,8 +1022,8 @@ logement . chauffage . bois . type . bûches . consommation précise:
 logement . chauffage . bois . type . bûches . consommation via DPE:
   applicable si: saisie précision consommation = 'DPE'
   par défaut: consommation moyenne réelle
-  formule: parc français . CEREN . chauffage . part chauffage air bois * précision consommation . DPE . consommation via DPE par m2 * surface / intensité énergétique * nombre sources chauffage air
-  unité: stère
+  formule: parc français . CEREN . chauffage . part chauffage air bois * précision consommation . DPE . consommation via DPE par m2 * surface * nombre sources chauffage air
+  unité: kWh
 
 logement . chauffage . bois . type . bûches . consommation via ressenti:
   applicable si: saisie précision consommation = 'aide'
@@ -980,7 +1034,7 @@ logement . chauffage . bois . type . bûches . consommation via ressenti:
       - si: ressenti = 'confortable'
         alors: consommation moyenne chauffage * précision consommation . saut D vers A / nombre sources chauffage air
       - sinon: consommation moyenne réelle
-  unité: stère
+  unité: kWh
 
 logement . chauffage . bois . type . bûches . consommation estimée via le coût:
   titre: Consommation estimée via le coût
@@ -1012,7 +1066,35 @@ logement . chauffage . bois . type . bûches . intensité énergétique:
   note: D'après l'[étude ADEME "Situation du chauffage domestique au bois en 2022-2023"](https://librairie.ademe.fr/energies/7443-situation-du-chauffage-domestique-au-bois-en-2022-2023.html), synthèse, page 7.
 
 logement . chauffage . bois . fe bûches:
-  titre: Empreinte bois bûches
+  formule:
+    moyenne:
+      - fe poêle bûches
+      - fe chaudière bûches
+  unité: kgCO2e/kWh
+
+logement . chauffage . bois . fe bûches réel:
+  formule:
+    moyenne:
+      - fe poêle bûches * système . poêle bûches . présent
+      - fe chaudière bûches * système . chaudière bûches . présent
+  unité: kgCO2e/kWh
+
+logement . chauffage . bois . fe granulés:
+  formule:
+    moyenne:
+      - fe poêle granulés
+      - fe chaudière granulés
+  unité: kgCO2e/kWh
+
+logement . chauffage . bois . fe granulés réel:
+  formule:
+    moyenne:
+      - fe poêle granulés * système . poêle granulés . présent
+      - fe chaudière granulés * système . chaudière granulés . présent
+  unité: kgCO2e/kWh
+
+logement . chauffage . bois . fe poêle bûches:
+  titre: Empreinte combustion poêle bûches
   formule: 0.0460
   unité: kgCO2e/kWh
   note: |
@@ -1021,13 +1103,33 @@ logement . chauffage . bois . fe bûches:
     Cependant, les facteurs d'émissions E+/C- suivent des règles d'élaboration parfois différentes des règles de calcul de la Base Empreinte.
     Il est donc probable que ce facteur d'émission sous-estime légèrement l'impact GES de la consommation d'un kWh de bois bûche en ne prenant pas en compte les émissions de méthane imbrulé.
 
-logement . chauffage . bois . fe granulés:
-  titre: Empreinte bois granulés
+logement . chauffage . bois . fe chaudière bûches:
+  titre: Empreinte chaudière bois bûches
+  formule: 0.0320
+  unité: kgCO2e/kWh
+  note: |
+    Attention : faute de facteur d'émission de statut "validé générique" pour le bois bûche dans la Base Empreinte, nous optons pour un facteur d'émission "validé spécifique"
+    (initiative E+/C- = label Energie Positive et Réduction Carbone), afin d'assurer une certaine cohérence pour l'utilisateur parcourant le modèle de calcul.
+    Cependant, les facteurs d'émissions E+/C- suivent des règles d'élaboration parfois différentes des règles de calcul de la Base Empreinte.
+    Il est donc probable que ce facteur d'émission sous-estime légèrement l'impact GES de la consommation d'un kWh de bois bûche en ne prenant pas en compte les émissions de méthane imbrulé.
+
+logement . chauffage . bois . fe poêle granulés:
+  titre: Empreinte combustion poêle granulés
   formule: 0.0320
   unité: kgCO2e/kWh
   note: |
     Attention : faute de facteur d'émission de statut "validé générique" pour les granulés dans la Base Empreinte (le FE valide générique disponible ne correspond pas à un usage dans un poêle individuel mais dans un réseau de chaleur),
     nous optons pour un facteur d'émission "validé spécifique" (initiative E+/C- = label Energie Positive et Réduction Carbone), afin d'assurer une certaine cohérence pour l'utilisateur parcourant le modèle de calcul.
+    Cependant, les facteurs d'émissions E+/C- suivent des règles d'élaboration parfois différentes des règles de calcul de la Base Empreinte.
+    Il est donc probable que ce facteur d'émission sous-estime légèrement l'impact GES de la consommation d'un kWh de bois bûche en ne prenant pas en compte les émissions de méthane imbrulé.
+
+logement . chauffage . bois . fe chaudière granulés:
+  titre: Empreinte combustion chaudière granulés
+  formule: 0.0270
+  unité: kgCO2e/kWh
+  note: |
+    Attention : faute de facteur d'émission de statut "validé générique" pour le bois granulés dans la Base Empreinte, nous optons pour un facteur d'émission "validé spécifique"
+    (initiative E+/C- = label Energie Positive et Réduction Carbone), afin d'assurer une certaine cohérence pour l'utilisateur parcourant le modèle de calcul.
     Cependant, les facteurs d'émissions E+/C- suivent des règles d'élaboration parfois différentes des règles de calcul de la Base Empreinte.
     Il est donc probable que ce facteur d'émission sous-estime légèrement l'impact GES de la consommation d'un kWh de bois bûche en ne prenant pas en compte les émissions de méthane imbrulé.
 
