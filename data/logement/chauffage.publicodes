@@ -2,30 +2,104 @@ logement . chauffage:
   DLUO: 01/09/2026
   non applicable si: métrique != "carbone"
   titre: Energie logement
-  mosaique:
-    type: selection
-    options:
-      - électricité . présent
-      - gaz . présent
-      - PAC . présent
-      - bois . présent
-      - réseau de chaleur . présent
-      - bouteille gaz . présent
-      - fioul . présent
-      - citerne propane . présent
-      - chauffe eau solaire . présent
-      - logement . climatisation . présent
-      - logement . électricité . photovoltaique . présent
-    option aucun: aucun
-  icônes: 🌡️
-  question: Qu'utilisez vous pour la cuisson, l'eau chaude et chauffer ou climatiser votre logement ?
-  description: |
-    **Ne sélectionnez pas "électricité"** si elle alimente seulement vos appareils électriques quotidiens (éclairage, électroménager, etc.).
   formule:
     variations:
       - si: choix utilisateur
         alors: empreinte totale / habitants
       - sinon: empreinte par défaut / habitants
+
+logement . chauffage . collectif:
+  avec:
+    collectif:
+    individuel:
+  question: Votre chauffage est-il collectif ou individuel ?
+  par défaut: "'collectif'"
+  note: |
+    On fait l'hypothèse que l'action est applicable seulement pour les appartements chauffés via un réseau de gaz ou fioul collectif.
+    En effet, côté particulier, il est préférable de travailler avec les copropriétaires d'un immeuble car le logement individuel n'est
+    pas une cible prioritaire pour ce type de solution, à la fois pour des questions de rentabilité économique mais également car la densité
+    thermique du réseau serait trop faible au vu de la consommation d'un logement individuel.
+  une possibilité:
+    - collectif
+    - individuel
+
+logement . chauffage . principal:
+  titre: Chauffage principal air
+  question: TODO Quel chauffage principal (air)?
+  description: TODO
+  une possibilité:
+    - électricité
+    - PAC air air
+    - PAC air eau
+    - gaz
+    - fioul
+    - bois
+    - réseau de chaleur
+    - citerne propane
+    - aucun
+  avec:
+    électricité:
+    PAC air air:
+      titre: PAC air/air
+    PAC air eau:
+      titre: PAC air/eau
+    gaz:
+    fioul:
+    bois:
+    réseau de chaleur:
+    citerne propane:
+    aucun:
+      titre: Aucun
+      icônes: ❌
+
+logement . chauffage . appoint:
+  titre: Chauffage d'appoint air
+  question: TODO Quel chauffage d'appoint (air)?
+  description: TODO
+  une possibilité:
+    - électricité
+    - bois
+    - aucun
+  avec:
+    électricité:
+    bois:
+    aucun:
+      titre: Aucun
+      icônes: ❌
+
+logement . chauffage . ecs:
+  titre: Chauffage eau chaude sanitaire
+  question: TODO Quel chauffage pour l'eau chaude sanitaire (ECS) ?
+  description: TODO
+  non applicable si:
+    une de ces conditions:
+      - chauffage . principal = "aucun"
+      - chauffage . collectif = "collectif"
+  une possibilité:
+    - électricité
+    - PAC air eau
+    - gaz
+    - fioul
+    - bois
+  avec:
+    électricité:
+    PAC air eau:
+      titre: PAC air/eau
+    gaz:
+    fioul:
+    bois:
+
+logement . chauffage . autres sources:
+  titre: Autre source d'énergie dans le logement
+  mosaique:
+    type: selection
+    options:
+      - bouteille gaz . présent
+      - chauffe eau solaire . présent
+      - logement . climatisation . présent
+      - logement . électricité . photovoltaique . présent
+    option aucun: aucun
+  question: Quelles autres sources/systèmes d'énergie dans le logement ?
 
 logement . chauffage . empreinte totale:
   formule:
@@ -214,13 +288,23 @@ logement . chauffage . PAC:
   icônes: 🌡️
 
 logement . chauffage . PAC . présent:
-  question: Votre logement est-il chauffé via une pompe à chaleur ?
+  # question: Votre logement est-il chauffé via une pompe à chaleur ?
+  formule:
+    une de ces conditions:
+      - chauffage . principal = "PAC air air"
+      - chauffage . principal = "PAC air eau"
+      - chauffage . ecs = "PAC air eau"
 
 logement . chauffage . électricité:
   icônes: ⚡️
 
 logement . chauffage . électricité . présent:
-  question: Votre logement est-il chauffé à l'électricité ?
+  # question: Votre logement est-il chauffé à l'électricité ?
+  formule:
+    une de ces conditions:
+      - chauffage . principal = "électricité"
+      - chauffage . appoint = "électricité"
+      - chauffage . ecs = "électricité"
 
 logement . chauffage . gaz:
   titre: Gaz naturel
@@ -237,12 +321,11 @@ logement . chauffage . gaz . empreinte:
   unité: kgCO2e
 
 logement . chauffage . gaz . présent:
-  question: Votre logement est-il chauffé au gaz ?
-
-  note: |
-    Bien que le chauffage majoritaire en France soit électrique [source](https://fr.statista.com/statistiques/856283/types-chauffage-logement-principal-france), nous mettons ici la valeur par défaut à oui pour se rapprocher de la moyenne d'empreinte du logement.
-
-    On touche aux limites actuelles de ce système de situation par défaut.
+  # question: Votre logement est-il chauffé au gaz ?
+  formule:
+    une de ces conditions:
+      - chauffage . principal = "gaz"
+      - chauffage . ecs = "gaz"
 
 logement . chauffage . gaz . consommation:
   non applicable si: gaz . présent = non
@@ -575,7 +658,11 @@ logement . chauffage . citerne propane . empreinte:
   unité: kgCO2e
 
 logement . chauffage . citerne propane . présent:
-  question: Votre logement est-il chauffé via une citerne de propane ?
+  # question: Votre logement est-il chauffé via une citerne de propane ?
+  formule:
+    une de ces conditions:
+      - chauffage . principal = "citerne propane"
+      - chauffage . ecs = "citerne propane"
 
 logement . chauffage . citerne propane . consommation:
   non applicable si: citerne propane . présent = non
@@ -671,7 +758,11 @@ logement . chauffage . fioul . empreinte:
   unité: kgCO2e
 
 logement . chauffage . fioul . présent:
-  question: Votre logement est-il chauffé au fioul ?
+  # question: Votre logement est-il chauffé au fioul ?
+  formule:
+    une de ces conditions:
+      - chauffage . principal = "fioul"
+      - chauffage . ecs = "fioul"
 
 logement . chauffage . fioul . consommation:
   non applicable si: fioul . présent = non
@@ -799,7 +890,12 @@ logement . chauffage . bois . empreinte:
   unité: kgCO2e
 
 logement . chauffage . bois . présent:
-  question: Votre logement est-il chauffé au bois ?
+  # question: Votre logement est-il chauffé au bois ?
+  formule:
+    une de ces conditions:
+      - chauffage . principal = "bois"
+      - chauffage . appoint = "bois"
+      - chauffage . ecs = "bois"
 
 logement . chauffage . bois . système:
   applicable si:
@@ -1148,7 +1244,11 @@ logement . chauffage . réseau de chaleur . empreinte:
   unité: kgCO2e
 
 logement . chauffage . réseau de chaleur . présent:
-  question: Votre logement est-il chauffé via un réseau de chaleur ?
+  # question: Votre logement est-il chauffé via un réseau de chaleur ?
+  formule:
+    une de ces conditions:
+      - chauffage . principal = "réseau de chaleur"
+      - chauffage . ecs = "réseau de chaleur"
 
 logement . chauffage . réseau de chaleur . consommation:
   non applicable si: réseau de chaleur . présent = non
