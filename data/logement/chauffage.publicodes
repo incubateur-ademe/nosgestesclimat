@@ -4,26 +4,34 @@ logement . chauffage:
   titre: Energie logement
   formule:
     variations:
-      - si: choix utilisateur
+      - si:
+          toutes ces conditions:
+            - est défini: chauffage . mode
+            - chauffage . mode != "inconnu"
         alors: empreinte totale / habitants
       - sinon: empreinte par défaut / habitants
 
-logement . chauffage . collectif:
-  avec:
-    collectif:
-    individuel:
-  question: Votre chauffage est-il collectif ou individuel ?
-  par défaut: "'collectif'"
+logement . chauffage . mode:
+  question: Intéressons-nous à l'énergie qui alimente votre logement. Quel est votre mode de chauffage ?
   note: |
     On fait l'hypothèse que l'action est applicable seulement pour les appartements chauffés via un réseau de gaz ou fioul collectif.
     En effet, côté particulier, il est préférable de travailler avec les copropriétaires d'un immeuble car le logement individuel n'est
     pas une cible prioritaire pour ce type de solution, à la fois pour des questions de rentabilité économique mais également car la densité
     thermique du réseau serait trop faible au vu de la consommation d'un logement individuel.
   une possibilité:
-    - collectif
     - individuel
+    - collectif
+    - pas de chauffage
+    - inconnu
+  avec:
+    individuel:
+    collectif:
+      applicable si: est un appartement
+    pas de chauffage:
+    inconnu:
 
 logement . chauffage . principal:
+  applicable si: mode = "individuel"
   titre: Chauffage principal air
   question: TODO Quel chauffage principal (air)?
   description: TODO
@@ -36,7 +44,6 @@ logement . chauffage . principal:
     - bois
     - réseau de chaleur
     - citerne propane
-    - aucun
   avec:
     électricité:
     PAC air air:
@@ -48,13 +55,100 @@ logement . chauffage . principal:
     bois:
     réseau de chaleur:
     citerne propane:
-    aucun:
-      titre: Aucun
-      icônes: ❌
+
+logement . chauffage . principal . ecs:
+  applicable si:
+    est défini: chauffage . principal
+  titre: Chauffage eau chaude sanitaire
+  question: TODO Chauffe eau différent du chauffage principal ?
+  description: TODO
+  par défaut: chauffage . principal
+  une possibilité:
+    - identique
+    - électricité
+    - PAC air eau
+    - gaz
+    - bois
+  avec:
+    identique:
+      titre: Identique au chauffage principal
+    électricité:
+      non applicable si:
+        toutes ces conditions:
+          - est défini: chauffage . principal
+          - chauffage . principal = "électricité"
+    PAC air eau:
+      titre: PAC air/eau
+      non applicable si:
+        toutes ces conditions:
+          - est défini: chauffage . principal
+          - chauffage . principal = "PAC air eau"
+    gaz:
+      non applicable si:
+        toutes ces conditions:
+          - est défini: chauffage . principal
+          - chauffage . principal = "gaz"
+    bois:
+      non applicable si:
+        toutes ces conditions:
+          - est défini: chauffage . principal
+          - chauffage . principal = "bois"
+
+logement . chauffage . collectif:
+  applicable si: mode = "collectif"
+  titre: Chauffage principal air
+  question: Quelle source d'énergie du chauffage central ? Pas de panique si vous savez pas.
+  description: TODO
+  une possibilité:
+    - gaz
+    - réseau de chaleur
+  avec:
+    gaz:
+    réseau de chaleur:
+
+logement . chauffage . collectif . ecs:
+  applicable si:
+    est défini: chauffage . collectif
+  titre: Chauffage eau chaude sanitaire
+  question: TODO ECS raccordé sur le collectif ?
+  description: TODO
+  par défaut: "'source collectif'"
+  une possibilité:
+    - source collectif
+    - chauffe eau électricité
+    - chauffe eau gaz
+  avec:
+    source collectif:
+      titre: Oui, l'ECS est raccordée au chauffage collectif
+    chauffe eau électricité:
+      titre: Non, j'ai un chauffe-eau électrique individuel
+    chauffe eau gaz:
+      titre: Non, j'ai un chauffe-eau gaz individuel
+
+logement . chauffage . mode . pas de chauffage . ecs:
+  titre: Chauffage eau chaude sanitaire
+  question: TODO Quel chauffage pour l'eau chaude sanitaire (ECS) ?
+  description: TODO
+  applicable si: mode = "pas de chauffage"
+  une possibilité:
+    - électricité
+    - PAC air eau
+    - chauffe eau solaire
+  avec:
+    électricité:
+    PAC air eau:
+      titre: PAC air/eau
+    chauffe eau solaire:
+      titre: Chauffe-eau solaire
 
 logement . chauffage . appoint:
+  non applicable si: chauffage . mode = "pas de chauffage"
+  applicable si:
+    une de ces conditions:
+      - est défini: chauffage . principal
+      - est défini: chauffage . collectif
   titre: Chauffage d'appoint air
-  question: TODO Quel chauffage d'appoint (air)?
+  question: TODO Disposez-vous d'un chauffage d'appoint ?
   description: TODO
   une possibilité:
     - électricité
@@ -62,35 +156,23 @@ logement . chauffage . appoint:
     - aucun
   avec:
     électricité:
+      titre: Oui, j'ai des chauffages électriques
+      non applicable si:
+        toutes ces conditions:
+          - est défini: chauffage . principal
+          - chauffage . principal = "électricité"
     bois:
+      titre: Oui, j'utilise du bois ou granulés pour de l'appoint
+      non applicable si:
+        toutes ces conditions:
+          - est défini: chauffage . principal
+          - chauffage . principal = "bois"
     aucun:
-      titre: Aucun
-      icônes: ❌
-
-logement . chauffage . ecs:
-  titre: Chauffage eau chaude sanitaire
-  question: TODO Quel chauffage pour l'eau chaude sanitaire (ECS) ?
-  description: TODO
-  non applicable si:
-    une de ces conditions:
-      - chauffage . principal = "aucun"
-      - chauffage . collectif = "collectif"
-  une possibilité:
-    - électricité
-    - PAC air eau
-    - gaz
-    - fioul
-    - bois
-  avec:
-    électricité:
-    PAC air eau:
-      titre: PAC air/eau
-    gaz:
-    fioul:
-    bois:
+      titre: Non, je n'ai pas de chauffage d'appoint
 
 logement . chauffage . autres sources:
   titre: Autre source d'énergie dans le logement
+  applicable si: mode = "individuel"
   mosaique:
     type: selection
     options:
@@ -173,7 +255,9 @@ logement . chauffage . nombre sources cuisson:
 
 logement . chauffage . saisie précision consommation:
   question: Connaissez-vous précisément vos consommations ou factures d'énergie ?
-  applicable si: logement . chauffage . choix utilisateur = oui
+  applicable si:
+    est défini: chauffage . principal
+  non applicable si: chauffage . mode = "collectif"
   une possibilité:
     - conso exactes
     - DPE
@@ -196,7 +280,7 @@ logement . chauffage . précision consommation . saisie DPE:
   note: |
     Le DPE fournit une consommation d'énergie primaire, par m2 et annuelle, selon la classe énergétique du logement. Cette consommation ne correspond pas à l'énergie réellement consommée par le logement (énergie finale).
 
-    Selon la [FAQ RT-RE-bâtiment, "Les réglementations du bâtiment"](https://rt-re-batiment.developpement-durable.gouv.fr/): 
+    Selon la [FAQ RT-RE-bâtiment, "Les réglementations du bâtiment"](https://rt-re-batiment.developpement-durable.gouv.fr/):
 
     - Dans le cas de la production d’électricité, le facteur de conversion est aujourd’hui de 2,3. Cela veut dire que, pour que vous bénéficiez chez vous d’1 kWh d’électricité, on considère qu’il a fallu dépenser 2,3kWh d’énergie primaire.
     - Pour les énergies qui ne nécessitent pas de transformation telles que le bois, le fioul et le gaz, le facteur de conversion est égal à 1. Ainsi, 1 kWh d’énergie primaire suffit à fournir 1 kWh d’énergie finale.
@@ -293,18 +377,20 @@ logement . chauffage . PAC . présent:
     une de ces conditions:
       - chauffage . principal = "PAC air air"
       - chauffage . principal = "PAC air eau"
-      - chauffage . ecs = "PAC air eau"
+      - chauffage . principal . ecs = "PAC air eau"
 
 logement . chauffage . électricité:
   icônes: ⚡️
 
 logement . chauffage . électricité . présent:
   # question: Votre logement est-il chauffé à l'électricité ?
+  applicable si:
+    est défini: chauffage . appoint = "électricité"
   formule:
     une de ces conditions:
       - chauffage . principal = "électricité"
       - chauffage . appoint = "électricité"
-      - chauffage . ecs = "électricité"
+      - chauffage . principal . ecs = "électricité"
 
 logement . chauffage . gaz:
   titre: Gaz naturel
@@ -325,7 +411,7 @@ logement . chauffage . gaz . présent:
   formule:
     une de ces conditions:
       - chauffage . principal = "gaz"
-      - chauffage . ecs = "gaz"
+      - chauffage . principal . ecs = "gaz"
 
 logement . chauffage . gaz . consommation:
   non applicable si: gaz . présent = non
@@ -385,11 +471,23 @@ logement . chauffage . gaz . consommation via DPE:
   par défaut: consommation moyenne réelle
   formule:
     somme:
-      - parc français . CEREN . chauffage . part chauffage air gaz * précision consommation . DPE . consommation via DPE par m2 * surface / nombre sources chauffage air
-      - parc français . CEREN . chauffage . part ecs gaz * précision consommation . DPE . consommation via DPE par m2 * surface / nombre sources ecs
+      - consommation via DPE . chauffage / nombre sources chauffage air
+      - consommation via DPE . ecs / nombre sources ecs
       - consommation moyenne cuisson / nombre sources cuisson
   note: |
     Cette valeur semble importante, mais les calculs semblent justes. Néanmoins, on pourrait aller plus loin car le DPE est une valeur théorique, qui ne reflète pas l'usage réel du logement.
+  unité: kWh
+
+logement . chauffage . gaz . consommation via DPE . chauffage:
+  titre: Consommation chauffage via DPE
+  applicable si: chauffage . principal = "gaz"
+  formule: parc français . CEREN . chauffage . part chauffage air gaz * précision consommation . DPE . consommation via DPE par m2 * surface
+  unité: kWh
+
+logement . chauffage . gaz . consommation via DPE . ecs:
+  titre: Consommation ECS via DPE
+  applicable si: chauffage . principal . ecs = "gaz"
+  formule: parc français . CEREN . chauffage . part ecs gaz * précision consommation . DPE . consommation via DPE par m2 * surface
   unité: kWh
 
 logement . chauffage . gaz . consommation via ressenti:
@@ -662,7 +760,7 @@ logement . chauffage . citerne propane . présent:
   formule:
     une de ces conditions:
       - chauffage . principal = "citerne propane"
-      - chauffage . ecs = "citerne propane"
+      - chauffage . principal . ecs = "citerne propane"
 
 logement . chauffage . citerne propane . consommation:
   non applicable si: citerne propane . présent = non
@@ -762,7 +860,7 @@ logement . chauffage . fioul . présent:
   formule:
     une de ces conditions:
       - chauffage . principal = "fioul"
-      - chauffage . ecs = "fioul"
+      - chauffage . principal . ecs = "fioul"
 
 logement . chauffage . fioul . consommation:
   non applicable si: fioul . présent = non
@@ -891,11 +989,13 @@ logement . chauffage . bois . empreinte:
 
 logement . chauffage . bois . présent:
   # question: Votre logement est-il chauffé au bois ?
+  applicable si:
+    est défini: chauffage . appoint = "bois"
   formule:
     une de ces conditions:
       - chauffage . principal = "bois"
       - chauffage . appoint = "bois"
-      - chauffage . ecs = "bois"
+      - chauffage . principal . ecs = "bois"
 
 logement . chauffage . bois . système:
   applicable si:
@@ -1248,7 +1348,7 @@ logement . chauffage . réseau de chaleur . présent:
   formule:
     une de ces conditions:
       - chauffage . principal = "réseau de chaleur"
-      - chauffage . ecs = "réseau de chaleur"
+      - chauffage . principal . ecs = "réseau de chaleur"
 
 logement . chauffage . réseau de chaleur . consommation:
   non applicable si: réseau de chaleur . présent = non
