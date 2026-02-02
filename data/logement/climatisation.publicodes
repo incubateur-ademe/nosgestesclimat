@@ -32,13 +32,27 @@ logement . climatisation . empreinte climatiseurs:
   unité: kgCO2e
 
 logement . climatisation . présent:
-  question: Utilisez-vous des climatiseurs pour refroidir votre logement ?
+  question: Possédez-vous des climatiseurs pour refroidir votre logement ?
+  une possibilité:
+    - oui et utilisation
+    - oui sans utilisation
+    - pas de climatiseurs
+  avec:
+    oui et utilisation:
+      titre: Oui, et je les utilise
+    oui sans utilisation:
+      titre: Oui, mais je ne les utilise pas
+    pas de climatiseurs:
+      titre: Non, je n'ai pas de climatiseurs
 
 logement . climatisation . rappel kWh:
   type: notification
   description: |
     La consommation d'électricité de votre clim est incluse dans la facture d'électricité, comme tous les appareils électriques du logement. Sont prises en compte ici, **les fuites de gaz frigorigènes**.
-  formule: climatisation . présent = oui
+  formule:
+    une de ces conditions:
+      - climatisation . présent = "oui et utilisation"
+      - climatisation . présent = "oui sans utilisation"
 
 logement . climatisation . nombre par défaut:
   formule:
@@ -60,7 +74,11 @@ logement . climatisation . nombre par défaut:
     > Ce taux moyen de 25 % recouvre de fortes disparités. Ainsi les possesseurs de maisons individuelles sont-ils 31 % à posséder un équipement de climatisation contre seulement 20 % des ménages habitant en logement collectif.
 
 logement . climatisation . nombre:
-  applicable si: présent
+  non applicable si:
+    toutes ces conditions:
+      - est défini: climatisation . présent
+      - climatisation . présent = "pas de climatiseurs"
+
   question: Combien de climatiseurs électriques possédez-vous ?
   par défaut: 1
   plancher: 0

@@ -16,6 +16,11 @@ logement . chauffage:
             - chauffage . mode = "collectif"
             - est défini: chauffage . collectif
         alors: empreinte totale collectif / habitants
+      - si:
+          toutes ces conditions:
+            - est défini: chauffage . mode
+            - chauffage . mode = "pas de chauffage"
+        alors: 0
       - sinon: empreinte par défaut / habitants
 
 logement . chauffage . mode:
@@ -65,8 +70,6 @@ logement . chauffage . principal:
     citerne propane:
 
 logement . chauffage . principal . ecs:
-  applicable si:
-    est défini: chauffage . principal
   titre: Chauffage eau chaude sanitaire
   question: TODO Chauffe eau différent du chauffage principal ?
   description: TODO
@@ -81,6 +84,7 @@ logement . chauffage . principal . ecs:
     - PAC air eau
     - gaz
     - bois
+    - chauffe eau solaire
   avec:
     identique:
       titre: Identique au chauffage principal
@@ -111,6 +115,8 @@ logement . chauffage . principal . ecs:
         toutes ces conditions:
           - est défini: chauffage . principal
           - chauffage . principal = "bois"
+    chauffe eau solaire:
+      titre: Chauffe-eau solaire
 
 logement . chauffage . collectif:
   applicable si: mode = "collectif"
@@ -125,8 +131,6 @@ logement . chauffage . collectif:
     réseau de chaleur:
 
 logement . chauffage . collectif . ecs:
-  applicable si:
-    est défini: chauffage . collectif
   titre: Chauffage eau chaude sanitaire
   question: TODO ECS raccordé sur le collectif ?
   description: TODO
@@ -135,6 +139,7 @@ logement . chauffage . collectif . ecs:
     - source collectif
     - chauffe eau électricité
     - chauffe eau gaz
+    - chauffe eau solaire
   avec:
     source collectif:
       titre: Oui, l'ECS est raccordée au chauffage collectif
@@ -142,11 +147,15 @@ logement . chauffage . collectif . ecs:
       titre: Non, j'ai un chauffe-eau électrique individuel
     chauffe eau gaz:
       titre: Non, j'ai un chauffe-eau gaz individuel
+    chauffe eau solaire:
+      titre: Non, j'ai un chauffe-eau solaire individuel
 
 logement . chauffage . mode . pas de chauffage . ecs:
+  applicable si: mode = "pas de chauffage"
   titre: Chauffage eau chaude sanitaire
   question: TODO Quel chauffage pour l'eau chaude sanitaire (ECS) ?
   description: TODO
+  par défaut: "'électricité'"
   une possibilité:
     - électricité
     - PAC air eau
@@ -190,23 +199,11 @@ logement . chauffage . appoint:
     aucun:
       titre: Non, je n'ai pas de chauffage d'appoint
 
-logement . chauffage . autres sources:
-  titre: Autre source d'énergie dans le logement
-  applicable si: mode = "individuel"
-  mosaique:
-    type: selection
-    options:
-      - bouteille gaz . présent
-      - chauffe eau solaire . présent
-      - logement . climatisation . présent
-      - logement . électricité . photovoltaique . présent
-    option aucun: aucun
-  question: Quelles autres sources/systèmes d'énergie dans le logement ?
-
 logement . chauffage . empreinte totale collectif:
   formule: empreinte totale
   contexte:
-    précision consommation: "'aide'"
+    saisie précision consommation: "'aide'"
+    précision consommation . ressenti: "'moyen'"
 
 logement . chauffage . empreinte totale:
   formule:
@@ -226,24 +223,14 @@ logement . chauffage . empreinte par défaut:
   formule:
     somme:
       - parc français . chauffage . empreinte moyenne par m2 hors électricité * logement . surface
-      - (-1) * chauffe eau solaire . est présent * chauffe eau solaire . taux réduction ecs * parc français . chauffage . empreinte moyenne ecs par m2 hors électricité * logement . surface
+      - (-1) * chauffe eau solaire . présent * chauffe eau solaire . taux réduction ecs * parc français . chauffage . empreinte moyenne ecs par m2 hors électricité * logement . surface
   unité: kgCO2e
 
-logement . chauffage . choix utilisateur:
-  titre: Choix utilisateur pour le chauffage
-  formule:
-    une de ces conditions:
-      - est défini: électricité . présent
-      - est défini: PAC . présent
-      - est défini: gaz . présent
-      - est défini: réseau de chaleur . présent
-      # - est défini: bouteille gaz . présent
-      - est défini: citerne propane . présent
-      - est défini: fioul . présent
-      - est défini: bois . présent
-      # - est défini: chauffe eau solaire . présent
-
 logement . chauffage . saisie précision consommation:
+  non applicable si:
+    une de ces conditions:
+      - chauffage . mode = "inconnu"
+      - chauffage . mode = "pas de chauffage"
   question: Connaissez-vous précisément vos consommations ou factures d'énergie ?
   une possibilité:
     - conso exactes
@@ -366,17 +353,25 @@ logement . chauffage . PAC . présent:
 
 logement . chauffage . PAC . est présent chauffage:
   formule:
-    une de ces conditions:
-      - chauffage . principal = "PAC air air"
-      - chauffage . principal = "PAC air eau"
+    toutes ces conditions:
+      - est défini: chauffage . principal
+      - une de ces conditions:
+          - chauffage . principal = "PAC air air"
+          - chauffage . principal = "PAC air eau"
 
 logement . chauffage . PAC . est présent ecs:
   formule:
     une de ces conditions:
-      - chauffage . principal . ecs = "PAC air eau"
       - toutes ces conditions:
+          - est défini: chauffage . principal
+          - chauffage . principal . ecs = "PAC air eau"
+      - toutes ces conditions:
+          - est défini: chauffage . principal
           - chauffage . principal = "PAC air eau"
           - chauffage . principal . ecs = "identique"
+      - toutes ces conditions:
+          - est défini: chauffage . mode . pas de chauffage . ecs
+          - chauffage . mode . pas de chauffage . ecs = "PAC air eau"
 
 logement . chauffage . électricité:
   icônes: ⚡️
@@ -389,15 +384,27 @@ logement . chauffage . électricité . présent:
       - est présent appoint
 
 logement . chauffage . électricité . est présent chauffage:
-  formule: chauffage . principal = "électricité"
+  formule:
+    toutes ces conditions:
+      - est défini: chauffage . principal
+      - chauffage . principal = "électricité"
 
 logement . chauffage . électricité . est présent ecs:
   formule:
     une de ces conditions:
-      - chauffage . principal . ecs = "électricité"
       - toutes ces conditions:
+          - est défini: chauffage . principal
+          - chauffage . principal . ecs = "électricité"
+      - toutes ces conditions:
+          - est défini: chauffage . principal
           - chauffage . principal = "électricité"
           - chauffage . principal . ecs = "identique"
+      - toutes ces conditions:
+          - est défini: chauffage . collectif
+          - chauffage . collectif . ecs = "chauffe eau électricité"
+      - toutes ces conditions:
+          - est défini: chauffage . mode . pas de chauffage . ecs
+          - chauffage . mode . pas de chauffage . ecs = "électricité"
 
 logement . chauffage . électricité . est présent appoint:
   formule:
@@ -477,7 +484,7 @@ logement . chauffage . gaz . consommation moyenne ecs:
   formule:
     somme:
       - parc français . CEREN . chauffage . part ecs gaz * consommation moyenne
-      - (-1) * chauffe eau solaire . est présent * parc français . CEREN . chauffage . part ecs gaz * consommation moyenne * chauffe eau solaire . taux réduction ecs
+      - (-1) * chauffe eau solaire . présent * parc français . CEREN . chauffage . part ecs gaz * consommation moyenne * chauffe eau solaire . taux réduction ecs
   unité: kWh
 
 logement . chauffage . gaz . consommation moyenne cuisson:
@@ -699,6 +706,7 @@ logement . chauffage . bouteille gaz . empreinte:
   unité: kgCO2e
 
 logement . chauffage . bouteille gaz . présent:
+  non applicable si: chauffage . mode = "inconnu"
   question: Utilisez-vous des bouteille de gaz ?
   par défaut: non
 
@@ -854,7 +862,7 @@ logement . chauffage . citerne propane . consommation moyenne ecs:
   formule:
     somme:
       - parc français . CEREN . chauffage . part ecs gaz * consommation moyenne
-      - (-1) * chauffe eau solaire . est présent * parc français . CEREN . chauffage . part ecs gaz * consommation moyenne * chauffe eau solaire . taux réduction ecs
+      - (-1) * chauffe eau solaire . présent * parc français . CEREN . chauffage . part ecs gaz * consommation moyenne * chauffe eau solaire . taux réduction ecs
   unité: kWh
 
 logement . chauffage . citerne propane . consommation moyenne cuisson:
@@ -1024,7 +1032,7 @@ logement . chauffage . fioul . consommation moyenne ecs:
   formule:
     somme:
       - parc français . CEREN . chauffage . part ecs fioul * consommation moyenne
-      - (-1) * chauffe eau solaire . est présent * parc français . CEREN . chauffage . part ecs fioul * consommation moyenne * chauffe eau solaire . taux réduction ecs
+      - (-1) * chauffe eau solaire . présent * parc français . CEREN . chauffage . part ecs fioul * consommation moyenne * chauffe eau solaire . taux réduction ecs
   unité: l
 
 logement . chauffage . fioul . consommation précise:
@@ -1661,7 +1669,7 @@ logement . chauffage . réseau de chaleur . consommation moyenne ecs:
   formule:
     somme:
       - parc français . CEREN . chauffage . part ecs réseau de chaleur * consommation moyenne
-      - (-1) * chauffe eau solaire . est présent * parc français . CEREN . chauffage . part ecs réseau de chaleur * consommation moyenne * chauffe eau solaire . taux réduction ecs
+      - (-1) * chauffe eau solaire . présent * parc français . CEREN . chauffage . part ecs réseau de chaleur * consommation moyenne * chauffe eau solaire . taux réduction ecs
   unité: kWh
 
 logement . chauffage . réseau de chaleur . consommation précise:
@@ -1758,14 +1766,17 @@ logement . chauffage . chauffe eau solaire:
   titre: Chauffe-eau solaire
 
 logement . chauffage . chauffe eau solaire . présent:
-  question: Avez-vous un chauffe-eau solaire individuel (CESI) ?
-  par défaut: non
-
-logement . chauffage . chauffe eau solaire . est présent:
   formule:
-    toutes ces conditions:
-      - est défini: chauffe eau solaire . présent
-      - chauffe eau solaire . présent
+    une de ces conditions:
+      - toutes ces conditions:
+          - est défini: chauffage . principal . ecs
+          - chauffage . principal . ecs = "chauffe eau solaire"
+      - toutes ces conditions:
+          - est défini: chauffage . collectif . ecs
+          - chauffage . collectif . ecs = "chauffe eau solaire"
+      - toutes ces conditions:
+          - est défini: chauffage . mode . pas de chauffage . ecs
+          - logement . chauffage . mode . pas de chauffage . ecs = "chauffe eau solaire"
 
 logement . chauffage . chauffe eau solaire . taux réduction ecs:
   titre: Économie d'énergie grâce au chauffe-eau solaire

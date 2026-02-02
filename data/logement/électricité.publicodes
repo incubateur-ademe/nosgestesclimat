@@ -43,7 +43,10 @@ logement . électricité . intensité carbone équivalente:
 logement . électricité . consommation totale:
   formule:
     variations:
-      - si: chauffage . saisie précision consommation = 'conso exactes'
+      - si:
+          une de ces conditions:
+            - chauffage . saisie précision consommation = 'conso exactes'
+            - électricité . saisie précision consommation = oui
         alors:
           somme:
             - photovoltaique . autoconsommation
@@ -52,17 +55,23 @@ logement . électricité . consommation totale:
         alors: consommation via DPE
       - si: chauffage . saisie précision consommation = 'aide'
         alors: consommation via ressenti
+      - si: électricité . saisie précision consommation = non
+        alors: consommation moyenne réelle
       - sinon: consommation par défaut
   unité: kWh
+
+logement . électricité . saisie précision consommation:
+  applicable si: chauffage . mode = "pas de chauffage"
+  question: Connaissez-vous votre consommation d'électricité ?
+  par défaut: oui
 
 logement . électricité . consommation par défaut:
   titre: Consommation par défaut électricité
   formule:
     variations:
-      - si: logement . chauffage . choix utilisateur = non
+      - si: chauffage . mode = "inconnu"
         alors: surface * (parc français . CEREN . consommation électricité autre par m2 + parc français . CEREN . surface . part électricité * parc français . CEREN . chauffage . consommation électricité par m2)
-      - si: logement . chauffage . choix utilisateur = oui
-        alors: consommation moyenne réelle
+      - sinon: consommation moyenne réelle
   unité: kWh
 
 logement . électricité . consommation moyenne réelle:
@@ -91,7 +100,7 @@ logement . électricité . consommation moyenne ecs:
   formule:
     somme:
       - consommation moyenne ecs hors solaire
-      - (-1) * chauffage . chauffe eau solaire . est présent * consommation moyenne ecs hors solaire * chauffage . chauffe eau solaire . taux réduction ecs
+      - (-1) * chauffage . chauffe eau solaire . présent * consommation moyenne ecs hors solaire * chauffage . chauffe eau solaire . taux réduction ecs
   unité: kWh
 
 logement . électricité . consommation moyenne ecs hors solaire:
@@ -131,7 +140,7 @@ logement . électricité . consommation moyenne climatisation:
   applicable si:
     toutes ces conditions:
       - est défini: climatisation . présent
-      - climatisation . présent
+      - climatisation . présent = "oui et utilisation"
   formule: parc français . CEREN . consommation électricité climatisation par m2 * surface
   unité: kWh
 
@@ -164,7 +173,7 @@ logement . électricité . consommation via DPE . climatisation:
   applicable si:
     toutes ces conditions:
       - est défini: climatisation . présent
-      - climatisation . présent
+      - climatisation . présent = "oui et utilisation"
   formule: parc français . CEREN . part climatisation électricité * chauffage . précision consommation . DPE . consommation via DPE par m2 * surface
   unité: kWh
 
@@ -208,8 +217,11 @@ logement . électricité . réseau . consommation moyenne réelle:
   unité: kWh
 
 logement . électricité . réseau . consommation précise:
-  applicable si: chauffage . saisie précision consommation = 'conso exactes'
-  par défaut: réseau . consommation moyenne réelle
+  applicable si:
+    une de ces conditions:
+      - chauffage . saisie précision consommation = 'conso exactes'
+      - électricité . saisie précision consommation = oui
+  par défaut: électricité . consommation moyenne réelle
   question: Quelle est la consommation annuelle d'électricité (réseau) de votre foyer ?
   aide: logement . électricité . réseau . consommation estimée via le coût . saisie
   plancher: 0
@@ -262,6 +274,7 @@ logement . électricité . photovoltaique:
   icônes: 🌞
 
 logement . électricité . photovoltaique . présent:
+  applicable si: est une maison
   question: Votre logement dispose-t-il de panneaux photovoltaïques ?
   par défaut: non
 
