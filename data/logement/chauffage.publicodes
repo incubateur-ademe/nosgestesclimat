@@ -42,6 +42,7 @@ logement . chauffage . mode:
       applicable si: est un appartement
     pas de chauffage:
     inconnu:
+      titre: inconnu (=je ne sais pas)
 
 logement . chauffage . principal:
   applicable si: mode = "individuel"
@@ -70,6 +71,8 @@ logement . chauffage . principal:
     citerne propane:
 
 logement . chauffage . principal . ecs:
+  applicable si:
+    est défini: chauffage . principal
   titre: Chauffage eau chaude sanitaire
   question: TODO Chauffe eau différent du chauffage principal ?
   description: TODO
@@ -172,10 +175,8 @@ logement . chauffage . appoint:
     une de ces conditions:
       - chauffage . mode = "pas de chauffage"
       - chauffage . mode = "inconnu"
-  applicable si:
-    une de ces conditions:
-      - est défini: chauffage . principal
-      - est défini: chauffage . collectif
+      - est non défini: chauffage . principal
+      - est non défini: chauffage . collectif
   titre: Chauffage d'appoint air
   question: TODO Disposez-vous d'un chauffage d'appoint ?
   description: TODO
@@ -227,6 +228,10 @@ logement . chauffage . empreinte par défaut:
   unité: kgCO2e
 
 logement . chauffage . saisie précision consommation:
+  applicable si:
+    une de ces conditions:
+      - est défini: chauffage . principal
+      - est défini: chauffage . collectif
   non applicable si:
     une de ces conditions:
       - chauffage . mode = "inconnu"
@@ -448,6 +453,9 @@ logement . chauffage . gaz . est présent ecs:
       - toutes ces conditions:
           - chauffage . collectif = "gaz"
           - chauffage . collectif . ecs = "source collectif"
+      - toutes ces conditions:
+          - chauffage . mode = "collectif"
+          - chauffage . collectif . ecs = "chauffe eau gaz"
 
 logement . chauffage . gaz . consommation:
   non applicable si: gaz . présent = non
