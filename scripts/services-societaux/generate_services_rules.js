@@ -1,6 +1,6 @@
 const utils = require('./utils')
 
-const year = 2019
+const year = 2023
 
 const SDES_data = utils.readJSON(
   `scripts/services-societaux/output/${year}/liste_SDES_traitée.json`
@@ -44,10 +44,7 @@ const data = SDES_data.map(({ code_CPA, ...att }) => {
   const object = {
     [ruleCPA]: {
       titre: `${titre_raccourci} (France)`,
-      formule:
-        att[
-          'émissions contenues dans les biens et services adressés à la demande finale de la France'
-        ],
+      formule: att['émissions demande finale'],
       unité: 'ktCO2e',
       description: `${titre}\n\n> La description ci-dessous correspond à la part de chaque sous-classe de la branche ${code_CPA} (en % de chiffre d'affaire)\n${description}`
     },
@@ -97,7 +94,7 @@ const dataObject = Object.assign({}, ...data)
 
 const SPobject = {
   'services sociétaux . services publics': {
-    'non applicable si': métrique != 'carbone',
+    'non applicable si': 'métrique != "carbone"',
     titre: 'Services publics',
     abréviation: 'S. publics',
     icônes: '🏛',
@@ -109,7 +106,7 @@ const SPobject = {
 
 const SMobject = {
   'services sociétaux . services marchands': {
-    'non applicable si': métrique != 'carbone',
+    'non applicable si': 'métrique != "carbone"',
     titre: 'Services marchands',
     abréviation: 'S. marchands',
     icônes: '✉️',
