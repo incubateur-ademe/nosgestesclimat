@@ -1,6 +1,6 @@
 const utils = require('./utils')
 
-const year = 2019
+const year = 2023
 
 // read files
 const readSDES = utils.readJSON(
@@ -82,19 +82,8 @@ const dataSDES = readSDES
           'Libellé CPA': NAF_niveau2.find((obj) => obj.code_NAF === elt)[
             'libellé'
           ],
-          'émissions contenues dans les biens et services adressés à la demande finale de la France':
-            utils.roundValue(
-              obj[
-                'émissions contenues dans les biens et services adressés à la demande finale de la France'
-              ] * facteur
-            ),
-          'émissions de la production intérieure (hors exportations)':
-            utils.roundValue(
-              obj['émissions de la production intérieure (hors exportations)'] *
-                facteur
-            ),
-          'émissions associées aux importations': utils.roundValue(
-            obj['émissions associées aux importations'] * facteur
+          'émissions demande finale': utils.roundValue(
+            obj['émissions demande finale'] * facteur
           )
         }
       })
