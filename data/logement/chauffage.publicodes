@@ -182,19 +182,29 @@ logement . chauffage . mode . pas de chauffage . ecs:
       titre: Je n'ai pas d'eau chaude
 
 logement . chauffage . appoint:
+  applicable si:
+    une de ces conditions:
+      - toutes ces conditions:
+          - est défini: chauffage . mode
+          - chauffage . mode = "individuel"
+          - est défini: chauffage . principal
+      - toutes ces conditions:
+          - est défini: chauffage . mode
+          - chauffage . mode = "collectif"
+          - est défini: chauffage . collectif
   non applicable si:
     une de ces conditions:
       - est non défini: chauffage . mode
       - chauffage . mode = "pas de chauffage"
-      - est non défini: chauffage . principal
-      - est non défini: chauffage . collectif
   titre: Appoint chauffage et cuisson
   question: Disposez-vous de sources d'énergie d'appoint ?
-  une possibilité:
-    - électricité
-    - bois
-    - bouteille gaz cuisson
-    - aucun
+  mosaique:
+    type: selection
+    options:
+      - électricité . présent
+      - bois . présent
+      - bouteille gaz cuisson . présent
+    option aucun: aucun
   avec:
     électricité:
       titre: Oui, j'ai des chauffages électriques
@@ -202,16 +212,21 @@ logement . chauffage . appoint:
         toutes ces conditions:
           - est défini: chauffage . principal
           - chauffage . principal = "électricité"
+    électricité . présent:
+      question: Utilisez-vous des chauffages électriques d'appoint au sein de votre logement ?
+      valeur: oui
     bois:
       titre: Oui, j'utilise du bois ou granulés
       non applicable si:
         toutes ces conditions:
           - est défini: chauffage . principal
           - chauffage . principal = "bois"
+    bois . présent:
+      question: Utilisez-vous du bois pour de l'appoint au sein de votre logement ?
     bouteille gaz cuisson:
       titre: Oui, j'utilise une bouteille de gaz pour la cuisson
-    aucun:
-      titre: Non, je n'ai pas de chauffage d'appoint
+    bouteille gaz cuisson . présent:
+      question: Utilisez-vous une bouteille de gaz pour la cuisson au sein de votre logement ?
 
 logement . chauffage . empreinte totale collectif:
   formule: empreinte totale
@@ -433,8 +448,8 @@ logement . chauffage . électricité . est présent ecs:
 logement . chauffage . électricité . est présent appoint:
   formule:
     toutes ces conditions:
-      - est défini: chauffage . appoint
-      - chauffage . appoint = "électricité"
+      - est défini: appoint . électricité . présent
+      - appoint . électricité . présent
 
 logement . chauffage . gaz:
   titre: Gaz naturel
@@ -734,8 +749,8 @@ logement . chauffage . bouteille gaz . empreinte:
 logement . chauffage . bouteille gaz . présent:
   formule:
     toutes ces conditions:
-      - est défini: logement . chauffage . appoint
-      - logement . chauffage . appoint = "bouteille gaz cuisson"
+      - est défini: appoint . bouteille gaz cuisson . présent
+      - appoint . bouteille gaz cuisson . présent
 
 logement . chauffage . bouteille gaz . consommation:
   non applicable si: bouteille gaz . présent = non
@@ -1199,8 +1214,8 @@ logement . chauffage . bois . est présent chauffage:
 logement . chauffage . bois . est présent appoint:
   formule:
     toutes ces conditions:
-      - est défini: chauffage . appoint
-      - chauffage . appoint = "bois"
+      - est défini: appoint . bois . présent
+      - appoint . bois . présent
 
 logement . chauffage . bois . est présent ecs:
   formule:
