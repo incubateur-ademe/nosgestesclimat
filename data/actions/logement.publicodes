@@ -1,3 +1,15 @@
+logement . chauffage . choix utilisateur:
+  titre: Choix utilisateur pour le chauffage
+  formule:
+    une de ces conditions:
+      - est défini: électricité . présent
+      - est défini: PAC . présent
+      - est défini: gaz . présent
+      - est défini: réseau de chaleur . présent
+      - est défini: citerne propane . présent
+      - est défini: fioul . présent
+      - est défini: bois . présent
+
 logement . empreinte chauffage air:
   formule:
     variations:
@@ -62,8 +74,6 @@ logement . chauffage . chauffe eau solaire . installer chauffe eau solaire:
   applicable si:
     toutes ces conditions:
       - propriétaire = 'propriétaire'
-      - est une maison
-      - est défini: chauffe eau solaire . présent
       - chauffe eau solaire . présent = non
   titre: S’équiper d’un chauffe-eau solaire
   icônes: 🌡️🛁☀️
@@ -204,7 +214,7 @@ logement . climatisation . réduction:
   applicable si:
     toutes ces conditions:
       - est défini: logement . climatisation . présent
-      - logement . climatisation . présent
+      - logement . climatisation . présent = "oui et utilisation"
       - logement . climatisation . nombre > 0
   formule: logement . climatisation + part électricité climatisation
   unité: kgCO2e
@@ -261,7 +271,7 @@ logement . chauffage . raccordement réseau de chaleur:
   applicable si:
     toutes ces conditions:
       - est un appartement
-      - chauffage collectif = 'collectif'
+      - chauffage . collectif = "collectif"
       - une de ces conditions:
           - toutes ces conditions:
               - est défini: chauffage . gaz . présent
@@ -287,6 +297,11 @@ logement . chauffage . raccordement réseau de chaleur:
   unité: kgCO2e
   # TODO : Cette `note` est plus grand public que technique, à voir si ce texte n'a pas sa place ailleurs.
   note: |
+    On fait l'hypothèse que l'action est applicable seulement pour les appartements chauffés via un réseau de gaz ou fioul collectif.
+    En effet, côté particulier, il est préférable de travailler avec les copropriétaires d'un immeuble car le logement individuel n'est
+    pas une cible prioritaire pour ce type de solution, à la fois pour des questions de rentabilité économique mais également car la densité
+    thermique du réseau serait trop faible au vu de la consommation d'un logement individuel.
+
     Un réseau de chaleur est un système de canalisations qui permettent d’acheminer vers un ensemble de bâtiments de la
     chaleur produite localement et majoritairement à partir d’énergies renouvelables et de récupération.
 
@@ -329,21 +344,6 @@ logement . chauffage . raccordement réseau de chaleur . recalcul . consommation
     logement . chauffage . gaz . présent: non
     logement . chauffage . fioul . présent: non
     logement . chauffage . citerne propane . présent: non
-
-logement . chauffage collectif:
-  avec:
-    collectif:
-    individuel:
-  question: Votre chauffage est-il collectif ou individuel ?
-  par défaut: "'collectif'"
-  note: |
-    On fait l'hypothèse que l'action est applicable seulement pour les appartements chauffés via un réseau de gaz ou fioul collectif.
-    En effet, côté particulier, il est préférable de travailler avec les copropriétaires d'un immeuble car le logement individuel n'est
-    pas une cible prioritaire pour ce type de solution, à la fois pour des questions de rentabilité économique mais également car la densité
-    thermique du réseau serait trop faible au vu de la consommation d'un logement individuel.
-  une possibilité:
-    - collectif
-    - individuel
 
 logement . extérieur . barbecue plus écologique:
   applicable si:
