@@ -60,7 +60,7 @@ logement . électricité . consommation par défaut:
   formule:
     variations:
       - si: logement . chauffage . choix utilisateur = non
-        alors: surface * (parc français . consommation électricité autre par m2 + parc français . surface . part électricité * parc français . chauffage . consommation électricité par m2)
+        alors: surface * (parc français . CEREN . consommation électricité autre par m2 + parc français . CEREN . surface . part électricité * parc français . CEREN . chauffage . consommation électricité par m2)
       - si: logement . chauffage . choix utilisateur = oui
         alors: consommation moyenne réelle
   unité: kWh
@@ -87,7 +87,7 @@ logement . électricité . consommation moyenne:
             - est défini: logement . chauffage . PAC . présent
             - logement . chauffage . électricité . présent = oui
             - logement . chauffage . PAC . présent = oui
-        alors: surface * parc français . chauffage . consommation électricité par m2
+        alors: surface * parc français . CEREN . chauffage . consommation électricité par m2
       - si:
           toutes ces conditions:
             - logement . chauffage . choix utilisateur = oui
@@ -95,7 +95,7 @@ logement . électricité . consommation moyenne:
             - est défini: logement . chauffage . PAC . présent
             - logement . chauffage . électricité . présent = oui
             - logement . chauffage . PAC . présent = non
-        alors: surface * parc français . chauffage . consommation électricité hors PAC par m2
+        alors: surface * parc français . CEREN . chauffage . consommation électricité hors PAC par m2
       - si:
           toutes ces conditions:
             - logement . chauffage . choix utilisateur = oui
@@ -103,27 +103,27 @@ logement . électricité . consommation moyenne:
             - est défini: logement . chauffage . PAC . présent
             - logement . chauffage . électricité . présent = non
             - logement . chauffage . PAC . présent = oui
-        alors: surface * parc français . chauffage . consommation électricité PAC par m2
+        alors: surface * parc français . CEREN . chauffage . consommation électricité PAC par m2
       - sinon: 0
   unité: kWh
 
 logement . électricité . consommation moyenne chauffage:
-  formule: parc français . chauffage . part chauffage air électricité * consommation moyenne
+  formule: parc français . CEREN . chauffage . part chauffage air électricité * consommation moyenne
   unité: kWh
 
 logement . électricité . consommation moyenne ecs:
   formule:
     somme:
-      - parc français . chauffage . part ecs électricité * consommation moyenne
-      - (-1) * parc français . chauffage . part ecs électricité * consommation moyenne * chauffage . chauffe eau solaire . taux réduction ecs
+      - parc français . CEREN . chauffage . part ecs électricité * consommation moyenne
+      - (-1) * parc français . CEREN . chauffage . part ecs électricité * consommation moyenne * chauffage . chauffe eau solaire . taux réduction ecs
   unité: kWh
 
 logement . électricité . consommation moyenne cuisson:
-  formule: parc français . chauffage . part cuisson électricité * consommation moyenne
+  formule: parc français . CEREN . chauffage . part cuisson électricité * consommation moyenne
   unité: kWh
 
 logement . électricité . consommation moyenne spécifique:
-  formule: parc français . consommation électricité spécifique par m2 * surface
+  formule: parc français . CEREN . consommation électricité spécifique par m2 * surface
   unité: kWh
 
 logement . électricité . consommation moyenne climatisation:
@@ -131,7 +131,7 @@ logement . électricité . consommation moyenne climatisation:
     toutes ces conditions:
       - est défini: climatisation . présent
       - climatisation . présent
-  formule: parc français . consommation électricité climatisation par m2 * surface
+  formule: parc français . CEREN . consommation électricité climatisation par m2 * surface
   unité: kWh
 
 logement . électricité . consommation via DPE:
@@ -139,8 +139,8 @@ logement . électricité . consommation via DPE:
   par défaut: consommation par défaut
   formule:
     somme:
-      - parc français . chauffage . part chauffage air électricité * chauffage . précision consommation . DPE . consommation via DPE par m2 * surface / chauffage . nombre sources chauffage air
-      - parc français . chauffage . part ecs électricité * chauffage . précision consommation . DPE . consommation via DPE par m2 * surface / chauffage . nombre sources ecs
+      - parc français . CEREN . chauffage . part chauffage air électricité * chauffage . précision consommation . DPE . consommation via DPE par m2 * surface / chauffage . nombre sources chauffage air
+      - parc français . CEREN . chauffage . part ecs électricité * chauffage . précision consommation . DPE . consommation via DPE par m2 * surface / chauffage . nombre sources ecs
       - consommation moyenne cuisson / chauffage . nombre sources cuisson
       - consommation moyenne spécifique
       - consommation via DPE . climatisation
@@ -151,7 +151,7 @@ logement . électricité . consommation via DPE . climatisation:
     toutes ces conditions:
       - est défini: climatisation . présent
       - climatisation . présent
-  formule: parc français . part climatisation électricité * chauffage . précision consommation . DPE . consommation via DPE par m2 * surface / chauffage . nombre sources chauffage air
+  formule: parc français . CEREN . part climatisation électricité * chauffage . précision consommation . DPE . consommation via DPE par m2 * surface / chauffage . nombre sources chauffage air
   unité: kWh
 
 logement . électricité . consommation via ressenti:
