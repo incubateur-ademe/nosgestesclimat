@@ -373,27 +373,27 @@ logement . âge:
 parc français . surface moyenne:
   formule: 80
 
-parc français . chauffage . consommation électricité par m2:
+parc français . CEREN . chauffage . consommation électricité par m2:
   formule: 125
   unité: kWh/m2
   note: Source - KBOB, consommation pour le chauffage par défaut de 450 MJ/m2
 
-parc français . chauffage . consommation gaz par m2:
+parc français . CEREN . chauffage . consommation gaz par m2:
   formule: 125
   unité: kWh/m2
   note: Source - KBOB, consommation pour le chauffage par défaut de 450 MJ/m2
 
-parc français . chauffage . consommation fioul par m2:
+parc français . CEREN . chauffage . consommation fioul par m2:
   formule: 125
   unité: kWh/m2
   note: Source - KBOB, consommation pour le chauffage par défaut de 450 MJ/m2
 
-parc français . chauffage . consommation bois par m2:
+parc français . CEREN . chauffage . consommation bois par m2:
   formule: 125
   unité: kWh/m2
   note: Source - KBOB, consommation pour le chauffage par défaut de 450 MJ/m2
 
-parc français . chauffage . consommation réseau de chaleur par m2:
+parc français . CEREN . chauffage . consommation réseau de chaleur par m2:
   formule: 125
   unité: kWh/m2
   note: Source - KBOB, consommation pour le chauffage par défaut de 450 MJ/m2
@@ -401,20 +401,20 @@ parc français . chauffage . consommation réseau de chaleur par m2:
 # @Clément On a besoin des parts de chaque type d'énergie dans le parc genevois. Il semble y avoir un pb avec ceux relevés dans le fichier.
 # On distingue parts des énergies dans le parc genevois et part dédiée au chauffage pour chaque type d'énergie (cf plus bas).
 # @JPhilippe Ici ce sont bien les parts de chaque combustibles pour le chauffage. Je n'ai pas compris comment nous devons ajuster ces chiffres pour que le modèle fonctionne ?
-parc français . surface . part électricité:
+parc français . CEREN . surface . part électricité:
   formule: 3.3%
   note: Pas de chauffage électrique, on prend en compte ici la part liée à la consommation des pompes à chaleur
 
-parc français . surface . part gaz:
+parc français . CEREN . surface . part gaz:
   formule: 60.80%
 
-parc français . surface . part fioul:
+parc français . CEREN . surface . part fioul:
   formule: 28.40%
 
-parc français . surface . part bois:
+parc français . CEREN . surface . part bois:
   formule: 2.3%
 
-parc français . surface . part réseau de chaleur:
+parc français . CEREN . surface . part réseau de chaleur:
   formule: 5.2%
 
 # @Clément: Il n'est finalement pas possible d'ajouter de nouvelles règles, je corrige ici le calcul mais sans la partie "intensité carbone chaleur de l'environnement"
@@ -429,23 +429,23 @@ parc français . chauffage . empreinte moyenne par m2 hors électricité:
   note: L'électricité est traitée séparément.
   formule:
     somme:
-      - surface . part gaz * empreinte gaz par m2
-      - surface . part fioul * empreinte fioul par m2
-      - surface . part bois * empreinte buches par m2 / 2
-      - surface . part bois * empreinte granulés par m2 / 2
-      - surface . part réseau de chaleur * empreinte réseau de chaleur par m2
+      - CEREN . surface . part gaz * empreinte gaz par m2
+      - CEREN . surface . part fioul * empreinte fioul par m2
+      - CEREN . surface . part bois * empreinte buches par m2 / 2
+      - CEREN . surface . part bois * empreinte granulés par m2 / 2
+      - CEREN . surface . part réseau de chaleur * empreinte réseau de chaleur par m2
 
 parc français . chauffage . empreinte moyenne chauffage air par m2:
   formule:
     somme:
-      - empreinte électricité par m2 * part chauffage air électricité
-      - empreinte gaz par m2 * part chauffage air gaz
-      - empreinte fioul par m2 * part chauffage air fioul
-      - empreinte buches par m2 * part chauffage air bois / 2
-      - empreinte granulés par m2 * part chauffage air bois / 2
-      - empreinte réseau de chaleur par m2 * part chauffage air réseau de chaleur
+      - empreinte électricité par m2 * CEREN . chauffage . part chauffage air électricité
+      - empreinte gaz par m2 * CEREN . chauffage . part chauffage air gaz
+      - empreinte fioul par m2 * CEREN . chauffage . part chauffage air fioul
+      - empreinte buches par m2 * CEREN . chauffage . part chauffage air bois / 2
+      - empreinte granulés par m2 * CEREN . chauffage . part chauffage air bois / 2
+      - empreinte réseau de chaleur par m2 * CEREN . chauffage . part chauffage air réseau de chaleur
 
-parc français . consommation électricité autre par m2:
+parc français . CEREN . consommation électricité autre par m2:
   formule: 31.5
   unité: kWh/m2
   note: |
@@ -553,7 +553,7 @@ logement . chauffage:
     Cochez tous les modes que vous utilisez.
 
 logement . chauffage . gaz . consommation précise:
-  par défaut: parc français . chauffage . consommation gaz par m2 * surface
+  par défaut: parc français . CEREN . chauffage . consommation gaz par m2 * surface
   description: |
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz.
 
