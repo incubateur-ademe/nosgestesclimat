@@ -70,12 +70,14 @@ logement . électricité . consommation totale:
 logement . électricité . consommation totale collectif:
   formule: consommation totale
   contexte:
-    chauffage . mode: "'inconnu'"
     chauffage . saisie précision consommation: "'aide'"
     chauffage . précision consommation . ressenti: "'moyen'"
 
 logement . électricité . saisie précision consommation:
-  applicable si: chauffage . mode = "pas de chauffage"
+  applicable si:
+    toutes ces conditions:
+      - est défini: chauffage . mode
+      - chauffage . mode = "collectif"
   question: Connaissez-vous votre consommation d'électricité ?
   par défaut: non
 
@@ -83,9 +85,10 @@ logement . électricité . consommation par défaut:
   titre: Consommation par défaut électricité
   formule:
     variations:
-      - si: chauffage . mode = "inconnu"
-        alors: surface * (parc français . CEREN . consommation électricité autre par m2 + parc français . CEREN . surface . part électricité * parc français . CEREN . chauffage . consommation électricité par m2)
-      - sinon: consommation moyenne réelle
+      - si:
+          est défini: chauffage . mode
+        alors: consommation moyenne réelle
+      - sinon: surface * (parc français . CEREN . consommation électricité autre par m2 + parc français . CEREN . surface . part électricité * parc français . CEREN . chauffage . consommation électricité par m2)
   unité: kWh
 
 logement . électricité . consommation moyenne réelle:

@@ -24,31 +24,29 @@ logement . chauffage:
       - sinon: empreinte par défaut / habitants
 
 logement . chauffage . mode:
-  question: Intéressons-nous à l'énergie qui alimente votre logement. Quel est votre mode de chauffage ?
-  note: |
-    On fait l'hypothèse que l'action est applicable seulement pour les appartements chauffés via un réseau de gaz ou fioul collectif.
-    En effet, côté particulier, il est préférable de travailler avec les copropriétaires d'un immeuble car le logement individuel n'est
-    pas une cible prioritaire pour ce type de solution, à la fois pour des questions de rentabilité économique mais également car la densité
-    thermique du réseau serait trop faible au vu de la consommation d'un logement individuel.
-  par défaut: "'inconnu'"
+  question: Intéressons-nous à l'énergie de votre logement. Comment sont alimentés vos radiateurs ?
+  description: |
+    Cette question peut-être difficile à appréhender par manque d'information. Répondre "Je ne sais pas" vous permettra d'obtenir une estimation de votre empreinte basée sur les données moyennes du parc français.
   une possibilité:
     - individuel
     - collectif
     - pas de chauffage
-    - inconnu
   avec:
     individuel:
+      titre: Chauffage individuel
     collectif:
+      titre: Chauffage collectif
       applicable si: est un appartement
     pas de chauffage:
-    inconnu:
-      titre: inconnu (=je ne sais pas)
+      titre: Mon logement n'est pas chauffé
 
 logement . chauffage . principal:
-  applicable si: mode = "individuel"
+  applicable si:
+    toutes ces conditions:
+      - est défini: chauffage . mode
+      - chauffage . mode = "individuel"
   titre: Chauffage principal air
-  question: TODO Quel chauffage principal (air)?
-  description: TODO
+  question: Quelle est la source d'énergie de votre chauffage principal ?
   une possibilité:
     - électricité
     - PAC air air
@@ -74,8 +72,7 @@ logement . chauffage . principal . ecs:
   applicable si:
     est défini: chauffage . principal
   titre: Chauffage eau chaude sanitaire
-  question: TODO Chauffe eau différent du chauffage principal ?
-  description: TODO
+  question: Votre chauffe-eau est-il raccordé sur le même système que votre chauffage principal ou bien sur une source différente ?
   par défaut:
     variations:
       - si: principal = "PAC air air"
@@ -122,10 +119,12 @@ logement . chauffage . principal . ecs:
       titre: Chauffe-eau solaire
 
 logement . chauffage . collectif:
-  applicable si: mode = "collectif"
+  applicable si:
+    toutes ces conditions:
+      - est défini: chauffage . mode
+      - chauffage . mode = "collectif"
   titre: Chauffage principal air
-  question: Quelle source d'énergie du chauffage central ? Pas de panique si vous savez pas.
-  description: TODO
+  question: Savez-vous si votre chauffage collectif est alimenté au gaz ou bien par un réseau de chaleur ?
   une possibilité:
     - gaz
     - réseau de chaleur
@@ -135,8 +134,9 @@ logement . chauffage . collectif:
 
 logement . chauffage . collectif . ecs:
   titre: Chauffage eau chaude sanitaire
-  question: TODO ECS raccordé sur le collectif ?
-  description: TODO
+  question: Votre chauffe-eau est-il raccordé au chauffage collectif également ?
+  description: |
+    Sélectionner chauffe-eau solaire prend en compte l'appoint nécessaire pour compléter l'énergie solaire.
   par défaut: "'source collectif'"
   une possibilité:
     - source collectif
@@ -147,42 +147,53 @@ logement . chauffage . collectif . ecs:
     source collectif:
       titre: Oui, l'ECS est raccordée au chauffage collectif
     chauffe eau électricité:
-      titre: Non, j'ai un chauffe-eau électrique individuel
+      titre: Non, j'ai un chauffe-eau électrique
     chauffe eau gaz:
-      titre: Non, j'ai un chauffe-eau gaz individuel
+      titre: Non, j'ai un chauffe-eau gaz
+      non applicable si:
+        toutes ces conditions:
+          - est défini: collectif
+          - collectif = "gaz"
     chauffe eau solaire:
-      titre: Non, j'ai un chauffe-eau solaire individuel
+      titre: Non, j'ai un chauffe-eau solaire
 
 logement . chauffage . mode . pas de chauffage . ecs:
-  applicable si: mode = "pas de chauffage"
+  applicable si:
+    toutes ces conditions:
+      - est défini: chauffage . mode
+      - chauffage . mode = "pas de chauffage"
   titre: Chauffage eau chaude sanitaire
-  question: TODO Quel chauffage pour l'eau chaude sanitaire (ECS) ?
-  description: TODO
+  question: Comment est chauffée l'eau de votre logement ?
+  description: |
+    Sélectionner chauffe-eau solaire prend en compte l'appoint nécessaire pour compléter l'énergie solaire.
   par défaut: "'électricité'"
   une possibilité:
     - électricité
     - PAC air eau
     - chauffe eau solaire
+    - aucun
   avec:
     électricité:
     PAC air eau:
       titre: PAC air/eau
     chauffe eau solaire:
       titre: Chauffe-eau solaire
+    aucun:
+      titre: Je n'ai pas d'eau chaude
 
 logement . chauffage . appoint:
   non applicable si:
     une de ces conditions:
+      - est non défini: chauffage . mode
       - chauffage . mode = "pas de chauffage"
-      - chauffage . mode = "inconnu"
       - est non défini: chauffage . principal
       - est non défini: chauffage . collectif
-  titre: Chauffage d'appoint air
-  question: TODO Disposez-vous d'un chauffage d'appoint ?
-  description: TODO
+  titre: Appoint chauffage et cuisson
+  question: Disposez-vous de sources d'énergie d'appoint ?
   une possibilité:
     - électricité
     - bois
+    - bouteille gaz cuisson
     - aucun
   avec:
     électricité:
@@ -192,11 +203,13 @@ logement . chauffage . appoint:
           - est défini: chauffage . principal
           - chauffage . principal = "électricité"
     bois:
-      titre: Oui, j'utilise du bois ou granulés pour de l'appoint
+      titre: Oui, j'utilise du bois ou granulés
       non applicable si:
         toutes ces conditions:
           - est défini: chauffage . principal
           - chauffage . principal = "bois"
+    bouteille gaz cuisson:
+      titre: Oui, j'utilise une bouteille de gaz pour la cuisson
     aucun:
       titre: Non, je n'ai pas de chauffage d'appoint
 
@@ -230,11 +243,17 @@ logement . chauffage . empreinte par défaut:
 logement . chauffage . saisie précision consommation:
   applicable si:
     une de ces conditions:
-      - est défini: chauffage . principal
-      - est défini: chauffage . collectif
+      - toutes ces conditions:
+          - est défini: chauffage . mode
+          - chauffage . mode = "individuel"
+          - est défini: chauffage . principal
+      - toutes ces conditions:
+          - est défini: chauffage . mode
+          - chauffage . mode = "collectif"
+          - est défini: chauffage . collectif
   non applicable si:
     une de ces conditions:
-      - chauffage . mode = "inconnu"
+      - est non défini: chauffage . mode
       - chauffage . mode = "pas de chauffage"
   question: Connaissez-vous précisément vos consommations ou factures d'énergie ?
   une possibilité:
@@ -454,6 +473,7 @@ logement . chauffage . gaz . est présent ecs:
           - chauffage . collectif = "gaz"
           - chauffage . collectif . ecs = "source collectif"
       - toutes ces conditions:
+          - est défini: chauffage . mode
           - chauffage . mode = "collectif"
           - chauffage . collectif . ecs = "chauffe eau gaz"
 
@@ -600,6 +620,7 @@ logement . chauffage . gaz . consommation estimée via le coût . facteur:
 logement . chauffage . gaz . biogaz:
   applicable si:
     toutes ces conditions:
+      - est défini: chauffage . mode
       - chauffage . mode = "individuel"
       - gaz . présent = oui
   question: Avez-vous souscrit à un contrat gaz incluant du biogaz (ou biométhane) ?
@@ -706,17 +727,15 @@ logement . chauffage . bouteille gaz:
 
 logement . chauffage . bouteille gaz . empreinte:
   titre: Empreinte de la consommation de bouteilles de gaz
-  applicable si:
-    toutes ces conditions:
-      - est défini: bouteille gaz . présent
-      - bouteille gaz . présent
+  applicable si: bouteille gaz . présent
   formule: empreinte bouteille * consommation
   unité: kgCO2e
 
 logement . chauffage . bouteille gaz . présent:
-  non applicable si: chauffage . mode = "inconnu"
-  question: Utilisez-vous des bouteille de gaz ?
-  par défaut: non
+  formule:
+    toutes ces conditions:
+      - est défini: logement . chauffage . appoint
+      - logement . chauffage . appoint = "bouteille gaz cuisson"
 
 logement . chauffage . bouteille gaz . consommation:
   non applicable si: bouteille gaz . présent = non
