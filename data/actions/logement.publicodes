@@ -13,12 +13,12 @@ logement . empreinte chauffage air:
 logement . empreinte chauffage air utilisateur:
   formule:
     somme:
-      - chauffage . électricité . présent * logement . électricité . empreinte * parc français . chauffage . part chauffage air électricité
-      - chauffage . gaz . empreinte * parc français . chauffage . part chauffage air gaz
-      - chauffage . citerne propane . empreinte * parc français . chauffage . part chauffage air gaz
-      - chauffage . bois . empreinte * parc français . chauffage . part chauffage air bois
-      - chauffage . fioul . empreinte * parc français . chauffage . part chauffage air fioul
-      - chauffage . réseau de chaleur . empreinte * parc français . chauffage . part chauffage air réseau de chaleur
+      - chauffage . électricité . présent * logement . électricité . empreinte * parc français . CEREN . chauffage . part chauffage air électricité
+      - chauffage . gaz . empreinte * parc français . CEREN . chauffage . part chauffage air gaz
+      - chauffage . citerne propane . empreinte * parc français . CEREN . chauffage . part chauffage air gaz
+      - chauffage . bois . empreinte * parc français . CEREN . chauffage . part chauffage air bois
+      - chauffage . fioul . empreinte * parc français . CEREN . chauffage . part chauffage air fioul
+      - chauffage . réseau de chaleur . empreinte * parc français . CEREN . chauffage . part chauffage air réseau de chaleur
   note: |
     Dans le cas des utilisateurs ayant répondu connaître leur DPE ou avoir besoin d'aide pour estimer leurs consommations, on fait ici une légère approximation en appliquant le ratio "chauffage air" à l'empreinte globale du chauffage pour chaque type d'énergie plutôt que de repartir de l'ensemble des consommations spécifiques au chauffage de l'air. Néanmoins, on considère que l'impact sur le résultat final n'est pas significatif.
 
@@ -38,11 +38,11 @@ logement . chauffage . empreinte eau chaude sanitaire:
 logement . chauffage . empreinte eau chaude sanitaire utilisateur:
   formule:
     somme:
-      - chauffage . électricité . présent * logement . électricité . empreinte * parc français . chauffage . part ecs électricité
-      - chauffage . gaz . empreinte * parc français . chauffage . part ecs gaz
-      - chauffage . citerne propane . empreinte * parc français . chauffage . part ecs gaz
-      - chauffage . fioul . empreinte * parc français . chauffage . part ecs fioul
-      - chauffage . réseau de chaleur . empreinte * parc français . chauffage . part ecs réseau de chaleur
+      - chauffage . électricité . présent * logement . électricité . empreinte * parc français . CEREN . chauffage . part ecs électricité
+      - chauffage . gaz . empreinte * parc français . CEREN . chauffage . part ecs gaz
+      - chauffage . citerne propane . empreinte * parc français . CEREN . chauffage . part ecs gaz
+      - chauffage . fioul . empreinte * parc français . CEREN . chauffage . part ecs fioul
+      - chauffage . réseau de chaleur . empreinte * parc français . CEREN . chauffage . part ecs réseau de chaleur
   note: |
     Dans le cas des utilisateurs ayant répondu connaître leur DPE ou avoir besoin d'aide pour estimer leurs consommations, on fait ici une légère approximation en appliquant le ratio "ecs" à l'empreinte globale du chauffage pour chaque type d'énergie plutôt que de repartir de l'ensemble des consommations spécifiques à l'ECS. Néanmoins, on considère que l'impact sur le résultat final n'est pas significatif.
 
@@ -74,64 +74,64 @@ logement . chauffage . chauffe eau solaire . installer chauffe eau solaire:
 
   formule: empreinte eau chaude sanitaire * chauffage . chauffe eau solaire . taux réduction ecs / habitants
 
-logement . chauffage . se chauffer au bois:
-  titre: Se chauffer au bois
-  applicable si:
-    toutes ces conditions:
-      - propriétaire = 'propriétaire'
-      - est une maison
-      - une de ces conditions:
-          - toutes ces conditions:
-              - est défini: chauffage . gaz . présent
-              - chauffage . gaz . présent
-          - toutes ces conditions:
-              - est défini: chauffage . fioul . présent
-              - chauffage . fioul . présent
-          - toutes ces conditions:
-              - est défini: chauffage . citerne propane . présent
-              - chauffage . citerne propane . présent
-  non applicable si:
-    une de ces conditions:
-      - toutes ces conditions:
-          - est défini: logement . construction . rénovation . travaux . chauffage . présent
-          - logement . construction . rénovation . travaux . chauffage . présent
-      - toutes ces conditions:
-          - est défini: chauffage . bois . présent
-          - chauffage . bois . présent
-  icônes: 🔄🪵
-  formule: (empreinte chauffage air - recalcul - empreinte travaux) / habitants
-  unité: kgCO2e
-  description: |
-    S’équiper d’un poêle ou d’une chaudière à bois permet de ne plus dépendre des énergies fossiles (fuel, gaz) ou de l’électricité pour se chauffer. C’est un mode de chauffage économique.
+# logement . chauffage . se chauffer au bois:
+#   titre: Se chauffer au bois
+#   applicable si:
+#     toutes ces conditions:
+#       - propriétaire = 'propriétaire'
+#       - est une maison
+#       - une de ces conditions:
+#           - toutes ces conditions:
+#               - est défini: chauffage . gaz . présent
+#               - chauffage . gaz . présent
+#           - toutes ces conditions:
+#               - est défini: chauffage . fioul . présent
+#               - chauffage . fioul . présent
+#           - toutes ces conditions:
+#               - est défini: chauffage . citerne propane . présent
+#               - chauffage . citerne propane . présent
+#   non applicable si:
+#     une de ces conditions:
+#       - toutes ces conditions:
+#           - est défini: logement . construction . rénovation . travaux . chauffage . présent
+#           - logement . construction . rénovation . travaux . chauffage . présent
+#       - toutes ces conditions:
+#           - est défini: chauffage . bois . présent
+#           - chauffage . bois . présent
+#   icônes: 🔄🪵
+#   formule: (empreinte chauffage air - recalcul - empreinte travaux) / habitants
+#   unité: kgCO2e
+#   description: |
+#     S’équiper d’un poêle ou d’une chaudière à bois permet de ne plus dépendre des énergies fossiles (fuel, gaz) ou de l’électricité pour se chauffer. C’est un mode de chauffage économique.
 
-    > Découvrez [nos conseils pour bien utiliser votre poêle](https://librairie.ademe.fr/energies/7322-comment-bien-se-chauffer-au-bois--9791029723209.html).
+#     > Découvrez [nos conseils pour bien utiliser votre poêle](https://librairie.ademe.fr/energies/7322-comment-bien-se-chauffer-au-bois--9791029723209.html).
 
-    > Par ailleurs, si vous vous demandez comment est gérée la ressource en bois, voici notre guide ["La forêt française en 10 questions"](https://librairie.ademe.fr/agriculture-alimentation-foret-bioeconomie/7440-la-foret-francaise-en-10-questions-9791029722660.html).
+#     > Par ailleurs, si vous vous demandez comment est gérée la ressource en bois, voici notre guide ["La forêt française en 10 questions"](https://librairie.ademe.fr/agriculture-alimentation-foret-bioeconomie/7440-la-foret-francaise-en-10-questions-9791029722660.html).
 
-    Attention toutefois à vous équipez d’un appareil moderne et performant car les vieux poêles libèrent des polluants dans l’air. Pour en savoir plus sur les appareils les plus performants, [consultez notre guide](https://librairie.ademe.fr/urbanisme-et-batiment/5667-adopter-le-chauffage-au-bois-9791029719769.html).
+#     Attention toutefois à vous équipez d’un appareil moderne et performant car les vieux poêles libèrent des polluants dans l’air. Pour en savoir plus sur les appareils les plus performants, [consultez notre guide](https://librairie.ademe.fr/urbanisme-et-batiment/5667-adopter-le-chauffage-au-bois-9791029719769.html).
 
-logement . chauffage . se chauffer au bois . empreinte travaux:
-  valeur: logement . surface * logement . construction . rénovation . travaux . chauffage / logement . construction . rénovation . amortissement
-  contexte:
-    logement . construction . rénovation . travaux . chauffage . présent: oui
+# logement . chauffage . se chauffer au bois . empreinte travaux:
+#   valeur: logement . surface * logement . construction . rénovation . travaux . chauffage / logement . construction . rénovation . amortissement
+#   contexte:
+#     logement . construction . rénovation . travaux . chauffage . présent: oui
 
-logement . chauffage . se chauffer au bois . recalcul:
-  valeur: logement . chauffage . bois . empreinte
-  contexte:
-    logement . chauffage . bois . présent: oui
-    logement . chauffage . bois . type: "'granulés'"
-    logement . chauffage . bois . type . granulés . consommation: recalcul . consommation
-  note: On considère un chauffage via granulés.
+# logement . chauffage . se chauffer au bois . recalcul:
+#   valeur: logement . chauffage . bois . empreinte
+#   contexte:
+#     logement . chauffage . bois . présent: oui
+#     logement . chauffage . bois . type: "'granulés'"
+#     logement . chauffage . bois . type . granulés . consommation: recalcul . consommation
+#   note: On considère un chauffage via granulés.
 
-logement . chauffage . se chauffer au bois . recalcul . consommation:
-  valeur: logement . chauffage . bois . type . granulés . consommation
-  contexte:
-    logement . chauffage . bois . présent: oui
-    logement . chauffage . bois . type: "'granulés'"
-    logement . chauffage . gaz . présent: non
-    logement . chauffage . fioul . présent: non
-    logement . chauffage . citerne propane . présent: non
-  note: On considère la valeur moyenne de la consommation mais on pourrait également jouer avec les rendements et les consommations exactes renseignées pour les autres modes de chauffage.
+# logement . chauffage . se chauffer au bois . recalcul . consommation:
+#   valeur: logement . chauffage . bois . type . granulés . consommation
+#   contexte:
+#     logement . chauffage . bois . présent: oui
+#     logement . chauffage . bois . type: "'granulés'"
+#     logement . chauffage . gaz . présent: non
+#     logement . chauffage . fioul . présent: non
+#     logement . chauffage . citerne propane . présent: non
+#   note: On considère la valeur moyenne de la consommation mais on pourrait également jouer avec les rendements et les consommations exactes renseignées pour les autres modes de chauffage.
 
 logement . chauffage . installer une PAC:
   titre: Installer une pompe à chaleur
@@ -190,7 +190,7 @@ logement . chauffage . installer une PAC . recalcul:
   note: On ne considère pas ici la notion de rendement (COP) mais nous nous basons sur les estimations de consommations moyennes selon les caractéristiques du logement fournies par l'utilisateur.
 
 logement . chauffage . installer une PAC . recalcul . consommation:
-  valeur: logement . électricité . consommation totale * (parc français . chauffage . part chauffage air électricité + parc français . chauffage . part ecs électricité)
+  valeur: logement . électricité . consommation totale * (parc français . CEREN . chauffage . part chauffage air électricité + parc français . CEREN . chauffage . part ecs électricité)
   contexte:
     logement . chauffage . PAC . présent: oui
     logement . chauffage . électricité . présent: non
@@ -214,7 +214,8 @@ logement . climatisation . réduction:
     > Pour découvrir les bons gestes pour vivre dans un logement confortable sans climatisation, [consultez notre article](https://agirpourlatransition.ademe.fr/particuliers/vacances-loisirs/ete/canicule-comment-garder-logement-frais).
 
 logement . climatisation . part électricité climatisation:
-  formule: logement . climatisation . nombre * 400 kWh * logement . électricité . empreinte au kWh
+  formule: logement . climatisation . nombre * 400 kWh/climatiseur * logement . électricité . empreinte au kWh
+  unité: kgCO2e
   note: |
     D'après l'étude [ADEME Panel ElecDom 2020](https://librairie.ademe.fr/changement-climatique-et-energie/4473-panel-usages-electrodomestiques.html), un climatiseur fixe a une [consommation moyenne "de 100 à 700 kWh/an"](https://agirpourlatransition.ademe.fr/particuliers/maison/economies-denergie-deau/electricite-combien-consomment-appareils-maison).
     Nous partons donc sur une moyenne de 400 kWh/an par climatiseur installé.

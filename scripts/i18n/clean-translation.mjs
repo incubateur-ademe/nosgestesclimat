@@ -28,12 +28,16 @@ destLangs.forEach((destLang) => {
   const destRules = mergeAll(readYAML(resolve(destPath)))
   // Check all attributes for each key of destRules and remove it if it's not in rules
   for (const rule in destRules) {
+    // Skip if the rule doesn't exist in the source model
+    if (!rules[rule]) {
+      continue
+    }
     for (const attr in destRules[rule]) {
       if (attr.includes('.')) {
-        break // Skip nested attributes
+        continue // Skip nested attributes
       }
       if (attr === 'titre') {
-        break // Skip 'titre' attributes
+        continue // Skip 'titre' attributes
       }
       if (!Object.hasOwn(rules[rule], attr)) {
         delete destRules[rule][attr]
