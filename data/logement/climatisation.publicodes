@@ -3,7 +3,10 @@ logement . climatisation:
   non applicable si: métrique != "carbone"
   icônes: ❄️
   titre: Climatiseurs
-  formule: empreinte climatiseurs / habitants
+  # This is a hack to make sure "non applicability" of "empreinte climatiseurs" is not propagate to parent rule.
+  formule:
+    somme:
+      - empreinte climatiseurs / habitants
   note: |
     Nous estimons ici l'empreinte de la climatisation.
     Son empreinte est quadruple :
@@ -75,8 +78,11 @@ logement . climatisation . nombre par défaut:
 
 logement . climatisation . nombre:
   applicable si:
-    est défini: climatisation . présent
-  non applicable si: climatisation . présent = "pas de climatiseurs"
+    toutes ces conditions:
+      - est défini: climatisation . présent
+      - une de ces conditions:
+          - climatisation . présent = "oui et utilisation"
+          - climatisation . présent = "oui sans utilisation"
   question: Combien de climatiseurs électriques possédez-vous ?
   par défaut: 1
   plancher: 0
