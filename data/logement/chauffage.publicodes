@@ -1218,6 +1218,7 @@ logement . chauffage . bois . empreinte moyenne:
       système . chaudière bûches . présent: oui
       système . poêle granulés . présent: oui
       système . chaudière granulés . présent: oui
+      système . foyer ouvert . présent: non
 
 logement . chauffage . bois . présent:
   formule:
@@ -1260,6 +1261,7 @@ logement . chauffage . bois . système:
       - chaudière bûches . présent
       - poêle granulés . présent
       - chaudière granulés . présent
+      - foyer ouvert . présent
     option aucun: aucun
   question: Quel(s) système(s) de chauffage au bois utilisez-vous dans votre logement ?
 
@@ -1270,7 +1272,7 @@ logement . chauffage . bois . système . nombre bûches et granulés:
       - type . granulés
 
 logement . chauffage . bois . système . poêle bûches:
-  titre: Poêle bûches
+  titre: Poêle ou insert bûches
 logement . chauffage . bois . système . poêle bûches . présent:
   question: Avez-vous un poêle à bûches dans votre logement ?
 
@@ -1281,7 +1283,7 @@ logement . chauffage . bois . système . chaudière bûches . présent:
   question: Avez-vous une chaudière à bûches dans votre logement ?
 
 logement . chauffage . bois . système . poêle granulés:
-  titre: Poêle granulés
+  titre: Poêle ou insert granulés
 logement . chauffage . bois . système . poêle granulés . présent:
   question: Avez-vous un poêle à granulés dans votre logement ?
 
@@ -1290,6 +1292,11 @@ logement . chauffage . bois . système . chaudière granulés:
   non applicable si: bois . est présent appoint
 logement . chauffage . bois . système . chaudière granulés . présent:
   question: Avez-vous une chaudière à granulés dans votre logement ?
+
+logement . chauffage . bois . système . foyer ouvert:
+  titre: Cheminée à foyer ouvert
+logement . chauffage . bois . système . foyer ouvert . présent:
+  question: Avez-vous un foyer ouvert dans votre logement ?
 
 logement . chauffage . bois . type:
   titre: Type de bois
@@ -1304,6 +1311,9 @@ logement . chauffage . bois . type . bûches:
       - toutes ces conditions:
           - est défini: système . chaudière bûches . présent
           - système . chaudière bûches . présent
+      - toutes ces conditions:
+          - est défini: système . foyer ouvert . présent
+          - système . foyer ouvert . présent
 
 logement . chauffage . bois . type . granulés:
   titre: Granulés
@@ -1605,7 +1615,10 @@ logement . chauffage . bois . fe bûches réel:
   formule:
     moyenne:
       - fe poêle bûches * système . poêle bûches . présent
+      - fe poêle bûches * système . foyer ouvert . présent
       - fe chaudière bûches * système . chaudière bûches . présent
+  note: |
+    Faute de facteur d'émission pour les foyers ouverts dans la Base Empreinte, nous faisons l'hypothèse que leur facteur d'émission est équivalent à celui des poêles à bûches même si leur performance de combustion est plus faible et qu'il y a sans doute un impact davantage néfaste pour le climat.
   unité: kgCO2e/kWh
 
 logement . chauffage . bois . fe granulés:
