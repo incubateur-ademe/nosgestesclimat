@@ -1,20 +1,21 @@
-logement . chauffage . choix utilisateur:
-  titre: Choix utilisateur pour le chauffage
-  formule:
-    une de ces conditions:
-      - est défini: électricité . présent
-      - est défini: PAC . présent
-      - est défini: gaz . présent
-      - est défini: réseau de chaleur . présent
-      - est défini: citerne propane . présent
-      - est défini: fioul . présent
-      - est défini: bois . présent
-
 logement . empreinte chauffage air:
   formule:
     variations:
-      - si: chauffage . choix utilisateur
+      - si:
+          une de ces conditions:
+            - toutes ces conditions:
+                - est défini: chauffage . mode
+                - chauffage . mode = "individuel"
+                - est défini: chauffage . principal
+            - toutes ces conditions:
+                - est défini: chauffage . mode
+                - chauffage . mode = "collectif"
         alors: empreinte chauffage air utilisateur
+      - si:
+          toutes ces conditions:
+            - est défini: chauffage . mode
+            - chauffage . mode = "pas de chauffage"
+        alors: 0
       - sinon: parc français . chauffage . empreinte moyenne chauffage air par m2 * logement . surface
   description: |
     Pour chaque kWh de chaque type d'énergie, quelle est la part utilisée pour le chauffage de l'air d'un foyer ?
@@ -25,7 +26,7 @@ logement . empreinte chauffage air:
 logement . empreinte chauffage air utilisateur:
   formule:
     somme:
-      - chauffage . électricité . présent * logement . électricité . empreinte * parc français . CEREN . chauffage . part chauffage air électricité
+      - (chauffage . électricité . est présent chauffage + chauffage . PAC . est présent chauffage) * logement . électricité . empreinte * parc français . CEREN . chauffage . part chauffage air électricité
       - chauffage . gaz . empreinte * parc français . CEREN . chauffage . part chauffage air gaz
       - chauffage . citerne propane . empreinte * parc français . CEREN . chauffage . part chauffage air gaz
       - chauffage . bois . empreinte * parc français . CEREN . chauffage . part chauffage air bois
@@ -34,17 +35,32 @@ logement . empreinte chauffage air utilisateur:
   note: |
     Dans le cas des utilisateurs ayant répondu connaître leur DPE ou avoir besoin d'aide pour estimer leurs consommations, on fait ici une légère approximation en appliquant le ratio "chauffage air" à l'empreinte globale du chauffage pour chaque type d'énergie plutôt que de repartir de l'ensemble des consommations spécifiques au chauffage de l'air. Néanmoins, on considère que l'impact sur le résultat final n'est pas significatif.
 
+    Par ailleurs, nous devrions séparer électricité et PAC.
+
 logement . chauffage . empreinte eau chaude sanitaire:
   formule:
     variations:
-      - si: chauffage . choix utilisateur
+      - si:
+          une de ces conditions:
+            - toutes ces conditions:
+                - est défini: chauffage . mode
+                - chauffage . mode = "individuel"
+                - est défini: chauffage . principal
+            - toutes ces conditions:
+                - est défini: chauffage . mode
+                - chauffage . mode = "collectif"
         alors: empreinte eau chaude sanitaire utilisateur
+      - si:
+          toutes ces conditions:
+            - est défini: chauffage . mode
+            - chauffage . mode = "pas de chauffage"
+        alors: 0
       - sinon: parc français . chauffage . empreinte moyenne ecs par m2 * logement . surface
   unité: kgCO2e
   description: |
     Pour chaque kWh de chaque type d'énergie, quelle est la part utilisée pour l'eau chaude sanitaire (ECS) d'un foyer ?
 
-    > Nous utilions ici [les données du CEREN](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel)
+    > Nous utilisons ici [les données du CEREN](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel)
     via le travail réalisé dans le fichier [chiffres parc logements français.publicodes](https://github.com/incubateur-ademe/nosgestesclimat/blob/master/data/logement/chiffres%20parc%20logements%20fran%C3%A7ais.publicodes).
 
 logement . chauffage . empreinte eau chaude sanitaire utilisateur:
@@ -83,65 +99,6 @@ logement . chauffage . chauffe eau solaire . installer chauffe eau solaire:
     > Pour en savoir plus sur la technologie, son fonctionnement et les coûts d’installation, consultez [notre guide "Adopter le solaire thermique"](https://librairie.ademe.fr/energies-renouvelables-reseaux-et-stockage/6136-adopter-le-solaire-thermique.html).
 
   formule: empreinte eau chaude sanitaire * chauffage . chauffe eau solaire . taux réduction ecs / habitants
-
-# logement . chauffage . se chauffer au bois:
-#   titre: Se chauffer au bois
-#   applicable si:
-#     toutes ces conditions:
-#       - propriétaire = 'propriétaire'
-#       - est une maison
-#       - une de ces conditions:
-#           - toutes ces conditions:
-#               - est défini: chauffage . gaz . présent
-#               - chauffage . gaz . présent
-#           - toutes ces conditions:
-#               - est défini: chauffage . fioul . présent
-#               - chauffage . fioul . présent
-#           - toutes ces conditions:
-#               - est défini: chauffage . citerne propane . présent
-#               - chauffage . citerne propane . présent
-#   non applicable si:
-#     une de ces conditions:
-#       - toutes ces conditions:
-#           - est défini: logement . construction . rénovation . travaux . chauffage . présent
-#           - logement . construction . rénovation . travaux . chauffage . présent
-#       - toutes ces conditions:
-#           - est défini: chauffage . bois . présent
-#           - chauffage . bois . présent
-#   icônes: 🔄🪵
-#   formule: (empreinte chauffage air - recalcul - empreinte travaux) / habitants
-#   unité: kgCO2e
-#   description: |
-#     S’équiper d’un poêle ou d’une chaudière à bois permet de ne plus dépendre des énergies fossiles (fuel, gaz) ou de l’électricité pour se chauffer. C’est un mode de chauffage économique.
-
-#     > Découvrez [nos conseils pour bien utiliser votre poêle](https://librairie.ademe.fr/energies/7322-comment-bien-se-chauffer-au-bois--9791029723209.html).
-
-#     > Par ailleurs, si vous vous demandez comment est gérée la ressource en bois, voici notre guide ["La forêt française en 10 questions"](https://librairie.ademe.fr/agriculture-alimentation-foret-bioeconomie/7440-la-foret-francaise-en-10-questions-9791029722660.html).
-
-#     Attention toutefois à vous équipez d’un appareil moderne et performant car les vieux poêles libèrent des polluants dans l’air. Pour en savoir plus sur les appareils les plus performants, [consultez notre guide](https://librairie.ademe.fr/urbanisme-et-batiment/5667-adopter-le-chauffage-au-bois-9791029719769.html).
-
-# logement . chauffage . se chauffer au bois . empreinte travaux:
-#   valeur: logement . surface * logement . construction . rénovation . travaux . chauffage / logement . construction . rénovation . amortissement
-#   contexte:
-#     logement . construction . rénovation . travaux . chauffage . présent: oui
-
-# logement . chauffage . se chauffer au bois . recalcul:
-#   valeur: logement . chauffage . bois . empreinte
-#   contexte:
-#     logement . chauffage . bois . présent: oui
-#     logement . chauffage . bois . type: "'granulés'"
-#     logement . chauffage . bois . type . granulés . consommation: recalcul . consommation
-#   note: On considère un chauffage via granulés.
-
-# logement . chauffage . se chauffer au bois . recalcul . consommation:
-#   valeur: logement . chauffage . bois . type . granulés . consommation
-#   contexte:
-#     logement . chauffage . bois . présent: oui
-#     logement . chauffage . bois . type: "'granulés'"
-#     logement . chauffage . gaz . présent: non
-#     logement . chauffage . fioul . présent: non
-#     logement . chauffage . citerne propane . présent: non
-#   note: On considère la valeur moyenne de la consommation mais on pourrait également jouer avec les rendements et les consommations exactes renseignées pour les autres modes de chauffage.
 
 logement . chauffage . installer une PAC:
   titre: Installer une pompe à chaleur
@@ -272,33 +229,18 @@ logement . chauffage . raccordement réseau de chaleur:
   applicable si:
     toutes ces conditions:
       - est un appartement
-      - chauffage . collectif = "collectif"
-      - une de ces conditions:
-          - toutes ces conditions:
-              - est défini: chauffage . gaz . présent
-              - chauffage . gaz . présent
-          - toutes ces conditions:
-              - est défini: chauffage . fioul . présent
-              - chauffage . fioul . présent
-          - toutes ces conditions:
-              - est défini: chauffage . citerne propane . présent
-              - chauffage . citerne propane . présent
+      - est défini: chauffage . mode
+      - chauffage . mode = "collectif"
+      - chauffage . collectif = "gaz"
   non applicable si:
-    une de ces conditions:
-      - toutes ces conditions:
-          - est défini: logement . construction . rénovation . travaux . chauffage . présent
-          - logement . construction . rénovation . travaux . chauffage . présent
-      - toutes ces conditions:
-          - est défini: chauffage . PAC . présent
-          - chauffage . PAC . présent
-      - toutes ces conditions:
-          - est défini: chauffage . électricité . présent
-          - chauffage . électricité . présent
+    toutes ces conditions:
+      - est défini: logement . construction . rénovation . travaux . chauffage . présent
+      - logement . construction . rénovation . travaux . chauffage . présent
   formule: (empreinte chauffage air + empreinte eau chaude sanitaire - recalcul) / habitants
   unité: kgCO2e
   # TODO : Cette `note` est plus grand public que technique, à voir si ce texte n'a pas sa place ailleurs.
   note: |
-    On fait l'hypothèse que l'action est applicable seulement pour les appartements chauffés via un réseau de gaz ou fioul collectif.
+    On fait l'hypothèse que l'action est applicable seulement pour les appartements chauffés via un réseau de gaz collectif.
     En effet, côté particulier, il est préférable de travailler avec les copropriétaires d'un immeuble car le logement individuel n'est
     pas une cible prioritaire pour ce type de solution, à la fois pour des questions de rentabilité économique mais également car la densité
     thermique du réseau serait trop faible au vu de la consommation d'un logement individuel.
@@ -335,16 +277,7 @@ logement . chauffage . raccordement réseau de chaleur:
 logement . chauffage . raccordement réseau de chaleur . recalcul:
   valeur: logement . chauffage . réseau de chaleur . empreinte
   contexte:
-    logement . chauffage . réseau de chaleur . présent: oui
-    logement . chauffage . réseau de chaleur . consommation: recalcul . consommation
-
-logement . chauffage . raccordement réseau de chaleur . recalcul . consommation:
-  valeur: logement . chauffage . réseau de chaleur . consommation
-  contexte:
-    logement . chauffage . réseau de chaleur . présent: oui
-    logement . chauffage . gaz . présent: non
-    logement . chauffage . fioul . présent: non
-    logement . chauffage . citerne propane . présent: non
+    logement . chauffage . collectif: "'réseau de chaleur'"
 
 logement . extérieur . barbecue plus écologique:
   applicable si:
@@ -541,26 +474,3 @@ logement . électricité verte:
     > Toutes les infos sur le label VertVolt et les offres d'énergie engagées ou très engagées [sont à retrouver ici](https://agirpourlatransition.ademe.fr/particuliers/vertvolt).
     >
     > Et si vous voulez en savoir plus sur le développement des énergies renouvelables en France, ça se passe [ici pour l'éolien](https://librairie.ademe.fr/energies/7345-tout-comprendre-l-eolien-9791029723247.html) ou [là pour le photovoltaïque](https://librairie.ademe.fr/energies/7545-l-electricite-photovoltaique-en-10-questions-9791029721465.html)
-
-#
-# logement . eau domestique . bains et douches . réduire:
-#   titre: Passer aux douches express
-#   non applicable si: logement . eau domestique . bains et douches . habitude = 'douche express'
-#   icônes: 🚿🕒
-#   formule: logement . eau domestique . bains et douches - empreinte douches express
-
-# logement . eau domestique . bains et douches . réduire . empreinte douches express:
-#   valeur: logement . eau domestique . bains et douches
-#   contexte:
-#     logement . eau domestique . bains et douches . habitude: "'douche express'"
-
-# logement . eau domestique . jardin . type arrosage . changer:
-#   titre: Passer au goutte-à-goutte
-#   non applicable si: logement . eau domestique . jardin . type arrosage = 'goutte à goutte'
-#   icônes: 💧🌱
-#   formule: logement . eau domestique . jardin - empreinte goutte à goutte
-
-# logement . eau domestique . jardin . type arrosage . changer . empreinte goutte à goutte:
-#   valeur: logement . eau domestique . jardin
-#   contexte:
-#     logement . eau domestique . jardin . type arrosage: "'goutte à goutte'"
