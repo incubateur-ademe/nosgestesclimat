@@ -2,30 +2,252 @@ logement . chauffage:
   DLUO: 01/09/2026
   non applicable si: métrique != "carbone"
   titre: Energie logement
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: chauffage . mode
+            - chauffage . mode = "individuel"
+            - est défini: chauffage . principal
+        alors: empreinte totale / habitants
+      - si:
+          toutes ces conditions:
+            - est défini: chauffage . mode
+            - chauffage . mode = "collectif"
+        alors: empreinte totale collectif / habitants
+      - si:
+          toutes ces conditions:
+            - est défini: chauffage . mode
+            - chauffage . mode = "pas de chauffage"
+        alors: 0
+      - sinon: empreinte par défaut / habitants
+
+logement . chauffage . mode:
+  question: Intéressons-nous à l'énergie de votre logement. Comment est-il chauffé ?
+  description: |
+    Cette question peut-être difficile à appréhender par manque d'information. Répondre "Je ne sais pas" vous permettra d'obtenir une estimation de votre empreinte basée sur les données moyennes du parc français.
+  une possibilité:
+    - individuel
+    - collectif
+    - pas de chauffage
+  avec:
+    individuel:
+      titre: Chauffage individuel
+    collectif:
+      titre: Chauffage collectif
+      non applicable si: est une maison
+    pas de chauffage:
+      titre: Mon logement n'est pas chauffé
+
+logement . chauffage . principal:
+  applicable si:
+    toutes ces conditions:
+      - est défini: chauffage . mode
+      - chauffage . mode = "individuel"
+  titre: Chauffage principal air
+  question: Quelle est la source d'énergie de votre chauffage principal ?
+  une possibilité:
+    - électricité
+    - PAC air air
+    - PAC air eau
+    - gaz
+    - fioul
+    - bois
+    - réseau de chaleur
+    - citerne propane
+  avec:
+    électricité:
+      titre: Electricité ⚡️
+    PAC air air:
+      titre: PAC air/air 💨
+    PAC air eau:
+      titre: PAC air/eau 💧
+    gaz:
+      titre: Gaz 🔥
+    fioul:
+      titre: Fioul 🛢️
+    bois:
+      titre: Bois 🪵
+    réseau de chaleur:
+      titre: Réseau de chaleur 🌡️
+    citerne propane:
+      titre: Citerne propane 🛢️
+
+logement . chauffage . principal . ecs:
+  applicable si:
+    est défini: chauffage . principal
+  titre: Chauffage eau chaude sanitaire
+  question: À quel système d'énergie est raccordé votre chauffe-eau ?
+  par défaut:
+    variations:
+      - si: principal = "PAC air air"
+        alors: "'électricité'"
+      - sinon: "'identique'"
+  une possibilité:
+    - identique
+    - électricité
+    - PAC air eau
+    - gaz
+    - bois
+    - chauffe eau solaire
+  avec:
+    identique:
+      titre: Mon chauffe-eau est sur le même système
+      non applicable si:
+        toutes ces conditions:
+          - est défini: chauffage . principal
+          - chauffage . principal = "PAC air air"
+    électricité:
+      titre: Chauffe-eau électrique
+      non applicable si:
+        toutes ces conditions:
+          - est défini: chauffage . principal
+          - chauffage . principal = "électricité"
+    PAC air eau:
+      titre: PAC air/eau
+      non applicable si:
+        toutes ces conditions:
+          - est défini: chauffage . principal
+          - une de ces conditions:
+              - chauffage . principal = "PAC air eau"
+              - chauffage . principal = "PAC air air"
+    gaz:
+      titre: Chauffe-eau gaz
+      non applicable si:
+        toutes ces conditions:
+          - est défini: chauffage . principal
+          - chauffage . principal = "gaz"
+    bois:
+      titre: Chaudière bois
+      non applicable si:
+        toutes ces conditions:
+          - est défini: chauffage . principal
+          - chauffage . principal = "bois"
+    chauffe eau solaire:
+      titre: Chauffe-eau solaire (appoint électrique)
+
+logement . chauffage . collectif:
+  applicable si:
+    toutes ces conditions:
+      - est défini: chauffage . mode
+      - chauffage . mode = "collectif"
+  titre: Chauffage principal air
+  question: Connaissez-vous le type d’énergie qui alimente votre chauffage collectif ?
+  description: |
+    Cette question est loin d'être évidente. Vous ne savez pas ? Pas de panique, répondez "Je ne sais pas", nous considérerons une valeur moyenne.
+  une possibilité:
+    - gaz
+    - réseau de chaleur
+  avec:
+    gaz:
+    réseau de chaleur:
+  note: On considère ici que le raccordement par défaut est le réseau de chaleur mais c'est biensûr une hypothèse. On pourra par la suite calculer une valeur plus précise.
+  par défaut: "'réseau de chaleur'"
+
+logement . chauffage . collectif . ecs:
+  titre: Chauffage eau chaude sanitaire
+  question: Votre chauffe-eau est-il raccordé au chauffage collectif également ?
+  description: |
+    Sélectionner chauffe-eau solaire prend en compte l'appoint nécessaire pour compléter l'énergie solaire.
+  par défaut: "'source collectif'"
+  une possibilité:
+    - source collectif
+    - chauffe eau électricité
+    - chauffe eau gaz
+    - chauffe eau solaire
+  avec:
+    source collectif:
+      titre: Chauffe-eau sur le même réseau
+    chauffe eau électricité:
+      titre: Chauffe-eau électrique
+    chauffe eau gaz:
+      titre: Chauffe-eau gaz individuel
+      non applicable si:
+        toutes ces conditions:
+          - est défini: collectif
+          - collectif = "gaz"
+    chauffe eau solaire:
+      titre: Chauffe-eau solaire (appoint électrique)
+
+logement . chauffage . mode . pas de chauffage . ecs:
+  applicable si:
+    toutes ces conditions:
+      - est défini: chauffage . mode
+      - chauffage . mode = "pas de chauffage"
+  titre: Chauffage eau chaude sanitaire
+  question: Comment est chauffée l'eau de votre logement ?
+  description: |
+    Sélectionner chauffe-eau solaire prend en compte l'appoint nécessaire pour compléter l'énergie solaire par de l'électricité.
+  par défaut: "'électricité'"
+  une possibilité:
+    - électricité
+    - PAC air eau
+    - chauffe eau solaire
+    - aucun
+  avec:
+    électricité:
+      titre: Chauffe-eau électrique ⚡️
+    PAC air eau:
+      titre: PAC air/eau 💧
+    chauffe eau solaire:
+      titre: Chauffe-eau solaire (appoint électrique) ☀️
+    aucun:
+      titre: Je n'ai pas d'eau chaude ❌
+
+logement . chauffage . appoint:
+  applicable si:
+    une de ces conditions:
+      - toutes ces conditions:
+          - est défini: chauffage . mode
+          - chauffage . mode = "individuel"
+          - est défini: chauffage . principal
+          - est défini: chauffage . principal . ecs
+      - toutes ces conditions:
+          - est défini: chauffage . mode
+          - chauffage . mode = "collectif"
+          - est défini: chauffage . collectif
+          - est défini: chauffage . collectif . ecs
+  non applicable si:
+    une de ces conditions:
+      - est non défini: chauffage . mode
+      - chauffage . mode = "pas de chauffage"
+  titre: Appoint chauffage et cuisson
+  question: Disposez-vous de sources d'énergie d'appoint ?
   mosaique:
     type: selection
     options:
       - électricité . présent
-      - gaz . présent
-      - PAC . présent
       - bois . présent
-      - réseau de chaleur . présent
-      - bouteille gaz . présent
-      - fioul . présent
-      - citerne propane . présent
-      - chauffe eau solaire . présent
-      - logement . climatisation . présent
-      - logement . électricité . photovoltaique . présent
+      - bouteille gaz cuisson . présent
     option aucun: aucun
-  icônes: 🌡️
-  question: Qu'utilisez vous pour la cuisson, l'eau chaude et chauffer ou climatiser votre logement ?
-  description: |
-    **Ne sélectionnez pas "électricité"** si elle alimente seulement vos appareils électriques quotidiens (éclairage, électroménager, etc.).
-  formule:
-    variations:
-      - si: choix utilisateur
-        alors: empreinte totale / habitants
-      - sinon: empreinte par défaut / habitants
+  avec:
+    électricité:
+      titre: Radiateurs électriques
+      non applicable si:
+        toutes ces conditions:
+          - est défini: chauffage . principal
+          - chauffage . principal = "électricité"
+    électricité . présent:
+      question: Utilisez-vous des chauffages électriques d'appoint au sein de votre logement ?
+      valeur: oui
+    bois:
+      titre: Poêle à bois ou à granulés
+      non applicable si:
+        toutes ces conditions:
+          - est défini: chauffage . principal
+          - chauffage . principal = "bois"
+    bois . présent:
+      question: Utilisez-vous du bois pour de l'appoint au sein de votre logement ?
+    bouteille gaz cuisson:
+      titre: Bouteille de gaz pour la cuisson
+    bouteille gaz cuisson . présent:
+      question: Utilisez-vous une bouteille de gaz pour la cuisson au sein de votre logement ?
+
+logement . chauffage . empreinte totale collectif:
+  formule: empreinte totale
+  contexte:
+    saisie précision consommation: "'aide'"
+    précision consommation . ressenti: "'moyen'"
 
 logement . chauffage . empreinte totale:
   formule:
@@ -45,61 +267,27 @@ logement . chauffage . empreinte par défaut:
   formule:
     somme:
       - parc français . chauffage . empreinte moyenne par m2 hors électricité * logement . surface
-      - (-1) * chauffe eau solaire . est présent * chauffe eau solaire . taux réduction ecs * parc français . chauffage . empreinte moyenne ecs par m2 hors électricité * logement . surface
+      - (-1) * chauffe eau solaire . présent * chauffe eau solaire . taux réduction ecs * parc français . chauffage . empreinte moyenne ecs par m2 hors électricité * logement . surface
   unité: kgCO2e
 
-logement . chauffage . choix utilisateur:
-  titre: Choix utilisateur pour le chauffage
-  formule:
-    une de ces conditions:
-      - est défini: électricité . présent
-      - est défini: PAC . présent
-      - est défini: gaz . présent
-      - est défini: réseau de chaleur . présent
-      - est défini: bouteille gaz . présent
-      - est défini: citerne propane . présent
-      - est défini: fioul . présent
-      - est défini: bois . présent
-      - est défini: chauffe eau solaire . présent
-
-logement . chauffage . nombre sources chauffage air:
-  par défaut: 1
-  plancher: 1
-  formule:
-    somme:
-      - électricité . présent
-      - PAC . présent
-      - gaz . présent
-      - citerne propane . présent
-      - bois . présent
-      - fioul . présent
-      - réseau de chaleur . présent
-
-logement . chauffage . nombre sources ecs:
-  par défaut: 1
-  plancher: 1
-  formule:
-    somme:
-      - électricité . présent
-      - PAC . présent
-      - gaz . présent
-      - citerne propane . présent
-      - fioul . présent
-      - réseau de chaleur . présent
-
-logement . chauffage . nombre sources cuisson:
-  par défaut: 1
-  plancher: 1
-  formule:
-    somme:
-      - électricité . présent
-      - gaz . présent
-      - citerne propane . présent
-      - bouteille gaz . présent
-
 logement . chauffage . saisie précision consommation:
+  applicable si:
+    une de ces conditions:
+      - toutes ces conditions:
+          - est défini: chauffage . mode
+          - chauffage . mode = "individuel"
+          - est défini: chauffage . principal
+      - toutes ces conditions:
+          - est défini: chauffage . mode
+          - chauffage . mode = "collectif"
+          - est défini: chauffage . collectif
+      - toutes ces conditions:
+          - est défini: chauffage . mode
+          - chauffage . mode = "pas de chauffage"
+          - est défini: chauffage . mode . pas de chauffage . ecs
+  non applicable si:
+    est non défini: chauffage . mode
   question: Connaissez-vous précisément vos consommations ou factures d'énergie ?
-  applicable si: logement . chauffage . choix utilisateur = oui
   une possibilité:
     - conso exactes
     - DPE
@@ -113,6 +301,10 @@ logement . chauffage . saisie précision consommation . DPE:
   titre: Non, mais je connais mon DPE
 
 logement . chauffage . saisie précision consommation . aide:
+  non applicable si:
+    toutes ces conditions:
+      - est défini: chauffage . mode
+      - chauffage . mode = "pas de chauffage"
   titre: Non, j’ai besoin d’aide pour estimer mes consommations
 
 logement . chauffage . précision consommation:
@@ -122,7 +314,7 @@ logement . chauffage . précision consommation . saisie DPE:
   note: |
     Le DPE fournit une consommation d'énergie primaire, par m2 et annuelle, selon la classe énergétique du logement. Cette consommation ne correspond pas à l'énergie réellement consommée par le logement (énergie finale).
 
-    Selon la [FAQ RT-RE-bâtiment, "Les réglementations du bâtiment"](https://rt-re-batiment.developpement-durable.gouv.fr/): 
+    Selon la [FAQ RT-RE-bâtiment, "Les réglementations du bâtiment"](https://rt-re-batiment.developpement-durable.gouv.fr/):
 
     - Dans le cas de la production d’électricité, le facteur de conversion est aujourd’hui de 2,3. Cela veut dire que, pour que vous bénéficiez chez vous d’1 kWh d’électricité, on considère qu’il a fallu dépenser 2,3kWh d’énergie primaire.
     - Pour les énergies qui ne nécessitent pas de transformation telles que le bois, le fioul et le gaz, le facteur de conversion est égal à 1. Ainsi, 1 kWh d’énergie primaire suffit à fournir 1 kWh d’énergie finale.
@@ -214,13 +406,71 @@ logement . chauffage . PAC:
   icônes: 🌡️
 
 logement . chauffage . PAC . présent:
-  question: Votre logement est-il chauffé via une pompe à chaleur ?
+  formule:
+    une de ces conditions:
+      - est présent chauffage
+      - est présent ecs
+
+logement . chauffage . PAC . est présent chauffage:
+  formule:
+    toutes ces conditions:
+      - est défini: chauffage . principal
+      - une de ces conditions:
+          - chauffage . principal = "PAC air air"
+          - chauffage . principal = "PAC air eau"
+
+logement . chauffage . PAC . est présent ecs:
+  formule:
+    une de ces conditions:
+      - toutes ces conditions:
+          - est défini: chauffage . principal
+          - chauffage . principal . ecs = "PAC air eau"
+      - toutes ces conditions:
+          - est défini: chauffage . principal
+          - chauffage . principal = "PAC air eau"
+          - chauffage . principal . ecs = "identique"
+      - toutes ces conditions:
+          - est défini: chauffage . mode . pas de chauffage . ecs
+          - chauffage . mode . pas de chauffage . ecs = "PAC air eau"
 
 logement . chauffage . électricité:
   icônes: ⚡️
 
 logement . chauffage . électricité . présent:
-  question: Votre logement est-il chauffé à l'électricité ?
+  formule:
+    une de ces conditions:
+      - est présent chauffage
+      - est présent ecs
+      - est présent appoint
+
+logement . chauffage . électricité . est présent chauffage:
+  formule:
+    toutes ces conditions:
+      - est défini: chauffage . principal
+      - chauffage . principal = "électricité"
+
+logement . chauffage . électricité . est présent ecs:
+  formule:
+    une de ces conditions:
+      - toutes ces conditions:
+          - est défini: chauffage . principal
+          - chauffage . principal . ecs = "électricité"
+      - toutes ces conditions:
+          - est défini: chauffage . principal
+          - chauffage . principal = "électricité"
+          - chauffage . principal . ecs = "identique"
+      - toutes ces conditions:
+          - est défini: chauffage . collectif
+          - chauffage . collectif . ecs = "chauffe eau électricité"
+      - toutes ces conditions:
+          - est défini: chauffage . mode . pas de chauffage . ecs
+          - chauffage . mode . pas de chauffage . ecs = "électricité"
+
+logement . chauffage . électricité . est présent appoint:
+  formule:
+    toutes ces conditions:
+      - est défini: appoint . électricité . présent
+      - appoint . électricité . présent
 
 logement . chauffage . gaz:
   titre: Gaz naturel
@@ -237,12 +487,31 @@ logement . chauffage . gaz . empreinte:
   unité: kgCO2e
 
 logement . chauffage . gaz . présent:
-  question: Votre logement est-il chauffé au gaz ?
+  # question: Votre logement est-il chauffé au gaz ?
+  formule:
+    une de ces conditions:
+      - est présent chauffage
+      - est présent ecs
 
-  note: |
-    Bien que le chauffage majoritaire en France soit électrique [source](https://fr.statista.com/statistiques/856283/types-chauffage-logement-principal-france), nous mettons ici la valeur par défaut à oui pour se rapprocher de la moyenne d'empreinte du logement.
+logement . chauffage . gaz . est présent chauffage:
+  une de ces conditions:
+    - chauffage . principal = "gaz"
+    - chauffage . collectif = "gaz"
 
-    On touche aux limites actuelles de ce système de situation par défaut.
+logement . chauffage . gaz . est présent ecs:
+  formule:
+    une de ces conditions:
+      - chauffage . principal . ecs = "gaz"
+      - toutes ces conditions:
+          - chauffage . principal = "gaz"
+          - chauffage . principal . ecs = "identique"
+      - toutes ces conditions:
+          - chauffage . collectif = "gaz"
+          - chauffage . collectif . ecs = "source collectif"
+      - toutes ces conditions:
+          - est défini: chauffage . mode
+          - chauffage . mode = "collectif"
+          - chauffage . collectif . ecs = "chauffe eau gaz"
 
 logement . chauffage . gaz . consommation:
   non applicable si: gaz . présent = non
@@ -257,12 +526,12 @@ logement . chauffage . gaz . consommation:
   par défaut: consommation moyenne réelle
 
 logement . chauffage . gaz . consommation moyenne réelle:
-  titre: Consommation moyenne réelle de gaz en tenant compte des autres modes de chauffage
+  titre: Consommation moyenne réelle de gaz
   formule:
     somme:
-      - consommation moyenne chauffage / nombre sources chauffage air
-      - consommation moyenne ecs / nombre sources ecs
-      - consommation moyenne cuisson / nombre sources cuisson
+      - consommation moyenne chauffage
+      - consommation moyenne ecs
+      - consommation moyenne cuisson
 
 logement . chauffage . gaz . consommation moyenne:
   titre: Consommation moyenne de gaz
@@ -270,22 +539,37 @@ logement . chauffage . gaz . consommation moyenne:
   unité: kWh
 
 logement . chauffage . gaz . consommation moyenne chauffage:
+  applicable si: est présent chauffage
   formule: parc français . CEREN . chauffage . part chauffage air gaz * consommation moyenne
   unité: kWh
 
 logement . chauffage . gaz . consommation moyenne ecs:
+  applicable si: est présent ecs
   formule:
     somme:
       - parc français . CEREN . chauffage . part ecs gaz * consommation moyenne
-      - (-1) * chauffe eau solaire . est présent * parc français . CEREN . chauffage . part ecs gaz * consommation moyenne * chauffe eau solaire . taux réduction ecs
+      - (-1) * chauffe eau solaire . présent * parc français . CEREN . chauffage . part ecs gaz * consommation moyenne * chauffe eau solaire . taux réduction ecs
   unité: kWh
 
 logement . chauffage . gaz . consommation moyenne cuisson:
+  applicable si:
+    toutes ces conditions:
+      - toutes ces conditions:
+          - est défini: chauffage . principal
+          - est défini: chauffage . collectif
+          - est défini: chauffage . bouteille gaz . présent
+      - une de ces conditions:
+          - chauffage . principal = "gaz"
+          - chauffage . collectif = "gaz"
+      - logement . chauffage . bouteille gaz . présent = non
   formule: parc français . CEREN . chauffage . part cuisson gaz * consommation moyenne
   unité: kWh
 
 logement . chauffage . gaz . consommation précise:
-  applicable si: saisie précision consommation = 'conso exactes'
+  applicable si:
+    toutes ces conditions:
+      - saisie précision consommation = 'conso exactes'
+      - gaz . présent
   question: Quelle est la consommation annuelle de gaz de votre foyer ?
   aide: logement . chauffage . gaz . consommation estimée via le coût . saisie
   par défaut: consommation moyenne réelle
@@ -302,11 +586,23 @@ logement . chauffage . gaz . consommation via DPE:
   par défaut: consommation moyenne réelle
   formule:
     somme:
-      - parc français . CEREN . chauffage . part chauffage air gaz * précision consommation . DPE . consommation via DPE par m2 * surface / nombre sources chauffage air
-      - parc français . CEREN . chauffage . part ecs gaz * précision consommation . DPE . consommation via DPE par m2 * surface / nombre sources ecs
-      - consommation moyenne cuisson / nombre sources cuisson
+      - consommation via DPE . chauffage
+      - consommation via DPE . ecs
+      - consommation moyenne cuisson
   note: |
     Cette valeur semble importante, mais les calculs semblent justes. Néanmoins, on pourrait aller plus loin car le DPE est une valeur théorique, qui ne reflète pas l'usage réel du logement.
+  unité: kWh
+
+logement . chauffage . gaz . consommation via DPE . chauffage:
+  titre: Consommation chauffage via DPE
+  applicable si: est présent chauffage
+  formule: parc français . CEREN . chauffage . part chauffage air gaz * précision consommation . DPE . consommation via DPE par m2 * surface
+  unité: kWh
+
+logement . chauffage . gaz . consommation via DPE . ecs:
+  titre: Consommation ECS via DPE
+  applicable si: est présent ecs
+  formule: parc français . CEREN . chauffage . part ecs gaz * précision consommation . DPE . consommation via DPE par m2 * surface
   unité: kWh
 
 logement . chauffage . gaz . consommation via ressenti:
@@ -316,15 +612,15 @@ logement . chauffage . gaz . consommation via ressenti:
       - si: précision consommation . ressenti = 'passoire thermique'
         alors:
           somme:
-            - consommation moyenne chauffage * précision consommation . saut D vers G / nombre sources chauffage air
-            - consommation moyenne ecs * précision consommation . saut D vers G / nombre sources ecs
-            - consommation moyenne cuisson / nombre sources cuisson
+            - consommation moyenne chauffage * précision consommation . saut D vers G
+            - consommation moyenne ecs * précision consommation . saut D vers G
+            - consommation moyenne cuisson
       - si: précision consommation . ressenti = 'confortable'
         alors:
           somme:
-            - consommation moyenne chauffage * précision consommation . saut D vers A / nombre sources chauffage air
-            - consommation moyenne ecs * précision consommation . saut D vers A / nombre sources ecs
-            - consommation moyenne cuisson / nombre sources cuisson
+            - consommation moyenne chauffage * précision consommation . saut D vers A
+            - consommation moyenne ecs * précision consommation . saut D vers A
+            - consommation moyenne cuisson
       - sinon: consommation moyenne réelle
   unité: kWh
 
@@ -361,7 +657,11 @@ logement . chauffage . gaz . consommation estimée via le coût . facteur:
     A priori, il n'existe pas d'API pour ce chiffre, nous mettons donc à jour cette valeur manuellement via sa Date Limite d'Utilisation Optimale.
 
 logement . chauffage . gaz . biogaz:
-  non applicable si: gaz . présent = non
+  applicable si:
+    toutes ces conditions:
+      - est défini: chauffage . mode
+      - chauffage . mode = "individuel"
+      - gaz . présent = oui
   question: Avez-vous souscrit à un contrat gaz incluant du biogaz (ou biométhane) ?
   par défaut: non
   description: |
@@ -451,6 +751,7 @@ logement . chauffage . biogaz . intensité carbone:
     Base Empreinte : Biométhane/Injecté dans les réseaux/Mix moyen (en kWh PCI)
 
 logement . chauffage . biogaz . part:
+  applicable si: gaz . biogaz = oui
   question: Quelle est la part de biogaz garantie par votre contrat de gaz ?
   plancher: 0
   plafond: 100
@@ -466,18 +767,23 @@ logement . chauffage . bouteille gaz:
 
 logement . chauffage . bouteille gaz . empreinte:
   titre: Empreinte de la consommation de bouteilles de gaz
-  applicable si:
-    toutes ces conditions:
-      - est défini: bouteille gaz . présent
-      - bouteille gaz . présent
-  formule: empreinte bouteille * consommation
+  applicable si: bouteille gaz . présent
+  formule:
+    variations:
+      - si: saisie précision consommation = 'conso exactes'
+        alors: empreinte bouteille * consommation
+      - sinon: empreinte bouteille * consommation moyenne réelle
   unité: kgCO2e
 
 logement . chauffage . bouteille gaz . présent:
-  question: Utilisez-vous des bouteille de gaz ?
+  formule:
+    toutes ces conditions:
+      - est défini: appoint . bouteille gaz cuisson . présent
+      - appoint . bouteille gaz cuisson . présent
 
 logement . chauffage . bouteille gaz . consommation:
   non applicable si: bouteille gaz . présent = non
+  applicable si: saisie précision consommation = 'conso exactes'
   question: Quelle est votre consommation annuelle en bouteilles de gaz (13 kg) ?
   aide: logement . chauffage . bouteille gaz . consommation estimée via le poids . saisie
   plancher: 0
@@ -501,12 +807,12 @@ logement . chauffage . bouteille gaz . consommation:
     Étant donné que les bouteilles elles-mêmes sont consignées, nous prenons en compte uniquement les émissions liées au gaz seul.
 
 logement . chauffage . bouteille gaz . consommation moyenne réelle:
-  titre: Consommation moyenne réelle de bouteilles de gaz en tenant compte des autres modes de chauffage
+  titre: Consommation moyenne réelle de bouteilles de gaz
   note: |
     On considère qu'en moyenne, les bouteilles de gaz sont utilisées pour de la cuisson, et nous considérons cette consommation équivalente à la consommation moyenne de gaz de ville pour de la cuisson.
 
     On fait également l'hypothèse que cette consommation n'est pas sensible au DPE ou au ressenti de chauffage.
-  formule: parc français . CEREN . chauffage . consommation moyenne gaz cuisson / énergie par bouteille / nombre sources cuisson
+  formule: parc français . CEREN . chauffage . consommation moyenne gaz cuisson / énergie par bouteille
 
 logement . chauffage . bouteille gaz . consommation estimée via le poids:
   titre: Consommation estimée via le poids
@@ -575,7 +881,20 @@ logement . chauffage . citerne propane . empreinte:
   unité: kgCO2e
 
 logement . chauffage . citerne propane . présent:
-  question: Votre logement est-il chauffé via une citerne de propane ?
+  # question: Votre logement est-il chauffé via une citerne de propane ?
+  formule:
+    une de ces conditions:
+      - est présent chauffage
+      - est présent ecs
+
+logement . chauffage . citerne propane . est présent chauffage:
+  formule: chauffage . principal = "citerne propane"
+
+logement . chauffage . citerne propane . est présent ecs:
+  formule:
+    toutes ces conditions:
+      - chauffage . principal = "citerne propane"
+      - chauffage . principal . ecs = "identique"
 
 logement . chauffage . citerne propane . consommation:
   non applicable si: citerne propane . présent = non
@@ -590,14 +909,51 @@ logement . chauffage . citerne propane . consommation:
   par défaut: consommation moyenne réelle
 
 logement . chauffage . citerne propane . consommation moyenne réelle:
-  titre: Consommation moyenne réelle de gaz propane en citerne en tenant compte des autres modes de chauffage
-  formule: gaz . consommation moyenne réelle / énergie par kg
+  titre: Consommation moyenne réelle de gaz propane en citerne
+  formule:
+    somme:
+      - consommation moyenne chauffage / énergie par kg
+      - consommation moyenne ecs / énergie par kg
+      - consommation moyenne cuisson / énergie par kg
+  unité: kg
   note: |
     On considère que le gaz propane en citerne est utilisé dans les mêmes proportions que le gaz de ville pour le chauffage, l'eau chaude sanitaire et la cuisson.
-  unité: kg
+
+logement . chauffage . citerne propane . consommation moyenne:
+  titre: Consommation moyenne de gaz propane en citerne
+  formule: parc français . CEREN . chauffage . consommation gaz par m2 * surface
+  unité: kWh
+
+logement . chauffage . citerne propane . consommation moyenne chauffage:
+  applicable si: est présent chauffage
+  formule: parc français . CEREN . chauffage . part chauffage air gaz * consommation moyenne
+  unité: kWh
+
+logement . chauffage . citerne propane . consommation moyenne ecs:
+  applicable si: est présent ecs
+  formule:
+    somme:
+      - parc français . CEREN . chauffage . part ecs gaz * consommation moyenne
+      - (-1) * chauffe eau solaire . présent * parc français . CEREN . chauffage . part ecs gaz * consommation moyenne * chauffe eau solaire . taux réduction ecs
+  unité: kWh
+
+logement . chauffage . citerne propane . consommation moyenne cuisson:
+  applicable si:
+    toutes ces conditions:
+      - toutes ces conditions:
+          - est défini: chauffage . principal
+          - est défini: chauffage . bouteille gaz . présent
+      - une de ces conditions:
+          - chauffage . principal = "citerne propane"
+      - logement . chauffage . bouteille gaz . présent = non
+  formule: parc français . CEREN . chauffage . part cuisson gaz * consommation moyenne
+  unité: kWh
 
 logement . chauffage . citerne propane . consommation précise:
-  applicable si: saisie précision consommation = 'conso exactes'
+  applicable si:
+    toutes ces conditions:
+      - saisie précision consommation = 'conso exactes'
+      - citerne propane . présent
   question: Quelle est la consommation annuelle de gaz propane en citerne de votre foyer ?
   aide: logement . chauffage . citerne propane . consommation estimée via le coût . saisie
   plancher: 0
@@ -611,15 +967,45 @@ logement . chauffage . citerne propane . consommation précise:
 
 logement . chauffage . citerne propane . consommation via DPE:
   applicable si: saisie précision consommation = 'DPE'
-  par défaut: gaz . consommation moyenne réelle / énergie par kg
-  formule: gaz . consommation via DPE / énergie par kg
+  par défaut: consommation moyenne réelle
+  formule:
+    somme:
+      - consommation via DPE . chauffage / énergie par kg
+      - consommation via DPE . ecs / énergie par kg
+      - consommation moyenne cuisson / énergie par kg
   note: |
     Cette valeur semble importante, mais les calculs semblent justes. Néanmoins, on pourrait aller plus loin car le DPE est une valeur théorique, qui ne reflète pas l'usage réel du logement.
   unité: kg
 
+logement . chauffage . citerne propane . consommation via DPE . chauffage:
+  titre: Consommation chauffage via DPE
+  applicable si: est présent chauffage
+  formule: parc français . CEREN . chauffage . part chauffage air gaz * précision consommation . DPE . consommation via DPE par m2 * surface
+  unité: kWh
+
+logement . chauffage . citerne propane . consommation via DPE . ecs:
+  titre: Consommation ECS via DPE
+  applicable si: est présent ecs
+  formule: parc français . CEREN . chauffage . part ecs gaz * précision consommation . DPE . consommation via DPE par m2 * surface
+  unité: kWh
+
 logement . chauffage . citerne propane . consommation via ressenti:
   applicable si: saisie précision consommation = 'aide'
-  formule: gaz . consommation via ressenti / énergie par kg
+  formule:
+    variations:
+      - si: précision consommation . ressenti = 'passoire thermique'
+        alors:
+          somme:
+            - consommation moyenne chauffage * précision consommation . saut D vers G / énergie par kg
+            - consommation moyenne ecs * précision consommation . saut D vers G / énergie par kg
+            - consommation moyenne cuisson / énergie par kg
+      - si: précision consommation . ressenti = 'confortable'
+        alors:
+          somme:
+            - consommation moyenne chauffage * précision consommation . saut D vers A / énergie par kg
+            - consommation moyenne ecs * précision consommation . saut D vers A / énergie par kg
+            - consommation moyenne cuisson / énergie par kg
+      - sinon: consommation moyenne réelle
   unité: kg
 
 logement . chauffage . citerne propane . consommation estimée via le coût:
@@ -671,7 +1057,20 @@ logement . chauffage . fioul . empreinte:
   unité: kgCO2e
 
 logement . chauffage . fioul . présent:
-  question: Votre logement est-il chauffé au fioul ?
+  # question: Votre logement est-il chauffé au fioul ?
+  formule:
+    une de ces conditions:
+      - chauffage . principal = "fioul"
+      - chauffage . principal . ecs = "fioul"
+
+logement . chauffage . fioul . est présent chauffage:
+  formule: chauffage . principal = "fioul"
+
+logement . chauffage . fioul . est présent ecs:
+  formule:
+    toutes ces conditions:
+      - chauffage . principal = "fioul"
+      - chauffage . principal . ecs = "identique"
 
 logement . chauffage . fioul . consommation:
   non applicable si: fioul . présent = non
@@ -686,11 +1085,11 @@ logement . chauffage . fioul . consommation:
   par défaut: consommation moyenne réelle
 
 logement . chauffage . fioul . consommation moyenne réelle:
-  titre: Consommation moyenne réelle de fioul en tenant compte des autres modes de chauffage
+  titre: Consommation moyenne réelle de fioul
   formule:
     somme:
-      - consommation moyenne chauffage / nombre sources chauffage air
-      - consommation moyenne ecs / nombre sources ecs
+      - consommation moyenne chauffage
+      - consommation moyenne ecs
   unité: l
 
 logement . chauffage . fioul . consommation moyenne:
@@ -699,18 +1098,23 @@ logement . chauffage . fioul . consommation moyenne:
   unité: l
 
 logement . chauffage . fioul . consommation moyenne chauffage:
+  applicable si: est présent chauffage
   formule: parc français . CEREN . chauffage . part chauffage air fioul * consommation moyenne
   unité: l
 
 logement . chauffage . fioul . consommation moyenne ecs:
+  applicable si: est présent ecs
   formule:
     somme:
       - parc français . CEREN . chauffage . part ecs fioul * consommation moyenne
-      - (-1) * chauffe eau solaire . est présent * parc français . CEREN . chauffage . part ecs fioul * consommation moyenne * chauffe eau solaire . taux réduction ecs
+      - (-1) * chauffe eau solaire . présent * parc français . CEREN . chauffage . part ecs fioul * consommation moyenne * chauffe eau solaire . taux réduction ecs
   unité: l
 
 logement . chauffage . fioul . consommation précise:
-  applicable si: saisie précision consommation = 'conso exactes'
+  applicable si:
+    toutes ces conditions:
+      - saisie précision consommation = 'conso exactes'
+      - fioul . présent
   par défaut: consommation moyenne réelle
   question: Quelle est la consommation annuelle de fioul domestique de votre foyer ?
   aide: logement . chauffage . fioul . consommation estimée via le coût . saisie
@@ -725,24 +1129,36 @@ logement . chauffage . fioul . consommation via DPE:
   par défaut: consommation moyenne réelle
   formule:
     somme:
-      - parc français . CEREN . chauffage . part chauffage air fioul * précision consommation . DPE . consommation via DPE par m2 * surface * fioul kWh au litre / nombre sources chauffage air
-      - parc français . CEREN . chauffage . part ecs fioul * précision consommation . DPE . consommation via DPE par m2 * surface * fioul kWh au litre / nombre sources ecs
+      - consommation via DPE . chauffage
+      - consommation via DPE . ecs
   unité: l
+
+logement . chauffage . fioul . consommation via DPE . chauffage:
+  titre: Consommation chauffage via DPE
+  applicable si: est présent chauffage
+  formule: parc français . CEREN . chauffage . part chauffage air fioul * précision consommation . DPE . consommation via DPE par m2 * surface * fioul kWh au litre
+  unité: kWh
+
+logement . chauffage . fioul . consommation via DPE . ecs:
+  titre: Consommation ECS via DPE
+  applicable si: est présent ecs
+  formule: parc français . CEREN . chauffage . part ecs fioul * précision consommation . DPE . consommation via DPE par m2 * surface * fioul kWh au litre
+  unité: kWh
 
 logement . chauffage . fioul . consommation via ressenti:
   applicable si: saisie précision consommation = 'aide'
   formule:
     variations:
-      - si: ressenti = 'passoire thermique'
+      - si: précision consommation . ressenti = 'passoire thermique'
         alors:
           somme:
-            - consommation moyenne chauffage * précision consommation . saut D vers G / nombre sources chauffage air
-            - consommation moyenne ecs * précision consommation . saut D vers G / nombre sources ecs
-      - si: ressenti = 'confortable'
+            - consommation moyenne chauffage * précision consommation . saut D vers G
+            - consommation moyenne ecs * précision consommation . saut D vers G
+      - si: précision consommation . ressenti = 'confortable'
         alors:
           somme:
-            - consommation moyenne chauffage * précision consommation . saut D vers A / nombre sources chauffage air
-            - consommation moyenne ecs * précision consommation . saut D vers A / nombre sources ecs
+            - consommation moyenne chauffage * précision consommation . saut D vers A
+            - consommation moyenne ecs * précision consommation . saut D vers A
       - sinon: consommation moyenne réelle
   unité: l
 
@@ -793,13 +1209,61 @@ logement . chauffage . bois . empreinte:
       - est défini: bois . présent
       - bois . présent
   formule:
-    somme:
-      - type . bûches . consommation * bois . fe bûches réel
-      - type . granulés . consommation * bois . fe granulés réel
+    variations:
+      - si:
+          une de ces conditions:
+            - type . bûches
+            - type . granulés
+        alors:
+          somme:
+            - type . bûches . consommation * bois . fe bûches réel
+            - type . granulés . consommation * bois . fe granulés réel
+      - sinon: bois . empreinte moyenne
   unité: kgCO2e
 
+logement . chauffage . bois . empreinte moyenne:
+  titre: Empreinte moyenne de la consommation de bois
+  formule:
+    somme:
+      - (type . bûches . consommation moyenne réelle / 2) * bois . fe bûches réel
+      - (type . granulés . consommation moyenne réelle / 2) * bois . fe granulés réel
+    contexte:
+      type . bûches: oui
+      type . granulés: oui
+      système . poêle bûches . présent: oui
+      système . chaudière bûches . présent: oui
+      système . poêle granulés . présent: oui
+      système . chaudière granulés . présent: oui
+      système . foyer ouvert . présent: non
+
 logement . chauffage . bois . présent:
-  question: Votre logement est-il chauffé au bois ?
+  formule:
+    une de ces conditions:
+      - est présent chauffage
+      - est présent appoint
+      - est présent ecs
+
+logement . chauffage . bois . est présent chauffage:
+  une de ces conditions:
+    - chauffage . principal = "bois"
+    - chauffage . collectif = "bois"
+
+logement . chauffage . bois . est présent appoint:
+  formule:
+    toutes ces conditions:
+      - est défini: appoint . bois . présent
+      - appoint . bois . présent
+
+logement . chauffage . bois . est présent ecs:
+  formule:
+    une de ces conditions:
+      - chauffage . principal . ecs = "bois"
+      - toutes ces conditions:
+          - chauffage . principal = "bois"
+          - chauffage . principal . ecs = "identique"
+      - toutes ces conditions:
+          - chauffage . collectif = "bois"
+          - chauffage . collectif . ecs = "source collectif"
 
 logement . chauffage . bois . système:
   applicable si:
@@ -813,28 +1277,42 @@ logement . chauffage . bois . système:
       - chaudière bûches . présent
       - poêle granulés . présent
       - chaudière granulés . présent
+      - foyer ouvert . présent
     option aucun: aucun
   question: Quel(s) système(s) de chauffage au bois utilisez-vous dans votre logement ?
 
+logement . chauffage . bois . système . nombre bûches et granulés:
+  formule:
+    somme:
+      - type . bûches
+      - type . granulés
+
 logement . chauffage . bois . système . poêle bûches:
-  titre: Poêle bûches
+  titre: Poêle ou insert bûches
 logement . chauffage . bois . système . poêle bûches . présent:
   question: Avez-vous un poêle à bûches dans votre logement ?
 
 logement . chauffage . bois . système . chaudière bûches:
   titre: Chaudière bûches
+  non applicable si: bois . est présent appoint
 logement . chauffage . bois . système . chaudière bûches . présent:
   question: Avez-vous une chaudière à bûches dans votre logement ?
 
+logement . chauffage . bois . système . poêle granulés:
+  titre: Poêle ou insert granulés
+logement . chauffage . bois . système . poêle granulés . présent:
+  question: Avez-vous un poêle à granulés dans votre logement ?
+
 logement . chauffage . bois . système . chaudière granulés:
   titre: Chaudière granulés
+  non applicable si: bois . est présent appoint
 logement . chauffage . bois . système . chaudière granulés . présent:
   question: Avez-vous une chaudière à granulés dans votre logement ?
 
-logement . chauffage . bois . système . poêle granulés:
-  titre: Poêle granulés
-logement . chauffage . bois . système . poêle granulés . présent:
-  question: Avez-vous un poêle à granulés dans votre logement ?
+logement . chauffage . bois . système . foyer ouvert:
+  titre: Cheminée à foyer ouvert
+logement . chauffage . bois . système . foyer ouvert . présent:
+  question: Avez-vous un foyer ouvert dans votre logement ?
 
 logement . chauffage . bois . type:
   titre: Type de bois
@@ -849,6 +1327,9 @@ logement . chauffage . bois . type . bûches:
       - toutes ces conditions:
           - est défini: système . chaudière bûches . présent
           - système . chaudière bûches . présent
+      - toutes ces conditions:
+          - est défini: système . foyer ouvert . présent
+          - système . foyer ouvert . présent
 
 logement . chauffage . bois . type . granulés:
   titre: Granulés
@@ -868,15 +1349,19 @@ logement . chauffage . bois . type . granulés . consommation:
       - si: saisie précision consommation = 'conso exactes'
         alors: consommation précise
       - si: saisie précision consommation = 'DPE'
-        alors: consommation via DPE
+        alors: consommation via DPE / système . nombre bûches et granulés
       - si: saisie précision consommation = 'aide'
-        alors: consommation via ressenti
+        alors: consommation via ressenti / système . nombre bûches et granulés
   par défaut: consommation moyenne réelle
   unité: kWh
 
 logement . chauffage . bois . type . granulés . consommation moyenne réelle:
-  titre: Consommation moyenne réelle de granulés en tenant compte des autres modes de chauffage
-  formule: consommation moyenne chauffage / nombre sources chauffage air
+  titre: Consommation moyenne réelle de granulés
+  formule:
+    somme:
+      - consommation moyenne chauffage
+      - consommation moyenne ecs
+      - consommation moyenne appoint
   unité: kWh
 
 logement . chauffage . bois . type . granulés . consommation moyenne:
@@ -885,7 +1370,18 @@ logement . chauffage . bois . type . granulés . consommation moyenne:
   unité: kWh
 
 logement . chauffage . bois . type . granulés . consommation moyenne chauffage:
+  applicable si: est présent chauffage
   formule: parc français . CEREN . chauffage . part chauffage air bois * consommation moyenne
+  unité: kWh
+
+logement . chauffage . bois . type . granulés . consommation moyenne ecs:
+  applicable si: est présent ecs
+  formule: parc français . CEREN . chauffage . part ecs bois * consommation moyenne
+  unité: kWh
+
+logement . chauffage . bois . type . granulés . consommation moyenne appoint:
+  applicable si: est présent appoint
+  formule: parc français . CEREN . chauffage . part chauffage air bois * consommation moyenne * parc français . CEREN . chauffage . consommation bois . part appoint / (1 - parc français . CEREN . chauffage . consommation bois . part appoint)
   unité: kWh
 
 logement . chauffage . bois . type . granulés . consommation précise:
@@ -907,7 +1403,10 @@ logement . chauffage . bois . type . granulés . consommation précise en kg:
 logement . chauffage . bois . type . granulés . consommation via DPE:
   applicable si: saisie précision consommation = 'DPE'
   par défaut: consommation moyenne réelle
-  formule: parc français . CEREN . chauffage . part chauffage air bois * précision consommation . DPE . consommation via DPE par m2 * surface / nombre sources chauffage air
+  formule:
+    somme:
+      - consommation via DPE . chauffage
+      - consommation via DPE . ecs
   unité: kWh
   note: |
     La valeur par défaut ici est à priori largement sur-estimée. En effet, les données utilisées ([CEREN](https://www.statistiques.developpement-durable.gouv.fr/consommation-denergie-par-usage-du-residentiel)) reflètent mal la réalité de l'énergie bois.
@@ -915,14 +1414,32 @@ logement . chauffage . bois . type . granulés . consommation via DPE:
 
     Et donc probablement que si la discrimination par type de bois de chauffe était faite dans les données du CEREN (pour les kWh consommés et les surface chauffées) on aboutirait à une valeur en kWh/m2 beaucoup plus faible pour les granulés que pour le bois bûches.
 
+logement . chauffage . bois . type . granulés . consommation via DPE . chauffage:
+  titre: Consommation chauffage via DPE
+  applicable si: est présent chauffage
+  formule: parc français . CEREN . chauffage . part chauffage air bois * précision consommation . DPE . consommation via DPE par m2 * surface
+  unité: kWh
+
+logement . chauffage . bois . type . granulés . consommation via DPE . ecs:
+  titre: Consommation ECS via DPE
+  applicable si: est présent ecs
+  formule: parc français . CEREN . chauffage . part ecs bois * précision consommation . DPE . consommation via DPE par m2 * surface
+  unité: kWh
+
+logement . chauffage . bois . type . granulés . consommation via DPE . appoint:
+  titre: Consommation appoint via DPE
+  applicable si: est présent appoint
+  formule: parc français . CEREN . chauffage . part chauffage air bois * précision consommation . DPE . consommation via DPE par m2 * surface * parc français . CEREN . chauffage . consommation bois . part appoint / (1 - parc français . CEREN . chauffage . consommation bois . part appoint)
+  unité: kWh
+
 logement . chauffage . bois . type . granulés . consommation via ressenti:
   applicable si: saisie précision consommation = 'aide'
   formule:
     variations:
-      - si: ressenti = 'passoire thermique'
-        alors: consommation moyenne chauffage * précision consommation . saut D vers G / nombre sources chauffage air
-      - si: ressenti = 'confortable'
-        alors: consommation moyenne chauffage * précision consommation . saut D vers A / nombre sources chauffage air
+      - si: précision consommation . ressenti = 'passoire thermique'
+        alors: consommation moyenne chauffage * précision consommation . saut D vers G
+      - si: précision consommation . ressenti = 'confortable'
+        alors: consommation moyenne chauffage * précision consommation . saut D vers A
       - sinon: consommation moyenne réelle
   unité: kWh
 
@@ -979,15 +1496,19 @@ logement . chauffage . bois . type . bûches . consommation:
       - si: saisie précision consommation = 'conso exactes'
         alors: consommation précise
       - si: saisie précision consommation = 'DPE'
-        alors: consommation via DPE
+        alors: consommation via DPE / système . nombre bûches et granulés
       - si: saisie précision consommation = 'aide'
-        alors: consommation via ressenti
+        alors: consommation via ressenti / système . nombre bûches et granulés
   par défaut: consommation moyenne réelle
   unité: kWh
 
 logement . chauffage . bois . type . bûches . consommation moyenne réelle:
-  titre: Consommation moyenne réelle de bûches en tenant compte des autres modes de chauffage
-  formule: consommation moyenne chauffage / nombre sources chauffage air
+  titre: Consommation moyenne réelle de bûches
+  formule:
+    somme:
+      - consommation moyenne chauffage
+      - consommation moyenne ecs
+      - consommation moyenne appoint
   unité: kWh
 
 logement . chauffage . bois . type . bûches . consommation moyenne:
@@ -996,7 +1517,18 @@ logement . chauffage . bois . type . bûches . consommation moyenne:
   unité: kWh
 
 logement . chauffage . bois . type . bûches . consommation moyenne chauffage:
+  applicable si: est présent chauffage
   formule: parc français . CEREN . chauffage . part chauffage air bois * consommation moyenne
+  unité: kWh
+
+logement . chauffage . bois . type . bûches . consommation moyenne ecs:
+  applicable si: est présent ecs
+  formule: parc français . CEREN . chauffage . part ecs bois * consommation moyenne
+  unité: kWh
+
+logement . chauffage . bois . type . bûches . consommation moyenne appoint:
+  applicable si: est présent appoint
+  formule: parc français . CEREN . chauffage . part chauffage air bois * consommation moyenne * parc français . CEREN . chauffage . consommation bois . part appoint / (1 - parc français . CEREN . chauffage . consommation bois . part appoint)
   unité: kWh
 
 logement . chauffage . bois . type . bûches . consommation précise:
@@ -1022,17 +1554,39 @@ logement . chauffage . bois . type . bûches . consommation précise en stère:
 logement . chauffage . bois . type . bûches . consommation via DPE:
   applicable si: saisie précision consommation = 'DPE'
   par défaut: consommation moyenne réelle
-  formule: parc français . CEREN . chauffage . part chauffage air bois * précision consommation . DPE . consommation via DPE par m2 * surface * nombre sources chauffage air
+  formule:
+    somme:
+      - consommation via DPE . chauffage
+      - consommation via DPE . ecs
+      - consommation via DPE . appoint
+  unité: kWh
+
+logement . chauffage . bois . type . bûches . consommation via DPE . chauffage:
+  titre: Consommation chauffage via DPE
+  applicable si: est présent chauffage
+  formule: parc français . CEREN . chauffage . part chauffage air bois * précision consommation . DPE . consommation via DPE par m2 * surface
+  unité: kWh
+
+logement . chauffage . bois . type . bûches . consommation via DPE . ecs:
+  titre: Consommation ECS via DPE
+  applicable si: est présent ecs
+  formule: parc français . CEREN . chauffage . part ecs bois * précision consommation . DPE . consommation via DPE par m2 * surface
+  unité: kWh
+
+logement . chauffage . bois . type . bûches . consommation via DPE . appoint:
+  titre: Consommation appoint via DPE
+  applicable si: est présent appoint
+  formule: parc français . CEREN . chauffage . part chauffage air bois * précision consommation . DPE . consommation via DPE par m2 * surface * parc français . CEREN . chauffage . consommation bois . part appoint / (1 - parc français . CEREN . chauffage . consommation bois . part appoint)
   unité: kWh
 
 logement . chauffage . bois . type . bûches . consommation via ressenti:
   applicable si: saisie précision consommation = 'aide'
   formule:
     variations:
-      - si: ressenti = 'passoire thermique'
-        alors: consommation moyenne chauffage * précision consommation . saut D vers G / nombre sources chauffage air
-      - si: ressenti = 'confortable'
-        alors: consommation moyenne chauffage * précision consommation . saut D vers A / nombre sources chauffage air
+      - si: précision consommation . ressenti = 'passoire thermique'
+        alors: consommation moyenne chauffage * précision consommation . saut D vers G
+      - si: précision consommation . ressenti = 'confortable'
+        alors: consommation moyenne chauffage * précision consommation . saut D vers A
       - sinon: consommation moyenne réelle
   unité: kWh
 
@@ -1076,7 +1630,10 @@ logement . chauffage . bois . fe bûches réel:
   formule:
     moyenne:
       - fe poêle bûches * système . poêle bûches . présent
+      - fe poêle bûches * système . foyer ouvert . présent
       - fe chaudière bûches * système . chaudière bûches . présent
+  note: |
+    Faute de facteur d'émission pour les foyers ouverts dans la Base Empreinte, nous faisons l'hypothèse que leur facteur d'émission est équivalent à celui des poêles à bûches même si leur performance de combustion est plus faible et qu'il y a sans doute un impact davantage néfaste pour le climat.
   unité: kgCO2e/kWh
 
 logement . chauffage . bois . fe granulés:
@@ -1148,7 +1705,26 @@ logement . chauffage . réseau de chaleur . empreinte:
   unité: kgCO2e
 
 logement . chauffage . réseau de chaleur . présent:
-  question: Votre logement est-il chauffé via un réseau de chaleur ?
+  formule:
+    une de ces conditions:
+      - est présent chauffage
+      - est présent ecs
+
+logement . chauffage . réseau de chaleur . est présent chauffage:
+  une de ces conditions:
+    - chauffage . principal = "réseau de chaleur"
+    - chauffage . collectif = "réseau de chaleur"
+
+logement . chauffage . réseau de chaleur . est présent ecs:
+  formule:
+    une de ces conditions:
+      - chauffage . principal . ecs = "réseau de chaleur"
+      - toutes ces conditions:
+          - chauffage . principal = "réseau de chaleur"
+          - chauffage . principal . ecs = "identique"
+      - toutes ces conditions:
+          - chauffage . collectif = "réseau de chaleur"
+          - chauffage . collectif . ecs = "source collectif"
 
 logement . chauffage . réseau de chaleur . consommation:
   non applicable si: réseau de chaleur . présent = non
@@ -1163,11 +1739,11 @@ logement . chauffage . réseau de chaleur . consommation:
   par défaut: consommation moyenne réelle
 
 logement . chauffage . réseau de chaleur . consommation moyenne réelle:
-  titre: Consommation moyenne réelle via réseau de chaleur en tenant compte des autres modes de chauffage
+  titre: Consommation moyenne réelle via réseau de chaleur
   formule:
     somme:
-      - consommation moyenne chauffage / nombre sources chauffage air
-      - consommation moyenne ecs / nombre sources ecs
+      - consommation moyenne chauffage
+      - consommation moyenne ecs
   unité: kWh
 
 logement . chauffage . réseau de chaleur . consommation moyenne:
@@ -1176,18 +1752,23 @@ logement . chauffage . réseau de chaleur . consommation moyenne:
   unité: kWh
 
 logement . chauffage . réseau de chaleur . consommation moyenne chauffage:
+  applicable si: est présent chauffage
   formule: parc français . CEREN . chauffage . part chauffage air réseau de chaleur * consommation moyenne
   unité: kWh
 
 logement . chauffage . réseau de chaleur . consommation moyenne ecs:
+  applicable si: est présent ecs
   formule:
     somme:
       - parc français . CEREN . chauffage . part ecs réseau de chaleur * consommation moyenne
-      - (-1) * chauffe eau solaire . est présent * parc français . CEREN . chauffage . part ecs réseau de chaleur * consommation moyenne * chauffe eau solaire . taux réduction ecs
+      - (-1) * chauffe eau solaire . présent * parc français . CEREN . chauffage . part ecs réseau de chaleur * consommation moyenne * chauffe eau solaire . taux réduction ecs
   unité: kWh
 
 logement . chauffage . réseau de chaleur . consommation précise:
-  applicable si: saisie précision consommation = 'conso exactes'
+  applicable si:
+    toutes ces conditions:
+      - saisie précision consommation = 'conso exactes'
+      - réseau de chaleur . présent
   par défaut: consommation moyenne réelle
   question: Quelle est votre consommation annuelle d'énergie via le réseau de chaleur raccordé à votre foyer ?
   aide: logement . chauffage . réseau de chaleur . consommation estimée via le coût . saisie
@@ -1204,24 +1785,36 @@ logement . chauffage . réseau de chaleur . consommation via DPE:
   par défaut: consommation moyenne réelle
   formule:
     somme:
-      - parc français . CEREN . chauffage . part chauffage air réseau de chaleur * précision consommation . DPE . consommation via DPE par m2 * surface / nombre sources chauffage air
-      - parc français . CEREN . chauffage . part ecs réseau de chaleur * précision consommation . DPE . consommation via DPE par m2 * surface / nombre sources ecs
+      - consommation via DPE . chauffage
+      - consommation via DPE . ecs
+  unité: kWh
+
+logement . chauffage . réseau de chaleur . consommation via DPE . chauffage:
+  titre: Consommation chauffage via DPE
+  applicable si: est présent chauffage
+  formule: parc français . CEREN . chauffage . part chauffage air réseau de chaleur * précision consommation . DPE . consommation via DPE par m2 * surface
+  unité: kWh
+
+logement . chauffage . réseau de chaleur . consommation via DPE . ecs:
+  titre: Consommation ECS via DPE
+  applicable si: est présent ecs
+  formule: parc français . CEREN . chauffage . part ecs réseau de chaleur * précision consommation . DPE . consommation via DPE par m2 * surface
   unité: kWh
 
 logement . chauffage . réseau de chaleur . consommation via ressenti:
   applicable si: saisie précision consommation = 'aide'
   formule:
     variations:
-      - si: ressenti = 'passoire thermique'
+      - si: précision consommation . ressenti = 'passoire thermique'
         alors:
           somme:
-            - consommation moyenne chauffage * précision consommation . saut D vers G / nombre sources chauffage air
-            - consommation moyenne ecs * précision consommation . saut D vers G / nombre sources ecs
-      - si: ressenti = 'confortable'
+            - consommation moyenne chauffage * précision consommation . saut D vers G
+            - consommation moyenne ecs * précision consommation . saut D vers G
+      - si: précision consommation . ressenti = 'confortable'
         alors:
           somme:
-            - consommation moyenne chauffage * précision consommation . saut D vers A / nombre sources chauffage air
-            - consommation moyenne ecs * précision consommation . saut D vers A / nombre sources ecs
+            - consommation moyenne chauffage * précision consommation . saut D vers A
+            - consommation moyenne ecs * précision consommation . saut D vers A
       - sinon: consommation moyenne réelle
   unité: kWh
 
@@ -1268,13 +1861,17 @@ logement . chauffage . chauffe eau solaire:
   titre: Chauffe-eau solaire
 
 logement . chauffage . chauffe eau solaire . présent:
-  question: Avez-vous un chauffe-eau solaire individuel (CESI) ?
-
-logement . chauffage . chauffe eau solaire . est présent:
   formule:
-    toutes ces conditions:
-      - est défini: chauffe eau solaire . présent
-      - chauffe eau solaire . présent
+    une de ces conditions:
+      - toutes ces conditions:
+          - est défini: chauffage . principal . ecs
+          - chauffage . principal . ecs = "chauffe eau solaire"
+      - toutes ces conditions:
+          - est défini: chauffage . collectif . ecs
+          - chauffage . collectif . ecs = "chauffe eau solaire"
+      - toutes ces conditions:
+          - est défini: chauffage . mode . pas de chauffage . ecs
+          - logement . chauffage . mode . pas de chauffage . ecs = "chauffe eau solaire"
 
 logement . chauffage . chauffe eau solaire . taux réduction ecs:
   titre: Économie d'énergie grâce au chauffe-eau solaire
