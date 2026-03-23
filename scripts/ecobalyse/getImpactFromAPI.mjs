@@ -34,10 +34,6 @@ const fetchData = async (request) => {
     body: JSON.stringify(request)
   })
 
-  if (!response.ok) {
-    throw new Error('No response from API')
-  }
-
   const data = await response.json()
   return data
 }
@@ -53,18 +49,17 @@ const getImpactFromAPI = async (request) => {
 
 const defaultRequest = {
   business: 'large-business-without-services',
-  disabledSteps: ['use', 'eol'], // We exclude use and end of life steps
+  disabledSteps: ['use', 'end-of-life'], // We exclude use and end of life steps
   materials: [
     {
-      id: 'ei-coton',
+      id: '62a4d6fb-3276-4ba5-93a3-889ecd3bff84', // coton par défaut
       share: 1
     }
   ],
-  numberOfReferences: 1000, // We set numberOfReferences and price so we can set custom durability factor (to 1)
+  numberOfReferences: 1000, // We set numberOfReferences and price so we can set custom durability factor (to 1), avoiding default transport to fast fashion.
   physicalDurability: 1,
   price: 100,
-  traceability: false,
-  trims: [],
+  trims: [], // no accessories
   upcycled: false
 }
 
