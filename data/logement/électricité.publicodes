@@ -50,10 +50,7 @@ logement . électricité . intensité carbone équivalente:
 logement . électricité . consommation totale:
   formule:
     variations:
-      - si:
-          une de ces conditions:
-            - chauffage . saisie précision consommation = 'conso exactes'
-            - électricité . saisie précision consommation = oui
+      - si: chauffage . saisie précision consommation = 'conso exactes'
         alors:
           somme:
             - photovoltaique . autoconsommation
@@ -68,10 +65,15 @@ logement . électricité . consommation totale:
   unité: kWh
 
 logement . électricité . consommation totale collectif:
-  formule: consommation totale
-  contexte:
-    chauffage . saisie précision consommation: "'aide'"
-    chauffage . précision consommation . ressenti: "'moyen'"
+  formule:
+    variations:
+      - si: électricité . saisie précision consommation = oui
+        alors:
+          somme:
+            - photovoltaique . autoconsommation
+            - réseau . consommation précise
+      - sinon: consommation par défaut
+  unité: kWh
 
 logement . électricité . saisie précision consommation:
   applicable si:
