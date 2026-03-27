@@ -9,8 +9,10 @@ logement . électricité . empreinte:
       - si:
           toutes ces conditions:
             - est défini: chauffage . mode
-            - chauffage . mode = "collectif"
-        alors: consommation totale collectif * empreinte au kWh
+            - une de ces conditions:
+                - chauffage . mode = "collectif"
+                - chauffage . mode = "pas de chauffage"
+        alors: consommation totale hors individuel * empreinte au kWh
       - sinon: consommation totale * empreinte au kWh
   description: |
     L'empreinte de l'électricité du logement est la somme des empreintes de l'électricité du réseau et de l'électricité produite par les panneaux photovoltaïques.
@@ -62,7 +64,7 @@ logement . électricité . consommation totale:
       - sinon: consommation par défaut
   unité: kWh
 
-logement . électricité . consommation totale collectif:
+logement . électricité . consommation totale hors individuel:
   formule:
     variations:
       - si: électricité . saisie précision consommation = oui
@@ -77,7 +79,9 @@ logement . électricité . saisie précision consommation:
   applicable si:
     toutes ces conditions:
       - est défini: chauffage . mode
-      - chauffage . mode = "collectif"
+      - une de ces conditions:
+          - chauffage . mode = "collectif"
+          - chauffage . mode = "pas de chauffage"
   question: Connaissez-vous votre consommation d'électricité ?
   par défaut: non
 
