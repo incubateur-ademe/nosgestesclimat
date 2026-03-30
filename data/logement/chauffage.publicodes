@@ -310,7 +310,6 @@ logement . chauffage . précision consommation . saisie DPE:
 
     - Dans le cas de la production d’électricité, le facteur de conversion est aujourd’hui de 2,3. Cela veut dire que, pour que vous bénéficiez chez vous d’1 kWh d’électricité, on considère qu’il a fallu dépenser 2,3kWh d’énergie primaire.
     - Pour les énergies qui ne nécessitent pas de transformation telles que le bois, le fioul et le gaz, le facteur de conversion est égal à 1. Ainsi, 1 kWh d’énergie primaire suffit à fournir 1 kWh d’énergie finale.
-  par défaut: "'D'"
   une possibilité:
     - A
     - B
@@ -511,11 +510,14 @@ logement . chauffage . gaz . consommation:
     variations:
       - si: saisie précision consommation = 'conso exactes'
         alors: consommation précise
-      - si: saisie précision consommation = 'DPE'
+      - si:
+          toutes ces conditions:
+            - saisie précision consommation = 'DPE'
+            - est défini: précision consommation . saisie DPE
         alors: consommation via DPE
       - si: saisie précision consommation = 'aide'
         alors: consommation via ressenti
-  par défaut: consommation moyenne réelle
+      - sinon: consommation moyenne réelle
 
 logement . chauffage . gaz . consommation moyenne réelle:
   titre: Consommation moyenne réelle de gaz
@@ -894,11 +896,14 @@ logement . chauffage . citerne propane . consommation:
     variations:
       - si: saisie précision consommation = 'conso exactes'
         alors: consommation précise
-      - si: saisie précision consommation = 'DPE'
+      - si:
+          toutes ces conditions:
+            - saisie précision consommation = 'DPE'
+            - est défini: précision consommation . saisie DPE
         alors: consommation via DPE
       - si: saisie précision consommation = 'aide'
         alors: consommation via ressenti
-  par défaut: consommation moyenne réelle
+      - sinon: consommation moyenne réelle
 
 logement . chauffage . citerne propane . consommation moyenne réelle:
   titre: Consommation moyenne réelle de gaz propane en citerne
@@ -950,12 +955,18 @@ logement . chauffage . citerne propane . consommation précise:
   aide: logement . chauffage . citerne propane . consommation estimée via le coût . saisie
   plancher: 0
   plafond: 10000
-  par défaut: gaz . consommation moyenne réelle / énergie par kg
+  par défaut: consommation par défaut
   unité: kg
   description: |
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
   note: |
     Certains logements ne peuvent être raccordés au réseau de gaz et disposent d'une citerne propane, à l'image d'une citerne fioul.
+
+logement . chauffage . citerne propane . consommation précise . consommation par défaut:
+  formule: gaz . consommation moyenne réelle / énergie par kg
+  contexte:
+    chauffage . principal: "'gaz'"
+  unité: kg
 
 logement . chauffage . citerne propane . consommation via DPE:
   applicable si: saisie précision consommation = 'DPE'
@@ -1070,11 +1081,14 @@ logement . chauffage . fioul . consommation:
     variations:
       - si: saisie précision consommation = 'conso exactes'
         alors: consommation précise
-      - si: saisie précision consommation = 'DPE'
+      - si:
+          toutes ces conditions:
+            - saisie précision consommation = 'DPE'
+            - est défini: précision consommation . saisie DPE
         alors: consommation via DPE
       - si: saisie précision consommation = 'aide'
         alors: consommation via ressenti
-  par défaut: consommation moyenne réelle
+      - sinon: consommation moyenne réelle
 
 logement . chauffage . fioul . consommation moyenne réelle:
   titre: Consommation moyenne réelle de fioul
@@ -1340,11 +1354,14 @@ logement . chauffage . bois . type . granulés . consommation:
     variations:
       - si: saisie précision consommation = 'conso exactes'
         alors: consommation précise
-      - si: saisie précision consommation = 'DPE'
+      - si:
+          toutes ces conditions:
+            - saisie précision consommation = 'DPE'
+            - est défini: précision consommation . saisie DPE
         alors: consommation via DPE / système . nombre bûches et granulés
       - si: saisie précision consommation = 'aide'
         alors: consommation via ressenti / système . nombre bûches et granulés
-  par défaut: consommation moyenne réelle
+      - sinon: consommation moyenne réelle
   unité: kWh
 
 logement . chauffage . bois . type . granulés . consommation moyenne réelle:
@@ -1487,11 +1504,14 @@ logement . chauffage . bois . type . bûches . consommation:
     variations:
       - si: saisie précision consommation = 'conso exactes'
         alors: consommation précise
-      - si: saisie précision consommation = 'DPE'
+      - si:
+          toutes ces conditions:
+            - saisie précision consommation = 'DPE'
+            - est défini: précision consommation . saisie DPE
         alors: consommation via DPE / système . nombre bûches et granulés
       - si: saisie précision consommation = 'aide'
         alors: consommation via ressenti / système . nombre bûches et granulés
-  par défaut: consommation moyenne réelle
+      - sinon: consommation moyenne réelle
   unité: kWh
 
 logement . chauffage . bois . type . bûches . consommation moyenne réelle:
@@ -1724,11 +1744,14 @@ logement . chauffage . réseau de chaleur . consommation:
     variations:
       - si: saisie précision consommation = 'conso exactes'
         alors: consommation précise
-      - si: saisie précision consommation = 'DPE'
+      - si:
+          toutes ces conditions:
+            - saisie précision consommation = 'DPE'
+            - est défini: précision consommation . saisie DPE
         alors: consommation via DPE
       - si: saisie précision consommation = 'aide'
         alors: consommation via ressenti
-  par défaut: consommation moyenne réelle
+      - sinon: consommation moyenne réelle
 
 logement . chauffage . réseau de chaleur . consommation moyenne réelle:
   titre: Consommation moyenne réelle via réseau de chaleur
