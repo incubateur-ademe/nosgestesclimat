@@ -138,9 +138,11 @@ logement . chauffage . collectif:
   une possibilité:
     - gaz
     - réseau de chaleur
+    - fioul
   avec:
     gaz:
     réseau de chaleur:
+    fioul:
   note: On considère ici que le raccordement par défaut est le réseau de chaleur mais c'est biensûr une hypothèse. On pourra par la suite calculer une valeur plus précise.
   par défaut: "'réseau de chaleur'"
 
@@ -478,7 +480,6 @@ logement . chauffage . gaz . empreinte:
   unité: kgCO2e
 
 logement . chauffage . gaz . présent:
-  # question: Votre logement est-il chauffé au gaz ?
   formule:
     une de ces conditions:
       - est présent chauffage
@@ -875,7 +876,6 @@ logement . chauffage . citerne propane . empreinte:
   unité: kgCO2e
 
 logement . chauffage . citerne propane . présent:
-  # question: Votre logement est-il chauffé via une citerne de propane ?
   formule:
     une de ces conditions:
       - est présent chauffage
@@ -1060,20 +1060,26 @@ logement . chauffage . fioul . empreinte:
   unité: kgCO2e
 
 logement . chauffage . fioul . présent:
-  # question: Votre logement est-il chauffé au fioul ?
+  formule:
+    une de ces conditions:
+      - est présent chauffage
+      - est présent ecs
+
+logement . chauffage . fioul . est présent chauffage:
   formule:
     une de ces conditions:
       - chauffage . principal = "fioul"
-      - chauffage . principal . ecs = "fioul"
-
-logement . chauffage . fioul . est présent chauffage:
-  formule: chauffage . principal = "fioul"
+      - chauffage . collectif = "fioul"
 
 logement . chauffage . fioul . est présent ecs:
   formule:
-    toutes ces conditions:
-      - chauffage . principal = "fioul"
-      - chauffage . principal . ecs = "identique"
+    une de ces conditions:
+      - toutes ces conditions:
+          - chauffage . principal = "fioul"
+          - chauffage . principal . ecs = "identique"
+      - toutes ces conditions:
+          - chauffage . collectif = "fioul"
+          - chauffage . collectif . ecs = "source collectif"
 
 logement . chauffage . fioul . consommation:
   non applicable si: fioul . présent = non
@@ -1723,14 +1729,14 @@ logement . chauffage . réseau de chaleur . présent:
       - est présent ecs
 
 logement . chauffage . réseau de chaleur . est présent chauffage:
-  une de ces conditions:
-    - chauffage . principal = "réseau de chaleur"
-    - chauffage . collectif = "réseau de chaleur"
+  formule:
+    une de ces conditions:
+      - chauffage . principal = "réseau de chaleur"
+      - chauffage . collectif = "réseau de chaleur"
 
 logement . chauffage . réseau de chaleur . est présent ecs:
   formule:
     une de ces conditions:
-      - chauffage . principal . ecs = "réseau de chaleur"
       - toutes ces conditions:
           - chauffage . principal = "réseau de chaleur"
           - chauffage . principal . ecs = "identique"
