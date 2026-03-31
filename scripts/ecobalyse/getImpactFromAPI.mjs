@@ -3,7 +3,7 @@ import path from 'path'
 import YAML from 'yaml'
 import 'dotenv/config'
 
-const VERSION = 'latest'
+const VERSION = '7.0.0'
 const ecobalyseAPI =
   VERSION === 'latest'
     ? `https://ecobalyse.beta.gouv.fr/api/textile/simulator`
@@ -47,12 +47,16 @@ const getImpactFromAPI = async (request) => {
   }
 }
 
+// # After v7.0.0
+// 'eol' -> 'end-of-life'
+// 'ei-coton' -> '62a4d6fb-3276-4ba5-93a3-889ecd3bff84'
+
 const defaultRequest = {
   business: 'large-business-without-services',
-  disabledSteps: ['use', 'end-of-life'], // We exclude use and end of life steps
+  disabledSteps: ['use', 'eol'], // We exclude use and end of life steps
   materials: [
     {
-      id: '62a4d6fb-3276-4ba5-93a3-889ecd3bff84', // coton par défaut
+      id: 'ei-coton', // coton par défaut
       share: 1
     }
   ],
@@ -71,6 +75,7 @@ for (const product of Object.keys(products)) {
     ...productData
   }
   const result = await getImpactFromAPI(request)
+
   productImpacts[product] = {
     cch: Math.round(result.impacts.cch * 100) / 100,
     wtu: Math.round(result.impacts.wtu * 1000),
