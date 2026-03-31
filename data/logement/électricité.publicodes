@@ -9,8 +9,10 @@ logement . électricité . empreinte:
       - si:
           toutes ces conditions:
             - est défini: chauffage . mode
-            - chauffage . mode = "collectif"
-        alors: consommation totale collectif * empreinte au kWh
+            - une de ces conditions:
+                - chauffage . mode = "collectif"
+                - chauffage . mode = "pas de chauffage"
+        alors: consommation totale hors individuel * empreinte au kWh
       - sinon: consommation totale * empreinte au kWh
   description: |
     L'empreinte de l'électricité du logement est la somme des empreintes de l'électricité du réseau et de l'électricité produite par les panneaux photovoltaïques.
@@ -50,34 +52,39 @@ logement . électricité . intensité carbone équivalente:
 logement . électricité . consommation totale:
   formule:
     variations:
-      - si:
-          une de ces conditions:
-            - chauffage . saisie précision consommation = 'conso exactes'
-            - électricité . saisie précision consommation = oui
+      - si: chauffage . saisie précision consommation = 'conso exactes'
         alors:
           somme:
             - photovoltaique . autoconsommation
             - réseau . consommation précise
-      - si: chauffage . saisie précision consommation = 'DPE'
+      - si:
+          toutes ces conditions:
+            - chauffage . saisie précision consommation = 'DPE'
+            - est défini: chauffage . précision consommation . saisie DPE
         alors: consommation via DPE
       - si: chauffage . saisie précision consommation = 'aide'
         alors: consommation via ressenti
-      - si: électricité . saisie précision consommation = non
-        alors: consommation moyenne réelle
       - sinon: consommation par défaut
   unité: kWh
 
-logement . électricité . consommation totale collectif:
-  formule: consommation totale
-  contexte:
-    chauffage . saisie précision consommation: "'aide'"
-    chauffage . précision consommation . ressenti: "'moyen'"
+logement . électricité . consommation totale hors individuel:
+  formule:
+    variations:
+      - si: électricité . saisie précision consommation = oui
+        alors:
+          somme:
+            - photovoltaique . autoconsommation
+            - réseau . consommation précise
+      - sinon: consommation par défaut
+  unité: kWh
 
 logement . électricité . saisie précision consommation:
   applicable si:
     toutes ces conditions:
       - est défini: chauffage . mode
-      - chauffage . mode = "collectif"
+      - une de ces conditions:
+          - chauffage . mode = "collectif"
+          - chauffage . mode = "pas de chauffage"
   question: Connaissez-vous votre consommation d'électricité ?
   par défaut: non
 
@@ -148,7 +155,20 @@ logement . électricité . consommation moyenne appoint . part appoint:
       - sinon: parc français . CEREN . chauffage . consommation électricité hors PAC . part appoint
 
 logement . électricité . consommation moyenne cuisson:
-  formule: parc français . CEREN . chauffage . consommation électricité cuisson par m2 * surface
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: chauffage . mode
+            - chauffage . mode = "individuel"
+            - est défini: chauffage . principal
+            - une de ces conditions:
+                - chauffage . gaz . est présent chauffage
+                - chauffage . fioul . est présent chauffage
+                - chauffage . réseau de chaleur . est présent chauffage
+                - chauffage . citerne propane . est présent chauffage
+        alors: 0
+      - sinon: parc français . CEREN . chauffage . consommation électricité cuisson par m2 * surface
   unité: kWh
 
 logement . électricité . consommation moyenne spécifique:
@@ -164,7 +184,6 @@ logement . électricité . consommation moyenne climatisation:
   unité: kWh
 
 logement . électricité . consommation via DPE:
-  applicable si: chauffage . saisie précision consommation = 'DPE'
   par défaut: consommation par défaut
   formule:
     somme:

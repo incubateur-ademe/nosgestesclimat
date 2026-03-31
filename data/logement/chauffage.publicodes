@@ -1,7 +1,7 @@
 logement . chauffage:
   DLUO: 01/09/2026
   non applicable si: métrique != "carbone"
-  titre: Energie logement
+  titre: Énergie logement
   formule:
     variations:
       - si:
@@ -138,9 +138,11 @@ logement . chauffage . collectif:
   une possibilité:
     - gaz
     - réseau de chaleur
+    - fioul
   avec:
     gaz:
     réseau de chaleur:
+    fioul:
   note: On considère ici que le raccordement par défaut est le réseau de chaleur mais c'est biensûr une hypothèse. On pourra par la suite calculer une valeur plus précise.
   par défaut: "'réseau de chaleur'"
 
@@ -281,10 +283,6 @@ logement . chauffage . saisie précision consommation:
           - est défini: chauffage . mode
           - chauffage . mode = "collectif"
           - est défini: chauffage . collectif
-      - toutes ces conditions:
-          - est défini: chauffage . mode
-          - chauffage . mode = "pas de chauffage"
-          - est défini: chauffage . mode . pas de chauffage . ecs
   non applicable si:
     est non défini: chauffage . mode
   question: Connaissez-vous précisément vos consommations ou factures d'énergie ?
@@ -301,10 +299,6 @@ logement . chauffage . saisie précision consommation . DPE:
   titre: Non, mais je connais mon DPE
 
 logement . chauffage . saisie précision consommation . aide:
-  non applicable si:
-    toutes ces conditions:
-      - est défini: chauffage . mode
-      - chauffage . mode = "pas de chauffage"
   titre: Non, j’ai besoin d’aide pour estimer mes consommations
 
 logement . chauffage . précision consommation:
@@ -318,7 +312,6 @@ logement . chauffage . précision consommation . saisie DPE:
 
     - Dans le cas de la production d’électricité, le facteur de conversion est aujourd’hui de 2,3. Cela veut dire que, pour que vous bénéficiez chez vous d’1 kWh d’électricité, on considère qu’il a fallu dépenser 2,3kWh d’énergie primaire.
     - Pour les énergies qui ne nécessitent pas de transformation telles que le bois, le fioul et le gaz, le facteur de conversion est égal à 1. Ainsi, 1 kWh d’énergie primaire suffit à fournir 1 kWh d’énergie finale.
-  par défaut: "'D'"
   une possibilité:
     - A
     - B
@@ -487,7 +480,6 @@ logement . chauffage . gaz . empreinte:
   unité: kgCO2e
 
 logement . chauffage . gaz . présent:
-  # question: Votre logement est-il chauffé au gaz ?
   formule:
     une de ces conditions:
       - est présent chauffage
@@ -519,11 +511,14 @@ logement . chauffage . gaz . consommation:
     variations:
       - si: saisie précision consommation = 'conso exactes'
         alors: consommation précise
-      - si: saisie précision consommation = 'DPE'
+      - si:
+          toutes ces conditions:
+            - saisie précision consommation = 'DPE'
+            - est défini: précision consommation . saisie DPE
         alors: consommation via DPE
       - si: saisie précision consommation = 'aide'
         alors: consommation via ressenti
-  par défaut: consommation moyenne réelle
+      - sinon: consommation moyenne réelle
 
 logement . chauffage . gaz . consommation moyenne réelle:
   titre: Consommation moyenne réelle de gaz
@@ -881,7 +876,6 @@ logement . chauffage . citerne propane . empreinte:
   unité: kgCO2e
 
 logement . chauffage . citerne propane . présent:
-  # question: Votre logement est-il chauffé via une citerne de propane ?
   formule:
     une de ces conditions:
       - est présent chauffage
@@ -902,11 +896,14 @@ logement . chauffage . citerne propane . consommation:
     variations:
       - si: saisie précision consommation = 'conso exactes'
         alors: consommation précise
-      - si: saisie précision consommation = 'DPE'
+      - si:
+          toutes ces conditions:
+            - saisie précision consommation = 'DPE'
+            - est défini: précision consommation . saisie DPE
         alors: consommation via DPE
       - si: saisie précision consommation = 'aide'
         alors: consommation via ressenti
-  par défaut: consommation moyenne réelle
+      - sinon: consommation moyenne réelle
 
 logement . chauffage . citerne propane . consommation moyenne réelle:
   titre: Consommation moyenne réelle de gaz propane en citerne
@@ -958,12 +955,18 @@ logement . chauffage . citerne propane . consommation précise:
   aide: logement . chauffage . citerne propane . consommation estimée via le coût . saisie
   plancher: 0
   plafond: 10000
-  par défaut: gaz . consommation moyenne réelle / énergie par kg
+  par défaut: consommation par défaut
   unité: kg
   description: |
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
   note: |
     Certains logements ne peuvent être raccordés au réseau de gaz et disposent d'une citerne propane, à l'image d'une citerne fioul.
+
+logement . chauffage . citerne propane . consommation précise . consommation par défaut:
+  formule: gaz . consommation moyenne réelle / énergie par kg
+  contexte:
+    chauffage . principal: "'gaz'"
+  unité: kg
 
 logement . chauffage . citerne propane . consommation via DPE:
   applicable si: saisie précision consommation = 'DPE'
@@ -1057,20 +1060,26 @@ logement . chauffage . fioul . empreinte:
   unité: kgCO2e
 
 logement . chauffage . fioul . présent:
-  # question: Votre logement est-il chauffé au fioul ?
+  formule:
+    une de ces conditions:
+      - est présent chauffage
+      - est présent ecs
+
+logement . chauffage . fioul . est présent chauffage:
   formule:
     une de ces conditions:
       - chauffage . principal = "fioul"
-      - chauffage . principal . ecs = "fioul"
-
-logement . chauffage . fioul . est présent chauffage:
-  formule: chauffage . principal = "fioul"
+      - chauffage . collectif = "fioul"
 
 logement . chauffage . fioul . est présent ecs:
   formule:
-    toutes ces conditions:
-      - chauffage . principal = "fioul"
-      - chauffage . principal . ecs = "identique"
+    une de ces conditions:
+      - toutes ces conditions:
+          - chauffage . principal = "fioul"
+          - chauffage . principal . ecs = "identique"
+      - toutes ces conditions:
+          - chauffage . collectif = "fioul"
+          - chauffage . collectif . ecs = "source collectif"
 
 logement . chauffage . fioul . consommation:
   non applicable si: fioul . présent = non
@@ -1078,11 +1087,14 @@ logement . chauffage . fioul . consommation:
     variations:
       - si: saisie précision consommation = 'conso exactes'
         alors: consommation précise
-      - si: saisie précision consommation = 'DPE'
+      - si:
+          toutes ces conditions:
+            - saisie précision consommation = 'DPE'
+            - est défini: précision consommation . saisie DPE
         alors: consommation via DPE
       - si: saisie précision consommation = 'aide'
         alors: consommation via ressenti
-  par défaut: consommation moyenne réelle
+      - sinon: consommation moyenne réelle
 
 logement . chauffage . fioul . consommation moyenne réelle:
   titre: Consommation moyenne réelle de fioul
@@ -1348,11 +1360,14 @@ logement . chauffage . bois . type . granulés . consommation:
     variations:
       - si: saisie précision consommation = 'conso exactes'
         alors: consommation précise
-      - si: saisie précision consommation = 'DPE'
+      - si:
+          toutes ces conditions:
+            - saisie précision consommation = 'DPE'
+            - est défini: précision consommation . saisie DPE
         alors: consommation via DPE / système . nombre bûches et granulés
       - si: saisie précision consommation = 'aide'
         alors: consommation via ressenti / système . nombre bûches et granulés
-  par défaut: consommation moyenne réelle
+      - sinon: consommation moyenne réelle
   unité: kWh
 
 logement . chauffage . bois . type . granulés . consommation moyenne réelle:
@@ -1495,11 +1510,14 @@ logement . chauffage . bois . type . bûches . consommation:
     variations:
       - si: saisie précision consommation = 'conso exactes'
         alors: consommation précise
-      - si: saisie précision consommation = 'DPE'
+      - si:
+          toutes ces conditions:
+            - saisie précision consommation = 'DPE'
+            - est défini: précision consommation . saisie DPE
         alors: consommation via DPE / système . nombre bûches et granulés
       - si: saisie précision consommation = 'aide'
         alors: consommation via ressenti / système . nombre bûches et granulés
-  par défaut: consommation moyenne réelle
+      - sinon: consommation moyenne réelle
   unité: kWh
 
 logement . chauffage . bois . type . bûches . consommation moyenne réelle:
@@ -1711,14 +1729,14 @@ logement . chauffage . réseau de chaleur . présent:
       - est présent ecs
 
 logement . chauffage . réseau de chaleur . est présent chauffage:
-  une de ces conditions:
-    - chauffage . principal = "réseau de chaleur"
-    - chauffage . collectif = "réseau de chaleur"
+  formule:
+    une de ces conditions:
+      - chauffage . principal = "réseau de chaleur"
+      - chauffage . collectif = "réseau de chaleur"
 
 logement . chauffage . réseau de chaleur . est présent ecs:
   formule:
     une de ces conditions:
-      - chauffage . principal . ecs = "réseau de chaleur"
       - toutes ces conditions:
           - chauffage . principal = "réseau de chaleur"
           - chauffage . principal . ecs = "identique"
@@ -1732,11 +1750,14 @@ logement . chauffage . réseau de chaleur . consommation:
     variations:
       - si: saisie précision consommation = 'conso exactes'
         alors: consommation précise
-      - si: saisie précision consommation = 'DPE'
+      - si:
+          toutes ces conditions:
+            - saisie précision consommation = 'DPE'
+            - est défini: précision consommation . saisie DPE
         alors: consommation via DPE
       - si: saisie précision consommation = 'aide'
         alors: consommation via ressenti
-  par défaut: consommation moyenne réelle
+      - sinon: consommation moyenne réelle
 
 logement . chauffage . réseau de chaleur . consommation moyenne réelle:
   titre: Consommation moyenne réelle via réseau de chaleur
