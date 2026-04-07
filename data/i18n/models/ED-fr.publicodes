@@ -1,0 +1,121 @@
+params:
+  code: ED
+  nom: Scolaire
+  gentilé: scolaire
+
+logement . type:
+  question: Où est-ce que tu vis la plupart du temps ?
+  description: |
+    En garde alternée ? Si tu changes de logement régulièrement, choisis en un pour répondre ensuite à toutes les questions.
+  une possibilité:
+    - maison
+    - appartement
+    - internat
+  avec:
+    internat:
+      titre: À l’internat
+
+logement . type . maison:
+  titre: Dans une maison
+
+logement . type . appartement:
+  titre: Dans un appartement
+
+logement . propriétaire:
+  question:
+
+logement . habitants:
+  question: Combien êtes-vous à vivre dans le logement ?
+  description: |
+    Cela permettra d’équilibrer certains calculs par la suite. Si vous êtes 2, réponds 2. Si un membre n’y habite pas tous les jours, tu peux rentrer quelque chose comme 2,5.
+  suggestions:
+    deux personnes: 2
+    trois personnes: 3
+    parents et 2 enfants: 4
+    cinq personnes: 5
+
+logement . surface:
+  question: Connais-tu la taille du logement ?
+  description: |
+    Essaie d’estimer la surface totale du logement dans lequel tu habites.
+  suggestions:
+    studio: 30
+    1 chambre: 50
+    2 chambres: 70
+    3 chambres: 100
+    Plus de 4 chambres: 150
+  par défaut:
+    arrondi: 1 décimale
+    variations:
+      - si: logement . est un appartement
+        alors: parc français . surface moyenne appartement
+      - si: logement . est une maison
+        alors: parc français . surface moyenne maison
+      - si:
+          toutes ces conditions:
+            - est défini: logement . type
+            - logement . type = 'internat'
+            - logement . type moyen = non
+        alors: 12 m2
+      - sinon: parc français . surface moyenne
+
+logement . âge:
+  question:
+
+logement . construction . travaux de rénovation:
+  question:
+
+logement . construction . rénovation . travaux . rénovation . présent:
+  question:
+
+logement . construction . rénovation . travaux . isolation . présent:
+  question:
+
+logement . construction . rénovation . travaux . chauffage . présent:
+  question:
+
+logement . construction . rénovation . travaux . extension . présent:
+  question:
+
+logement . construction . rénovation . travaux . extension . taille:
+  question:
+
+logement . extérieur:
+  question:
+
+logement . extérieur . salon de jardin bois . présent:
+  question:
+
+logement . extérieur . salon de jardin résine ou métal . présent:
+  question:
+
+logement . extérieur . tondeuse électrique ou robot . présent:
+  question:
+
+logement . extérieur . tondeuse thermique . présent:
+  question:
+
+logement . extérieur . barbecue électrique ou gaz . présent:
+  question:
+
+logement . extérieur . barbecue charbon . présent:
+  question:
+
+logement . vacances . résidence secondaire . présent:
+  question:
+
+logement . vacances:
+  question: Si tu pars en week-ends ou en vacances, comment te loges-tu ?
+  description: |
+    Coches tous les types de logement qui te concernent
+  mosaique:
+    type: selection
+    options:
+      - hotel . présent
+      - camping . présent
+      - auberge de jeunesse . présent
+      - locations . présent
+      - famille ou amis . présent
+      - échange . présent
+      - croisière . présent
+    option aucun: non concerné

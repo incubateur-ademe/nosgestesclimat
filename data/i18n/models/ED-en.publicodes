@@ -1,0 +1,99 @@
+params:
+  code: ED
+  nom: School
+  gentilé: school
+logement . type:
+  question: Where do you live most of the time?
+  description: |
+    Alternating custody? If you change accommodation regularly, choose one and then answer all the questions.
+  une possibilité:
+    - maison
+    - appartement
+    - internat
+  avec:
+    internat:
+      titre: À l’internat
+logement . type . maison:
+  titre: In a house
+logement . type . appartement:
+  titre: In a flat
+logement . propriétaire:
+  question: null
+logement . habitants:
+  question: How many of you live in the property?
+  description: |
+    This will help to balance some of the calculations later on. If there are 2 of you, enter 2. If one member does not live there every day, you can enter something like 2.5.
+  suggestions:
+    two people: 2
+    three people: 3
+    parents and 2 children: 4
+    five people: 5
+logement . surface:
+  question: Do you know the size of the accommodation?
+  description: |
+    Try to estimate the total surface area of the home you live in.
+  suggestions:
+    studio: 30
+    1 bedroom: 50
+    2 bedrooms: 70
+    3 bedrooms: 100
+    More than 4 bedrooms: 150
+  par défaut:
+    arrondi: 1 décimale
+    variations:
+      - si: logement . est un appartement
+        alors: parc français . surface moyenne appartement
+      - si: logement . est une maison
+        alors: parc français . surface moyenne maison
+      - si:
+          toutes ces conditions:
+            - est défini: logement . type
+            - logement . type = 'internat'
+            - logement . type moyen = non
+        alors: 12 m2
+      - sinon: parc français . surface moyenne
+logement . âge:
+  question: null
+logement . construction . travaux de rénovation:
+  question: null
+logement . construction . rénovation . travaux . rénovation . présent:
+  question: null
+logement . construction . rénovation . travaux . isolation . présent:
+  question: null
+logement . construction . rénovation . travaux . chauffage . présent:
+  question: null
+logement . construction . rénovation . travaux . extension . présent:
+  question: null
+logement . construction . rénovation . travaux . extension . taille:
+  question: null
+logement . extérieur:
+  question: null
+logement . extérieur . salon de jardin bois . présent:
+  question: null
+logement . extérieur . salon de jardin résine ou métal . présent:
+  question: null
+logement . extérieur . tondeuse électrique ou robot . présent:
+  question: null
+logement . extérieur . tondeuse thermique . présent:
+  question: null
+logement . extérieur . barbecue électrique ou gaz . présent:
+  question: null
+logement . extérieur . barbecue charbon . présent:
+  question: null
+logement . vacances . résidence secondaire . présent:
+  question: null
+logement . vacances:
+  question: If you go away for the weekend or on holiday, how do you stay?
+  description: |
+    Tick all the types of accommodation that apply to you
+  mosaique:
+    type: selection
+    options:
+      - hotel . présent
+      - camping . présent
+      - auberge de jeunesse . présent
+      - locations . présent
+      - famille ou amis . présent
+      - échange . présent
+      - croisière . présent
+    option aucun: not concerned

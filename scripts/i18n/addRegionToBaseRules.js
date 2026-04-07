@@ -42,6 +42,17 @@ ${c.italic('(it might be a typo error in the rule name or a renamed rule in the 
     }
 
     Object.entries(attrs).forEach(([attr, transVal]) => {
+      if (attr === 'question' && (transVal === '' || transVal === null)) {
+        const ruleWithoutQuestion = { ...baseRules[rule] }
+        delete ruleWithoutQuestion.question
+        baseRules = utils.customAssocPath(
+          [rule],
+          ruleWithoutQuestion,
+          baseRules
+        )
+        return
+      }
+
       updateBaseRules([rule, attr], transVal)
     })
   })
