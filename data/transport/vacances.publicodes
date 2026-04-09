@@ -116,40 +116,12 @@ transport . vacances . caravane . pourcentage caravaniers:
 transport . vacances . camping car:
   titre: Camping Car
   icônes: 🚐
-  applicable si:
-    toutes ces conditions:
-      - km > 0
-      - propriétaire
-  formule: usage réel + construction amortie
+  applicable si: propriétaire
+  formule: (usage + construction) / logement . habitants
 
 transport . vacances . camping car . propriétaire:
   question: Possédez-vous un camping car ?
   par défaut: non
-
-transport . vacances . camping car . usage réel:
-  titre: Usage Camping Car
-  formule: usage / logement . habitants
-  unité: kgCO2e
-
-transport . vacances . camping car . construction amortie:
-  titre: Construction du camping car
-  formule: (construction / durée de vie) / logement . habitants
-  unité: kgCO2e
-
-transport . vacances . camping car . construction:
-  formule: voiture . barème construction . barème thermique . empreinte par kg * camping car . poids
-  unité: kgCO2e
-
-transport . vacances . camping car . poids:
-  formule: 3500
-  unité: kg
-  note: On considère que le poids d'un camping car est de 3,5 tonnes (au-delà de 3,5 tonnes, le véhicule change de PTAC pour devenir un "poids lourd", impliquant l'utilisation d'un autre permis)
-
-transport . vacances . camping car . durée de vie:
-  formule: 25
-  note: |
-    On considère une durée de vie de [25 ans](https://objectifpleinair.com/combien-de-temps-dure-un-camping-car/).
-    Cette hypothèse nécessite d'être mieux sourcée
 
 transport . vacances . camping car . km:
   titre: km en camping car
@@ -169,35 +141,51 @@ transport . vacances . camping car . km:
   unité: km
   note: D'après la fédération des campeurs, caravaniers et camping-caristes, un camping-cariste fait en moyenne 8869 km par an ([source](https://ffcc.fr/actualite/qui-sont-les-camping-caristes-et-les-vanlifers-en-2021/))
 
+transport . vacances . camping car . usage:
+  titre: Usage Camping Car
+  formule: usage au km * km
+  unité: kgCO2e
+
+transport . vacances . camping car . usage au km:
+  valeur: transport . voiture . usage au kilomètre
+  unité: kgCO2e/km
+  contexte:
+    transport . voiture . utilisateur: "'propriétaire'"
+    transport . voiture . motorisation: "'thermique'"
+    transport . voiture . gabarit: "'VUL'"
+    transport . voiture . thermique . carburant: "'gazole B7 ou B10'"
+    transport . voiture . thermique . consommation aux 100: camping car . consommation aux 100
+
 transport . vacances . camping car . consommation aux 100:
   question: Connaissez-vous la consommation moyenne de votre camping-car ?
-  par défaut: 15
+  par défaut: 12
   unité: l/centkm
   suggestions:
     10 l/100km: 10
     15 l/100km: 15
     18 l/100km: 18
   note: |
-    Par défaut on considère une consommation de [15 l au 100 km](http://www.france-camping-car.fr/utilisation/consommation-camping-car.php)
+    La source n'est pas idéal mais [Just4Camper](https://www.just4camper.fr/fr-fr/blog/comment-moins-consommer-en-camping-car?srsltid=AfmBOoraiFSkgf5CQ9A7K19IBzDIpzY_dmRFvJ5a3nBCCbOra2ek0wpZ#article-main-contents-list-1) indique que la consommation moyenne d'un camping-car "intégral" oscille entre 10 et 15 litres. Nous avons choisi une valeur par défaut de 12 l/100km.
 
-transport . vacances . camping car . consommation au kilomètre:
-  formule: consommation aux 100 / 100 km/centkm
-  unité: l/km
-
-transport . vacances . camping car . empreinte au litre:
-  formule: 2.7
-  unité: kgCO2e/l
-  note: |
-    Source : [Base Carbone](https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element/categorie/405)
-
-transport . vacances . camping car . empreinte au kilomètre:
-  titre: empreinte au km camping-car
-  formule: consommation au kilomètre * empreinte au litre
-  unité: kgCO2e/km
-
-transport . vacances . camping car . usage:
-  formule: camping car . km * empreinte au kilomètre
+transport . vacances . camping car . construction:
+  titre: Construction du camping car
+  formule: construction au km * km
   unité: kgCO2e
+
+transport . vacances . camping car . construction au km:
+  formule: transport . voiture . construction au kilomètre
+  unité: kgCO2e/km
+  contexte:
+    transport . voiture . utilisateur: "'propriétaire'"
+    transport . voiture . motorisation: "'thermique'"
+    transport . voiture . gabarit: "'VUL'"
+    transport . voiture . gabarit . VUL . poids: camping car . poids
+    transport . voiture . durée de vie en km: 250000
+
+transport . vacances . camping car . poids:
+  formule: 3500
+  unité: kg
+  note: On considère que le poids d'un camping car est de 3,5 tonnes (au-delà de 3,5 tonnes, le véhicule change de PTAC pour devenir un "poids lourd", impliquant l'utilisation d'un autre permis)
 
 transport . vacances . camping car . pourcentage camping-caristes:
   formule: 1400000 * 77% / population
@@ -207,20 +195,27 @@ transport . vacances . van:
   titre: Van
   icônes: 🚐
   applicable si: propriétaire
-  formule: usage réel + construction amortie
+  formule: (usage + construction) / logement . habitants
+  unité: kgCO2e
 
 transport . vacances . van . propriétaire:
   question: Possédez-vous un van ?
   par défaut: non
 
-transport . vacances . van . usage réel:
+transport . vacances . van . usage:
   titre: Usage van
-  formule: usage / logement . habitants
+  formule: usage au km * km
   unité: kgCO2e
 
-transport . vacances . van . usage:
-  formule: van . km * empreinte au kilomètre
-  unité: kgCO2e
+transport . vacances . van . usage au km:
+  valeur: transport . voiture . usage au kilomètre
+  unité: kgCO2e/km
+  contexte:
+    transport . voiture . utilisateur: "'propriétaire'"
+    transport . voiture . motorisation: "'thermique'"
+    transport . voiture . gabarit: "'VUL'"
+    transport . voiture . thermique . carburant: "'gazole B7 ou B10'"
+    transport . voiture . thermique . consommation aux 100: van . consommation aux 100
 
 transport . vacances . van . km:
   titre: km en van
@@ -240,49 +235,36 @@ transport . vacances . van . km:
   plafond: 99999
   note: D'après la fédération des campeurs, caravaniers et camping-caristes, un "vanlifer" fait en moyenne 9310 km par an ([source](https://ffcc.fr/actualite/qui-sont-les-camping-caristes-et-les-vanlifers-en-2021/))
 
-transport . vacances . van . empreinte au kilomètre:
-  titre: empreinte au km camping-car
-  formule: consommation au kilomètre * empreinte au litre
-  unité: kgCO2e/km
-
-transport . vacances . van . consommation au kilomètre:
-  formule: consommation aux 100 / 100 km/centkm
-  unité: l/km
-
 transport . vacances . van . consommation aux 100:
   question: Connaissez-vous la consommation moyenne de votre van ?
-  par défaut: 9
+  par défaut: 6.6 * 1.127
   unité: l/centkm
   suggestions:
     7 l/100km: 7
     9 l/100km: 9
     12 l/100km: 12
   note: |
-    Par défaut on considère une consommation de [9 l au 100 km](https://www.wikicampers.fr/blog/van-vs-fourgon-lequel-choisir/)
-
-transport . vacances . van . empreinte au litre:
-  formule: 2.7
-  unité: kgCO2e/l
-  note: |
-    Source : [Base Carbone](https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element/categorie/405)
-
-transport . vacances . van . construction amortie:
-  titre: Construction du van
-  formule: (construction / durée de vie) / logement . habitants
-  unité: kgCO2e
+    La consommation par défaut est issue d'une moyenne des véhicules diesel de Car Labelling ajusté via un facteur de correction constructeur / réel (+12,7%).
 
 transport . vacances . van . construction:
-  formule: voiture . barème construction . barème thermique . empreinte par kg * van . poids
+  titre: Construction du van
+  formule: construction au km * km
   unité: kgCO2e
+
+transport . vacances . van . construction au km:
+  formule: transport . voiture . construction au kilomètre
+  unité: kgCO2e/km
+  contexte:
+    transport . voiture . utilisateur: "'propriétaire'"
+    transport . voiture . motorisation: "'thermique'"
+    transport . voiture . gabarit: "'VUL'"
+    transport . voiture . gabarit . VUL . poids: van . poids
+    transport . voiture . durée de vie en km: 250000
 
 transport . vacances . van . poids:
   formule: 3000
   unité: kg
   note: Le poids d'un van aménagé varie entre 2,6 et 3,5 tonnes (au-delà de 3,5 tonnes, le véhicule change de PTAC pour devenir un "poids lourd", impliquant l'utilisation d'un autre permis)
-
-transport . vacances . van . durée de vie:
-  formule: 25
-  note: Nous considérons pour un van aménagé la même durée de vie que pour un camping-car.
 
 transport . vacances . van . pourcentage usagers van:
   formule: 1400000 * 23% / population
