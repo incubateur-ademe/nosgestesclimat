@@ -37,29 +37,61 @@ logement . habitants:
     cinq personnes: 5
 
 logement . surface:
-  question: Connais-tu la taille du logement ?
-  description: |
-    Essaie d’estimer la surface totale du logement dans lequel tu habites.
-  suggestions:
-    studio: 30
-    1 chambre: 50
-    2 chambres: 70
-    3 chambres: 100
-    Plus de 4 chambres: 150
-  par défaut:
-    arrondi: 1 décimale
+  question:
+  formule:
     variations:
-      - si: logement . est un appartement
-        alors: parc français . surface moyenne appartement
-      - si: logement . est une maison
-        alors: parc français . surface moyenne maison
-      - si:
-          toutes ces conditions:
-            - est défini: logement . type
-            - logement . type = 'internat'
-            - logement . type moyen = non
-        alors: 12 m2
-      - sinon: parc français . surface moyenne
+      - si: surface . possibilités = 'studio'
+        alors: 30 m2
+      - si: surface . possibilités = 'une chambre'
+        alors: 50 m2
+      - si: surface . possibilités = 'deux chambres'
+        alors: 70 m2
+      - si: surface . possibilités = 'trois chambres'
+        alors: 100 m2
+      - si: surface . possibilités = 'quatre chambres'
+        alors: 120 m2
+      - si: surface . possibilités = 'plus de 4 chambres'
+        alors: 150 m2
+  par défaut: surface par défaut
+  avec:
+    surface par défaut:
+      arrondi: 1 décimale
+      formule:
+        variations:
+          - si: logement . est un appartement
+            alors: parc français . surface moyenne appartement
+          - si: logement . est une maison
+            alors: parc français . surface moyenne maison
+          - si:
+              toutes ces conditions:
+                - est défini: logement . type
+                - logement . type = 'internat'
+                - logement . type moyen = non
+            alors: 12 m2
+          - sinon: parc français . surface moyenne
+    possibilités:
+      question: Connais-tu la taille du logement ?
+      description: |
+        Aide-nous à estimer la surface du logement dans lequel tu vis avec le nombre de chambres.
+      une possibilité:
+        - studio
+        - une chambre
+        - deux chambres
+        - trois chambres
+        - quatre chambres
+        - plus de 4 chambres
+    possibilités . studio:
+      titre: Studio (1 pièce)
+    possibilités . une chambre:
+      titre: 1 chambre
+    possibilités . deux chambres:
+      titre: 2 chambres
+    possibilités . trois chambres:
+      titre: 3 chambres
+    possibilités . quatre chambres:
+      titre: 4 chambres
+    possibilités . plus de 4 chambres:
+      titre: Plus de 4 chambres
 
 logement . âge:
   question:
@@ -81,12 +113,12 @@ logement . piscine . type:
   question: Est-ce qu'il y a une piscine chez toi ?
 
 logement . chauffage . mode:
-  question: As-tu déjà demandé, dans ta famille, comment est chauffé votre logement ?
+  question: Est-ce que vous utilisez du chauffage dans ton logement ?
   description: |
     N'hésite pas à demander chez toi si tu ne l'as jamais fait !
   une possibilité:
-    - test oui
-    - test non
+    - fake oui
+    - pas de chauffage
   avec:
     individuel:
       titre: Chauffage individuel
@@ -94,11 +126,9 @@ logement . chauffage . mode:
       titre: Chauffage collectif
       non applicable si: est une maison
     pas de chauffage:
-      titre: Mon logement n'est pas chauffé
-    test oui:
+      titre: Le logement n'est pas chauffé
+    fake oui:
       titre: Oui
-    test non:
-      titre: Non
 
 logement . électricité . photovoltaique . présent:
   question: Est-ce que tu as des panneaux photovoltaïques sur le toit de ta maison ?
@@ -156,10 +186,42 @@ alimentation . boisson . chaude:
 
 alimentation . boisson . eau en bouteille . consommateur:
   question: La plupart du temps, est-ce que tu bois ton eau en bouteille ?
+  description: |
+    S'il t'arrive de boire de l'eau en bouteille mais que ce n'est pas ta consommation principale, tu peux répondre "non" à cette question.
 
 alimentation . boisson . sucrées . litres:
-  question: |
-    Pour les sodas, jus de fruits ou autres boissons sucrées : quelle est ta consommation moyenne par semaine ?
+  question:
+  formule:
+    variations:
+      - si: possibilités = 'occasionnellement'
+        alors: 0.5
+      - si: possibilités = 'régulièrement'
+        alors: 2
+      - si: possibilités = 'souvent'
+        alors: 3.5
+      - si: possibilités = 'jamais'
+        alors: 0
+  avec:
+    possibilités:
+      question: |
+        Pour les sodas, jus de fruits ou autres boissons sucrées : quelle est ta consommation moyenne par semaine ?
+      une possibilité:
+        - occasionnellement
+        - régulièrement
+        - souvent
+        - jamais
+    possibilités . occasionnellement:
+      titre: Occasionnellement (quelques fois par mois)
+    possibilités . régulièrement:
+      titre: Régulièrement (1 à 3 fois par semaine)
+    possibilités . souvent:
+      titre: Très souvent (presque tous les jours)
+    possibilités . jamais:
+      titre: Jamais ou presque
+      icônes: ❌
+
+alimentation . boisson . alcool . litres:
+  question:
 
 alimentation . boisson . type de lait:
   question: Quel type de lait bois-tu en règle générale ?
@@ -171,6 +233,435 @@ alimentation . déchets . gestes . saisie:
   question: Quels éco-gestes mets-tu en place pour réduire tes déchets ?
 
 # Transport
+
+transport . voiture:
+  titre: voiture
+  icônes: 🚘
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: km . hebdo . possibilités
+            - est défini: km . annuel . possibilités
+            - km . hebdo . possibilités = 'jamais'
+            - km . annuel . possibilités = 'jamais'
+        alors: 0
+      - si:
+          une de ces conditions:
+            - toutes ces conditions:
+                - est défini: km . hebdo . possibilités
+                - km . hebdo . possibilités != 'jamais'
+            - toutes ces conditions:
+                - est défini: km . annuel . possibilités
+                - km . annuel . possibilités != 'jamais'
+        alors: empreinte
+      - sinon: empreinte moyenne
+
+transport . voiture . utilisateur:
+  question:
+  par défaut: "'régulier non propriétaire'"
+
+transport . voiture . km:
+  non applicable si: non
+  question:
+  formule:
+    somme:
+      - hebdo * 47 semaine
+      - annuel
+  note: |
+    On considère une vitesse moyenne de 40 km/h pour convertir le temps passé en voiture en kilomètres parcourus, en prenant une valeur médiane pour les plages de temps.
+  avec:
+    hebdo:
+      unité: km/semaine
+      formule:
+        variations:
+          - si:
+              est défini: possibilités
+            alors:
+              variations:
+                - si: possibilités = 'rarement'
+                  alors: 15
+                - si: possibilités = 'moins d'une heure'
+                  alors: 30
+                - si: possibilités = 'entre 1 et 3 heures'
+                  alors: 80
+                - si: possibilités = 'entre 3 et 7 heures'
+                  alors: 200
+                - si: possibilités = 'plus de 7 heures'
+                  alors: 350
+                - si: possibilités = 'jamais'
+                  alors: 0
+          - sinon: 0
+    hebdo . possibilités:
+      question: |
+        Sur une semaine normale, combien de temps passes-tu en voiture environ ?
+      une possibilité:
+        - rarement
+        - moins d'une heure
+        - entre 1 et 3 heures
+        - entre 3 et 7 heures
+        - plus de 7 heures
+        - jamais
+    hebdo . possibilités . rarement:
+      titre: Quelques minutes maximum
+    hebdo . possibilités . moins d'une heure:
+      titre: Moins d’une heure
+    hebdo . possibilités . entre 1 et 3 heures:
+      titre: Entre 1 et 3 heures
+    hebdo . possibilités . entre 3 et 7 heures:
+      titre: Entre 3 et 7 heures
+    hebdo . possibilités . plus de 7 heures:
+      titre: Plus de 7 heures
+    hebdo . possibilités . jamais:
+      titre: Je ne monte jamais en voiture
+      icônes: ❌
+    annuel:
+      unité: km
+      formule:
+        variations:
+          - si:
+              est défini: possibilités
+            alors:
+              variations:
+                - si: possibilités = 'plusieurs fois par an'
+                  alors: 2000
+                - si: possibilités = 'occasionnellement'
+                  alors: 1000
+                - si: possibilités = 'jamais'
+                  alors: 0
+          - sinon: 0
+    annuel . possibilités:
+      question: |
+        Dans l’année, fais-tu aussi de longs trajets en voiture ? (plus de 2h)
+      description: |
+        Par exemple : vacances d’été, week-end chez la famille...
+      une possibilité:
+        - plusieurs fois par an
+        - occasionnellement
+        - jamais
+    annuel . possibilités . plusieurs fois par an:
+      titre: Oui, plusieurs fois par an
+    annuel . possibilités . occasionnellement:
+      titre: Oui, 1 à 2 fois par an
+    annuel . possibilités . jamais:
+      titre: Non, pas vraiment
+
+transport . voiture . voyageurs:
+  question: En moyenne, combien de personnes sont dans la voiture avec toi ?
+  description: |
+    Aide : en moyenne en France, le taux de remplissage d’une voiture est de 1,4 personnes sur des trajets courts et 2,25 personnes sur des trajets longs (source).
+
+transport . voiture . motorisation:
+  question: Dans quel type de voiture voyages-tu le plus souvent ?
+  description: S'il y plusieurs voitures chez toi, choisis celle que tu prends le plus souvent.
+  par défaut: "'thermique'"
+  une possibilité:
+    - thermique
+    - électrique
+    - hybride non rechargeable
+transport . voiture . motorisation . thermique:
+  titre: Une voiture thermique (diesel/essence)
+transport . voiture . motorisation . électrique:
+  titre: Une voiture électrique
+transport . voiture . motorisation . hybride non rechargeable:
+  titre: Une voiture hybride (essence et électrique)
+
+transport . voiture . gabarit:
+  question:
+
+transport . voiture . thermique . carburant:
+  question:
+
+transport . voiture . thermique . consommation aux 100:
+  question:
+
+transport . voiture . barème construction . barème électrique . batterie . capacité:
+  question:
+
+transport . voiture . électrique . consommation aux 100:
+  question:
+
+transport . voiture . électrique . recharge à domicile:
+  question:
+
+transport . avion . usager:
+  question: As-tu voyagé en avion au cours des 3 dernières années ?
+  description: |
+    Si tu as pris l’avion une fois en 3 ans, ton vol sera amorti en 3 ans.
+  une possibilité:
+    - jamais
+    - occasionnellement
+    - fréquemment
+
+transport . avion . usager . fréquemment:
+  titre: Oui, au moins une fois par an
+
+transport . avion . usager . occasionnellement:
+  titre: Oui, mais moins d’une fois par an
+
+transport . avion . usager . jamais:
+  titre: Non, je n’ai pas pris l’avion ces 3 dernières années
+
+transport . deux roues . usager:
+  question: Utilises-tu un scooter ou une moto ?
+
+transport . deux roues . km:
+  question: Combien de km fais-tu à l'année avec ton scooter ou moto ?
+
+transport . deux roues . type:
+  question: Quel type de scooter ou moto utilises-tu majoritairement ?
+  une possibilité:
+    - scooter électrique
+    - scooter thermique
+    - moto inf 250
+
+transport . deux roues . type . scooter électrique:
+  titre: Électrique
+transport . deux roues . type . scooter thermique:
+  titre: 50 cm³
+transport . deux roues . type . moto inf 250:
+  titre: 125 cm³
+
+transport . mobilité douce:
+  question: Parmi ces autres modes de déplacement, lesquels utilises-tu ?
+
+transport . mobilité douce . vae . km:
+  question:
+  formule:
+    variations:
+      - si: possibilités = 'occasionnellement'
+        alors: 250
+      - si: possibilités = 'régulièrement'
+        alors: 1500
+      - si: possibilités = 'souvent'
+        alors: 3600
+  avec:
+    possibilités:
+      question: Tu utilises ton vélo électrique...
+      une possibilité:
+        - occasionnellement
+        - régulièrement
+        - souvent
+    possibilités . occasionnellement:
+      titre: Occasionnellement (quelques fois par mois)
+    possibilités . régulièrement:
+      titre: Régulièrement (1 à 3 fois par semaine)
+    possibilités . souvent:
+      titre: Très souvent (presque tous les jours)
+
+transport . mobilité douce . autres véhicules à moteur . km:
+  question:
+  formule:
+    variations:
+      - si: possibilités = 'occasionnellement'
+        alors: 250
+      - si: possibilités = 'régulièrement'
+        alors: 1500
+      - si: possibilités = 'souvent'
+        alors: 3600
+  avec:
+    possibilités:
+      question: Tu utilises ton petit véhicule électrique...
+      une possibilité:
+        - occasionnellement
+        - régulièrement
+        - souvent
+    possibilités . occasionnellement:
+      titre: Occasionnellement (quelques fois par mois)
+    possibilités . régulièrement:
+      titre: Régulièrement (1 à 3 fois par semaine)
+    possibilités . souvent:
+      titre: Très souvent (presque tous les jours)
+
+transport . transports commun:
+  question: Niveau transports collectifs, lesquels as-tu utilisé sur les 12 derniers mois ?
+
+transport . transports commun . bus . heures par semaine:
+  question:
+  formule:
+    variations:
+      - si: possibilités = 'rarement'
+        alors: 0.25
+      - si: possibilités = 'moins d'une heure'
+        alors: 0.75
+      - si: possibilités = 'entre 1 et 3 heures'
+        alors: 2
+      - si: possibilités = 'entre 3 et 7 heures'
+        alors: 5
+      - si: possibilités = 'plus de 7 heures'
+        alors: 8
+  avec:
+    possibilités:
+      question: |
+        Chaque semaine, combien de temps passes-tu dans le bus en moyenne ?
+      une possibilité:
+        - rarement
+        - moins d'une heure
+        - entre 1 et 3 heures
+        - entre 3 et 7 heures
+        - plus de 7 heures
+    possibilités . rarement:
+      titre: Quelques minutes maximum
+    possibilités . moins d'une heure:
+      titre: Moins d’une heure
+    possibilités . entre 1 et 3 heures:
+      titre: Entre 1 et 3 heures
+    possibilités . entre 3 et 7 heures:
+      titre: Entre 3 et 7 heures
+    possibilités . plus de 7 heures:
+      titre: Plus de 7 heures
+
+transport . transports commun . car . km par semaine:
+  question:
+  formule:
+    variations:
+      - si: possibilités = 'rarement'
+        alors: 0.25 * 60
+      - si: possibilités = 'moins d'une heure'
+        alors: 0.75 * 60
+      - si: possibilités = 'entre 1 et 3 heures'
+        alors: 2 * 60
+      - si: possibilités = 'entre 3 et 7 heures'
+        alors: 5 * 60
+      - si: possibilités = 'plus de 7 heures'
+        alors: 8 * 60
+  note: |
+    On considère une vitesse moyenne de 60 km/h pour convertir le temps passé en autocar en kilomètres parcourus, en prenant une valeur médiane pour les plages de temps.
+  avec:
+    possibilités:
+      question: |
+        Chaque semaine, combien de temps passes-tu en autocar en moyenne ?
+      une possibilité:
+        - rarement
+        - moins d'une heure
+        - entre 1 et 3 heures
+        - entre 3 et 7 heures
+        - plus de 7 heures
+    possibilités . rarement:
+      titre: Quelques minutes maximum
+    possibilités . moins d'une heure:
+      titre: Moins d’une heure
+    possibilités . entre 1 et 3 heures:
+      titre: Entre 1 et 3 heures
+    possibilités . entre 3 et 7 heures:
+      titre: Entre 3 et 7 heures
+    possibilités . plus de 7 heures:
+      titre: Plus de 7 heures
+
+transport . transports commun . métro ou tram . heures par semaine:
+  question:
+  formule:
+    variations:
+      - si: possibilités = 'rarement'
+        alors: 0.25
+      - si: possibilités = 'moins d'une heure'
+        alors: 0.75
+      - si: possibilités = 'entre 1 et 3 heures'
+        alors: 2
+      - si: possibilités = 'entre 3 et 7 heures'
+        alors: 5
+      - si: possibilités = 'plus de 7 heures'
+        alors: 8
+  avec:
+    possibilités:
+      question: |
+        Chaque semaine, combien de temps passes-tu dans le métro ou tram en moyenne ?
+      une possibilité:
+        - rarement
+        - moins d'une heure
+        - entre 1 et 3 heures
+        - entre 3 et 7 heures
+        - plus de 7 heures
+    possibilités . rarement:
+      titre: Quelques minutes maximum
+    possibilités . moins d'une heure:
+      titre: Moins d’une heure
+    possibilités . entre 1 et 3 heures:
+      titre: Entre 1 et 3 heures
+    possibilités . entre 3 et 7 heures:
+      titre: Entre 3 et 7 heures
+    possibilités . plus de 7 heures:
+      titre: Plus de 7 heures
+
+transport . train . km:
+  question:
+  formule: trajet freq * trajet km
+  avec:
+    trajet freq:
+      formule:
+        variations:
+          - si: possibilités = 'rarement'
+            alors: 2
+          - si: possibilités = 'occasionnellement'
+            alors: 8
+          - si: possibilités = 'régulièrement'
+            alors: 20
+          - si: possibilités = 'très souvent'
+            alors: 60
+    trajet freq . possibilités:
+      question: |
+        Tu prends le train...
+      une possibilité:
+        - rarement
+        - occasionnellement
+        - régulièrement
+        - très souvent
+    trajet freq . possibilités . rarement:
+      titre: Occasionnellement (1 à 2 fois par an)
+    trajet freq . possibilités . occasionnellement:
+      titre: Régulièrement (quelques fois par mois)
+    trajet freq . possibilités . régulièrement:
+      titre: Régulièrement (au moins une fois par mois)
+    trajet freq . possibilités . très souvent:
+      titre: Très souvent (plusieurs fois par semaine)
+    trajet km:
+      formule:
+        variations:
+          - si: possibilités = 'court'
+            alors: 50
+          - si: possibilités = 'moyen'
+            alors: 300
+          - si: possibilités = 'long'
+            alors: 600
+    trajet km . possibilités:
+      question: |
+        Tes trajets en train sont plutôt:
+      description: |
+        Choisis la réponse qui correspond le mieux à la distance moyenne de tes trajets.
+      une possibilité:
+        - court
+        - moyen
+        - long
+    trajet km . possibilités . court:
+      titre: Courts (moins d'une heure)
+    trajet km . possibilités . moyen:
+      titre: Moyens (entre 1 et 3 heures)
+    trajet km . possibilités . long:
+      titre: Longs (plus de 3 heures)
+
+transport . ferry . heures:
+  question: Combien d’heures passes-tu en ferry à l'année ?
+  description: |
+    Par exemple : pour aller en Corse ou en Angleterre.
+  suggestions:
+    quelques heures: 5
+    une journée: 10
+    plusieurs jours: 50
+
+transport . vacances:
+  question: Possédez-vous l’un (ou plusieurs) de ces véhicules ?
+
+transport . vacances . caravane . propriétaire:
+  question:
+
+transport . vacances . camping car . propriétaire:
+  question:
+
+transport . vacances . van . propriétaire:
+  question:
+
+transport . vacances . bateau plaisance . propriétaire:
+  question:
 
 # Divers
 
@@ -199,10 +690,9 @@ divers . numérique . appareils . renouvellement téléphone:
 divers . textile . volume:
   question: Pour quelle raison renouvelles-tu tes vêtements ?
   description: |
-    TODO
-
+    Le but est d'estimer la taille de ta garde-robe : si tu possèdes peu de vêtements, coche la première option, si tu en possèdes beaucoup, coche la dernière.
 divers . textile . volume . minimum:
-  titre: Je renouvelle quand c’est strictement nécessaire (croissance, usure...)
+  titre: Je renouvelle quand c’est strictement nécessaire (je grandis vite, usure...)
 divers . textile . volume . renouvellement occasionnel:
   titre: Je renouvelle par besoin mais aussi parfois par coup-de-coeur
 divers . textile . volume . accro au shopping:
