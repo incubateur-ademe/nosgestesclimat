@@ -1,0 +1,724 @@
+params:
+  code: ED
+  nom: School
+  gentilé: school
+logement . type:
+  question: What is your main home?
+  description: |
+    If you alternate between several homes, choose one for your answers.
+  une possibilité:
+    - maison
+    - appartement
+    - internat
+  avec:
+    internat:
+      titre: À l’internat
+logement . type . maison:
+  titre: In a house
+logement . type . appartement:
+  titre: In a flat
+logement . propriétaire:
+  question: null
+logement . habitants:
+  question: How many people live in this home (including you)?
+  description: |
+    This figure will enable us to divide up the footprint of the home.
+    If one (or more) people live there, but not every day, you can enter a figure with a decimal point: for example 2.5 if there are 2 of you half the time, and 3 the other half.
+  suggestions:
+    two people: 2
+    three people: 3
+    parents and 2 children: 4
+    five people: 5
+logement . surface:
+  question: null
+  formule:
+    variations:
+      - si: surface . possibilités = 'studio'
+        alors: 30 m2
+      - si: surface . possibilités = 'une chambre'
+        alors: 50 m2
+      - si: surface . possibilités = 'deux chambres'
+        alors: 70 m2
+      - si: surface . possibilités = 'trois chambres'
+        alors: 100 m2
+      - si: surface . possibilités = 'quatre chambres'
+        alors: 120 m2
+      - si: surface . possibilités = 'plus de 4 chambres'
+        alors: 150 m2
+  par défaut: surface par défaut
+  avec:
+    surface par défaut:
+      arrondi: 1 décimale
+      formule:
+        variations:
+          - si: logement . est un appartement
+            alors: parc français . surface moyenne appartement
+          - si: logement . est une maison
+            alors: parc français . surface moyenne maison
+          - si:
+              toutes ces conditions:
+                - est défini: logement . type
+                - logement . type = 'internat'
+                - logement . type moyen = non
+            alors: 12 m2
+          - sinon: parc français . surface moyenne
+    possibilités:
+      question: Laquelle de ces options décrit le mieux ton logement ?
+      description: Connaître le nombre de pièces, ou de chambres, nous permet d'estimer la surface de ton logement.
+      une possibilité:
+        - studio
+        - une chambre
+        - deux chambres
+        - trois chambres
+        - quatre chambres
+        - plus de 4 chambres
+    possibilités . studio:
+      titre: Studio (1 pièce)
+    possibilités . une chambre:
+      titre: 1 chambre
+    possibilités . deux chambres:
+      titre: 2 chambres
+    possibilités . trois chambres:
+      titre: 3 chambres
+    possibilités . quatre chambres:
+      titre: 4 chambres
+    possibilités . plus de 4 chambres:
+      titre: Plus de 4 chambres
+logement . âge:
+  question: null
+logement . construction . travaux de rénovation:
+  question: null
+logement . climatisation . présent:
+  question: Does your home have air conditioning?
+  avec:
+    oui et utilisation:
+      titre: Oui, et on l'utilise
+    oui sans utilisation:
+      titre: Oui, mais on ne l'utilise pas
+    pas de climatiseurs:
+      titre: Non
+logement . piscine . type:
+  question: Do you have a swimming pool?
+logement . piscine . surface:
+  question: null
+logement . chauffage . mode:
+  question: Is your home heated?
+  description: |
+    Whether it's electric or gas radiators, a wood-burning stove...
+  une possibilité:
+    - oui par défaut
+    - pas de chauffage
+  avec:
+    individuel:
+      titre: Chauffage individuel
+    collectif:
+      titre: Chauffage collectif
+      non applicable si: est une maison
+    pas de chauffage:
+      titre: Le logement n'est pas chauffé
+    oui par défaut:
+      titre: Oui
+logement . électricité . photovoltaique . présent:
+  question: Does your home have photovoltaic panels?
+  description: |
+    Solar panels that generate electricity.
+logement . électricité . photovoltaique . part autoconsommation:
+  question: null
+logement . électricité . photovoltaique . production:
+  question: null
+logement . extérieur:
+  question: null
+logement . vacances:
+  question: When you go away for the weekend or on holiday, where do you sleep?
+  description: |
+    You can tick more than one answer.
+  mosaique:
+    type: selection
+    options:
+      - hotel . présent
+      - camping . présent
+      - auberge de jeunesse . présent
+      - locations . présent
+      - famille ou amis . présent
+      - échange . présent
+      - croisière . présent
+    option aucun: not concerned
+logement . vacances . résidence secondaire . présent:
+  question: null
+logement . vacances . famille ou amis . notif:
+  description: |
+    For information, the footprint associated with "Family or friends" nights is zero as this is counted in the hosts' footprint.
+logement . vacances . hotel . nombre de nuitées:
+  question: How many nights a year do you spend in a hotel or B&B?
+logement . vacances . camping . nombre de nuitées:
+  question: How many nights a year do you spend camping?
+logement . vacances . auberge de jeunesse . nombre de nuitées:
+  question: How many nights a year do you spend in a youth hostel?
+logement . vacances . locations . nombre de nuitées:
+  question: How many nights a year do you spend in furnished accommodation?
+  description: |
+    Indicate here the number of nights spent in Airbnb-type rentals.
+logement . vacances . échange . nombre de nuitées:
+  question: How many nights a year do you spend in home exchange?
+  description: |
+    Accounts every night, even if the exchanges are not simultaneous.
+logement . vacances . croisière . nombre de nuitées:
+  question: How many nights a year do you spend cruising?
+  description: |
+    Indicate here the nights spent on the cruise.
+alimentation . plats:
+  question: Choose the 14 meals of a "classic" week for you.
+  description: |
+    14 for 7 lunches and 7 dinners.
+alimentation . petit déjeuner . type:
+  question: Select the option that most closely resembles your everyday breakfast.
+  description: null
+alimentation . local . consommation:
+  question: null
+alimentation . de saison . consommation:
+  question: Would you say that you eat the same fruit and vegetables all year round, or does it depend on the season?
+  description: |
+    For example, tomatoes and courgettes are in season in summer, and oranges and lemons in winter.
+  une possibilité:
+    - jamais
+    - parfois
+    - souvent
+    - oui toujours
+alimentation . de saison . consommation . jamais:
+  titre: Not really according to the season
+alimentation . de saison . consommation . parfois:
+  titre: Sometimes, but not all the time
+alimentation . de saison . consommation . souvent:
+  titre: Most of the time, depending on the season
+alimentation . de saison . consommation . oui toujours:
+  titre: Seasonal fruit and vegetables all the time
+alimentation . boisson . chaude:
+  question: null
+alimentation . boisson . eau en bouteille . consommateur:
+  question: Do you usually drink bottled water?
+  description: |
+    If you sometimes drink bottled water but only occasionally, you can answer "no" to this question.
+alimentation . boisson . sucrées . litres:
+  question: null
+  formule:
+    variations:
+      - si: possibilités = 'occasionnellement'
+        alors: 0.5
+      - si: possibilités = 'régulièrement'
+        alors: 2
+      - si: possibilités = 'souvent'
+        alors: 3.5
+      - si: possibilités = 'jamais'
+        alors: 0
+  avec:
+    possibilités:
+      question: |
+        Quelle est ta consommation de boissons sucrées (sodas, jus de fruits...) ?
+      une possibilité:
+        - occasionnellement
+        - régulièrement
+        - souvent
+        - jamais
+    possibilités . occasionnellement:
+      titre: Occasionnelle (quelques fois par mois)
+    possibilités . régulièrement:
+      titre: Régulière (1 à 3 fois par semaine)
+    possibilités . souvent:
+      titre: Quotidienne (tous les jours ou presque)
+    possibilités . jamais:
+      titre: Moins d'une fois par mois.
+      icônes: ❌
+alimentation . boisson . alcool . litres:
+  question: null
+alimentation . boisson . type de lait:
+  question: What type of milk do you usually drink?
+alimentation . déchets . quantité jetée:
+  question: null
+alimentation . déchets . gestes . saisie:
+  question: What eco-gestures do you practise when it comes to waste?
+  description: null
+  mosaique:
+    type: selection
+    option aucun: no
+    options:
+      - compostage biodéchets . présent
+      - gaspillage alimentaire . présent
+alimentation . déchets . gestes . compostage biodéchets:
+  titre: I have a composter at home.
+alimentation . déchets . gestes . acheter en vrac . présent:
+  question: null
+alimentation . déchets . gestes . stop pub . présent:
+  question: null
+transport . voiture:
+  titre: car
+  icônes: 🚘
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: km . hebdo . possibilités
+            - est défini: km . annuel . possibilités
+            - km . hebdo . possibilités = 'jamais'
+            - km . annuel . possibilités = 'jamais'
+        alors: 0
+      - si:
+          une de ces conditions:
+            - toutes ces conditions:
+                - est défini: km . hebdo . possibilités
+                - km . hebdo . possibilités != 'jamais'
+            - toutes ces conditions:
+                - est défini: km . annuel . possibilités
+                - km . annuel . possibilités != 'jamais'
+        alors: empreinte
+      - sinon: empreinte moyenne
+transport . voiture . utilisateur:
+  question: null
+  par défaut: "'régulier non propriétaire'"
+transport . voiture . km:
+  non applicable si: non
+  question: null
+  formule:
+    somme:
+      - hebdo * 47 semaine
+      - annuel
+  note: |
+    An average speed of 40 km/h is used to convert the time spent in the car into kilometres travelled, taking a median value for the time periods.
+  avec:
+    hebdo:
+      unité: km/semaine
+      formule:
+        variations:
+          - si:
+              est défini: possibilités
+            alors:
+              variations:
+                - si: possibilités = 'moins d'une heure'
+                  alors: 30
+                - si: possibilités = 'entre 1 et 3 heures'
+                  alors: 80
+                - si: possibilités = 'entre 3 et 7 heures'
+                  alors: 200
+                - si: possibilités = 'plus de 7 heures'
+                  alors: 350
+                - si: possibilités = 'jamais'
+                  alors: 0
+          - sinon: 0
+    hebdo . possibilités:
+      question: |
+        Combien de temps passes-tu en voiture par semaine (sur une semaine "classique") ?
+      une possibilité:
+        - moins d'une heure
+        - entre 1 et 3 heures
+        - entre 3 et 7 heures
+        - plus de 7 heures
+        - jamais
+    hebdo . possibilités . moins d'une heure:
+      titre: Moins d’une heure
+    hebdo . possibilités . entre 1 et 3 heures:
+      titre: Entre 1 et 3 heures
+    hebdo . possibilités . entre 3 et 7 heures:
+      titre: Entre 3 et 7 heures
+    hebdo . possibilités . plus de 7 heures:
+      titre: Plus de 7 heures (1h par jour au moins)
+    hebdo . possibilités . jamais:
+      titre: En semaine, jamais ou presque
+      icônes: ❌
+    annuel:
+      unité: km
+      formule:
+        variations:
+          - si:
+              est défini: possibilités
+            alors:
+              variations:
+                - si: possibilités = 'plusieurs fois par an'
+                  alors: 2000
+                - si: possibilités = 'occasionnellement'
+                  alors: 1000
+                - si: possibilités = 'jamais'
+                  alors: 0
+          - sinon: 0
+    annuel . possibilités:
+      question: |
+        T'arrive-t-il dans l'année de faire de longs trajets en voiture (plus de 2h) ?
+      description: |
+        Par exemple, pour partir en vacances, ou en week-end, ou rendre visite à des amis ou de la famille qui habite loin.
+      une possibilité:
+        - plusieurs fois par an
+        - occasionnellement
+        - jamais
+    annuel . possibilités . plusieurs fois par an:
+      titre: Oui, plusieurs fois par an
+    annuel . possibilités . occasionnellement:
+      titre: Oui, 1 à 2 fois par an
+    annuel . possibilités . jamais:
+      titre: Non, pas vraiment
+transport . voiture . voyageurs:
+  question: On average, how many people are in the car (including the driver)?
+  description: |
+    Help: on average in France, the occupancy rate of a car is 1.4 people on short journeys and 2.25 people on long journeys (source).
+transport . voiture . motorisation:
+  question: |
+    The car you use most often is :
+  description: null
+  par défaut: "'thermique'"
+  une possibilité:
+    - thermique
+    - électrique
+    - hybride non rechargeable
+transport . voiture . motorisation . thermique:
+  titre: A combustion car (diesel/petrol)
+transport . voiture . motorisation . électrique:
+  titre: An electric car
+transport . voiture . motorisation . hybride non rechargeable:
+  titre: A hybrid car (petrol and electric)
+transport . voiture . gabarit:
+  question: null
+transport . voiture . thermique . carburant:
+  question: null
+transport . voiture . thermique . consommation aux 100:
+  question: null
+transport . voiture . barème construction . barème électrique . batterie . capacité:
+  question: null
+transport . voiture . électrique . consommation aux 100:
+  question: null
+transport . voiture . électrique . recharge à domicile:
+  question: null
+transport . avion . usager:
+  question: Have you travelled by plane in the last 3 years?
+  description: null
+  une possibilité:
+    - jamais
+    - occasionnellement
+    - fréquemment
+transport . avion . usager . fréquemment:
+  titre: Yes, at least once a year
+transport . avion . usager . occasionnellement:
+  titre: Yes, but not every year
+transport . avion . usager . jamais:
+  titre: No, I haven't flown in the last 3 years
+transport . avion . vols annuels:
+  question: |
+    Enter here the duration of your flights for one year (return):
+  description: |
+    Adds up all flight times: **outbound**, **return** and flights with **stops** (example: Lyon-Los Angeles with 1 stopover = 26h).
+transport . avion . vols amortis:
+  question: |
+    Enter the duration of your flights for the last 3 years (return):
+  description: |
+    Adds up all flight times: **outbound**, **return** and flights with **stops** (example: Lyon-Los Angeles with 1 stopover = 26h).
+transport . deux roues . usager:
+  question: Do you use a scooter or motorbike?
+transport . deux roues . km:
+  question: How many kilometres do you cover a year on your scooter or motorbike?
+transport . deux roues . type:
+  question: What type of scooter or motorbike do you mainly use?
+  une possibilité:
+    - scooter électrique
+    - scooter thermique
+    - moto inf 250
+transport . deux roues . type . scooter électrique:
+  titre: Electric scooter
+transport . deux roues . type . scooter thermique:
+  titre: Internal combustion scooter (50 cm³)
+transport . deux roues . type . moto inf 250:
+  titre: 125 cm³ motorbike
+transport . mobilité douce:
+  question: Which of these other modes of transport do you use?
+  description: null
+transport . mobilité douce . vae . km:
+  question: null
+  formule:
+    variations:
+      - si: possibilités = 'occasionnellement'
+        alors: 250
+      - si: possibilités = 'régulièrement'
+        alors: 1500
+      - si: possibilités = 'souvent'
+        alors: 3600
+  avec:
+    possibilités:
+      question: Tu utilises ton vélo électrique...
+      une possibilité:
+        - occasionnellement
+        - régulièrement
+        - souvent
+    possibilités . occasionnellement:
+      titre: Occasionnellement (quelques fois par mois)
+    possibilités . régulièrement:
+      titre: Régulièrement (1 à 3 fois par semaine)
+    possibilités . souvent:
+      titre: Très souvent (presque tous les jours)
+transport . mobilité douce . autres véhicules à moteur . km:
+  question: null
+  formule:
+    variations:
+      - si: possibilités = 'occasionnellement'
+        alors: 250
+      - si: possibilités = 'régulièrement'
+        alors: 1500
+      - si: possibilités = 'souvent'
+        alors: 3600
+  avec:
+    possibilités:
+      question: Tu utilises ta trottinette ou hoverboard...
+      une possibilité:
+        - occasionnellement
+        - régulièrement
+        - souvent
+    possibilités . occasionnellement:
+      titre: Occasionnellement (quelques fois par mois)
+    possibilités . régulièrement:
+      titre: Régulièrement (1 à 3 fois par semaine)
+    possibilités . souvent:
+      titre: Très souvent (presque tous les jours)
+transport . transports commun:
+  question: What types of public transport do you use regularly?
+transport . transports commun . bus . heures par semaine:
+  question: null
+  formule:
+    variations:
+      - si: possibilités = 'moins d'une heure'
+        alors: 0.75
+      - si: possibilités = 'entre 1 et 3 heures'
+        alors: 2
+      - si: possibilités = 'entre 3 et 7 heures'
+        alors: 5
+      - si: possibilités = 'plus de 7 heures'
+        alors: 8
+  avec:
+    possibilités:
+      question: |
+        Combien de temps passes-tu dans le bus, en moyenne, par semaine ?
+      une possibilité:
+        - moins d'une heure
+        - entre 1 et 3 heures
+        - entre 3 et 7 heures
+        - plus de 7 heures
+    possibilités . moins d'une heure:
+      titre: Moins d’une heure
+    possibilités . entre 1 et 3 heures:
+      titre: Entre 1 et 3 heures
+    possibilités . entre 3 et 7 heures:
+      titre: Entre 3 et 7 heures
+    possibilités . plus de 7 heures:
+      titre: Plus de 7 heures
+transport . transports commun . car . km par semaine:
+  question: null
+  formule:
+    variations:
+      - si: possibilités = 'moins d'une heure'
+        alors: 0.75 * 60
+      - si: possibilités = 'entre 1 et 3 heures'
+        alors: 2 * 60
+      - si: possibilités = 'entre 3 et 7 heures'
+        alors: 5 * 60
+      - si: possibilités = 'plus de 7 heures'
+        alors: 8 * 60
+  note: |
+    An average speed of 60 km/h is used to convert the time spent in the coach into kilometres travelled, taking a median value for the time periods.
+  avec:
+    possibilités:
+      question: |
+        Combien de temps passes-tu en car, en moyenne, par semaine ?
+      une possibilité:
+        - moins d'une heure
+        - entre 1 et 3 heures
+        - entre 3 et 7 heures
+        - plus de 7 heures
+    possibilités . moins d'une heure:
+      titre: Moins d’une heure
+    possibilités . entre 1 et 3 heures:
+      titre: Entre 1 et 3 heures
+    possibilités . entre 3 et 7 heures:
+      titre: Entre 3 et 7 heures
+    possibilités . plus de 7 heures:
+      titre: Plus de 7 heures
+transport . transports commun . métro ou tram . heures par semaine:
+  question: null
+  formule:
+    variations:
+      - si: possibilités = 'moins d'une heure'
+        alors: 0.75
+      - si: possibilités = 'entre 1 et 3 heures'
+        alors: 2
+      - si: possibilités = 'entre 3 et 7 heures'
+        alors: 5
+      - si: possibilités = 'plus de 7 heures'
+        alors: 8
+  avec:
+    possibilités:
+      question: |
+        Combien de temps passes-tu en métro ou en tram, en moyenne, par semaine ?
+      une possibilité:
+        - moins d'une heure
+        - entre 1 et 3 heures
+        - entre 3 et 7 heures
+        - plus de 7 heures
+    possibilités . moins d'une heure:
+      titre: Moins d’une heure
+    possibilités . entre 1 et 3 heures:
+      titre: Entre 1 et 3 heures
+    possibilités . entre 3 et 7 heures:
+      titre: Entre 3 et 7 heures
+    possibilités . plus de 7 heures:
+      titre: Plus de 7 heures
+transport . train . km:
+  question: null
+  formule: trajet freq * trajet km
+  avec:
+    trajet freq:
+      formule:
+        variations:
+          - si: possibilités = 'rarement'
+            alors: 2
+          - si: possibilités = 'occasionnellement'
+            alors: 8
+          - si: possibilités = 'régulièrement'
+            alors: 20
+          - si: possibilités = 'très souvent'
+            alors: 60
+    trajet freq . possibilités:
+      question: |
+        Tu prends le train...
+      une possibilité:
+        - rarement
+        - occasionnellement
+        - régulièrement
+        - très souvent
+    trajet freq . possibilités . rarement:
+      titre: Rarement (1 à 2 fois par an)
+    trajet freq . possibilités . occasionnellement:
+      titre: Occasionnellement (quelques fois par mois)
+    trajet freq . possibilités . régulièrement:
+      titre: Fréquemment (au moins une fois par mois)
+    trajet freq . possibilités . très souvent:
+      titre: Presque quotidiennement (plusieurs fois par semaine)
+    trajet km:
+      formule:
+        variations:
+          - si: possibilités = 'court'
+            alors: 50
+          - si: possibilités = 'moyen'
+            alors: 300
+          - si: possibilités = 'long'
+            alors: 600
+    trajet km . possibilités:
+      question: |
+        Tes trajets en train sont plutôt :
+      description: |
+        Choisis la réponse qui correspond le mieux à la distance moyenne de tes trajets.
+      une possibilité:
+        - court
+        - moyen
+        - long
+    trajet km . possibilités . court:
+      titre: Courts (moins d'une heure)
+    trajet km . possibilités . moyen:
+      titre: Moyens (entre 1 et 3 heures)
+    trajet km . possibilités . long:
+      titre: Longs (plus de 3 heures)
+transport . ferry . heures:
+  question: How many hours a year do you spend on the ferry?
+  description: |
+    For example: to go to Corsica by night (12 h), to England from Calais (1h30), to Belle-Île-en-Mer (1h).
+  suggestions:
+    a few hours: 5
+    one day: 10
+    several days: 50
+transport . vacances:
+  question: Do you ever travel in one (or more) of these vehicles?
+transport . vacances . caravane . propriétaire:
+  question: null
+transport . vacances . camping car . propriétaire:
+  question: null
+transport . vacances . van . propriétaire:
+  question: null
+transport . vacances . bateau plaisance . propriétaire:
+  question: null
+divers . animaux domestiques . empreinte:
+  question: How many animals live in your home?
+divers . loisirs . culture:
+  question: null
+divers . loisirs . sports:
+  question: What sports do you play regularly?
+divers . numérique . internet . durée journalière:
+  question: How many hours a day do you spend online (phone, computer, tablet)?
+  description: |
+    Do not count time spent in class / lessons.
+divers . numérique . appareils:
+  question: What digital cameras do you own?
+  description: |
+    You are personally allocated the fingerprint of individual devices (such as your telephone) and the fingerprint of devices shared with other members of your household is distributed.
+divers . numérique . appareils . renouvellement téléphone:
+  question: null
+divers . textile . volume:
+  question: |
+    Choose the situation that suits you best:
+  description: null
+  une possibilité:
+    - renouvellement occasionnel
+    - accro au shopping
+divers . textile . volume . renouvellement occasionnel:
+  titre: I wear the same clothes as often and for as long as possible
+divers . textile . volume . accro au shopping:
+  titre: I have lots of clothes, some of which I rarely wear.
+divers . textile . revente:
+  question: null
+divers . textile . qualité:
+  question: |
+    How do you go about choosing your clothes?
+  description: null
+  une possibilité:
+    - neuf fast fashion
+    - occasion
+divers . textile . qualité . neuf fast fashion:
+  titre: Nine
+divers . textile . qualité . occasion:
+  titre: Second-hand
+divers . textile . empreinte précise:
+  question: What clothes do you usually buy in a year (new or second-hand)?
+divers . ameublement . préservation:
+  question: null
+divers . tabac . consommation par semaine:
+  question: null
+actions:
+  formule:
+    somme:
+      - alimentation . repas . réduire viande . max 1 par jour
+      - alimentation . repas . réduire viande . max 2 par semaine
+      - alimentation . repas . réduire poisson . max 2 par semaine
+      - alimentation . repas . poisson faible empreinte
+      - alimentation . repas . viande faible empreinte
+      - alimentation . devenir végétarien
+      - alimentation . devenir végétalien
+      - alimentation . boisson . réduire café . max deux par jour
+      - alimentation . boisson . réduire café . max un par jour
+      - alimentation . boisson . réduire café . remplace un café par jour par thé
+      - alimentation . boisson . réduire café . remplace par chicorée
+      - alimentation . boisson . réduire chocolat chaud . max un par jour
+      - alimentation . boisson . réduire boissons sucrées . max un litres par semaine
+      - alimentation . boisson . réduire boissons sucrées . changer pour sirop
+      - alimentation . boisson . eau en bouteille . arrêter
+      - alimentation . bonus . manger de saison
+      - alimentation . déchets . réduire gaspillage
+      - alimentation . déchets . composter
+      - logement . chauffage . chauffe eau solaire . installer chauffe eau solaire
+      - logement . climatisation . réduction
+      - transport . avion . arrêter l'avion
+      - transport . avion . arrêter l'avion court
+      - transport . avion . prendre moins l'avion
+      - transport . voiture . covoiturage
+      - transport . voiture . voiture 5km
+      - transport . ferry . arrêter ferry
+      - transport . ferry . réduire ferry
+      - divers . partage NGC
+      - divers . aider les autres
+      - divers . publicité
+      - divers . numérique . internet . diminuer
+      - divers . tabac . arrêter
+      - divers . textile . réduire neuf . privilégier la seconde main
+      - divers . textile . réduire neuf . diviser par deux achats
+      - divers . textile . faire du tri
+      - services sociétaux . voter
+      - services sociétaux . pression locale

@@ -93,7 +93,12 @@ logement . électricité . consommation par défaut:
   formule:
     variations:
       - si:
-          est défini: chauffage . mode
+          toutes ces conditions:
+            - est défini: chauffage . mode
+            - une de ces conditions:
+                - chauffage . mode = "individuel"
+                - chauffage . mode = "collectif"
+                - chauffage . mode = "pas de chauffage"
         alors: consommation moyenne réelle
       - sinon: surface * (parc français . CEREN . consommation électricité autre par m2 + parc français . CEREN . surface . part électricité * parc français . CEREN . chauffage . consommation électricité par m2)
   unité: kWh
