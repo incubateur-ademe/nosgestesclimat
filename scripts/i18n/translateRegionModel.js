@@ -59,7 +59,8 @@ const translateRule = async ([ruleName, ruleVal], destLang) => {
   }
   const translateAttr = async (attr, val) => {
     switch (attr) {
-      case 'question': {
+      case 'question':
+      case 'description': {
         // Keep empty question values as-is instead of sending them to translation.
         if (val === '' || val === null) {
           break

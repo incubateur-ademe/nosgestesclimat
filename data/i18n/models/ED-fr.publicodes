@@ -6,9 +6,9 @@ params:
 # Logement
 
 logement . type:
-  question: Où est-ce que tu vis la plupart du temps ?
+  question: Quel est ton logement principal ?
   description: |
-    En garde alternée ? Si tu changes de logement régulièrement, choisis en un pour répondre ensuite à toutes les questions.
+    Si tu alternes entre plusieurs logements, choisis en un pour tes réponses.
   une possibilité:
     - maison
     - appartement
@@ -27,9 +27,10 @@ logement . propriétaire:
   question:
 
 logement . habitants:
-  question: Combien êtes-vous à vivre dans le logement ?
+  question: Combien de personnes vivent dans ce logement (y compris toi) ?
   description: |
-    Cela permettra d’équilibrer certains calculs par la suite. Si vous êtes 2, réponds 2. Si un membre n’y habite pas tous les jours, tu peux rentrer quelque chose comme 2,5.
+    Ce chiffre nous permettra de répartir l'empreinte du logement.
+    Si une (ou plusieurs) personne y habite, mais pas tous les jours, tu peux indiquer un chiffre à virgule : par exemple 2,5 si vous êtes 2 la moitié du temps, et 3 l'autre moitié.
   suggestions:
     deux personnes: 2
     trois personnes: 3
@@ -70,9 +71,8 @@ logement . surface:
             alors: 12 m2
           - sinon: parc français . surface moyenne
     possibilités:
-      question: Connais-tu la taille du logement ?
-      description: |
-        Aide-nous à estimer la surface du logement dans lequel tu vis avec le nombre de chambres.
+      question: Laquelle de ces options décrit le mieux ton logement ?
+      description: Connaître le nombre de pièces, ou de chambres, nous permet d'estimer la surface de ton logement.
       une possibilité:
         - studio
         - une chambre
@@ -100,24 +100,27 @@ logement . construction . travaux de rénovation:
   question:
 
 logement . climatisation . présent:
-  question: Est-ce qu’il y a un système de climatisation là où tu vis ?
+  question: Ton logement dispose-t-il de la climatisation ?
   avec:
     oui et utilisation:
-      titre: Oui, on climatise parfois
+      titre: Oui, et on l'utilise
     oui sans utilisation:
-      titre: Oui, mais on ne les utilise pas
+      titre: Oui, mais on ne l'utilise pas
     pas de climatiseurs:
-      titre: Non, pas à ma connaissance
+      titre: Non
 
 logement . piscine . type:
-  question: Est-ce qu'il y a une piscine chez toi ?
+  question: Disposez-vous d'une piscine ?
+
+logement . piscine . surface:
+  question:
 
 logement . chauffage . mode:
-  question: Est-ce que vous utilisez du chauffage dans ton logement ?
+  question: Ton logement est-il chauffé ?
   description: |
-    N'hésite pas à demander chez toi si tu ne l'as jamais fait !
+    Que ce soit par des radiateurs électrique, gaz, un poêle à bois...
   une possibilité:
-    - fake oui
+    - oui par défaut
     - pas de chauffage
   avec:
     individuel:
@@ -127,11 +130,13 @@ logement . chauffage . mode:
       non applicable si: est une maison
     pas de chauffage:
       titre: Le logement n'est pas chauffé
-    fake oui:
+    oui par défaut:
       titre: Oui
 
 logement . électricité . photovoltaique . présent:
-  question: Est-ce que tu as des panneaux photovoltaïques sur le toit de ta maison ?
+  question: Ton logement dispose-t-il de panneaux photovoltaïques ?
+  description: |
+    Des panneaux solaires qui produisent de l'électricité.
 
 logement . électricité . photovoltaique . part autoconsommation:
   question:
@@ -143,9 +148,9 @@ logement . extérieur:
   question:
 
 logement . vacances:
-  question: Si tu pars en week-ends ou en vacances, comment te loges-tu ?
+  question: Quand tu pars en week-end, ou en vacances, où dors-tu ?
   description: |
-    Coches tous les types de logement qui te concernent
+    Tu peux cocher plusieurs réponses.
   mosaique:
     type: selection
     options:
@@ -161,25 +166,66 @@ logement . vacances:
 logement . vacances . résidence secondaire . présent:
   question:
 
+logement . vacances . famille ou amis . notif:
+  description: |
+    Pour information, l’empreinte associée aux nuits de “Famille ou amis” est nulle car c’est compté dans l’empreinte des accueillants.
+
+logement . vacances . hotel . nombre de nuitées:
+  question: Combien de nuits passes-tu à l'hôtel ou en chambre d'hôtes à l'année ?
+
+logement . vacances . camping . nombre de nuitées:
+  question: Combien de nuits passes-tu en camping à l'année ?
+
+logement . vacances . auberge de jeunesse . nombre de nuitées:
+  question: Combien de nuits passes-tu en auberge de jeunesse à l'année ?
+
+logement . vacances . locations . nombre de nuitées:
+  question: Combien de nuits passes-tu en locations meublées à l'année ?
+  description: |
+    Indiques ici le nombre de nuits passées en locations type Airbnb.
+
+logement . vacances . échange . nombre de nuitées:
+  question: Combien de nuits passes-tu en échange de maison à l'année ?
+  description: |
+    Comptes toutes les nuits, même si les échanges ne sont pas simultanés.
+
+logement . vacances . croisière . nombre de nuitées:
+  question: Combien de nuits passes-tu en croisière à l'année ?
+  description: |
+    Indiques ici les nuits passées en croisière.
+
 # Alimentation
 
 alimentation . plats:
-  question: Passons à l'alimentation ! Choisis maintenant les 14 repas d'une semaine type
+  question: Choisis les 14 repas d'une semaine "classique" pour toi.
   description: |
-    On dit 14 car 7 déjeuners et 7 diners mais ça peut être moins, saisis le nombre et le type de repas qui te correspondent le mieux en moyenne.
+    14 pour les 7 repas du midi, et 7 du soir.
 
 alimentation . petit déjeuner . type:
-  question: Et pour le petit-dej ? Coche ce que tu manges la plupart du temps.
-  description: |
-    Si tu hésites, choisis celui qui se rapproche le plus de tes habitudes.
+  question: Sélectionne l'option qui ressemble le plus à ton petit-déjeuner de tous les jours.
+  description:
 
 alimentation . local . consommation:
   question:
 
 alimentation . de saison . consommation:
-  question: Côté fruits et légumes, tu manges pareil toute l’année ou bien en fonction des saisons ?
+  question: Dirais-tu que tu manges les mêmes fruits et légumes toute l'année, ou que ça dépend des saisons ?
   description: |
-    Par exemple: la saison des tomates ou des courgettes est en été, pas le reste de l’année.
+    Par exemple : la saison des tomates ou des courgettes, c'est l'été, et celle des oranges et des citrons, c'est l'hiver.
+  une possibilité:
+    - jamais
+    - parfois
+    - souvent
+    - oui toujours
+
+alimentation . de saison . consommation . jamais:
+  titre: Pas vraiment en fonction des saisons
+alimentation . de saison . consommation . parfois:
+  titre: Parfois, mais pas tout le temps
+alimentation . de saison . consommation . souvent:
+  titre: La plupart du temps, en fonction des saisons
+alimentation . de saison . consommation . oui toujours:
+  titre: Tout le temps des fruits et légumes de saison
 
 alimentation . boisson . chaude:
   question:
@@ -187,8 +233,7 @@ alimentation . boisson . chaude:
 alimentation . boisson . eau en bouteille . consommateur:
   question: La plupart du temps, est-ce que tu bois ton eau en bouteille ?
   description: |
-    S'il t'arrive de boire de l'eau en bouteille mais que ce n'est pas ta consommation principale, tu peux répondre "non" à cette question.
-
+    S'il t'arrive de boire de l'eau en bouteille mais que c'est occasionnel, tu peux répondre "non" à cette question.
 alimentation . boisson . sucrées . litres:
   question:
   formule:
@@ -204,20 +249,20 @@ alimentation . boisson . sucrées . litres:
   avec:
     possibilités:
       question: |
-        Pour les sodas, jus de fruits ou autres boissons sucrées : quelle est ta consommation moyenne par semaine ?
+        Quelle est ta consommation de boissons sucrées (sodas, jus de fruits...) ?
       une possibilité:
         - occasionnellement
         - régulièrement
         - souvent
         - jamais
     possibilités . occasionnellement:
-      titre: Occasionnellement (quelques fois par mois)
+      titre: Occasionnelle (quelques fois par mois)
     possibilités . régulièrement:
-      titre: Régulièrement (1 à 3 fois par semaine)
+      titre: Régulière (1 à 3 fois par semaine)
     possibilités . souvent:
-      titre: Très souvent (presque tous les jours)
+      titre: Quotidienne (tous les jours ou presque)
     possibilités . jamais:
-      titre: Jamais ou presque
+      titre: Moins d'une fois par mois.
       icônes: ❌
 
 alimentation . boisson . alcool . litres:
@@ -230,7 +275,23 @@ alimentation . déchets . quantité jetée:
   question:
 
 alimentation . déchets . gestes . saisie:
-  question: Quels éco-gestes mets-tu en place pour réduire tes déchets ?
+  question: Quels éco-gestes pratiques-tu en matière de déchets ?
+  description:
+  mosaique:
+    type: selection
+    option aucun: aucun
+    options:
+      - compostage biodéchets . présent
+      - gaspillage alimentaire . présent
+
+alimentation . déchets . gestes . compostage biodéchets:
+  titre: IL y a un composteur chez moi.
+
+alimentation . déchets . gestes . acheter en vrac . présent:
+  question:
+
+alimentation . déchets . gestes . stop pub . présent:
+  question:
 
 # Transport
 
@@ -279,8 +340,6 @@ transport . voiture . km:
               est défini: possibilités
             alors:
               variations:
-                - si: possibilités = 'rarement'
-                  alors: 15
                 - si: possibilités = 'moins d'une heure'
                   alors: 30
                 - si: possibilités = 'entre 1 et 3 heures'
@@ -294,16 +353,13 @@ transport . voiture . km:
           - sinon: 0
     hebdo . possibilités:
       question: |
-        Sur une semaine normale, combien de temps passes-tu en voiture environ ?
+        Combien de temps passes-tu en voiture par semaine (sur une semaine "classique") ?
       une possibilité:
-        - rarement
         - moins d'une heure
         - entre 1 et 3 heures
         - entre 3 et 7 heures
         - plus de 7 heures
         - jamais
-    hebdo . possibilités . rarement:
-      titre: Quelques minutes maximum
     hebdo . possibilités . moins d'une heure:
       titre: Moins d’une heure
     hebdo . possibilités . entre 1 et 3 heures:
@@ -311,9 +367,9 @@ transport . voiture . km:
     hebdo . possibilités . entre 3 et 7 heures:
       titre: Entre 3 et 7 heures
     hebdo . possibilités . plus de 7 heures:
-      titre: Plus de 7 heures
+      titre: Plus de 7 heures (1h par jour au moins)
     hebdo . possibilités . jamais:
-      titre: Je ne monte jamais en voiture
+      titre: En semaine, jamais ou presque
       icônes: ❌
     annuel:
       unité: km
@@ -332,9 +388,9 @@ transport . voiture . km:
           - sinon: 0
     annuel . possibilités:
       question: |
-        Dans l’année, fais-tu aussi de longs trajets en voiture ? (plus de 2h)
+        T'arrive-t-il dans l'année de faire de longs trajets en voiture (plus de 2h) ?
       description: |
-        Par exemple : vacances d’été, week-end chez la famille...
+        Par exemple, pour partir en vacances, ou en week-end, ou rendre visite à des amis ou de la famille qui habite loin.
       une possibilité:
         - plusieurs fois par an
         - occasionnellement
@@ -347,13 +403,14 @@ transport . voiture . km:
       titre: Non, pas vraiment
 
 transport . voiture . voyageurs:
-  question: En moyenne, combien de personnes sont dans la voiture avec toi ?
+  question: En moyenne, combien êtes-vous dans la voiture (conducteur compris) ?
   description: |
     Aide : en moyenne en France, le taux de remplissage d’une voiture est de 1,4 personnes sur des trajets courts et 2,25 personnes sur des trajets longs (source).
 
 transport . voiture . motorisation:
-  question: Dans quel type de voiture voyages-tu le plus souvent ?
-  description: S'il y plusieurs voitures chez toi, choisis celle que tu prends le plus souvent.
+  question: |
+    La voiture que tu utilises le plus souvent, c'est :
+  description:
   par défaut: "'thermique'"
   une possibilité:
     - thermique
@@ -386,8 +443,7 @@ transport . voiture . électrique . recharge à domicile:
 
 transport . avion . usager:
   question: As-tu voyagé en avion au cours des 3 dernières années ?
-  description: |
-    Si tu as pris l’avion une fois en 3 ans, ton vol sera amorti en 3 ans.
+  description:
   une possibilité:
     - jamais
     - occasionnellement
@@ -397,10 +453,22 @@ transport . avion . usager . fréquemment:
   titre: Oui, au moins une fois par an
 
 transport . avion . usager . occasionnellement:
-  titre: Oui, mais moins d’une fois par an
+  titre: Oui, mais pas chaque année
 
 transport . avion . usager . jamais:
   titre: Non, je n’ai pas pris l’avion ces 3 dernières années
+
+transport . avion . vols annuels:
+  question: |
+    Renseigne ici la durée de tes vols pour une année (A/R):
+  description: |
+    Additionne toutes les heures de vol : **aller**, **retour** et vols avec **escales** (exemple: Lyon-Los Angeles avec 1 escale = 26h).
+
+transport . avion . vols amortis:
+  question: |
+    Renseigne ici la durée de tes vols pour les 3 dernières années (A/R):
+  description: |
+    Additionne toutes les heures de vol : **aller**, **retour** et vols avec **escales** (exemple: Lyon-Los Angeles avec 1 escale = 26h).
 
 transport . deux roues . usager:
   question: Utilises-tu un scooter ou une moto ?
@@ -416,14 +484,15 @@ transport . deux roues . type:
     - moto inf 250
 
 transport . deux roues . type . scooter électrique:
-  titre: Électrique
+  titre: Scooter électrique
 transport . deux roues . type . scooter thermique:
-  titre: 50 cm³
+  titre: Scooter thermique (50 cm³)
 transport . deux roues . type . moto inf 250:
-  titre: 125 cm³
+  titre: Moto 125 cm³
 
 transport . mobilité douce:
   question: Parmi ces autres modes de déplacement, lesquels utilises-tu ?
+  description:
 
 transport . mobilité douce . vae . km:
   question:
@@ -461,7 +530,7 @@ transport . mobilité douce . autres véhicules à moteur . km:
         alors: 3600
   avec:
     possibilités:
-      question: Tu utilises ton petit véhicule électrique...
+      question: Tu utilises ta trottinette ou hoverboard...
       une possibilité:
         - occasionnellement
         - régulièrement
@@ -474,14 +543,12 @@ transport . mobilité douce . autres véhicules à moteur . km:
       titre: Très souvent (presque tous les jours)
 
 transport . transports commun:
-  question: Niveau transports collectifs, lesquels as-tu utilisé sur les 12 derniers mois ?
+  question: Quels types de transports collectifs utilises-tu régulièrement ?
 
 transport . transports commun . bus . heures par semaine:
   question:
   formule:
     variations:
-      - si: possibilités = 'rarement'
-        alors: 0.25
       - si: possibilités = 'moins d'une heure'
         alors: 0.75
       - si: possibilités = 'entre 1 et 3 heures'
@@ -493,15 +560,12 @@ transport . transports commun . bus . heures par semaine:
   avec:
     possibilités:
       question: |
-        Chaque semaine, combien de temps passes-tu dans le bus en moyenne ?
+        Combien de temps passes-tu dans le bus, en moyenne, par semaine ?
       une possibilité:
-        - rarement
         - moins d'une heure
         - entre 1 et 3 heures
         - entre 3 et 7 heures
         - plus de 7 heures
-    possibilités . rarement:
-      titre: Quelques minutes maximum
     possibilités . moins d'une heure:
       titre: Moins d’une heure
     possibilités . entre 1 et 3 heures:
@@ -515,8 +579,6 @@ transport . transports commun . car . km par semaine:
   question:
   formule:
     variations:
-      - si: possibilités = 'rarement'
-        alors: 0.25 * 60
       - si: possibilités = 'moins d'une heure'
         alors: 0.75 * 60
       - si: possibilités = 'entre 1 et 3 heures'
@@ -530,15 +592,12 @@ transport . transports commun . car . km par semaine:
   avec:
     possibilités:
       question: |
-        Chaque semaine, combien de temps passes-tu en autocar en moyenne ?
+        Combien de temps passes-tu en car, en moyenne, par semaine ?
       une possibilité:
-        - rarement
         - moins d'une heure
         - entre 1 et 3 heures
         - entre 3 et 7 heures
         - plus de 7 heures
-    possibilités . rarement:
-      titre: Quelques minutes maximum
     possibilités . moins d'une heure:
       titre: Moins d’une heure
     possibilités . entre 1 et 3 heures:
@@ -552,8 +611,6 @@ transport . transports commun . métro ou tram . heures par semaine:
   question:
   formule:
     variations:
-      - si: possibilités = 'rarement'
-        alors: 0.25
       - si: possibilités = 'moins d'une heure'
         alors: 0.75
       - si: possibilités = 'entre 1 et 3 heures'
@@ -565,15 +622,12 @@ transport . transports commun . métro ou tram . heures par semaine:
   avec:
     possibilités:
       question: |
-        Chaque semaine, combien de temps passes-tu dans le métro ou tram en moyenne ?
+        Combien de temps passes-tu en métro ou en tram, en moyenne, par semaine ?
       une possibilité:
-        - rarement
         - moins d'une heure
         - entre 1 et 3 heures
         - entre 3 et 7 heures
         - plus de 7 heures
-    possibilités . rarement:
-      titre: Quelques minutes maximum
     possibilités . moins d'une heure:
       titre: Moins d’une heure
     possibilités . entre 1 et 3 heures:
@@ -607,13 +661,13 @@ transport . train . km:
         - régulièrement
         - très souvent
     trajet freq . possibilités . rarement:
-      titre: Occasionnellement (1 à 2 fois par an)
+      titre: Rarement (1 à 2 fois par an)
     trajet freq . possibilités . occasionnellement:
-      titre: Régulièrement (quelques fois par mois)
+      titre: Occasionnellement (quelques fois par mois)
     trajet freq . possibilités . régulièrement:
-      titre: Régulièrement (au moins une fois par mois)
+      titre: Fréquemment (au moins une fois par mois)
     trajet freq . possibilités . très souvent:
-      titre: Très souvent (plusieurs fois par semaine)
+      titre: Presque quotidiennement (plusieurs fois par semaine)
     trajet km:
       formule:
         variations:
@@ -625,7 +679,7 @@ transport . train . km:
             alors: 600
     trajet km . possibilités:
       question: |
-        Tes trajets en train sont plutôt:
+        Tes trajets en train sont plutôt :
       description: |
         Choisis la réponse qui correspond le mieux à la distance moyenne de tes trajets.
       une possibilité:
@@ -642,14 +696,14 @@ transport . train . km:
 transport . ferry . heures:
   question: Combien d’heures passes-tu en ferry à l'année ?
   description: |
-    Par exemple : pour aller en Corse ou en Angleterre.
+    Par exemple : pour aller en Corse de nuit (12 h), en Angleterre depuis Calais (1h30), à Belle-Île-en-Mer (1h).
   suggestions:
     quelques heures: 5
     une journée: 10
     plusieurs jours: 50
 
 transport . vacances:
-  question: Possédez-vous l’un (ou plusieurs) de ces véhicules ?
+  question: Est-ce qu'il t'arrive de voyager dans l’un (ou plusieurs) de ces véhicules ?
 
 transport . vacances . caravane . propriétaire:
   question:
@@ -666,7 +720,7 @@ transport . vacances . bateau plaisance . propriétaire:
 # Divers
 
 divers . animaux domestiques . empreinte:
-  question: Combien d’animaux vivent avec vous dans ton logement ?
+  question: Combien d'animaux vivent chez toi ?
 
 divers . loisirs . culture:
   question:
@@ -677,7 +731,7 @@ divers . loisirs . sports:
 divers . numérique . internet . durée journalière:
   question: Combien d’heures passes-tu par jour sur Internet ? (téléphone, ordinateur, tablette)
   description: |
-    Ne pas comptabiliser le temps passé en classes / en cours.
+    Ne pas comptabiliser le temps passé en classe / en cours.
 
 divers . numérique . appareils:
   question: Quels appareils numériques possèdes-tu ?
@@ -688,38 +742,33 @@ divers . numérique . appareils . renouvellement téléphone:
   question:
 
 divers . textile . volume:
-  question: Pour quelle raison renouvelles-tu tes vêtements ?
-  description: |
-    Le but est d'estimer la taille de ta garde-robe : si tu possèdes peu de vêtements, coche la première option, si tu en possèdes beaucoup, coche la dernière.
-divers . textile . volume . minimum:
-  titre: Je renouvelle quand c’est strictement nécessaire (je grandis vite, usure...)
+  question: |
+    Choisis la situation qui semble te correspondre le plus :
+  description:
+  une possibilité:
+    - renouvellement occasionnel
+    - accro au shopping
+
 divers . textile . volume . renouvellement occasionnel:
-  titre: Je renouvelle par besoin mais aussi parfois par coup-de-coeur
+  titre: Je porte souvent les mêmes vêtements et le plus longtemps possible
 divers . textile . volume . accro au shopping:
-  titre: Je renouvelle plus souvent par plaisir que par besoin
+  titre: J’ai beaucoup de vêtements, dont certains que je porte rarement.
 
 divers . textile . revente:
-  question: Est-ce que tu te sépares de ce que tu ne portes plus ?
-
-divers . textile . revente . toujours:
-  titre: Oui, je revends ou donne dès que je ne porte plus
-divers . textile . revente . parfois:
-  titre: Ça dépend des vêtements
-divers . textile . revente . jamais:
-  titre: Non, je conserve mes anciens vêtements
+  question:
 
 divers . textile . qualité:
   question: |
-    Comment choisis-tu tes vêtements ?
+    Généralement, comment choisis-tu tes vêtements ?
+  description:
+  une possibilité:
+    - neuf fast fashion
+    - occasion
 
-# divers . textile . qualité . neuf fast fashion:
-#   titre: Neufs, chez des enseignes à large gamme de produits (Kiabi, Zara, Mango...)
-# divers . textile . qualité . neuf éthique:
-#   titre: Neufs, chez des enseignes proposant une gamme travaillée (Lacoste, Patagonia, Petit Bateau...)
-# divers . textile . qualité . occasion:
-#   titre: D'occasion, tous types de vêtements
-# divers . textile . qualité . occasion réfléchie:
-#   titre: D'occasion, en sélectionnant mes pièces avec soin
+divers . textile . qualité . neuf fast fashion:
+  titre: Neuf
+divers . textile . qualité . occasion:
+  titre: D'occasion
 
 divers . textile . empreinte précise:
   question: Quels vêtements achètes-tu en général dans une année (neufs ou de seconde main) ?
