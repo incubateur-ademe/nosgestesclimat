@@ -24,3 +24,25 @@ actions . alimentation . réduire viande:
             - si: utilisateur . petit déjeuner type = "britannique"
               alors: "'continental'"
             - sinon: utilisateur . petit déjeuner type
+
+actions . alimentation . réduire produits de la mer:
+  description: Avoir une consommation responsable de produits de la mer
+  note: |
+    On fait l'hypothèse que les repas avec du poisson sont remplacés par des repas végétariens pour obtenir un gain carbone maximal mais réaliste.
+  applicable si:
+    une de ces conditions:
+      - utilisateur . nombre de plats poisson blanc > 0
+      - utilisateur . nombre de plats poisson gras > 0
+  formule: alimentation - nouveau régime
+  avec:
+    nouveau régime:
+      valeur: alimentation
+      contexte:
+        alimentation . plats . poisson blanc . nombre: 0
+        alimentation . plats . poisson gras . nombre: 0
+        alimentation . plats . végétarien . nombre: utilisateur . nombre de plats végétariens + utilisateur . nombre de plats poisson blanc + utilisateur . nombre de plats poisson gras
+
+actions . alimentation . cuisiner plus de légumineuses:
+  description: Cuisiner plus souvent des légumineuses
+  applicable si: (utilisateur . nombre de plats végétaliens + utilisateur . nombre de plats végétariens) < 7
+  formule: 0
