@@ -3,13 +3,15 @@ actions . alimentation:
   valeur: alimentation
 
 actions . alimentation . réduire viande:
-  description: Réduire le poids de la viande dans son empreinte carbone
+  titre: Réduire le poids de la viande dans son empreinte carbone
+  meta:
+    id: xx
   note: |
-    On fait l'hypothèse que les repas carnés sont remplacés par des repas végétariens pour obtenir un gain carbone maximal mais réaliste.
+    On fait l'hypothèse que les repas carnés sont remplacés par des repas végétariens pour obtenir un gain carbone maximal et réaliste.
   applicable si:
     une de ces conditions:
-      - utilisateur . nombre de plats viande rouge > 0
-      - utilisateur . nombre de plats viande blanche > 0
+      - utilisateur . nombre de plats viande rouge hebdo > 0
+      - utilisateur . nombre de plats viande blanche hebdo > 0
       - utilisateur . petit déjeuner type = "britannique"
   formule: alimentation - nouveau régime
   avec:
@@ -18,9 +20,171 @@ actions . alimentation . réduire viande:
       contexte:
         alimentation . plats . viande rouge . nombre: 0
         alimentation . plats . viande blanche . nombre: 0
-        alimentation . plats . végétarien . nombre: utilisateur . nombre de plats végétariens + utilisateur . nombre de plats viande rouge + utilisateur . nombre de plats viande blanche
+        alimentation . plats . végétarien . nombre: utilisateur . nombre de plats végétariens hebdo + utilisateur . nombre de plats viande rouge hebdo + utilisateur . nombre de plats viande blanche hebdo
         alimentation . petit déjeuner . type:
           variations:
             - si: utilisateur . petit déjeuner type = "britannique"
               alors: "'continental'"
             - sinon: utilisateur . petit déjeuner type
+
+actions . alimentation . réduire produits de la mer:
+  titre: Avoir une consommation responsable de produits de la mer
+  meta:
+    id: 248146c7-9d4b-4fad-bfef-05dda313e3c8
+  note: |
+    On fait l'hypothèse que les repas avec du poisson sont remplacés par des repas végétariens pour obtenir un gain carbone maximal et réaliste.
+  applicable si:
+    une de ces conditions:
+      - utilisateur . nombre de plats poisson blanc hebdo > 0
+      - utilisateur . nombre de plats poisson gras hebdo > 0
+  formule: alimentation - nouveau régime
+  avec:
+    nouveau régime:
+      valeur: alimentation
+      contexte:
+        alimentation . plats . poisson blanc . nombre: 0
+        alimentation . plats . poisson gras . nombre: 0
+        alimentation . plats . végétarien . nombre: utilisateur . nombre de plats végétariens hebdo + utilisateur . nombre de plats poisson blanc hebdo + utilisateur . nombre de plats poisson gras hebdo
+
+actions . alimentation . cuisiner plus de légumineuses:
+  titre: Cuisiner plus souvent des légumineuses
+  meta:
+    id: 594a61c3-97b3-4fb0-9d04-a44f044d5bcc
+  note: |
+    On pourrait imaginer modifier le FE de certains repas avec légumineuses pour tenter d'avoir une approche quantifiée de cette action.
+  applicable si: (utilisateur . nombre de plats végétaliens hebdo + utilisateur . nombre de plats végétariens hebdo) < 7
+  formule: 0
+
+actions . alimentation . privilégier volaille:
+  titre: Privilégier la volaille pour les repas avec de la viande
+  meta:
+    id: c5a909d7-14c8-4754-82dd-4d43bcc1c53a
+  applicable si: utilisateur . nombre de plats viande rouge hebdo > 0
+  formule: alimentation - nouveau régime
+  avec:
+    nouveau régime:
+      valeur: alimentation
+      contexte:
+        alimentation . plats . viande rouge . nombre: 0
+        alimentation . plats . viande blanche . nombre: utilisateur . nombre de plats viande rouge hebdo + utilisateur . nombre de plats viande blanche hebdo
+
+actions . alimentation . choisir restaurant engagé:
+  titre: Choisir un restaurant engagé pour l’environnement
+  meta:
+    id: a125877c-7d6b-4290-ba4f-cce5d2bd94e8
+  applicable si: oui
+  formule: 0
+
+actions . alimentation . proposer idées pour la cantine:
+  titre: Proposer des idées pour la cantine scolaire de vos enfants
+  meta:
+    id: 0a337de3-ca74-4d7d-bb67-0938887fb6e9
+  applicable si: oui
+  formule: 0
+
+actions . alimentation . interpeler comité restauration entreprise:
+  titre: Interpeler le comité de restauration de son entreprise
+  meta:
+    id: cf49172e-9f9f-417e-be9d-ac5a29af34f3
+  applicable si: oui
+  formule: 0
+
+actions . alimentation . partager ses recettes:
+  titre: Partager ses meilleures recettes
+  meta:
+    id: 4945712c-23e8-44b3-a390-101120bdc3ac
+  applicable si: oui
+  formule: 0
+
+actions . alimentation . manger local et de saison:
+  titre: Manger local et de saison
+  meta:
+    id: 413f99ad-f198-4f6b-acd8-53f644b9d11e
+  applicable si:
+    une de ces conditions:
+      - utilisateur . consommation de saison = "jamais"
+      - utilisateur . consommation de saison = "parfois"
+      - utilisateur . consommation locale = "jamais"
+      - utilisateur . consommation locale = "parfois"
+  formule: alimentation - nouveau régime
+  avec:
+    nouveau régime:
+      valeur: alimentation
+      contexte:
+        alimentation . de saison . consommation: "'oui toujours'"
+        alimentation . local . consommation: "'oui toujours'"
+
+actions . alimentation . faire ses conserves:
+  titre: Faire ses conserves pour manger de saison toute l’année
+  meta:
+    id: 820353e6-95a4-4d2e-ad13-34395fbbc0df
+  applicable si: oui
+  formule: 0
+
+actions . alimentation . privilégier achat vrac:
+  titre: Privilégier l'achat en vrac
+  meta:
+    id: afa26f9d-71bf-4280-a26a-75e4e86fe829
+  note: |
+    Pas de calcul d'empreinte associé au vrac pour le moment.
+  applicable si: utilisateur . achat vrac = oui
+  formule: 0
+
+actions . alimentation . réduire boissons sucrées:
+  titre: Réduire sa consommation de boissons sucrées
+  meta:
+    id: 4425f8fb-a40c-41ed-9f38-294d71d598ab
+  applicable si: utilisateur . consommation boissons sucrées hebdo > 0
+  formule: alimentation - nouveau régime
+  avec:
+    nouveau régime:
+      valeur: alimentation
+      contexte:
+        alimentation . boisson . sucrées . litres: 0
+
+actions . alimentation . réduire consommation café:
+  titre: Réduire sa consommation de café
+  meta:
+    id: 1d8c7bd0-abad-4890-ba4b-77276e1e61e4
+  applicable si: utilisateur . consommation café quotidienne > 0
+  formule: alimentation - nouveau régime
+  avec:
+    nouveau régime:
+      valeur: alimentation
+      contexte:
+        alimentation . boisson . chaude . café . nombre: 0
+
+actions . alimentation . réduire chocolat:
+  titre: Réduire sa consommation de chocolat
+  meta:
+    id: 4c9e1a63-7419-411e-99c5-6422ea745b75
+  note: |
+    On pourrait tenter une estimation de gain carbone via la consommation moyenne de chocolat d'un français, en attendant d'avoir une queston dans le test qui concernent les aliments très émetteurs.
+    En attendant, à nouveau, ça pourrait être applicable seulement pour les personne qui prennent des chocolats chauds, mais avec une quantification plus globale.
+  applicable si: oui
+  formule: 0
+
+actions . alimentation . moins de produits transformés:
+  titre: Consommer moins de produits ultra-transformés
+  meta:
+    id: 4ced090b-b551-4e95-880d-696de229f6c3
+  note: |
+    On pourrait éviter de proposer cette actions pour certains profils (consommateurs de saison / local, petites poubelles).
+  applicable si: oui
+  formule: 0
+
+actions . alimentation . valoriser ses déchets:
+  titre: Valoriser ses déchets alimentaires
+  meta:
+    id: d53531cc-b965-4129-b337-1122f0c0f7db
+  non applicable si:
+    une de ces conditions:
+      - utilisateur . compostage biodéchets = oui
+      - utilisateur . taille poubelle = "zéro déchet"
+  formule: alimentation - nouveau régime
+  avec:
+    nouveau régime:
+      valeur: alimentation
+      contexte:
+        alimentation . déchets . gestes . compostage biodéchets . présent: oui
+        alimentation . déchets . quantité jetée: "'zéro déchet'"
