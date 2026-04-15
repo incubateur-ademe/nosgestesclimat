@@ -1,0 +1,26 @@
+actions . alimentation:
+  # Somehow we need to set `actions . alimentation` to `alimentation`, otherwise, sub actions are linked to `actions . alimentation` instead of `alimentation` and it appears ton be undefined.
+  valeur: alimentation
+
+actions . alimentation . réduire viande:
+  description: Réduire le poids de la viande dans son empreinte carbone
+  note: |
+    On fait l'hypothèse que les repas carnés sont remplacés par des repas végétariens pour obtenir un gain carbone maximal mais réaliste.
+  applicable si:
+    une de ces conditions:
+      - utilisateur . nombre de plats viande rouge > 0
+      - utilisateur . nombre de plats viande blanche > 0
+      - utilisateur . petit déjeuner type = "britannique"
+  formule: alimentation - nouveau régime
+  avec:
+    nouveau régime:
+      valeur: alimentation
+      contexte:
+        alimentation . plats . viande rouge . nombre: 0
+        alimentation . plats . viande blanche . nombre: 0
+        alimentation . plats . végétarien . nombre: utilisateur . nombre de plats végétariens + utilisateur . nombre de plats viande rouge + utilisateur . nombre de plats viande blanche
+        alimentation . petit déjeuner . type:
+          variations:
+            - si: utilisateur . petit déjeuner type = "britannique"
+              alors: "'continental'"
+            - sinon: utilisateur . petit déjeuner type
