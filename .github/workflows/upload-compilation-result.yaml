@@ -20,11 +20,13 @@ jobs:
       test-personas-latest-result: ${{ steps.test-personas-latest.outputs.result }}
       test-url: ${{ steps.set-test-url.outputs.fr }}
     steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
       - name: Install pnpm
-        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061
+        uses: pnpm/action-setup@bdf0af2a9d539c0fd91f655344d2934bfd5a2cdd
+        with:
+          version: 10.11.0
       - name: Use Node.js
-        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
         with:
           node-version-file: './package.json'
           cache: 'pnpm'
@@ -47,20 +49,22 @@ jobs:
         name: Checks the rules translation
         run: |
           pnpm check:rules --markdown > check-rules.res
-          body="$(cat check-rules.res | tail --lines=+3 | head --lines=-1)"
-          body="${body//'%'/'%25'}"
-          body="${body//$'\n'/'%0A'}"
-          body="${body//$'\r'/'%0D'}"
-          echo "::set-output name=result::${body}"
+          body="$(cat check-rules.res | tail --lines=+3)"
+          {
+            echo "result<<EOF"
+            echo "${body}"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
       - id: check-personas
         name: Checks the personas translation
         run: |
           pnpm check:personas --markdown > check-personas.res
-          body="$(cat check-personas.res | tail --lines=+3 | head --lines=-1)"
-          body="${body//'%'/'%25'}"
-          body="${body//$'\n'/'%0A'}"
-          body="${body//$'\r'/'%0D'}"
-          echo "::set-output name=result::${body}"
+          body="$(cat check-personas.res | tail --lines=+3)"
+          {
+            echo "result<<EOF"
+            echo "${body}"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
       - id: test-optim
         name: Test the optimized rules against base rules
         run: pnpm test:optim
@@ -71,32 +75,35 @@ jobs:
         name: Test the personas bilans against production
         run: |
           pnpm test:personas --markdown -v latest > test-personas-latest.res
-          body="$(cat test-personas-latest.res | tail --lines=+3 | head --lines=-1)"
-          body="${body//'%'/'%25'}"
-          body="${body//$'\n'/'%0A'}"
-          body="${body//$'\r'/'%0D'}"
-          echo "::set-output name=result::${body}"
+          body="$(cat test-personas-latest.res | tail --lines=+3)"
+          {
+            echo "result<<EOF"
+            echo "${body}"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
       - id: test-personas-nightly
         name: Test the personas bilans against develop
         run: |
           pnpm test:personas --markdown -v nightly > test-personas-nightly.res
-          body="$(cat test-personas-nightly.res | tail --lines=+3 | head --lines=-1)"
-          body="${body//'%'/'%25'}"
-          body="${body//$'\n'/'%0A'}"
-          body="${body//$'\r'/'%0D'}"
-          echo "::set-output name=result::${body}"
+          body="$(cat test-personas-nightly.res | tail --lines=+3)"
+          {
+            echo "result<<EOF"
+            echo "${body}"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
       - id: test-personas-nightly-eau
         name: Test the personas bilans against develop for water metric
         run: |
           pnpm test:personas --markdown -v nightly -i 'eau' > test-personas-nightly-eau.res
-          body="$(cat test-personas-nightly-eau.res | tail --lines=+3 | head --lines=-1)"
-          body="${body//'%'/'%25'}"
-          body="${body//$'\n'/'%0A'}"
-          body="${body//$'\r'/'%0D'}"
-          echo "::set-output name=result::${body}"
+          body="$(cat test-personas-nightly-eau.res | tail --lines=+3)"
+          {
+            echo "result<<EOF"
+            echo "${body}"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
       - id: set-test-url
         # Setups the NGC url with the corresponding PR number: https://nosgestesclimat.fr?PR=<pr_number>
-        run: echo "::set-output name=fr::${{ steps.deploy-env.outputs.name == 'master' && 'https://preprod.nosgestesclimat.fr' || format('https://preprod.nosgestesclimat.fr?PR={0}', github.event.pull_request.number) }}"
+        run: echo "fr=${{ steps.deploy-env.outputs.name == 'master' && 'https://preprod.nosgestesclimat.fr' || format('https://preprod.nosgestesclimat.fr?PR={0}', github.event.pull_request.number) }}" >> "$GITHUB_OUTPUT"
 
   generate-comment:
     runs-on: ubuntu-22.04
@@ -228,12 +235,14 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
       - name: Install pnpm
-        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061
+        uses: pnpm/action-setup@bdf0af2a9d539c0fd91f655344d2934bfd5a2cdd
+        with:
+          version: 10.11.0
       - name: Use Node.js
-        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
         with:
           node-version-file: './package.json'
           cache: 'pnpm'
