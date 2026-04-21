@@ -1,10 +1,10 @@
-name: publish-quick-doc-gh-pages
+name: Publish Quick Doc to GitHub Pages
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - preprod
     paths:
       - quick-doc/**
       - .github/workflows/publish-quick-doc-gh-pages.yml
@@ -26,7 +26,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
-        uses: ctions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
       - name: Setup pnpm
         uses: pnpm/action-setup@bdf0af2a9d539c0fd91f655344d2934bfd5a2cdd
@@ -42,11 +42,23 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Compile model artifacts
+        run: pnpm compile:fr
+
+      - name: Prepare quick-doc report stubs
+        run: |
+          mkdir -p quick-doc/reports
+          touch quick-doc/reports/situation-coverage.md
+          touch quick-doc/reports/migration-report.md
+
       - name: Build quick-doc for GitHub Pages
         run: pnpm --filter quick-doc run build:gh-pages
 
       - name: Add .nojekyll
         run: touch quick-doc/dist/.nojekyll
+
+      - name: Add SPA fallback
+        run: cp quick-doc/dist/index.html quick-doc/dist/404.html
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
