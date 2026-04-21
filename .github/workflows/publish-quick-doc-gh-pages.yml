@@ -1,0 +1,61 @@
+name: publish-quick-doc-gh-pages
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - quick-doc/**
+      - .github/workflows/publish-quick-doc-gh-pages.yml
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: ctions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@bdf0af2a9d539c0fd91f655344d2934bfd5a2cdd
+        with:
+          version: 10.11.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build quick-doc for GitHub Pages
+        run: pnpm --filter quick-doc run build:gh-pages
+
+      - name: Add .nojekyll
+        run: touch quick-doc/dist/.nojekyll
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: quick-doc/dist
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

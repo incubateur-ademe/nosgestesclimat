@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { AppContext, AppDispatchContext } from '../AppContext'
 import { PersonaKey, personasEntries } from '../Personas'
-import { Page, pathTo } from '../Nav'
+import { isGithubPagesDeploy, Page, pathTo } from '../Nav'
 import { Link, useLocation } from 'react-router-dom'
 // import CompilePersonasButton from './CompilePersonasButton'
 
@@ -33,9 +33,13 @@ export default function Header() {
         </h2>
         <div className="ml-4 flex gap-4">
           {link('doc', 'Documentation')}
-          {link('personas', 'Tests')}
-          {link('situations', 'Situations')}
-          {link('migration', 'Migration')}
+          {!isGithubPagesDeploy && (
+            <>
+              {link('personas', 'Tests')}
+              {link('situations', 'Situations')}
+              {link('migration', 'Migration')}
+            </>
+          )}
         </div>
       </div>
       <PersonasHeader />
