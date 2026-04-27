@@ -5,15 +5,18 @@
   "type": "module",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "build:gh-pages": "tsc && vite build --mode gh-pages-root --base=/nosgestesclimat/",
+    "generate:questions-schema": "ts-json-schema-generator --path ../types/questions.d.ts --type Questions --out json_schemas/questions.schema.json",
+    "dev": "pnpm run generate:questions-schema && vite",
+    "build": "pnpm run generate:questions-schema && tsc && vite build",
+    "build:gh-pages": "pnpm run generate:questions-schema && tsc && vite build --mode gh-pages-root --base=/nosgestesclimat/",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@monaco-editor/react": "^4.7.0",
     "@publicodes/react-ui": "^1.10.0",
+    "monaco-editor": "^0.55.1",
     "publicodes": "^1.10.1",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
@@ -43,6 +46,7 @@
     "prettier-plugin-tailwindcss": "^0.7.2",
     "remark-gfm": "^4.0.1",
     "tailwindcss": "^4.2.3",
+    "ts-json-schema-generator": "^2.9.0",
     "typescript": "^6.0.3",
     "vite": "^8.0.9"
   },
