@@ -1,0 +1,127 @@
+actions . logement:
+  # Somehow we need to set `actions . logement` to `logement`, otherwise, sub actions are linked to `actions . logement` instead of `logement` and it appears ton be undefined.
+  valeur: logement
+
+actions . logement . chauffer raisonnablement:
+  titre: Chauffer son logement sans faire grimper la facture
+  meta:
+    id: xx
+  note: |
+    On peut imaginer une approche basé sur la réduction d'empreinte associées à l'installation d'un thermostat (~15% d'économies)
+  applicable si: oui
+  formule: 0
+
+actions . logement . optimiser chauffe eau:
+  titre: Chauffer l’eau de manière plus économique
+  meta:
+    id: xx
+  note: |
+    Une étude ADEME indique une perte moyenne de 1/3 de l'énergie consommée pour chauffer l'eau.
+  applicable si: oui
+  formule: 0
+
+actions . logement . logement frais sans clim:
+  titre: Garder son logement frais sans utiliser la clim’
+  meta:
+    id: xx
+  note: |
+    Supprimer la part d'empreinte liée à l'utilisation de la climatisation.
+  applicable si: oui
+  formule: 0
+
+actions . logement . individualisation chauffage collectif:
+  titre: Demander l’individualisation des frais de chauffage de son immeuble
+  meta:
+    id: xx
+  note: |
+    Doit-on inclure la notion de propriété dans les conditions d'applicabilité ?
+
+    En moyenne, l’individualisation des frais de chauffage mène à une réduction de 15% de la consommation.
+  applicable si: utilisateur . mode de chauffage = "collectif"
+  formule: 0
+
+actions . logement . améliorer chauffage immeuble:
+  titre: Proposer d’améliorer le chauffage de son immeuble
+  meta:
+    id: xx
+  applicable si:
+    toutes ces conditions:
+      - utilisateur . mode de chauffage = "collectif"
+      - utilisateur . propriétaire logement principal = "propriétaire"
+  formule: 0
+
+actions . logement . isoler:
+  titre: Isoler son logement
+  meta:
+    id: xx
+  note: |
+    Calcul actuel ? 39% de réduction - les travaux ?
+    On ajoute l'exception des logements récents ? Ceux bien isolés ?
+  applicable si: utilisateur . propriétaire logement principal = "propriétaire"
+  formule: 0
+
+actions . logement . installer panneaux solaires thermiques:
+  titre: Installer des panneaux solaires thermiques
+  meta:
+    id: xx
+  applicable si: utilisateur . propriétaire logement principal = "propriétaire"
+  formule: 0
+
+actions . logement . installer panneaux solaires photovoltaïques:
+  titre: Installer des panneaux solaires photovoltaïques
+  meta:
+    id: xx
+  applicable si:
+    toutes ces conditions:
+      - utilisateur . propriétaire logement principal = "propriétaire"
+      - utilisateur . type de logement = "maison"
+  non applicable si: utilisateur . panneau photovoltaïque = "oui"
+  formule: logement - logement avec PV
+  unité: kgCO2e
+  avec:
+    logement avec PV:
+      valeur: logement
+      contexte:
+        logement . électricité . photovoltaique . présent: oui
+        logement . électricité . photovoltaique . production: énergie produite
+        logement . électricité . photovoltaique . intensité carbone: intensité carbone
+        nombre panneaux: 4
+        zone climatique: "'centre et littoral atlantique'"
+    énergie produite:
+      formule: puissance installée * productible
+    puissance installée:
+      formule: nombre panneaux * puissance moyenne panneau
+    nombre panneaux:
+      question: Combien de panneaux pourriez-vous installer ?
+    puissance moyenne panneau:
+      valeur: 0.4
+      unité: kWc
+    productible:
+      formule:
+        variations:
+          - si: zone climatique = 'bretagne et nord de la france'
+            alors: 1200
+          - si: zone climatique = 'centre et littoral atlantique'
+            alors: 1300
+          - si: zone climatique = 'littoral méditerranéen'
+            alors: 1500
+      unité: kWh/kWc
+    zone climatique:
+      question: Où se situe votre logement en France ?
+    intensité carbone:
+      formule:
+        variations:
+          - si: zone climatique = 'bretagne et nord de la france'
+            alors: 0.0315
+          - si: zone climatique = 'centre et littoral atlantique'
+            alors: 0.0291
+          - si: zone climatique = 'littoral méditerranéen'
+            alors: 0.0252
+      unité: kgCO2e/kWh
+
+actions . logement . se chauffer énergies renouvelables:
+  titre: Se chauffer avec des énergies renouvelables
+  meta:
+    id: xx
+  applicable si: utilisateur . propriétaire logement principal = "propriétaire"
+  formule: 0
