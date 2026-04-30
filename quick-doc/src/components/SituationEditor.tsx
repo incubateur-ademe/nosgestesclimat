@@ -1,6 +1,6 @@
 import { AppContext } from '../AppContext'
 import { AppDispatchContext } from '../AppContext'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import Editor, { type Monaco } from '@monaco-editor/react'
 import { MarkerSeverity, type editor as MonacoEditor } from 'monaco-editor'
 import { personas } from '../Personas'
@@ -36,6 +36,7 @@ export default function SituationEditor({
   const [shareFeedback, setShareFeedback] = useState<
     'success' | 'error' | null
   >(null)
+  const handleApplyRef = useRef<() => void>(() => {})
 
   const hasPendingChanges = situationValue !== situationText
 
@@ -63,7 +64,10 @@ export default function SituationEditor({
     setEditorError(null)
   }, [situationValue])
 
-  const handleEditorMount = (monaco: Monaco) => {
+  const handleEditorMount = (
+    editor: MonacoEditor.IStandaloneCodeEditor,
+    monaco: Monaco
+  ) => {
     monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
       validate: true,
       allowComments: false,
@@ -75,6 +79,10 @@ export default function SituationEditor({
           schema: questionsSchema
         }
       ]
+    })
+
+    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
+      handleApplyRef.current()
     })
   }
 
@@ -101,6 +109,10 @@ export default function SituationEditor({
     engine?.setSituation(situationParsed)
     dispatch({ type: 'setEngine', engine: engine })
   }
+
+  useEffect(() => {
+    handleApplyRef.current = handleApply
+  })
 
   const handleCopyShareLink = async () => {
     const shareParams = new URLSearchParams(window.location.search)
@@ -143,7 +155,7 @@ export default function SituationEditor({
           defaultLanguage="json"
           path={SITUATION_EDITOR_MODEL_URI}
           value={situationText}
-          onMount={(_, monaco) => handleEditorMount(monaco)}
+          onMount={(editor, monaco) => handleEditorMount(editor, monaco)}
           onChange={(value) => setSituationText(value ?? '')}
           onValidate={handleEditorValidate}
           options={{
