@@ -83,3 +83,114 @@ utilisateur . panneau photovoltaïque:
   valeur: logement . électricité . photovoltaique . présent
   description: |
     oui | non
+
+utilisateur . consommation énergie au m2 équivalente:
+  formule:
+    variations:
+      - si:
+          est défini: logement . chauffage . mode
+        alors:
+          produit:
+            - consommation totale
+            - 1 / logement . surface
+      - sinon: consommation par défaut au m2
+  avec:
+    DPE équivalent:
+      formule:
+        variations:
+          - si: consommation énergie au m2 équivalente <= 70
+            alors: "'A'"
+          - si: consommation énergie au m2 équivalente <= 110
+            alors: "'B'"
+          - si: consommation énergie au m2 équivalente <= 180
+            alors: "'C'"
+          - si: consommation énergie au m2 équivalente <= 250
+            alors: "'D'"
+          - si: consommation énergie au m2 équivalente <= 330
+            alors: "'E'"
+          - si: consommation énergie au m2 équivalente <= 420
+            alors: "'F'"
+          - sinon: "'G'"
+    consommation par défaut au m2:
+      formule:
+        somme:
+          - consommation totale . part DPE électricité * parc français . CEREN . surface . part électricité * parc français . CEREN . chauffage . consommation électricité par m2 / logement . électricité . consommation via DPE par m2 . ratio énergie primaire finale
+          - consommation totale . part DPE gaz * parc français . CEREN . surface . part gaz * parc français . CEREN . chauffage . consommation gaz par m2
+          - consommation totale . part DPE fioul * parc français . CEREN . surface . part fioul * parc français . CEREN . chauffage . consommation fioul par m2
+          - consommation totale . part DPE bois * parc français . CEREN . surface . part bois * parc français . CEREN . chauffage . consommation bois par m2
+          - consommation totale . part DPE réseau de chaleur * parc français . CEREN . surface . part réseau de chaleur * parc français . CEREN . chauffage . consommation réseau de chaleur par m2
+          - consommation totale . part DPE GPL * parc français . CEREN . surface . part GPL * parc français . CEREN . chauffage . consommation GPL par m2
+    consommation totale:
+      formule:
+        somme:
+          - électricité
+          - gaz
+          - fioul
+          - bois
+          - réseau de chaleur
+          - citerne propane
+      avec:
+        électricité:
+          applicable si: logement . chauffage . électricité . présent
+          formule:
+            produit:
+              - logement . électricité . consommation totale / logement . électricité . consommation via DPE par m2 . ratio énergie primaire finale
+              - part DPE électricité
+        part DPE électricité:
+          formule:
+            somme:
+              - parc français . CEREN . chauffage . part chauffage air électricité
+              - parc français . CEREN . chauffage . part ecs électricité
+              - (-1) * logement . chauffage . chauffe eau solaire . présent * logement . chauffage . chauffe eau solaire . taux réduction ecs * parc français . CEREN . chauffage . part ecs électricité
+              - parc français . CEREN . part climatisation électricité
+        gaz:
+          formule:
+            produit:
+              - logement . chauffage . gaz . consommation
+              - part DPE gaz
+        part DPE gaz:
+          formule:
+            somme:
+              - parc français . CEREN . chauffage . part chauffage air gaz
+              - parc français . CEREN . chauffage . part ecs gaz
+        fioul:
+          formule:
+            produit:
+              - logement . chauffage . fioul . consommation / logement . chauffage . fioul kWh au litre
+              - part DPE fioul
+        part DPE fioul:
+          formule:
+            somme:
+              - parc français . CEREN . chauffage . part chauffage air fioul
+              - parc français . CEREN . chauffage . part ecs fioul
+        bois:
+          formule:
+            produit:
+              - logement . chauffage . bois . type . bûches . consommation + logement . chauffage . bois . type . granulés . consommation
+              - part DPE bois
+        part DPE bois:
+          formule:
+            somme:
+              - parc français . CEREN . chauffage . part chauffage air bois
+              - parc français . CEREN . chauffage . part ecs bois
+        réseau de chaleur:
+          formule:
+            produit:
+              - logement . chauffage . réseau de chaleur . consommation
+              - part DPE réseau de chaleur
+        part DPE réseau de chaleur:
+          formule:
+            somme:
+              - parc français . CEREN . chauffage . part chauffage air réseau de chaleur
+              - parc français . CEREN . chauffage . part ecs réseau de chaleur
+        citerne propane:
+          formule:
+            produit:
+              - logement . chauffage . citerne propane . consommation * logement . chauffage . citerne propane . énergie par kg
+              - part DPE citerne propane
+        part DPE citerne propane: part DPE gaz
+        part DPE GPL:
+          formule:
+            somme:
+              - parc français . CEREN . chauffage . part chauffage air GPL
+              - parc français . CEREN . chauffage . part ecs GPL
