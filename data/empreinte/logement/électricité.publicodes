@@ -198,21 +198,33 @@ logement . électricité . consommation via DPE:
 
 logement . électricité . consommation via DPE . chauffage:
   titre: Consommation chauffage via DPE
-  applicable si: chauffage . électricité . est présent chauffage
-  formule: parc français . CEREN . chauffage . part chauffage air électricité * consommation via DPE par m2 * surface
+  applicable si:
+    une de ces conditions:
+      - chauffage . électricité . est présent chauffage
+      - chauffage . PAC . est présent chauffage
+  formule: part chauffage air DPE * consommation via DPE par m2 * surface
+  avec:
+    part chauffage air DPE: parc français . CEREN . chauffage . part chauffage air électricité / (parc français . CEREN . part climatisation électricité + parc français . CEREN . chauffage . part chauffage air électricité + parc français . CEREN . chauffage . part ecs électricité + parc français . CEREN . chauffage . part cuisson électricité)
   unité: kWh
 
 logement . électricité . consommation via DPE . ecs:
   titre: Consommation ECS via DPE
-  applicable si: chauffage . électricité . est présent ecs
-  formule: parc français . CEREN . chauffage . part ecs électricité * consommation via DPE par m2 * surface
+  applicable si:
+    une de ces conditions:
+      - chauffage . électricité . est présent ecs
+      - chauffage . PAC . est présent ecs
+  formule: part ecs DPE * consommation via DPE par m2 * surface
+  avec:
+    part ecs DPE: parc français . CEREN . chauffage . part ecs électricité / (parc français . CEREN . part climatisation électricité + parc français . CEREN . chauffage . part chauffage air électricité + parc français . CEREN . chauffage . part ecs électricité + parc français . CEREN . chauffage . part cuisson électricité)
 
 logement . électricité . consommation via DPE . climatisation:
   applicable si:
     toutes ces conditions:
       - est défini: climatisation . présent
       - climatisation . présent = "oui et utilisation"
-  formule: parc français . CEREN . part climatisation électricité * consommation via DPE par m2 * surface
+  formule: part climatisation DPE * consommation via DPE par m2 * surface
+  avec:
+    part climatisation DPE: parc français . CEREN . part climatisation électricité / (parc français . CEREN . part climatisation électricité + parc français . CEREN . chauffage . part chauffage air électricité + parc français . CEREN . chauffage . part ecs électricité + parc français . CEREN . chauffage . part cuisson électricité)
   unité: kWh
 
 logement . électricité . consommation via DPE par m2:
