@@ -27,11 +27,6 @@ export default function SituationEditor({
     setShouldBeHydratedWithInitialSituationValue
   ] = useState(!!initialSituationValue)
 
-  console.log(
-    'shouldBeHydratedWithInitialSituationValue',
-    shouldBeHydratedWithInitialSituationValue
-  )
-
   const [editorError, setEditorError] = useState<string | null>(null)
   const [shareFeedback, setShareFeedback] = useState<
     'success' | 'error' | null
