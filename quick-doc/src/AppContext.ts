@@ -4,7 +4,10 @@ import Engine from 'publicodes'
 import { PersonaKey, personas } from './Personas'
 import ReportManager from './ReportManager'
 
-import rules from '../../public/co2-model.FR-lang.fr.json'
+import devRules from '../../public/co2-model.FR-lang.fr.json'
+import { getRules } from './helpers/getRules'
+
+const rules = import.meta.env.DEV ? devRules : await getRules()
 
 export const initialEngine = new Engine(rules as unknown as NGCRules, {
   strict: {
