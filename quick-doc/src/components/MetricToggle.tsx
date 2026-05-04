@@ -7,7 +7,7 @@ export default function MetricToggle() {
   const dispatch = useContext(AppDispatchContext)
 
   return (
-    <div className="absolute right-[5%] mt-2 inline-flex">
+    <div className="inline-flex">
       <button
         className={twMerge(
           'hover:bg-primary-200 bg-primary-100 rounded-l px-4 py-2',
