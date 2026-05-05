@@ -3,7 +3,7 @@ params:
   nom: School
   gentilé: school
 logement . type:
-  question: What is your main home?
+  question: Describe your accommodation. Where do you live most often during the school year?
   description: |
     If you alternate between several homes, choose one for your answers.
   une possibilité:
@@ -22,12 +22,11 @@ logement . propriétaire:
 logement . habitants:
   question: How many people live in this home (including you)?
   description: |
-    This figure will enable us to divide up the footprint of the home.
-    If one (or more) people live there, but not every day, you can enter a figure with a decimal point: for example 2.5 if there are 2 of you half the time, and 3 the other half.
+    This figure will enable us to distribute the housing footprint.
   suggestions:
     two people: 2
     three people: 3
-    parents and 2 children: 4
+    Four people: 4
     five people: 5
 logement . surface:
   question: null
@@ -63,8 +62,8 @@ logement . surface:
             alors: 12 m2
           - sinon: parc français . surface moyenne
     possibilités:
-      question: Laquelle de ces options décrit le mieux ton logement ?
-      description: Connaître le nombre de pièces, ou de chambres, nous permet d'estimer la surface de ton logement.
+      question: Combien y-a-t-il de chambres chez toi ?
+      description: Cette indication va nous aider à estimer la surface du logement où tu vis.
       une possibilité:
         - studio
         - une chambre
@@ -89,35 +88,83 @@ logement . âge:
 logement . construction . travaux de rénovation:
   question: null
 logement . climatisation . présent:
-  question: Does your home have air conditioning?
+  question: Do you have an air conditioning system at home?
   avec:
     oui et utilisation:
-      titre: Oui, et on l'utilise
+      titre: Oui, et on l'utilise parfois
     oui sans utilisation:
       titre: Oui, mais on ne l'utilise pas
     pas de climatiseurs:
-      titre: Non
+      titre: Non, pas à ma connaissance
 logement . piscine . type:
   question: Do you have a swimming pool?
 logement . piscine . surface:
   question: null
 logement . chauffage . mode:
-  question: Is your home heated?
-  description: |
-    Whether it's electric or gas radiators, a wood-burning stove...
+  question: null
+  par défaut: "'individuel'"
+logement . chauffage . principal:
+  question: How is your home heated?
+  applicable si: oui
+  description: null
   une possibilité:
-    - oui par défaut
-    - pas de chauffage
+    - électricité
+    - PAC air eau
+    - gaz
+    - fioul
+    - bois
   avec:
-    individuel:
-      titre: Chauffage individuel
-    collectif:
-      titre: Chauffage collectif
-      non applicable si: est une maison
-    pas de chauffage:
-      titre: Le logement n'est pas chauffé
-    oui par défaut:
-      titre: Oui
+    électricité:
+      titre: Avec des radiateurs électriques ⚡️
+    PAC air eau:
+      titre: Avec une pompe à chaleur
+    gaz:
+      titre: Au gaz 🔥
+    fioul:
+      titre: Au fioul 🛢️
+    bois:
+      titre: Avec une chaudière à bois ou à granulés 🪵
+logement . chauffage . principal . ecs:
+  question: null
+  par défaut: "'identique'"
+logement . chauffage . appoint:
+  question: Do you also have a fireplace or stove in your home?
+  applicable si: oui
+  non applicable si: non
+  mosaique:
+    type: selection
+    options:
+      - bois . présent
+    option aucun: no, there isn't any
+  avec:
+    électricité:
+      titre: Radiateurs électriques
+    électricité . présent:
+      question: null
+    bois:
+      titre: Oui, il y a une cheminée ou un poêle
+    bois . présent:
+      question: Utilisez-vous du bois pour de l'appoint au sein de votre logement ?
+    bouteille gaz cuisson:
+      titre: Bouteille de gaz pour la cuisson
+    bouteille gaz cuisson . présent:
+      question: null
+logement . chauffage . saisie précision consommation:
+  question: null
+logement . chauffage . précision consommation . ressenti:
+  question: null
+logement . chauffage . bois . système:
+  question: null
+logement . chauffage . bois . système . poêle bûches . présent:
+  question: null
+logement . chauffage . bois . système . chaudière bûches . présent:
+  question: null
+logement . chauffage . bois . système . poêle granulés . présent:
+  question: null
+logement . chauffage . bois . système . chaudière granulés . présent:
+  question: null
+logement . chauffage . bois . système . foyer ouvert . présent:
+  question: null
 logement . électricité . photovoltaique . présent:
   question: Does your home have photovoltaic panels?
   description: |
@@ -129,9 +176,9 @@ logement . électricité . photovoltaique . production:
 logement . extérieur:
   question: null
 logement . vacances:
-  question: When you go away for the weekend or on holiday, where do you sleep?
+  question: Where did you spend your holidays last year?
   description: |
-    You can tick more than one answer.
+    You can tick more than one box if you went to different places several times a year.
   mosaique:
     type: selection
     options:
@@ -149,34 +196,34 @@ logement . vacances . famille ou amis . notif:
   description: |
     For information, the footprint associated with "Family or friends" nights is zero as this is counted in the hosts' footprint.
 logement . vacances . hotel . nombre de nuitées:
-  question: How many nights a year do you spend in a hotel or B&B?
+  question: How many nights have you spent in hotels or B&Bs in the last twelve months?
+  description: |
+    If it's difficult for you to give a precise figure, choose the formula that suits you best from these 4 suggestions.
 logement . vacances . camping . nombre de nuitées:
-  question: How many nights a year do you spend camping?
+  question: How many nights have you spent camping in the last twelve months?
 logement . vacances . auberge de jeunesse . nombre de nuitées:
-  question: How many nights a year do you spend in a youth hostel?
+  question: How many nights have you spent in a youth hostel in the last twelve months?
 logement . vacances . locations . nombre de nuitées:
-  question: How many nights a year do you spend in furnished accommodation?
+  question: How many nights have you spent in furnished accommodation in the last twelve months?
   description: |
     Indicate here the number of nights spent in Airbnb-type rentals.
 logement . vacances . échange . nombre de nuitées:
-  question: How many nights a year do you spend in home exchange?
+  question: How many nights have you spent in home exchange in the last twelve months?
   description: |
     Accounts every night, even if the exchanges are not simultaneous.
 logement . vacances . croisière . nombre de nuitées:
-  question: How many nights a year do you spend cruising?
-  description: |
-    Indicate here the nights spent on the cruise.
+  question: How many nights have you spent on a cruise in the last twelve months?
 alimentation . plats:
-  question: Choose the 14 meals of a "classic" week for you.
+  question: Choose the 14 meals of a typical week.
   description: |
-    14 for 7 lunches and 7 dinners.
+    If you have trouble answering this question precisely, try to remember what you ate in the last 7 days or choose the formula that suits you best from these 4 suggestions.
 alimentation . petit déjeuner . type:
   question: Select the option that most closely resembles your everyday breakfast.
   description: null
 alimentation . local . consommation:
   question: null
 alimentation . de saison . consommation:
-  question: Would you say that you eat the same fruit and vegetables all year round, or does it depend on the season?
+  question: Do you only eat fruit and vegetables that are in season?
   description: |
     For example, tomatoes and courgettes are in season in summer, and oranges and lemons in winter.
   une possibilité:
@@ -185,19 +232,18 @@ alimentation . de saison . consommation:
     - souvent
     - oui toujours
 alimentation . de saison . consommation . jamais:
-  titre: Not really according to the season
+  titre: Not really
 alimentation . de saison . consommation . parfois:
   titre: Sometimes, but not all the time
 alimentation . de saison . consommation . souvent:
-  titre: Most of the time, depending on the season
+  titre: Most of the time
 alimentation . de saison . consommation . oui toujours:
-  titre: Seasonal fruit and vegetables all the time
+  titre: Always
 alimentation . boisson . chaude:
   question: null
 alimentation . boisson . eau en bouteille . consommateur:
-  question: Do you usually drink bottled water?
-  description: |
-    If you sometimes drink bottled water but only occasionally, you can answer "no" to this question.
+  question: Do you often drink bottled water?
+  description: null
 alimentation . boisson . sucrées . litres:
   question: null
   formule:
@@ -235,7 +281,7 @@ alimentation . boisson . type de lait:
 alimentation . déchets . quantité jetée:
   question: null
 alimentation . déchets . gestes . saisie:
-  question: What eco-gestures do you practise when it comes to waste?
+  question: What are you doing to reduce the weight of your rubbish?
   description: null
   mosaique:
     type: selection
@@ -243,12 +289,15 @@ alimentation . déchets . gestes . saisie:
     options:
       - compostage biodéchets . présent
       - gaspillage alimentaire . présent
+      - stop pub . présent
+alimentation . déchets . gestes . gaspillage alimentaire:
+  titre: I don't waste food
 alimentation . déchets . gestes . compostage biodéchets:
-  titre: I have a composter at home.
+  titre: I compost
 alimentation . déchets . gestes . acheter en vrac . présent:
   question: null
 alimentation . déchets . gestes . stop pub . présent:
-  question: null
+  question: I have "stop pub" on my letterbox
 transport . voiture:
   titre: car
   icônes: 🚘
@@ -305,7 +354,8 @@ transport . voiture . km:
           - sinon: 0
     hebdo . possibilités:
       question: |
-        Combien de temps passes-tu en voiture par semaine (sur une semaine "classique") ?
+        Combien de temps passes-tu en voiture par semaine ?
+      description: Estime ce temps pour une semaine hors vacances scolaire.
       une possibilité:
         - moins d'une heure
         - entre 1 et 3 heures
@@ -321,7 +371,7 @@ transport . voiture . km:
     hebdo . possibilités . plus de 7 heures:
       titre: Plus de 7 heures (1h par jour au moins)
     hebdo . possibilités . jamais:
-      titre: En semaine, jamais ou presque
+      titre: Jamais ou presque
       icônes: ❌
     annuel:
       unité: km
@@ -342,7 +392,7 @@ transport . voiture . km:
       question: |
         T'arrive-t-il dans l'année de faire de longs trajets en voiture (plus de 2h) ?
       description: |
-        Par exemple, pour partir en vacances, ou en week-end, ou rendre visite à des amis ou de la famille qui habite loin.
+        Par exemple, pour partir en vacances, en week-end, ou rendre visite à de la famille qui habite loin.
       une possibilité:
         - plusieurs fois par an
         - occasionnellement
@@ -401,12 +451,12 @@ transport . avion . vols annuels:
   question: |
     Enter here the duration of your flights for one year (return):
   description: |
-    Adds up all flight times: **outbound**, **return** and flights with **stops** (example: Lyon-Los Angeles with 1 stopover = 26h).
+    Adds up all flight hours (**outbound** and **return**)
 transport . avion . vols amortis:
   question: |
     Enter the duration of your flights for the last 3 years (return):
   description: |
-    Adds up all flight times: **outbound**, **return** and flights with **stops** (example: Lyon-Los Angeles with 1 stopover = 26h).
+    Adds up all flight hours (**outbound** and **return**)
 transport . deux roues . usager:
   question: Do you use a scooter or motorbike?
 transport . deux roues . km:
@@ -549,7 +599,7 @@ transport . transports commun . métro ou tram . heures par semaine:
   avec:
     possibilités:
       question: |
-        Combien de temps passes-tu en métro ou en tram, en moyenne, par semaine ?
+        Combien de temps passes-tu en métro ou en tram par semaine ?
       une possibilité:
         - moins d'une heure
         - entre 1 et 3 heures
@@ -637,43 +687,43 @@ transport . vacances . van . propriétaire:
 transport . vacances . bateau plaisance . propriétaire:
   question: null
 divers . animaux domestiques . empreinte:
-  question: How many animals live in your home?
+  question: How many pets live in your home?
 divers . loisirs . culture:
   question: null
 divers . loisirs . sports:
   question: What sports do you play regularly?
 divers . numérique . internet . durée journalière:
-  question: How many hours a day do you spend online (phone, computer, tablet)?
+  question: How many hours a day do you spend on the Internet and social networks?
   description: |
     Do not count time spent in class / lessons.
 divers . numérique . appareils:
-  question: What digital cameras do you own?
+  question: What digital equipment do you use at home?
   description: |
-    You are personally allocated the fingerprint of individual devices (such as your telephone) and the fingerprint of devices shared with other members of your household is distributed.
+    You are allocated the fingerprint of individual devices (such as the telephone) and the fingerprint of other devices (television, PC) is shared.
 divers . numérique . appareils . renouvellement téléphone:
   question: null
 divers . textile . volume:
   question: |
-    Choose the situation that suits you best:
+    Let's talk about fashion. Choose the statement that best describes you:
   description: null
   une possibilité:
     - renouvellement occasionnel
     - accro au shopping
 divers . textile . volume . renouvellement occasionnel:
-  titre: I wear the same clothes as often and for as long as possible
+  titre: I often wear the same clothes for as long as possible.
 divers . textile . volume . accro au shopping:
   titre: I have lots of clothes, some of which I rarely wear.
 divers . textile . revente:
   question: null
 divers . textile . qualité:
   question: |
-    How do you go about choosing your clothes?
+    How do you prefer to buy your clothes?
   description: null
   une possibilité:
     - neuf fast fashion
     - occasion
 divers . textile . qualité . neuf fast fashion:
-  titre: Nine
+  titre: New
 divers . textile . qualité . occasion:
   titre: Second-hand
 divers . textile . empreinte précise:
@@ -692,8 +742,6 @@ actions:
       - alimentation . repas . viande faible empreinte
       - alimentation . devenir végétarien
       - alimentation . devenir végétalien
-      - alimentation . boisson . réduire café . max deux par jour
-      - alimentation . boisson . réduire café . max un par jour
       - alimentation . boisson . réduire café . remplace un café par jour par thé
       - alimentation . boisson . réduire café . remplace par chicorée
       - alimentation . boisson . réduire chocolat chaud . max un par jour
