@@ -2,30 +2,30 @@ actions . alimentation:
   # Somehow we need to set `actions . alimentation` to `alimentation`, otherwise, sub actions are linked to `actions . alimentation` instead of `alimentation` and it appears ton be undefined.
   valeur: alimentation
 
-actions . alimentation . réduire viande:
-  titre: Réduire le poids de la viande dans son empreinte carbone
-  meta:
-    id: xx
-  note: |
-    On fait l'hypothèse que les repas carnés sont remplacés par des repas végétariens pour obtenir un gain carbone maximal et réaliste.
-  applicable si:
-    une de ces conditions:
-      - utilisateur . nombre de plats viande rouge hebdo > 0
-      - utilisateur . nombre de plats viande blanche hebdo > 0
-      - utilisateur . petit déjeuner type = "britannique"
-  formule: alimentation - nouveau régime
-  avec:
-    nouveau régime:
-      valeur: alimentation
-      contexte:
-        alimentation . plats . viande rouge . nombre: 0
-        alimentation . plats . viande blanche . nombre: 0
-        alimentation . plats . végétarien . nombre: utilisateur . nombre de plats végétariens hebdo + utilisateur . nombre de plats viande rouge hebdo + utilisateur . nombre de plats viande blanche hebdo
-        alimentation . petit déjeuner . type:
-          variations:
-            - si: utilisateur . petit déjeuner type = "britannique"
-              alors: "'continental'"
-            - sinon: utilisateur . petit déjeuner type
+# actions . alimentation . réduire viande:
+#   titre: Réduire le poids de la viande dans son empreinte carbone
+#   meta:
+#     id: xx
+#   note: |
+#     On fait l'hypothèse que les repas carnés sont remplacés par des repas végétariens pour obtenir un gain carbone maximal et réaliste.
+#   applicable si:
+#     une de ces conditions:
+#       - utilisateur . nombre de plats viande rouge hebdo > 0
+#       - utilisateur . nombre de plats viande blanche hebdo > 0
+#       - utilisateur . petit déjeuner type = "britannique"
+#   formule: alimentation - nouveau régime
+#   avec:
+#     nouveau régime:
+#       valeur: alimentation
+#       contexte:
+#         alimentation . plats . viande rouge . nombre: 0
+#         alimentation . plats . viande blanche . nombre: 0
+#         alimentation . plats . végétarien . nombre: utilisateur . nombre de plats végétariens hebdo + utilisateur . nombre de plats viande rouge hebdo + utilisateur . nombre de plats viande blanche hebdo
+#         alimentation . petit déjeuner . type:
+#           variations:
+#             - si: utilisateur . petit déjeuner type = "britannique"
+#               alors: "'continental'"
+#             - sinon: utilisateur . petit déjeuner type
 
 actions . alimentation . réduire produits de la mer:
   titre: Avoir une consommation responsable de produits de la mer
@@ -51,9 +51,23 @@ actions . alimentation . cuisiner plus de légumineuses:
   meta:
     id: 594a61c3-97b3-4fb0-9d04-a44f044d5bcc
   note: |
-    On pourrait imaginer modifier le FE de certains repas avec légumineuses pour tenter d'avoir une approche quantifiée de cette action.
-  applicable si: (utilisateur . nombre de plats végétaliens hebdo + utilisateur . nombre de plats végétariens hebdo) < 7
-  formule: 0
+    Pour le moment, on considère que cette action est équivalente à "réduire le poids de la viande dans son empreinte". En effet, nous n'avons pas de question spécifique aux légumineuses dans le test, et il est difficile d'estimer une consommation de légumineuses à partir des questions existantes.
+
+    La condition est néanmoins légèrement moins axée sur la consommation de viande en se basant sur la consommation de plats végétariens et végétaliens.
+  applicable si:
+    toutes ces conditions:
+      - (utilisateur . nombre de plats végétaliens hebdo + utilisateur . nombre de plats végétariens hebdo) < 7
+      - une de ces conditions:
+          - utilisateur . nombre de plats viande rouge hebdo > 0
+          - utilisateur . nombre de plats viande blanche hebdo > 0
+  formule: alimentation - nouveau régime
+  avec:
+    nouveau régime:
+      valeur: alimentation
+      contexte:
+        alimentation . plats . viande rouge . nombre: 0
+        alimentation . plats . viande blanche . nombre: 0
+        alimentation . plats . végétarien . nombre: utilisateur . nombre de plats végétariens hebdo + utilisateur . nombre de plats viande rouge hebdo + utilisateur . nombre de plats viande blanche hebdo
 
 actions . alimentation . privilégier volaille:
   titre: Privilégier la volaille pour les repas avec de la viande
