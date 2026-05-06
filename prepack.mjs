@@ -4,6 +4,7 @@
  */
 import fs from 'fs'
 import path from 'path'
+import Engine from 'publicodes'
 import generateExtendedSituationDottedNames from './scripts/situation/generateExtendedSituationDottedNames.mjs'
 
 const everyModelFolder = 'public'
@@ -38,6 +39,9 @@ fs.writeFileSync(
   generateExtendedSituationDottedNamesTypes(model)
 )
 
+// Generate the Questions type
+fs.writeFileSync('./types/questions.d.ts', generateQuestionsType(model))
+
 // Generate the Categories type
 fs.writeFileSync('./types/categories.d.ts', generateCategoriesTypes(model))
 
@@ -48,7 +52,7 @@ fs.writeFileSync(
 )
 
 console.log(
-  `✅ dottedNames, extendedSituationDottedNames, categories and subcategories types generated`
+  `✅ dottedNames, extendedSituationDottedNames, questions, categories and subcategories types generated`
 )
 
 console.log('➡️ Packaging done')
@@ -100,4 +104,98 @@ export type ExtendedSituationDottedNames =
 ${questionDottedName.map((dottedName) => `  | "${dottedName}"`).join('\n')}
 `
   return dFile
+}
+
+// Question generation si a feature from @publicodes/tools compilation that we do not use for now. We should migrate to it when Publicodes 2.0 will be released.
+function generateQuestionsType(model) {
+  const engine = new Engine(model)
+  const ruleTypes = resolveRuleTypes(engine)
+  // exception for the "métrique" rule which must be ine the question situation schema even if it is not a question rule.
+  const serializedQuestionsRuleTypes = Object.entries(ruleTypes)
+    .filter(
+      ([name]) => engine.getRule(name).rawNode.question || name === 'métrique'
+    )
+    .map(([name, type]) => `  "${name}": ${serializeType(type)}`)
+    .join(',\n')
+
+  return `
+/**
+ * String representing a date in the format 'DD/MM/YYYY' or 'MM/YYYY'.
+ */
+export type PDate = string
+
+/**
+ * Publicodes boolean type.
+ */
+export type PBoolean = 'oui' | 'non'
+
+/**
+ * String constants are enclosed in single quotes to differentiate them from references.
+ */
+export type PString = \`'\${string}'\`
+
+/**
+ * Subset of the publicodes situation with only question rules.
+ *
+ * This represents raw publicodes inputs for question rules.
+ */
+export type Questions = Partial<{
+${serializedQuestionsRuleTypes}
+}>
+`
+}
+
+function resolveRuleTypes(engine) {
+  const parsedRules = engine.getParsedRules()
+  const ruleTypes = {}
+
+  for (const ruleName in parsedRules) {
+    const rule = parsedRules[ruleName]
+    const ruleType = engine.context.nodesTypes.get(rule)
+    const possibilities = engine.getPossibilitiesFor(ruleName)
+
+    if (possibilities) {
+      ruleTypes[ruleName] = {
+        type: 'enum',
+        options: possibilities.map(({ nodeValue }) => nodeValue.toString()),
+        isNullable: ruleType?.isNullable
+      }
+    } else if (ruleType?.type === undefined) {
+      ruleTypes[ruleName] = {
+        type: 'boolean',
+        isNullable: ruleType?.isNullable
+      }
+    } else {
+      ruleTypes[ruleName] = {
+        type: ruleType.type,
+        isNullable: ruleType.isNullable
+      }
+    }
+  }
+
+  return ruleTypes
+}
+
+function serializeType(type) {
+  const nullable = type.isNullable ? ' | null' : ''
+
+  switch (type.type) {
+    case 'string': {
+      return `PString${nullable}`
+    }
+    case 'number': {
+      return `number${nullable}`
+    }
+    case 'boolean': {
+      return `PBoolean${nullable}`
+    }
+    case 'date': {
+      return `PDate${nullable}`
+    }
+    case 'enum': {
+      return (
+        type.options.map((option) => `"'${option}'"`).join(' | ') + nullable
+      )
+    }
+  }
 }

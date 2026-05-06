@@ -104,11 +104,9 @@ export default function PersonasReportsPage() {
       </div>
       <div className="mt-8 min-w-full rounded border border-gray-200 bg-white px-8 py-4">
         {report !== null ? (
-          <Markdown
-            remarkPlugins={[remarkGfm]}
-            className="prose prose-lg prose-blockquote:bg-grey-200 min-w-full"
-            children={report}
-          />
+          <div className="prose prose-lg prose-blockquote:bg-grey-200 min-w-full">
+            <Markdown remarkPlugins={[remarkGfm]}>{report}</Markdown>
+          </div>
         ) : (
           <TableSkeleton loading={syncStatus === 'loading'} />
         )}
