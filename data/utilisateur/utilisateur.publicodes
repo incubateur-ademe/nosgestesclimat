@@ -72,17 +72,96 @@ utilisateur . propriétaire logement principal:
 utilisateur . type de logement:
   valeur: logement . type
   description: |
-    maison | appartement | autre
+    non défini | maison | appartement | autre
+
+utilisateur . surface du logement:
+  valeur: logement . surface
+
+utilisateur . âge du logement:
+  valeur: logement . âge
+  description: |
+    très récent | récent | ancien
+
+utilisateur . habitants:
+  valeur: logement . habitants
+
+utilisateur . a réalisé travaux isolation:
+  valeur: logement . construction . rénovation . travaux . isolation . présent
+  description: |
+    oui | non
+
+utilisateur . a réalisé travaux chauffage:
+  valeur: logement . construction . rénovation . travaux . chauffage . présent
+  description: |
+    oui | non
 
 utilisateur . mode de chauffage:
   valeur: logement . chauffage . mode
   description: |
     non défini | individuel | collectif | pas de chauffage
 
+utilisateur . chauffage air électrique:
+  formule:
+    une de ces conditions:
+      - logement . chauffage . électricité . est présent chauffage
+      - logement . chauffage . PAC . est présent chauffage
+  description: |
+    oui | non
+
+utilisateur . chauffage ecs électrique:
+  formule:
+    une de ces conditions:
+      - logement . chauffage . électricité . est présent ecs
+      - logement . chauffage . PAC . est présent ecs
+  description: |
+    oui | non
+
+utilisateur . possède une PAC:
+  valeur: logement . chauffage . PAC . présent
+  description: |
+    oui | non
+
+utilisateur . possède une chaudière bois:
+  formule:
+    une de ces conditions:
+      - logement . chauffage . bois . est présent chauffage
+      - logement . chauffage . bois . est présent ecs
+  description: |
+    oui | non
+
+utilisateur . est présent gaz:
+  valeur: logement . chauffage . gaz . présent
+  description: |
+    oui | non
+utilisateur . est présent fioul:
+  valeur: logement . chauffage . fioul . présent
+  description: |
+    oui | non
+utilisateur . est présent citerne propane:
+  valeur: logement . chauffage . citerne propane . présent
+  description: |
+    oui | non
+
 utilisateur . panneau photovoltaïque:
   valeur: logement . électricité . photovoltaique . présent
   description: |
+    non défini | oui | non
+
+utilisateur . chauffe eau solaire:
+  valeur: logement . chauffage . chauffe eau solaire . présent
+  description: |
     oui | non
+
+utilisateur . nombre climatiseurs:
+  formule:
+    variations:
+      - si:
+          est défini: logement . climatisation . nombre
+        alors: logement . climatisation . nombre
+      - sinon: 0
+
+utilisateur . utilisation climatiseurs:
+  valeur: logement . climatisation . présent = "oui et utilisation"
 
 utilisateur . consommation énergie au m2 équivalente:
   formule:
@@ -94,6 +173,7 @@ utilisateur . consommation énergie au m2 équivalente:
             - consommation totale
             - 1 / logement . surface
       - sinon: consommation par défaut au m2
+  unité: kWh/m2
   avec:
     DPE équivalent:
       formule:
