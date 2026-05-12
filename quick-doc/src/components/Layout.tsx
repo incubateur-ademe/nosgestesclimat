@@ -9,8 +9,6 @@ type CompilationStatus = {
   message?: string
 }
 
-const socket = io('http://localhost:4000')
-
 export default function Layout() {
   // NOTE(@EmileRolley): When the rules are compiled, this component will be HMR updated
   // therefore the compilation status will be reset to 'none'.
@@ -19,12 +17,23 @@ export default function Layout() {
   )
 
   useEffect(() => {
+    if (!import.meta.env.DEV) {
+      return
+    }
+
+    const socket = io('http://localhost:4000')
+
     socket.on('connection', () => {
       console.log('connected')
     })
+
     socket.on('compilation-status', (status: CompilationStatus) => {
       setCompilationStatus(status)
     })
+
+    return () => {
+      socket.disconnect()
+    }
   }, [])
 
   useEffect(() => {
