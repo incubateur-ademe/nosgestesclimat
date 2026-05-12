@@ -89,6 +89,11 @@ const translateRule = async ([ruleName, ruleVal], destLang) => {
         val = translateMd(val)
         break
       }
+      case 'avec': {
+        // Recursively translate rules nested under 'avec'.
+        val = await translateModel(val, destLang)
+        break
+      }
       default: {
         val = translate(val)
       }
@@ -100,7 +105,7 @@ const translateRule = async ([ruleName, ruleVal], destLang) => {
     Object.fromEntries(
       await Promise.all(
         Object.entries(ruleVal).map(async ([attr, val]) => {
-          if (utils.mechanismsToTranslate.includes(attr)) {
+          if (utils.mechanismsToTranslate.includes(attr) || attr === 'avec') {
             return translateAttr(attr, val)
           }
           return [attr, val]
