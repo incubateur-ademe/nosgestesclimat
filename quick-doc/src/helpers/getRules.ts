@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { NGCRules } from './../../../index.d'
 import { getPRNumberFromURL } from './getPRNumberFromURL'
 
@@ -9,20 +10,15 @@ export async function getRules(): Promise<Partial<NGCRules> | null> {
 
   console.log('fetching preview file', { fileName, PRNumber })
 
-  try {
-    const response = await fetch(`${previewURL}/${fileName}`)
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`)
-    }
-
-    return (await response.json()) as Partial<NGCRules>
-  } catch (error) {
-    console.error('Error fetching preview file', {
-      fileName,
-      PRNumber,
-      error
+  return axios
+    .get(`${previewURL}/${fileName}`)
+    .then((res) => res.data)
+    .catch((e) => {
+      console.error('Error fetching preview file', {
+        fileName,
+        PRNumber,
+        error: e
+      })
+      return null
     })
-    return null
-  }
 }
