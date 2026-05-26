@@ -115,7 +115,7 @@ function generateQuestionsType(model) {
     .filter(
       ([name]) => engine.getRule(name).rawNode.question || name === 'métrique'
     )
-    .map(([name, type]) => `  "${name}": ${serializeType(type)}`)
+    .map(([name, type]) => `  "${name}": ${serializeType(type, name)}`)
     .join(',\n')
 
   return `
@@ -176,8 +176,13 @@ function resolveRuleTypes(engine) {
   return ruleTypes
 }
 
-function serializeType(type) {
+function serializeType(type, name) {
   const nullable = type.isNullable ? ' | null' : ''
+
+  // If the rule corresponds to a mosaic in the model, prefer Mosaic type
+  if (type.type === 'number' && model[name] && model[name].mosaique) {
+    return `Mosaic${nullable}`
+  }
 
   switch (type.type) {
     case 'string': {
