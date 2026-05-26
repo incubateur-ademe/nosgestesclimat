@@ -32,19 +32,31 @@ actions . alimentation . réduire produits de la mer:
   meta:
     id: 248146c7-9d4b-4fad-bfef-05dda313e3c8
   note: |
-    On fait l'hypothèse que les repas avec du poisson sont remplacés par des repas végétariens pour obtenir un gain carbone maximal et réaliste.
+    On fait l'hypothèse que les repas avec du poisson sont plafonnés à 2 repas de poissons gras, les autres sont remplacés par des repas végétariens pour obtenir un gain carbone réaliste.
   applicable si:
     une de ces conditions:
       - utilisateur . nombre de plats poisson blanc hebdo > 0
-      - utilisateur . nombre de plats poisson gras hebdo > 0
+      - utilisateur . nombre de plats poisson gras hebdo > 2
   formule: alimentation - nouveau régime
   avec:
     nouveau régime:
       valeur: alimentation
       contexte:
         alimentation . plats . poisson blanc . nombre: 0
-        alimentation . plats . poisson gras . nombre: 0
-        alimentation . plats . végétarien . nombre: utilisateur . nombre de plats végétariens hebdo + utilisateur . nombre de plats poisson blanc hebdo + utilisateur . nombre de plats poisson gras hebdo
+        alimentation . plats . poisson gras . nombre: nouveau nombre poisson gras
+        alimentation . plats . végétarien . nombre: nouveau nombre plats végétariens
+      avec:
+        nouveau nombre poisson gras:
+          le minimum de:
+            - 2
+            - utilisateur . nombre de plats poisson gras hebdo + utilisateur . nombre de plats poisson blanc hebdo
+        nouveau nombre plats végétariens:
+          formule:
+            somme:
+              - utilisateur . nombre de plats végétariens hebdo
+              - le maximum de:
+                  - 0
+                  - utilisateur . nombre de plats poisson gras hebdo + utilisateur . nombre de plats poisson blanc hebdo - 2
 
 actions . alimentation . cuisiner plus de légumineuses:
   titre: Cuisiner plus souvent des légumineuses
@@ -195,10 +207,4 @@ actions . alimentation . valoriser ses déchets:
     une de ces conditions:
       - utilisateur . compostage biodéchets = oui
       - utilisateur . taille poubelle = "zéro déchet"
-  formule: alimentation - nouveau régime
-  avec:
-    nouveau régime:
-      valeur: alimentation
-      contexte:
-        alimentation . déchets . gestes . compostage biodéchets . présent: oui
-        alimentation . déchets . quantité jetée: "'zéro déchet'"
+  formule: alimentation . déchets . gestes . bonus compostage biodéchets
