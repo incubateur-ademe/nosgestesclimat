@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { PersonaKey } from './Personas'
 import { Version, Metric } from './Versions'
 
@@ -50,15 +49,22 @@ export default class ReportManager {
         const url = `http://localhost:4000/testPersonas/${version}/${metric}/${persona}`
 
         console.log(`[ReportManager] fetching: ${url}`)
-        axios
-          .get(
-            `http://localhost:4000/testPersonas/${version}/${metric}/${persona}`
-          )
-          .then((response) => {
-            console.log(`[ReportManager] response:`, response.data)
-            this.cache.set(key, response.data.report)
-            setReport(response.data.report, false)
-            setTimeElapsed(response.data.timeElapsed)
+        fetch(url)
+          .then(async (response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP ${response.status}`)
+            }
+
+            return (await response.json()) as {
+              report: string
+              timeElapsed: number
+            }
+          })
+          .then((data) => {
+            console.log(`[ReportManager] response:`, data)
+            this.cache.set(key, data.report)
+            setReport(data.report, false)
+            setTimeElapsed(data.timeElapsed)
           })
           .catch((error: Error) => {
             console.log(
