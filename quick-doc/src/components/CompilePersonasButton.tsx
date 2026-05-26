@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { CheckCircle2, Loader2, RefreshCw, XCircle } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
@@ -73,12 +74,9 @@ export default function CompilePersonasButton() {
 }
 
 function compilePersona(onDone: () => void, onError: () => void) {
-  fetch(`http://localhost:4000/compile-personas`)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`)
-      }
-
+  axios
+    .get(`http://localhost:4000/compile-personas`)
+    .then((_response) => {
       onDone()
     })
     .catch((error: Error) => {
