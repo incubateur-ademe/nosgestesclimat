@@ -1,0 +1,40 @@
+actions . consommation:
+  valeur: divers
+
+actions . consommation . achat malin:
+  titre: Éviter d’acheter des objets peu ou pas utilisés
+  meta:
+    id: 1ba06fce-2f9c-4840-93fe-cf44bf4b0850
+  note: |
+    Les hypothèses derrière un calcul seraient trop approximatives.
+  applicable si: oui
+  formule: 0
+
+actions . consommation . achat seconde main:
+  titre: Privilégier l’achat d’occasion
+  meta:
+    id: 75257893-6e72-49dd-a090-d046456db5af
+  note: |
+    On a cette information seulement pour le textile, pour le moment, dans le test.
+  applicable si: utilisateur . acheteur fast fashion
+  formule: consommation - nouvelle garde robe
+  avec:
+    nouvelle garde robe:
+      valeur: divers
+      contexte:
+        divers . textile . qualité: "'occasion'"
+
+actions . consommation . faire durer ses objets:
+  titre: Entretenir, réparer ou faire réparer ses objets
+  meta:
+    id: 6eb1d3fe-785c-4dfc-99b9-438d4aa24e99
+  non applicable si:
+    toutes ces conditions:
+      - utilisateur . soin des objets = 'maximum'
+      - utilisateur . renouvellement téléphone = 'élevé'
+  formule: (consommation - préservation allongée)
+  avec:
+    préservation allongée:
+      valeur: divers
+      contexte:
+        divers . coefficient préservation: 4 / 3
