@@ -1,0 +1,263 @@
+actions . mobilités:
+  valeur: transport
+
+actions . mobilités . calculs courts trajets:
+  avec:
+    seuil activation courts trajets:
+      note: |
+        On définit cette valeur comme étant équivalente à 2 trajets de 5 km A/R par semaine.
+
+        > Si quelqu'un nous dit qu'il ne fait que 200km de voiture dans l'année, il y a peu de chances qu'il s'agisse de trajets de 5km.
+      formule: commun . semaines par an * 2 trajet/semaine * distance moyenne aller-retour trajet court
+      unité: km
+    distance moyenne aller-retour trajet court:
+      valeur: 5
+      unité: km/trajet
+    distance totale évitée:
+      formule:
+        le minimum de:
+          - distance totale courts trajets
+          - utilisateur . km en voiture par an
+    distance totale courts trajets:
+      formule: fréquence * distance moyenne aller-retour trajet court * commun . semaines par an
+    fréquence:
+      formule: 10
+      note: Cette valeur est potentiellement élevée et dépend de chaque utilisateur. C'est une hypothèse forte.
+      unité: trajet/semaine
+
+actions . mobilités . calculs trajets quotidiens:
+  avec:
+    seuil activation trajets quotidiens:
+      note: |
+        On définit cette valeur en prenant en s'appuyant sur les données du [tableau de bord des mobilités durables](https://mobilites-durables.transports.gouv.fr/accueil/) via les chiffres concernant les trajets domicile-travail. Ce n'est évidemment pas représentatif de tous les trajets quotidiens, et encore moins adapté aux personnes sans emploi, mais c'est un ordre de grandeur pertinent pour définir un seuil d'activation.
+
+        On considère le trajet comme étant quotidien à raison de 3 trajets (A/R) par semaine.
+      formule: commun . semaines par an * 3 trajet/semaine * distance moyenne aller-retour trajet quotidien
+      unité: km
+    distance moyenne aller-retour trajet quotidien:
+      valeur: 28.6
+      unité: km/trajet
+    distance totale évitée:
+      formule:
+        le minimum de:
+          - distance totale trajets quotidiens
+          - utilisateur . km en voiture par an
+    distance totale trajets quotidiens:
+      formule: fréquence * distance moyenne aller-retour trajet quotidien * commun . semaines par an
+    fréquence:
+      formule: 5
+      note: Cette valeur est potentiellement élevée et dépend de chaque utilisateur. C'est une hypothèse forte.
+      unité: trajet/semaine
+
+actions . mobilités . petits trajets sans voiture:
+  titre: Laisser la voiture au garage pour les petits trajets
+  meta:
+    id: 9ec9c596-7675-470d-a306-1e63d5293aed
+  note: |
+    On fait l'hypothèse qu'une personne qui n'est pas propriétaire de voiture se passe *déjà* d'une voiture pour de courts trajets.
+
+    On choisit également de ne pas proposer cette actions aux personnes qui indiquent ne faire que très peu de kilomètres en voiture dans l'année.
+
+    Enfin, nous ne proposons pas cette action aux personnes qui utilisent régulièrement les mobilités actives.
+  applicable si:
+    toutes ces conditions:
+      - utilisateur . km en voiture par an > calculs courts trajets . seuil activation courts trajets
+      - utilisateur . utilisateur de la voiture = 'propriétaire'
+  non applicable si: utilisateur . km mobilité douce par an > calculs courts trajets . seuil activation courts trajets
+  formule: (transport . voiture . construction au kilomètre + transport . voiture . usage au kilomètre) * calculs courts trajets . distance totale évitée / utilisateur . voyageurs en voiture
+
+actions . mobilités . transport en commun:
+  titre: Privilégier les transports en commun au quotidien
+  meta:
+    id: 11973409-c85d-4d0c-95ea-2eb365ea5f4b
+  applicable si: utilisateur . km en voiture par an > calculs trajets quotidiens . seuil activation trajets quotidiens
+  non applicable si: utilisateur . km mobilité douce par an > calculs trajets quotidiens . seuil activation trajets quotidiens
+  note: |
+    On considère que les transports en commun du quotidien correspondent aux modes suivants : bus, métro ou tramway et TER.
+  formule: gain empreinte au km * calculs trajets quotidiens . distance totale évitée
+  avec:
+    gain empreinte au km:
+      formule: ((transport . voiture . usage au kilomètre + transport . voiture . construction au kilomètre) / transport . voiture . voyageurs) - impact par km transport commun
+      note: On fait l'hypothèse que les trajets sont effectués seuls.
+    impact par km transport commun:
+      note: On considère une moyenne des impacts par km des différents transports en commun du quotidien.
+      formule:
+        moyenne:
+          - transport . transports commun . bus . impact par km
+          - transport . transports commun . métro ou tram . impact par km
+          - transport . train . TER
+
+actions . mobilités . voiture électrique:
+  titre: Opter pour une voiture électrique
+  # titre: Rouler en voiture électrique
+  meta:
+    id: 88f48ec8-6127-45e8-8732-2678e9aac8f0
+  applicable si:
+    une de ces conditions:
+      - utilisateur . utilisateur de la voiture = 'propriétaire'
+      - utilisateur . utilisateur de la voiture = 'non régulier'
+  non applicable si: utilisateur . motorisation de la voiture = 'électrique'
+  note: |
+    L'idée est de proposer cette action à des personnes qui sont propriétaires d'une voiture ou qui pratiquent l'auto-partage / covoiturage. Les personnes qui utilisent le véhicule d'un proche ne sont pas ciblées.
+
+    L'action peut-être négative si le véhicule initial est relativement vieux et que l'on fait peu de kilomètres.
+  formule:
+    variations:
+      - si: utilisateur . utilisateur de la voiture = 'non régulier'
+        alors: transport . voiture - recalcul non régulier
+      - sinon: transport . voiture - recalcul propriétaire
+  avec:
+    recalcul propriétaire:
+      valeur: transport . voiture
+      contexte:
+        transport . voiture . motorisation: "'électrique'"
+        transport . voiture . électrique . consommation aux 100: transport . voiture . électrique . consommation estimée
+        transport . voiture . barème construction . barème électrique . batterie . capacité:
+          valeur: transport . voiture . barème construction . barème électrique . batterie . capacité
+          contexte:
+            transport . voiture . motorisation: "'électrique'"
+    recalcul non régulier:
+      valeur: transport . voiture
+      contexte:
+        transport . voiture . utilisateur: "'régulier non propriétaire'"
+        transport . voiture . gabarit: "'moyenne'"
+        transport . voiture . motorisation: "'électrique'"
+        transport . voiture . électrique . consommation aux 100: transport . voiture . électrique . consommation estimée
+        transport . voiture . barème construction . barème électrique . batterie . capacité:
+          valeur: transport . voiture . barème construction . barème électrique . batterie . capacité
+          contexte:
+            transport . voiture . motorisation: "'électrique'"
+            transport . voiture . utilisateur: "'régulier non propriétaire'"
+            transport . voiture . gabarit: "'moyenne'"
+
+actions . mobilités . écoconduite:
+  titre: Economiser du carburant grâce à l’écoconduite
+  meta:
+    id: 14f89d9a-36b4-4047-8b92-0f829a544512
+  applicable si: utilisateur . km en voiture par an > 0
+  formule: transport . voiture . usage au kilomètre * utilisateur . km en voiture par an * réduction / transport . voiture . voyageurs
+  avec:
+    réduction:
+      formule: 15%
+      note: |
+        Le guide ADEME ["Comment consommer moins de carburant"](https://librairie.ademe.fr/mobilite-et-transports/5432-comment-consommer-moins-de-carburants-.html) indique une réduction de la consommation pouvant aller jusqu'à 20%. Pour être plus conservateur, nous avons choisi d'appliquer une réduction de 15% à l'usage au kilomètre.
+
+actions . mobilités . covoiturage vacances:
+  titre: Pratiquer le covoiturage pour les longs trajets
+  meta:
+    id: 102027d7-0229-48cb-9f2a-3d836d6665ff
+  applicable si:
+    toutes ces conditions:
+      - utilisateur . km en voiture par an > 0
+      - utilisateur . voyageurs en voiture < 3
+  non applicable si:
+    une de ces conditions:
+      - utilisateur . utilisateur de la voiture = 'non régulier'
+      - utilisateur . utilisateur de la voiture = 'jamais'
+  note: |
+    La réduction est appliquée à l'ensemble de l'empreinte (usage et construction), sur l'ensemble des kilomètres parcourus en voiture.
+  formule: transport . voiture * réduction covoiturage
+  avec:
+    réduction covoiturage:
+      formule: 20%
+      note: |
+        On pourrait penser que le covoiturage divise par 2 l'empreinte par personne. Mais en réalité, [une étude menée en Île-de-France](https://www.sciencedirect.com/science/article/pii/S1361920918303201) montre que les réductions sont plutôt de l'ordre de 20%... avant les effets rebonds, qui réduisent le gain final du covoiturage à seulement 6%.
+
+        Voir l'article The Conversation [À quelles conditions le covoiturage sera-t-il un mode de transport durable ?](https://theconversation.com/a-quelles-conditions-le-covoiturage-sera-t-il-un-mode-de-transport-durable-124122).
+
+actions . mobilités . covoiturage quotidien:
+  titre: Recourir au covoiturage pour vos trajets quotidiens
+  meta:
+    id: 4ff71cbb-c342-4e2f-a153-400598678858
+  applicable si:
+    toutes ces conditions:
+      - utilisateur . voyageurs en voiture < 3
+      - utilisateur . km en voiture par an > calculs trajets quotidiens . seuil activation trajets quotidiens
+  non applicable si:
+    une de ces conditions:
+      - utilisateur . utilisateur de la voiture = 'non régulier'
+      - utilisateur . utilisateur de la voiture = 'jamais'
+  note: |
+    On considère que les trajets du quotidien sont réalisés avec une personne supplémentaire dans la voiture. Contrairement aux trajets 'longs', cette actions est ciblée et peut donc s'appliquer en ajoutant spécifiquement, en considérant que ces trajets sont solistes.
+  formule: (transport . voiture . usage au kilomètre + transport . voiture . construction au kilomètre) * calculs trajets quotidiens . distance totale évitée * (1 - 1 / nombre de voyageurs)
+  avec:
+    nombre de voyageurs:
+      formule: 2
+      note: On ajoute seulement 1 co-voitureur pour le moment.
+
+actions . mobilités . location voiture:
+  titre: Louer ou partager plutôt que posséder un véhicule
+  meta:
+    id: 1fe0115d-d4fd-4bab-b04b-7bf36a47073d
+  applicable si: utilisateur . km en voiture par an < plafond activation autopartage
+  non applicable si:
+    une de ces conditions:
+      - utilisateur . utilisateur de la voiture = 'non régulier'
+      - utilisateur . utilisateur de la voiture = 'jamais'
+  note: |
+    L'auto-partage permet de réduire le nombre de km parcourus dans l'année (l'usage de la voiture est moins systématique).
+    En moyenne, on compte une baisse de 41% des kilomètres par an d'après [cette étude ADEME](https://presse.ademe.fr/wp-content/uploads/2013/03/ena_4pages_presse_130306.pdf).
+  formule: ((transport . voiture . construction au kilomètre + transport . voiture . usage au kilomètre) / utilisateur . voyageurs en voiture) * km évités
+  avec:
+    km évités:
+      formule:
+        le minimum de:
+          - 2000 km
+          - utilisateur . km en voiture par an
+      note: |
+        D'après [l'enquête Nationale Autopartage 2025](https://librairie.ademe.fr/mobilite-et-transports/9344-enquete-nationale-autopartage-2025.html), l'adoption de l'autopartage permet à l'usager moyen de réduire ses déplacements en voiture de 750 à 2 000 km par an.
+
+        On choisit la fourchette haute car nous sommes sur une estimation du potentiel de réduction maximale.
+    plafond activation autopartage:
+      formule: 7200
+      note: Nous supposons qu'au-delà de 600 km par mois en moyenne, il est difficile de se projeter dans un usage d'autopartage (moins d'un plein par mois).
+      unité: km
+
+actions . mobilités . réduire vitesse autoroute:
+  titre: Réduire sa vitesse sur autoroute
+  meta:
+    id: 598fbb1e-0137-42c0-8e19-903df10f39db
+  non applicable si:
+    toutes ces conditions:
+      - est défini: utilisateur
+      - utilisateur = 'jamais'
+  formule: transport . voiture . usage au kilomètre * km autoroute * réduction / transport . voiture . voyageurs
+  note: |
+    Le guide ADEME ["Comment consommer moins de carburant"](https://librairie.ademe.fr/mobilite-et-transports/5432-comment-consommer-moins-de-carburants-.html) indique que réduire sa vitesse de 10 km/h sur l'autoroute permet de réduire sa consommation de carburant de 1 à 3 litres sur un trajet de 500km.
+  avec:
+    km autoroute:
+      formule: utilisateur . km en voiture par an * 0.28
+      note: |
+        D'après le document [La sécurité routière en France - bilan de l’année 2023, page 54](https://www.onisr.securite-routiere.gouv.fr/sites/default/files/2024-09/Bilan%20SR%202023%20version%20site%20internet%2012%20septembre.pdf), le réseau autoroutier accueille 28 % de la circulation automobile.
+
+        Cette valeur prend en compte les trajets pro et perso ce qui peut être un biais, mais c'est la meilleure approximation que nous avons pour estimer le kilométrage annuel sur autoroute.
+    réduction:
+      formule: 15%
+      note: On considère que la réduction de vitesse est de 20 km/h (de 130 à 110 km/h).
+    réduction 10 kmh:
+      formule: 7.5%
+      note: une consommation de carburant réduite de 1 à 3 litres sur un trajet de 500km est équivalent à une réduction de 2.5 à 7.5% de la consommation du véhicule (pour une voiture qui consomme 8l/100km). Nous optons pour la fourchette haute.
+
+actions . mobilités . voyager france europe:
+  titre: Voyager en France ou en Europe
+  meta:
+    id: 8939c6ea-f5ac-490c-9b12-e7f6c3297fd4
+  applicable si: oui
+  formule: 0
+
+actions . mobilités . vacances en train:
+  titre: Partir en vacances et en week-end en train
+  meta:
+    id: 0a161fc2-5c25-453e-93de-db38c8cbf3d9
+  applicable si: oui
+  formule: 0
+
+actions . mobilités . mobilité active:
+  titre: |
+    Redécouvrir le voyage en itinérance : à vélo, en marchant
+  meta:
+    id: 28ba80b2-620f-40c7-852e-f7cd61d0d125
+  note: |
+    Pas de gain associé pour le moment. On pourrait envisager réduire la part associée à un van ou autre utilisée pour les vacances...
+  applicable si: oui
+  formule: 0
