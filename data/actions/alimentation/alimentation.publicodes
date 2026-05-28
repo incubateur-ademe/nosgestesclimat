@@ -2,30 +2,43 @@ actions . alimentation:
   # Somehow we need to set `actions . alimentation` to `alimentation`, otherwise, sub actions are linked to `actions . alimentation` instead of `alimentation` and it appears ton be undefined.
   valeur: alimentation
 
-# actions . alimentation . réduire viande:
-#   titre: Réduire le poids de la viande dans son empreinte carbone
-#   meta:
-#     id: xx
-#   note: |
-#     On fait l'hypothèse que les repas carnés sont remplacés par des repas végétariens pour obtenir un gain carbone maximal et réaliste.
-#   applicable si:
-#     une de ces conditions:
-#       - utilisateur . nombre de plats viande rouge hebdo > 0
-#       - utilisateur . nombre de plats viande blanche hebdo > 0
-#       - utilisateur . petit déjeuner type = "britannique"
-#   formule: alimentation - nouveau régime
-#   avec:
-#     nouveau régime:
-#       valeur: alimentation
-#       contexte:
-#         alimentation . plats . viande rouge . nombre: 0
-#         alimentation . plats . viande blanche . nombre: 0
-#         alimentation . plats . végétarien . nombre: utilisateur . nombre de plats végétariens hebdo + utilisateur . nombre de plats viande rouge hebdo + utilisateur . nombre de plats viande blanche hebdo
-#         alimentation . petit déjeuner . type:
-#           variations:
-#             - si: utilisateur . petit déjeuner type = "britannique"
-#               alors: "'continental'"
-#             - sinon: utilisateur . petit déjeuner type
+actions . alimentation . réduire viande:
+  titre: Limiter la quantité de viande consommée chaque semaine
+  meta:
+    id: xx
+  note: |
+    On fait l'hypothèse que les repas carnés sont remplacés par des repas végétariens pour obtenir un gain carbone maximal et réaliste.
+  applicable si:
+    une de ces conditions:
+      - toutes ces conditions:
+          - utilisateur . nombre de plats viande rouge hebdo + utilisateur . nombre de plats viande blanche hebdo >= 4
+          - utilisateur . nombre de plats viande rouge hebdo > 0
+      - utilisateur . petit déjeuner type = "britannique"
+  formule: alimentation - nouveau régime
+  avec:
+    nouveau régime:
+      valeur: alimentation
+      contexte:
+        alimentation . plats . viande rouge . nombre: 0
+        alimentation . plats . viande blanche . nombre: nouveau nombre viande blanche
+        alimentation . plats . végétarien . nombre: nouveau nombre plats végétariens
+        alimentation . petit déjeuner . type:
+          variations:
+            - si: utilisateur . petit déjeuner type = "britannique"
+              alors: "'continental'"
+            - sinon: utilisateur . petit déjeuner type
+      avec:
+        nouveau nombre viande blanche:
+          le minimum de:
+            - 4
+            - utilisateur . nombre de plats viande rouge hebdo + utilisateur . nombre de plats viande blanche hebdo
+        nouveau nombre plats végétariens:
+          formule:
+            somme:
+              - utilisateur . nombre de plats végétariens hebdo
+              - le maximum de:
+                  - 0
+                  - utilisateur . nombre de plats viande rouge hebdo + utilisateur . nombre de plats viande blanche hebdo - 4
 
 actions . alimentation . réduire produits de la mer:
   titre: Avoir une consommation responsable de produits de la mer
@@ -34,9 +47,9 @@ actions . alimentation . réduire produits de la mer:
   note: |
     On fait l'hypothèse que les repas avec du poisson sont plafonnés à 2 repas de poissons gras, les autres sont remplacés par des repas végétariens pour obtenir un gain carbone réaliste.
   applicable si:
-    une de ces conditions:
+    toutes ces conditions:
+      - utilisateur . nombre de plats poisson blanc hebdo + utilisateur . nombre de plats poisson gras hebdo >= 2
       - utilisateur . nombre de plats poisson blanc hebdo > 0
-      - utilisateur . nombre de plats poisson gras hebdo > 2
   formule: alimentation - nouveau régime
   avec:
     nouveau régime:
