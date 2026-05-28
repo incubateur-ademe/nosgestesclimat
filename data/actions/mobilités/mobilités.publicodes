@@ -238,10 +238,11 @@ actions . mobilités . réduire vitesse autoroute:
       formule: 7.5%
       note: une consommation de carburant réduite de 1 à 3 litres sur un trajet de 500km est équivalent à une réduction de 2.5 à 7.5% de la consommation du véhicule (pour une voiture qui consomme 8l/100km). Nous optons pour la fourchette haute.
 
-actions . mobilités . voyager france europe:
-  titre: Voyager en France ou en Europe
+actions . mobilités . motiver employeur mobilité durable:
+  titre: Motiver son employeur à la mobilité durable
   meta:
-    id: 8939c6ea-f5ac-490c-9b12-e7f6c3297fd4
+    id: xxx
+  note: Action non quantifiée
   applicable si: oui
   formule: 0
 
@@ -249,15 +250,50 @@ actions . mobilités . vacances en train:
   titre: Partir en vacances et en week-end en train
   meta:
     id: 0a161fc2-5c25-453e-93de-db38c8cbf3d9
-  applicable si: oui
-  formule: 0
+  note: |
+    Nous avons choisi de proposer cette actions aux personnes qui ne prennent pas souvent le train (< 1200 km par an =  ~2 A/R Paris - Marseille) et qui prennent l'avion court courrier. 
 
-actions . mobilités . mobilité active:
+    Pour la quantification, on fait l'hypothèse que les trajets en avion courts et les longs trajets en voiture sont remplacés par des trajets en train.
+  applicable si:
+    toutes ces conditions:
+      - utilisateur . heures court courrier par an > 0
+      - utilisateur . km en train par an < 1200 km
+  formule: empreinte court courrier - compensation train
+  avec:
+    empreinte court courrier:
+      formule: transport . avion . court courrier . empreinte par km * transport . avion . court courrier . vitesse moyenne * utilisateur . heures court courrier par an
+    compensation train:
+      formule: utilisateur . heures court courrier par an * transport . avion . court courrier . vitesse moyenne * ratio distance supplémentaire train * transport . train . impact par km
+    ratio distance supplémentaire train:
+      formule: 1.2
+      note: On fait l'hypothèse qu'un trajet en train est 20% plus long (en distance) qu'un trajet en avion.
+
+actions . mobilités . itinérance:
   titre: |
     Redécouvrir le voyage en itinérance : à vélo, en marchant
   meta:
     id: 28ba80b2-620f-40c7-852e-f7cd61d0d125
   note: |
-    Pas de gain associé pour le moment. On pourrait envisager réduire la part associée à un van ou autre utilisée pour les vacances...
-  applicable si: oui
+    Pas de gain associé pour le moment. On pourrait envisager réduire la part associée à un van ou autre utilisée pour les vacances mais ce serait trop approximatif.
+
+    On fait l'hypothèse de reccomander cette action aux personnes qui prennent l'avion long courrier ou qui font beaucoup de kilomètres en voiture. On inclue également les personnes qui possèdent un van, camping-car ou caravane.
+  applicable si:
+    une de ces conditions:
+      - utilisateur . heures court courrier par an > 0
+      - utilisateur . km en voiture par an > 15000
+      - utilisateur . possède un van
+      - utilisateur . possède un camping car
+      - utilisateur . possède une caravane
   formule: 0
+
+actions . mobilités . limiter avion:
+  titre: Limiter les voyages en avion
+  meta:
+    id: xxx
+  note: |
+    Simple: applicable si l'utilisateur prend l'avion, le gain est équivalent à l'empreinte associée à ses trajets en avion.
+  applicable si:
+    une de ces conditions:
+      - utilisateur . heures court courrier par an > 0
+      - utilisateur . heures long courrier par an > 0
+  formule: transport . avion
