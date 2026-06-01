@@ -60,12 +60,12 @@ actions . logement . calcul . empreinte eau chaude sanitaire:
       note: |
         Dans le cas des utilisateurs ayant répondu connaître leur DPE ou avoir besoin d'aide pour estimer leurs consommations, on fait ici une légère approximation en appliquant le ratio "ecs" à l'empreinte globale du chauffage pour chaque type d'énergie plutôt que de repartir de l'ensemble des consommations spécifiques à l'ECS. Néanmoins, on considère que l'impact sur le résultat final n'est pas significatif.
 
-actions . logement . chauffer raisonnablement:
-  titre: Chauffer son logement sans faire grimper la facture
+actions . logement . installer thermostat programmable:
+  titre: Installer un thermostat programmable
   meta:
     id: 1ca8754b-ba9e-470f-b932-db5e5f4dd7c4
   note: |
-    Le saviez-vous ? L'installation d'un thermostat programmable permet de faire jusqu'à [15% d'économies de chauffage](https://agirpourlatransition.ademe.fr/particuliers/amenager-maison/renover/installer-thermostat-programmable).
+    L'installation d'un thermostat programmable permet de faire jusqu'à [15% d'économies de chauffage](https://agirpourlatransition.ademe.fr/particuliers/amenager-maison/renover/installer-thermostat-programmable).
 
     Concernant l'applicabilité, nous avons choisi de cibler les utilisateurs ayant une consommation d'énergie au m2 équivalente supérieure à 70 kWh/m2/an, uniquement pour les logements individuels.
   applicable si:
@@ -73,6 +73,17 @@ actions . logement . chauffer raisonnablement:
       - utilisateur . mode de chauffage = "individuel"
       - utilisateur . consommation énergie au m2 équivalente > 70
   formule: calcul . empreinte chauffage air * 0.15 / utilisateur . habitants
+
+actions . logement . eviter deperditions chaleur:
+  titre: Eviter les déperditions de chaleur en hiver
+  meta:
+    id: xxx
+  note: |
+    Selon le guide ADEME ["Comment passer un hiver tout confort ?"](https://librairie.ademe.fr/energies/7722-comment-passer-un-hiver-tout-confort--9791029726132.html) ne donne pas d'information sur les économies d'énergie associées à cette action, nous choisissons de ne pas chiffrer l'impact de cette action pour le moment.
+
+    Concernant l'applicabilité, nous avons choisi de cibler les utilisateurs ayant une consommation d'énergie au m2 équivalente supérieure à 70 kWh/m2/an.
+  applicable si: utilisateur . consommation énergie au m2 équivalente > 70
+  formule: 0
 
 actions . logement . optimiser chauffe eau:
   titre: Chauffer l’eau de manière plus économique
@@ -180,7 +191,10 @@ actions . logement . installer panneaux solaires thermiques:
     On parle ici d'alimenter le chauffe-eau avec des panneaux solaires thermiques.
 
     En moyenne, un chauffe-eau solaire individuel (CESI) permet de couvrir 60% des besoins en eau chaude sanitaire (voir [cet article de l'ADEME](https://agirpourlatransition.ademe.fr/particuliers/maison/chauffage/chauffer-leau-solei)).
-  applicable si: utilisateur . propriétaire logement principal = "propriétaire"
+  applicable si:
+    toutes ces conditions:
+      - utilisateur . type de logement = "maison"
+      - utilisateur . propriétaire logement principal = "propriétaire"
   non applicable si: utilisateur . chauffe eau solaire
   formule: calcul . empreinte eau chaude sanitaire * logement . chauffage . chauffe eau solaire . taux réduction ecs / utilisateur . habitants
 
@@ -245,12 +259,14 @@ actions . logement . se chauffer énergies renouvelables:
       - se chauffer au bois
       - installer une PAC
 
-    On fait l'hypothèse d'adresser cette action aux propriétaires de maisons individuelles.
+    On fait l'hypothèse d'adresser cette action aux propriétaires de maisons individuelles. (et chauffage individuel).
 
     Les logements déjà chauffés à l'électricité et bois sont exclus de cette action.
   applicable si:
     toutes ces conditions:
       - utilisateur . propriétaire logement principal = "propriétaire"
+      - utilisateur . type de logement = "maison"
+      - utilisateur . mode de chauffage = "individuel"
       - une de ces conditions:
           - utilisateur . est présent gaz
           - utilisateur . est présent fioul
