@@ -151,21 +151,16 @@ actions . logement . isoler:
   formule: (calcul . empreinte chauffage air * gain isolation - empreinte travaux) / utilisateur . habitants
   avec:
     gain isolation:
-      formule:
-        variations:
-          - si: utilisateur . chauffage air électrique
-            alors: gain isolation . électricité
-          - sinon: gain isolation . gaz
+      formule: saut DPE D vers B
       note: |
-        Une [étude du SDES](https://www.statistiques.developpement-durable.gouv.fr/effets-de-lisolation-thermique-des-logements-sur-la-consommation-reelle-denergie-residentielle?rubrique=&dossier=843982) visant à évaluer les effets de l'isolation thermique des logements sur la consommation réelle d'énergie résidentielle, en se basant sur les compteur communiquants estime que la baisse de consommation d'énergie est de 5,4% pour les logements chauffés à l'électricité et 8,9% pour les logements chauffés au gaz. Cette baisse est plus forte pour les logements les plus énergivores "avant travaux" : elle 9,2% pour les logements chauffés à l'électricité et 16,6% pour les logements chauffés au gaz.
+        L'idée est d'estimer un gain selon la même approche que pour la quantification de l'impact du ressenti d'isolation permettant de moduler les consommations moyennes d'énergie via les saut de classe de DPE (arbitrairement on choisit de se baser sur les sauts de classe D vers B). Néanmoins, nous avons identifié plusieurs limites à cette approche : 
+          - les sauts de classe de DPE ne sont pas uniquement liés à l'isolation du logement, mais également à d'autres facteurs comme le système de chauffage, les ponts thermiques, etc. Par conséquent, il est difficile d'isoler l'impact de l'isolation sur les consommations d'énergie à partir de ces sauts de classe.
+          - le fait de fixer un saut de classe de DPE arbitraire (D vers B) pour estimer le gain d'isolation est non représentatif de la diversité des situations d'isolation des logements mais permet d'avoir une estimation de l'ordre de grandeur du gain d'isolation.
 
-        Ces chiffres sont basés sur les consommations totales du logement (pas seulement sur le chaufage de l'air), alors que les travaux d'isolation ont un impact principalement sur le chauffage de l'air justement. POur approcher une réduction qui concerne uniquement le chauffage de l'air, nous avons choisi de redresser ces chiffres en imputant cette réduction à la part seule du chauffage de l'air.
 
-        On fait également l'hypothèse que les gains d'isolation sont identiques au gaz sauf pour l'électricité.
-    gain isolation . électricité:
-      formule: 5.4% / parc français . CEREN . chauffage . part chauffage air électricité
-    gain isolation . gaz:
-      formule: 8.9% / parc français . CEREN . chauffage . part chauffage air gaz
+        A titre informatif, une [étude du SDES](https://www.statistiques.developpement-durable.gouv.fr/effets-de-lisolation-thermique-des-logements-sur-la-consommation-reelle-denergie-residentielle?rubrique=&dossier=843982) visant à évaluer les effets de l'isolation thermique des logements sur la consommation réelle d'énergie résidentielle, en se basant sur les compteur communiquants estime que la baisse de consommation d'énergie est de 5,4% pour les logements chauffés à l'électricité et 8,9% pour les logements chauffés au gaz. Cette baisse est plus forte pour les logements les plus énergivores "avant travaux" : elle 9,2% pour les logements chauffés à l'électricité et 16,6% pour les logements chauffés au gaz. Néanmoisn, ces chiffres sont basés sur les consommations totales du logement (pas seulement sur le chaufage de l'air), alors que les travaux d'isolation ont un impact principalement sur le chauffage de l'air justement. Par ailleurs cette étude n'est pas engageante côté ministère ce qui nous pousse à faire le choix de ne pas l'utiliser.
+    saut DPE D vers B:
+      formule: 90 kWh/m2 / 215 kWh/m2
     empreinte travaux:
       valeur: logement . surface * logement . construction . rénovation . travaux . isolation / logement . construction . rénovation . amortissement
       contexte:
