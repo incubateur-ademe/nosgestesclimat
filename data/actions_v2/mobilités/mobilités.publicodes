@@ -58,27 +58,49 @@ actions . mobilités . petits trajets sans voiture:
 
     On choisit également de ne pas proposer cette actions aux personnes qui indiquent ne faire que très peu de kilomètres en voiture dans l'année.
 
-    Enfin, nous ne proposons pas cette action aux personnes qui utilisent régulièrement les mobilités actives.
+    Enfin, nous ne proposons pas cette action aux personnes qui utilisent régulièrement les mobilités actives, les transports en commun. On propose également d'exclure les rouleurs qui sont plus de 3 en moyenne dans la voiture ce qui suggère que les trajets correspondent à de longs trajets en famille ou entre amis.
   applicable si:
     toutes ces conditions:
       - utilisateur . km en voiture par an > calculs courts trajets . seuil activation courts trajets
       - utilisateur . utilisateur de la voiture = 'propriétaire'
-  non applicable si: utilisateur . km mobilité douce par an > calculs courts trajets . seuil activation courts trajets
+  non applicable si:
+    une de ces conditions:
+      - utilisateur . voyageurs en voiture >= 3
+      - utilisateur . km mobilité douce par an > (calculs courts trajets . seuil activation courts trajets / 2)
+      - utilisateur . heures bus par semaine > 0.5
+      - utilisateur . heures métro ou tram par semaine > 0.5
   formule: (transport . voiture . construction au kilomètre + transport . voiture . usage au kilomètre) * calculs courts trajets . distance totale évitée / utilisateur . voyageurs en voiture
 
 actions . mobilités . transport en commun:
   titre: Privilégier les transports en commun au quotidien
   meta:
     id: 11973409-c85d-4d0c-95ea-2eb365ea5f4b
-  applicable si: utilisateur . km en voiture par an > calculs trajets quotidiens . seuil activation trajets quotidiens
-  non applicable si: utilisateur . km mobilité douce par an > calculs trajets quotidiens . seuil activation trajets quotidiens
   note: |
+    On choisit de ne pas proposer cette actions aux personnes qui indiquent ne faire que très peu de kilomètres en voiture dans l'année.
+
+    Enfin, nous ne proposons pas cette action aux personnes qui utilisent régulièrement les mobilités actives, les transports en commun. On propose également d'exclure les rouleurs qui sont plus de 3 en moyenne dans la voiture ce qui suggère que les trajets correspondent à de longs trajets en famille ou entre amis.
+
     On considère que les transports en commun du quotidien correspondent aux modes suivants : bus, métro ou tramway et TER.
+  applicable si: (utilisateur . km en voiture par an + utilisateur . km en deux roues par an) > calculs trajets quotidiens . seuil activation trajets quotidiens
+  non applicable si:
+    une de ces conditions:
+      - utilisateur . voyageurs en voiture >= 3
+      - utilisateur . km mobilité douce par an > calculs trajets quotidiens . seuil activation trajets quotidiens
+      - utilisateur . heures bus par semaine > 1
+      - utilisateur . heures métro ou tram par semaine > 1
   formule: gain empreinte au km * calculs trajets quotidiens . distance totale évitée
   avec:
     gain empreinte au km:
-      formule: ((transport . voiture . usage au kilomètre + transport . voiture . construction au kilomètre) / transport . voiture . voyageurs) - impact par km transport commun
+      formule:
+        somme:
+          - ratio usage voiture * (transport . voiture . usage au kilomètre + transport . voiture . construction au kilomètre) / transport . voiture . voyageurs
+          - ratio usage deux roues * transport . deux roues . empreinte au km
+          - (-1) * impact par km transport commun
       note: On fait l'hypothèse que les trajets sont effectués seuls.
+    gain empreinte au km . ratio usage voiture:
+      formule: utilisateur . km en voiture par an / (utilisateur . km en voiture par an + utilisateur . km en deux roues par an)
+    gain empreinte au km . ratio usage deux roues:
+      formule: 1 - ratio usage voiture
     impact par km transport commun:
       note: On considère une moyenne des impacts par km des différents transports en commun du quotidien.
       formule:
