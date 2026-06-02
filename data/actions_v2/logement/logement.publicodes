@@ -134,18 +134,6 @@ actions . logement . individualisation chauffage collectif:
       - calcul . empreinte chauffage air * 0.15 / utilisateur . habitants
       - calcul . empreinte eau chaude sanitaire * 0.15 / utilisateur . habitants
 
-actions . logement . améliorer chauffage immeuble:
-  titre: Proposer d’améliorer le chauffage de son immeuble
-  meta:
-    id: cb8deb1d-5019-495d-9e7e-bcd5cffb80ee
-  note: |
-    Les hypothèses derrière un calcul seraient trop approximatives.
-  applicable si:
-    toutes ces conditions:
-      - utilisateur . mode de chauffage = "collectif"
-      - utilisateur . propriétaire logement principal = "propriétaire"
-  formule: 0
-
 actions . logement . isoler:
   titre: Isoler son logement
   meta:
@@ -276,35 +264,64 @@ actions . logement . se chauffer énergies renouvelables:
     le maximum de:
       - installer une PAC
       - installer une chaudière bois
-  avec:
-    installer une PAC:
-      non applicable si: utilisateur . possède une PAC
-      formule: (calcul . empreinte chauffage air + calcul . empreinte eau chaude sanitaire - recalcul - empreinte travaux) / utilisateur . habitants
-      note: |
-        Nous considérons pour l'instant que le remplacement des kWh de gaz par la même quantité de kWh électrique est une bonne approximation de premier ordre. Nous pourrons par la suite l'adapter en fonction du rendement des installations résidentielles.
 
-        Cette action chiffre le remplacement du système de chauffage de l'air mais aussi de l'eau chaude sanitaire. Nous faisons le pari que la PAC installée est une PAC air-eau, qui chauffe aussi l'eau sanitaire, mais ce n'est pas nécessairement le cas.
-    installer une PAC . empreinte travaux:
+actions . logement . améliorer chauffage immeuble:
+  titre: Proposer d’améliorer le chauffage de son immeuble
+  meta:
+    id: cb8deb1d-5019-495d-9e7e-bcd5cffb80ee
+  note: |
+    On parle ici de 2 actions principales : 
+      - se chauffer au bois
+      - installer une PAC
+
+    On fait l'hypothèse d'adresser cette action aux propriétaires de maisons individuelles. (et chauffage individuel).
+
+    Les logements déjà chauffés à l'électricité et bois sont exclus de cette action.
+  applicable si:
+    toutes ces conditions:
+      - utilisateur . propriétaire logement principal = "propriétaire"
+      - utilisateur . mode de chauffage = "collectif"
+      - une de ces conditions:
+          - utilisateur . est présent gaz
+          - utilisateur . est présent fioul
+          - utilisateur . est présent citerne propane
+  non applicable si: utilisateur . a réalisé travaux chauffage
+  formule:
+    le maximum de:
+      - installer une PAC
+      - installer une chaudière bois
+
+actions . logement . installer une PAC:
+  non applicable si: utilisateur . possède une PAC
+  formule: (calcul . empreinte chauffage air + calcul . empreinte eau chaude sanitaire - recalcul - empreinte travaux) / utilisateur . habitants
+  note: |
+    Nous considérons pour l'instant que le remplacement des kWh de gaz par la même quantité de kWh électrique est une bonne approximation de premier ordre. Nous pourrons par la suite l'adapter en fonction du rendement des installations résidentielles.
+
+    Cette action chiffre le remplacement du système de chauffage de l'air mais aussi de l'eau chaude sanitaire. Nous faisons le pari que la PAC installée est une PAC air-eau, qui chauffe aussi l'eau sanitaire, mais ce n'est pas nécessairement le cas.
+  avec:
+    empreinte travaux:
       valeur: logement . surface * logement . construction . rénovation . travaux . chauffage / logement . construction . rénovation . amortissement
       contexte:
         logement . construction . rénovation . travaux . chauffage . présent: oui
-    installer une PAC . recalcul:
+    recalcul:
       formule: consommation / 2.9 * logement . électricité . empreinte au kWh
       note: |
         On choisit de prendre en compte le coefficient de performance (COP), [en moyenne de 2,9](https://infos.ademe.fr/energies/2025/comment-maximiser-la-performance-de-votre-pompe-a-chaleur-air-eau/). On choisit donc d'appliquer un coefficient à la consommation d'énergie finale du logement pour estimer la consommation d'électricité de la PAC. C'est une approximation forte : rien n'indique que les consommations vont réduire de cette manière à l'installation d'une PAC (effet rebond).
-    installer une PAC . recalcul . consommation:
+    recalcul . consommation:
       formule: utilisateur . consommation énergie au m2 équivalente * utilisateur . surface du logement
       note: on utilise directement la consommation d'énergie au m2 équivalente estimée car elle correspond à une estimation de la consommation finale du logement pour les usages du chauffage de l'air et de l'eau chaude sanitaire, qui sont les usages que l'on considère être couverts par la PAC.
-    installer une chaudière bois:
-      non applicable si: utilisateur . possède une chaudière bois
-      formule: (calcul . empreinte chauffage air + calcul . empreinte eau chaude sanitaire - recalcul - empreinte travaux) / utilisateur . habitants
-    installer une chaudière bois . empreinte travaux:
+
+actions . logement . installer une chaudière bois:
+  non applicable si: utilisateur . possède une chaudière bois
+  formule: (calcul . empreinte chauffage air + calcul . empreinte eau chaude sanitaire - recalcul - empreinte travaux) / utilisateur . habitants
+  avec:
+    empreinte travaux:
       valeur: logement . surface * logement . construction . rénovation . travaux . chauffage / logement . construction . rénovation . amortissement
       contexte:
         logement . construction . rénovation . travaux . chauffage . présent: oui
-    installer une chaudière bois . recalcul:
+    recalcul:
       valeur: consommation * logement . chauffage . bois . fe chaudière granulés
       note: On considère un chauffage via granulés.
-    installer une chaudière bois . recalcul . consommation:
+    recalcul . consommation:
       formule: utilisateur . consommation énergie au m2 équivalente * utilisateur . surface du logement
       note: on utilise directement la consommation d'énergie au m2 équivalente estimée car elle correspond à une estimation de la consommation finale du logement pour les usages du chauffage de l'air et de l'eau chaude sanitaire, qui sont les usages que l'on considère être couverts par la PAC.
