@@ -67,8 +67,7 @@ actions . mobilités . petits trajets sans voiture:
     une de ces conditions:
       - utilisateur . voyageurs en voiture >= 3
       - utilisateur . km mobilité douce par an > (calculs courts trajets . seuil activation courts trajets / 2)
-      - utilisateur . heures bus par semaine > 0.5
-      - utilisateur . heures métro ou tram par semaine > 0.5
+      - utilisateur . heures bus par semaine + utilisateur . heures métro ou tram par semaine > 0.5
   formule: (transport . voiture . construction au kilomètre + transport . voiture . usage au kilomètre) * calculs courts trajets . distance totale évitée / utilisateur . voyageurs en voiture
 
 actions . mobilités . transport en commun:
@@ -86,8 +85,7 @@ actions . mobilités . transport en commun:
     une de ces conditions:
       - utilisateur . voyageurs en voiture >= 3
       - utilisateur . km mobilité douce par an > calculs trajets quotidiens . seuil activation trajets quotidiens
-      - utilisateur . heures bus par semaine > 1
-      - utilisateur . heures métro ou tram par semaine > 1
+      - utilisateur . heures bus par semaine + utilisateur . heures métro ou tram par semaine > 0.5
   formule: gain empreinte au km * calculs trajets quotidiens . distance totale évitée
   avec:
     gain empreinte au km:
@@ -111,25 +109,17 @@ actions . mobilités . transport en commun:
 
 actions . mobilités . voiture électrique:
   titre: Opter pour une voiture électrique
-  # titre: Rouler en voiture électrique
   meta:
     id: 88f48ec8-6127-45e8-8732-2678e9aac8f0
-  applicable si:
-    une de ces conditions:
-      - utilisateur . utilisateur de la voiture = 'propriétaire'
-      - utilisateur . utilisateur de la voiture = 'non régulier'
+  applicable si: utilisateur . utilisateur de la voiture = 'propriétaire'
   non applicable si: utilisateur . motorisation de la voiture = 'électrique'
   note: |
     L'idée est de proposer cette action à des personnes qui sont propriétaires d'une voiture ou qui pratiquent l'auto-partage / covoiturage. Les personnes qui utilisent le véhicule d'un proche ne sont pas ciblées.
 
     L'action peut-être négative si le véhicule initial est relativement vieux et que l'on fait peu de kilomètres.
-  formule:
-    variations:
-      - si: utilisateur . utilisateur de la voiture = 'non régulier'
-        alors: transport . voiture - recalcul non régulier
-      - sinon: transport . voiture - recalcul propriétaire
+  formule: transport . voiture - recalcul
   avec:
-    recalcul propriétaire:
+    recalcul:
       valeur: transport . voiture
       contexte:
         transport . voiture . motorisation: "'électrique'"
@@ -138,19 +128,6 @@ actions . mobilités . voiture électrique:
           valeur: transport . voiture . barème construction . barème électrique . batterie . capacité
           contexte:
             transport . voiture . motorisation: "'électrique'"
-    recalcul non régulier:
-      valeur: transport . voiture
-      contexte:
-        transport . voiture . utilisateur: "'régulier non propriétaire'"
-        transport . voiture . gabarit: "'moyenne'"
-        transport . voiture . motorisation: "'électrique'"
-        transport . voiture . électrique . consommation aux 100: transport . voiture . électrique . consommation estimée
-        transport . voiture . barème construction . barème électrique . batterie . capacité:
-          valeur: transport . voiture . barème construction . barème électrique . batterie . capacité
-          contexte:
-            transport . voiture . motorisation: "'électrique'"
-            transport . voiture . utilisateur: "'régulier non propriétaire'"
-            transport . voiture . gabarit: "'moyenne'"
 
 actions . mobilités . écoconduite:
   titre: Economiser du carburant grâce à l’écoconduite
@@ -211,13 +188,12 @@ actions . mobilités . location voiture:
   titre: Louer ou partager plutôt que posséder un véhicule
   meta:
     id: 1fe0115d-d4fd-4bab-b04b-7bf36a47073d
-  applicable si: utilisateur . km en voiture par an < plafond activation autopartage
-  non applicable si:
-    une de ces conditions:
-      - utilisateur . utilisateur de la voiture = 'non régulier'
-      - utilisateur . utilisateur de la voiture = 'jamais'
+  applicable si:
+    toutes ces conditions:
+      - utilisateur . km en voiture par an < plafond activation autopartage
+      - utilisateur . utilisateur de la voiture = 'propriétaire'
   note: |
-    L'idée est de proposer cette action à des personnes qui font peu de kilomètres en voiture dans l'année et qui sont propriétaires d'une voiture ou qui utilisent régulièrement le véhicule d'un proche.
+    L'idée est de proposer cette action à des personnes qui font peu de kilomètres en voiture dans l'année et qui sont propriétaires d'une voiture.
 
     D'après [l'enquête Nationale Autopartage 2025](https://librairie.ademe.fr/mobilite-et-transports/9344-enquete-nationale-autopartage-2025.html), l'adoption de l'autopartage permet à l'usager moyen de réduire ses déplacements en voiture de 750 à 2 000 km par an.
 
