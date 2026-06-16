@@ -11,7 +11,6 @@ actions . alimentation . réduire viande:
   applicable si:
     une de ces conditions:
       - utilisateur . nombre de plats viande rouge hebdo + utilisateur . nombre de plats viande blanche hebdo > 4
-      - utilisateur . nombre de plats viande rouge hebdo > 0
       - utilisateur . petit déjeuner type = "britannique"
   formule: alimentation - nouveau régime
   avec:
@@ -36,6 +35,19 @@ actions . alimentation . réduire viande:
             somme:
               - utilisateur . nombre de plats végétariens hebdo
               - ancien nombre repas avec viande - nouveau nombre viande blanche
+
+actions . alimentation . privilégier volaille:
+  titre: Privilégier la volaille pour les repas avec de la viande
+  meta:
+    id: c5a909d7-14c8-4754-82dd-4d43bcc1c53a
+  applicable si: utilisateur . nombre de plats viande rouge hebdo >= 2
+  formule: alimentation - nouveau régime
+  avec:
+    nouveau régime:
+      valeur: alimentation
+      contexte:
+        alimentation . plats . viande rouge . nombre: 0
+        alimentation . plats . viande blanche . nombre: utilisateur . nombre de plats viande rouge hebdo + utilisateur . nombre de plats viande blanche hebdo
 
 actions . alimentation . réduire produits de la mer:
   titre: Avoir une consommation responsable de produits de la mer
@@ -81,19 +93,6 @@ actions . alimentation . cuisiner plus de légumineuses:
           - utilisateur . nombre de plats viande rouge hebdo > 0
           - utilisateur . nombre de plats viande blanche hebdo > 0
   formule: 0
-
-actions . alimentation . privilégier volaille:
-  titre: Privilégier la volaille pour les repas avec de la viande
-  meta:
-    id: c5a909d7-14c8-4754-82dd-4d43bcc1c53a
-  applicable si: utilisateur . nombre de plats viande rouge hebdo > 0
-  formule: alimentation - nouveau régime
-  avec:
-    nouveau régime:
-      valeur: alimentation
-      contexte:
-        alimentation . plats . viande rouge . nombre: 0
-        alimentation . plats . viande blanche . nombre: utilisateur . nombre de plats viande rouge hebdo + utilisateur . nombre de plats viande blanche hebdo
 
 actions . alimentation . choisir restaurant engagé:
   titre: Choisir un restaurant engagé pour l’environnement
@@ -173,7 +172,7 @@ actions . alimentation . réduire consommation café:
   titre: Réduire sa consommation de café
   meta:
     id: 1d8c7bd0-abad-4890-ba4b-77276e1e61e4
-  applicable si: utilisateur . consommation café quotidienne > 0
+  applicable si: utilisateur . consommation café quotidienne >= 2
   formule: alimentation - nouveau régime
   avec:
     nouveau régime:
