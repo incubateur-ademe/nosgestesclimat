@@ -8,11 +8,12 @@ const utils = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
 
 const mechanismsThatCanBeOverriden = [
   // Using the [avec] mechanism allows to use custom rules without having to add them to the base rules.
-  // For academic mode, we also allow to write custom attributes.
+  // For academic mode, we also allow to write custom attributes: [formule, description, par défaut, non applicable si]
   'avec',
   'formule',
   'description',
-  'par défaut'
+  'par défaut',
+  'non applicable si'
 ]
 
 const ruleNamesToIgnore = [
