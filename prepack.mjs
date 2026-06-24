@@ -135,6 +135,11 @@ export type PBoolean = 'oui' | 'non'
 export type PString = \`'\${string}'\`
 
 /**
+ * Mosaic question type — the parent key of a mosaic question group holds null in the situation.
+ */
+export type Mosaic = null
+
+/**
  * Subset of the publicodes situation with only question rules.
  *
  * This represents raw publicodes inputs for question rules.
