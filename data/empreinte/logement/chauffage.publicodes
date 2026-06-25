@@ -138,10 +138,19 @@ logement . chauffage . collectif:
     - gaz
     - réseau de chaleur
     - fioul
+    - PAC air air
+    - PAC air eau
   avec:
+    PAC air air:
+      titre: PAC collective air/air 💨
+    PAC air eau:
+      titre: PAC collective air/eau 💧
     gaz:
-    réseau de chaleur:
+      titre: Gaz 🔥
     fioul:
+      titre: Fioul 🛢️
+    réseau de chaleur:
+      titre: Réseau de chaleur 🌡️
   note: On considère ici que le raccordement par défaut est le réseau de chaleur mais c'est biensûr une hypothèse. On pourra par la suite calculer une valeur plus précise.
   par défaut: "'réseau de chaleur'"
 
@@ -150,7 +159,11 @@ logement . chauffage . collectif . ecs:
   question: Votre chauffe-eau est-il raccordé au chauffage collectif également ?
   description: |
     Sélectionner chauffe-eau solaire prend en compte l'appoint nécessaire pour compléter l'énergie solaire.
-  par défaut: "'source collectif'"
+  par défaut:
+    variations:
+      - si: principal = "PAC air air"
+        alors: "'électricité'"
+      - sinon: "'source collectif'"
   une possibilité:
     - source collectif
     - chauffe eau électricité
@@ -159,6 +172,10 @@ logement . chauffage . collectif . ecs:
   avec:
     source collectif:
       titre: Chauffe-eau sur le même réseau
+      non applicable si:
+        toutes ces conditions:
+          - est défini: chauffage . collectif
+          - chauffage . collectif = "PAC air air"
     chauffe eau électricité:
       titre: Chauffe-eau électrique
     chauffe eau gaz:
@@ -405,11 +422,17 @@ logement . chauffage . PAC . présent:
 
 logement . chauffage . PAC . est présent chauffage:
   formule:
-    toutes ces conditions:
-      - est défini: chauffage . principal
-      - une de ces conditions:
-          - chauffage . principal = "PAC air air"
-          - chauffage . principal = "PAC air eau"
+    une de ces conditions:
+      - toutes ces conditions:
+          - est défini: chauffage . principal
+          - une de ces conditions:
+              - chauffage . principal = "PAC air air"
+              - chauffage . principal = "PAC air eau"
+      - toutes ces conditions:
+          - est défini: chauffage . collectif
+          - une de ces conditions:
+              - chauffage . collectif = "PAC air air"
+              - chauffage . collectif = "PAC air eau"
 
 logement . chauffage . PAC . est présent ecs:
   formule:
@@ -421,6 +444,10 @@ logement . chauffage . PAC . est présent ecs:
           - est défini: chauffage . principal
           - chauffage . principal = "PAC air eau"
           - chauffage . principal . ecs = "identique"
+      - toutes ces conditions:
+          - est défini: chauffage . collectif
+          - chauffage . collectif = "PAC air eau"
+          - chauffage . collectif . ecs = "source collectif"
       - toutes ces conditions:
           - est défini: chauffage . mode . pas de chauffage . ecs
           - chauffage . mode . pas de chauffage . ecs = "PAC air eau"
@@ -485,9 +512,10 @@ logement . chauffage . gaz . présent:
       - est présent ecs
 
 logement . chauffage . gaz . est présent chauffage:
-  une de ces conditions:
-    - chauffage . principal = "gaz"
-    - chauffage . collectif = "gaz"
+  formule:
+    une de ces conditions:
+      - chauffage . principal = "gaz"
+      - chauffage . collectif = "gaz"
 
 logement . chauffage . gaz . est présent ecs:
   formule:
