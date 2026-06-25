@@ -38,16 +38,22 @@ logement . climatisation . est présent PAC air air:
       - est défini: chauffage . principal
       - chauffage . principal = "PAC air air"
 
+logement . climatisation . est présent PAC air eau:
+  formule:
+    toutes ces conditions:
+      - est défini: chauffage . principal
+      - chauffage . principal = "PAC air eau"
+
 logement . climatisation . rappel kWh:
   type: notification
   description: |
-    La consommation d'électricité de votre clim est incluse dans la facture d'électricité, comme tous les appareils électriques du logement. Sont prises en compte ici, **les fuites de gaz frigorigènes**.
+    La consommation d'électricité de votre clim ou pompe à chaleur est incluse dans la facture d'électricité. Sont prises en compte ici, **les fuites de gaz frigorigènes** dont le pouvoir de réchauffement est très important.
   formule:
     une de ces conditions:
+      - climatisation . est présent PAC air air
+      - climatisation . est présent PAC air eau
       - climatisation . sans PAC air air . présent = "oui et utilisation"
       - climatisation . sans PAC air air . présent = "oui sans utilisation"
-      - climatisation . avec PAC air air . autre système = "oui et utilisation"
-      - climatisation . avec PAC air air . autre système = "oui sans utilisation"
 
 logement . climatisation . empreinte:
   titre: Empreinte des fluides frigorigènes des climatiseurs et PAC
@@ -261,10 +267,7 @@ logement . climatisation . empreinte unitaire PAC air air multi split:
 
 logement . climatisation . empreinte PAC air eau:
   titre: Empreinte des fluides frigorigènes des pompes à chaleur air eau
-  applicable si:
-    toutes ces conditions:
-      - est défini: chauffage . principal
-      - chauffage . principal = "PAC air eau"
+  applicable si: est présent PAC air eau
   valeur: climatisation . empreinte unitaire PAC air eau * 1 climatiseur
 
 logement . climatisation . empreinte unitaire PAC air eau:
