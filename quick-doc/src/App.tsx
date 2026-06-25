@@ -2,7 +2,7 @@
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import AppContextProvider from './AppContextProvider'
-import { pathTo } from './Nav'
+import { isGithubPagesDeploy, pathTo } from './Nav'
 import { lazy, Suspense } from 'react'
 import Layout from './components/Layout'
 import Loader from './components/Loader'
@@ -33,7 +33,7 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: '/',
+        index: true,
         element: (
           <RouteWrapper>
             <HomePage />
@@ -48,30 +48,34 @@ const router = createBrowserRouter([
           </RouteWrapper>
         )
       },
-      {
-        path: pathTo('personas') + '/*',
-        element: (
-          <RouteWrapper>
-            <PersonasReportsPage />
-          </RouteWrapper>
-        )
-      },
-      {
-        path: pathTo('situations') + '/*',
-        element: (
-          <RouteWrapper>
-            <SituationCoveragePage />
-          </RouteWrapper>
-        )
-      },
-      {
-        path: pathTo('migration') + '/*',
-        element: (
-          <RouteWrapper>
-            <MigrationReportPage />
-          </RouteWrapper>
-        )
-      }
+      ...(isGithubPagesDeploy
+        ? []
+        : [
+            {
+              path: pathTo('personas') + '/*',
+              element: (
+                <RouteWrapper>
+                  <PersonasReportsPage />
+                </RouteWrapper>
+              )
+            },
+            {
+              path: pathTo('situations') + '/*',
+              element: (
+                <RouteWrapper>
+                  <SituationCoveragePage />
+                </RouteWrapper>
+              )
+            },
+            {
+              path: pathTo('migration') + '/*',
+              element: (
+                <RouteWrapper>
+                  <MigrationReportPage />
+                </RouteWrapper>
+              )
+            }
+          ])
     ]
   }
 ])

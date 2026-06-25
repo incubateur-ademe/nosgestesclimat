@@ -1,0 +1,353 @@
+transport . avion:
+  DLUO: 01/06/2026
+  icônes: ✈️
+  description: |
+    L'empreinte de l'avion est conséquente. Il n'est pas forcément plus polluant *au kilomètre* qu'une voiture qui ne déplace qu'une personne,
+    mais la distance et surtout la distance parcourue en une heure (qu'on appelle couramment la vitesse), permet de changer de continent pour un week-end.
+
+    Gardons aussi en tête que le Français moyen ne prend pas ou peu l'avion. L'essentiel de l'empreinte de l'aviation est donc concentrée sur 10% ou moins des Français.
+  note: |
+    Nous avons fait le choix de demander le total d'heures de vol, plutôt que de demander à l'utilisateur de renseigner chacun de ses vols
+    via l'aéroport de départ, d'arrivée et la classe économique. C'est une évolution possible par la suite. A noter aussi que les escales entrainent des décollages supplémentaires, qui consomment plu
+    s de carburant qu'une vitesse de croisière. C'est aussi un paramètre à prendre en compte par la suite.
+  formule:
+    variations:
+      - si:
+          est défini: usager
+        alors: empreinte
+      - sinon: empreinte moyenne
+
+transport . avion . empreinte moyenne:
+  valeur: transport . avion . empreinte
+  contexte:
+    transport . avion . usager: "'fréquemment'"
+    transport . avion . vols annuels . heures court courrier: court courrier . durée moyenne
+    transport . avion . vols annuels . heures moyen et long courrier: moyen et long courrier . durée moyenne
+
+transport . avion . empreinte:
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: usager
+            - usager = "fréquemment"
+        alors:
+          valeur: vols annuels
+      - si:
+          toutes ces conditions:
+            - est défini: usager
+            - usager = "occasionnellement"
+        alors:
+          valeur: vols amortis
+      - sinon: 0
+  note: |
+    Nous avons choisi de conserver les trainées de condensation dans les facteurs d'émission utilisés, car elles contribuent à l'effet de serre, même si leur quantification reste incertaine, notamment pour des raisons conservatrices.
+
+## Un refacto publicodes serait nécessaire pour factoriser les éléments communs entre court et moyen/long courrier. On introduit une complexité supplémentaire car il n'est pas possible de variabiliser l'attribut question pour le moment.
+
+transport . avion . usager:
+  question: À quelle fréquence avez-vous voyagé en avion au cours des 3 dernières années ?
+  description: |
+    Considérez les vols personnels et non professionnels.
+  une possibilité:
+    - jamais
+    - occasionnellement
+    - fréquemment
+
+transport . avion . usager . fréquemment:
+  titre: Chaque année
+
+transport . avion . usager . occasionnellement:
+  titre: Moins d'une fois par an
+
+transport . avion . usager . jamais:
+  titre: Jamais
+
+transport . avion . vols annuels:
+  titre: Empreinte vols annuels
+  applicable si:
+    toutes ces conditions:
+      - est défini: usager
+      - usager = "fréquemment"
+  mosaique:
+    type: nombre
+    options:
+      - heures court courrier . saisie
+      - heures moyen et long courrier . saisie
+  question: |
+    Renseignez vos heures de vols pour une année (A/R):
+  description: |
+    Additionnez toutes vos heures de vol : **aller**, **retour** et vols avec **escales** (exemple: Lyon-Los Angeles avec 1 escale = 26h).
+  unité: kgCO2e
+  somme:
+    - heures court courrier * court courrier . empreinte par km * court courrier . vitesse moyenne
+    - heures moyen et long courrier * moyen et long courrier . empreinte par km * moyen et long courrier . vitesse moyenne
+
+transport . avion . vols annuels . heures court courrier:
+  titre: Sur des vols court-courrier
+  description: (national ou frontalier)
+  icônes: 🛩️
+  formule: saisie
+  unité: h
+
+transport . avion . vols annuels . heures court courrier . saisie:
+  description: Saisie des heures de vol cette année sur des vols court-courrier
+  applicable si:
+    toutes ces conditions:
+      - est défini: usager
+      - usager = "fréquemment"
+  question: Combien d'heures avez-vous voyagé en avion cette année sur des vols court-courrier ?
+  par défaut: court courrier . durée moyenne passager
+  plancher: 0
+  plafond: 200
+  unité: h
+
+transport . avion . vols annuels . heures moyen et long courrier:
+  titre: Sur des vols moyen ou long-courrier
+  description: (trajet > 2 h)
+  icônes: ✈️
+  formule: saisie
+  unité: h
+
+transport . avion . vols annuels . heures moyen et long courrier . saisie:
+  description: Saisie des heures de vol cette année sur des vols moyen ou long-courrier
+  applicable si:
+    toutes ces conditions:
+      - est défini: usager
+      - usager = "fréquemment"
+  par défaut: moyen et long courrier . durée moyenne passager
+  plancher: 0
+  plafond: 600
+  question: Combien d'heures avez-vous voyagé en avion cette année sur des vols moyen ou long-courrier ?
+  unité: h
+
+transport . avion . vols amortis:
+  titre: Empreinte vols amortis
+  applicable si:
+    toutes ces conditions:
+      - est défini: usager
+      - usager = "occasionnellement"
+  mosaique:
+    type: nombre
+    options:
+      - heures court courrier . saisie
+      - heures moyen et long courrier . saisie
+  question: |
+    Renseignez vos heures de vols pour les 3 dernières années (A/R):
+  description: |
+    Additionnez toutes vos heures de vol : **aller**, **retour** et vols avec **escales** (exemple: Lyon-Los Angeles avec 1 escale = 26h).
+  unité: kgCO2e
+  somme:
+    - heures court courrier * court courrier . empreinte par km * court courrier . vitesse moyenne
+    - heures moyen et long courrier * moyen et long courrier . empreinte par km * moyen et long courrier . vitesse moyenne
+
+transport . avion . vols amortis . amortissement:
+  valeur: 3
+
+transport . avion . vols amortis . heures court courrier:
+  titre: Sur des vols court-courrier
+  description: (national ou frontalier)
+  icônes: 🛩️
+  formule: saisie / amortissement
+  unité: h
+
+transport . avion . vols amortis . heures court courrier . saisie:
+  description: Saisie des heures de vol des 3 dernières années sur des vols court-courrier
+  applicable si:
+    toutes ces conditions:
+      - est défini: usager
+      - usager = "occasionnellement"
+  question: Combien d'heures avez-vous voyagé en avion sur les 3 dernières années sur des vols court-courrier ?
+  par défaut: court courrier . durée moyenne passager
+  plancher: 0
+  plafond: 200
+  unité: h
+
+transport . avion . vols amortis . heures moyen et long courrier:
+  titre: Sur des vols moyen ou long-courrier
+  description: (trajet > 2 h)
+  icônes: ✈️
+  formule: saisie / amortissement
+  unité: h
+
+transport . avion . vols amortis . heures moyen et long courrier . saisie:
+  description: Saisie des heures de vol des 3 dernières années sur des vols moyen ou long-courrier
+  applicable si:
+    toutes ces conditions:
+      - est défini: usager
+      - usager = "occasionnellement"
+  par défaut: moyen et long courrier . durée moyenne passager
+  plancher: 0
+  plafond: 600
+  question: Combien d'heures avez-vous voyagé en avion sur les 3 dernières années sur des vols moyen ou long-courrier ?
+  unité: h
+
+transport . avion . fréquence trajets:
+  titre: Fréquence moyenne de prise de l'avion par les passagers français
+  formule: 5.6
+  note: |
+    L'[enquête nationale des passagers aériens](https://www.ecologie.gouv.fr/politiques-publiques/enquete-nationale-passagers-aeriens-enpa) 2023, donne un chiffre de 5.6 trajets par an en moyenne.
+
+transport . avion . proportion trajets perso:
+  formule: 0.81
+  note: |
+    L'[enquête nationale des passagers aériens](https://www.ecologie.gouv.fr/politiques-publiques/enquete-nationale-passagers-aeriens-enpa) 2023, donne un chiffre de 19% de trajets professionnels.
+
+transport . avion . court courrier:
+  titre: Vols court-courrier (trajet < 2 h)
+  note: |
+    Les vols court-courriers sont définis ici comme des vols de moins de 2 h (environ 1000km).
+    On considère que les appareils qui assurent ces vols possèdent une capacité de 101 à 220 sièges.
+
+transport . avion . court courrier . vitesse moyenne:
+  formule: 600 km / 1.3 h
+  unité: km/h
+  note: |
+    Nous utilisons la vitesse moyenne de vol pour un Paris-Toulouse.
+
+transport . avion . court courrier . empreinte par km:
+  formule:
+    moyenne:
+      - entre 500 et 1000 km
+      - entre 1000 et 2000 km
+  unité: kgCO2e/km
+  note: |
+    Nous considérons la moyenne de 2 facteurs d'émission correspondant à des distances proches de 1000km.
+
+transport . avion . court courrier . empreinte par km . entre 500 et 1000 km:
+  formule: 0.22
+  description: |
+    Facteur d'émission issu de la Base Empreinte (Avion passagers/101-220 sièges, 500-1000 kms, 2023/AVEC trainées).
+  unité: kgCO2e/km
+
+transport . avion . court courrier . empreinte par km . entre 1000 et 2000 km:
+  formule: 0.18
+  description: |
+    Facteur d'émission issu de la Base Empreinte (Avion passagers/101-220 sièges, 1000-2000 kms, 2023/AVEC trainées).
+  unité: kgCO2e/km
+
+transport . avion . court courrier . durée moyenne:
+  titre: Durée moyenne passée par un Français dans les vols court-courriers
+  formule: durée moyenne passager * passagers annuel français / population
+  unité: h
+
+transport . avion . court courrier . durée moyenne passager:
+  titre: Durée moyenne passée par un passager Français dans les vols court-courriers
+  formule: passager km moyen / vitesse moyenne
+  unité: h
+
+transport . avion . court courrier . passager km moyen:
+  titre: Distance moyenne parcourue un Français sur des vols court-courriers
+  formule: proportion trajets perso * passager km total * proportions voyageurs français / passagers annuel français
+  note: |
+    On fait une grosse approximation en considérant que la proportion des kilomètres parcourus par des français est la même que la proportion des passagers français.
+  unité: km
+
+transport . avion . court courrier . passagers annuel français:
+  titre: Nombre de passagers court courrier français
+  formule: passagers annuel * proportions voyageurs français / fréquence trajets
+  note: |
+    Un français peut être compté plusieurs fois dans l'année en tant que passager.
+
+transport . avion . court courrier . proportion voyageurs:
+  formule: passagers annuel français / population
+
+transport . avion . court courrier . passagers annuel:
+  titre: Nombre de passagers court courrier
+  formule: 21100000
+  note: |
+    D'après [l'observatoire de la conccurrence 2023 par la DGAC](https://www.ecologie.gouv.fr/sites/default/files/documents/observatoire_concurrence_2023_transport_aerien.pdf), 21,1 millions de passagers ont transité par les aéroports français en 2023 pour des vols court courrier (hypothèse: métropole).
+
+transport . avion . court courrier . proportions voyageurs français:
+  titre: Proportion de voyageurs français sur les vols court courrier
+  formule: 0.91
+  note: |
+    Chiffre issu de l'[enquête nationale des passagers aériens](https://www.ecologie.gouv.fr/politiques-publiques/enquete-nationale-passagers-aeriens-enpa) 2023.
+
+transport . avion . court courrier . passager km total:
+  titre: Distance totale parcourue par les voyageurs en France sur des vols court courrier en 2023
+  formule: 384000000000 km * 0.072
+  unité: km
+  note: |
+    D'après [l'observatoire de la conccurrence 2023 par la DGAC](https://www.ecologie.gouv.fr/sites/default/files/documents/observatoire_concurrence_2023_transport_aerien.pdf),le nombre de passagers-km transportés représente 384 milliards de passagers-km.
+
+    D'après les ["Chiffres clés du transport 2025" (données de 2023)](https://www.statistiques.developpement-durable.gouv.fr/edition-numerique/chiffres-cles-transports/fr/15-transport-collectif-urbain-de-voyageurs), le trafic métropolitain représente 7,2% du trafic total en passagers-km.
+
+transport . avion . moyen et long courrier:
+  titre: Vols moyen ou long courrier (trajet > 2 h)
+  note: |
+    Les vols moyen-courriers sont définis ici comme des vols de plus de 2 h (de 1000 à plus de 5000km).
+    On considère que les appareils qui assurent ces vols possèdent une capacité de plus de 220 sièges.
+
+transport . avion . moyen et long courrier . vitesse moyenne:
+  formule: 6000 km / 8 h
+  unité: km/h
+  note: |
+    Nous utilisons la vitesse moyenne de vol pour un Paris-New York.
+
+transport . avion . moyen et long courrier . empreinte par km:
+  formule:
+    moyenne:
+      - entre 2000 et 5000 km
+      - plus de 5000 km
+  unité: kgCO2e/km
+  note: |
+    Nous considérons la moyenne de 3 facteurs d'émission correspondant à des distances supérieures à 2000km.
+
+transport . avion . moyen et long courrier . empreinte par km . entre 2000 et 5000 km:
+  formule: 0.17
+  description: |
+    Facteur d'émission issu de la Base Empreinte (Avion passagers/>220 sièges, 2000-5000 kms, 2023/AVEC trainées).
+  unité: kgCO2e/km
+
+transport . avion . moyen et long courrier . empreinte par km . plus de 5000 km:
+  formule: 0.15
+  description: |
+    Facteur d'émission issu de la Base Empreinte (Avion passagers/>220 sièges, >5000 kms, 2023/AVEC trainées).
+  unité: kgCO2e/km
+
+transport . avion . moyen et long courrier . durée moyenne:
+  titre: Durée moyenne passée par un Français dans les vols moyen-courriers
+  formule: durée moyenne passager * passagers annuel français / population
+  unité: h
+
+transport . avion . moyen et long courrier . durée moyenne passager:
+  titre: Durée moyenne passée par un passager Français dans les vols moyen-courriers
+  formule: passager km moyen / vitesse moyenne
+  unité: h
+
+transport . avion . moyen et long courrier . passager km moyen:
+  titre: Distance moyenne parcourue un Français sur des vols moyen et long courrier
+  formule: proportion trajets perso * passager km total * proportion voyageurs français / passagers annuel français
+  note: |
+    On fait une grosse approximation en considérant que la proportion des kilomètres parcourus par des français est la même que la proportion des passagers français.
+
+    Par ailleurs, ce chiffre est sans doute sous-estimé car on ne prend pas en compte les trajets des français depuis les aéroports étrangers, notamment pour les vols long-courriers avec des escales ou bien les vols internes à l'étranger.
+  unité: km
+
+transport . avion . moyen et long courrier . passagers annuel français:
+  titre: Nombre de passagers moyen et long courrier français
+  formule: passagers annuel * proportion voyageurs français / fréquence trajets
+  note: |
+    Un français peut être compté plusieurs fois dans l'année en tant que passager.
+
+transport . avion . moyen et long courrier . passagers annuel:
+  titre: Nombre de passagers moyen et long courrier
+  formule: 142400000
+  note: |
+    D'après [l'observatoire de la conccurrence 2023 par la DGAC](https://www.ecologie.gouv.fr/sites/default/files/documents/observatoire_concurrence_2023_transport_aerien.pdf), 142,4 millions de passagers ont transité par les aéroports français en 2023 pour des vols moyen et long courrier (hypothèse: outremer + international).
+
+transport . avion . moyen et long courrier . proportion voyageurs français:
+  titre: Proportion de voyageurs français sur les vols moyen et long courrier
+  formule: 0.53
+  note: |
+    Chiffre issu de l'[enquête nationale des passagers aériens](https://www.ecologie.gouv.fr/politiques-publiques/enquete-nationale-passagers-aeriens-enpa) 2023.
+
+transport . avion . moyen et long courrier . passager km total:
+  titre: Distance totale parcourue par les voyageurs en France sur des vols moyen et long courrier en 2023
+  formule: 384000000000 km * (1 - 0.072)
+  unité: km
+  note: |
+    D'après [l'observatoire de la conccurrence 2023 par la DGAC](https://www.ecologie.gouv.fr/sites/default/files/documents/observatoire_concurrence_2023_transport_aerien.pdf),le nombre de passagers-km transportés représente 384 milliards de passagers-km.
+
+    D'après les ["Chiffres clés du transport 2025" (données de 2023)](https://www.statistiques.developpement-durable.gouv.fr/edition-numerique/chiffres-cles-transports/fr/15-transport-collectif-urbain-de-voyageurs), le trafic métropolitain représente 7,2% du trafic total en passagers-km.

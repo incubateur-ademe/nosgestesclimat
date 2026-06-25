@@ -1,0 +1,400 @@
+divers . animaux domestiques:
+  DLUO: 01/08/2026
+  non applicable si: métrique != "carbone"
+  titre: Animaux domestiques
+  icônes: 🐶
+  formule: empreinte / logement . habitants
+  description: |
+    On parle ici d'animaux domestiques, dont l'augmentation de la population (environ 10 millions de chats en France en 2000
+    contre 15 millions actuellement (2020)) est liée aux êtres humains (à l'inverse des animaux sauvages, dont l'Histoire semble
+    montrer un équilibre GES stable).
+
+    D'après [le rapport annuel FACCO (Chambre Syndicale des Fabricants d'Aliments pour Chiens, Chats, Oiseaux et autres animaux familiers) 2022](https://www.facco.fr/wp-content/uploads/2022/05/rapport-annuel-facco-2022pdf.pdf),
+    43.5% des foyers français possèdent au moins un chat ou un chien. Près d’1 foyer français sur 3 possède un chat et 1 foyer sur 5 possède un chien.
+
+    Il est donc clair que nous ne pouvons ignorer l'empreinte de nos animaux de compagnie et
+    ces émissions sont, par définition, d'origine anthropique.
+
+    La vie domestique de nos bêtes entraine bien des émissions supplémentaires à attribuer à un individu humain (celui qui détient l'animal).
+
+    D'après l'étude [Environmental Impacts of a Pet Dog: An LCA Case Study, 2020](https://www.mdpi.com/2071-1050/12/8/3394), il apparait que l'empreinte climat d'un animal provient à 90% de son alimentation
+    (relativement à l'impact des déjections animales et déchets associés selon le périmètre de l'étude).
+
+    Pour notre cas, nous avons dans un premier temps considéré l'alimentation et les services vétérinaires qui représentent seulement quelques kilos de CO₂ alors que l'alimentation est responsable de centaines de kilos pour certains animaux.
+
+    > Nous considérons qu'un animal appartient à un foyer. Au même titre qu'un objet partagé au sein du foyer, l'empreinte d'un animal est amortie également.
+  note: |
+    A noter que, pour l'impact de la nourriture, nous avons utilisé le papier : [The global environmental paw print of pet food, 2020](https://reader.elsevier.com/reader/sd/pii/S0959378020307366?token=375964333F28DED330C9C2CACCD5553CAAE486B7BD641A4F39738E9EC323613DCDABF4A0263131197CB5B47E1D304B99&originRegion=eu-west-1&originCreation=20230330100228) qui présente une méthodologie intéressante.
+    Sur ce volet, l'article "Environmental Impacts of a Pet Dog: An LCA Case Study" cite The European Pet Food Industry Federation (FEDIAF); C&D Foods; FACCO, Chambre Syndicale des Fabricants d’Aliments pour Chiens, Chats, Oiseaux et autres Animaux Familiers (the French Pet Food Association for Dogs, Cats, Birds and Other Domestic Pets); Mars PetCare Europe; Nestlé Purina PetCare Europe; saturn petcare gmbh, and Quantis. Product Environmental Footprint Screening Study—Prepared Pet Food or Cats and Dogs; The European Pet Food Industry Federation: Brussels, Belgium, 2015,
+    malheureusement introuvable...
+
+    Certaines questions pourraient être approfondies :
+      - Est-ce pertinent d'associer une empreinte "de base" par animal liée à l'achat d'équipements ou autres ?
+      - Le facteur d'émission sélectionné pour notre calcul résulte d'une étude présentant une approche méthodologique spécifique (entendons ici un  choix d'hypothèses propre au travail mené pour cet article).
+        Il sera nécessaire de continuer à suivre les évolutions pour approfondir le cycle de vie de ce type de nourriture (prise en compte des emballages ?).
+
+divers . animaux domestiques . empreinte:
+  titre: Empreinte annuelle des animaux du foyer
+  icônes: 😺🐶
+  question: Combien d'animaux vivent avec vous ?
+  description: |
+    Les petits animaux (hamsters, canaris…) ne sont pas pris en compte car leur empreinte carbone est négligeable, tout comme celle des animaux de basse-cour (poules).
+  mosaique:
+    type: nombre
+    options:
+      - petit chien . nombre
+      - chien moyen . nombre
+      - gros chien . nombre
+      - chats . nombre
+    option aucun: aucun
+  formule: empreinte totale
+
+divers . animaux domestiques . empreinte totale:
+  formule:
+    somme:
+      - empreinte . chats
+      - empreinte . chiens
+
+divers . animaux domestiques . empreinte . chats:
+  icônes: 🐱
+  titre: Chat
+  formule: nombre * empreinte
+
+divers . animaux domestiques . empreinte . chats . nombre:
+  question: Combien de chats possédez-vous dans votre foyer ?
+  plancher: 0
+  plafond: 20
+  par défaut: 0.49
+
+divers . animaux domestiques . empreinte . chats . empreinte:
+  titre: Empreinte d'un chat de taille moyenne
+  description: |
+    On considère un chat de taille moyenne (4kg).
+  formule:
+    somme:
+      - alimentation
+      - soins vétérinaires par animal
+      - litière
+  unité: kgCO2e
+
+divers . animaux domestiques . empreinte . chats . alimentation:
+  formule: besoin journalier nourriture * commun . jours par an * empreinte nourriture
+  unité: kgCO2e
+
+divers . animaux domestiques . empreinte . chats . alimentation . empreinte nourriture:
+  titre: Empreinte nourriture pour chats
+  formule: 2.5
+  unité: kgCO2e/kg
+  note: |
+    Pour ce facteur d'émission, nous avons utilisé le papier : [The global environmental paw print of pet food, 2020](https://reader.elsevier.com/reader/sd/pii/S0959378020307366?token=375964333F28DED330C9C2CACCD5553CAAE486B7BD641A4F39738E9EC323613DCDABF4A0263131197CB5B47E1D304B99&originRegion=eu-west-1&originCreation=20230330100228)
+
+    Quelques commentaires au niveau de la méthodo mise en place dans cet article :
+
+    Les sous-produits animaux (Animal by-products = ABPs) sont des produits d'origine animale non consommés par les Hommes et sont les ingrédients principaux de la nourriture pour ... animaux.
+
+    ![](https://www.researchgate.net/publication/317818426/figure/fig1/AS:614100279230464@1523424324126/General-descriptions-of-edible-and-inedible-by-products.png)
+
+    On pourrait imaginer que transformer ces "restes" pour nourrir nos animaux est la meilleure option, mais il ne faut pas oublier qu'il existe des alternatives:
+    fertilisant, biocarburant.
+
+    Si 1kg de "sous-produit" animal n'a surement pas le même impact environnemental qu'un kilogramme de steak, on ne peut cependant pas considérer que l'impact est nul.
+    Néanmoins, comme on peut l'imaginer, il n'existe pas de FE associés à ces sous-produits. L'idée dans cet article est
+    d'approcher l'empreinte de ces produits via un prorata par prix de produit.
+
+    Le résultat final est 2.3 fois supérieur en adoptant une méthode classique sur la base de : 1kg de sous-produits animaux = 1 kg de steak = 1 FE en kgco2e/kg.
+
+    En ce qui concerne la "qualité" de la nourriture, deux types de nourriture sont considérés :
+
+    Deux types de nourritures sont considérés :
+    - Nourriture Chat "classique" (type croquettes): 1.5 kgCO2e/kg, composant la nourriture moyenne des chats à hauteur de 2/3.
+    - Nourriture Chat "Premium" (plus proche des patées semble-t-il): 4.5 kgCO2e/kg, composant la nourriture moyenne des chats à hauteur de 1/3.
+
+    On obtient une valeur moyenne de 2 kgCO2e/kg de nourriture pour chat.
+
+    A priori, seule la partie production est comptabilisée. Il faudrait entrer davantage dans les sources de calcul pour savoir la distribution ou les emballages sont pris en compte.
+
+    Enfin, concernant le périmètre géographique, cette étude s'appuie sur des données à l'échelle des États-Unis, qui semble-t-il, au vu de la similitude des marchés avec l'Europe sont légitimement applicables à la France.
+
+    Par ailleurs, l'étude [Environmental impact of diets for dogs and cats, 20222](https://www.nature.com/articles/s41598-022-22631-0#MOESM1) donne des résultats bien plus élevés notamment pour la "nourriture humide".
+
+    > If a 10 kg dog with an average caloric intake of 534 kcal per day15 is considered, we can estimate the yearly consumption of calories and,
+    therefore, can estimate the annual environmental impact. If we consider the results of the present study, the median of CO2eq of a dry diet
+    per 1000 kcal is 4.25 kg and a wet diet of 33.56 kg. This average dog would be responsible for 828.37 kg of CO2eq per year if consuming dry
+    diets or 6,541 kg of CO2eq per year if consuming wet diets.
+
+    Au vu des chiffres particulièrement élevés, et dans l'attente d'approfondir cette étude, nous avons préféré utiliser les chiffres de l'étude mentionnée plus haut qui semble adopter une méthodologie cohérente.
+divers . animaux domestiques . empreinte . chats . alimentation . besoin journalier nourriture:
+  formule: besoins énergétiques journaliers / apport énergétique nourriture
+  unité: kg/jour
+
+divers . animaux domestiques . empreinte . chats . alimentation . besoins énergétiques journaliers:
+  formule: facteur poids * facteur énergie
+  unité: kcal/jour
+  description: |
+    Chiffres et tableaux issus de [FEDIAF, Nutritional Guidelines](https://europeanpetfood.org/wp-content/uploads/2022/03/Updated-Nutritional-Guidelines.pdf)
+
+    Pour un chat, on retient la formule: (poids chat)^0.67 * 100 kcal pour un animal moyennement actif.
+
+    Ici, on considère un chat de 4kg, moyennement actif, ce qui donne les chiffres visibles dans les tableaux ci-dessous.
+
+    ![](https://user-images.githubusercontent.com/55186402/229522212-30dde3ac-0c96-42f4-925a-78f122185b64.png)
+
+    ![](https://user-images.githubusercontent.com/55186402/228851632-28ad3746-7fd2-4b80-8923-a76f75dc8012.png)
+
+divers . animaux domestiques . empreinte . chats . alimentation . besoins énergétiques journaliers . facteur poids:
+  formule: 2.53
+  note: |
+    Formule : (poids chat)^0.67, formule issue de [FEDIAF, Nutritional Guidelines](https://europeanpetfood.org/wp-content/uploads/2022/03/Updated-Nutritional-Guidelines.pdf)
+
+    Publicodes ne supporte pas la fonction puissance. On considère un chat de 4kg.
+divers . animaux domestiques . empreinte . chats . alimentation . besoins énergétiques journaliers . facteur énergie:
+  formule:
+    variations:
+      - si: activité = 'actif'
+        alors: 100
+      - sinon: 75
+  unité: kcal/jour
+  note: |
+    On retient la formule: (poids chat)^0.67 * 100 kcal pour un animal moyennement actif, (poids chat)^0.67 * 75 kcal pour un chat moins actif (chat d'intérieur).
+
+divers . animaux domestiques . empreinte . chats . alimentation . besoins énergétiques journaliers . facteur énergie . activité:
+  titre: Niveau d'activité du chat
+  par défaut: "'actif'"
+  avec:
+    actif:
+    peu actif:
+
+divers . animaux domestiques . empreinte . chats . litière:
+  titre: Empreinte de la litière pour un chat
+  note: L'impact de la litière semble résider majoritairement dans les déchets. Il faudrait investiguer davangtage cet impact dans la partie "déchets" du test.
+  formule: quantité annuelle * empreinte
+  unité: kgCO2e
+
+divers . animaux domestiques . empreinte . chats . litière . quantité annuelle:
+  titre: Quantité litière par an pour un chat
+  formule: 33
+  unité: kg
+  note: https://www.planetoscope.com/Animaux/1211-.html
+
+divers . animaux domestiques . empreinte . chats . litière . empreinte:
+  titre: Empreinte d'un kilogramme de litière pour chat
+  formule: 0.0506
+  unité: kgCO2e/kg
+  note: Nous faisons l'hypothèse ici qu'une litière pour chat est composée majoritairement de granulat. On considère donc le FE Granulat, grave/ciment issu de la base Empreinte.
+
+divers . animaux domestiques . empreinte . chiens:
+  formule:
+    somme:
+      - petit chien
+      - chien moyen
+      - gros chien
+
+divers . animaux domestiques . empreinte . petit chien:
+  icônes: 🐶
+  titre: Petit chien
+  description: Moins de 10 kg (Chihuahua, Yorkshire ...)
+  formule: nombre * empreinte
+
+divers . animaux domestiques . empreinte . petit chien . nombre:
+  question: Combien de chiens possédez-vous dans votre foyer ?
+  plancher: 0
+  plafond: 10
+  par défaut: 0
+
+divers . animaux domestiques . empreinte . petit chien . empreinte:
+  titre: Empreinte d'un petit chien
+  description: |
+    Chien d'environ 5 kg
+  formule:
+    somme:
+      - alimentation
+      - soins vétérinaires par animal
+
+divers . animaux domestiques . empreinte . petit chien . alimentation:
+  valeur: chiens . alimentation
+  contexte:
+    chiens . alimentation . besoins énergétiques journaliers . facteur poids . taille chien: "'petit chien'"
+
+divers . animaux domestiques . empreinte . chien moyen:
+  icônes: 🐶
+  titre: Chien moyen
+  description: Entre 10 et 30 kg (Beagle, Bouledogue, Caniche...)
+  formule: nombre * empreinte
+
+divers . animaux domestiques . empreinte . chien moyen . nombre:
+  question: Combien de chiens possédez-vous dans votre foyer ?
+  plancher: 0
+  plafond: 10
+  par défaut: 0.25
+
+divers . animaux domestiques . empreinte . chien moyen . empreinte:
+  titre: Empreinte d'un chien de taille moyenne
+  description: |
+    Chien d'environ 20 kg
+  formule:
+    somme:
+      - alimentation
+      - soins vétérinaires par animal
+
+divers . animaux domestiques . empreinte . chien moyen . alimentation:
+  valeur: chiens . alimentation
+  contexte:
+    chiens . alimentation . besoins énergétiques journaliers . facteur poids . taille chien: "'chien moyen'"
+
+divers . animaux domestiques . empreinte . gros chien:
+  icônes: 🐶
+  titre: Gros chien
+  description: Plus de 30 kg (Labrador, Dogue Allemand...)
+  formule: nombre * empreinte
+
+divers . animaux domestiques . empreinte . gros chien . nombre:
+  question: Combien de chiens possédez-vous dans votre foyer ?
+  plancher: 0
+  plafond: 10
+  par défaut: 0
+
+divers . animaux domestiques . empreinte . gros chien . empreinte:
+  titre: Empreinte d'un gros chien
+  description: |
+    Chien d'environ 40kg
+  formule:
+    somme:
+      - alimentation
+      - soins vétérinaires par animal
+
+divers . animaux domestiques . empreinte . gros chien . alimentation:
+  valeur: chiens . alimentation
+  contexte:
+    chiens . alimentation . besoins énergétiques journaliers . facteur poids . taille chien: "'gros chien'"
+
+divers . animaux domestiques . empreinte . chiens . alimentation:
+  formule: besoin journalier nourriture * commun . jours par an * empreinte nourriture
+  unité: kgCO2e
+
+divers . animaux domestiques . empreinte . chiens . alimentation . empreinte nourriture:
+  titre: Empreinte nourriture pour chiens
+  formule: 4.3
+  unité: kgCO2e/kg
+  note: |
+    Pour ce facteur d'émission, nous avons utilisé le papier : [The global environmental paw print of pet food, 2020](https://reader.elsevier.com/reader/sd/pii/S0959378020307366?token=375964333F28DED330C9C2CACCD5553CAAE486B7BD641A4F39738E9EC323613DCDABF4A0263131197CB5B47E1D304B99&originRegion=eu-west-1&originCreation=20230330100228)
+
+    Quelques commentaires au niveau de la méthodo mise en place dans cet article :
+
+    Les sous-produits animaux (Animal by-products = ABPs) sont des produits d'origine animale non consommés par les Hommes et sont les ingrédients principaux de la nourriture pour ... animaux.
+
+    ![](https://www.researchgate.net/publication/317818426/figure/fig1/AS:614100279230464@1523424324126/General-descriptions-of-edible-and-inedible-by-products.png)
+
+    On pourrait imaginer que transformer ces "restes" pour nourrir nos animaux est la meilleure option, mais il ne faut pas oublier qu'il existe des alternatives:
+    fertilisant, biocarburant.
+
+    Si 1kg de "sous-produit" animal n'a surement pas le même impact environnemental qu'un kilogramme de steak, on ne peut cependant pas considérer que l'impact est nul.
+    Néanmoins, comme on peut l'imaginer, il n'existe pas de FE associés à ces sous-produits. L'idée dans cet article est
+    d'approcher l'empreinte de ces produits via un prorata par prix de produit.
+
+    Le résultat final est 2.3 fois supérieur en adoptant une méthode classique sur la base de : 1kg de sous-produits animaux = 1 kg de steak = 1 FE en kgco2e/kg.
+
+    En ce qui concerne la "qualité" de la nourriture, deux types de nourriture sont considérés :
+
+    - Nourriture Chien "classique" (type croquettes): 3 kgCO2e/kg, composant la nourriture moyenne des chiens à hauteur de 2/3.
+    - Nourriture Chien "Premium" (plus proche des patées semble-t-il): 7 kgCO2e/kg, composant la nourriture moyenne des chiens à hauteur de 1/3.
+
+    On obtient une valeur moyenne de 4.3 kgCO2e/kg de nourriture pour chien.
+
+    A priori, seule la partie production est comptabilisée. Il faudrait entrer davantage dans les sources de calcul pour savoir le distribution ou les emballages sont pris en compte.
+
+    Enfin, concernant le périmètre géographique, cette étude s'appuie sur des données à l'échelle des États-Unis, qui semble-t-il, au vu de la similitude des marchés avec l'Europe sont légitimement applicable à la France.
+
+    Par ailleurs, l'étude [Environmental impact of diets for dogs and cats, 20222](https://www.nature.com/articles/s41598-022-22631-0#MOESM1) donne des résultats bien plus élevés notamment pour la "nourriture humide".
+
+    > If a 10 kg dog with an average caloric intake of 534 kcal per day15 is considered, we can estimate the yearly consumption of calories and,
+    therefore, can estimate the annual environmental impact. If we consider the results of the present study, the median of CO2eq of a dry diet
+    per 1000 kcal is 4.25 kg and a wet diet of 33.56 kg. This average dog would be responsible for 828.37 kg of CO2eq per year if consuming dry
+    diets or 6,541 kg of CO2eq per year if consuming wet diets.
+
+    Au vu des chiffres particulièrement élevés, et dans l'attente d'approfondir cette étude, nous avons préféré utiliser les chiffres de l'étude mentionnée plus haut qui semble adopter une méthodologie cohérente.
+divers . animaux domestiques . empreinte . chiens . alimentation . besoin journalier nourriture:
+  formule: besoins énergétiques journaliers / apport énergétique nourriture
+  unité: kg/jour
+
+divers . animaux domestiques . empreinte . chiens . alimentation . besoins énergétiques journaliers:
+  formule: facteur poids * facteur énergie
+  unité: kcal/jour
+  description: |
+    Chiffres et tableaux issus de [FEDIAF, Nutritional Guidelines](https://europeanpetfood.org/wp-content/uploads/2022/03/Updated-Nutritional-Guidelines.pdf)
+
+    On retient la formule: (poids chien)^0.75 * 110 kcal pour un animal moyennement actif.
+
+divers . animaux domestiques . empreinte . chiens . alimentation . besoins énergétiques journaliers . facteur poids:
+  formule:
+    variations:
+      - si: taille chien = 'gros chien'
+        alors: 15.9
+      - si: taille chien = 'chien moyen'
+        alors: 9.46
+      - si: taille chien = 'petit chien'
+        alors: 3.34
+  note: |
+    Formule : (poids chien)^0.75, formule issue de [FEDIAF, Nutritional Guidelines](https://europeanpetfood.org/wp-content/uploads/2022/03/Updated-Nutritional-Guidelines.pdf)
+
+    Publicodes ne supporte pas la fonction puissance. On considère des chiens de 5, 20 et 40kg.
+
+divers . animaux domestiques . empreinte . chiens . alimentation . besoins énergétiques journaliers . facteur poids . taille chien:
+  une possibilité:
+    - gros chien
+    - chien moyen
+    - petit chien
+
+divers . animaux domestiques . empreinte . chiens . alimentation . besoins énergétiques journaliers . facteur énergie:
+  formule:
+    variations:
+      - si: activité = 'très actif'
+        alors: 125
+      - si: activité = 'actif'
+        alors: 110
+      - sinon: 95
+  unité: kcal/jour
+  note: |
+    On retient la formule: (poids chien)^0.75 * 125 kcal pour un chien très actif, (poids chien)^0.67 * 110 pour un chien actif, (poids chien)^0.67 * 95 kcal pour un chien moins actif.
+
+    ![](https://user-images.githubusercontent.com/55186402/229539516-3f548d73-1129-48f3-900a-f9fd30317d4c.png)
+
+divers . animaux domestiques . empreinte . chiens . alimentation . besoins énergétiques journaliers . facteur énergie . activité:
+  titre: Niveau d'activité du chien
+  par défaut: "'actif'"
+  avec:
+    actif:
+    peu actif:
+    très actif:
+
+divers . animaux domestiques . empreinte . apport énergétique nourriture:
+  formule: 4610
+  note: |
+    > An average gross energy of cat and dog food of 461 kcal/100 g (Davies et al., 2017).
+    Issu de [The global environmental paw print of pet food, 2020](https://reader.elsevier.com/reader/sd/pii/S0959378020307366?token=375964333F28DED330C9C2CACCD5553CAAE486B7BD641A4F39738E9EC323613DCDABF4A0263131197CB5B47E1D304B99&originRegion=eu-west-1&originCreation=20230330100228)
+  unité: kcal/kg
+
+divers . animaux domestiques . empreinte . soins vétérinaires par animal:
+  titre: Empreinte asociées aux soins vétérinaires de l'animal
+  formule: soins vétérinaires France / 35700000
+  unité: kgCO2e
+  description: Ce chiffre, associé à l'empreinte correspondant aux soins vétérinaires de l'animal, est issu du prorata de l'empreinte macro-économique associées aux soins vétérinaires par le nombre d'animaux domestiques (hors poissons).
+  note: |
+    L'idée est de partir de l'empreinte de [l'empreinte macro-économique](https://nosgestesclimat.fr/documentation/empreinte-branche/M75) associée à la branche NAF M75 (Activités vétérinaires).
+    L'INSEE donne [cette description](https://www.insee.fr/fr/metadonnees/cpfr21/sousCategorie/75.00.11?champRecherche=false):
+      - Services médicaux, chirurgicaux et dentaires fournis à des animaux de compagnie dans des cliniques vétérinaires ou ailleurs. Ces services ont pour but de soigner les animaux, d'améliorer et/ou de stabiliser leur état de santé.
+      - Services hospitaliers, services des laboratoires, services techniques, nourriture (y compris les régimes alimentaires spéciaux), etc.
+
+    Par ailleurs, d'après le [rapport annuel FACCO](https://www.facco.fr/wp-content/uploads/2022/05/rapport-annuel-facco-2022pdf.pdf), la France comptait en 2020
+    75 millions d'animaux domestiques.
+
+    En faisant l'hypothèse que les poissons ne bénéficient pas de soins vétérinaires, on atteint 49 millions d'animaux.
+    Nous avons également déduit les oiseaux de basse-cour qui semble-t-il n'ont pas besoin de soins cliniques, ce qui nous amène à **35,7 millions d'animaux**.
+
+    ![](https://user-images.githubusercontent.com/55186402/229517254-01e77c3d-acef-4053-9b8f-2931a6ce33a9.png)
+
+    On peut alors en déduire l'empreinte moyenne des services vétérinaires par animal.
+
+divers . animaux domestiques . empreinte . soins vétérinaires France:
+  titre: Empreinte soins vétérinaires en France
+  formule: empreinte branche . M75 * 1000000 kgCO2e/ktCO2e
+  unité: kgCO2e

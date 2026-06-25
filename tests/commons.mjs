@@ -53,7 +53,8 @@ export function getArgs() {
     .option('metric', {
       alias: 'i',
       type: 'string',
-      description: 'Choose whether to use carbon or water metric'
+      description: 'Choose whether to use carbon or water metric',
+      default: 'carbone'
     })
     .help('h')
     .alias('h', 'help').argv

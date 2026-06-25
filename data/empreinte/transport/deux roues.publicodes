@@ -1,0 +1,130 @@
+transport . deux roues:
+  DLUO: 01/12/2026
+  icônes: 🛵
+  formule:
+    variations:
+      - si:
+          est défini: usager
+        alors: empreinte
+      - sinon: empreinte moyenne
+  unité: kgCO2e
+
+transport . deux roues . usager:
+  question: Utilisez-vous un scooter ou une moto ?
+
+transport . deux roues . empreinte:
+  icônes: 🛵
+  formule: (empreinte au km + entretien pondéré) * km
+  unité: kgCO2e
+
+transport . deux roues . empreinte moyenne:
+  valeur: deux roues . empreinte
+  contexte:
+    deux roues . usager: oui
+    deux roues . type: "'moto sup 250'"
+    deux roues . km: km annuels moyen * pourcentage motards
+
+transport . deux roues . km:
+  applicable si: usager
+  question: Combien de km faites-vous à l'année avec votre scooter ou moto ?
+  par défaut: km annuels moyen
+  plancher: 0
+  plafond: 99999
+  unité: km
+  suggestions:
+    2000km / an: 2000
+    10km / jour: 3600
+    1000km / mois: 12000
+    20 000km / an: 20000
+
+transport . deux roues . km annuels moyen:
+  formule: 3600
+  unité: km
+  note: |
+    [Source pour les km annuels moyens](https://www.violenceroutiere.fr/q_r/quel-est-le-kilometrage-moyen-parcouru-par-les-2rm-et-sur-quelles-routes/),
+
+transport . deux roues . type:
+  applicable si: usager
+  question: Quelle est la motorisation de votre scooter ou moto ?
+  par défaut: "'moto sup 250'"
+  une possibilité:
+    - scooter électrique
+    - scooter thermique
+    - moto inf 250
+    - moto sup 250
+  note: |
+    Le parc des deux-roues motorisés se divise en [3 catégories](https://www.onisr.securite-routiere.gouv.fr/etudes-et-recherches?field_theme_target_id=760).
+    - Les cyclomoteurs (moins de 50 cm³) : 17,3 % du parc
+    - Les motocyclettes légères (50 à 125 cm³) : 24,1 % du parc
+    - Les motocyclettes lourdes (plus de 125 cm³) : 58,6 % du parc
+
+transport . deux roues . type . scooter électrique:
+  titre: Électrique
+transport . deux roues . type . scooter thermique:
+  titre: 50 cm³
+transport . deux roues . type . moto inf 250:
+  titre: Moins de 250 cm³
+transport . deux roues . type . moto sup 250:
+  titre: Plus de 250 cm³
+
+transport . deux roues . empreinte au km:
+  unité: kgCO2e/km
+  formule:
+    variations:
+      - si: type = 'scooter thermique'
+        alors: 0.0851 kgCO2e/km
+      - si: type = 'scooter électrique'
+        alors: FE scooter électrique
+      - si: type = 'moto inf 250'
+        alors: 0.0872 kgCO2e/km
+      - si: type = 'moto sup 250'
+        alors: 0.220 kgCO2e/km
+
+  note: |
+    Cyclomoteur - Mixte - 2023 ; Facteur d'émission issu de la Base Empreinte
+
+    Moto =< 250 cm3 - Mixte - 2023 ; Facteur d'émission issu de la Base Empreinte
+
+    Moto > 250 cm3 - Mixte - 2023 ; Facteur d'émission issu de la Base Empreinte
+
+    Les chiffres ci-dessus incluent la fabrication du véhicule.
+
+transport . deux roues . empreinte au km . FE scooter électrique:
+  formule: construction au km + usage au km
+  unité: kgCO2e/km
+  note: |
+    Nous utilisons ici la donnée Ecoinvent "Transport de passagers en scooter électrique" mise à disposition dans la Base Empreinte. 
+    En effet, il n'existe pas dans la Base Emppreinte de donnée spécifique pour le scooter électrique calculée sur le même périmètre que les autres deux roues. A noter que nous excluons de ce facteur la partie infrastructure.
+
+    Ce chiffre n'est pas parfait. Ecoinvent mentionne que cette valeur est valide pour des technologies allant jusqu'à 2015. Il paraît effectivement très élevé comparé à des extrapolations faites à partir d'études plus récentes. Néanmoins, nous avons choisi de conserver ce chiffre pour le moment, en attendant d'avoir des données plus récentes dans la Base Empreinte.
+
+transport . deux roues . empreinte au km . FE scooter électrique . construction au km:
+  formule: 0.0386
+  unité: kgCO2e/km
+
+transport . deux roues . empreinte au km . FE scooter électrique . usage au km:
+  formule: 0.0207
+  unité: kgCO2e/km
+
+transport . deux roues . entretien pondéré:
+  formule:
+    variations:
+      - si: type = 'scooter électrique'
+        alors: entretien * 0.75
+      - sinon: entretien
+  unité: kgCO2e/km
+  note: Nous choisissons de pondérer l'entretien des scooters électriques par le même facteur qui réduit celui des véhicules électriques par rapport aux véhicules thermiques.
+
+transport . deux roues . entretien:
+  formule: empreinte branche . G45 * 1000000 kgCO2e/ktCO2e * 0.02 * 0.08 / ( 0.70 + 0.08 ) / nombre deux roues circulation / km annuels moyen
+  unité: kgCO2e/km
+  note: |
+    Dans le poste G45, nous proratisons le poste Commerce et réparation de motocycles (2%) sur le même rapport que les voitures pour extraire l'entretien de ce poste comprenant également le commerce.
+    Nous le divisons par le nombre de véhicules en circulation, puis par 3000 km (la moyenne de km effectués par véhicule) pour obtenir une empreinte en kgCO2e / km.
+
+transport . deux roues . nombre deux roues circulation:
+  formule: 2900000
+  note: Le nombre de deux-roues en circulation en 2024 est en hausse avec [2,9 millions de véhicules](https://www.onisr.securite-routiere.gouv.fr/etudes-et-recherches?field_theme_target_id=760) contre 2,7 millions en 2020.
+
+transport . deux roues . pourcentage motards:
+  formule: nombre deux roues circulation / population

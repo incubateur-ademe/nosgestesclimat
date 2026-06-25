@@ -1,0 +1,532 @@
+alimentation . boisson:
+  icônes: 🥤
+  formule:
+    somme:
+      - chaude
+      - froide
+
+alimentation . boisson . chaude:
+  DLUO: 01/12/2026
+  mosaique:
+    type: nombre
+    options:
+      - café . nombre
+      - thé . nombre
+      - chocolat chaud . nombre
+      - chicorée . nombre
+    option aucun: non concerné
+    suggestions:
+      un café:
+        café . nombre: 1
+        thé . nombre: 0
+        chocolat chaud . nombre: 0
+        chicorée . nombre: 0
+      beaucoup de café:
+        café . nombre: 4
+        thé . nombre: 0
+        chocolat chaud . nombre: 0
+        chicorée . nombre: 0
+      un café et un thé:
+        café . nombre: 1
+        thé . nombre: 1
+        chocolat chaud . nombre: 0
+        chicorée . nombre: 0
+      un chocolat chaud:
+        café . nombre: 0
+        thé . nombre: 0
+        chocolat chaud . nombre: 1
+        chicorée . nombre: 0
+  question: Quelle est votre consommation de boissons chaudes par jour (en nombre de tasses) ?
+  icônes: ☕️🫖
+  description: |
+    Renseignez ici ce que vous consommez lors d'une journée type (dont le petit-déjeuner). Vos consommations occasionnelles sont considérées comme négligeables.
+
+    Si vous buvez du chocolat chaud, nous vous demanderons le type de lait dans une autre question !
+  formule: boisson . chaude . par jour * commun . jours par an
+
+alimentation . boisson . chaude . par jour:
+  titre: Empreinte boissons chaudes par jour
+  formule:
+    somme:
+      - café
+      - thé
+      - chocolat chaud
+      - chicorée
+
+alimentation . boisson . chaude . café:
+  titre: Café
+  icônes: ☕
+  formule: tasse de café * nombre
+
+alimentation . boisson . chaude . thé:
+  titre: Thé
+  icônes: 🫖
+  formule: tasse de thé * nombre
+
+alimentation . boisson . chaude . chocolat chaud:
+  titre: Chocolat chaud
+  icônes: 🥛🍫
+  formule: tasse de chocolat chaud * nombre
+
+alimentation . boisson . chaude . chicorée:
+  titre: Chicorée
+  icônes: 🍵
+  formule: tasse de chicorée * nombre
+
+alimentation . boisson . chaude . café . nombre:
+  question: Nombre de cafés par jour
+  par défaut: 1.5
+  plancher: 0
+  plafond: 10
+  unité: tasse/jour
+  note: Un français moyen boit 500 tasses de café par an ([source](https://fr.statista.com/themes/10144/le-cafe-en-france/#topFacts)), soit environ une tasse et demi par jour.
+
+alimentation . boisson . chaude . thé . nombre:
+  question: Nombre de thés par jour
+  par défaut: 0.5
+  plancher: 0
+  plafond: 10
+  unité: tasse/jour
+  note: Un français moyen consomme 250g de thé par an ([source](https://www.francesoir.fr/lifestyle-vie-quotidienne/le-boom-de-la-consommation-en-france)), soit 5 grammes par semaine. Nous avons estimé que cela correspondait approximativement à une demi tasse par jour.
+
+alimentation . boisson . chaude . chocolat chaud . nombre:
+  question: Nombre de chocolats chauds par jour
+  par défaut: 0
+  plancher: 0
+  plafond: 10
+  unité: tasse/jour
+  note: Nous ne considérons pas de tasses de chocolat chaud par défaut.
+
+alimentation . boisson . chaude . chicorée . nombre:
+  question: Nombre de tasses de chicorée par jour
+  par défaut: 0
+  plancher: 0
+  plafond: 10
+  unité: tasse/jour
+  note: Nous ne considérons pas de tasses de chicorée par défaut.
+
+alimentation . boisson . tasse de café:
+  titre: Empreinte d'une tasse de café
+  formule: empreinte café moulu * quantité café par tasse
+
+alimentation . boisson . tasse de café . empreinte café moulu:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone café moulu
+      - si: métrique = "eau"
+        alors: empreinte eau café moulu
+
+alimentation . boisson . tasse de café . empreinte carbone café moulu:
+  formule: 8.4
+  unité: kgCO2e/kg
+  note: Facteur d'émission issu d'[Agribalyse, café moulu](https://agribalyse.ademe.fr/app/aliments/18003#Caf%C3%A9,_moulu).
+
+alimentation . boisson . tasse de café . empreinte eau café moulu:
+  formule: 9710
+  unité: l/kg
+  note: Facteur d'émission issu d'[Agribalyse, café moulu](https://agribalyse.ademe.fr/app/aliments/18003#Caf%C3%A9,_moulu).
+
+alimentation . boisson . tasse de café . quantité café par tasse:
+  formule: 0.012
+  unité: kg/tasse
+  note: on fait l'hypothèse qu'une tasse de café contient en moyenne 12 grammes de café moulu.
+
+alimentation . boisson . tasse de thé:
+  titre: Empreinte d'une tasse de thé
+  formule: empreinte thé infusé sans consommation * quantité thé par tasse
+
+alimentation . boisson . tasse de thé . empreinte thé infusé sans consommation:
+  formule: empreinte thé infusé * (1 - part consommation empreinte thé infusé)
+  note: |
+    Pour l'empreinte d'une tasse de café ou chocolat chaud, la part liée à la consommation (chauffage de l'eau notamment) n'est pas prise en compte dans le facteur d'émission
+    ce qui n'est pas le cas du facteur d'émission du thé issu d'Agribalyse. Si la boisson est bue à domicile, la consommation est déjà incluse dans la facture électrique du logement.
+    En revanche, si elle est prise dans un café, l'empreinte de la consommation doit être ajoutée.
+    Nous faisons le choix de ne pas inclure la consommation dans les boissons chaudes
+    (la part liée à la consommation étant négligeable pour le café et chocolat chaud devant les grains de café ou le cacao)
+
+alimentation . boisson . tasse de thé . empreinte thé infusé:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone thé infusé
+      - si: métrique = "eau"
+        alors: empreinte eau thé infusé
+
+alimentation . boisson . tasse de thé . empreinte carbone thé infusé:
+  formule: 0.04
+  unité: kgCO2e/kg
+  note: Facteur d'émission issu d'[Agribalyse, thé infusé non sucré](https://agribalyse.ademe.fr/app/aliments/18020#Th%C3%A9_infus%C3%A9,_non_sucr%C3%A9).
+
+alimentation . boisson . tasse de thé . empreinte eau thé infusé:
+  formule: 776
+  unité: l/kg
+  note: Facteur d'émission issu d'[Agribalyse, thé infusé non sucré](https://agribalyse.ademe.fr/app/aliments/18020#Th%C3%A9_infus%C3%A9,_non_sucr%C3%A9).
+
+alimentation . boisson . tasse de thé . part consommation empreinte thé infusé:
+  formule: 33.6%
+  note: |
+    Selon la décomposition issu d'[Agribalyse, thé infusé non sucré](https://agribalyse.ademe.fr/app/aliments/18020#Th%C3%A9_infus%C3%A9,_non_sucr%C3%A9),
+    la part de consommation dans le facteur d'émission du thé représente 33.6% (indicateur CO₂e).
+
+alimentation . boisson . tasse de thé . quantité thé par tasse:
+  formule: 0.250
+  unité: kg/tasse
+  note: On fait l'hypothèse qu'une tasse de thé fait en moyenne 250 grammes.
+
+alimentation . boisson . tasse de chocolat chaud:
+  titre: Empreinte d'une tasse de chocolat chaud
+  formule:
+    somme:
+      - empreinte cacao en poudre * quantité cacao par tasse
+      - empreinte lait * quantité lait par tasse
+
+alimentation . boisson . tasse de chocolat chaud . empreinte cacao en poudre:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone cacao en poudre
+      - si: métrique = "eau"
+        alors: empreinte eau cacao en poudre
+
+alimentation . boisson . tasse de chocolat chaud . empreinte carbone cacao en poudre:
+  formule: 29.10
+  unité: kgCO2e/kg
+  note: Facteur d'émission issu d'[Agribalyse, cacao non sucré soluble](https://agribalyse.ademe.fr/app/aliments/18100#Cacao,_non_sucr%C3%A9,_poudre_soluble).
+
+alimentation . boisson . tasse de chocolat chaud . empreinte eau cacao en poudre:
+  formule: 743
+  unité: l/kg
+  note: Facteur d'émission issu d'[Agribalyse, cacao non sucré soluble](https://agribalyse.ademe.fr/app/aliments/18100#Cacao,_non_sucr%C3%A9,_poudre_soluble).
+
+alimentation . boisson . tasse de chocolat chaud . quantité cacao par tasse:
+  formule: 0.020
+  unité: kg/tasse
+  note: On fait l'hypothèse qu'une tasse de chocolat chaud contient en moyenne 20 grammes de cacao en poudre.
+
+alimentation . boisson . tasse de chocolat chaud . empreinte lait:
+  formule:
+    variations:
+      - si: type de lait = 'lait de vache'
+        alors: empreinte lait de vache
+      - si: type de lait = 'lait de soja'
+        alors: empreinte lait de soja
+      - si: type de lait = 'lait d'avoine'
+        alors: empreinte lait d'avoine
+
+alimentation . boisson . tasse de chicorée:
+  titre: Empreinte d'une tasse de chicorée
+  formule: empreinte chicorée instantanée * quantité chicorée par tasse
+
+alimentation . boisson . tasse de chicorée . empreinte chicorée instantanée:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone chicorée instantanée
+      - si: métrique = "eau"
+        alors: empreinte eau chicorée instantanée
+
+alimentation . boisson . tasse de chicorée . empreinte carbone chicorée instantanée:
+  formule: 7.87
+  unité: kgCO2e/kg
+  note: Facteur d'émission issu d'[Agribalyse, chicorée, poudre soluble, non réhydratée](https://agribalyse.ademe.fr/app/aliments/18152_1#Chicor%C3%A9e,_poudre_soluble,_non_r%C3%A9hydrat%C3%A9e).
+
+alimentation . boisson . tasse de chicorée . empreinte eau chicorée instantanée:
+  formule: 1420
+  unité: l/kg
+  note: Facteur d'émission issu d'[Agribalyse, chicorée, poudre soluble, non réhydratée](https://agribalyse.ademe.fr/app/aliments/18152_1#Chicor%C3%A9e,_poudre_soluble,_non_r%C3%A9hydrat%C3%A9e).
+
+alimentation . boisson . tasse de chicorée . quantité chicorée par tasse:
+  formule: 0.003
+  unité: kg/tasse
+  note: On fait l'hypothèse qu'une tasse de chicorée contient en moyenne 3 grammes de chicorée instantanée.
+
+alimentation . boisson . type de lait:
+  applicable si:
+    une de ces conditions:
+      - boisson . chaude . chocolat chaud . nombre > 0
+      - petit déjeuner . type = 'lait céréales'
+  question: Le lait que vous consommez est-il d'origine animale ou végétale ?
+  par défaut: "'lait de vache'"
+  une possibilité:
+    - lait de vache
+    - lait de soja
+    - lait d'avoine
+
+alimentation . boisson . type de lait . lait de vache:
+  titre: Lait de vache
+alimentation . boisson . type de lait . lait de soja:
+  titre: Lait de soja
+alimentation . boisson . type de lait . lait d'avoine:
+  titre: Lait d'avoine
+
+alimentation . boisson . empreinte lait de vache:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone lait de vache
+      - si: métrique = "eau"
+        alors: empreinte eau lait de vache
+
+alimentation . boisson . empreinte carbone lait de vache:
+  formule: 1.27
+  unité: kgCO2e/kg
+  note: Facteur d'émission issu d'[Agribalyse, lait demi-écrémé pasteurisé](https://agribalyse.ademe.fr/app/aliments/19042#Lait_demi-%C3%A9cr%C3%A9m%C3%A9,_pasteuris%C3%A9).
+
+alimentation . boisson . empreinte eau lait de vache:
+  formule: 156
+  unité: l/kg
+  note: Facteur d'émission issu d'[Agribalyse, lait demi-écrémé pasteurisé](https://agribalyse.ademe.fr/app/aliments/19042#Lait_demi-%C3%A9cr%C3%A9m%C3%A9,_pasteuris%C3%A9).
+
+alimentation . boisson . empreinte lait de soja:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone lait de soja
+      - si: métrique = "eau"
+        alors: empreinte eau lait de soja
+
+alimentation . boisson . empreinte carbone lait de soja:
+  formule: 0.427
+  unité: kgCO2e/kg
+  note: Facteur d'émission issu d'[Agribalyse, boisson au soja nature](https://agribalyse.ademe.fr/app/aliments/18900#Boisson_au_soja,_nature).
+
+alimentation . boisson . empreinte eau lait de soja:
+  formule: 78.6
+  unité: l/kg
+  note: Facteur d'émission issu d'[Agribalyse, boisson au soja nature](https://agribalyse.ademe.fr/app/aliments/18900#Boisson_au_soja,_nature).
+
+alimentation . boisson . empreinte lait d'avoine:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone lait d'avoine
+      - si: métrique = "eau"
+        alors: empreinte eau lait d'avoine
+
+alimentation . boisson . empreinte carbone lait d'avoine:
+  formule: 0.566
+  unité: kgCO2e/kg
+  note: Facteur d'émission issu d'[Agribalyse, boisson à base d'avoine nature](https://agribalyse.ademe.fr/app/aliments/18905#Boisson_à_base_d'avoine,_nature).
+
+alimentation . boisson . empreinte eau lait d'avoine:
+  formule: 382
+  unité: l/kg
+  note: Facteur d'émission issu d'[Agribalyse, boisson à base d'avoine nature](https://agribalyse.ademe.fr/app/aliments/18905#Boisson_à_base_d'avoine,_nature).
+
+alimentation . boisson . tasse de chocolat chaud . quantité lait par tasse:
+  formule: 0.200
+  unité: kg/tasse
+  note: on fait l'hypothèse qu'une tasse de chocolat chaud contient en moyenne 200 grammes de lait.
+
+alimentation . boisson . froide:
+  icônes: 🍺🥤🧴
+  formule:
+    somme:
+      - sucrées
+      - alcool
+      - eau en bouteille
+
+alimentation . boisson . eau en bouteille:
+  DLUO: 01/12/2026
+  titre: Eau en bouteille
+  formule:
+    variations:
+      - si:
+          est défini: consommateur
+        alors: consommation annuelle * empreinte
+      - sinon: consommation moyenne * empreinte
+
+alimentation . boisson . eau en bouteille . consommateur:
+  question: Buvez-vous votre eau en bouteille ?
+  description: |
+    Nous cherchons à capter ici si votre consommation d'eau en bouteille est très régulière : cochez oui seulement si vous buvez de l'eau en bouteille chaque jour.
+
+    > La consommation d'eau du robinet (pour tous usages) a une empreinte climat négligeable. Nous ne posons donc pas la question !
+  note: |
+    Les français boivent en moyenne entre 100 et 150 litres d'eau en bouteille par an [source](https://www.planetoscope.com/consommation-eau/854-litres-d-eau-en-bouteille-vendus-en-france.html), soit environ un tiers de nos besoins de 1-1,5l par jour [source](https://www.mangerbouger.fr/Le-Mag/Bien-etre/L-eau-indispensable-a-notre-bonne-sante).
+
+    Nous avons considéré que la valeur par défaut était donc "non".
+
+alimentation . boisson . eau en bouteille . empreinte:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . boisson . eau en bouteille . empreinte carbone:
+  formule: 0.32
+  unité: kgCO2e/l
+  note: Facteur d'émission issu d'[Agribalyse, eau embouteillée de source](https://agribalyse.ademe.fr/app/aliments/18430#Eau_embouteillée_de_source).
+
+alimentation . boisson . eau en bouteille . empreinte eau:
+  formule: 98.6
+  unité: l/l
+  note: Facteur d'émission issu d'[Agribalyse, eau embouteillée de source](https://agribalyse.ademe.fr/app/aliments/18430#Eau_embouteillée_de_source).
+
+alimentation . boisson . eau en bouteille . consommation moyenne:
+  formule: 135
+  unité: l
+  note: |
+    La consommation moyenne de l'eau en bouteille est en 2018 de 135 litres par an par habitant (soit 90 bouteilles),
+    d'après le syndicat des eaux minérales naturelles ([source](https://eaumineralenaturelle.fr/qui-sommes-nous/leau-minerale-en-chiffres))
+
+alimentation . boisson . eau en bouteille . consommation annuelle:
+  applicable si: consommateur
+  formule: commun . jours par an * 1.5 l/jour
+  unité: l
+  description: On considère que chacun boit 1,5 litres d'eau par jour.
+
+alimentation . boisson . sucrées:
+  DLUO: 01/12/2026
+  description: |
+    Des alternatives au soda, très simples à préparer maison, sont possibles : c'est le cas du [kéfir](https://fr.wikipedia.org/wiki/K%C3%A9fir) ou [Kombucha](https://fr.wikipedia.org/wiki/Kombucha).
+
+    Nous n'avons pas encore évalué les gains d'empreinte offerts par ces solutions.
+  formule: litres * commun . semaines par an * facteur
+
+alimentation . boisson . sucrées . facteur:
+  formule:
+    moyenne:
+      - facteur sodas
+      - facteur jus de fruits
+  note: |
+    Cette valeur est bien sûr très approximative, encore davantage pour l'empreinte eau : elle est particulièrement importante pour les jus de fruits (l'empreinte étant très liée à l'agriculture) alors que relativement aux jus de fruits, l'empreinte des sodas est faible. Considérer une moyenne devra être revu par la suite.
+
+alimentation . boisson . sucrées . facteur sodas:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: facteur sodas carbone
+      - si: métrique = "eau"
+        alors: facteur sodas eau
+
+alimentation . boisson . sucrées . facteur sodas carbone:
+  formule: 0.493
+  unité: kgCO2e/l
+  note: Facteur d'émission issu d'[Agribalyse, Cola, sucré](https://agribalyse.ademe.fr/app/aliments/18037#Cola,_sucr%C3%A9,_avec_%C3%A9dulcorants), 0.51 kgCO2e/kg. On considère que la masse volumique est de 1kg/l.
+
+alimentation . boisson . sucrées . facteur sodas eau:
+  formule: 307
+  unité: l/l
+  note: Facteur d'émission issu d'[Agribalyse, Cola, sucré](https://agribalyse.ademe.fr/app/aliments/18037#Cola,_sucr%C3%A9,_avec_%C3%A9dulcorants). On considère que la masse volumique est de 1kg/l.
+
+alimentation . boisson . sucrées . facteur jus de fruits:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: facteur jus de fruits carbone
+      - si: métrique = "eau"
+        alors: facteur jus de fruits eau
+
+alimentation . boisson . sucrées . facteur jus de fruits carbone:
+  formule: 0.88
+  unité: kgCO2e/l
+  note: Facteur d'émission issu d'[Agribalyse, Jus multifruit, pur jus, standard](https://agribalyse.ademe.fr/app/aliments/2069#Jus_multifruit,_%C3%A0_base_de_concentr%C3%A9,_standard), 0.91 kgCO2e/kg. On considère que la masse volumique est de 1kg/l.
+
+alimentation . boisson . sucrées . facteur jus de fruits eau:
+  formule: 8980
+  unité: l/l
+  note: Facteur d'émission issu d'[Agribalyse, Jus multifruit, pur jus, standard](https://agribalyse.ademe.fr/app/aliments/2035#Jus_multifruit,_pur_jus,_standard). On considère que la masse volumique est de 1kg/l.
+
+alimentation . boisson . sucrées . litres:
+  titre: Consommation de boissons sucrées
+  question: Quelle est votre consommation par semaine de sodas, jus de fruits, etc. ?
+  suggestions:
+    nulle: 0
+    ponctuelle: 1
+    quotidienne: 3
+  par défaut: 1
+  plancher: 0
+  plafond: 20
+  unité: l/semaine
+  note: La consommation de sodas et boissons sucrées en France est en moyenne de 50,9 litres par habitant ([source](https://www.sante-et-nutrition.com/consommation-soda-france/)) soit à peu près 1 litre par semaine.
+
+alimentation . boisson . alcool:
+  DLUO: 01/12/2026
+  description: |
+    Étonnamment, notre consommation d'alcool prend un rôle important dans notre empreinte.
+
+    La bonne nouvelle, c'est que nous pouvons l'améliorer de façon très simple : plus que l'alimentation, une boisson est lourde, voyage beaucoup, et son emballage a une empreinte significative.
+
+    > Prenons l'exemple d'une 🍺 bière de 25cl : brassée au bout du monde, elle a voyagé des milliers de kilomètres et son contenu (la boisson) est emballé dans un contenant qui fait presque le même poids (200g de verre).
+
+    > En privilégiant une bière brassée localement, servie à la pression (le fût étant réutilisé des années), on peut réduire drastiquement l'empreinte sans changer la consommation.
+  formule: litres * commun . semaines par an * facteur
+
+alimentation . boisson . alcool . facteur:
+  formule:
+    moyenne:
+      - facteur bière
+      - facteur vin
+      - facteur cocktail
+  note: Le vin n'a pas la même empreinte que la bière au litre, c'est une grosse simplification, notamment pour l'empreinte eau.
+
+alimentation . boisson . alcool . facteur bière:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: facteur bière carbone
+      - si: métrique = "eau"
+        alors: facteur bière eau
+
+alimentation . boisson . alcool . facteur bière carbone:
+  formule: 1.35
+  unité: kgCO2e/l
+  note: Facteur d'émission issu d'[Agribalyse, bière coeur de marché](https://agribalyse.ademe.fr/app/aliments/5001#Bi%C3%A8re_%22coeur_de_march%C3%A9%22_(4-5%C2%B0_alcool)), 1.12 kgCO2e/kg. On considère que la masse volumique de la bière est de 1kg/l.
+
+alimentation . boisson . alcool . facteur bière eau:
+  formule: 258
+  unité: l/l
+  note: Facteur d'émission issu d'[Agribalyse, bière coeur de marché](https://agribalyse.ademe.fr/app/aliments/5001#Bi%C3%A8re_%22coeur_de_march%C3%A9%22_(4-5%C2%B0_alcool)), 1.12 kgCO2e/kg. On considère que la masse volumique de la bière est de 1kg/l.
+
+alimentation . boisson . alcool . facteur vin:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: facteur vin carbone
+      - si: métrique = "eau"
+        alors: facteur vin eau
+
+alimentation . boisson . alcool . facteur vin carbone:
+  formule: 1.5
+  unité: kgCO2e/l
+  note: Facteur d'émission issu d'[Agribalyse, vin blanc sec](https://agribalyse.ademe.fr/app/aliments/5215#Vin_blanc_sec), 1.22 kgCO2e/kg. On considère que la masse volumique du vin est de 1kg/l.
+
+alimentation . boisson . alcool . facteur vin eau:
+  formule: 265
+  unité: l/l
+  note: Facteur d'émission issu d'[Agribalyse, vin blanc sec](https://agribalyse.ademe.fr/app/aliments/5215#Vin_blanc_sec), 1.22 kgCO2e/kg. On considère que la masse volumique du vin est de 1kg/l.
+
+alimentation . boisson . alcool . facteur cocktail:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: facteur cocktail carbone
+      - si: métrique = "eau"
+        alors: facteur cocktail eau
+
+alimentation . boisson . alcool . facteur cocktail carbone:
+  formule: 1.1
+  unité: kgCO2e/l
+  note: Facteur d'émission issu d'[Agribalyse, cocktail base rhum](https://agribalyse.ademe.fr/app/aliments/1012#Cocktail_%C3%A0_base_de_rhum), 0.91 kgCO2e/kg. On considère que la masse volumique d'un cocktail est de 1kg/l.
+
+alimentation . boisson . alcool . facteur cocktail eau:
+  formule: 695
+  unité: l/l
+  note: Facteur d'émission issu d'[Agribalyse, cocktail base rhum](https://agribalyse.ademe.fr/app/aliments/1012#Cocktail_%C3%A0_base_de_rhum), 0.91 kgCO2e/kg. On considère que la masse volumique d'un cocktail est de 1kg/l.
+
+alimentation . boisson . alcool . litres:
+  titre: Consommation d'alcool
+  question: Quelle est votre consommation par semaine d'alcool (vin, bière, etc.) ?
+  suggestions:
+    nulle: 0
+    ponctuelle: 1
+    quotidienne: 3
+  par défaut: 1.5
+  plancher: 0
+  plafond: 20
+  unité: l/semaine
+  note: La consommation d'alcool en France est de 79,6 litres d'alcool, tous alcools confondus, soit à peu près 1,5 litres par semaine ([source](https://www.insee.fr/fr/statistiques/4319377#graphique-figure2))

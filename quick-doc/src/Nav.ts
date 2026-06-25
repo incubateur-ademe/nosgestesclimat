@@ -1,19 +1,24 @@
 export type Page = 'home' | 'doc' | 'personas' | 'situations' | 'migration'
 
-export const baseUrl =
-  process.env.NODE_ENV === 'development' ? '' : '/nosgestesclimat'
+export const isGithubPagesDeploy = import.meta.env.MODE === 'gh-pages-root'
+
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '')
+
+function withBase(path: string): string {
+  return `${baseUrl}${path}`
+}
 
 export function pathTo(page: Page): string {
   switch (page) {
     case 'home':
-      return baseUrl + '/'
+      return withBase('/')
     case 'doc':
-      return baseUrl + '/doc'
+      return withBase('/doc')
     case 'personas':
-      return baseUrl + '/personas'
+      return withBase('/personas')
     case 'situations':
-      return baseUrl + '/situations'
+      return withBase('/situations')
     case 'migration':
-      return baseUrl + '/migration'
+      return withBase('/migration')
   }
 }

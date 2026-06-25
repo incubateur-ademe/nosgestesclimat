@@ -38,8 +38,36 @@ const translateRule = async ([ruleName, ruleVal], destLang) => {
       destLang.toUpperCase()
     )
   }
+  const translateMosaique = async (val) => {
+    if (val === null || typeof val !== 'object') {
+      return val
+    }
+
+    return Object.fromEntries(
+      await Promise.all(
+        Object.entries(val).map(async ([mosaiqueAttr, mosaiqueVal]) => {
+          if (
+            mosaiqueAttr === 'option aucun' &&
+            typeof mosaiqueVal === 'string'
+          ) {
+            return [mosaiqueAttr, await translate(mosaiqueVal)]
+          }
+          return [mosaiqueAttr, mosaiqueVal]
+        })
+      )
+    )
+  }
   const translateAttr = async (attr, val) => {
     switch (attr) {
+      case 'question':
+      case 'description': {
+        // Keep empty question values as-is instead of sending them to translation.
+        if (val === '' || val === null) {
+          break
+        }
+        val = translate(val)
+        break
+      }
       case 'suggestions': {
         val = Object.fromEntries(
           await Promise.all(
@@ -52,13 +80,18 @@ const translateRule = async ([ruleName, ruleVal], destLang) => {
         break
       }
       case 'mosaique': {
-        val = translateRule(val, destLang)
+        val = translateMosaique(val)
         break
       }
       case 'description':
       case 'note':
       case 'avertissement': {
         val = translateMd(val)
+        break
+      }
+      case 'avec': {
+        // Recursively translate rules nested under 'avec'.
+        val = await translateModel(val, destLang)
         break
       }
       default: {
@@ -72,7 +105,7 @@ const translateRule = async ([ruleName, ruleVal], destLang) => {
     Object.fromEntries(
       await Promise.all(
         Object.entries(ruleVal).map(async ([attr, val]) => {
-          if (utils.mechanismsToTranslate.includes(attr)) {
+          if (utils.mechanismsToTranslate.includes(attr) || attr === 'avec') {
             return translateAttr(attr, val)
           }
           return [attr, val]
@@ -93,7 +126,10 @@ const translateModel = async (srcRules, destLang) => {
 }
 
 destLangs.forEach(async (destLang) => {
-  const destFile = path.join(regionModelsPath, `${model}-${destLang}.publicodes`)
+  const destFile = path.join(
+    regionModelsPath,
+    `${model}-${destLang}.publicodes`
+  )
   console.log(
     'Translating',
     path.basename(srcFile),

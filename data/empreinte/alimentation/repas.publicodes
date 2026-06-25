@@ -1,0 +1,773 @@
+alimentation . repas:
+  icônes: 🍽️
+  formule:
+    somme:
+      - petit déjeuner annuel
+      - déjeuner et dîner
+      - bonus
+alimentation . déjeuner et dîner:
+  icônes: 🍽️
+  titre: Déjeuners et dîners
+  formule: par semaine * commun . semaines par an
+
+alimentation . déjeuner et dîner . par semaine:
+  titre: Déjeuners et dîners par semaine
+  formule: plats
+
+alimentation . plats:
+  DLUO: 01/06/2026
+  icônes: 🍽️
+  mosaique:
+    type: nombre
+    options:
+      - végétalien . nombre
+      - végétarien . nombre
+      - viande blanche . nombre
+      - viande rouge . nombre
+      - poisson gras . nombre
+      - poisson blanc . nombre
+    suggestions:
+      végétalien:
+        végétalien . nombre: 14
+        végétarien . nombre: 0
+        viande blanche . nombre: 0
+        viande rouge . nombre: 0
+        poisson gras . nombre: 0
+        poisson blanc . nombre: 0
+      végétarien:
+        végétalien . nombre: 3
+        végétarien . nombre: 11
+        viande blanche . nombre: 0
+        viande rouge . nombre: 0
+        poisson gras . nombre: 0
+        poisson blanc . nombre: 0
+      peu de viande:
+        végétalien . nombre: 1
+        végétarien . nombre: 7
+        viande blanche . nombre: 4
+        viande rouge . nombre: 0
+        poisson gras . nombre: 1
+        poisson blanc . nombre: 1
+      viande chaque jour:
+        végétalien . nombre: 0
+        végétarien . nombre: 0
+        viande blanche . nombre: 6
+        viande rouge . nombre: 6
+        poisson gras . nombre: 1
+        poisson blanc . nombre: 1
+  question: Choisissez les 14 repas (déjeuners et dîners) de votre semaine-type
+  titre: Empreinte des repas
+  description: |
+    Les portions de viande ou de poisson de ces repas font 150 grammes. Ajustez si vous consommez des portions plus petites.
+  formule:
+    somme:
+      - végétalien
+      - végétarien
+      - viande blanche
+      - viande rouge
+      - poisson gras
+      - poisson blanc
+  note: |
+    Pour le moment, nous proposons 6 repas types pour 6 régimes différents. Il a été choisi de limiter la granularité du modèle via 6 menus représentatifs
+    des régimes associés pour simplifier l'estimation de l'empreinte du poste alimentation pour l'utilisateur
+    (les spécificités de l'alimentation de chacun pourraient donner lieu à un simulateur complet dédié à l'alimentation).
+
+    Ils ne sont pas directement basés sur les régimes de la Base Empreinte, [documentés par l'ADEME](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm), jugés obsolètes (peu exhaustifs, FE non issus d'Agribalyse).
+
+    En revanche, nous avons travaillé sur des repas types basés sur une consolidation multi-facteurs (quantité totale d'aliments consommés, quantité de viande et poisson consommés, apports énergétiques, empreinte carbone moyenne d'un repas)
+    basé sur les données de [l'étude INCA 3](https://www.anses.fr/fr/system/files/NUT2014SA0234Ra.pdf), permettant de se rapprocher du régime moyen d'un Français.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit?gid=925636017#gid=925636017) sous forme de tableur.
+
+alimentation . plats . végétalien:
+  titre: Végétalien
+  formule: empreinte * nombre
+  icônes: 🌾🥜🥗
+  description: |
+    Repas sans produits animaux.
+
+alimentation . plats . végétalien . empreinte:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . plats . végétalien . empreinte carbone:
+  titre: Empreinte carbone d'un repas végétalien
+  formule: 0.54
+  unité: kgCO2e/repas
+  note: |
+    Repas contenant du tofu, un accompagnement "moyen" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit?gid=925636017#gid=925636017) sous forme de tableur.
+
+alimentation . plats . végétalien . empreinte eau:
+  titre: Empreinte eau d'un repas végétalien
+  formule: 820
+  unité: l/repas
+  note: |
+    Repas contenant du tofu, un accompagnement "moyen" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit?gid=925636017#gid=925636017) sous forme de tableur.
+
+alimentation . plats . végétalien . nombre:
+  titre: Nombre de plats végétaliens par semaine
+  question: Quel nombre de plats végétaliens (sans produits animaux) consommez-vous en moyenne par semaine ?
+  par défaut: 0
+  plancher: 0
+  plafond: 21
+  unité: repas/semaine
+
+alimentation . plats . végétarien:
+  titre: Végétarien
+  formule: empreinte * nombre
+  icônes: 🥗🍳🧀
+  description: |
+    Repas sans chair animale, avec œufs ou fromage.
+
+alimentation . plats . végétarien . empreinte:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . plats . végétarien . empreinte carbone:
+  titre: Empreinte carbone d'un repas végétarien
+  formule: 0.85
+  unité: kgCO2e/repas
+  note: |
+    Repas contenant des œufs, un accompagnement "moyen" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit?gid=925636017#gid=925636017) sous forme de tableur.
+
+alimentation . plats . végétarien . empreinte eau:
+  titre: Empreinte eau d'un repas végétarien
+  formule: 725
+  unité: l/repas
+  note: |
+    Repas contenant des œufs, un accompagnement "moyen" (issu d'un travail de consolidation sur les moyennes de consommation des français tirées de l'étude INCA3 pour les légumes, légumineuses, riz, céréales et pâtes), huile.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit?gid=925636017#gid=925636017) sous forme de tableur.
+
+alimentation . plats . végétarien . nombre:
+  titre: Nombre de plats végétariens par semaine
+  question: Quel nombre de plats végétariens (contenant des œufs ou du fromage) consommez-vous en moyenne par semaine ?
+  par défaut: 5
+  plancher: 0
+  plafond: 21
+  unité: repas/semaine
+
+alimentation . plats . viande blanche:
+  titre: Viande blanche
+  icônes: 🍗🥓
+  formule: empreinte * nombre
+  description: |
+    Repas contenant une pièce de poulet, porc.
+
+alimentation . plats . viande blanche . empreinte:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . plats . viande blanche . empreinte carbone:
+  titre: Empreinte carbone d'un repas de type viande blanche (poulet, porc)
+  formule: 1.65
+  unité: kgCO2e/repas
+  note: |
+    Repas contenant 150g d'une viande blanche moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande blanche de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit?gid=925636017#gid=925636017) sous forme de tableur.
+
+alimentation . plats . viande blanche . empreinte eau:
+  titre: Empreinte eau d'un repas de type viande blanche (poulet, porc, fromage)
+  formule: 996
+  unité: l/repas
+  note: |
+    Repas contenant 150g d'une viande blanche moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande blanche de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit?gid=925636017#gid=925636017) sous forme de tableur.
+
+alimentation . plats . viande blanche . nombre:
+  titre: Nombre de plats viande blanche par semaine
+  question: Quel nombre de plats contenant de la viande blanche (poulet, porc) consommez-vous en moyenne par semaine ?
+  par défaut: 4
+  plancher: 0
+  plafond: 21
+  unité: repas/semaine
+
+alimentation . plats . viande rouge:
+  titre: Viande rouge
+  icônes: 🥩🍖
+  formule: empreinte * nombre
+  description: |
+    Repas contenant une pièce de bœuf, veau, ou agneau.
+
+alimentation . plats . viande rouge . empreinte:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . plats . viande rouge . empreinte carbone:
+  titre: Empreinte carbone d'un repas de type viande rouge (bœuf, veau, agneau)
+  formule:
+    somme:
+      - 5.01
+  unité: kgCO2e/repas
+  note: |
+    Repas contenant 150g d'une viande rouge moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande rouge de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+alimentation . plats . viande rouge . empreinte eau:
+  titre: Empreinte eau d'un repas de type viande rouge (bœuf, veau, agneau)
+  formule: 1059
+  unité: l/repas
+  description: |
+    Repas contenant 150g d'une viande rouge moyenne (issue d'un travail de consolidation sur les consommations moyennes de viande rouge de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit?gid=925636017#gid=925636017) sous forme de tableur.
+
+alimentation . plats . viande rouge . nombre:
+  titre: Nombre de plats viande rouge par semaine
+  question: Quel nombre de plats contenant de la viande rouge (bœuf, veau, agneau) consommez-vous en moyenne par semaine ?
+  par défaut: 3
+  plancher: 0
+  plafond: 21
+  unité: repas/semaine
+
+alimentation . plats . poisson gras:
+  titre: Poisson gras
+  formule: empreinte * nombre
+  icônes: 🍣🥧
+  description: |
+    Repas contenant thon, saumon ou sardine.
+
+alimentation . plats . poisson gras . empreinte:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . plats . poisson gras . empreinte carbone:
+  titre: Empreinte carbone d'un repas de type poisson gras (thon, saumon, sardine, maquereau)
+  formule: 1.45
+  unité: kgCO2e/repas
+  description: |
+    Repas contenant 150g d'un poisson gras moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons gras de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit?gid=925636017#gid=925636017) sous forme de tableur.
+
+alimentation . plats . poisson gras . empreinte eau:
+  titre: Empreinte eau d'un repas de type poisson gras (thon, saumon, sardine, maquereau)
+  formule: 1113
+  unité: l/repas
+  description: |
+    Repas contenant 150g d'un poisson gras moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons gras de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit?gid=925636017#gid=925636017) sous forme de tableur.
+
+alimentation . plats . poisson gras . nombre:
+  titre: Nombre de plats poisson gras par semaine
+  question: Quel nombre de plats contenant du poisson gras (thon, saumon, sardine, maquereau) consommez-vous en moyenne par semaine ?
+  par défaut: 2
+  plancher: 0
+  plafond: 21
+  unité: repas/semaine
+
+alimentation . plats . poisson blanc:
+  titre: Poisson blanc
+  formule: empreinte * nombre
+  icônes: 🐟🍚
+  description: |
+    Repas avec un filet de poisson blanc.
+
+alimentation . plats . poisson blanc . empreinte:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . plats . poisson blanc . empreinte carbone:
+  titre: Empreinte carbone d'un repas de type poisson blanc
+  formule: 2.22
+  unité: kgCO2e/repas
+  description: |
+    Repas contenant 150g d'un poisson blanc moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons blancs de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit?gid=925636017#gid=925636017) sous forme de tableur.
+
+alimentation . plats . poisson blanc . empreinte eau:
+  titre: Empreinte eau d'un repas de type poisson blanc
+  formule: 724
+  unité: l/repas
+  description: |
+    Repas contenant 150g d'un poisson blanc moyen (issu d'un travail de consolidation sur les consommations moyennes de poissons blancs de l'étude INCA3), un accompagnement moyen (consolidation sur les moyennes de consommation pour les légumes, légumineuses, riz, céréales et pâtes), huile.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit?gid=925636017#gid=925636017) sous forme de tableur.
+
+alimentation . plats . poisson blanc . nombre:
+  titre: Nombre de plats poisson blanc par semaine
+  question: Quel nombre de plats contenant du poisson blanc (merlan, colin, lieu) consommez-vous en moyenne par semaine ?
+  par défaut: 0
+  plancher: 0
+  plafond: 21
+  unité: repas/semaine
+
+alimentation . petit déjeuner annuel:
+  titre: Petit déjeuner
+  icônes: 🥐
+  formule: petit déjeuner . par jour * commun . jours par an
+
+alimentation . petit déjeuner . par semaine:
+  titre: Empreinte hebdo petit déjeuner
+  formule: par jour * commun . jours par semaine
+
+alimentation . petit déjeuner . par jour:
+  titre: Empreinte hebdo petit déjeuner
+  formule: alimentation . petit déjeuner * 1 repas/jour
+
+alimentation . petit déjeuner:
+  formule:
+    variations:
+      - si: type = 'continental'
+        alors: continental
+      - si: type = 'lait céréales'
+        alors: lait céréales
+      - si: type = 'britannique'
+        alors: britannique
+      - si: type = 'végétalien'
+        alors: végétalien
+      - sinon: 0
+
+alimentation . petit déjeuner . type:
+  question: Quel petit-déjeuner vous correspond le plus ?
+  description: |
+    Si vous hésitez, choisissez celui qui se rapproche le plus de vos habitudes.
+
+    Votre consommation de jus de fruits / café / thé / chocolat chaud sera comptabilisée dans les questions dédiées aux boissons.
+  par défaut: "'continental'"
+  une possibilité:
+    - continental
+    - lait céréales
+    - britannique
+    - végétalien
+    - aucun
+
+alimentation . petit déjeuner . continental:
+  titre: Continental
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . petit déjeuner . continental . empreinte carbone:
+  titre: Empreinte carbone d'un petit déjeuner continental
+  formule: 0.32
+  unité: kgCO2e/repas
+  description: |
+    Petit déjeuner avec pain, viennoiserie, beurre, confiture et un fruit.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit?gid=925636017#gid=925636017) sous forme de tableur.
+
+alimentation . petit déjeuner . continental . empreinte eau:
+  titre: Empreinte eau d'un petit déjeuner continental
+  formule: 1250
+  unité: l/repas
+  description: |
+    Petit déjeuner avec pain, viennoiserie, beurre, confiture et un fruit.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit?gid=925636017#gid=925636017) sous forme de tableur.
+
+alimentation . petit déjeuner . lait céréales:
+  titre: Lait céréales
+  formule:
+    variations:
+      - si: boisson . type de lait = 'lait de vache'
+        alors: lait vache céréales
+      - si: boisson . type de lait = 'lait de soja'
+        alors: lait soja céréales
+      - si: boisson . type de lait = 'lait d'avoine'
+        alors: lait avoine céréales
+
+alimentation . petit déjeuner . lait vache céréales:
+  titre: Céréales avec lait de vache
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . petit déjeuner . lait vache céréales . empreinte carbone:
+  titre: Empreinte carbone d'un petit déjeuner avec lait de vache et céréales
+  formule: 0.45
+  unité: kgCO2e/repas
+  description: |
+    Petit déjeuner avec un produit laitier (lait de vache) et une portion de céréales.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit?gid=925636017#gid=925636017) sous forme de tableur.
+
+alimentation . petit déjeuner . lait vache céréales . empreinte eau:
+  titre: Empreinte eau d'un petit déjeuner avec lait de vache et céréales
+  formule: 337
+  unité: l/repas
+  description: |
+    Petit déjeuner avec un produit laitier (lait de vache) et une portion de céréales.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit?gid=925636017#gid=925636017) sous forme de tableur.
+
+alimentation . petit déjeuner . lait soja céréales:
+  titre: Céréales avec lait de soja
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . petit déjeuner . lait soja céréales . empreinte carbone:
+  titre: Empreinte carbone d'un petit déjeuner avec lait de soja et céréales
+  formule: 0.29
+  unité: kgCO2e/repas
+  description: |
+    Petit déjeuner avec un produit laitier (lait de soja) et une portion de céréales.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit?gid=925636017#gid=925636017) sous forme de tableur.
+
+alimentation . petit déjeuner . lait soja céréales . empreinte eau:
+  titre: Empreinte eau d'un petit déjeuner avec lait de soja et céréales
+  formule: 322
+  unité: l/repas
+  description: |
+    Petit déjeuner avec un produit laitier (lait de soja) et une portion de céréales.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit?gid=925636017#gid=925636017) sous forme de tableur.
+
+alimentation . petit déjeuner . lait avoine céréales:
+  titre: Céréales avec lait d'avoine
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . petit déjeuner . lait avoine céréales . empreinte carbone:
+  titre: Empreinte carbone d'un petit déjeuner avec lait de avoine et céréales
+  formule: 0.31
+  unité: kgCO2e/repas
+  description: |
+    Petit déjeuner avec un produit laitier (lait d'avoine) et une portion de céréales.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit?gid=925636017#gid=925636017) sous forme de tableur.
+
+alimentation . petit déjeuner . lait avoine céréales . empreinte eau:
+  titre: Empreinte eau d'un petit déjeuner avec lait de avoine et céréales
+  formule: 380
+  unité: l/repas
+  description: |
+    Petit déjeuner avec un produit laitier (lait d'avoine) et une portion de céréales.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit?gid=925636017#gid=925636017) sous forme de tableur.
+
+alimentation . petit déjeuner . britannique:
+  titre: Britannique
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . petit déjeuner . britannique . empreinte carbone:
+  titre: Empreinte carbone d'un petit déjeuner britannique
+  formule: 1.08
+  unité: kgCO2e/repas
+  description: |
+    Petit déjeuner avec de la charcuterie, 2 œufs et des toasts.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit?gid=925636017#gid=925636017) sous forme de tableur.
+
+alimentation . petit déjeuner . britannique . empreinte eau:
+  titre: Empreinte eau d'un petit déjeuner britannique
+  formule: 365
+  unité: l/repas
+  description: |
+    Petit déjeuner avec de la charcuterie, 2 œufs et des toasts.
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit?gid=925636017#gid=925636017) sous forme de tableur.
+
+alimentation . petit déjeuner . végétalien:
+  titre: Végétalien
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone
+      - si: métrique = "eau"
+        alors: empreinte eau
+
+alimentation . petit déjeuner . végétalien . empreinte carbone:
+  titre: Empreinte carbone d'un petit déjeuner végétalien
+  formule: 0.38
+  unité: kgCO2e/repas
+  description: |
+    Petit déjeuner avec une portion de muesli, un fruit
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit?gid=925636017#gid=925636017) sous forme de tableur.
+
+alimentation . petit déjeuner . végétalien . empreinte eau:
+  titre: Empreinte eau d'un petit déjeuner végétalien
+  formule: 596
+  unité: l/repas
+  description: |
+    Petit déjeuner avec une portion de muesli, un fruit
+
+    💡 Vous trouverez la documentation complète dans [notre wiki](https://accelerateur-transition-ecologique-ademe.notion.site/Empreinte-des-repas-NGC-377d2143f3a14b558ab2c8e0426d2e23).
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1L3p1m2jtbSK7f3i9AYvWIHntXhI_IiVIY9RM6-IxTb8/edit?gid=925636017#gid=925636017) sous forme de tableur.
+
+alimentation . petit déjeuner . type . continental:
+  icônes: 🥐🥖
+  titre: Tartine de pain ou viennoiserie
+
+alimentation . petit déjeuner . type . lait céréales:
+  icônes: 🥣🎑
+  titre: Lait et céréales
+
+alimentation . petit déjeuner . type . britannique:
+  titre: Charcuterie, oeuf, fromage
+  icônes: 🍳🥓
+
+alimentation . petit déjeuner . type . végétalien:
+  titre: Fruits
+  icônes: 🍌🍎
+
+alimentation . petit déjeuner . type . aucun:
+  titre: Pas de petit-déjeuner
+  icônes: ❌
+
+alimentation . bonus:
+  non applicable si: métrique != "carbone"
+  formule:
+    somme:
+      - de saison . empreinte
+      - local . empreinte
+
+alimentation . local:
+  non applicable si: métrique != "carbone"
+  icônes: 🍅🇫🇷
+
+alimentation . local . empreinte:
+  DLUO: 01/05/2026
+  titre: Bonus régime local
+  formule:
+    variations:
+      - si: consommation = 'jamais'
+        alors: 0
+      - sinon: (-1) * niveau * part locale annuelle
+  unité: kgCO2e
+
+alimentation . local . consommation:
+  question: À quelle fréquence consommez-vous des produits locaux ?
+  description: |
+    Si comme 40 % de français.e.s, vous cultivez vos fruits et légumes, bravo ! 
+    Difficile toutefois d’en estimer l’empreinte, de par la diversité des pratiques et du degré d’autonomie alimentaire.
+  note: Voir détail de l'approche de calcul [ici](http://nosgestesclimat/documentation/alimentation/local/part-locale)
+  par défaut: "'jamais'"
+  une possibilité:
+    - jamais
+    - parfois
+    - souvent
+    - oui toujours
+
+alimentation . local . consommation . jamais:
+  titre: Jamais
+alimentation . local . consommation . parfois:
+  titre: Parfois
+alimentation . local . consommation . souvent:
+  titre: Souvent
+alimentation . local . consommation . oui toujours:
+  titre: Toujours
+
+alimentation . local . niveau:
+  formule:
+    variations:
+      - si: consommation = 'oui toujours'
+        alors: 100%
+      - si: consommation = 'souvent'
+        alors: 66.6%
+      - si: consommation = 'parfois'
+        alors: 33.3%
+      - sinon: 0%
+  description: |
+    On applique un coefficient de 0,333 et 0,666 dans le cas où l'utilisateur indique qu'il consomme respectivement "parfois" ou "souvent" local.
+
+alimentation . local . part locale annuelle:
+  formule: part locale * commun . semaines par an
+
+alimentation . local . part locale:
+  formule:
+    somme:
+      - alimentation . plats . végétalien * 12%
+      - alimentation . plats . végétarien * 8%
+      - alimentation . plats . viande blanche * 3%
+      - alimentation . plats . viande rouge * 1%
+      - alimentation . plats . poisson gras * 5%
+      - alimentation . plats . poisson blanc * 6%
+      - alimentation . petit déjeuner . par semaine * 8%
+  unité: kgCO2e/semaine
+  description: |
+    Dans une première approche, nous avons choisi de travailler sur les menus proposés dans le simulateur en considérant les facteurs d'émission d'Agribalyse, actualisés en divisant la part de transport par 2.
+
+  note: |
+    Ces coefficients sont obtenus en reconstituant les repas types de la Base Carbone avec des produits équivalents issus d'Agribalyse
+    et en considérant une part de transport divisée par 2. Plus concrètement, le ratio = plat reconstitué avec une part transport divisée par 2 / plat reconstitué.
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1SVYvBaaYDOUDcg5jX0eZFEColnWWIL8PCLMGrPR000o/edit#gid=1694091424) sous forme de tableur.
+
+alimentation . de saison:
+  non applicable si: métrique != "carbone"
+  icônes: 🍅🌞
+
+alimentation . de saison . empreinte:
+  DLUO: 01/05/2026
+  titre: Bonus régime de saison
+  formule:
+    variations:
+      - si: consommation = 'jamais'
+        alors: 0
+      - sinon: facteur de saison * part de saison
+
+alimentation . de saison . facteur de saison:
+  formule: (-1) * niveau / ratio
+
+alimentation . de saison . consommation:
+  question: À quelle fréquence consommez vous des fruits et légumes de saison ?
+  note: Voir détail de l'approche de calcul [ici](http://nosgestesclimat/documentation/alimentation/de-saison/pourcentage-saisonable)
+  par défaut: "'jamais'"
+  une possibilité:
+    - jamais
+    - parfois
+    - souvent
+    - oui toujours
+
+alimentation . de saison . consommation . jamais:
+  titre: Jamais
+alimentation . de saison . consommation . parfois:
+  titre: Parfois
+alimentation . de saison . consommation . souvent:
+  titre: Souvent
+alimentation . de saison . consommation . oui toujours:
+  titre: Toujours
+
+alimentation . de saison . niveau:
+  formule:
+    variations:
+      - si: consommation = 'oui toujours'
+        alors: 100%
+      - si: consommation = 'souvent'
+        alors: 66.6%
+      - si: consommation = 'parfois'
+        alors: 33.3%
+      - sinon: 0%
+  description: |
+    On applique un coefficient de 0,333 et 0,666 dans le cas où l'utilisateur indique qu'il consomme respectivement "parfois" ou "souvent" de saison.
+
+alimentation . de saison . ratio:
+  formule: 2.26
+  description: |
+    Ce coefficient de 2,26 est issu d'Agribalyse en réalisant la moyenne des ratios d'un même produit considéré "de saison" et "hors saison".
+
+    Ce coefficient est sujet à une forte incertitude étant donné que la donnée de saison/hors saison ne concerne que 2 produits dans Agribalyse (la tomate et la fraise).
+  note: |
+    Cette méthode de calcul est imparfaite : idéalement, nous pourrions faire la différence saison / de saison sur chaque plat du régime personnalisé de l'utilisateur. Mais Agribalyse ne donne pas encore le coupe saison/pas de saison pour chaque aliment.
+
+    Elle a cependant le mérite de donner un premier ordre de grandeur.
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1SVYvBaaYDOUDcg5jX0eZFEColnWWIL8PCLMGrPR000o/edit#gid=1694091424) sous forme de tableur.
+
+alimentation . de saison . part de saison:
+  formule: pourcentage de saison * (petit déjeuner annuel + déjeuner et dîner)
+  unité: kgCO2e
+  description: |
+    Le pourcentage de produits de saison est appliqué à l'ensemble des repas d'un individu.
+
+alimentation . de saison . pourcentage de saison:
+  titre: Pourcentage de saison de l'empreinte d'un repas moyen
+  formule: 7.3%
+  description: |
+    Dans une première approche, nous avons choisi d'estimer la part de l'empreinte des produits de saison dans l'empreinte du [repas moyen français](https://www.bilans-ges.ademe.fr/documentation/UPLOAD_DOC_FR/index.htm?repas.htm)
+    calculé à partir de l'enquête INCA 3 (2017).
+
+    Ces produits correspondent aux fruits et légumes susceptibles d'être achetés "directement" de saison, mais également d'autres produits transformés, tels que
+    les jus de fruits, soupes, compotes, pouvant être achetés en connaissance de la date de production du produit.
+
+    Nous avons choisi d'exclure les pommes de terre du calcul étant donné que la récolte est possible presque toute l'année grâce aux nombreuses variétés de pommes de terre.
+  note: |
+    Cette méthode de calcul est imparfaite : idéalement, nous pourrions faire la différence saison / de saison sur chaque plat du régime personnalisé de l'utilisateur. Nous pourrons cependant dans une prochaine version du calcul différencier le pourcentage pour chaque élément du régime.
+
+    Elle a cependant le mérite de donner un premier ordre de grandeur.
+
+    🧮 Le calcul détaillé est [disponible ici](https://docs.google.com/spreadsheets/d/1SVYvBaaYDOUDcg5jX0eZFEColnWWIL8PCLMGrPR000o/edit#gid=1694091424) sous forme de tableur.

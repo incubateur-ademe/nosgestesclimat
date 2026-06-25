@@ -1,0 +1,291 @@
+transport . vacances:
+  DLUO: 01/05/2026
+  mosaique:
+    type: selection
+    clé: propriétaire
+    options:
+      - caravane . propriétaire
+      - camping car . propriétaire
+      - van . propriétaire
+      - bateau plaisance . propriétaire
+    option aucun: aucun
+  question: Possédez-vous l’un (ou plusieurs) de ces véhicules ?
+  icônes: 🏖
+  description: |
+    La catégorie "van aménagé" comprend les fourgons et camionettes aménagés. Si vous avez déjà renseigné les kilomètres parcourus en van aménagé précédemment, en indiquant "véhicule utilitaire léger" comme véhicule principal de déplacement, alors vous pouvez ici cocher "aucun".
+
+    💡 Si vous avez loué un de ces équipements, cochez "aucun". La location n'est pas encore prise en compte dans le calculateur.
+  note: |
+    @Clément: pour l'instant, nous gardons la valeur par défaut pour `transport . vacances` à false pour des raison de complexité :
+    - L'empreinte par défaut est relativement faible au vu des proportions d'usagers de ces véhicules
+    transport . vacances . empreinte par défaut:
+      formule:
+        somme:
+          - caravane . empreinte . usage réel * caravane . pourcentage caravaniers
+          - camping car . empreinte . usage réel * camping car . pourcentage camping-caristes
+          - van * van . pourcentage usagers van
+
+    transport . vacances . choix utilisateur:
+      formule:
+        variations:
+          - si:
+              une de ces conditions:
+                - caravane . propriétaire
+                - camping car . propriétaire
+                - van . propriétaire
+            alors: oui
+        - sinon: non
+  formule:
+    somme:
+      - caravane
+      - camping car
+      - van
+      - bateau plaisance
+
+transport . vacances . caravane:
+  titre: Caravane
+  icônes: 🚎
+  applicable si:
+    toutes ces conditions:
+      - transport . voiture . km > 0
+      - propriétaire
+  formule: usage réel + construction amortie
+  note: |
+    On considère une surconsommation pour les km parcourus avec la caravance.
+
+transport . vacances . caravane . propriétaire:
+  question: Possédez-vous une caravane ?
+  par défaut: non
+
+transport . vacances . caravane . usage réel:
+  titre: Usage Caravane
+  formule: (surconsommation * distance) / logement . habitants
+  unité: kgCO2e
+
+transport . vacances . caravane . surconsommation:
+  formule: voiture . usage au kilomètre * ratio surconsommation
+
+transport . vacances . caravane . ratio surconsommation:
+  formule: 0.25
+  note: |
+    1.2 à 1.5 l/100 km [ici](https://www.lemondedupleinair.com/comment-limiter-sa-consommation-de-carburant-en-tractant-une-caravane/) ce qui peut être estimé à une surconsommation de 10 à 20%
+    40 à 50 % [ici](https://forum.lescaravaniers2.com/viewtopic.php?t=9973)
+    En première approximation, nous considérons donc une hypothèse de 25% de surconsommation
+
+transport . vacances . caravane . distance:
+  question: Quelle distance parcourez-vous à l'année en caravane ?
+  suggestions:
+    1000 km / an: 1000
+    5000 km / an: 5000
+    8000 km / an: 8000
+  par défaut: 6250
+  plancher: 0
+  plafond: 99999
+  description: |
+    Ces km ont normalement déjà été comptabilisés dans vos km parcourus en voiture.
+
+    💡 Cette question nous sert à appliquer la surconsommation du tractage de votre caravane à ces trajets.
+  note: D'après la fédération des campeurs, caravaniers et camping-caristes, un camping-cariste fait en moyenne de 5000 à 7500 km par an ([source](https://ffcc.fr/chiffres-cles/))
+  unité: km
+
+transport . vacances . caravane . construction amortie:
+  titre: Construction de la caravane
+  formule: (construction / durée de vie) / logement . habitants
+  unité: kgCO2e
+
+transport . vacances . caravane . construction:
+  formule: voiture . barème construction . barème thermique . empreinte par kg * caravane . poids
+  unité: kgCO2e
+  note: |
+    On extrapole l'impact de la fabrication d'une caravane car à partir d'un ratio sur le poids et en considérant les données de construction "Berline" (6300 kgCO2e et 1500 kg)
+    Source Figure 6 et tableau 1 [FNH-Carbone4](https://europeanclimate.org/wp-content/uploads/2019/11/quelle-contribution-du-vehicule-electrique-a-la-transition-ecologique-en-france.pdf)
+    On considère un poids de 750 kg pour une caravane.
+
+transport . vacances . caravane . poids:
+  formule: 750
+  unité: kg
+
+transport . vacances . caravane . durée de vie:
+  formule: 25
+  note: |
+    Comme pour le camping car on considère une durée de vie de [25 ans](https://objectifpleinair.com/combien-de-temps-dure-un-camping-car/).
+    Cette hypothèse nécessite d'être mieux sourcée.
+
+transport . vacances . caravane . pourcentage caravaniers:
+  formule: 700000 / population
+  note: Il s'est vendu moitié moins de caravanes en France en 2021 que de camping-cars. On peut supposer qu'il y a moitié moins de caravaniers que de camping-caristes ([source](https://ffcc.fr/chiffres-cles/)).
+
+transport . vacances . camping car:
+  titre: Camping Car
+  icônes: 🚐
+  applicable si: propriétaire
+  formule: (usage + construction) / logement . habitants
+
+transport . vacances . camping car . propriétaire:
+  question: Possédez-vous un camping car ?
+  par défaut: non
+
+transport . vacances . camping car . km:
+  titre: km en camping car
+  applicable si: propriétaire
+  question: Quelle distance parcourez-vous à l'année en camping-car ?
+  suggestions:
+    1000 km / an: 1000
+    5000 km / an: 5000
+    8000 km / an: 8000
+  description: |
+    Attention, ces km de camping car ne doivent pas être renseignés dans les km voiture, ils seraient sinon comptés deux fois.
+
+    Si vous les aviez renseignés côté voiture, vous pouvez revenir en arrière, ou revenir sur cette question à la fin du test via la page Profil.
+  par défaut: 8869
+  plancher: 0
+  plafond: 99999
+  unité: km
+  note: D'après la fédération des campeurs, caravaniers et camping-caristes, un camping-cariste fait en moyenne 8869 km par an ([source](https://ffcc.fr/actualite/qui-sont-les-camping-caristes-et-les-vanlifers-en-2021/))
+
+transport . vacances . camping car . usage:
+  titre: Usage Camping Car
+  formule: usage au km * km
+  unité: kgCO2e
+
+transport . vacances . camping car . usage au km:
+  valeur: transport . voiture . usage au kilomètre
+  unité: kgCO2e/km
+  contexte:
+    transport . voiture . utilisateur: "'propriétaire'"
+    transport . voiture . motorisation: "'thermique'"
+    transport . voiture . gabarit: "'VUL'"
+    transport . voiture . thermique . carburant: "'gazole B7 ou B10'"
+    transport . voiture . thermique . consommation aux 100: camping car . consommation aux 100
+
+transport . vacances . camping car . consommation aux 100:
+  question: Connaissez-vous la consommation moyenne de votre camping-car ?
+  par défaut: 12
+  plancher: 1
+  plafond: 30
+  unité: l/centkm
+  suggestions:
+    10 l/100km: 10
+    15 l/100km: 15
+    18 l/100km: 18
+  note: |
+    La source n'est pas idéale mais [Just4Camper](https://www.just4camper.fr/fr-fr/blog/comment-moins-consommer-en-camping-car?srsltid=AfmBOoraiFSkgf5CQ9A7K19IBzDIpzY_dmRFvJ5a3nBCCbOra2ek0wpZ#article-main-contents-list-1) indique que la consommation moyenne d'un camping-car "intégral" oscille entre 10 et 15 litres. Nous avons choisi une valeur par défaut de 12 l/100km.
+
+transport . vacances . camping car . construction:
+  titre: Construction du camping car
+  formule: construction au km * km
+  unité: kgCO2e
+
+transport . vacances . camping car . construction au km:
+  formule: transport . voiture . construction au kilomètre
+  unité: kgCO2e/km
+  contexte:
+    transport . voiture . utilisateur: "'propriétaire'"
+    transport . voiture . motorisation: "'thermique'"
+    transport . voiture . gabarit: "'VUL'"
+    transport . voiture . gabarit . VUL . poids: camping car . poids
+    transport . voiture . durée de vie en km: 250000
+
+transport . vacances . camping car . poids:
+  formule: 4000
+  unité: kg
+  note: On considère que le poids d'un camping car est de 4 tonnes en moyenne.(au-delà de 4,25 tonnes, le véhicule change de PTAC pour devenir un "poids lourd", impliquant l'utilisation d'un autre permis)
+
+transport . vacances . camping car . pourcentage camping-caristes:
+  formule: 1400000 * 77% / population
+  note: Il existe 1,4 millions de camping-caristes en France, dont 77% roulent en camping-car (23% en van / fourgon aménagé) [selon la Fédération des campeurs, caravaniers et camping-caristes](https://ffcc.fr/chiffres-cles/)
+
+transport . vacances . van:
+  titre: Van
+  icônes: 🚐
+  applicable si: propriétaire
+  formule: (usage + construction) / logement . habitants
+  unité: kgCO2e
+
+transport . vacances . van . propriétaire:
+  question: Possédez-vous un van ?
+  par défaut: non
+
+transport . vacances . van . usage:
+  titre: Usage van
+  formule: usage au km * km
+  unité: kgCO2e
+
+transport . vacances . van . usage au km:
+  valeur: transport . voiture . usage au kilomètre
+  unité: kgCO2e/km
+  contexte:
+    transport . voiture . utilisateur: "'propriétaire'"
+    transport . voiture . motorisation: "'thermique'"
+    transport . voiture . gabarit: "'VUL'"
+    transport . voiture . thermique . carburant: "'gazole B7 ou B10'"
+    transport . voiture . thermique . consommation aux 100: van . consommation aux 100
+
+transport . vacances . van . km:
+  titre: km en van
+  applicable si: propriétaire
+  question: Quelle distance parcourez-vous à l'année en van ?
+  description: |
+    Attention, ces km en van ne doivent pas être renseignés dans les km voiture, ils seraient sinon comptés deux fois.
+
+    Si vous les aviez renseignés côté voiture, vous pouvez revenir en arrière, ou revenir sur cette question à la fin du test via la page Profil.
+  par défaut: 9310
+  unité: km
+  suggestions:
+    1000 km / an: 1000
+    5000 km / an: 5000
+    8000 km / an: 8000
+  plancher: 0
+  plafond: 99999
+  note: D'après la fédération des campeurs, caravaniers et camping-caristes, un "vanlifer" fait en moyenne 9310 km par an ([source](https://ffcc.fr/actualite/qui-sont-les-camping-caristes-et-les-vanlifers-en-2021/))
+
+transport . vacances . van . consommation aux 100:
+  question: Connaissez-vous la consommation moyenne de votre van ?
+  par défaut: 6.6 * 1.127
+  plancher: 1
+  plafond: 30
+  unité: l/centkm
+  suggestions:
+    7 l/100km: 7
+    9 l/100km: 9
+    12 l/100km: 12
+  note: |
+    La consommation par défaut est issue d'une moyenne des véhicules diesel de Car Labelling ajusté par l'intermédiaire d'un facteur de correction constructeur / réel (+12,7%).
+
+transport . vacances . van . construction:
+  titre: Construction du van
+  formule: construction au km * km
+  unité: kgCO2e
+
+transport . vacances . van . construction au km:
+  formule: transport . voiture . construction au kilomètre
+  unité: kgCO2e/km
+  contexte:
+    transport . voiture . utilisateur: "'propriétaire'"
+    transport . voiture . motorisation: "'thermique'"
+    transport . voiture . gabarit: "'VUL'"
+    transport . voiture . gabarit . VUL . poids: van . poids
+    transport . voiture . durée de vie en km: 250000
+
+transport . vacances . van . poids:
+  formule: 3000
+  unité: kg
+  note: Le poids d'un van aménagé varie entre 2,6 et 3,5 tonnes (au-delà de 3,5 tonnes, le véhicule change de PTAC pour devenir un "poids lourd", impliquant l'utilisation d'un autre permis)
+
+transport . vacances . van . pourcentage usagers van:
+  formule: 1400000 * 23% / population
+  note: Il existe 1,4 millions de camping-caristes en France, dont 23% roulent en van / fourgon aménagé [selon la Fédération des campeurs, caravaniers et camping-caristes](https://ffcc.fr/chiffres-cles/)
+
+transport . vacances . bateau plaisance:
+  titre: Bateau de plaisance
+  icônes: ⚓️
+  applicable si: propriétaire
+  formule: 0
+  note: |
+    La plaisance en mer est un usage répandu en France : près de 1 000 000 de bateaux sont immatriculés sur le territoire (800 000 bateaux à moteur, 200 000 voiliers).
+    Cette option sera activée lorsque nous aurons trouvé toutes les données pour calculer l'empreinte liée à cet usage (empreintes de construction, d'usage des infrastructures maritimes, et bien évidemment liée aux sorties en mer et à l'utilisation de carburant).
+
+transport . vacances . bateau plaisance . propriétaire:
+  question: Possédez-vous un bateau de plaisance (voilier ou à moteur) ?
+  par défaut: non
+  inactif: oui

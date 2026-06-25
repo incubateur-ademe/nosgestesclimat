@@ -1,0 +1,103 @@
+importer!:
+  depuis:
+    nom: futureco-data
+    url: https://github.com/laem/futureco-data
+  dans: logement
+  les règles:
+    - piscine . empreinte eau froide
+    - piscine . traitement chimique
+    - piscine . construction
+    - piscine . surface:
+        applicable si: piscine . type = 'creusée'
+        question: Quelle est la taille de votre piscine ?
+        plancher: 0
+        plafond: 999
+        unité: m2
+        suggestions:
+          3 x 5 mètres: 15
+          5 x 5 mètres: 25
+          5 x 8 mètres: 40
+    - piscine . volume:
+        formule:
+          variations:
+            - si: piscine . type = 'creusée'
+              alors: piscine . surface * piscine . profondeur * 1000 l/m3
+            - si: piscine . type = 'hors sol'
+              alors: piscine . profondeur * 4 m2 * 1000 l/m3
+        note: On fixe abrbitrairement la valeur du volume d'une piscine hors sol à 6000 litres.
+    # Non nécessaire ici mais il faut y penser si on importe "chauffage" par exemple.
+    # - piscine . empreinte électricité:
+    #     formule: logement . électricité . empreinte
+
+logement . piscine:
+  DLUO: 01/08/2026
+  icônes: 🏊‍♀️
+  applicable si: logement . est une maison
+  formule: empreinte / habitants
+  # @Clément: Pour le moment, pas de valeur par défaut représentative pour la piscine.
+  description: |
+    L'installation de piscines privées **enterrées** dans les jardins français s'est accélérée ces dernières années. On en compte aujourd'hui plus de [3 millions](https://bonpote.com/impact-ecologique-dune-piscine-individuelle/).
+    C'est donc un équipement loin d'être anecdotique, qui pèse dans l'empreinte climat de la France.
+
+    Ce sont les travaux de construction, d'entretien, d'achat du matériel divers nécessaire (sureté, gestion de l'eau, produits chimiques sanitaires), et de chauffage qui sont les plus impactants pour le climat.
+
+logement . piscine . type:
+  question: Votre logement dispose-t-il d'une piscine ?
+  une possibilité:
+    - pas de piscine
+    - creusée
+    - hors sol
+  par défaut: "'pas de piscine'"
+  note: |
+    Aujourd'hui, nous posons la question à toutes les personnes qui possèdent une maison.
+    Afin de limiter l'apparition de cette question pour les utilisateurs qui ne possèdent pas de terrain, ou qui ne sont absoluement pas concernés par la piscine,
+    on pourrait filtrer l'affichage de la question selon la surface de la maison par exemple.
+
+logement . piscine . type . creusée:
+  titre: Oui, une piscine creusée
+logement . piscine . type . hors sol:
+  titre: Oui, une piscine posée sur le sol
+logement . piscine . type . pas de piscine:
+  titre: Non, pas de piscine
+
+logement . piscine . empreinte:
+  formule: empreinte carbone
+
+logement . piscine . empreinte carbone:
+  formule:
+    variations:
+      - si: piscine . type = 'pas de piscine'
+        alors: 0
+      - si: piscine . type = 'creusée'
+        alors:
+          somme:
+            - piscine . empreinte eau froide
+            - piscine . traitement chimique
+            - piscine . construction
+      - si: piscine . type = 'hors sol'
+        alors:
+          somme:
+            - piscine . empreinte eau froide / 2
+            - piscine . traitement chimique
+  unité: kgCO2e
+  description: |
+    Ce modèle de calcul de l'empreinte carbone d'une piscine nous provient de [Futur.eco](https://futur.eco/simulateur/piscine/empreinte), tiré du [modèle publicodes](https://github.com/laem/futureco-data/blob/master/data/piscine.yaml) avec ses valeurs par défaut.
+
+    C'est le seul modèle ouvert d'empreinte carbone d'une piscine individuelle publié à ce jour.
+
+    Dans cette première version, nous ne prenons pas spécifiquement en compte l'utilisation de la pompe de filtrage ou le chauffage dont l'empreinte est implicitement calculée dans les consommations énergétiques du logement.
+    Par la suite, il pourrait être intéressant de bien séparer les 2 consommations pour proposer notamment des actions plus personalisées.
+
+    Notez que l'aspect consommation d'eau n'est pas traité ici par principe (nos calculs portent sur les émissions de carbone), mais il est évidemment primordial de s'en soucier.
+  note: |
+    Afin de mieux comprendre le calcul de l'empreinte de la piscine, quelques élements:
+
+      - L'empreinte de l'eau dépend à la fois de l'acheminement et du traitement
+      - L'évaporation de l'eau n'est pas prise en compte
+      - On considère que la piscine est re-remplie chaque année : c'est une hypothèse forte mais acceptable dans le sens ou les personnes qui conservent l'eau de leur piscine l'hiver consommeront davantage de produits chimiques.
+      - La construction prend en compte de nombreux facteurs : maçonnerie, étanchéité, équipements techniques etc...  pour des piscines "béton"
+      - Le traitement chimique est aujourd'hui une constante. On pourrait imaginer le variabiliser selon la taile ou le nombre de mois d'utilisation de la piscine.
+      - L'éventuel abri de piscine, les acccessoires type jeux ne sont pas pris en compte pour le moment
+      - Pour la piscine hors sol, on considère toujours l'empreinte du traitemetn chimique mais on applique un facteur 2 (arbitraire).
+
+    Il est important de noter que ce modèle de calcul est amélioré en continu. (Voir https://github.com/laem/futureco-data/issues/97)

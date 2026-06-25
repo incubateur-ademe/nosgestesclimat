@@ -1,0 +1,206 @@
+alimentation . déchets:
+  DLUO: 01/10/2026
+  non applicable si: métrique = 'eau'
+  icônes: 🚮
+  description: |
+    Nous avons rangé ce poste dans la catégorie "Alimentation" car une grande partie de nos déchets ont une origine alimentaire (85% des emballages jetés par
+    les ménages sont des emballages alimentaires)
+  formule:
+    variations:
+      - si: quantité jetée = 'zéro déchet'
+        alors: niveau zéro déchets
+      - sinon:
+          somme:
+            - niveau moyen
+            - gestes
+
+alimentation . déchets . quantité jetée:
+  question: Comment estimeriez-vous la quantité de déchets que vous jetez ?
+  description: |
+    Répondez 'Zéro Déchet' uniquement si vous traquez le moindre déchet et ne sortez (quasiment) jamais vos poubelles, et "je limite" sinon (nous vous questionnerons alors sur les actions que vous avez mises en œuvre).
+  par défaut: "'réduction'"
+  une possibilité:
+    - base
+    - réduction
+    - zéro déchet
+
+alimentation . déchets . quantité jetée . base:
+  titre: Je jette sans faire attention
+
+alimentation . déchets . quantité jetée . réduction:
+  titre: Je limite mes déchets
+
+alimentation . déchets . quantité jetée . zéro déchet:
+  titre: Je suis zéro-déchet
+
+alimentation . déchets . notif zéro déchet:
+  type: notification
+  formule: quantité jetée = 'zéro déchet'
+  description: |
+    Vous avez renseigné un mode de vie zéro déchet. Il faut savoir que ce niveau d'engagement correspond à une personne qui est investie à **100% dans la démarche de réduction de ses déchets**. Consommer en vrac n'est pas suffisant pour être zéro-déchet.
+
+alimentation . déchets . niveau zéro déchets:
+  formule:
+    somme:
+      - omr . putrescibles . non compostable + omr . putrescibles . compostés
+      - omr . papier carton / 4
+      - omr . plastiques / 4
+      - omr . verre / 4
+      - omr . metaux / 4
+      - omr . autre / 4
+      - collecte separee / 4
+      - dechetterie / 4
+  note: |
+    On considère que la part de gens vivant réellement sans générer aucun déchets est peu représentative même au sein du mouvement zéro déchets. Ainsi,
+    on considère qu'un mode de vie zéro déchets correspond à une division par 4 de toutes les autres quantitées de déchets (OMR, CS et déchetterie).
+    Seuls les déchets putrescibles sont exclus des réduction opérées car ils ne concernent pas les emballages.
+    Voir l'analyse [Bien vivre en zéro déchet de l'ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/1906-bien-vivre-en-zero-dechet.html).
+
+alimentation . déchets . niveau moyen:
+  formule:
+    somme:
+      - omr
+      - collecte separee
+      - dechetterie
+  description: |
+    Ce niveau correspond à la moyenne française.
+
+alimentation . déchets . gestes:
+  formule:
+    somme:
+      - compostage biodéchets
+      - gaspillage alimentaire
+      - stop pub
+      - acheter en vrac
+
+alimentation . déchets . gestes . saisie:
+  applicable si: quantité jetée = 'réduction'
+  mosaique:
+    type: selection
+    option aucun: aucun
+    options:
+      - compostage biodéchets . présent
+      - gaspillage alimentaire . présent
+      - stop pub . présent
+      - acheter en vrac . présent
+  question: Que faite-vous pour limiter le poids de votre poubelle ?
+  description: Les différents gestes que vous pourriez déjà mettre en place pour réduire l'empreinte de votre poubelle.
+
+alimentation . déchets . gestes . compostage biodéchets . présent:
+  question: Compostez-vous vos biodéchets ?
+  par défaut: non
+  description: |
+    Les biodéchets regroupent les déchets alimentaires (mais pas tous !), les papiers et cartons souillés et une partie des déchets verts.
+
+alimentation . déchets . gestes . compostage biodéchets:
+  titre: Je composte
+  icônes: 🍃
+  applicable si: présent
+  formule: (-1) * bonus compostage biodéchets
+  unité: kgCO2e
+
+alimentation . déchets . gestes . bonus compostage biodéchets:
+  formule:
+    somme:
+      - omr . putrescibles . réduction compost
+      - (-1) * omr . putrescibles . compostés
+  unité: kgCO2e
+
+alimentation . déchets . omr . putrescibles . réduction compost:
+  formule: omr . putrescibles * (gisement réduction / quantité réelle)
+  unité: kgCO2e
+
+alimentation . déchets . omr . putrescibles . non compostable:
+  formule: omr . putrescibles * ((quantité réelle - gisement réduction) / quantité réelle)
+  unité: kgCO2e
+
+alimentation . déchets . omr . putrescibles . compostés:
+  formule: gisement réduction * impact compost domestique
+  unité: kgCO2e
+  note: |
+    On considère que seulement seul le gisement de déchets putrescibles est réellement composté. Le reste des déchets suit l'exutoire classique
+    des OMR
+
+alimentation . déchets . omr . putrescibles . gisement réduction:
+  formule: 55
+  unité: kg
+  note: |
+    Source : potentiel de réduction du gisement située entre 40 et 70 kg issu de la section 4.13.3.3. page 84 de [l'étude ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/2520-etude-d-evaluation-des-gisements-d-evitement-des-potentiels-de-reduction-de-dechets-et-des-impacts-environnementaux-evites.html)
+
+alimentation . déchets . omr . putrescibles . impact compost domestique:
+  formule: 0.009
+  unité: kgCO2e/kg
+  note: |
+    Le facteur d'émission considéré est : Déchets de cuisine et déchets verts - Compostage domestique en bac - Impacts
+
+alimentation . déchets . gestes . gaspillage alimentaire . présent:
+  question: Cherchez-vous à réduire votre gaspillage alimentaire (que les produits aient été cuisinés ou non) ?
+  par défaut: non
+  description: |
+    Si vous faites peu ou pas d'efforts pour éviter de jeter vos aliments, répondez non. En moyenne, le gaspillage alimentaire reste la norme.
+
+alimentation . déchets . gestes . gaspillage alimentaire:
+  titre: Je ne gaspille pas d'aliments
+  icônes: 🚯
+  applicable si: présent
+  formule: (-1) * empreinte gaspillage alimentaire
+  unité: kgCO2e
+  note: |
+    Il faut savoir qu'il existe un double comptage avec la fin de vie des pertes non-comestibles chez le consommateur déjà prise en compte dans les facteurs d'émission repas.
+    de la Base Carbone. Cependant, ce double comptage est peu significatif.
+    Pour aller plus loin dans cette discussion, notamment les questions de périmètre et de comparaison avec l'étude internationale de la FAO, voir nos commentaires [ici](https://github.com/incubateur-ademe/nosgestesclimat/pull/1096#issuecomment-945158967).
+
+alimentation . déchets . gestes . empreinte gaspillage alimentaire:
+  formule: 30
+  unité: kgCO2e
+  note: Voir tableau page 111 de [l'étude ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/2520-etude-d-evaluation-des-gisements-d-evitement-des-potentiels-de-reduction-de-dechets-et-des-impacts-environnementaux-evites.html)
+
+alimentation . déchets . gestes . stop pub . présent:
+  question: Avez-vous un stop pub sur votre boîte aux lettres ?
+  description: |
+    C'est un autocollant à placer sur votre boîte aux lettres qui informe les distributeurs de pub que vous refusez de recevoir des catalogues, des promotions, menus de restaurant et publicités en tout genre.
+
+    Cela n'empêche pas toute publicité, mais envoie un signal fort et réduit en général considérablement la quantité de déchets papiers reçus.
+  par défaut: non
+
+alimentation . déchets . gestes . stop pub:
+  titre: J'ai "stop pub" sur ma boîte aux lettres
+  icônes: 📬
+  applicable si: présent
+  formule: (-1) * bonus stop pub
+  unité: kgCO2e
+
+alimentation . déchets . bonus stop pub:
+  formule: gain prospectus * 3 * 52
+  unité: kgCO2e
+  note: |
+    On considère 3 prospectus par semaine dans sa boite aux lettres
+
+alimentation . déchets . bonus stop pub . gain prospectus:
+  titre: Non fabrication d'un prospectus
+  formule: 0.083
+  note: |
+    Source : Cas 2 du tableau page 103 de [l'étude ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/2520-etude-d-evaluation-des-gisements-d-evitement-des-potentiels-de-reduction-de-dechets-et-des-impacts-environnementaux-evites.html)
+    C'est le cas le plus défavorable car il inclut le report vers une communication électronique
+
+alimentation . déchets . gestes . acheter en vrac . présent:
+  question: Achetez-vous en vrac ?
+  par défaut: non
+  note: |
+    Malheureusement, à ce stade, nous ne disposons pas de données permettant de moyenner le gain d’empreinte que cette pratique représente. Du côté des fruits et légumes, c’est un gain net et indiscutable. Sur les produits “normalement emballés”, une [étude ADEME](https://librairie.ademe.fr/consommer-autrement/5064-panorama-et-evaluation-environnementale-du-vrac-en-france.html) portant sur 10 d’entre eux montre que le gain est très important sur les liquides (surtout ceux que l’on trouve dans des bouteilles en verre), moins sur les céréales (dont le travail de réduction d’emballage n’a pas encore été réalisé sur toute la chaîne de distribution). 
+    Mais le contexte évolue vite, et d’autant plus vite que les consommateurs et consommatrices s’y mettent, donc adoptons le vrac et participons à l’évolution des chaînes de distribution.
+
+alimentation . déchets . gestes . acheter en vrac:
+  titre: J'achète en vrac
+  icônes: 🧺
+  applicable si: présent
+  formule: 0
+  unité: kgCO2e
+
+alimentation . déchets . gestes . notif vrac:
+  type: notification
+  formule: acheter en vrac . présent
+  description: |
+    Bravo ! Hélas, nous manquons de données pour estimer précisément l’impact carbone de cette pratique vertueuse, mais chaque geste compte.
+
+    Savoir que vous achetez en vrac nous aidera à vous faire des recommandations d’actions plus pertinentes.
