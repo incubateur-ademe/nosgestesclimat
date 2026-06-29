@@ -21,15 +21,21 @@ logement . climatisation:
       - le taux de fuites en fin de vie n'est pas clairement précisé
       - le fluide R134a, considéré dans l'étude, ne semble pas être représentatif du parc actuel de climatiseurs. Le gaz R410a est plus représentatif des anciennes installations alors que le R32 est de plus en plus utilisé. Enfin cette étude ne mentionne pas les pompes à chaleur, or nous souhaitons adopté une modélisation similaire pour les PAC avec un jeu d'hypothèses différent.
 
+logement . climatisation . notif fluides frigorigènes:
+  type: notification
+  description: |
+    L'empreinte des climatiseurs et pompes à chaleur provient majoritairement des **fluides frigorigènes** présents dans les appareils.
+  formule:
+    une de ces conditions:
+      - climatisation . sans PAC air air . présent = "oui et utilisation"
+      - climatisation . sans PAC air air . présent = "oui sans utilisation"
+
 logement . climatisation . usage:
   formule:
     une de ces conditions:
       - toutes ces conditions:
           - est défini: climatisation . sans PAC air air . présent
           - climatisation . sans PAC air air . présent = "oui et utilisation"
-      - toutes ces conditions:
-          - est défini: climatisation . avec PAC air air . autre système
-          - climatisation . avec PAC air air . autre système = "oui et utilisation"
       - climatisation . avec PAC air air . mode réversible = oui
 
 logement . climatisation . est présent PAC air air:
@@ -43,17 +49,6 @@ logement . climatisation . est présent PAC air eau:
     toutes ces conditions:
       - est défini: chauffage . principal
       - chauffage . principal = "PAC air eau"
-
-logement . climatisation . rappel kWh:
-  type: notification
-  description: |
-    La consommation d'électricité de votre clim ou pompe à chaleur est incluse dans la facture d'électricité. Sont prises en compte ici, **les fuites de gaz frigorigènes** dont le pouvoir de réchauffement est très important.
-  formule:
-    une de ces conditions:
-      - climatisation . est présent PAC air air
-      - climatisation . est présent PAC air eau
-      - climatisation . sans PAC air air . présent = "oui et utilisation"
-      - climatisation . sans PAC air air . présent = "oui sans utilisation"
 
 logement . climatisation . empreinte:
   titre: Empreinte des fluides frigorigènes des climatiseurs et PAC
@@ -97,7 +92,7 @@ logement . climatisation . sans PAC air air . présent . oui et utilisation:
 logement . climatisation . sans PAC air air . présent . oui sans utilisation:
   titre: Oui, mais je ne les utilise pas
 logement . climatisation . sans PAC air air . présent . pas de climatiseurs:
-  titre: Non, je n'ai ni climatiseur mobile, ni clim réversible (PAC air-air)
+  titre: Non
 
 logement . climatisation . sans PAC air air . nombre:
   non applicable si: est présent PAC air air
@@ -107,12 +102,12 @@ logement . climatisation . sans PAC air air . nombre:
       - une de ces conditions:
           - climatisation . sans PAC air air . présent = "oui et utilisation"
           - climatisation . sans PAC air air . présent = "oui sans utilisation"
+  question: Combien de systèmes de climatisation possédez-vous ?
   mosaique:
     type: nombre
     options:
       - sans PAC air air . climatiseurs mobiles . nombre
       - sans PAC air air . climatiseurs fixes . nombre
-  question: Combien de systèmes de climatisation possédez-vous ?
 
 logement . climatisation . sans PAC air air . climatiseurs mobiles:
   titre: Climatiseurs mobiles
@@ -130,10 +125,11 @@ logement . climatisation . sans PAC air air . climatiseurs mobiles . nombre:
   plafond: 15
   unité: climatiseur
 logement . climatisation . sans PAC air air . climatiseurs fixes:
-  titre: Climatiseurs fixes (réversible, PAC air-air)
+  titre: Climatiseurs fixes
+  description: Clim réversible, pompe à chaleur air/air
 logement . climatisation . sans PAC air air . climatiseurs fixes . nombre:
-  titre: Nombre de climatiseurs fixes (réversible, PAC air-air)
-  question: Combien de climatiseurs fixes (PAC air-air) possédez-vous ?
+  titre: Nombre de climatiseurs fixes (réversible, PAC air/air)
+  question: Combien de climatiseurs fixes (PAC air/air) possédez-vous ?
   applicable si:
     toutes ces conditions:
       - est défini: climatisation . sans PAC air air . présent
@@ -149,50 +145,16 @@ logement . climatisation . avec PAC air air:
 
 logement . climatisation . avec PAC air air . mode réversible:
   applicable si: est présent PAC air air
-  question: Utilisez-vous votre PAC (air/air) pour refroidir votre logement ?
+  question: Utilisez-vous votre pompe à chaleur air/air pour refroidir votre logement ?
   par défaut: oui
-
-logement . climatisation . avec PAC air air . autre système:
-  applicable si: est présent PAC air air
-  question: Possédez-vous d'autres systèmes de climatisation ?
-  une possibilité:
-    - oui et utilisation
-    - oui sans utilisation
-    - pas de climatiseurs
-
-logement . climatisation . avec PAC air air . autre système . oui et utilisation:
-  titre: Oui, et je les utilise
-logement . climatisation . avec PAC air air . autre système . oui sans utilisation:
-  titre: Oui, mais je ne les utilise pas
-logement . climatisation . avec PAC air air . autre système . pas de climatiseurs:
-  titre: Non, je n'ai pas de climatiseur en plus de la PAC
-
-logement . climatisation . avec PAC air air . nombre climatiseurs mobiles:
-  titre: Nombre climatiseurs mobiles
-  applicable si:
-    toutes ces conditions:
-      - est défini: climatisation . avec PAC air air . autre système
-      - une de ces conditions:
-          - climatisation . avec PAC air air . autre système = "oui et utilisation"
-          - climatisation . avec PAC air air . autre système = "oui sans utilisation"
-  question: Combien de climatiseurs mobiles possédez-vous ?
-  par défaut: 1
-  plancher: 0
-  plafond: 15
-  unité: climatiseur
 
 logement . climatisation . empreinte climatiseurs mobiles:
   titre: Empreinte des fluides frigorigènes des climatiseurs mobiles
   formule:
     variations:
       - si:
-          une de ces conditions:
-            - est défini: sans PAC air air . présent
-            - est défini: avec PAC air air . autre système
-        alors:
-          somme:
-            - climatisation . sans PAC air air . climatiseurs mobiles . nombre * empreinte unitaire
-            - climatisation . avec PAC air air . nombre climatiseurs mobiles * empreinte unitaire
+          est défini: sans PAC air air . présent
+        alors: climatisation . sans PAC air air . climatiseurs mobiles . nombre * empreinte unitaire
       - sinon:
           variations:
             - si: est présent PAC air air
@@ -230,7 +192,7 @@ logement . climatisation . empreinte PAC air air:
         alors: climatisation . empreinte unitaire PAC air air multi split * 1 climatiseur
       - sinon: climatisation . empreinte unitaire PAC air air mono split * 1 climatiseur
   note: |
-    Si l'utilisateur renseigne plusieurs climatiseurs fixes (PAC air-air), nous considérons que l'empreinte est celle d'un PAC multi split. Si l'utilisateur renseigne un seul climatiseur fixe (PAC air-air), nous considérons que l'empreinte est celle d'un PAC mono split.
+    Si l'utilisateur renseigne plusieurs climatiseurs fixes (PAC air/air), nous considérons que l'empreinte est celle d'un PAC multi split. Si l'utilisateur renseigne un seul climatiseur fixe (PAC air/air), nous considérons que l'empreinte est celle d'un PAC mono split.
   unité: kgCO2e
 
 logement . climatisation . empreinte unitaire PAC air air mono split:
@@ -303,7 +265,7 @@ logement . climatisation . empreinte unitaire:
   note: |
     L'empreinte unitaire est calculée à partir de la charge moyenne du climatiseur et des fuites ayant lieu à la charge, lors de l'utilisation, lors de la maintenance et en fin de vie.
 
-    Les hypothèses varient selon le type de climatiseur (mobile, PAC air-air mono split, PAC air-air multi split, PAC air-eau). Elles sont issues du rapport [Rapport Fluides frigorigènes 2025](https://www.afce.asso.fr/rapport-septembre-2025-fluides-frigorigenes/) (transmis par le service Bâtiment ADEME).
+    Les hypothèses varient selon le type de climatiseur (mobile, PAC air/air mono split, PAC air/air multi split, PAC air-eau). Elles sont issues du rapport [Rapport Fluides frigorigènes 2025](https://www.afce.asso.fr/rapport-septembre-2025-fluides-frigorigenes/) (transmis par le service Bâtiment ADEME).
 
 logement . climatisation . fuites à la charge amortie:
   titre: Empreinte amortie des fuites à la charge du climatiseur
