@@ -107,8 +107,8 @@ actions . logement . logement frais sans clim:
     On ne considère que l'usage des climatiseurs pour cette action (qui correspond à l'empreinte de la consommation électrique). On ne considère pas, pour le moment, la part de l'empreinte (la plus importante) liée à l'empreinte des fluides frigorigènes.
   applicable si:
     toutes ces conditions:
-      - utilisateur . nombre climatiseurs > 0
-      - utilisateur . utilisation climatiseurs = "oui"
+      - utilisateur . nombre climatiseurs mobiles + utilisateur . nombre climatiseurs fixes > 0
+      - utilisateur . utilisation climatiseurs = oui
   formule:
     somme:
       - part électricité climatisation / utilisateur . habitants
@@ -116,11 +116,13 @@ actions . logement . logement frais sans clim:
   avec:
     part électricité climatisation:
       applicable si: utilisateur . utilisation climatiseurs
-      formule: logement . climatisation . nombre * 400 kWh/climatiseur * logement . électricité . empreinte au kWh
+      formule:
+        somme:
+          - utilisateur . nombre climatiseurs mobiles * 140 kWh/climatiseur * logement . électricité . empreinte au kWh
+          - utilisateur . nombre climatiseurs fixes * 300 kWh/climatiseur * logement . électricité . empreinte au kWh
       unité: kgCO2e
       note: |
-        D'après l'étude [ADEME Panel ElecDom 2020](https://librairie.ademe.fr/changement-climatique-et-energie/4473-panel-usages-electrodomestiques.html), un climatiseur fixe a une [consommation moyenne "de 100 à 700 kWh/an"](https://agirpourlatransition.ademe.fr/particuliers/maison/economies-denergie-deau/electricite-combien-consomment-appareils-maison).
-        Nous partons donc sur une moyenne de 400 kWh/an par climatiseur installé.
+        D'après l'étude [ADEME Panel ElecDom 2020](https://librairie.ademe.fr/changement-climatique-et-energie/4473-panel-usages-electrodomestiques.html), un climatiseur fixe a une consommation moyenne d'environ 300 kWh/an et un climatiseur mobile environ 140 kWh/an.
 
 actions . logement . individualisation chauffage collectif:
   titre: Demander l’individualisation des frais de chauffage de son immeuble

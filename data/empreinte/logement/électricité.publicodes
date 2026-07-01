@@ -181,10 +181,7 @@ logement . électricité . consommation moyenne spécifique:
   unité: kWh
 
 logement . électricité . consommation moyenne climatisation:
-  applicable si:
-    toutes ces conditions:
-      - est défini: climatisation . présent
-      - climatisation . présent = "oui et utilisation"
+  applicable si: climatisation . usage
   formule: parc français . CEREN . consommation électricité climatisation par m2 * surface
   unité: kWh
 
@@ -223,10 +220,7 @@ logement . électricité . consommation via DPE . ecs:
     part ecs DPE: parc français . CEREN . chauffage . part ecs électricité / (parc français . CEREN . part climatisation électricité + parc français . CEREN . chauffage . part chauffage air électricité + parc français . CEREN . chauffage . part ecs électricité)
 
 logement . électricité . consommation via DPE . climatisation:
-  applicable si:
-    toutes ces conditions:
-      - est défini: climatisation . présent
-      - climatisation . présent = "oui et utilisation"
+  applicable si: climatisation . usage
   formule: part climatisation DPE * consommation via DPE par m2 * surface
   avec:
     part climatisation DPE: parc français . CEREN . part climatisation électricité / (parc français . CEREN . part climatisation électricité + parc français . CEREN . chauffage . part chauffage air électricité + parc français . CEREN . chauffage . part ecs électricité)
@@ -286,6 +280,10 @@ logement . électricité . réseau . consommation précise:
     une de ces conditions:
       - chauffage . saisie précision consommation = 'conso exactes'
       - électricité . saisie précision consommation = oui
+  non applicable si:
+    toutes ces conditions:
+      - climatisation . est présent PAC air air
+      - est non défini: climatisation . avec PAC air air . mode réversible
   par défaut: électricité . consommation moyenne réelle
   question: Quelle est la consommation annuelle d'électricité (réseau) de votre foyer ?
   aide: logement . électricité . réseau . consommation estimée via le coût . saisie

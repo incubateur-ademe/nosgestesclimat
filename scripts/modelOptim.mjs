@@ -54,7 +54,11 @@ const rulesToKeep = [
   'divers . textile . empreinte précise',
   'divers . textile . choix précis',
   'divers . textile . nombre total',
-  'logement . construction . rénovation . travaux'
+  'logement . construction . rénovation . travaux',
+  'logement . climatisation . sans PAC air air',
+  'logement . climatisation . sans PAC air air . climatiseurs fixes',
+  'logement . climatisation . sans PAC air air . climatiseurs mobiles',
+  'logement . climatisation . avec PAC air air'
 ]
 
 // Rule names which should be avoided in the optimized model.
