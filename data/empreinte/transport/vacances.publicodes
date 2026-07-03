@@ -42,6 +42,14 @@ transport . vacances:
       - van
       - bateau plaisance
 
+transport . vacances . passagers moyens longue distance:
+  titre: Passagers moyens longue distance
+  formule: 2.25
+  note: |
+    Le taux de remplissage d'une voiture est 2,25 personnes sur des trajets longs. (Voir https://www.statistiques.developpement-durable.gouv.fr/se-deplacer-en-voiture-seul-plusieurs-ou-en-covoiturage-0).
+
+    On considère cette valeur pour l'amortissement des trajets vacances (plutôt que le nombre de personnes dans le foyer).
+
 transport . vacances . caravane:
   titre: Caravane
   icônes: 🚎
@@ -49,7 +57,7 @@ transport . vacances . caravane:
     toutes ces conditions:
       - transport . voiture . km > 0
       - propriétaire
-  formule: usage réel + construction amortie
+  formule: (usage réel + construction amortie) / passagers moyens longue distance
   note: |
     On considère une surconsommation pour les km parcourus avec la caravance.
 
@@ -59,7 +67,7 @@ transport . vacances . caravane . propriétaire:
 
 transport . vacances . caravane . usage réel:
   titre: Usage Caravane
-  formule: (surconsommation * distance) / logement . habitants
+  formule: (surconsommation * distance)
   unité: kgCO2e
 
 transport . vacances . caravane . surconsommation:
@@ -90,7 +98,7 @@ transport . vacances . caravane . distance:
 
 transport . vacances . caravane . construction amortie:
   titre: Construction de la caravane
-  formule: (construction / durée de vie) / logement . habitants
+  formule: construction / durée de vie
   unité: kgCO2e
 
 transport . vacances . caravane . construction:
@@ -119,7 +127,7 @@ transport . vacances . camping car:
   titre: Camping Car
   icônes: 🚐
   applicable si: propriétaire
-  formule: (usage + construction) / logement . habitants
+  formule: (usage + construction) / passagers moyens longue distance
 
 transport . vacances . camping car . propriétaire:
   question: Possédez-vous un camping car ?
@@ -199,7 +207,7 @@ transport . vacances . van:
   titre: Van
   icônes: 🚐
   applicable si: propriétaire
-  formule: (usage + construction) / logement . habitants
+  formule: (usage + construction) / passagers moyens longue distance
   unité: kgCO2e
 
 transport . vacances . van . propriétaire:
