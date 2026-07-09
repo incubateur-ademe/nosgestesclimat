@@ -175,16 +175,21 @@ utilisateur . chauffe eau solaire:
   description: |
     oui | non
 
-utilisateur . nombre climatiseurs:
+utilisateur . nombre climatiseurs mobiles:
   formule:
-    variations:
-      - si:
-          est défini: logement . climatisation . nombre
-        alors: logement . climatisation . nombre
-      - sinon: 0
+    somme:
+      - logement . climatisation . sans PAC air air . climatiseurs mobiles . nombre
+
+utilisateur . nombre climatiseurs fixes:
+  formule:
+    somme:
+      - 2 * logement . climatisation . est présent PAC air air
+      - logement . climatisation . sans PAC air air . climatiseurs fixes . nombre
+  note: |
+    On fait une approximation ici car nous n'avons pas le nombre de bouches de climatisation pour les PAC air air. On considère donc qu'il y a 2 bouches de climatisation par PAC air air.
 
 utilisateur . utilisation climatiseurs:
-  valeur: logement . climatisation . présent = "oui et utilisation"
+  valeur: logement . climatisation . usage
 
 utilisateur . consommation énergie au m2 équivalente:
   formule:

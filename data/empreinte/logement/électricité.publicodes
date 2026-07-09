@@ -181,10 +181,7 @@ logement . électricité . consommation moyenne spécifique:
   unité: kWh
 
 logement . électricité . consommation moyenne climatisation:
-  applicable si:
-    toutes ces conditions:
-      - est défini: climatisation . présent
-      - climatisation . présent = "oui et utilisation"
+  applicable si: climatisation . usage
   formule: parc français . CEREN . consommation électricité climatisation par m2 * surface
   unité: kWh
 
@@ -223,10 +220,7 @@ logement . électricité . consommation via DPE . ecs:
     part ecs DPE: parc français . CEREN . chauffage . part ecs électricité / (parc français . CEREN . part climatisation électricité + parc français . CEREN . chauffage . part chauffage air électricité + parc français . CEREN . chauffage . part ecs électricité)
 
 logement . électricité . consommation via DPE . climatisation:
-  applicable si:
-    toutes ces conditions:
-      - est défini: climatisation . présent
-      - climatisation . présent = "oui et utilisation"
+  applicable si: climatisation . usage
   formule: part climatisation DPE * consommation via DPE par m2 * surface
   avec:
     part climatisation DPE: parc français . CEREN . part climatisation électricité / (parc français . CEREN . part climatisation électricité + parc français . CEREN . chauffage . part chauffage air électricité + parc français . CEREN . chauffage . part ecs électricité)
@@ -286,6 +280,10 @@ logement . électricité . réseau . consommation précise:
     une de ces conditions:
       - chauffage . saisie précision consommation = 'conso exactes'
       - électricité . saisie précision consommation = oui
+  non applicable si:
+    toutes ces conditions:
+      - climatisation . est présent PAC air air
+      - est non défini: climatisation . avec PAC air air . mode réversible
   par défaut: électricité . consommation moyenne réelle
   question: Quelle est la consommation annuelle d'électricité (réseau) de votre foyer ?
   aide: logement . électricité . réseau . consommation estimée via le coût . saisie
@@ -334,7 +332,7 @@ logement . électricité . empreinte eau mix électrique:
     > Cette donnée est soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peut pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
 
 logement . électricité . photovoltaique:
-  DLUO: 01/04/2026
+  DLUO: 01/04/2027
   titre: Panneaux photovoltaïques
   icônes: 🌞
 
@@ -407,6 +405,6 @@ logement . électricité . photovoltaique . part autoconsommation:
     je consomme 100% de ce que je produis: 100
 
 logement . électricité . photovoltaique . intensité carbone:
-  formule: 0.0291
+  formule: 0.0439
   unité: kgCO2e/kWh
-  note: D'après l'ADEME, nous considérons que la zone H1C (est de la France) est représentative d'un logement moyen standard en France, ce qui correspond à une empreinte moyenne de 29,1 gCO2e / kWh produit.
+  note: Facteur d'émission issu de la Base Empreinte - Électricité/photovoltaïque/Fabrication Chine (Par défaut utilisé en France)

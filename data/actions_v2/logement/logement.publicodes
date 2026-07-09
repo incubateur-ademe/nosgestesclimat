@@ -107,8 +107,8 @@ actions . logement . logement frais sans clim:
     On ne considère que l'usage des climatiseurs pour cette action (qui correspond à l'empreinte de la consommation électrique). On ne considère pas, pour le moment, la part de l'empreinte (la plus importante) liée à l'empreinte des fluides frigorigènes.
   applicable si:
     toutes ces conditions:
-      - utilisateur . nombre climatiseurs > 0
-      - utilisateur . utilisation climatiseurs = "oui"
+      - utilisateur . nombre climatiseurs mobiles + utilisateur . nombre climatiseurs fixes > 0
+      - utilisateur . utilisation climatiseurs = oui
   formule:
     somme:
       - part électricité climatisation / utilisateur . habitants
@@ -116,11 +116,13 @@ actions . logement . logement frais sans clim:
   avec:
     part électricité climatisation:
       applicable si: utilisateur . utilisation climatiseurs
-      formule: logement . climatisation . nombre * 400 kWh/climatiseur * logement . électricité . empreinte au kWh
+      formule:
+        somme:
+          - utilisateur . nombre climatiseurs mobiles * 140 kWh/climatiseur * logement . électricité . empreinte au kWh
+          - utilisateur . nombre climatiseurs fixes * 300 kWh/climatiseur * logement . électricité . empreinte au kWh
       unité: kgCO2e
       note: |
-        D'après l'étude [ADEME Panel ElecDom 2020](https://librairie.ademe.fr/changement-climatique-et-energie/4473-panel-usages-electrodomestiques.html), un climatiseur fixe a une [consommation moyenne "de 100 à 700 kWh/an"](https://agirpourlatransition.ademe.fr/particuliers/maison/economies-denergie-deau/electricite-combien-consomment-appareils-maison).
-        Nous partons donc sur une moyenne de 400 kWh/an par climatiseur installé.
+        D'après l'étude [ADEME Panel ElecDom 2020](https://librairie.ademe.fr/changement-climatique-et-energie/4473-panel-usages-electrodomestiques.html), un climatiseur fixe a une consommation moyenne d'environ 300 kWh/an et un climatiseur mobile environ 140 kWh/an.
 
 actions . logement . individualisation chauffage collectif:
   titre: Demander l’individualisation des frais de chauffage de son immeuble
@@ -202,9 +204,7 @@ actions . logement . installer panneaux solaires photovoltaïques:
       contexte:
         logement . électricité . photovoltaique . présent: oui
         logement . électricité . photovoltaique . production: énergie produite
-        logement . électricité . photovoltaique . intensité carbone: intensité carbone
         nombre panneaux: 4
-        zone climatique: "'centre et littoral atlantique'"
     énergie produite:
       formule: puissance installée * productible
     puissance installée:
@@ -215,27 +215,10 @@ actions . logement . installer panneaux solaires photovoltaïques:
       valeur: 0.4
       unité: kWc
     productible:
-      formule:
-        variations:
-          - si: zone climatique = 'bretagne et nord de la france'
-            alors: 1200
-          - si: zone climatique = 'centre et littoral atlantique'
-            alors: 1300
-          - si: zone climatique = 'littoral méditerranéen'
-            alors: 1500
+      valeur: 1300
+      note: |
+        On considère un productible moyen de 1300 kWh/kWc/an ce qui correspond à la zone "centre et littoral atlantique".
       unité: kWh/kWc
-    zone climatique:
-      titre: Situation géographique du logement
-    intensité carbone:
-      formule:
-        variations:
-          - si: zone climatique = 'bretagne et nord de la france'
-            alors: 0.0315
-          - si: zone climatique = 'centre et littoral atlantique'
-            alors: 0.0291
-          - si: zone climatique = 'littoral méditerranéen'
-            alors: 0.0252
-      unité: kgCO2e/kWh
 
 actions . logement . se chauffer énergies renouvelables:
   titre: Se chauffer avec des énergies renouvelables
@@ -324,3 +307,19 @@ actions . logement . installer une chaudière bois:
     recalcul . consommation:
       formule: utilisateur . consommation énergie au m2 équivalente * utilisateur . surface du logement
       note: on utilise directement la consommation d'énergie au m2 équivalente estimée car elle correspond à une estimation de la consommation finale du logement pour les usages du chauffage de l'air et de l'eau chaude sanitaire, qui sont les usages que l'on considère être couverts par la PAC.
+
+actions . logement . consommation heures creuses:
+  titre: Utiliser ses appareils électriques au bon moment
+  meta:
+    id: 15ce7f04-1898-4b38-b73e-e4411cc227d5
+  note: Action non quantifiée
+  applicable si: oui
+  formule: 0
+
+actions . logement . offre énergies renouvelables:
+  titre: Choisir une offre d'électricité produite avec des énergies renouvelables
+  meta:
+    id: 14fec429-b563-4fb7-89c3-5e030b9d57c2
+  note: Action non quantifiée
+  applicable si: oui
+  formule: 0

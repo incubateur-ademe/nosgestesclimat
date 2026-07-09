@@ -36,7 +36,7 @@ logement . chauffage . mode:
     collectif:
       titre: Chauffage collectif
     pas de chauffage:
-      titre: Mon logement n'est pas chauffé
+      titre: Pas de chauffage
 
 logement . chauffage . principal:
   applicable si:
@@ -58,9 +58,9 @@ logement . chauffage . principal:
     électricité:
       titre: Electricité ⚡️
     PAC air air:
-      titre: PAC air/air 💨
+      titre: Pompe à chaleur air/air 💨
     PAC air eau:
-      titre: PAC air/eau 💧
+      titre: Pompe à chaleur air/eau 💧
     gaz:
       titre: Gaz 🔥
     fioul:
@@ -103,7 +103,7 @@ logement . chauffage . principal . ecs:
           - est défini: chauffage . principal
           - chauffage . principal = "électricité"
     PAC air eau:
-      titre: PAC air/eau
+      titre: Pompe à chaleur air/eau
       non applicable si:
         toutes ces conditions:
           - est défini: chauffage . principal
@@ -138,10 +138,19 @@ logement . chauffage . collectif:
     - gaz
     - réseau de chaleur
     - fioul
+    - PAC air air
+    - PAC air eau
   avec:
+    PAC air air:
+      titre: Pompe à chaleur collective air/air 💨
+    PAC air eau:
+      titre: Pompe à chaleur collective air/eau 💧
     gaz:
-    réseau de chaleur:
+      titre: Gaz 🔥
     fioul:
+      titre: Fioul 🛢️
+    réseau de chaleur:
+      titre: Réseau de chaleur 🌡️
   note: On considère ici que le raccordement par défaut est le réseau de chaleur mais c'est biensûr une hypothèse. On pourra par la suite calculer une valeur plus précise.
   par défaut: "'réseau de chaleur'"
 
@@ -150,7 +159,11 @@ logement . chauffage . collectif . ecs:
   question: Votre chauffe-eau est-il raccordé au chauffage collectif également ?
   description: |
     Sélectionner chauffe-eau solaire prend en compte l'appoint nécessaire pour compléter l'énergie solaire.
-  par défaut: "'source collectif'"
+  par défaut:
+    variations:
+      - si: principal = "PAC air air"
+        alors: "'électricité'"
+      - sinon: "'source collectif'"
   une possibilité:
     - source collectif
     - chauffe eau électricité
@@ -159,6 +172,10 @@ logement . chauffage . collectif . ecs:
   avec:
     source collectif:
       titre: Chauffe-eau sur le même réseau
+      non applicable si:
+        toutes ces conditions:
+          - est défini: chauffage . collectif
+          - chauffage . collectif = "PAC air air"
     chauffe eau électricité:
       titre: Chauffe-eau électrique
     chauffe eau gaz:
@@ -189,7 +206,7 @@ logement . chauffage . mode . pas de chauffage . ecs:
     électricité:
       titre: Chauffe-eau électrique ⚡️
     PAC air eau:
-      titre: PAC air/eau 💧
+      titre: Pompe à chaleur air/eau 💧
     chauffe eau solaire:
       titre: Chauffe-eau solaire (appoint électrique) ☀️
     aucun:
@@ -405,11 +422,17 @@ logement . chauffage . PAC . présent:
 
 logement . chauffage . PAC . est présent chauffage:
   formule:
-    toutes ces conditions:
-      - est défini: chauffage . principal
-      - une de ces conditions:
-          - chauffage . principal = "PAC air air"
-          - chauffage . principal = "PAC air eau"
+    une de ces conditions:
+      - toutes ces conditions:
+          - est défini: chauffage . principal
+          - une de ces conditions:
+              - chauffage . principal = "PAC air air"
+              - chauffage . principal = "PAC air eau"
+      - toutes ces conditions:
+          - est défini: chauffage . collectif
+          - une de ces conditions:
+              - chauffage . collectif = "PAC air air"
+              - chauffage . collectif = "PAC air eau"
 
 logement . chauffage . PAC . est présent ecs:
   formule:
@@ -421,6 +444,10 @@ logement . chauffage . PAC . est présent ecs:
           - est défini: chauffage . principal
           - chauffage . principal = "PAC air eau"
           - chauffage . principal . ecs = "identique"
+      - toutes ces conditions:
+          - est défini: chauffage . collectif
+          - chauffage . collectif = "PAC air eau"
+          - chauffage . collectif . ecs = "source collectif"
       - toutes ces conditions:
           - est défini: chauffage . mode . pas de chauffage . ecs
           - chauffage . mode . pas de chauffage . ecs = "PAC air eau"
@@ -485,9 +512,10 @@ logement . chauffage . gaz . présent:
       - est présent ecs
 
 logement . chauffage . gaz . est présent chauffage:
-  une de ces conditions:
-    - chauffage . principal = "gaz"
-    - chauffage . collectif = "gaz"
+  formule:
+    une de ces conditions:
+      - chauffage . principal = "gaz"
+      - chauffage . collectif = "gaz"
 
 logement . chauffage . gaz . est présent ecs:
   formule:
@@ -635,16 +663,16 @@ logement . chauffage . gaz . consommation estimée via le coût . saisie:
   unité: €/mois
 
 logement . chauffage . gaz . consommation estimée via le coût . facteur:
-  DLUO: 01/02/2026
+  DLUO: 01/11/2026
   titre: Coût du kWh de gaz
   unité: €/kWh
-  formule: 0.137
+  formule: 0.164
   description: |
     C'est le facteur qui nous permet de passer du prix payé par le ménage à la consommation en kWh.
 
     Il n'existe pas de prix unique du kWh de gaz, car le prix dépend du fournisseur, de l'offre choisie, de la zone géographique, etc.
 
-    Néanmoins, nous avons décidé de nous appuyer sur le [prix repère du gaz](https://www.cre.fr/consommateurs/prix-reperes-et-references/prix-repere-de-vente-de-gaz-naturel-a-destination-des-clients-residentiels.html), tarif de référence publié mensuellement par la Commission de Régulation de l'Énergie en France, pour l'abonnement et le coût du kWh.
+    Nous avons donc décidé de nous appuyer sur le [prix repère du gaz](https://www.cre.fr/consommateurs/prix-reperes-et-references/prix-repere-de-vente-de-gaz-naturel-a-destination-des-clients-residentiels.html), tarif de référence publié mensuellement par la Commission de Régulation de l'Énergie en France, pour l'abonnement et le coût du kWh. Mis à jour en juin 2026 (prix TTC).
 
     Attention, le marché du gaz est largement libéralisé, ainsi le prix repère, qui est la base de notre calcul, n'est pas exclusif.
 
@@ -1027,11 +1055,11 @@ logement . chauffage . citerne propane . consommation estimée via le coût . sa
   unité: €/mois
 
 logement . chauffage . citerne propane . consommation estimée via le coût . facteur:
-  formule: 2.2
+  formule: 2.417
   unité: €/kg
   note: |
     Selon les informations agrégées par le site [Selectra](https://lepropane.com/citernes/prix/cours),
-    le prix du propane en citerne oscille autour de 2200€ par tonne (selon le fournisseur).
+    le prix du propane en citerne est en moyenne de 2417€ par tonne (mais très variable selon le fournisseur).
 
 logement . chauffage . citerne propane . énergie par kg:
   formule: 46 MJ/kg * 1.111 / 3.6 MJ/kWh
@@ -1190,14 +1218,13 @@ logement . chauffage . fioul . consommation estimée via le coût . saisie:
   unité: €/mois
 
 logement . chauffage . fioul . consommation estimée via le coût . facteur:
-  formule: 1.2004
+  formule: 1.439
   unité: €/l
   note: |
     Cette formule nous permet de passer des €/mois aux litres/an.
 
-    Source : Fioul domestique 2000 à 4999 litres, année 2024 (TTC).
-    Donnée issue de l'excel `Prix HTT et TTC depuis janvier 2020.xlsx` téléchargeable sur la page
-    [Prix des produits pétroliers](https://www.ecologie.gouv.fr/prix-des-produits-petroliers#scroll-nav__4) du ministère de la Transition Écologique.
+    Source : Prix moyens mensuels de vente au détail en métropole - Fioul domestique : 1.000 litres (livré à domicile), disponible [sur le site de l'INSEE](https://www.insee.fr/fr/statistiques/serie/000442573).
+    Donnée calculée : moyenne des 6 derniers mois. Actualisé en juin 2026.
 
 logement . chauffage . fioul kWh au litre:
   formule: 0.1014
@@ -1488,11 +1515,17 @@ logement . chauffage . bois . type . granulés . prix tonne:
 
 logement . chauffage . bois . type . granulés vrac:
 logement . chauffage . bois . type . granulés vrac . prix tonne:
-  formule: 479
+  formule: 412
   unité: €/tonne
   note: |
-    Chiffre issu de l'étude ADEME [Enquête sur les prix des combustibles bois en 2023](https://librairie.ademe.fr/energies/7508-enquete-sur-les-prix-des-combustibles-bois-en-2023.html), page 10 du rapport complet.
+    Nous utilisions précédemment un chiffre issu de l'étude ADEME [Enquête sur les prix des combustibles bois en 2023](https://librairie.ademe.fr/energies/7508-enquete-sur-les-prix-des-combustibles-bois-en-2023.html), page 10 du rapport complet.
     Granulés vrac, prix livré, T3 2023.
+
+    Cependant, au vu de la [volatilité des prix depuis quelques années](https://www.insee.fr/fr/statistiques/serie/011815863#Graphique), nous lui préférons dorénavant un prix actualisé.
+
+    Nous utilisons donc le prix moyen [fourni par Selectra](https://selectra.info/energie/bois/granules-pellets/prix) pour une tonne de pellets.
+
+    Dernière actualisation : juin 2026.
 
 logement . chauffage . bois . type . granulés sac:
 logement . chauffage . bois . type . granulés sac . prix tonne:
@@ -1629,11 +1662,15 @@ logement . chauffage . bois . type . bûches . consommation estimée via le coû
   note: Cette formule nous permet de passer des €/mois au nombre de stères par an.
 
 logement . chauffage . bois . type . bûches . prix stère:
-  formule: 97
+  formule: 98.56
   unité: €/stère
   note: |
-    Chiffre issu de l'étude ADEME [Enquête sur les prix des combustibles bois en 2023](https://librairie.ademe.fr/energies/7508-enquete-sur-les-prix-des-combustibles-bois-en-2023.html), page 10 du rapport complet.
+    Nous utilisions précédemment un chiffre issu de l'étude ADEME [Enquête sur les prix des combustibles bois en 2023](https://librairie.ademe.fr/energies/7508-enquete-sur-les-prix-des-combustibles-bois-en-2023.html), page 10 du rapport complet.
     Bûches de 33 cm, prix livré, T3 2023.
+
+    Néanmoins, au vu de l'inflation, il nous a semblé plus juste de chercher un prix actualisé. En l'absence de donnée officielle (État, INSEE...), nous faisons le choix d'utiliser [la moyenne fournie par le site bois de chauffage - énergie](https://bois-de-chauffage-energie.fr/prix-bois-de-chauffage/), moyenne calculée sur 379 prix relevés nationalement.
+
+    Nous moyennons les chiffres des 6 derniers mois pour obtenir une moyenne sur la période. Dernière actualisation en juin 2026.
 
 logement . chauffage . bois . type . bûches . intensité énergétique:
   formule: 1710
@@ -1854,24 +1891,18 @@ logement . chauffage . réseau de chaleur . consommation estimée via le coût .
   unité: €/mois
 
 logement . chauffage . réseau de chaleur . consommation estimée via le coût . facteur:
-  DLUO: 01/02/2026
-  formule: 0.085
+  DLUO: 01/02/2027
+  formule: 0.1047
   unité: €/kWh
   note: |
     Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois.
 
-    Ce chiffre est tiré de l'[Enquête des réseaux de chaleur et de froid](https://amorce.asso.fr/actualite/les-reseaux-de-chaleur-la-bonne-solution-de-chauffage-pour-le-pouvoir-d-achat-et-le-climat)
-    basé sur les données 2021 qui donne un chiffre de 80€HT/MWh. Malheureusement, il est nécessaire d'être adhérent à AMORCE pour accéder aux derniers chiffres 2023, parus en février 2025.
+    Nous utilisions auparavant un chiffre tiré de l'[Enquête des réseaux de chaleur et de froid](https://amorce.asso.fr/actualite/les-reseaux-de-chaleur-la-bonne-solution-de-chauffage-pour-le-pouvoir-d-achat-et-le-climat)
+    basé sur les données 2021 qui donne un chiffre de 80€HT/MWh.
 
-    L'[Enquête sur le prix de vente de la chaleur et de froid de 2019](https://amorce.asso.fr/publications/enquete-sur-le-prix-de-vente-de-la-chaleur-et-de-froid-en-2019-rce36)
-    donnait un chiffre de 74,6€HT/MWh et 79,3€TTC/MWh, avec une médiane à 82,3€TTC/MWh.
+    Mais la volatiilité de ce prix nous invite en 2026 à revoir notre copie. Nous utilisons dorénavant [le prix moyen déclaré par AMORCE : 104,7€ / MWh](https://amorce.asso.fr/actualite/reseaux-de-chaleur-un-atout-economique-pour-les-territoires).
 
-    Nous avons donc choisi dans une première approximation de nous baser sur la moyenne 2021 en conservant le ratio 2019 pour passer en TTC ce qui donne une valeur de 85€TTC/MWh
-    (ce n'est pas seulement un 5,5% ou 20%, car l'application de ces taux varie selon la proportion d'énergie verte dans le mix du réseau de chaleur,
-    une TVA à 5,5% étant appliquée aux réseaux contenant plus de 50 % d'énergie renouvelable et de récupération).
-
-    C'est une valeur moyenne dont l'écart-type est relativement important.
-    Néanmoins, on peut lire dans l'enquête que "les prix de vente moyens des réseaux de chaleur affichent une très grande disparité, 89% de la chaleur livrée est vendue à un prix compris entre -30 et +30% de la moyenne nationale".
+    C'est une valeur moyenne dont l'écart-type est relativement important : on peut lire dans l'enquête d'AMORCE que "les prix de vente moyens des réseaux de chaleur affichent une très grande disparité, 89% de la chaleur livrée est vendue à un prix compris entre -30 et +30% de la moyenne nationale".
 
 logement . chauffage . réseau de chaleur . intensité carbone:
   titre: Empreinte carbone réseau de chaleur

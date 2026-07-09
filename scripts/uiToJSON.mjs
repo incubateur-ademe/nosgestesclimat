@@ -25,7 +25,7 @@ const funFactsRules = {
   percentageOfFuelHeating: 'ui . organisations . logement . chauffage fioul',
   percentageOfWoodHeating: 'ui . organisations . logement . chauffage bois',
   percentageOfCoolingSystem:
-    'ui . organisations . logement . possède climatisation',
+    'ui . organisations . logement . utilise climatisation',
   percentageOfVegan: 'ui . organisations . alimentation . est végétalien',
   percentageOfRedMeat:
     'ui . organisations . alimentation . fréquence viande rouge',

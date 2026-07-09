@@ -2,60 +2,72 @@ logement . climatisation:
   DLUO: 01/05/2026
   non applicable si: métrique != "carbone"
   icônes: ❄️
-  titre: Climatiseurs
+  titre: Fluides frigorigènes (climatiseurs et PAC)
   # This is a hack to make sure "non applicability" of "empreinte climatiseurs" is not propagate to parent rule.
   formule:
     somme:
-      - empreinte climatiseurs / habitants
+      - empreinte / habitants
   note: |
-    Nous estimons ici l'empreinte de la climatisation.
-    Son empreinte est quadruple :
-      - la consommation d'électricité (elle est incluse dans la consommation du logement)
-      - l'empreinte de la construction du matériel
-      - l'empreinte des fuites du liquide caloriporteur
-        - annuelle
-        - en fin de vie
+    Nous estimons ici l'empreinte des systèmes de refroidissement du logement. Que ce soit des climatiseurs ou des pompes à chaleur, leur empreinte est principalement liée aux fuites de fluides frigorigènes (même si le mode froid n'est pas ou peu utilisé).
 
-    Nous avons une certaine différence avec l'étude ADEME car les hypothèses sont différentes de celles de la Base Empreinte alors que cette dernière dit s'appuyer sur cette étude.
+    L'empreinte est quadruple :
+      - la consommation d'électricité (elle est déja prise en compte dans la facture d'électricité du logement)
+      - l'empreinte de la construction du matériel (négligeable par rapport aux fuites de fluide frigorigène, non pris en compte ici car nous ne prenons pas en compte l'empreinte des systèmes de chauffage pour le moment)
+      - l'empreinte des fuites frigorigènes annuelles
+      - l'empreinte des fuites frigorigènes en fin de vie
 
-    Les principales différences proviennent
+    L'étude ADEME ["Modélisation et évaluation environnementale de produits de consommation et biens d'équipement"](https://librairie.ademe.fr/dechets-economie-circulaire/127-modelisation-et-evaluation-environnementale-de-produits-de-consommation-et-biens-d-equipement.html) donne un chiffre sur le "climatiseur mobile" mais les hypothèses semblent datées :
+      - le taux de fuites annuelles considéré est assez faible (1%) et doit varier pour nous selon l'utilisation du climatiseur.
+      - le taux de fuites en fin de vie n'est pas clairement précisé
+      - le fluide R134a, considéré dans l'étude, ne semble pas être représentatif du parc actuel de climatiseurs. Le gaz R410a est plus représentatif des anciennes installations alors que le R32 est de plus en plus utilisé. Enfin cette étude ne mentionne pas les pompes à chaleur, or nous souhaitons adopté une modélisation similaire pour les PAC avec un jeu d'hypothèses différent.
 
-    - du taux de fuite annuelle considéré : 1% dans l'étude ADEME (tab p38) là ou notre modèle fait la moyenne des taux de fuites annuel du secteur résidentiel donnés dans la Base Empreinte (soit 4,2 %)
-    - du fait que l'étude ADEME ne semble pas prendre en compte le taux de fuite en fin de vie (même amorti) qui lui est énorme dans la Base Empreinte (moyenne de 66,4 %)
-    - du fait que nous considérons en première estimation le fluide frigo R410a là ou l'étude considère le R134a
-
-logement . climatisation . empreinte climatiseurs:
-  titre: Empreinte des climatiseurs
-  formule:
-    variations:
-      - si:
-          est défini: climatisation . présent
-        alors: nombre * empreinte unitaire
-      - sinon: nombre par défaut * empreinte unitaire
-  unité: kgCO2e
-
-logement . climatisation . présent:
-  question: Possédez-vous un ou plusieurs systèmes de climatisation ?
-  une possibilité:
-    - oui et utilisation
-    - oui sans utilisation
-    - pas de climatiseurs
-  avec:
-    oui et utilisation:
-      titre: Oui, et je les utilise
-    oui sans utilisation:
-      titre: Oui, mais je ne les utilise pas
-    pas de climatiseurs:
-      titre: Non, je n'ai pas de climatiseurs
-
-logement . climatisation . rappel kWh:
+logement . climatisation . notif fluides frigorigènes:
   type: notification
   description: |
-    La consommation d'électricité de votre clim est incluse dans la facture d'électricité, comme tous les appareils électriques du logement. Sont prises en compte ici, **les fuites de gaz frigorigènes**.
+    L'empreinte des climatiseurs et pompes à chaleur provient majoritairement des **fluides frigorigènes** présents dans les appareils.
   formule:
     une de ces conditions:
-      - climatisation . présent = "oui et utilisation"
-      - climatisation . présent = "oui sans utilisation"
+      - climatisation . sans PAC air air . présent = "oui et utilisation"
+      - climatisation . sans PAC air air . présent = "oui sans utilisation"
+
+logement . climatisation . usage:
+  formule:
+    une de ces conditions:
+      - toutes ces conditions:
+          - est défini: climatisation . sans PAC air air . présent
+          - climatisation . sans PAC air air . présent = "oui et utilisation"
+      - toutes ces conditions:
+          - est défini: climatisation . avec PAC air air . mode réversible
+          - climatisation . avec PAC air air . mode réversible = "oui"
+
+logement . climatisation . est présent PAC air air:
+  formule:
+    une de ces conditions:
+      - toutes ces conditions:
+          - est défini: chauffage . principal
+          - chauffage . principal = "PAC air air"
+      - toutes ces conditions:
+          - est défini: chauffage . collectif
+          - chauffage . collectif = "PAC air air"
+
+logement . climatisation . est présent PAC air eau:
+  formule:
+    une de ces conditions:
+      - toutes ces conditions:
+          - est défini: chauffage . principal
+          - chauffage . principal = "PAC air eau"
+      - toutes ces conditions:
+          - est défini: chauffage . collectif
+          - chauffage . collectif = "PAC air eau"
+
+logement . climatisation . empreinte:
+  titre: Empreinte des fluides frigorigènes des climatiseurs et PAC
+  formule:
+    somme:
+      - empreinte climatiseurs mobiles
+      - empreinte PAC air air
+      - empreinte PAC air eau
+  unité: kgCO2e
 
 logement . climatisation . nombre par défaut:
   formule:
@@ -76,89 +88,297 @@ logement . climatisation . nombre par défaut:
 
     > Ce taux moyen de 25 % recouvre de fortes disparités. Ainsi les possesseurs de maisons individuelles sont-ils 31 % à posséder un équipement de climatisation contre seulement 20 % des ménages habitant en logement collectif.
 
-logement . climatisation . nombre:
+logement . climatisation . sans PAC air air:
+logement . climatisation . sans PAC air air . présent:
+  non applicable si: est présent PAC air air
+  question: Possédez-vous un ou plusieurs systèmes de climatisation ?
+  une possibilité:
+    - oui et utilisation
+    - oui sans utilisation
+    - pas de climatiseurs
+
+logement . climatisation . sans PAC air air . présent . oui et utilisation:
+  titre: Oui, et je les utilise
+logement . climatisation . sans PAC air air . présent . oui sans utilisation:
+  titre: Oui, mais je ne les utilise pas
+logement . climatisation . sans PAC air air . présent . pas de climatiseurs:
+  titre: Non
+
+logement . climatisation . sans PAC air air . nombre:
+  non applicable si: est présent PAC air air
   applicable si:
     toutes ces conditions:
-      - est défini: climatisation . présent
+      - est défini: climatisation . sans PAC air air . présent
       - une de ces conditions:
-          - climatisation . présent = "oui et utilisation"
-          - climatisation . présent = "oui sans utilisation"
-  question: Combien de climatiseurs électriques possédez-vous ?
+          - climatisation . sans PAC air air . présent = "oui et utilisation"
+          - climatisation . sans PAC air air . présent = "oui sans utilisation"
+  question: Combien de systèmes de climatisation possédez-vous ?
+  mosaique:
+    type: nombre
+    options:
+      - sans PAC air air . climatiseurs mobiles . nombre
+      - sans PAC air air . climatiseurs fixes . nombre
+
+logement . climatisation . sans PAC air air . climatiseurs mobiles:
+  titre: Climatiseurs mobiles
+logement . climatisation . sans PAC air air . climatiseurs mobiles . nombre:
+  titre: Nombre de climatiseurs mobiles
+  question: Combien de climatiseurs mobiles possédez-vous ?
+  applicable si:
+    toutes ces conditions:
+      - est défini: climatisation . sans PAC air air . présent
+      - une de ces conditions:
+          - climatisation . sans PAC air air . présent = "oui et utilisation"
+          - climatisation . sans PAC air air . présent = "oui sans utilisation"
   par défaut: 1
   plancher: 0
   plafond: 15
   unité: climatiseur
+logement . climatisation . sans PAC air air . climatiseurs fixes:
+  titre: Climatiseurs fixes
+  description: Clim réversible, pompe à chaleur air/air
+logement . climatisation . sans PAC air air . climatiseurs fixes . nombre:
+  titre: Nombre de climatiseurs fixes (réversible, PAC air/air)
+  question: Combien de climatiseurs fixes (PAC air/air) possédez-vous ?
+  applicable si:
+    toutes ces conditions:
+      - est défini: climatisation . sans PAC air air . présent
+      - une de ces conditions:
+          - climatisation . sans PAC air air . présent = "oui et utilisation"
+          - climatisation . sans PAC air air . présent = "oui sans utilisation"
+  par défaut: 0
+  plancher: 0
+  plafond: 15
+  unité: climatiseur
+
+logement . climatisation . avec PAC air air:
+
+logement . climatisation . avec PAC air air . mode réversible:
+  applicable si: est présent PAC air air
+  question: Utilisez-vous votre pompe à chaleur air/air pour refroidir votre logement ?
+
+logement . climatisation . empreinte climatiseurs mobiles:
+  titre: Empreinte des fluides frigorigènes des climatiseurs mobiles
+  formule:
+    variations:
+      - si:
+          est défini: sans PAC air air . présent
+        alors: climatisation . sans PAC air air . climatiseurs mobiles . nombre * empreinte unitaire
+      - sinon:
+          variations:
+            - si: est présent PAC air air
+              alors: 0
+            - sinon: nombre par défaut * empreinte unitaire
+  unité: kgCO2e
+
+logement . climatisation . empreinte unitaire climatiseurs mobiles:
+  valeur: climatisation . empreinte unitaire
+  contexte:
+    durée de vie: 10
+    charge moyenne usine: charge moyenne usine mobile
+    charge moyenne sur site: 0 kg/climatiseur
+    fuites à la charge . taux de fuites à la charge usine: 1.5%
+    fuites à la charge . taux de fuites à la charge sur site: 0%
+    fuites annuelles . taux de fuites annuelles: 2%
+    fuites maintenance . taux de fuites maintenance: 0%
+    fuites fin de vie . taux de fuites fin de vie: 40%
+  avec:
+    charge moyenne usine mobile: 0.5 kg/climatiseur
+  note: Le gaz R290 fait désormais son apparition mais il est encore peu utilisé. Nous considérons donc que les climatiseurs mobiles utilisent des fluides R410a et R32.
+
+logement . climatisation . empreinte PAC air air:
+  titre: Empreinte des fluides frigorigènes des pompes à chaleur air air
+  applicable si:
+    une de ces conditions:
+      - est présent PAC air air
+      - climatisation . sans PAC air air . climatiseurs fixes . nombre > 0
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - est présent PAC air air
+            - climatisation . sans PAC air air . climatiseurs fixes . nombre > 1
+        alors: climatisation . empreinte unitaire PAC air air multi split * 1 climatiseur
+      - sinon: climatisation . empreinte unitaire PAC air air mono split * 1 climatiseur
+  note: |
+    Si l'utilisateur renseigne plusieurs climatiseurs fixes (PAC air/air), nous considérons que l'empreinte est celle d'un PAC multi split. Si l'utilisateur renseigne un seul climatiseur fixe (PAC air/air), nous considérons que l'empreinte est celle d'un PAC mono split.
+  unité: kgCO2e
+
+logement . climatisation . empreinte unitaire PAC air air mono split:
+  valeur: climatisation . empreinte unitaire
+  contexte:
+    durée de vie: 15
+    charge moyenne usine: charge moyenne usine mono split
+    charge moyenne sur site: 0 kg/climatiseur
+    fuites à la charge . taux de fuites à la charge usine: 1.5%
+    fuites à la charge . taux de fuites à la charge sur site: 0%
+    fuites annuelles . taux de fuites annuelles: 4%
+    fuites maintenance . taux de fuites maintenance: 2%
+    fuites fin de vie . taux de fuites fin de vie: 20%
+  avec:
+    charge moyenne usine mono split:
+      formule:
+        somme:
+          - 1.3 kg/climatiseur * R410a . part
+          - 1.2 kg/climatiseur * R32 . part
+
+logement . climatisation . empreinte unitaire PAC air air multi split:
+  valeur: climatisation . empreinte unitaire
+  contexte:
+    durée de vie: 15
+    charge moyenne usine: charge moyenne usine multi split
+    charge moyenne sur site: 50% * charge moyenne usine multi split
+    fuites à la charge . taux de fuites à la charge usine: 1.5%
+    fuites à la charge . taux de fuites à la charge sur site: 2.5%
+    fuites annuelles . taux de fuites annuelles: 4%
+    fuites maintenance . taux de fuites maintenance: 2%
+    fuites fin de vie . taux de fuites fin de vie: 20%
+  avec:
+    charge moyenne usine multi split:
+      formule:
+        somme:
+          - 1.9 kg/climatiseur * R410a . part
+          - 1.7 kg/climatiseur * R32 . part
+
+logement . climatisation . empreinte PAC air eau:
+  titre: Empreinte des fluides frigorigènes des pompes à chaleur air eau
+  applicable si: est présent PAC air eau
+  valeur: climatisation . empreinte unitaire PAC air eau * 1 climatiseur
+
+logement . climatisation . empreinte unitaire PAC air eau:
+  valeur: climatisation . empreinte unitaire
+  contexte:
+    durée de vie: 15
+    charge moyenne usine: charge moyenne usine multi split
+    charge moyenne sur site: 0 kg/climatiseur
+    fuites à la charge . taux de fuites à la charge usine: 1.5%
+    fuites à la charge . taux de fuites à la charge sur site: 0%
+    fuites annuelles . taux de fuites annuelles: 2%
+    fuites maintenance . taux de fuites maintenance: 2%
+    fuites fin de vie . taux de fuites fin de vie: 35%
+  avec:
+    charge moyenne usine multi split:
+      formule:
+        somme:
+          - 2.6 kg/climatiseur * R410a . part
+          - 2.3 kg/climatiseur * R32 . part
 
 logement . climatisation . empreinte unitaire:
   formule:
     somme:
-      - fuite annuelle
-      - fuite fin de vie amortie
-      - construction amortie
+      - fuites à la charge amortie
+      - fuites annuelles
+      - fuites maintenance amortie
+      - fuites fin de vie amortie
   unité: kgCO2e/climatiseur
-
-logement . climatisation . fuite annuelle:
-  titre: Empreinte des fuites annuelles du climatiseur
-  formule: quantité * fluide frigo empreinte
-  unité: kgCO2e/climatiseur
-
-logement . climatisation . fuite annuelle . quantité:
-  formule: charge moyenne * taux de fuite annuel
-  unité: kg/climatiseur
-
-logement . climatisation . charge moyenne:
-  formule: 1.72
-  unité: kg/climatiseur
-  note: moyenne des charges moyennes du tableau résidentielle donné [ici](https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Refrigeration_et_climatisation)
-
-logement . climatisation . fuite annuelle . taux de fuite annuel:
-  formule: 4.2%
-  note: moyenne des taux de fuites annuel du tableau résidentielle donné [ici](https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Refrigeration_et_climatisation)
-
-logement . climatisation . fluide frigo empreinte:
-  formule: 1924
-  unité: kgCO2e/kg
   note: |
-    Le fluide considéré est le R410a et son facteur d'émission issu de la Base Carbone.
+    L'empreinte unitaire est calculée à partir de la charge moyenne du climatiseur et des fuites ayant lieu à la charge, lors de l'utilisation, lors de la maintenance et en fin de vie.
 
-    Note que l'on trouve dans l'étude [Modélisation et évaluation environnementale de produits de consommation et biens d'équipement](https://librairie.ademe.fr/dechets-economie-circulaire/127-modelisation-et-evaluation-environnementale-de-produits-de-consommation-et-biens-d-equipement.html) :
+    Les hypothèses varient selon le type de climatiseur (mobile, PAC air/air mono split, PAC air/air multi split, PAC air-eau). Elles sont issues du rapport [Rapport Fluides frigorigènes 2025](https://www.afce.asso.fr/rapport-septembre-2025-fluides-frigorigenes/) (transmis par le service Bâtiment ADEME).
 
-    > Le fluide frigorigène est le principal contributeur au cycle de vie des climatiseurs. Selon le fluide utilisé, les impacts peuvent être très différents, en effet, on voit aujourd'hui de nouvelles technologies utilisant du pentane, gaz à faible pouvoir de réchauffement global en comparaison avec le R134a.
-
-    On peut envisager une moyenne pondérée en fonction des proportions de chaque réfrigérant utiisé.
-
-logement . climatisation . fuite fin de vie amortie:
-  titre: Empreinte des fuites de fin de vie du climatiseur
-  formule: fuite fin de vie / durée de vie
+logement . climatisation . fuites à la charge amortie:
+  titre: Empreinte amortie des fuites à la charge du climatiseur
+  formule: fuites à la charge / durée de vie
   unité: kgCO2e/climatiseur
 
-logement . climatisation . fuite fin de vie:
-  titre: Empreinte des fuites de fin de vie du climatiseur
-  formule: quantité * fluide frigo empreinte
+logement . climatisation . fuites à la charge:
+  titre: Empreinte des fuites à la charge du climatiseur
+  formule:
+    somme:
+      - charge moyenne usine * taux de fuites à la charge usine * empreinte fluide
+      - charge moyenne sur site * taux de fuites à la charge sur site * empreinte fluide
+  unité: kgCO2e/climatiseur
+  avec:
+    taux de fuites à la charge usine: 1%
+    taux de fuites à la charge sur site: 1%
+
+logement . climatisation . fuites annuelles:
+  titre: Empreinte des fuites annuelles du climatiseur
+  formule: quantité * empreinte fluide
+  unité: kgCO2e/climatiseur
+  note: |
+    Il est possible que le taux de fuites annuelles varie selon l'utilisation du climatiseur mais ce n'est pas clairement explicité ni dans le rapport AFCE, ni dans la littérature scientifique.
+  avec:
+    quantité:
+      formule: charge moyenne * taux de fuites annuelles
+      unité: kg/climatiseur
+    taux de fuites annuelles:
+      formule: 2%
+
+logement . climatisation . fuites maintenance amortie:
+  titre: Empreinte amortie des fuites lors de la maintenance du climatiseur
+  formule: fuites maintenance / durée de vie
   unité: kgCO2e/climatiseur
 
-logement . climatisation . fuite fin de vie . quantité:
-  formule: charge moyenne * taux de fuite fin de vie
-  unité: kg/climatiseur
+logement . climatisation . fuites maintenance:
+  titre: Empreinte des fuites lors de la maintenance du climatiseur
+  formule: quantité * empreinte fluide * fréquence de rechargement
+  unité: kgCO2e/climatiseur
+  note: |
+    Le rapport AFCE indique que si le taux de chargement du climatiseur passe sous les 90%, une maintenance est nécessaire. On détermine donc la fréquence de rechargement sur toute sa durée de vie à partir du taux de fuites annuelles. Lorsque le taux de fuites atteint 10%, le climatiseur est rechargé. Ainsi, la fréquence de rechargement est calculée comme suit : 10% / taux de fuites annuelles. Par exemple, si le taux de fuites annuelles est de 4%, le climatiseur sera rechargé tous les 2,5 ans (10% / 4% = 2,5 ans). Sur une durée de vie de 10 ans, cela correspond à 4 rechargements.
+  avec:
+    fréquence de rechargement:
+      formule: durée de vie / (10% / fuites annuelles . taux de fuites annuelles)
+    quantité:
+      formule: charge moyenne * taux de fuites maintenance
+      unité: kg/climatiseur
+    taux de fuites maintenance:
+      formule: 0%
 
-logement . climatisation . fuite fin de vie . taux de fuite fin de vie:
-  formule: 66.4%
-  note: moyenne des taux de fuites en fin de vie du tableau résidentielle donné [ici](https://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Refrigeration_et_climatisation)
+logement . climatisation . fuites fin de vie amortie:
+  titre: Empreinte amortie des fuites de fin de vie du climatiseur
+  formule: fuites fin de vie / durée de vie
+  unité: kgCO2e/climatiseur
+
+logement . climatisation . fuites fin de vie:
+  titre: Empreinte des fuites de fin de vie du climatiseur
+  formule: quantité * empreinte fluide
+  unité: kgCO2e/climatiseur
+  avec:
+    quantité:
+      formule: charge moyenne * taux de fuites fin de vie
+      unité: kg/climatiseur
+    taux de fuites fin de vie:
+      formule: 40%
 
 logement . climatisation . durée de vie:
-  formule: 6
-  note: issu Tab 4-5 p33 de cette étude [ADEME](https://librairie.ademe.fr/dechets-economie-circulaire/127-modelisation-et-evaluation-environnementale-de-produits-de-consommation-et-biens-d-equipement.html)
+  formule: 10
 
-logement . climatisation . construction amortie:
-  formule: construction / durée de vie
-  unité: kgCO2e/climatiseur
-  note: Censé représenter l'impact de la construction d'un climatiseur mais je reprends le FE "climatiseur mobile"
-  #Vérifier que c'est bien un périmètre cradle-to-gate
-  #Mais ces données ne semblent significativement plus forte (en termes de chiffrage GES) que l'étude ADEME mentionnée dans les sources de la Base Carbone (cf. plus haut)
+logement . climatisation . charge moyenne:
+  formule: climatisation . charge moyenne usine + climatisation . charge moyenne sur site
+  unité: kg/climatiseur
 
-logement . climatisation . construction:
-  formule: 239
-  unité: kgCO2e/climatiseur
-  note: Censé représenter l'impact de la construction d'un climatiseur mais je reprends le FE "climatiseur mobile"
-  #Vérifier que c'est bien un périmètre cradle-to-gate
-  #Mais ces données ne semblent significativement plus forte (en termes de chiffrage GES) que l'étude ADEME mentionnée dans les sources de la Base Carbone (cf. plus haut)
+logement . climatisation . charge moyenne usine:
+  formule: 0.5
+  unité: kg/climatiseur
+
+logement . climatisation . charge moyenne sur site:
+  formule: 0
+  unité: kg/climatiseur
+
+logement . climatisation . empreinte fluide:
+  formule:
+    somme:
+      - R410a * R410a . part
+      - R32 * R32 . part
+  unité: kgCO2e/kg
+  note: |
+    On considère que les fluides utilisés pour la maintenance sont représentatifs du parc de climatiseurs et PAC en France métropolitaine. Le R-410A est majoritairement utilisé mais le R-32 est de plus en plus présent.
+
+    > En 2023, le besoin pour la maintenance (Tableau 55 en annexe) des installations présentes sur le parc de France métropole est évalué à environ 340 tonnes dont la majeure partie est du R-410A (77%). Le R-32 est progressivement utilisé et représente 23% des fluides utilisés pour la maintenance en 2023.
+
+logement . climatisation . R410a:
+  formule: 2256
+  unité: kgCO2e/kg
+  note: |
+    Valeur issue de la Base Empreinte (R410a/PRG à 100 ans)
+  avec:
+    part: 77%
+
+logement . climatisation . R32:
+  formule: 771
+  unité: kgCO2e/kg
+  note: |
+    Valeur issue de la Base Empreinte (R32/PRG à 100 ans)
+  avec:
+    part: 23%
