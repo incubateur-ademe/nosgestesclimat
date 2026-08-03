@@ -147,6 +147,24 @@ const situations = {
     'transport . voiture . utilisateur': "'propriétaire'",
     'transport . voiture . gabarit': "'SUV'",
     'transport . voiture . motorisation': "'hybride rechargeable'"
+  },
+  campingCar: {
+    'transport . voiture . utilisateur': "'propriétaire'",
+    'transport . voiture . motorisation': "'thermique'",
+    'transport . voiture . gabarit': "'VUL'",
+    'transport . voiture . gabarit . VUL . poids': 4000,
+    'transport . voiture . durée de vie en km': 250000,
+    'transport . voiture . thermique . carburant': "'gazole B7 ou B10'",
+    'transport . voiture . thermique . consommation aux 100': 12
+  },
+  van: {
+    'transport . voiture . utilisateur': "'propriétaire'",
+    'transport . voiture . motorisation': "'thermique'",
+    'transport . voiture . gabarit': "'VUL'",
+    'transport . voiture . gabarit . VUL . poids': 3000,
+    'transport . voiture . durée de vie en km': 250000,
+    'transport . voiture . thermique . carburant': "'gazole B7 ou B10'",
+    'transport . voiture . thermique . consommation aux 100': 7.4382
   }
 }
 
@@ -155,7 +173,14 @@ console.log(
 )
 for (const [name, situation] of Object.entries(situations)) {
   engine.setSituation(situation)
-  const voyageurs = engine.evaluate('transport . voiture . voyageurs').nodeValue
+  const voyageursCar = engine.evaluate(
+    'transport . voiture . voyageurs'
+  ).nodeValue
+  const voyageursVacances = engine.evaluate(
+    'transport . vacances . passagers moyens longue distance'
+  ).nodeValue
+  const voyageurs =
+    name === 'campingCar' || name === 'van' ? voyageursVacances : voyageursCar
   const usage =
     engine.evaluate('transport . voiture . usage au kilomètre').nodeValue /
     voyageurs
