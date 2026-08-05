@@ -204,61 +204,28 @@ alimentation . boisson . tasse de chocolat chaud . quantité cacao par tasse:
   unité: kg/tasse
   note: On fait l'hypothèse qu'une tasse de chocolat chaud contient en moyenne 20 grammes de cacao en poudre.
 
-alimentation . boisson . tasse de chocolat chaud . empreinte lait:
+alimentation . boisson . empreinte lait:
   formule:
     variations:
-      - si: type de lait = 'lait de vache'
-        alors: empreinte lait de vache
-      - si: type de lait = 'lait de soja'
-        alors: empreinte lait de soja
-      - si: type de lait = 'lait d'avoine'
-        alors: empreinte lait d'avoine
-
-alimentation . boisson . tasse de chicorée:
-  titre: Empreinte d'une tasse de chicorée
-  formule: empreinte chicorée instantanée * quantité chicorée par tasse
-
-alimentation . boisson . tasse de chicorée . empreinte chicorée instantanée:
-  formule:
-    variations:
-      - si: métrique = "carbone"
-        alors: empreinte carbone chicorée instantanée
-      - si: métrique = "eau"
-        alors: empreinte eau chicorée instantanée
-
-alimentation . boisson . tasse de chicorée . empreinte carbone chicorée instantanée:
-  formule: 7.87
-  unité: kgCO2e/kg
-  note: Facteur d'émission issu d'[Agribalyse, chicorée, poudre soluble, non réhydratée](https://agribalyse.ademe.fr/app/aliments/18152_1#Chicor%C3%A9e,_poudre_soluble,_non_r%C3%A9hydrat%C3%A9e).
-
-alimentation . boisson . tasse de chicorée . empreinte eau chicorée instantanée:
-  formule: 1420
-  unité: l/kg
-  note: Facteur d'émission issu d'[Agribalyse, chicorée, poudre soluble, non réhydratée](https://agribalyse.ademe.fr/app/aliments/18152_1#Chicor%C3%A9e,_poudre_soluble,_non_r%C3%A9hydrat%C3%A9e).
-
-alimentation . boisson . tasse de chicorée . quantité chicorée par tasse:
-  formule: 0.003
-  unité: kg/tasse
-  note: On fait l'hypothèse qu'une tasse de chicorée contient en moyenne 3 grammes de chicorée instantanée.
+      - si: type de lait = 'lait végétal'
+        alors: empreinte lait végétal
+      - sinon: empreinte lait de vache
 
 alimentation . boisson . type de lait:
   applicable si:
     une de ces conditions:
       - boisson . chaude . chocolat chaud . nombre > 0
-      - petit déjeuner . type = 'lait céréales'
+      - petit déjeuner . bol céréales . présent
   question: Le lait que vous consommez est-il d'origine animale ou végétale ?
   par défaut: "'lait de vache'"
   une possibilité:
     - lait de vache
-    - lait de soja
-    - lait d'avoine
+    - lait végétal
 
 alimentation . boisson . type de lait . lait de vache:
   titre: Lait de vache
-alimentation . boisson . type de lait . lait de soja:
-  titre: Lait de soja
-alimentation . boisson . type de lait . lait d'avoine:
-  titre: Lait d'avoine
+alimentation . boisson . type de lait . lait végétal:
+  titre: Lait végétal
 
 alimentation . boisson . empreinte lait de vache:
   formule:
@@ -277,6 +244,12 @@ alimentation . boisson . empreinte eau lait de vache:
   formule: 156
   unité: l/kg
   note: Facteur d'émission issu d'[Agribalyse, lait demi-écrémé pasteurisé](https://agribalyse.ademe.fr/app/aliments/19042#Lait_demi-%C3%A9cr%C3%A9m%C3%A9,_pasteuris%C3%A9).
+
+alimentation . boisson . empreinte lait végétal:
+  formule:
+    moyenne:
+      - alimentation . boisson . empreinte lait de soja
+      - alimentation . boisson . empreinte lait d'avoine
 
 alimentation . boisson . empreinte lait de soja:
   formule:
@@ -313,6 +286,33 @@ alimentation . boisson . empreinte eau lait d'avoine:
   formule: 382
   unité: l/kg
   note: Facteur d'émission issu d'[Agribalyse, boisson à base d'avoine nature](https://agribalyse.ademe.fr/app/aliments/18905#Boisson_à_base_d'avoine,_nature).
+
+alimentation . boisson . tasse de chicorée:
+  titre: Empreinte d'une tasse de chicorée
+  formule: empreinte chicorée instantanée * quantité chicorée par tasse
+
+alimentation . boisson . tasse de chicorée . empreinte chicorée instantanée:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: empreinte carbone chicorée instantanée
+      - si: métrique = "eau"
+        alors: empreinte eau chicorée instantanée
+
+alimentation . boisson . tasse de chicorée . empreinte carbone chicorée instantanée:
+  formule: 7.87
+  unité: kgCO2e/kg
+  note: Facteur d'émission issu d'[Agribalyse, chicorée, poudre soluble, non réhydratée](https://agribalyse.ademe.fr/app/aliments/18152_1#Chicor%C3%A9e,_poudre_soluble,_non_r%C3%A9hydrat%C3%A9e).
+
+alimentation . boisson . tasse de chicorée . empreinte eau chicorée instantanée:
+  formule: 1420
+  unité: l/kg
+  note: Facteur d'émission issu d'[Agribalyse, chicorée, poudre soluble, non réhydratée](https://agribalyse.ademe.fr/app/aliments/18152_1#Chicor%C3%A9e,_poudre_soluble,_non_r%C3%A9hydrat%C3%A9e).
+
+alimentation . boisson . tasse de chicorée . quantité chicorée par tasse:
+  formule: 0.003
+  unité: kg/tasse
+  note: On fait l'hypothèse qu'une tasse de chicorée contient en moyenne 3 grammes de chicorée instantanée.
 
 alimentation . boisson . tasse de chocolat chaud . quantité lait par tasse:
   formule: 0.200
