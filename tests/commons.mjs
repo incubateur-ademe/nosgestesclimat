@@ -13,7 +13,6 @@ import { Readable } from 'stream'
 const PREPROD_PREVIEW_URL =
   'https://nosgestesclimat-dev.s3.fr-par.scw.cloud/model/nightly/'
 
-// Same as site-nextjs, shouldn't it be https://data.nosgestesclimat.fr/ ?
 const LATEST_PREVIEW_URL =
   'https://nosgestesclimat-dev.s3.fr-par.scw.cloud/model/master/'
 

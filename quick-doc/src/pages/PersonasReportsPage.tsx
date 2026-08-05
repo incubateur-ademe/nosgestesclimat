@@ -190,19 +190,19 @@ function VersionSelector({
   const options = (
     <>
       <option
-        className={version === 'nightly' ? ' selected' : ''}
+        className={version === 'nightly' ? 'selected' : ''}
         value="nightly"
       >
-        Nightly (preprod)
+        Nightly
       </option>
       <option
         className={version === 'nightly-eau' ? 'selected' : ''}
         value="nightly-eau"
       >
-        Nightly (preprod) - Eau
+        Nightly - Eau
       </option>
       <option className={version === 'latest' ? 'selected' : ''} value="latest">
-        Latest (master)
+        Last release
       </option>
     </>
   )
