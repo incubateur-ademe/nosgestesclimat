@@ -65,6 +65,10 @@ jobs:
     needs:
       - create_github_release
       - check_if_version_upgraded
+    outputs:
+      was_published: ${{ steps.publish.outputs.was_published }}
+      published_version: ${{ steps.publish.outputs.published_version }}
+      previous_version: ${{ steps.publish.outputs.previous_version }}
     steps:
       - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
@@ -86,10 +90,16 @@ jobs:
           FILES_PATH=model/master
           AWS_ACCESS_KEY_ID=${{ secrets.SCW_ACCESS_KEY }} AWS_SECRET_ACCESS_KEY=${{ secrets.SCW_SECRET_KEY }} aws s3 rm s3://${{ vars.BUCKET_NAME }}/$FILES_PATH --recursive --endpoint-url ${{ vars.BUCKET_ENDPOINT }}
           AWS_ACCESS_KEY_ID=${{ secrets.SCW_ACCESS_KEY }} AWS_SECRET_ACCESS_KEY=${{ secrets.SCW_SECRET_KEY }} aws s3 cp public s3://${{ vars.BUCKET_NAME }}/$FILES_PATH --recursive --endpoint-url ${{ vars.BUCKET_ENDPOINT }} --acl public-read
-
       - name: Publishing on NPM
+        id: publish
+        shell: bash
         run: |
+          set -euo pipefail
+
           if [ "$(pnpm show . version)" = "$VERSION" ]; then
+            echo "was_published=false" >> "$GITHUB_OUTPUT"
+            echo "published_version=$VERSION" >> "$GITHUB_OUTPUT"
+            echo "previous_version=$PREVIOUS_VERSION" >> "$GITHUB_OUTPUT"
             echo "This version is already published"
             exit 0
           fi
@@ -98,6 +108,109 @@ jobs:
               EXTRA_ARGS="--tag next"
           fi
           pnpm publish $EXTRA_ARGS
+          echo "was_published=true" >> "$GITHUB_OUTPUT"
+          echo "published_version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "previous_version=$PREVIOUS_VERSION" >> "$GITHUB_OUTPUT"
         env:
           VERSION: ${{ needs.check_if_version_upgraded.outputs.to_version }}
+          PREVIOUS_VERSION: ${{ needs.check_if_version_upgraded.outputs.from_version }}
           IS_PRE_RELEASE: ${{ needs.check_if_version_upgraded.outputs.is_pre_release }}
+
+  update_nosgestesclimat_app_version:
+    name: Update nosgestesclimat-app version bumps
+    runs-on: ubuntu-latest
+    needs:
+      - publish_on_npm
+    if: needs.publish_on_npm.outputs.was_published == 'true'
+    steps:
+      - name: Checkout nosgestesclimat-app
+        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        with:
+          repository: incubateur-ademe/nosgestesclimat-app
+          ref: main
+          token: ${{ secrets.NOSGESTESCLIMAT_APP_GH_TOKEN }}
+          path: nosgestesclimat-app
+          fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@bdf0af2a9d539c0fd91f655344d2934bfd5a2cdd
+        with:
+          version: 10.27.0
+
+      - name: Use Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version-file: 'nosgestesclimat-app/package.json'
+          cache: 'pnpm'
+          cache-dependency-path: 'nosgestesclimat-app/pnpm-lock.yaml'
+
+      - name: Update version bumps
+        shell: bash
+        working-directory: nosgestesclimat-app
+        run: |
+          set -euo pipefail
+
+          node <<'NODE'
+          const fs = require('node:fs')
+
+          const latestVersion = process.env.LATEST_VERSION
+          const previousVersion = process.env.PREVIOUS_VERSION
+
+          const updates = [
+            ['packages/core/package.json', packageJson => {
+              packageJson.dependencies['@incubateur-ademe/nosgestesclimat'] = latestVersion
+              packageJson.dependencies['@incubateur-ademe/nosgestesclimat-previous'] = `npm:@incubateur-ademe/nosgestesclimat@${previousVersion}`
+            }],
+            ['apps/site/package.json', packageJson => {
+              packageJson.dependencies['@incubateur-ademe/nosgestesclimat'] = latestVersion
+            }],
+            ['apps/server/package.json', packageJson => {
+              packageJson.dependencies['@incubateur-ademe/nosgestesclimat'] = latestVersion
+            }],
+          ]
+
+          for (const [filePath, update] of updates) {
+            const packageJson = JSON.parse(fs.readFileSync(filePath, 'utf8'))
+            update(packageJson)
+            fs.writeFileSync(filePath, JSON.stringify(packageJson, null, 2) + '\n')
+          }
+          NODE
+
+          pnpm install --lockfile-only --ignore-scripts
+        env:
+          LATEST_VERSION: ${{ needs.publish_on_npm.outputs.published_version }}
+          PREVIOUS_VERSION: ${{ needs.publish_on_npm.outputs.previous_version }}
+
+      - name: Create or update pull request
+        shell: bash
+        working-directory: nosgestesclimat-app
+        env:
+          GH_TOKEN: ${{ secrets.NOSGESTESCLIMAT_APP_GH_TOKEN }}
+          LATEST_VERSION: ${{ needs.publish_on_npm.outputs.published_version }}
+        run: |
+          set -euo pipefail
+
+          branch_name="chore/update-nosgestesclimat-version-${LATEST_VERSION}"
+          title="chore: update nosgestesclimat version to ${LATEST_VERSION}"
+          body=$(cat <<EOF
+          Automated update triggered after publishing @incubateur-ademe/nosgestesclimat v${LATEST_VERSION}.
+
+          This bumps @incubateur-ademe/nosgestesclimat in apps/site, apps/server and packages/core, and keeps @incubateur-ademe/nosgestesclimat-previous aligned on the prior release in packages/core.
+          EOF
+          )
+
+          git checkout -B "$branch_name"
+          git add apps/site/package.json apps/server/package.json packages/core/package.json pnpm-lock.yaml
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "$title"
+          git push --force-with-lease origin "$branch_name"
+
+          existing_pr_number=$(gh pr list --base main --head "$branch_name" --state open --json number --jq '.[0].number // empty')
+          if [ -n "$existing_pr_number" ]; then
+            gh pr edit "$existing_pr_number" --title "$title" --body "$body"
+          else
+            gh pr create --base main --head "$branch_name" --title "$title" --body "$body"
+          fi
