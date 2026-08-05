@@ -248,22 +248,9 @@ actions . mobilités . vacances en train:
   meta:
     id: 0a161fc2-5c25-453e-93de-db38c8cbf3d9
   note: |
-    Nous avons choisi de proposer cette actions aux personnes qui ne prennent pas souvent le train (< 1200 km par an =  ~2 A/R Paris - Marseille) et qui prennent l'avion court courrier. 
-
-    Pour la quantification, on fait l'hypothèse que les trajets en avion courts et les longs trajets en voiture sont remplacés par des trajets en train.
-  applicable si:
-    toutes ces conditions:
-      - utilisateur . heures court courrier par an > 0
-      - utilisateur . km en train par an < 1200 km
-  formule: empreinte court courrier - compensation train
-  avec:
-    empreinte court courrier:
-      formule: transport . avion . court courrier . empreinte par km * transport . avion . court courrier . vitesse moyenne * utilisateur . heures court courrier par an
-    compensation train:
-      formule: utilisateur . heures court courrier par an * transport . avion . court courrier . vitesse moyenne * ratio distance supplémentaire train * transport . train . impact par km
-    ratio distance supplémentaire train:
-      formule: 1.2
-      note: On fait l'hypothèse qu'un trajet en train est 20% plus long (en distance) qu'un trajet en avion.
+    Nous avons choisi de proposer cette actions aux personnes qui ne prennent pas souvent le train (< 1200 km par an =  ~2 A/R Paris - Marseille).
+  applicable si: utilisateur . km en train par an < 1200 km
+  formule: 0
 
 actions . mobilités . itinérance:
   titre: |
@@ -273,26 +260,49 @@ actions . mobilités . itinérance:
   note: |
     Pas de gain associé pour le moment. On pourrait envisager réduire la part associée à un van ou autre utilisée pour les vacances mais ce serait trop approximatif.
 
-    On fait l'hypothèse de recommander cette action aux personnes qui prennent l'avion long courrier ou qui font beaucoup de kilomètres en voiture. On inclue également les personnes qui possèdent un van, camping-car ou caravane.
+    On fait l'hypothèse de recommander cette action aux personnes qui prennent l'avion ou qui font beaucoup de kilomètres en voiture. On inclue également les personnes qui possèdent un van, camping-car ou caravane.
   applicable si:
     une de ces conditions:
-      - utilisateur . heures long courrier par an > 0
+      - utilisateur . voyageur en avion = 'occasionnellement'
+      - utilisateur . voyageur en avion = 'fréquemment'
       - utilisateur . km en voiture par an > 15000
       - utilisateur . possède un van
       - utilisateur . possède un camping car
       - utilisateur . possède une caravane
   formule: 0
 
-actions . mobilités . limiter avion:
-  titre: Limiter les voyages en avion
+actions . mobilités . limiter avion court courrier:
+  titre: Explorer les alternatives aux vols courts-courriers
   meta:
-    id: c0932b7e-5950-483c-aea8-2838ec7d2aa1
+    id: b7c151e0-1614-4a8c-a8d2-a7f83a3731a9
   note: |
     Simple: applicable si l'utilisateur prend l'avion, le gain est équivalent à l'empreinte associée à ses trajets en avion.
   applicable si:
-    une de ces conditions:
-      - utilisateur . heures court courrier par an > 0
+    toutes ces conditions:
+      - utilisateur . voyageur en avion = 'occasionnellement'
       - utilisateur . heures long courrier par an > 0
+  formule: transport . avion
+
+actions . mobilités . limiter avion long courrier:
+  titre: Avez-vous mesuré l’impact de votre voyage ?
+  meta:
+    id: 63ef8805-04fa-48ae-afa7-765070c5d913
+  note: |
+    Simple: applicable si l'utilisateur prend l'avion, le gain est équivalent à l'empreinte associée à ses trajets en avion.
+  applicable si:
+    toutes ces conditions:
+      - utilisateur . voyageur en avion = 'occasionnellement'
+      - utilisateur . heures long courrier par an = 0
+      - utilisateur . heures court courrier par an > 0
+  formule: transport . avion
+
+actions . mobilités . limiter avion:
+  titre: Avez-vous mesuré l’impact de vos voyages ?
+  meta:
+    id: 3122683a-e542-4d91-9ea8-fc221ffe2783
+  note: |
+    Simple: applicable si l'utilisateur prend l'avion, le gain est équivalent à l'empreinte associée à ses trajets en avion.
+  applicable si: utilisateur . voyageur en avion = 'fréquemment'
   formule: transport . avion
 
 actions . mobilités . nouveaux déplacements:
