@@ -38,6 +38,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    outputs:
+      release_body: ${{ steps.get-body.outputs.release_body }}
     # We create release only if the version in the package.json have been upgraded and this CI is running against the main branch.
     # We allow branches with a PR open on main to publish pre-release (x.y.z-rc.u) but not actual releases.
     if: |
@@ -55,6 +57,21 @@ jobs:
           prerelease: ${{ needs.check_if_version_upgraded.outputs.is_pre_release == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Expose the auto-generated release body as a job output so downstream
+      # jobs (e.g. the repository_dispatch to the app) can embed it without
+      # re-fetching the release themselves.
+      - name: Get generated release body
+        id: get-body
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          body="$(gh release view "v${{ needs.check_if_version_upgraded.outputs.to_version }}" --json body --jq '.body // ""')"
+          {
+            echo "release_body<<RELEASE_BODY_EOF"
+            echo "${body}"
+            echo "RELEASE_BODY_EOF"
+          } >> "$GITHUB_OUTPUT"
 
   publish_on_npm:
     name: Publish on NPM
@@ -101,17 +118,17 @@ jobs:
           VERSION: ${{ needs.check_if_version_upgraded.outputs.to_version }}
           IS_PRE_RELEASE: ${{ needs.check_if_version_upgraded.outputs.is_pre_release }}
 
-  # Opens a PR in incubateur-ademe/nosgestesclimat-app updating the
-  # @incubateur-ademe/nosgestesclimat dependency to the version just released.
-  #
-  # Everything runs from this repository: we checkout the app, run the app's
-  # update script, and open the PR with a GitHub App token (so CI runs on it,
-  # dependabot-style). Event-driven: only runs after a successful NPM publish,
-  # no NPM polling.
-  open_update_pr_in_app:
-    name: Open update PR in app
+  # Sends a repository_dispatch event to incubateur-ademe/nosgestesclimat-app so
+  # the app runs its own model update script
+  # (.github/scripts/update-model-version.mjs) and opens the dependency bump PR.
+  # The model workflow therefore stays a simple dispatch.
+  dispatch_model_update_to_app:
+    name: Dispatch model update to app
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     needs:
+      - create_github_release
       - publish_on_npm
       - check_if_version_upgraded
     env:
@@ -125,7 +142,8 @@ jobs:
           exit 0
 
       # GITHUB_TOKEN is scoped to this repository, so we generate a temporary
-      # GitHub App token with write access to incubateur-ademe/nosgestesclimat-app.
+      # GitHub App token with write access to incubateur-ademe/nosgestesclimat-app
+      # to trigger the repository_dispatch event on that repository.
       - name: Generate GitHub App token
         if: env.IS_PRE_RELEASE != 'true'
         id: app-token
@@ -136,87 +154,24 @@ jobs:
           owner: incubateur-ademe
           repositories: nosgestesclimat-app
 
-      - name: Checkout nosgestesclimat-app
+      # The release body comes from the create_github_release job output (the
+      # job that generated the release notes), so no re-fetch is needed here.
+      - name: Dispatch update to app
         if: env.IS_PRE_RELEASE != 'true'
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
         with:
-          repository: incubateur-ademe/nosgestesclimat-app
-          ref: main
-          token: ${{ steps.app-token.outputs.token }}
-
-      - name: Update dependency version
-        if: env.IS_PRE_RELEASE != 'true'
-        run: node .github/scripts/update-model-version.mjs
+          github-token: ${{ steps.app-token.outputs.token }}
+          script: |
+            // Keep under the client_payload size limit (64KB total).
+            const releaseBody = (process.env.RELEASE_BODY ?? '').slice(0, 60000)
+            await github.rest.repos.createDispatchEvent({
+              owner: 'incubateur-ademe',
+              repo: 'nosgestesclimat-app',
+              event_type: 'model-release',
+              client_payload: {
+                version: process.env.NEW_VERSION,
+                release_body: releaseBody,
+              },
+            })
         env:
-          NEW_VERSION: ${{ needs.check_if_version_upgraded.outputs.to_version }}
-
-      # Reconcile the lockfile with the bumped package.json, otherwise the
-      # app's CI (pnpm install --frozen-lockfile) would fail on the PR.
-      - name: Install pnpm
-        if: env.IS_PRE_RELEASE != 'true'
-        uses: pnpm/action-setup@v4
-
-      - name: Use Node.js
-        if: env.IS_PRE_RELEASE != 'true'
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: './package.json'
-          cache: 'pnpm'
-
-      # The package has just been published: retry briefly in case the npm
-      # registry has not propagated the new version yet.
-      - name: Update lockfile
-        if: env.IS_PRE_RELEASE != 'true'
-        run: |
-          for attempt in 1 2 3 4 5; do
-            if pnpm install --lockfile-only; then
-              exit 0
-            fi
-            echo "npm not ready yet, retry $attempt/5..."
-            sleep 15
-          done
-          exit 1
-
-      # Fetch the release notes generated for v${NEW_VERSION} and embed them in
-      # the PR body. We use GITHUB_TOKEN here: the GitHub App token is scoped to
-      # nosgestesclimat-app, not to this repository.
-      - name: Build PR body from release notes
-        if: env.IS_PRE_RELEASE != 'true'
-        id: pr-body
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          release_notes="$(gh release view "v${NEW_VERSION}" --repo incubateur-ademe/nosgestesclimat --json body --jq '.body')"
-
-          {
-            echo "pr_body<<PR_BODY_EOF"
-            echo "## Summary"
-            echo ""
-            echo "Opened automatically after the release of [\`@incubateur-ademe/nosgestesclimat\` v${NEW_VERSION}](https://github.com/incubateur-ademe/nosgestesclimat/releases/tag/v${NEW_VERSION})."
-            echo ""
-            echo "This PR updates \`@incubateur-ademe/nosgestesclimat\` → \`v${NEW_VERSION}\` in:"
-            echo "- \`packages/core/package.json\`"
-            echo "- \`apps/server/package.json\`"
-            echo "- \`apps/site/package.json\`"
-            echo ""
-            echo "and reconciles \`pnpm-lock.yaml\` with the new version."
-            echo ""
-            echo "## Release notes"
-            echo ""
-            echo "${release_notes}"
-            echo ""
-            echo "_Generated by the \`packaging\` workflow of the model repository — no NPM polling._"
-            echo "PR_BODY_EOF"
-          } >> "$GITHUB_OUTPUT"
-
-      - name: Create Pull Request
-        if: env.IS_PRE_RELEASE != 'true'
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ steps.app-token.outputs.token }}
-          branch: update-model/v${{ env.NEW_VERSION }}
-          title: 'chore(deps): update @incubateur-ademe/nosgestesclimat to v${{ env.NEW_VERSION }}'
-          commit-message: 'chore(deps): update @incubateur-ademe/nosgestesclimat to v${{ env.NEW_VERSION }}'
-          body: ${{ steps.pr-body.outputs.pr_body }}
-          labels: dependencies
-          delete-branch: true
+          RELEASE_BODY: ${{ needs.create_github_release.outputs.release_body }}
