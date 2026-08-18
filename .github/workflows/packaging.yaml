@@ -9,12 +9,6 @@ on:
   # Manual trigger to run the release pipeline (publish on npm + dispatch to the
   # app) without bumping the version in package.json.
   workflow_dispatch:
-    inputs:
-      force_release:
-        description: 'Run the release pipeline even if the version was not bumped'
-        required: false
-        type: boolean
-        default: false
 
 jobs:
   check_if_version_upgraded:
@@ -52,11 +46,11 @@ jobs:
       release_body: ${{ steps.get-body.outputs.release_body }}
     # We create release only if the version in the package.json have been upgraded and this CI is running against the main branch.
     # We allow branches with a PR open on main to publish pre-release (x.y.z-rc.u) but not actual releases.
-    # A manual workflow_dispatch with force_release=true runs the pipeline even without a version bump
-    # (e.g. to re-run publishing/dispatch for an already-existing release).
+    # A manual workflow_dispatch always runs this job to expose the release body,
+    # even without a version bump.
     if: |
       needs.check_if_version_upgraded.outputs.from_version != needs.check_if_version_upgraded.outputs.to_version ||
-      (github.event_name == 'workflow_dispatch' && inputs.force_release == 'true')
+      github.event_name == 'workflow_dispatch'
     needs:
       - check_if_version_upgraded
     steps:
@@ -75,10 +69,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Expose the auto-generated release body as a job output so downstream
-      # jobs (e.g. the repository_dispatch to the app) can embed it without
-      # re-fetching the release themselves.
-      - name: Get generated release body
+      # Expose the release body as a job output so downstream jobs (e.g. the
+      # repository_dispatch to the app) can embed it without re-fetching.
+      # On a manual force run the tag usually already exists (the creation step
+      # above failed and was ignored), so we read the body of the existing
+      # release for that version.
+      - name: Get release body
         id: get-body
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
