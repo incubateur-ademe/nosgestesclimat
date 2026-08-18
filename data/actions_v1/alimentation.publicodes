@@ -190,19 +190,9 @@ alimentation . devenir végétarien:
 
 alimentation . devenir végétarien . différence par semaine:
   titre: Différence par semaine
-  formule:
-    somme:
-      - différence par semaine petits déjeuners
-      - différence par semaine repas
-
-alimentation . devenir végétarien . différence par semaine petits déjeuners:
-  applicable si: alimentation . petit déjeuner . type = 'britannique'
-  formule: alimentation . petit déjeuner . par semaine - une semaine petit déjeuner végétalien
-
-alimentation . devenir végétarien . différence par semaine repas:
   formule: plats - recalcul
 
-alimentation . devenir végétarien . différence par semaine repas . recalcul:
+alimentation . devenir végétarien . différence par semaine . recalcul:
   valeur: plats
   contexte:
     plats . végétarien . nombre: nouveau nombre plats végé
@@ -211,11 +201,11 @@ alimentation . devenir végétarien . différence par semaine repas . recalcul:
     plats . poisson gras: 0
     plats . poisson blanc: 0
 
-alimentation . devenir végétarien . différence par semaine repas . nouveau nombre plats végé:
+alimentation . devenir végétarien . différence par semaine . nouveau nombre plats végé:
   formule: plats . végétarien . nombre + nombre plats non végé
   unité: repas/semaine
 
-alimentation . devenir végétarien . différence par semaine repas . nombre plats non végé:
+alimentation . devenir végétarien . différence par semaine . nombre plats non végé:
   formule: nombre de plats viande + nombre de plats poisson
   unité: repas/semaine
 
@@ -245,43 +235,10 @@ alimentation . devenir végétalien:
 
 alimentation . devenir végétalien . différence par semaine:
   titre: Différence par semaine
-  formule:
-    somme:
-      - différence par semaine repas
-      - différence par semaine petits déjeuners
-      - différence par semaine chocolat chaud
-
-alimentation . devenir végétalien . différence par semaine repas:
   formule: plats - une semaine plats végétalien
-
-alimentation . devenir végétalien . différence par semaine petits déjeuners:
-  applicable si:
-    une de ces conditions:
-      - alimentation . petit déjeuner . type = 'britannique'
-      - toutes ces conditions:
-          - alimentation . petit déjeuner . type = 'lait céréales'
-          - alimentation . boisson . type de lait = 'lait de vache'
-  formule: alimentation . petit déjeuner . par semaine - une semaine petit déjeuner végétalien
 
 alimentation . une semaine plats végétalien:
   formule: 14 repas/semaine * plats . végétalien . empreinte
-
-alimentation . devenir végétalien . différence par semaine chocolat chaud:
-  applicable si:
-    toutes ces conditions:
-      - alimentation . boisson . type de lait = 'lait de vache'
-      - alimentation . boisson . chaude . chocolat chaud . nombre > 0
-  formule: (alimentation . boisson . chaude . chocolat chaud - une semaine chocolat chaud végétalien) * 7 jour/semaine
-
-alimentation . une semaine petit déjeuner végétalien:
-  valeur: petit déjeuner . par semaine
-  contexte:
-    alimentation . petit déjeuner . type: "'végétalien'"
-
-alimentation . une semaine chocolat chaud végétalien:
-  valeur: boisson . chaude . chocolat chaud
-  contexte:
-    alimentation . boisson . type de lait: "'lait d'avoine'"
 
 alimentation . boisson . réduire café:
 alimentation . boisson . réduire café . max deux par jour:
@@ -398,13 +355,11 @@ alimentation . boisson . réduire boissons sucrées . max un litres par semaine:
 
     Se limiter à 1 litre de jus et 1 litre de solda par semaine, c’est un bon début pour réduire son empreinte carbone.
 
-alimentation . bonus . manger local:
+alimentation . manger local:
   non applicable si: local . consommation = 'oui toujours'
   titre: Manger essentiellement des produits locaux
   icônes: 🍅🇫🇷
-  formule:
-    somme:
-      - alimentation . local . empreinte - recalcul empreinte local
+  formule: 0
   description: |
     Manger des aliments qui n’ont pas été produits à l’autre bout de la planète et à la bonne saison permet d’éviter des émissions de gaz à effet de serre.
 
@@ -414,16 +369,11 @@ alimentation . bonus . manger local:
 
     Découvrez [des recettes des 4 saisons dans notre livret](https://librairie.ademe.fr/agriculture-alimentation-foret-bioeconomie/1768-recettes-des-4-saisons-a-base-de-legumes-et-legumineuses-9791029709593.html).
 
-alimentation . bonus . manger local . recalcul empreinte local:
-  valeur: alimentation . local . empreinte
-  contexte:
-    alimentation . local . consommation: "'oui toujours'"
-
-alimentation . bonus . manger de saison:
+alimentation . manger de saison:
   non applicable si: de saison . consommation = 'oui toujours'
   titre: Manger en respectant les saisons
   icônes: 🍅🌞
-  formule: alimentation . de saison . empreinte - recalcul
+  formule: 0
   description: |
     Manger des fruits et des légumes quand c’est la bonne saison permet d’éviter de transporter les produits de pays éloignés ou de faire pousser des aliments sous serre chauffée.
     C’est un bon moyen pour économiser l’énergie et éviter des émissions de gaz à effet de serre.
@@ -433,11 +383,6 @@ alimentation . bonus . manger de saison:
     En mal d’inspiration pour préparer vos repas, découvrez [des recettes des 4 saisons dans notre livret](https://librairie.ademe.fr/agriculture-alimentation-foret-bioeconomie/1768-recettes-des-4-saisons-a-base-de-legumes-et-legumineuses-9791029709593.html).
 
     > Pour découvrir en un clic les émissions de gaz à effet de serre générées par la culture des fruits et légumes et vérifier leur saisonnalité, [consultez notre simulateur](https://impactco2.fr/fruitsetlegumes).
-
-alimentation . bonus . manger de saison . recalcul:
-  valeur: alimentation . de saison . empreinte
-  contexte:
-    alimentation . de saison . consommation: "'oui toujours'"
 
 alimentation . boisson . eau en bouteille . arrêter:
   applicable si:
