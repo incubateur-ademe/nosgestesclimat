@@ -1,13 +1,11 @@
 import { Evaluation, Rule, RuleNode, Situation } from 'publicodes'
 import { Categories as GeneratedCategories } from './types/categories.d'
 import { DottedName as GeneratedDottedName } from './types/dottedNames'
-import { Subcategories as GeneratedSubcategories } from './types/subcategories.d'
 import { ExtendedSituationDottedNames as GeneratedExtendedSituationDottedNames } from './types/extendedSituationDottedNames'
 import { Questions as GeneratedQuestions } from './types/questions'
 
 export type DottedName = GeneratedDottedName
 export type Categories = GeneratedCategories
-export type Subcategories = GeneratedSubcategories
 export type ExtendedSituationDottedNames = GeneratedExtendedSituationDottedNames
 export type Questions = GeneratedQuestions
 

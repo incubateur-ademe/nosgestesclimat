@@ -50,7 +50,6 @@ const rulesToKeep = [
   'logement . chauffage . bois . système . chaudière bûches',
   'logement . chauffage . bois . système . chaudière granulés',
   'logement . chauffage . bois . système . foyer ouvert',
-  'ui . pédagogie . empreinte faible',
   'divers . textile . empreinte précise',
   'divers . textile . choix précis',
   'divers . textile . nombre total',
