@@ -45,14 +45,8 @@ fs.writeFileSync('./types/questions.d.ts', generateQuestionsType(model))
 // Generate the Categories type
 fs.writeFileSync('./types/categories.d.ts', generateCategoriesTypes(model))
 
-// Generate the Subcategories type
-fs.writeFileSync(
-  './types/subcategories.d.ts',
-  generateSubcategoriesTypes(model)
-)
-
 console.log(
-  `✅ dottedNames, extendedSituationDottedNames, questions, categories and subcategories types generated`
+  `✅ dottedNames, extendedSituationDottedNames, questions and categories types generated`
 )
 
 console.log('➡️ Packaging done')
@@ -83,17 +77,6 @@ function generateCategoriesTypes(model) {
 export type Categories = ${categories.map((category) => `  | "${category}"`).join('\n')}
 `
 
-  return dFile
-}
-
-function generateSubcategoriesTypes(model) {
-  const subcategories = Object.keys(model).filter((dottedName) =>
-    dottedName.startsWith('ui . pédagogie . sous catégories . ')
-  )
-  const dFile = `
-  export type Subcategories =
-  ${subcategories.map((subcategory) => `  | "${subcategory}"`).join('\n')}
-  `
   return dFile
 }
 
