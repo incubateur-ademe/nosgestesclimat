@@ -6,6 +6,15 @@ on:
   push:
     branches:
       - master
+  # Manual trigger to run the release pipeline (publish on npm + dispatch to the
+  # app) without bumping the version in package.json.
+  workflow_dispatch:
+    inputs:
+      force_release:
+        description: 'Run the release pipeline even if the version was not bumped'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   check_if_version_upgraded:
@@ -19,6 +28,7 @@ jobs:
     # it's cleaner to stop the execution instead of letting the CI crash.
     if: |
       github.event_name == 'push' || 
+      github.event_name == 'workflow_dispatch' ||
       github.event.pull_request.head.repo.owner.login == github.event.pull_request.base.repo.owner.login
     runs-on: ubuntu-latest
     outputs:
@@ -42,12 +52,19 @@ jobs:
       release_body: ${{ steps.get-body.outputs.release_body }}
     # We create release only if the version in the package.json have been upgraded and this CI is running against the main branch.
     # We allow branches with a PR open on main to publish pre-release (x.y.z-rc.u) but not actual releases.
+    # A manual workflow_dispatch with force_release=true runs the pipeline even without a version bump
+    # (e.g. to re-run publishing/dispatch for an already-existing release).
     if: |
-      needs.check_if_version_upgraded.outputs.from_version != needs.check_if_version_upgraded.outputs.to_version
+      needs.check_if_version_upgraded.outputs.from_version != needs.check_if_version_upgraded.outputs.to_version ||
+      (github.event_name == 'workflow_dispatch' && inputs.force_release == 'true')
     needs:
       - check_if_version_upgraded
     steps:
+      # When force-triggered on an already-released version, creating the release
+      # fails (the tag already exists). That is expected and must not block the
+      # rest of the pipeline (publish on npm + dispatch to the app).
       - uses: softprops/action-gh-release@v1
+        continue-on-error: true
         with:
           name: Release v${{ needs.check_if_version_upgraded.outputs.to_version }}
           tag_name: v${{ needs.check_if_version_upgraded.outputs.to_version }}
@@ -66,7 +83,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          body="$(gh release view "v${{ needs.check_if_version_upgraded.outputs.to_version }}" --json body --jq '.body // ""')"
+          body="$(gh release view "v${{ needs.check_if_version_upgraded.outputs.to_version }}" --repo "$GITHUB_REPOSITORY" --json body --jq '.body // ""')"
           {
             echo "release_body<<RELEASE_BODY_EOF"
             echo "${body}"
