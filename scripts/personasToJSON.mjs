@@ -5,7 +5,6 @@ import c from 'ansi-colors'
 import utils from '@incubateur-ademe/nosgestesclimat-scripts/utils'
 import cli from '@incubateur-ademe/nosgestesclimat-scripts/cli'
 import { addTranslationToBasePersonas } from './i18n/addTranslationToBasePersonas.js'
-import { getPersonaExtendedSituation } from './situation/getExtendedSituationFromSituation.mjs'
 
 const outputJSONPath = './public'
 
@@ -48,18 +47,8 @@ const basePersonas = utils.readYAML(
   path.resolve(`personas/personas-${srcLang}.yaml`)
 )
 
-const basePersonasWithExtendedSituation = Object.fromEntries(
-  Object.entries(basePersonas).map(([personaId, personaAttrs]) => [
-    personaId,
-    {
-      ...personaAttrs,
-      extendedSituation: getPersonaExtendedSituation(personaAttrs.situation)
-    }
-  ])
-)
-
 writePersonas(
-  basePersonasWithExtendedSituation,
+  basePersonas,
   path.join(outputJSONPath, `personas-${srcLang}.json`),
   srcLang
 )
@@ -69,7 +58,7 @@ destLangs.forEach((destLang) => {
   const translatedPersonasAttrs =
     utils.readYAML(path.resolve(`personas/personas-${destLang}.yaml`)) ?? {}
   const translatedPersonas = addTranslationToBasePersonas(
-    basePersonasWithExtendedSituation,
+    basePersonas,
     translatedPersonasAttrs
   )
   writePersonas(translatedPersonas, destPath, destLang)
