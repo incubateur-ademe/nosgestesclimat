@@ -1,25 +1,11 @@
 import { Evaluation, Rule, RuleNode, Situation } from 'publicodes'
 import { Categories as GeneratedCategories } from './types/categories.d'
 import { DottedName as GeneratedDottedName } from './types/dottedNames'
-import { ExtendedSituationDottedNames as GeneratedExtendedSituationDottedNames } from './types/extendedSituationDottedNames'
 import { Questions as GeneratedQuestions } from './types/questions'
 
 export type DottedName = GeneratedDottedName
 export type Categories = GeneratedCategories
-export type ExtendedSituationDottedNames = GeneratedExtendedSituationDottedNames
 export type Questions = GeneratedQuestions
-
-export type ExtendedSituation = Record<
-  ExtendedSituationDottedNames,
-  | {
-      nodeValue: Evaluation
-      source: 'answered' | 'default'
-    }
-  | {
-      nodeValue?: undefined
-      source: 'omitted'
-    }
->
 
 export type NGCRuleNode = RuleNode & { rawNode: NGCRule }
 
@@ -58,7 +44,6 @@ export type Persona = {
   icônes: string
   résumé?: string
   situation: Situation<DottedName>
-  extendedSituation: ExtendedSituation
 }
 
 export type Personas = Record<string, Persona>
