@@ -19,7 +19,7 @@ const { destLangs, srcFile, markdown } = getArgs(
   }
 )
 const rules = getModelFromSource(srcFile, {
-  ignore: ['data/i18n/**', 'data/utilisateur/**', 'data/actions/**'],
+  ignore: ['data/i18n/**', 'data/utilisateur/**'],
   verbose: !markdown
 })
 
