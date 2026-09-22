@@ -5,7 +5,6 @@
 import fs from 'fs'
 import path from 'path'
 import Engine from 'publicodes'
-import generateExtendedSituationDottedNames from './scripts/situation/generateExtendedSituationDottedNames.mjs'
 
 const everyModelFolder = 'public'
 const originModelFile = 'co2-model.FR-lang.fr.json'
@@ -33,27 +32,13 @@ if (!fs.existsSync('types')) {
 // Generate the DottedName type
 fs.writeFileSync('./types/dottedNames.d.ts', generateDottedNamesType(model))
 
-// Generate the ExtendedSituationDottedNames type
-fs.writeFileSync(
-  './types/extendedSituationDottedNames.d.ts',
-  generateExtendedSituationDottedNamesTypes(model)
-)
-
 // Generate the Questions type
 fs.writeFileSync('./types/questions.d.ts', generateQuestionsType(model))
 
 // Generate the Categories type
 fs.writeFileSync('./types/categories.d.ts', generateCategoriesTypes(model))
 
-// Generate the Subcategories type
-fs.writeFileSync(
-  './types/subcategories.d.ts',
-  generateSubcategoriesTypes(model)
-)
-
-console.log(
-  `✅ dottedNames, extendedSituationDottedNames, questions, categories and subcategories types generated`
-)
+console.log(`✅ dottedNames, questions and categories types generated`)
 
 console.log('➡️ Packaging done')
 
@@ -83,26 +68,6 @@ function generateCategoriesTypes(model) {
 export type Categories = ${categories.map((category) => `  | "${category}"`).join('\n')}
 `
 
-  return dFile
-}
-
-function generateSubcategoriesTypes(model) {
-  const subcategories = Object.keys(model).filter((dottedName) =>
-    dottedName.startsWith('ui . pédagogie . sous catégories . ')
-  )
-  const dFile = `
-  export type Subcategories =
-  ${subcategories.map((subcategory) => `  | "${subcategory}"`).join('\n')}
-  `
-  return dFile
-}
-
-function generateExtendedSituationDottedNamesTypes(model) {
-  const questionDottedName = generateExtendedSituationDottedNames(model)
-  const dFile = `
-export type ExtendedSituationDottedNames =
-${questionDottedName.map((dottedName) => `  | "${dottedName}"`).join('\n')}
-`
   return dFile
 }
 

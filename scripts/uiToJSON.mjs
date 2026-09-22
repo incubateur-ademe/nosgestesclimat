@@ -33,9 +33,7 @@ const funFactsRules = {
     'ui . organisations . alimentation . local et de saison',
   percentageOfBottledWater:
     'ui . organisations . alimentation . eau en bouteille',
-  percentageOfZeroWaste: 'ui . organisations . alimentation . zéro déchet',
-  amountOfClothing: 'ui . organisations . divers . textile',
-  percentageOfStreaming: 'ui . organisations . divers . internet'
+  percentageOfZeroWaste: 'ui . organisations . alimentation . zéro déchet'
 }
 
 function writeFunFactsFile(outputJSONPath, dataObject) {

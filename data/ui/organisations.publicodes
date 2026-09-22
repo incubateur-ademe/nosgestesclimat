@@ -144,12 +144,16 @@ ui . organisations . alimentation . fréquence viande rouge:
   unité: '%'
 
 ui . organisations . alimentation . local et de saison:
-  titre: Achètent local et de saison
+  titre: Achètent souvent local et de saison
   icônes: 🍅
   formule:
     toutes ces conditions:
-      - alimentation . de saison . consommation = 'oui toujours'
-      - alimentation . local . consommation = 'oui toujours'
+      - une de ces conditions:
+          - alimentation . de saison . consommation = 'souvent'
+          - alimentation . de saison . consommation = 'oui toujours'
+      - une de ces conditions:
+          - alimentation . local . consommation = 'souvent'
+          - alimentation . local . consommation = 'oui toujours'
   unité: '%'
 
 ui . organisations . alimentation . eau en bouteille:
@@ -166,44 +170,4 @@ ui . organisations . alimentation . zéro déchet:
   formule:
     toutes ces conditions:
       - alimentation . déchets . quantité jetée = 'zéro déchet'
-  unité: '%'
-
-ui . organisations . divers:
-  titre: Divers
-  icônes: 📦
-
-ui . organisations . divers . textile:
-  titre: Vêtements neufs achetés chaque année
-  icônes: 👕
-  formule:
-    variations:
-      - si: divers . textile . choix précis = oui
-        alors:
-          somme:
-            - divers . textile . t-shirt . nombre
-            - divers . textile . pantalon . nombre
-            - divers . textile . short . nombre
-            - divers . textile . sweat . nombre
-            - divers . textile . robe . nombre
-            - divers . textile . chemise . nombre
-            - divers . textile . pull . nombre
-            - divers . textile . chaussure . nombre
-            - divers . textile . manteau . nombre
-            - divers . textile . petit article . nombre
-            - divers . textile . gros article . nombre
-      - si: divers . textile . volume = 'minimum'
-        alors: 13
-      - si: divers . textile . volume = 'renouvellement occasionnel'
-        alors: 25
-      - si: divers . textile . volume = 'accro au shopping'
-        alors: 43
-      - sinon: 25
-  unité: '%'
-
-ui . organisations . divers . internet:
-  titre: Passent plus de 3h par jour sur les réseaux hors bureau
-  icônes: 📱
-  formule:
-    toutes ces conditions:
-      - divers . numérique . internet . durée journalière > 3
   unité: '%'

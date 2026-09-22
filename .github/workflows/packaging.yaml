@@ -6,6 +6,9 @@ on:
   push:
     branches:
       - master
+  # Manual trigger to run the release pipeline (publish on npm + dispatch to the
+  # app) without bumping the version in package.json.
+  workflow_dispatch:
 
 jobs:
   check_if_version_upgraded:
@@ -19,6 +22,7 @@ jobs:
     # it's cleaner to stop the execution instead of letting the CI crash.
     if: |
       github.event_name == 'push' || 
+      github.event_name == 'workflow_dispatch' ||
       github.event.pull_request.head.repo.owner.login == github.event.pull_request.base.repo.owner.login
     runs-on: ubuntu-latest
     outputs:
@@ -38,14 +42,23 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    outputs:
+      release_body: ${{ steps.get-body.outputs.release_body }}
     # We create release only if the version in the package.json have been upgraded and this CI is running against the main branch.
     # We allow branches with a PR open on main to publish pre-release (x.y.z-rc.u) but not actual releases.
+    # A manual workflow_dispatch always runs this job to expose the release body,
+    # even without a version bump.
     if: |
-      needs.check_if_version_upgraded.outputs.from_version != needs.check_if_version_upgraded.outputs.to_version
+      needs.check_if_version_upgraded.outputs.from_version != needs.check_if_version_upgraded.outputs.to_version ||
+      github.event_name == 'workflow_dispatch'
     needs:
       - check_if_version_upgraded
     steps:
+      # When force-triggered on an already-released version, creating the release
+      # fails (the tag already exists). That is expected and must not block the
+      # rest of the pipeline (publish on npm + dispatch to the app).
       - uses: softprops/action-gh-release@v1
+        continue-on-error: true
         with:
           name: Release v${{ needs.check_if_version_upgraded.outputs.to_version }}
           tag_name: v${{ needs.check_if_version_upgraded.outputs.to_version }}
@@ -55,6 +68,23 @@ jobs:
           prerelease: ${{ needs.check_if_version_upgraded.outputs.is_pre_release == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Expose the release body as a job output so downstream jobs (e.g. the
+      # repository_dispatch to the app) can embed it without re-fetching.
+      # On a manual force run the tag usually already exists (the creation step
+      # above failed and was ignored), so we read the body of the existing
+      # release for that version.
+      - name: Get release body
+        id: get-body
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          body="$(gh release view "v${{ needs.check_if_version_upgraded.outputs.to_version }}" --repo "$GITHUB_REPOSITORY" --json body --jq '.body // ""')"
+          {
+            echo "release_body<<RELEASE_BODY_EOF"
+            echo "${body}"
+            echo "RELEASE_BODY_EOF"
+          } >> "$GITHUB_OUTPUT"
 
   publish_on_npm:
     name: Publish on NPM
@@ -86,7 +116,6 @@ jobs:
           FILES_PATH=model/master
           AWS_ACCESS_KEY_ID=${{ secrets.SCW_ACCESS_KEY }} AWS_SECRET_ACCESS_KEY=${{ secrets.SCW_SECRET_KEY }} aws s3 rm s3://${{ vars.BUCKET_NAME }}/$FILES_PATH --recursive --endpoint-url ${{ vars.BUCKET_ENDPOINT }}
           AWS_ACCESS_KEY_ID=${{ secrets.SCW_ACCESS_KEY }} AWS_SECRET_ACCESS_KEY=${{ secrets.SCW_SECRET_KEY }} aws s3 cp public s3://${{ vars.BUCKET_NAME }}/$FILES_PATH --recursive --endpoint-url ${{ vars.BUCKET_ENDPOINT }} --acl public-read
-
       - name: Publishing on NPM
         run: |
           if [ "$(pnpm show . version)" = "$VERSION" ]; then
@@ -101,3 +130,61 @@ jobs:
         env:
           VERSION: ${{ needs.check_if_version_upgraded.outputs.to_version }}
           IS_PRE_RELEASE: ${{ needs.check_if_version_upgraded.outputs.is_pre_release }}
+
+  # Sends a repository_dispatch event to incubateur-ademe/nosgestesclimat-app so
+  # the app runs its own model update script
+  # (.github/scripts/update-model-version.mjs) and opens the dependency bump PR.
+  # The model workflow therefore stays a simple dispatch.
+  dispatch_model_update_to_app:
+    name: Dispatch model update to app
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    needs:
+      - create_github_release
+      - publish_on_npm
+      - check_if_version_upgraded
+    env:
+      NEW_VERSION: ${{ needs.check_if_version_upgraded.outputs.to_version }}
+      IS_PRE_RELEASE: ${{ needs.check_if_version_upgraded.outputs.is_pre_release }}
+    steps:
+      - name: Skip pre-releases
+        if: env.IS_PRE_RELEASE == 'true'
+        run: |
+          echo "Skipping pre-release $NEW_VERSION"
+          exit 0
+
+      # GITHUB_TOKEN is scoped to this repository, so we generate a temporary
+      # GitHub App token with write access to incubateur-ademe/nosgestesclimat-app
+      # to trigger the repository_dispatch event on that repository.
+      - name: Generate GitHub App token
+        if: env.IS_PRE_RELEASE != 'true'
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.MODEL_BOT_APP_ID }}
+          private-key: ${{ secrets.MODEL_BOT_APP_PRIVATE_KEY }}
+          owner: incubateur-ademe
+          repositories: nosgestesclimat-app
+
+      # The release body comes from the create_github_release job output (the
+      # job that generated the release notes), so no re-fetch is needed here.
+      - name: Dispatch update to app
+        if: env.IS_PRE_RELEASE != 'true'
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
+        with:
+          github-token: ${{ steps.app-token.outputs.token }}
+          script: |
+            // Keep under the client_payload size limit (64KB total).
+            const releaseBody = (process.env.RELEASE_BODY ?? '').slice(0, 60000)
+            await github.rest.repos.createDispatchEvent({
+              owner: 'incubateur-ademe',
+              repo: 'nosgestesclimat-app',
+              event_type: 'model-release',
+              client_payload: {
+                version: process.env.NEW_VERSION,
+                release_body: releaseBody,
+              },
+            })
+        env:
+          RELEASE_BODY: ${{ needs.create_github_release.outputs.release_body }}
