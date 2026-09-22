@@ -24,8 +24,6 @@ logement . chauffage:
 
 logement . chauffage . mode:
   question: Intéressons-nous à l'énergie de votre logement. Comment est-il chauffé ?
-  description: |
-    Cette question peut-être difficile à appréhender par manque d'information. Répondre "Je ne sais pas" vous permettra d'obtenir une estimation de votre empreinte basée sur les données moyennes du parc français.
   une possibilité:
     - individuel
     - collectif
@@ -140,8 +138,6 @@ logement . chauffage . collectif:
       - chauffage . mode = "collectif"
   titre: Chauffage principal air
   question: Connaissez-vous le type d’énergie qui alimente votre chauffage collectif ?
-  description: |
-    Cette question est loin d'être évidente. Vous ne savez pas ? Pas de panique, répondez "Je ne sais pas", nous considérerons une valeur moyenne.
   une possibilité:
     - gaz
     - réseau de chaleur
@@ -170,8 +166,6 @@ logement . chauffage . collectif:
 logement . chauffage . collectif . ecs:
   titre: Chauffage eau chaude sanitaire
   question: Votre chauffe-eau est-il raccordé au chauffage collectif également ?
-  description: |
-    Sélectionner chauffe-eau solaire prend en compte l'appoint nécessaire pour compléter l'énergie solaire.
   par défaut:
     variations:
       - si: principal = "PAC air air"
@@ -399,14 +393,13 @@ logement . chauffage . précision consommation . DPE . consommation via DPE par 
 logement . chauffage . précision consommation . ressenti:
   applicable si: saisie précision consommation = 'aide'
   question: Quel est votre ressenti sur le confort thermique de votre logement en hiver ?
-  description: |
-    Si vous vivez dans une région où il n'est pas nécessaire de chauffer, transposez la question sur le ressenti en été, avec la climatisation par exemple.
   note: |
     L'idée est d'utiliser cette variable pour pondérer les consommations d'un logement moyen estimées via les consommations réelles du parc français, en considérant un DPE moyen en France à D. Ainsi, on peut ajuster la valeur moyenne de consommation avec un saut de classe de D vers A ou de D vers G selon le ressenti de l'utilisateur.
   une possibilité:
     - passoire thermique
     - moyen
     - confortable
+    - non concerné
   par défaut: "'moyen'"
 
 logement . chauffage . précision consommation . ressenti . passoire thermique:
@@ -420,6 +413,9 @@ logement . chauffage . précision consommation . ressenti . moyen:
 logement . chauffage . précision consommation . ressenti . confortable:
   titre: Je chauffe peu, il fait bon naturellement
   note: On considère dans ce cas un DPE A.
+
+logement . chauffage . précision consommation . ressenti . non concerné:
+  titre: Il ne fait pas froid, même en hiver
 
 logement . chauffage . précision consommation . saut D vers A:
   formule: 55 kWh/m2 / 215 kWh/m2
@@ -1612,14 +1608,12 @@ logement . chauffage . bois . type . bûches . consommation précise en stère:
       - type . bûches
       - saisie précision consommation = 'conso exactes'
   par défaut: consommation moyenne réelle / intensité énergétique
-  question: Quelle la consommation annuelle de bois en bûches de votre foyer ?
+  question: Quelle est la consommation annuelle de bûches de votre foyer ?
   aide: logement . chauffage . bois . type . bûches . consommation estimée via le coût . saisie
   plancher: 0
   plafond: 150
   description: |
     La consommation de bois de chauffage se compte traditionnellement en stères, ce qui correspond approximativement à un mètre cube de bûches.
-
-    ![](https://upload.wikimedia.org/wikipedia/commons/7/7c/Raummeter_hg.jpg)
   unité: stère
 
 logement . chauffage . bois . type . bûches . consommation via DPE:
