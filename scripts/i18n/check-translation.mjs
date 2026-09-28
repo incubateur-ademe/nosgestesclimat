@@ -81,7 +81,7 @@ function manageNotUpToDateRuleTranslations(
 }
 
 const rules = getModelFromSource(srcFile, {
-  ignore: ['data/i18n/**', 'data/utilisateur/**'],
+  ignore: ['data/i18n/**', 'data/utilisateur/utilisateur.publicodes'],
   verbose: !markdown
 })
 
