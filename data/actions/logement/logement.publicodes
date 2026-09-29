@@ -133,7 +133,7 @@ actions . logement . individualisation chauffage collectif:
 
     En moyenne, l’individualisation des frais de chauffage mène à une réduction de [15% de la consommation](https://librairie.ademe.fr/societe-et-politiques-publiques/647-individualisation-des-frais-de-chauffage-quels-avantages-.html). On considère que cette réduction concerne le chauffage de l'air et l'eau chaude sanitaire.
   applicable si: utilisateur . mode de chauffage = "collectif"
-  non applicable si: profil . âge = 'moins de 18 ans'
+  non applicable si: utilisateur . est mineur
   formule:
     somme:
       - calcul . empreinte chauffage air * 0.15 / utilisateur . habitants
@@ -153,7 +153,7 @@ actions . logement . isoler:
       - utilisateur . a réalisé travaux chauffage
       - utilisateur . a réalisé travaux isolation
       - utilisateur . âge du logement = 'très récent'
-      - profil . âge = 'moins de 18 ans'
+      - utilisateur . est mineur
 
   note: |
     Pour le moment, nous ne chiffrons pas l'impact de cette action car une réflexion plus poussée est menée avec le service Bâtiment de l'ADEME pour déterminer un gain carbone réaliste.
@@ -190,7 +190,7 @@ actions . logement . installer panneaux solaires thermiques:
   non applicable si:
     une de ces conditions:
       - utilisateur . chauffe eau solaire
-      - profil . âge = 'moins de 18 ans'
+      - utilisateur . est mineur
   formule: calcul . empreinte eau chaude sanitaire * logement . chauffage . chauffe eau solaire . taux réduction ecs / utilisateur . habitants
 
 actions . logement . installer panneaux solaires photovoltaïques:
@@ -204,7 +204,7 @@ actions . logement . installer panneaux solaires photovoltaïques:
   non applicable si:
     une de ces conditions:
       - utilisateur . panneau photovoltaïque = "oui"
-      - profil . âge = 'moins de 18 ans'
+      - utilisateur . est mineur
   formule: logement - logement avec PV
   unité: kgCO2e
   avec:
@@ -253,7 +253,7 @@ actions . logement . se chauffer énergies renouvelables:
   non applicable si:
     une de ces conditions:
       - utilisateur . a réalisé travaux chauffage
-      - profil . âge = 'moins de 18 ans'
+      - utilisateur . est mineur
   formule:
     le maximum de:
       - installer une PAC
@@ -282,7 +282,7 @@ actions . logement . améliorer chauffage immeuble:
   non applicable si:
     une de ces conditions:
       - utilisateur . a réalisé travaux chauffage
-      - profil . âge = 'moins de 18 ans'
+      - utilisateur . est mineur
   formule:
     le maximum de:
       - installer une PAC
