@@ -47,6 +47,7 @@ bilan . sous catégories . alimentation:
       - bilan . sous catégories . alimentation . sucrées
       - bilan . sous catégories . alimentation . eau en bouteille
       - bilan . sous catégories . alimentation . déchets
+      - bilan . sous catégories . alimentation . bonus local et de saison
 
 bilan . sous catégories . logement:
   formule:
@@ -317,9 +318,6 @@ bilan . sous catégories . alimentation . végétarien:
 bilan . sous catégories . alimentation . végétalien:
   formule: alimentation . plats . végétarien * commun . semaines par an
 
-bilan . sous catégories . alimentation . petit déjeuner:
-  # formule: alimentation . petit déjeuner annuel
-
 bilan . sous catégories . alimentation . petit déjeuner portion carné:
   formule:
     produit:
@@ -369,12 +367,24 @@ bilan . sous catégories . alimentation . eau en bouteille:
 bilan . sous catégories . alimentation . déchets:
   formule: alimentation . déchets
 
+# Terme correctif du poste « repas » : présent avant 4.16.0 (il porte les
+# empreintes « de saison » et « local », souvent négatives), supprimé ensuite.
+# Il doit être neutralisé dans les versions récentes, sinon il serait compté
+# deux fois.
+bilan . sous catégories . alimentation . bonus local et de saison:
+  formule: 0
+
 bilan . sous catégories . logement . chauffage:
 bilan . sous catégories . logement . chauffage . moyenne:
   formule:
     variations:
       - si:
-          est non défini: logement . chauffage . mode
+          une de ces conditions:
+            - toutes ces conditions:
+                - est défini: logement . chauffage . mode
+                - logement . chauffage . mode = "individuel"
+                - est non défini: logement . chauffage . principal
+            - est non défini: logement . chauffage . mode
         alors: logement . chauffage . empreinte par défaut / logement . habitants
       - sinon: 0
 
@@ -523,7 +533,11 @@ bilan . sous catégories . logement . électricité . photovoltaique:
   formule:
     variations:
       - si: logement . électricité . photovoltaique . présent
-        alors: logement . électricité . photovoltaique . production * logement . électricité . photovoltaique . intensité carbone / logement . habitants
+        alors:
+          variations:
+            - si: logement . électricité . photovoltaique . production >= logement . électricité . consommation totale
+              alors: logement . électricité . consommation totale * logement . électricité . photovoltaique . intensité carbone / logement . habitants
+            - sinon: logement . électricité . photovoltaique . production * logement . électricité . photovoltaique . intensité carbone / logement . habitants
       - sinon: 0
 
 bilan . sous catégories . logement . fluides frigorigènes climatisation:

@@ -130,12 +130,15 @@ export async function getRulesFromPreviousRelease(version) {
 
     extract.on('entry', (header, stream, next) => {
       if (header.name === `package/${fileName}`) {
-        let data = ''
-        stream.on('data', (chunk) => (data += chunk))
+        // On accumule les Buffers puis on décode une seule fois : décoder chaque
+        // chunk séparément corromprait les caractères UTF-8 multi-octets coupés
+        // entre deux chunks (ex. « é » -> « � »).
+        const chunks = []
+        stream.on('data', (chunk) => chunks.push(chunk))
         stream.on('end', () => {
           found = true
           try {
-            resolve(JSON.parse(data))
+            resolve(JSON.parse(Buffer.concat(chunks).toString('utf8')))
           } catch (e) {
             reject(new Error(`Erreur de parsing JSON: ${e.message}`))
           }
