@@ -112,7 +112,10 @@ actions . mobilités . voiture électrique:
   meta:
     id: 88f48ec8-6127-45e8-8732-2678e9aac8f0
   applicable si: utilisateur . utilisateur de la voiture = 'propriétaire'
-  non applicable si: utilisateur . motorisation de la voiture = 'électrique'
+  non applicable si:
+    une de ces conditions:
+      - utilisateur . motorisation de la voiture = 'électrique'
+      - utilisateur . est mineur
   note: |
     L'idée est de proposer cette action à des personnes qui sont propriétaires d'une voiture ou qui pratiquent l'auto-partage / covoiturage. Les personnes qui utilisent le véhicule d'un proche ne sont pas ciblées.
 
@@ -134,6 +137,7 @@ actions . mobilités . écoconduite:
   meta:
     id: 14f89d9a-36b4-4047-8b92-0f829a544512
   applicable si: utilisateur . km en voiture par an > 0
+  non applicable si: utilisateur . est mineur
   formule: transport . voiture . usage au kilomètre * utilisateur . km en voiture par an * réduction / transport . voiture . voyageurs
   avec:
     réduction:
@@ -153,6 +157,7 @@ actions . mobilités . covoiturage vacances:
     une de ces conditions:
       - utilisateur . utilisateur de la voiture = 'non régulier'
       - utilisateur . utilisateur de la voiture = 'jamais'
+      - utilisateur . est mineur
   formule: 0
   note: |
     Si auparavant, nous calculions un gain d'empreinte pour cette action, nous avons décidé de ne plus le faire, car les dernières études sur le covoiturage longue distance montrent que les gains d'empreinte potentiels sont entièrement compensés par l'effet rebond.
@@ -187,6 +192,7 @@ actions . mobilités . location voiture:
     toutes ces conditions:
       - utilisateur . km en voiture par an < plafond activation autopartage
       - utilisateur . utilisateur de la voiture = 'propriétaire'
+  non applicable si: utilisateur . est mineur
   note: |
     L'idée est de proposer cette action à des personnes qui font peu de kilomètres en voiture dans l'année et qui sont propriétaires d'une voiture.
 
@@ -210,9 +216,9 @@ actions . mobilités . réduire vitesse autoroute:
   meta:
     id: 598fbb1e-0137-42c0-8e19-903df10f39db
   non applicable si:
-    toutes ces conditions:
-      - est défini: utilisateur
-      - utilisateur = 'jamais'
+    une de ces conditions:
+      - utilisateur . utilisateur de la voiture = 'jamais'
+      - utilisateur . est mineur
   formule: transport . voiture . usage au kilomètre * km autoroute * réduction / transport . voiture . voyageurs
   note: |
     Le guide ADEME ["Comment consommer moins de carburant"](https://librairie.ademe.fr/mobilite-et-transports/5432-comment-consommer-moins-de-carburants-.html) indique que réduire sa vitesse de 10 km/h sur l'autoroute permet de réduire sa consommation de carburant de 1 à 3 litres sur un trajet de 500km.
@@ -235,7 +241,7 @@ actions . mobilités . motiver employeur mobilité durable:
   meta:
     id: 285f6bfa-2836-4f50-93ba-a75a30466110
   note: Action non quantifiée
-  applicable si: oui
+  applicable si: utilisateur . est actif
   formule: 0
 
 actions . mobilités . vacances en train:
@@ -302,5 +308,5 @@ actions . mobilités . trajet enfant sans voiture:
   meta:
     id: 83942267-f887-4c99-9e4e-9a0fefeb31d0
   note: Action non quantifiée
-  applicable si: oui
+  applicable si: utilisateur . est parent potentiel de scolaires
   formule: 0
