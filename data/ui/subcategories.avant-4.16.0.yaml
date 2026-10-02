@@ -1,0 +1,59 @@
+# Sous catégories — variante pour les modèles ANTÉRIEURS à 4.16.0.
+#
+# ⚠️ Ce fichier ne contient que les règles qui diffèrent de
+# `data/ui/subcategories.publicodes`. Il est fusionné par-dessus : les règles
+# absentes d'ici sont reprises telles quelles du fichier principal.
+#
+# ## Pourquoi cette variante
+#
+# Le petit déjeuner a été refondu en 4.16.0 :
+#
+#   - avant 4.16.0 : un PROFIL agrégé, sans décomposition
+#       `alimentation . petit déjeuner . type` (mosaïque) :
+#       continental | lait céréales | britannique | végétalien | aucun
+#     chacun portant une unique empreinte en dur ;
+#
+#   - à partir de 4.16.0 : des COMPOSANTS (`tartine`, `viennoiserie`, `yaourt`,
+#     `charcuterie`, `fromage`, `oeufs`…), qui permettent de distinguer les
+#     portions carné / lacté / sucré.
+#
+# Les règles `portion carné / lacté / sucré` du fichier principal référencent
+# `alimentation . petit déjeuner . charcuterie`, `fromage`, `tartine`… qui
+# n'existent pas avant 4.16.0.
+#
+# ## Mapping retenu
+#
+#   carné      -> britannique
+#   lacté      -> lait céréales
+#   sucré      -> continental, végétalien
+#
+# ## Bonus local et de saison
+#
+# Avant 4.16.0, `alimentation . repas` quantifiait sous forme d'un bonus la consommation de produits locaux et de saison. Ce bonus est supprimé dans les versions récentes.
+
+bilan . sous catégories . alimentation . bonus local et de saison:
+  formule: alimentation . bonus
+
+bilan . sous catégories . alimentation . petit déjeuner portion carné:
+  formule:
+    variations:
+      - si: alimentation . petit déjeuner . type = 'britannique'
+        alors: alimentation . petit déjeuner * commun . jours par an
+      - sinon: 0
+
+bilan . sous catégories . alimentation . petit déjeuner portion lacté:
+  formule:
+    variations:
+      - si: alimentation . petit déjeuner . type = 'lait céréales'
+        alors: alimentation . petit déjeuner * commun . jours par an
+      - sinon: 0
+
+bilan . sous catégories . alimentation . petit déjeuner portion sucré:
+  formule:
+    variations:
+      - si:
+          une de ces conditions:
+            - alimentation . petit déjeuner . type = 'continental'
+            - alimentation . petit déjeuner . type = 'végétalien'
+        alors: alimentation . petit déjeuner * commun . jours par an
+      - sinon: 0
