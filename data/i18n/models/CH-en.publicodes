@@ -9,10 +9,13 @@ commun . mix électrique . empreinte carbone:
     Calculation carried out by the State of Geneva (OCEN – DDC), taking into account locally generated renewable electricity, which accounts for around one-third of the canton’s electricity consumption, and the average Swiss consumer mix (KBOB) for electricity imported from the grid, based on the 2017–2021 average (5 years).
 transport . voiture . km:
   description: |
-    Only include kilometres travelled for personal purposes (shopping, leisure, family, etc.) and for travelling between home and your usual place of work.
+    Only include kilometres travelled for personal purposes (errands, leisure, family, etc.) and for commuting between home and your usual place of work.
 
     For example, if you are on a business trip to another canton or another country, this is covered by your company’s records: do not include it here.
   par défaut: 6000
+transport . voiture . voyageurs:
+  description: |
+    🤔 It’s highly likely that your journeys will vary, and that you’ll sometimes drive alone and sometimes with others.
 transport . voiture . km annuels moyen:
   formule: 6000
   note: |
@@ -27,7 +30,7 @@ transport . voiture . gabarit . VUL:
   titre: Commercial vehicle
   description: VW Multivan or Mercedes Vito-type van or minibus
 transport . voiture . gabarit . berline:
-  titre: Saloon
+  titre: Saloon car
   description: A saloon car such as the Peugeot 508, Tesla Model 3, Audi A4 or A6
 transport . voiture . gabarit . SUV:
   titre: SUV
@@ -52,12 +55,12 @@ transport . deux roues . empreinte moyenne:
     deux roues . usager: oui
     deux roues . type: "'moto sup 250'"
     deux roues . km: 400
-  note: MRMT 2021, figures adjusted on the basis of the 2022 counts to correct for the COVID effect observed in 2021.
+  note: MRMT 2021, figures adjusted using the 2022 census data to correct for the COVID effect observed in 2021.
 transport . avion . usager:
   description: |
-    We have chosen to offer you the option of calculating the impact of your air travel over several years. The climate impact is such that it is important to take this into account.
+    We have chosen here to offer you the option of calculating the impact of your air travel over several years. The climate impact is such that it is important to take this into account.
 
-    So, whether or not you fly every year, please answer ‘yes’ and you’ll then have the option to enter your flight times for the last three years.
+    So, whether or not you fly every year, please answer ‘yes’ and you will then have the option to enter your flight times for the last 3 years.
 
     &gt; 💡 If you flew from Zurich to New York in 2023 (approximately 19 hours return), your associated emissions (nearly 2 tonnes) will be spread over the last three years.
 transport . avion . court courrier . durée moyenne:
@@ -90,6 +93,8 @@ transport . avion . vols amortis:
       - heures court courrier . saisie
       - heures moyen et long courrier . saisie
     suggestions: null
+transport . train:
+  description: null
 transport . train . km:
   suggestions:
     Geneva ⇄ Nyon: 42
@@ -98,6 +103,8 @@ transport . train . km:
     Geneva ⇄ Zurich: 440
     Geneva ⇄ Paris: 820
   par défaut: 2700
+transport . transports commun . métro ou tram:
+  titre: Tram
 transport . transports commun . métro ou tram . heures par semaine:
   question: How many hours a week do you spend on the tram?
 transport . avion . court courrier . empreinte par km:
@@ -191,7 +198,7 @@ transport . voiture . barème construction . barème hybride:
         alors: 10298
       - si: gabarit = 'SUV'
         alors: 13616
-  note: We use the emission factor provided by the Mobitool platform ((manufacture + maintenance + end-of-life) * km * number of passengers) – https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
+  note: We use the emission factor from the Mobitool platform ((manufacture + maintenance + end-of-life) * km * number of passengers) – https://www.mobitool.ch/fr/outils/facteurs-mobitool-v2-1-25.html
 transport . ferry . usager:
   par défaut: non
 transport . ferry . heures:
@@ -202,13 +209,13 @@ transport . ferry . heures:
     Genoa ⇄ Olbia: 24
 transport . mobilité douce . vélo . construction:
   formule: 76
-  note: Conventional Mobitool ((manufacture + maintenance + end-of-life) * km)
+  note: Conventional Mobitool ((manufacture + maintenance + end of life) * km
 transport . mobilité douce . vélo . durée de vie:
   formule: 15
   note: Mobitool Conventional
 transport . mobilité douce . vae . empreinte:
   formule: 0.001
-  note: Mobitool mid-range e-bikes (25 km/h, 45 km/h) and cargo bikes (power supply)
+  note: Mobitool mid-range e-bike (25 km/h, 45 km/h) and cargo bike (power supply)
 transport . mobilité douce . vae . construction:
   formule: 198
   note: Mobitool average e-bike 25 km/h, 45 km/h and cargo bike ((manufacture + maintenance + end of life) * km
@@ -230,15 +237,15 @@ divers . animaux domestiques . empreinte . chien moyen . nombre:
   par défaut: 0.25
 divers . loisirs . culture . édition . fréquence:
   par défaut: "'élevée'"
-  note: Purchasing power is significantly higher in Switzerland than in France; it is more representative to base the average figure on a high level of expenditure.
+  note: Purchasing power is significantly higher in Switzerland than in France; to obtain a more representative average figure, it is better to base the calculation on a high level of expenditure.
 divers . loisirs . culture . édition . fréquence . faible:
   titre: Less than 5 CHF a month
 divers . loisirs . culture . édition . fréquence . normale:
   titre: From 5 to 15 CHF per month
 divers . loisirs . culture . édition . fréquence . élevée:
-  titre: From 15 to 30 CHF per month
+  titre: From 15 to 30 CHF a month
 divers . loisirs . culture . édition . fréquence . très élevée:
-  titre: More than 30 CHF per month
+  titre: More than 30 CHF a month
 alimentation . plats:
   question: Choose the dishes for your lunch and dinner for a typical week
 alimentation . local . consommation:
@@ -248,13 +255,15 @@ alimentation . de saison . consommation:
     This question enables us to adjust your dietary profile based on your shopping habits in relation to seasonal produce.
 alimentation . déchets . quantité jetée:
   description: |
-    &gt; Please only select ‘Zero Waste’ if you keep track of every single item of waste. To find out more about zero-waste lifestyles, visit the Zero Waste Genève website.
+    &gt; Please answer ‘Zero Waste’ only if you keep track of every single item of waste. To find out more about zero-waste lifestyles, visit the Zero Waste Genève website.
 
-    &gt; Please note that even if you commit to a ‘zero waste’ lifestyle, we still take greenhouse gas emissions into account (albeit significantly reduced), as it is very difficult
-    or even impossible to generate no waste at all; some waste is invisible and unavoidable.
+    &gt; Please note that even if you commit to a ‘zero waste’ lifestyle, we still take greenhouse gas emissions into account (albeit significantly reduced), as it is very difficult,
+    if not impossible, to generate absolutely no waste, as some waste is invisible and unavoidable.
+logement . lieu de vie . aire urbaine:
+  description: null
 logement . âge:
   description: |
-    In the canton of Geneva, more than half of residential buildings and detached houses were built before 1980.
+    In the canton of Geneva, more than half of all residential buildings and detached houses were built before 1980.
 parc français . surface moyenne:
   formule: 80 m2
 parc français . CEREN . chauffage . consommation électricité par m2:
@@ -279,7 +288,7 @@ parc français . CEREN . chauffage . consommation réseau de chaleur par m2:
   note: Source – KBOB, default heating consumption of 450 MJ/m²
 parc français . CEREN . surface . part électricité:
   formule: 3.3%
-  note: No electric heating; here we are taking into account the proportion relating to heat pump consumption
+  note: No electric heating; here we take into account the proportion relating to heat pump consumption
 parc français . CEREN . surface . part gaz:
   formule: 60.80%
 parc français . CEREN . surface . part fioul:
@@ -289,7 +298,7 @@ parc français . CEREN . surface . part bois:
 parc français . CEREN . surface . part réseau de chaleur:
   formule: 5.2%
 logement . chauffage . empreinte par défaut:
-  résumé: A statistical analysis of the average residential **heating** in Geneva
+  résumé: A statistical analysis of average residential **heating** in Geneva
   note: The default housing footprint is calculated on the basis of the average for Geneva’s housing stock
 parc français . chauffage . empreinte moyenne par m2 hors électricité:
   note: Electricity is dealt with separately.
@@ -331,7 +340,7 @@ logement . chauffage . bois . type . bûches . consommation estimée via le coû
 logement . chauffage . bois . type . bûches . prix stère:
   formule: 180
   unité: CHF/stère
-  note: Swiss Farmers’ Union, firewood 2023, direct sales, mixed wood species    https://www.sbv-usp.ch/fr/prix/vente-directe/bois-de-cheminee
+  note: Swiss Farmers’ Union, firewood 2023, direct sales, mixed species    https://www.sbv-usp.ch/fr/prix/vente-directe/bois-de-cheminee
 logement . chauffage . bois . type . granulés . consommation estimée via le coût . saisie:
   unité: CHF/mois
 logement . chauffage . bois . type . granulés . consommation estimée via le coût . facteur:
@@ -353,7 +362,7 @@ logement . chauffage . réseau de chaleur . consommation estimée via le coût .
   unité: CHF/kWh
 logement . type:
   description: |
-    This information affects, in particular, the building’s footprint, but also the options for insulation work, for example.
+    This information affects, in particular, the building’s environmental footprint, but also the options for insulation work, for example.
 
     &gt; If you live in an unconventional home, such as a campervan, that’s no problem: select ‘flat’ and enter the square metres of what is, after all, your home.
   note: OCSTAT
@@ -377,7 +386,7 @@ logement . électricité . réseau . consommation:
   description: |
     Tip: You can find your annual electricity consumption on your bills or via your online account on the SIG website.
 
-    &gt; If you live in more than one property (for example, if you have a second home), try to ‘consolidate’ these consumption figures into those for your main home to ensure the estimate is as accurate as possible.
+    &gt; If you live in more than one property (for example, if you have a second home), try to ‘consolidate’ these consumption figures into those for your main home in order to get the most accurate estimate possible.
 logement . climatisation . nombre par défaut:
   formule: 0
 logement . chauffage . fioul:
@@ -386,15 +395,15 @@ logement . chauffage:
   description: |
     &gt; This question covers all the energy sources you use to power your heating, water heater, hobs, etc.
 
-    Some homes use only electricity, others are heated entirely by gas, and, less commonly, by wood or fuel oil.
+    Some homes use electricity only, others are heated entirely by gas, and, more rarely, by wood or fuel oil.
     In other cases, a home may be heated mainly by electric heaters or a heat pump,
-    but with wood as a supplementary source, for example. Finally, you can also include your gas consumption for your van or motorhome.
+    but with supplementary wood-burning heating, for example. Finally, you can also include your gas consumption for your van or motorhome.
 
-    Tick all the methods you use.
+    Tick all the heating methods you use.
 logement . chauffage . gaz . consommation précise:
   par défaut: parc français . CEREN . chauffage . consommation gaz par m2 * surface
   description: |
-    Tip: You can find your annual energy consumption on your gas bills.
+    Tip: You’ll find your annual energy consumption on your gas bills.
 
     &gt; For heating, your property management company may not provide you with your home’s consumption in kWh if you have a central heating boiler. You can enter the amount of your bill in CHF to estimate your kWh usage. If you have two bills – one for cooking gas and one for heating gas (service charges) – add the two amounts together.
 logement . chauffage . gaz . consommation estimée via le coût . saisie:
@@ -417,20 +426,20 @@ logement . chauffage . réseau de chaleur . consommation précise:
   description: |
     The carbon content per kWh of heat supplied by a district heating network depends heavily on the network to which you are connected.
 
-    Tip: You can find your annual energy consumption on your bills or in your online account on your supplier’s website.
+    Tip: You can find your annual energy consumption on your bills or via your online account on your supplier’s website.
 
-    &gt; Your property management company may not provide you with your home’s consumption in kWh if the boiler is centrally located. You can enter your bill amount in CHF to estimate your kWh consumption.
+    &gt; Your property management company may not provide you with your home’s consumption in kWh if the boiler is centrally managed. You can enter the amount of your bill in CHF to estimate your kWh usage.
 services sociétaux:
   formule:
     somme:
       - services publics
   description: |
     This post includes the footprint of Swiss public services.
-  note: Regional carbon footprints of the City of Geneva and the Canton of Geneva
+  note: Territorial carbon footprints of the City of Geneva and the Canton of Geneva
 services sociétaux . services publics:
   formule: 1583
   note: calculation based on the VdG and Canton territorial carbon footprints (see ‘societal services’ file)
 logement . propriétaire:
   description: |
-    As a tenant, it is obviously difficult to make the investments needed to improve the property’s environmental footprint: insulating your home or switching to a different energy source are measures that only landlords can carry out. That doesn’t stop tenants from asking them to do so!
+    As a tenant, it is obviously difficult to make the investments needed to improve the property’s environmental footprint: insulating your home or switching to a different energy source are things that only landlords can do. But that doesn’t stop tenants from asking them to do so!
   par défaut: non
