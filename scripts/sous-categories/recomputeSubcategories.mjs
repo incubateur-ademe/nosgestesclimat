@@ -2,6 +2,11 @@
  * Recalcule les nouvelles « sous catégories » (data/ui/subcategories.publicodes)
  * pour chaque simulation stockée en base, et exporte le résultat dans un CSV.
  *
+ * Le CSV produit est directement consommable par `customSubcategories.mjs`
+ * (calcul des postes de `ravijen.yaml`, `page-de-fin.yaml`…) : le format est
+ * défini une fois pour toutes dans `lib/csv.mjs` et `lib/subcategories.mjs`,
+ * partagés avec `recomputeSubCategoriesForPersonas.mjs`.
+ *
  * Pour chaque simulation :
  *   1. on récupère les règles de la version du modèle associée à la simulation
  *      (publiée sur npm, via getRulesFromPreviousRelease) ;
@@ -74,7 +79,7 @@
  *   node scripts/sous-categories/recomputeSubcategories.mjs   # reprend si interrompu
  */
 
-import Engine, { formatValue } from 'publicodes'
+import Engine from 'publicodes'
 import { execFileSync } from 'node:child_process'
 import { appendFile, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
@@ -83,11 +88,16 @@ import c from 'ansi-colors'
 import { getModelFromSource } from '@publicodes/tools/compilation'
 
 import { getRulesFromPreviousRelease } from '../../tests/commons.mjs'
-
-const SUB_CATEGORIES_ROOT = 'bilan . sous catégories'
-
-// Séparateur du CSV.
-const DELIMITER = ';'
+import { DELIMITER } from './lib/csv.mjs'
+import {
+  SUB_CATEGORIES_ROOT,
+  buildCsvHeader,
+  buildCsvLine,
+  engineOptions,
+  isEmptyRule,
+  roundToTenth,
+  toNumber
+} from './lib/subcategories.mjs'
 
 // Le script vit dans `<repo>/scripts/sous-categories`.
 const SCRIPT_DIR = import.meta.dirname
@@ -275,25 +285,6 @@ const outputPath = path.isAbsolute(output)
 
 /// ---------------------- Helpers ----------------------
 
-const silentLogger = {
-  log: () => {},
-  warn: () => {},
-  error: () => {}
-}
-
-// Options identiques à celles utilisées côté app / serveur pour éviter les
-// avertissements et les erreurs liées aux références circulaires du modèle.
-const engineOptions = {
-  logger: silentLogger,
-  strict: {
-    situation: false,
-    noOrphanRule: false,
-    checkPossibleValues: false,
-    noCycleRuntime: false
-  },
-  warn: { cyclicReferences: false, situationIssues: false }
-}
-
 /**
  * Récupère un batch de simulations depuis Postgres, triées par `date` (et `id`
  * pour départager les dates identiques). Utilise une pagination "keyset" pour
@@ -349,13 +340,6 @@ function fetchSimulationsByIds(ids) {
   return JSON.parse(stdout)
 }
 
-/** Échappe une valeur pour un CSV au format RFC 4180 (séparateur `DELIMITER`). */
-const csvEscape = (value) => {
-  const str = value == null ? '' : String(value)
-  const needsQuotes = str.includes(DELIMITER) || /["\n\r]/.test(str)
-  return needsQuotes ? `"${str.replace(/"/g, '""')}"` : str
-}
-
 /// ---------------------- Moteurs ----------------------
 
 const rulesCache = new Map()
@@ -408,43 +392,6 @@ const getVersionFromModel = (model) => model.split('-').slice(2).join('-')
  */
 const RELEASE_VERSION_RE = /^\d+\.\d+\.\d+$/
 const isPublishedVersion = (version) => RELEASE_VERSION_RE.test(version)
-
-/**
- * Convertit une valeur Publicodes en nombre.
- *
- * Une évaluation indéfinie ou non applicable (`undefined`, `NaN`) vaut `0`
- * plutôt que `null` : dans le CSV, ces cellules doivent contenir `0`, pas une
- * valeur vide.
- */
-const toNumber = (nodeValue) =>
-  typeof nodeValue === 'number' && Number.isFinite(nodeValue) ? nodeValue : 0
-
-/**
- * Arrondit une valeur au dixième.
- *
- * `-0` est normalisé en `0` : `Math.round(-0.04 * 10) / 10` vaut `-0`, et
- * `formatValue` l'afficherait `"-0"`.
- */
-const roundToTenth = (value) => {
-  const rounded = Math.round(value * 10) / 10
-  return rounded === 0 ? 0 : rounded
-}
-
-/**
- * Formate un nombre pour le CSV, via `formatValue` de Publicodes (convention
- * française : virgule décimale).
- *
- * Publicodes groupe les milliers avec une espace fine insécable (`U+202F`), ce
- * qui rendrait la valeur ininterprétable comme nombre par les tableurs : on la
- * retire. La virgule décimale reste correcte avec le séparateur de champ `;`.
- *
- * ex. `7738.5` => `"7738,5"` ; `0` => `"0"`.
- */
-const formatNumber = (value) =>
-  formatValue(value, { language: 'fr', precision: 1 }).replace(
-    /[\u202F\u00A0\s]/g,
-    ''
-  )
 
 /// ---------------------- Checkpoint ----------------------
 
@@ -506,14 +453,17 @@ async function computeSimulationRow(simulation, version) {
     )
   }
 
-  const line = [
-    csvEscape(simulation.id),
-    csvEscape(simulation.date),
-    csvEscape(simulation.progression),
-    csvEscape(formatNumber(bilanRounded)),
-    isCoherent,
-    ...subcategories.map((name) => csvEscape(formatNumber(values[name])))
-  ].join(DELIMITER)
+  const line = buildCsvLine(
+    {
+      id: simulation.id,
+      date: simulation.date,
+      progression: simulation.progression,
+      bilan: bilanRounded,
+      isCoherent
+    },
+    subcategories,
+    values
+  )
 
   return { line, isCoherent, bilanRounded, bilanSubcategoriesRounded }
 }
@@ -682,14 +632,6 @@ async function recomputeIncoherentSimulations() {
 const baseRulesForColumns = getModelFromSource([
   path.resolve(REPO_DIR, BASE_RULES_FILE)
 ])
-
-/**
- * Une règle est « vide » lorsqu'elle ne porte ni `formule` ni `valeur` : elle
- * ne sert que de nœud d'arborescence (ex. `bilan . sous catégories . transport`)
- * ou de simple regroupement. Ces règles sont exclues des colonnes du CSV.
- */
-const isEmptyRule = (rule) =>
-  rule == null || (rule.formule === undefined && rule.valeur === undefined)
 
 // Toutes les règles « évaluables » du fichier de base, dans l'ordre de
 // déclaration.
@@ -905,14 +847,7 @@ if (!recomputeIncoherent) {
   console.log(`➡️  Batchs de ${batch} simulations\n`)
 }
 
-const header = [
-  'simulationId',
-  'date',
-  'progression',
-  'bilan',
-  'bilanCoherent',
-  ...subcategories.map(csvEscape)
-]
+const header = buildCsvHeader(subcategories)
 
 /// ---------------------- Mode « recalcul des incohérentes » ----------------------
 
