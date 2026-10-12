@@ -53,9 +53,23 @@
  *   moyenne       : poste;categorie;moyenne_kgCO2e;moyenne_tonnes;part_pct;part_pct_categorie
  *   par situation : situation;poste;categorie;kgCO2e;tonnes;part_pct;part_pct_categorie
  *
- * `part_pct` est la part dans le total des postes du fichier ;
- * `part_pct_categorie` la part au sein du sous-poste (ex. part de la voiture
+ * `part_pct` est la part dans le total des sous catégories ;
+ * `part_pct_categorie` la part au sein de la catégorie (ex. part de la voiture
  * dans le transport).
+ *
+ * Les totaux (global et par catégorie) sont lus dans le CSV des sous catégories
+ * plutôt que déduits du fichier de postes : le total est la somme des règles
+ * `bilan . sous catégories . xxx` de premier niveau (`transport`,
+ * `alimentation`…), et le total d'une catégorie est la colonne correspondante.
+ * S'appuyer sur le fichier de postes serait fragile : un poste manquant
+ * fausserait le total et donc toutes les parts.
+ *
+ * ## Contrôle de couverture
+ *
+ * Le script vérifie que chaque sous catégorie « feuille » est rattachée à au
+ * moins un poste du fichier : une sous catégorie oubliée laisserait son poids
+ * hors du total des postes (somme des postes < total) et fausserait les parts.
+ * Les oubliées sont listées dans le rapport.
  */
 
 import { readFile, writeFile } from 'node:fs/promises'
@@ -65,6 +79,7 @@ import c from 'ansi-colors'
 import { parse as parseYaml, stringify } from 'yaml'
 
 import { DELIMITER, csvEscape, parseCell, parseCsv } from './lib/csv.mjs'
+import { SUB_CATEGORIES_ROOT } from './lib/subcategories.mjs'
 
 // Le script vit dans `<repo>/scripts/sous-categories`.
 const SCRIPT_DIR = import.meta.dirname
@@ -181,11 +196,15 @@ const categoriesPath = path.isAbsolute(argv.categories)
 function buildResolver(categoryRules, columnIndex) {
   const ruleNames = new Set(Object.keys(categoryRules))
   const unresolved = new Set()
+  // Colonnes du CSV effectivement rattachées à un poste : sert au contrôle de
+  // couverture (une sous catégorie oubliée fausserait les parts).
+  const usedColumns = new Set()
 
   /** Résout une référence en une fonction ligne (tableau) -> nombre. */
   const resolveReference = (reference) => {
     const index = columnIndex.get(reference)
     if (index != null) {
+      usedColumns.add(reference)
       return (row) => parseCell(row[index])
     }
     unresolved.add(reference)
@@ -229,7 +248,7 @@ function buildResolver(categoryRules, columnIndex) {
     return resolver
   }
 
-  return { buildResolverFor, unresolved }
+  return { buildResolverFor, unresolved, usedColumns }
 }
 
 /// ---------------------- Lecture du CSV ----------------------
@@ -299,7 +318,7 @@ if (kept.length === 0) {
 
 /// --- Évaluation des postes
 
-const { buildResolverFor, unresolved } = buildResolver(
+const { buildResolverFor, unresolved, usedColumns } = buildResolver(
   categoryRules,
   columnIndex
 )
@@ -337,6 +356,17 @@ const getCategory = (name) => name.split(' . ')[1] ?? 'autre'
 /** Racine du fichier de postes (`ravijen`, `page de fin`…). */
 const root = ruleNames[0]?.split(' . ')[0] ?? ''
 
+/**
+ * Un poste « agrégé » : une règle dont le nom, relatif à la racine, a
+ * exactement deux segments (ex. `transport . voiture`).
+ *
+ * Sert uniquement de repli pour le total d'une catégorie sans colonne de sous
+ * catégories dédiée : sommer aussi les postes plus profonds
+ * (`transport . voiture . usage`) compterait deux fois le même poids.
+ */
+const isAggregatedPost = (name) =>
+  name.replace(`${root} . `, '').split(' . ').length === 2
+
 // Ordre d'affichage des sous-postes : celui de déclaration dans le fichier.
 // Les nœuds de regroupement (`<racine> . <sous-poste>`, sans formule) servent de
 // source d'ordre ; on complète avec les catégories rencontrées en cours de
@@ -354,15 +384,72 @@ const rankOf = (category) => {
   return index === -1 ? categoryOrder.length : index
 }
 
-// Totaux par sous-poste, pour calculer la part de chaque poste au sein de sa
-// propre catégorie (ex. part de la voiture dans le transport).
-const totalByCategory = new Map()
-for (const { name, mean } of results) {
-  const category = getCategory(name)
-  totalByCategory.set(category, (totalByCategory.get(category) ?? 0) + mean)
+// Les totaux sont lus dans le CSV des sous catégories plutôt que déduits du
+// fichier de postes : un poste oublié fausserait le total, et donc toutes les
+// parts. Le total est la somme des règles `bilan . sous catégories . xxx` de
+// premier niveau (`transport`, `alimentation`…) ; le total d'une catégorie est
+// la colonne correspondante.
+const subCategoriesPrefix = `${SUB_CATEGORIES_ROOT} . `
+const subCategoryColumns = header.filter((name) =>
+  name.startsWith(subCategoriesPrefix)
+)
+const rootColumns = subCategoryColumns.filter(
+  (name) => !name.slice(subCategoriesPrefix.length).includes(' . ')
+)
+const totalColumns =
+  rootColumns.length > 0
+    ? rootColumns
+    : [SUB_CATEGORIES_ROOT].filter((name) => columnIndex.has(name))
+
+if (totalColumns.length === 0) {
+  console.error(
+    `${c.red('✘')} Aucune colonne « ${SUB_CATEGORIES_ROOT} » dans ${inputPath} : impossible de calculer le total.`
+  )
+  process.exit(1)
 }
 
-const totalGeneral = results.reduce((sum, { mean }) => sum + mean, 0)
+/** Colonne du CSV portant la catégorie (`bilan . sous catégories . transport`). */
+const categoryColumn = (category) =>
+  columnIndex.has(`${SUB_CATEGORIES_ROOT} . ${category}`)
+    ? `${SUB_CATEGORIES_ROOT} . ${category}`
+    : null
+
+const cellOf = (row, column) => parseCell(row[columnIndex.get(column)])
+const meanOfColumn = (column) =>
+  kept.reduce((sum, row) => sum + cellOf(row, column), 0) / kept.length
+
+// Repli, par catégorie, si le CSV n'a pas de colonne correspondante : les
+// postes plus profonds sont exclus pour éviter le double comptage.
+const aggregated = results.filter(({ name }) => isAggregatedPost(name))
+const aggregatedTotalOf = (category, pick) =>
+  aggregated
+    .filter(({ name }) => getCategory(name) === category)
+    .reduce((sum, poste) => sum + pick(poste), 0)
+
+const categoryColumns = new Map(
+  categoryOrder.map((category) => [category, categoryColumn(category)])
+)
+const categoriesWithoutColumn = categoryOrder.filter(
+  (category) => categoryColumns.get(category) == null
+)
+
+const totalGeneral = totalColumns.reduce(
+  (sum, column) => sum + meanOfColumn(column),
+  0
+)
+
+// Totaux par catégorie, pour calculer la part de chaque poste au sein de sa
+// propre catégorie (ex. part de la voiture dans le transport).
+const totalByCategory = new Map()
+for (const category of categoryOrder) {
+  const column = categoryColumns.get(category)
+  totalByCategory.set(
+    category,
+    column != null
+      ? meanOfColumn(column)
+      : aggregatedTotalOf(category, ({ mean }) => mean)
+  )
+}
 
 // Tri : sous-poste (ordre du fichier), puis poids décroissant.
 const sorted = [...results].sort((a, b) => {
@@ -386,12 +473,17 @@ const round1 = (value) => Math.round(value * 10) / 10
 // Détail par situation : sert au CSV comme au YAML. Les noms sont raccourcis
 // (racine retirée) pour la lisibilité, `fullName` conserve le nom Publicodes.
 const situationReports = kept.map((row, i) => {
-  const total = sorted.reduce((sum, poste) => sum + poste.values[i], 0)
+  const total = totalColumns.reduce(
+    (sum, column) => sum + cellOf(row, column),
+    0
+  )
   const postes = sorted.map(({ name, values }) => {
     const category = getCategory(name)
-    const categoryTotal = sorted
-      .filter((poste) => getCategory(poste.name) === category)
-      .reduce((sum, poste) => sum + poste.values[i], 0)
+    const column = categoryColumns.get(category)
+    const categoryTotal =
+      column != null
+        ? cellOf(row, column)
+        : aggregatedTotalOf(category, ({ values: v }) => v[i])
     return {
       name: name.replace(`${root} . `, ''),
       category,
@@ -516,12 +608,39 @@ if (unresolved.size > 0) {
   )
 }
 
+// Contrôle de couverture : chaque sous catégorie « feuille » (sans descendant)
+// doit être rattachée à au moins un poste, sinon son poids manque dans le
+// fichier de postes — la somme des postes reste sous le total et les parts sont
+// faussées.
+const leafColumns = subCategoryColumns.filter(
+  (name) => !subCategoryColumns.some((other) => other.startsWith(`${name} . `))
+)
+const uncoveredColumns = leafColumns.filter((name) => !usedColumns.has(name))
+
+if (uncoveredColumns.length > 0) {
+  console.log(
+    `\n${c.yellow(`⚠️  ${uncoveredColumns.length} sous catégorie(s) non rattachée(s) à un poste (absente(s) de ${path.basename(categoriesPath)}) :`)}`
+  )
+  for (const name of uncoveredColumns) {
+    console.log(`   - ${name}`)
+  }
+  console.log(
+    `   Complète ${path.basename(categoriesPath)} : leur poids manque aux totaux.`
+  )
+}
+
+if (categoriesWithoutColumn.length > 0) {
+  console.log(
+    `\n${c.yellow(`⚠️  ${categoriesWithoutColumn.length} catégorie(s) sans colonne de sous catégories (${categoriesWithoutColumn.join(', ')}) : total estimé à partir des postes.`)}`
+  )
+}
+
 if (argv['per-situation']) {
   console.log(`\n--- Postes (kgCO2e) par situation ---`)
   for (let i = 0; i < kept.length; i++) {
     const situation = kept[i][situationIndex] ?? `situation ${i + 1}`
-    const situationTotal = sorted.reduce(
-      (sum, poste) => sum + poste.values[i],
+    const situationTotal = totalColumns.reduce(
+      (sum, column) => sum + cellOf(kept[i], column),
       0
     )
     console.log(
