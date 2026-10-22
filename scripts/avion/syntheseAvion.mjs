@@ -15,9 +15,9 @@ période. Les moyennes sont fournies non pondérées et pondérées par le poids
 calage de la population générale (POIDS_GP).
 
 Par défaut, seuls les trajets **personnels** sont comptés (vols non
-professionnels), les trajets mixtes étant inclus dès qu'un motif personnel est
-coché (--mixed inclusif). Voir --cadre pour inclure aussi les vols
-professionnels, et --mixed strict pour exclure les trajets mixtes.
+professionnels) : les trajets mixtes sont écartés (--mixed strict). Voir --cadre
+pour inclure aussi les vols professionnels, et --mixed inclusif pour retenir les
+trajets mixtes.
 
 Les kilomètres proviennent de distances-avion.csv, produit par
 distancesAvion.mjs ; lancer ce script d'abord pour les obtenir.
@@ -33,8 +33,11 @@ Options:
                     compter que les trajets de ce cadre (questions q8a1c /
                     q10a1c). `tous` conserve vols professionnels et mixtes.
                     La ventilation annuelle reste celle du fichier complet.
-  --mixed <mode>    strict | inclusif (défaut : inclusif) : traitement des trajets
+  --mixed <mode>    strict | inclusif (défaut : strict) : traitement des trajets
                     à la fois professionnels et personnels
+  --exclude <ids>   identifiants supplémentaires à écarter des analyses, séparés
+                    par des virgules (en plus de la liste par défaut)
+  --no-exclude      réintégrer les répondants écartés comme valeurs extrêmes
   --sep <char>      séparateur csv (défaut : ";", adapté à Excel FR)
   --no-bom          ne pas préfixer le csv par un BOM UTF-8
 */
@@ -47,6 +50,7 @@ import { readXlsxRows } from './lib/xlsxReader.mjs'
 import {
   MIXED_POLICIES,
   YEARS,
+  createExclusionFilter,
   createYearAllocator,
   csvEscape,
   extractRespondents,
@@ -84,7 +88,9 @@ function parseArgs(argv) {
     output: path.join(HERE, 'synthese-avion.csv'),
     gpOnly: false,
     cadre: 'personnel',
-    mixedPolicy: 'inclusif',
+    mixedPolicy: 'strict',
+    exclude: true,
+    excludeIds: [],
     separator: ';',
     bom: true
   }
@@ -97,6 +103,12 @@ function parseArgs(argv) {
     else if (arg === '--gp-only') options.gpOnly = true
     else if (arg === '--cadre') options.cadre = argv[++i]
     else if (arg === '--mixed') options.mixedPolicy = argv[++i]
+    else if (arg === '--exclude')
+      options.excludeIds = String(argv[++i])
+        .split(',')
+        .map((value) => value.trim())
+        .filter(Boolean)
+    else if (arg === '--no-exclude') options.exclude = false
     else if (arg === '--sep') options.separator = argv[++i]
     else if (arg === '--no-bom') options.bom = false
     else if (arg === '--help' || arg === '-h') options.help = true
@@ -262,7 +274,9 @@ function main() {
   // (GV) ou non voyageurs (NV), et sa somme sur la cible GP vaut l'effectif GP.
   // La valeur « pondérée » de l'ensemble des répondants porte donc en réalité
   // sur le sous-échantillon GP, pas sur les 1 647 répondants.
-  const gpRespondents = [...weights.values()].filter((w) => w > 0).length
+  const gpWeights = [...weights.values()].filter((w) => w > 0)
+  const gpRespondents = gpWeights.length
+  const gpWeightSum = gpWeights.reduce((sum, value) => sum + value, 0)
 
   const distances = loadDistances(options.distances)
   const respondents = extractRespondents(rows)
@@ -278,8 +292,17 @@ function main() {
   // colonnes court / moyen-long (lues dans son CSV) restent cohérentes avec
   // le nombre de vols. Le filtre de population s'applique au classement.
   const allocator = createYearAllocator()
+  const isExcluded = createExclusionFilter({
+    exclude: options.exclude,
+    extra: options.excludeIds
+  })
+  let excludedRespondents = 0
   for (const { id, trips: extractedTrips } of respondents) {
     const trips = allocator.allocate(extractedTrips)
+    if (isExcluded(id)) {
+      excludedRespondents++
+      continue
+    }
 
     const flights = Object.fromEntries(YEARS.map((year) => [year, 0]))
     let flightsWithoutYear = 0
@@ -569,6 +592,11 @@ function main() {
 
   console.log(`Source      : ${path.basename(options.input)}`)
   if (options.gpOnly) console.log('Population  : cible GP uniquement')
+  if (excludedRespondents > 0) {
+    console.log(
+      `Exclusions  : ${excludedRespondents} répondant(s) écarté(s) comme valeur(s) extrême(s) — voir EXCLUDED_RESPONDENTS`
+    )
+  }
   console.log(
     `Cadre       : ${
       options.cadre === 'personnel'
@@ -579,7 +607,7 @@ function main() {
     }${
       options.cadre === 'tous'
         ? ''
-        : ` ; trajets mixtes : ${options.mixedPolicy}`
+        : ` ; trajets mixtes : ${options.mixedPolicy}${options.mixedPolicy === 'strict' ? ' (défaut)' : ''}`
     }`
   )
   if (!distances) {
@@ -600,12 +628,19 @@ function main() {
   }
   if (gpRespondents < weights.size) {
     console.log(
-      `Attention   : POIDS_GP = 0 pour les ${
-        weights.size - gpRespondents
-      } répondants hors cible GP (GV ou NV recrutés en supplément)`
+      `Pondération : POIDS_GP = 0 pour ${weights.size - gpRespondents} répondants sur ${weights.size}`
     )
     console.log(
-      `              → les valeurs pondérées de l’ensemble portent sur les ${gpRespondents} répondants GP, pas sur ${weights.size}`
+      '              (cibles GV et NV recrutées en supplément, qui n’ont de poids que dans POIDS_GV / POIDS_NV)'
+    )
+    console.log(
+      `              → un poids nul annule la ligne : la valeur pondérée ne porte donc que sur la cible GP (${gpRespondents} répondants dans la base source)`
+    )
+    console.log(
+      `              → somme des POIDS_GP = ${gpWeightSum.toFixed(0)} : c’est un calage interne à la cible GP, pas la population française`
+    )
+    console.log(
+      '              → la valeur non pondérée, elle, inclut les 1 647 : l’écart mesure un périmètre, pas un redressement'
     )
   }
   console.log('')

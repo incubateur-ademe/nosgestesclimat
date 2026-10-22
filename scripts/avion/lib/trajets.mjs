@@ -48,11 +48,41 @@ export const PURPOSE_LABELS = {
 // Cadres possibles d'un trajet, tels qu'affichés dans les csv.
 export const CADRES = ['personnel', 'professionnel', 'mixte', 'non renseigné']
 
+// Répondants écartés des analyses, avec leur justification. L'exclusion est
+// volontairement explicite et réversible (--no-exclude) : il s'agit d'un choix
+// de traitement statistique, pas d'une correction de donnée.
+//
+// 711 : 19 allers-retours Marseille–Nouméa sur 2022-2024 (6/7/6, motif
+//       « famille »), soit 216 066 km/an à lui seul et 8,2 % du total pondéré.
+//       Réponse cohérente (trois années, trois fréquences distinctes), donc
+//       conservée dans l'extraction brute ; elle est écartée des moyennes
+//       parce qu'un individu ne doit pas peser 8 % d'une moyenne nationale.
+export const EXCLUDED_RESPONDENTS = new Map([
+  [
+    '711',
+    'valeur extrême : 19 A/R Marseille–Nouméa, 216 066 km/an (8,2 % du total pondéré)'
+  ]
+])
+
+/**
+ * Construit le prédicat d'exclusion. `exclude: false` (option --no-exclude)
+ * réintègre tous les répondants ; `extra` ajoute des identifiants à la liste
+ * par défaut (option --exclude).
+ */
+export function createExclusionFilter({ exclude = true, extra = [] } = {}) {
+  if (!exclude) return () => false
+  const ids = new Set([...EXCLUDED_RESPONDENTS.keys(), ...extra])
+  return (id) => ids.has(id)
+}
+
 // Traitement des trajets mixtes (motifs professionnels ET personnels) :
+//  - `strict`   : écartés des deux cadres, seuls les trajets exclusifs comptent ;
 //  - `inclusif` : comptés dans les deux cadres (un trajet avec un motif
-//                 personnel est un trajet personnel, et réciproquement) ;
-//  - `strict`   : écartés des deux cadres, seuls les trajets exclusifs comptent.
-export const MIXED_POLICIES = ['inclusif', 'strict']
+//                 personnel est un trajet personnel, et réciproquement).
+// `strict` est le défaut : la fréquence n'existant qu'une fois par trajet, un
+// trajet mixte ne peut pas être réparti entre les deux cadres, donc on préfère
+// ne pas trancher.
+export const MIXED_POLICIES = ['strict', 'inclusif']
 
 /**
  * Cadre d'un trajet d'après ses motifs déclarés. La fréquence n'existe qu'une
@@ -69,7 +99,7 @@ export function classifyTrip(trip) {
 }
 
 /** Vrai si le trajet entre dans le cadre demandé (`tous` les accepte tous). */
-export function matchesCadre(trip, cadre, mixedPolicy = 'inclusif') {
+export function matchesCadre(trip, cadre, mixedPolicy = 'strict') {
   if (cadre === 'tous') return true
   const kind = classifyTrip(trip)
   if (kind === cadre) return true

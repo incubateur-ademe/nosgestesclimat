@@ -13,12 +13,12 @@ Le seuil de catégorie s'applique à la distance aller simple (par défaut
 
 Par défaut, seuls les trajets **personnels** sont pris en compte (question
 q8a1c / q10a1c, choix multiple) : les trajets exclusivement professionnels sont
-écartés. Les trajets mixtes (motifs pro ET perso) sont au contraire **comptés**
-dans le cadre personnel (--mixed inclusif par défaut) : dès qu'un motif personnel
-est coché, le vol est retenu. La fréquence n'existant qu'une fois par trajet, un
-trajet mixte n'est pas scindable — il ne peut donc pas être réparti entre les
-deux cadres. Utiliser --mixed strict pour exclure les trajets mixtes, et
---cadre tous pour revenir à l'ensemble des vols, tous motifs confondus.
+écartés, et les trajets mixtes (motifs pro ET perso) le sont aussi (--mixed
+strict par défaut). La fréquence n'existant qu'une fois par trajet, un trajet
+mixte n'est pas scindable : le compter dans un cadre reviendrait à décider
+arbitrairement de son motif principal. Utiliser --mixed inclusif pour le retenir
+dès qu'un motif personnel est coché, et --cadre tous pour revenir à l'ensemble
+des vols, tous motifs confondus.
 
 L'enquête ne demande qu'une fréquence par trajet, mais autorise plusieurs
 années cochées. Les vols sont répartis sur les années du trajet, de la plus
@@ -56,8 +56,11 @@ Options:
                       ne retenir que les trajets de ce cadre (question q8a1c /
                       q10a1c, choix multiple). `tous` conserve les vols
                       professionnels et les trajets mixtes
-  --mixed <mode>      strict | inclusif (défaut : inclusif) : traitement des
+  --mixed <mode>      strict | inclusif (défaut : strict) : traitement des
                       trajets à la fois professionnels et personnels
+  --exclude <ids>     identifiants supplémentaires à écarter des analyses,
+                      séparés par des virgules (en plus de la liste par défaut)
+  --no-exclude        réintégrer les répondants écartés comme valeurs extrêmes
   --sep <char>        séparateur csv (défaut : ";", adapté à Excel FR)
   --no-bom            ne pas préfixer le csv par un BOM UTF-8
 */
@@ -70,6 +73,7 @@ import { readXlsxRows } from './lib/xlsxReader.mjs'
 import {
   MIXED_POLICIES,
   YEARS,
+  createExclusionFilter,
   createYearAllocator,
   csvEscape,
   extractRespondents,
@@ -163,7 +167,9 @@ function parseArgs(argv) {
     threshold: 1500,
     assumeDeparture: 'home-then-paris',
     cadre: 'personnel',
-    mixedPolicy: 'inclusif',
+    mixedPolicy: 'strict',
+    exclude: true,
+    excludeIds: [],
     separator: ';',
     bom: true
   }
@@ -178,6 +184,12 @@ function parseArgs(argv) {
     else if (arg === '--assume-departure') options.assumeDeparture = argv[++i]
     else if (arg === '--cadre') options.cadre = argv[++i]
     else if (arg === '--mixed') options.mixedPolicy = argv[++i]
+    else if (arg === '--exclude')
+      options.excludeIds = String(argv[++i])
+        .split(',')
+        .map((id) => id.trim())
+        .filter(Boolean)
+    else if (arg === '--no-exclude') options.exclude = false
     else if (arg === '--sep') options.separator = argv[++i]
     else if (arg === '--no-bom') options.bom = false
     else if (arg === '--help' || arg === '-h') options.help = true
@@ -286,15 +298,26 @@ function main() {
     ),
     imputedPerYear: Object.fromEntries(YEARS.map((year) => [year, 0])),
     missingAirports: new Map(),
-    tripsExcludedByCadre: 0
+    tripsExcludedByCadre: 0,
+    excludedRespondents: 0
   }
 
   const records = []
   // Un seul allocateur pour tout le fichier : le curseur traverse les
-  // répondants dans l'ordre de lecture.
+  // répondants dans l'ordre de lecture. L'allocation a lieu avant le filtre
+  // d'exclusion, pour que la ventilation annuelle des autres répondants reste
+  // identique à celle d'une exécution sans exclusion.
   const allocator = createYearAllocator()
+  const isExcluded = createExclusionFilter({
+    exclude: options.exclude,
+    extra: options.excludeIds
+  })
   for (const { id, trips: extractedTrips } of respondents) {
     const trips = allocator.allocate(extractedTrips)
+    if (isExcluded(id)) {
+      stats.excludedRespondents++
+      continue
+    }
     const perYear = Object.fromEntries(
       YEARS.map((year) => [
         year,
@@ -570,11 +593,16 @@ function main() {
     `Cadre         : ${options.cadre}${options.cadre === 'personnel' ? ' (défaut)' : ''}${
       options.cadre === 'tous'
         ? ', tous motifs confondus'
-        : `, trajets mixtes : ${options.mixedPolicy}${options.mixedPolicy === 'inclusif' ? ' (défaut)' : ''}`
+        : `, trajets mixtes : ${options.mixedPolicy}${options.mixedPolicy === 'strict' ? ' (défaut)' : ''}`
     }`
   )
   console.log(`Sortie        : ${options.output}`)
   console.log(`Répondants    : ${stats.respondents}`)
+  if (stats.excludedRespondents > 0) {
+    console.log(
+      `  écartés (valeurs extrêmes) : ${stats.excludedRespondents} répondant(s), voir EXCLUDED_RESPONDENTS`
+    )
+  }
   console.log(`Trajets       : ${stats.trips}`)
   if (stats.tripsExcludedByCadre > 0) {
     console.log(

@@ -4,9 +4,13 @@ Scripts d'extraction et de synthèse des trajets en avion déclarés par les
 1 647 répondants de l'enquête OpinionWay pour Forum Vies Mobiles.
 
 Par défaut, les sorties ne portent que sur les **vols personnels** (hors motifs
-professionnels), trajets mixtes **inclus** : voir « Vols personnels et vols
-professionnels ». `--cadre tous` rétablit l'ensemble des vols, `--mixed strict`
-exclut les trajets mixtes.
+professionnels), **trajets mixtes écartés** : voir « Vols personnels et vols
+professionnels ». `--cadre tous` rétablit l'ensemble des vols, `--mixed inclusif`
+réintègre les trajets mixtes.
+
+Un répondant extrême (ID 711, 8,2 % du total pondéré) est écarté des analyses
+par défaut : voir « Exclusion des valeurs extrêmes ». `--no-exclude` le
+réintègre.
 
 ## Fichiers
 
@@ -46,8 +50,9 @@ Options utiles :
 | `distancesAvion`      | `--threshold <km>` (seuil court / moyen-long, défaut 1 500), `--assume-departure none\|home\|home-then-paris\|paris` |
 | `syntheseAvion`       | `--gp-only` (restreint à la cible « population générale »)                                                           |
 
-Options communes aux trois scripts (`--cadre`, `--mixed`, `--sep`, `--no-bom`) :
-voir la section « Vols personnels et vols professionnels ».
+Options communes aux scripts d'analyse (`--cadre`, `--mixed`, `--exclude`,
+`--no-exclude`, `--sep`, `--no-bom`) : voir « Vols personnels et vols
+professionnels » et « Exclusion des valeurs extrêmes ».
 
 ## Structure du questionnaire
 
@@ -114,27 +119,30 @@ Chaque trajet est classé par `classifyTrip()` (dans `lib/trajets.mjs`) :
 par motif. Un trajet mixte ne peut donc pas être scindé entre vols
 professionnels et vols personnels. D'où l'option `--mixed` :
 
-| `--mixed`  | Trajets mixtes                          | Vols personnels | Vols professionnels |
-| ---------- | --------------------------------------- | --------------: | ------------------: |
-| `inclusif` | comptés dans les deux cadres _(défaut)_ |           4 511 |               1 237 |
-| `strict`   | écartés des deux cadres                 |           4 105 |                 831 |
+| `--mixed`  | Trajets mixtes                     | Vols personnels | Vols professionnels |
+| ---------- | ---------------------------------- | --------------: | ------------------: |
+| `strict`   | écartés des deux cadres _(défaut)_ |           4 105 |                 831 |
+| `inclusif` | comptés dans les deux cadres       |           4 511 |               1 237 |
 
 En mode `inclusif`, les deux cadres ne forment plus une partition : un trajet
 mixte est compté des deux côtés. En mode `strict`, 406 vols (7,6 %) ne sont
 dans aucun cadre et 17 vols n'ont aucun motif.
 
-**Le cadre `personnel` + `--mixed inclusif` est le comportement par défaut** des
-scripts de calcul : un vol est retenu dès qu'**au moins un motif personnel** est
-coché, y compris s'il porte aussi un motif professionnel. Utilisation :
+**Le cadre `personnel` + `--mixed strict` est le comportement par défaut** des
+scripts de calcul : seuls les trajets dont **tous** les motifs sont personnels
+sont retenus. C'est le choix neutre — un trajet mixte ne pouvant pas être
+scindé, le compter dans un cadre reviendrait à lui attribuer arbitrairement un
+motif principal. Utilisation :
 
 ```bash
-# Défaut : vols personnels, trajets mixtes inclus
+# Défaut : vols personnels, trajets mixtes écartés
 node scripts/avion/extractTrajetsAvion.mjs   # tous les trajets, colonne « cadre »
 node scripts/avion/distancesAvion.mjs
 node scripts/avion/syntheseAvion.mjs
 
-# Exclure les trajets mixtes
-node scripts/avion/distancesAvion.mjs --mixed strict
+# Réintégrer les trajets mixtes (motifs pro ET perso)
+node scripts/avion/distancesAvion.mjs --mixed inclusif
+node scripts/avion/syntheseAvion.mjs --mixed inclusif
 
 # Revenir à l'ensemble des vols, tous motifs confondus
 node scripts/avion/distancesAvion.mjs --cadre tous
@@ -161,24 +169,74 @@ Points de méthode :
 
 Repères pondérés (moyenne annuelle par personne, cible GP) selon le mode :
 
-| Population          | Vols strict | Vols inclusif | Vols tous | km strict | km inclusif | km tous |
-| ------------------- | ----------: | ------------: | --------: | --------: | ----------: | ------: |
-| Tous les ans        |        2,78 |      **2,90** |      3,09 |    18 118 |  **19 501** |  19 812 |
-| Occasionnels        |        0,76 |      **0,78** |      0,80 |     4 022 |   **3 984** |   4 223 |
-| Tous les répondants |        0,56 |      **0,61** |      0,67 |     3 336 |   **3 624** |   3 977 |
+| Population          | Vols strict | Vols inclusif | Vols tous |  km strict | km inclusif | km tous |
+| ------------------- | ----------: | ------------: | --------: | ---------: | ----------: | ------: |
+| Tous les ans        |    **2,73** |          2,86 |      3,06 | **15 453** |      17 025 |  17 569 |
+| Occasionnels        |    **0,76** |          0,78 |      0,80 |  **4 022** |       3 984 |   4 223 |
+| Tous les répondants |    **0,56** |          0,60 |      0,66 |  **3 042** |       3 330 |   3 684 |
 
-La colonne en gras est le défaut. Les vols personnels représentent l'essentiel
-des vols et des kilomètres : le professionnel pèse environ 10 à 16 % selon la
-population considérée. Inclure les trajets mixtes ajoute ~7 % aux vols
-personnels (406 vols sur 5 359) et comble l'essentiel de l'écart avec `tous`.
+La colonne en gras est le défaut (strict + exclusion du 711). Les vols personnels
+représentent l'essentiel des vols et des kilomètres : le professionnel pèse
+environ 10 à 16 % selon la population considérée. Inclure les trajets mixtes
+ajoute ~7 % aux vols personnels (406 vols sur 5 359) et le répondant 711 pèse
+~8 % de plus sur les km.
 
-### 3. Aller-retour
+### 3. Exclusion des valeurs extrêmes
+
+Un répondant est écarté des **analyses** (pas de l'extraction brute) par défaut :
+
+| ID  | Situation                                                    | Vols 2022-2024 |      km/an | Part du total pondéré |
+| --- | ------------------------------------------------------------ | -------------: | ---------: | --------------------: |
+| 711 | 19 A/R Marseille–Nouméa (motif « famille »), 6/7/6 par année |             19 | 216 066 km |                 8,2 % |
+
+La réponse est **cohérente** — trois années renseignées, trois fréquences
+distinctes, une destination unique — donc elle n'est pas une erreur de saisie.
+Elle est écartée parce qu'un seul individu ne doit pas déterminer à 9 % une
+moyenne nationale.
+
+> Ce répondant n'est **pas** écarté par le filtre de cadre : son unique trajet
+> ne porte que le motif « famille », donc `classifyTrip()` le classe
+> `personnel` et le mode `strict` le retient. Il n'y a pas de double sécurité :
+> seule la liste `EXCLUDED_RESPONDENTS` le sort des analyses. Passer
+> `--no-exclude` le réintègre et fait remonter la moyenne de +9,7 %
+> (3 042 → 3 336 km/an), les vols restant à 0,56. Le cas « tout cocher » de
+> l'ID 1017 est, lui, bien traité par le mode `strict` (voir plus bas).
+
+Conséquences sur les moyennes pondérées (moyenne annuelle, mode strict) :
+
+| Population          | Avec le 711 | Sans le 711 |  Écart |
+| ------------------- | ----------: | ----------: | -----: |
+| Tous les ans        |   18 118 km |   15 453 km |  −15 % |
+| Tous les répondants |    3 336 km |    3 042 km | −8,8 % |
+
+Points de méthode :
+
+- l'exclusion est **explicite et réversible** : liste `EXCLUDED_RESPONDENTS`
+  dans `lib/trajets.mjs`, option `--no-exclude` pour tout réintégrer, option
+  `--exclude <ids>` pour en ajouter ;
+- le filtre est appliqué **après** la répartition par année, donc la ventilation
+  annuelle des autres répondants est inchangée ;
+- `extractTrajetsAvion.mjs` n'exclut personne : `trajets-avion.csv` contient les
+  1 647 répondants, `distances-avion.csv` en contient 1 646 ;
+- **la concentration est continue** : le top 2 % porte 37 % des km, le top 5 %
+  55 %, le top 10 % 71 %. Exclure un seul individu ne « corrige » donc pas la
+  distribution, il déplace la moyenne de 8 à 15 %. D'autres seuils donneraient
+  d'autres moyennes (sans les 2 plus gros : 3 066 km/an).
+- l'ID 1017 (10 A/R Fort-de-France par an) a coché **7 motifs sur 10** (3 pro,
+  4 perso). Il est donc classé `mixte` et **écarté par le mode strict**, sans
+  liste d'exclusion — seuls ses 2 trajets Malte subsistent. Sans ce filtre, il
+  pèserait 5,6 % de la moyenne, dont 99 % de kilomètres au départ imputé ;
+- répartition des rôles : le filtre de cadre traite les réponses **non
+  discriminantes** (mixte, non renseigné), la liste d'exclusion traite les
+  réponses **valides mais extrêmes**. Les deux mécanismes sont indépendants.
+
+### 4. Aller-retour
 
 La question de fréquence compte les vols **vers** la destination (aller). Les
 kilomètres sont calculés en **aller-retour** : `2 × fréquence × distance
 haversine`. Aucune trace d'un vol retour déclaré séparément.
 
-### 4. Distances
+### 5. Distances
 
 Distance orthodromique entre les coordonnées des aéroports, via
 `Base2c` (nom → IATA) puis `Base1` (IATA → lat/lon). Le seuil court /
@@ -191,7 +249,7 @@ défaut, ajustable avec `--threshold`.
 > Les chiffres produits ici ne sont donc pas directement comparables à ceux du
 > modèle public ; relancer avec `--threshold 1000` pour s'aligner.
 
-### 5. Imputation du départ manquant
+### 6. Imputation du départ manquant
 
 Sur 2 869 trajets, **554** ont une destination mais pas d'aéroport de départ
 (dont 240 avec une fréquence > 0, les autres ne pèsent aucun km). Le départ est
@@ -204,7 +262,7 @@ Les km ainsi produits sont isolés dans les colonnes « dont imputés » — les
 soustraire ou relancer avec `--assume-departure none` pour ne garder que le
 déclaratif.
 
-### 6. Périmètre des kilomètres
+### 7. Périmètre des kilomètres
 
 Ne sont pas comptés faute de données : les **escales** (le questionnaire
 demande explicitement l'aéroport de destination finale) et les **318 vols
@@ -213,12 +271,14 @@ un départ égal à l'arrivée et pèsent 0 km.
 
 ## Populations de `synthese-avion.csv`
 
+Effectifs en mode par défaut (personnel strict, répondant 711 exclu) :
+
 | Population                                       | Définition                                           | Effectif |
 | ------------------------------------------------ | ---------------------------------------------------- | -------- |
-| `tous les ans (2022, 2023 et 2024)`              | au moins 1 vol chacune des 3 années                  | 347      |
-| `au moins 1 vol sur 3 ans, pas tous les ans`     | au moins 1 vol sur la période, mais pas chaque année | 468      |
-| `aucun vol sur les 3 ans`                        | aucun vol attribuable à une année                    | 832      |
-| `ensemble des répondants (non-voyageurs inclus)` | tout le monde                                        | 1 647    |
+| `tous les ans (2022, 2023 et 2024)`              | au moins 1 vol chacune des 3 années                  | 287      |
+| `au moins 1 vol sur 3 ans, pas tous les ans`     | au moins 1 vol sur la période, mais pas chaque année | 484      |
+| `aucun vol sur les 3 ans`                        | aucun vol attribuable à une année                    | 875      |
+| `ensemble des répondants (non-voyageurs inclus)` | tout le monde                                        | 1 646    |
 
 Colonnes, pour chaque population et chaque période (2022, 2023, 2024, moyenne
 annuelle sur 3 ans, total sur 3 ans), en version **non pondérée** et
@@ -269,46 +329,54 @@ l'échantillon brut surreprésente les grands voyageurs.
 ### Pourquoi « pondéré » et « non pondéré » divergent autant sur l'ensemble
 
 `POIDS_GP` n'est pas un poids de population : c'est un poids de calage **interne
-à la cible GP**, dont la somme vaut exactement l'effectif GP (1 040, pour 1 647
-répondants). Il vaut **0** pour les 607 répondants recrutés uniquement comme
-grands voyageurs (302) ou non voyageurs (305), sur-recrutés par construction.
+à la cible GP**, dont la somme vaut l'effectif GP (1 040 dans la base source, pour
+1 647 répondants). Il vaut **0** pour les 607 répondants recrutés uniquement comme
+grands voyageurs (302) ou non voyageurs (305), sur-recrutés par construction et
+dotés de poids séparés (`POIDS_GV`, `POIDS_NV`).
 
 Conséquence : sur la population « ensemble des répondants », la colonne pondérée
 ne pondère pas les 1 647 répondants, elle **les restreint au sous-échantillon
-GP** (1 040). L'écart est donc un effet de périmètre, pas de redressement.
+GP**. L'écart est donc un effet de périmètre, pas de redressement.
 
-Décomposition des km A/R par personne et par an :
+Décomposition des km A/R par personne et par an (défaut actuel) :
 
 | Étape                                           |     n | km/an |
 | ----------------------------------------------- | ----: | ----: |
-| tous les répondants                             | 1 647 | 5 871 |
-| − 302 GV recrutés en supplément                 | 1 345 | 3 017 |
-| − 305 NV recrutés en supplément                 | 1 040 | 3 902 |
-| + pondération `POIDS_GP` (poids de 0,59 à 1,98) | 1 040 | 3 977 |
+| tous les répondants analysés                    | 1 646 | 4 678 |
+| − 302 GV recrutés en supplément                 | 1 344 | 2 385 |
+| − 305 NV recrutés en supplément (= cible GP)    | 1 039 | 3 085 |
+| + pondération `POIDS_GP` (poids de 0,59 à 1,98) | 1 039 | 3 042 |
 
 Les GV recrutés en supplément représentent 18 % des répondants mais **58 % des
-kilomètres** parcourus : les retirer fait chuter la moyenne de 49 %. À
-l'inverse, retirer les NV (0 km) la fait remonter de 29 %. La pondération
-elle-même ne déplace la moyenne que de +1,9 %.
+kilomètres** parcourus : les retirer fait chuter la moyenne de 49 %. Retirer les
+NV (0 km) la fait remonter de 29 %. La pondération elle-même ne déplace la
+moyenne que de **−1,4 %**.
 
-C'est la valeur pondérée (3 977 km/an) qui est comparable à la moyenne
-nationale ; la non pondérée sur 1 647 est un artefact d'échantillonnage. Le
-même mécanisme explique l'écart sur les vols (1,08 contre 0,67) et sur toutes
-les populations dont l'effectif pondéré est inférieur à l'effectif brut.
+Autrement dit, la colonne « pondéré » est presque identique à une simple moyenne
+sur les seuls répondants GP. C'est la valeur pondérée (3 042 km/an) qui est
+comparable à une moyenne nationale ; la non pondérée sur 1 646 est un artefact
+d'échantillonnage. Le même mécanisme explique l'écart sur les vols (0,82 contre
+0,56) et sur toutes les populations dont l'effectif pondéré est inférieur à
+l'effectif brut.
 
 Repères actuels (moyenne annuelle par personne, pondérée, seuil 1 500 km, défaut
-= vols personnels avec trajets mixtes inclus) :
+= vols personnels, trajets mixtes écartés, répondant 711 exclu) :
 
 | Population              | Vols / an | dont court | dont moyen/long | km A/R / an | dont court |
 | ----------------------- | --------- | ---------- | --------------- | ----------- | ---------- |
-| Tous les ans            | 2,90      | 1,32       | 1,24            | 19 501      | 1 870      |
-| Occasionnels            | 0,78      | 0,43       | 0,28            | 3 984       | 633        |
-| **Tous les répondants** | **0,61**  | **0,30**   | **0,24**        | **3 624**   | **439**    |
+| Tous les ans            | 2,73      | 1,28       | 1,08            | 15 453      | 1 846      |
+| Occasionnels            | 0,76      | 0,42       | 0,29            | 4 022       | 636        |
+| **Tous les répondants** | **0,56**  | **0,28**   | **0,21**        | **3 042**   | **420**    |
 
-Avec `--mixed strict` (mixtes exclus) : 2,78 / 0,76 / 0,56 vols et 18 118 /
-4 022 / 3 336 km. Avec `--cadre tous` (professionnel inclus) : 3,09 / 0,80 /
-0,67 vols et 19 812 / 4 223 / 3 977 km. Les vols personnels représentent donc
-84 à 95 % des vols et des km selon la population.
+Variantes : `--no-exclude` (711 réintégré) → 2,78 / 0,76 / 0,56 vols et
+18 118 / 4 022 / 3 336 km ; `--mixed inclusif` → 2,86 / 0,78 / 0,60 vols et
+17 025 / 3 984 / 3 330 km ; `--cadre tous` → 3,06 / 0,80 / 0,66 vols et
+17 569 / 4 223 / 3 684 km. Les vols personnels représentent donc 84 à 95 % des
+vols et des km selon la population.
+
+Constantes correspondantes pour `avion.publicodes` (moyenne sur 3 ans ÷ 3) :
+**420 km** court et **2 622 km** moyen/long, soit une empreinte moyenne de
+420 × 0,3 + 2 622 × 0,18 ≈ **598 kgCO2e/an**.
 
 Avec le seuil de 1 000 km, la ventilation court / moyen-long change mais pas
 les totaux de vols et de km.
@@ -327,19 +395,23 @@ node scripts/avion/extractTrajetsAvion.mjs | grep -E "Vols|Cadre"
 # et 4 105 + 831 + 406 + 17 = 5 359 (somme des cadres)
 
 node scripts/avion/distancesAvion.mjs | tail -12
-# perYear + "trajets sans année" = "total réel" (personnel + mixtes par défaut)
+# perYear + "trajets sans année" = "total réel" (personnels exclusifs par défaut)
 ```
 
 Repères stables sur cette base :
 
-- 1 647 répondants, 818 ayant volé sur la période (49,7 %) ;
+- 1 647 répondants à la source, 1 646 après exclusion du 711 (analyses) ;
+- 818 ayant volé sur la période (49,7 %), 817 après exclusion ;
 - 2 869 trajets extraits (910 France, 1 959 étranger), dont 327 sans année ;
+  2 868 trajets analysés ;
 - 5 359 vols déclarés ; 5 333 répartis sur les années, 26 non attribuables ;
+  analyses : 5 340 vols (19 vols du 711 écartés) ;
 - cadres : 4 105 vols personnels, 831 professionnels, 406 mixtes, 17 sans motif ;
 - 318 vols internes au voyage, sur 176 trajets (question `q10a1e`) ;
-- tous cadres : 29 011 069 km par année, 29 248 629 km réels (écart = trajets
-  sans année) ; personnels + mixtes (défaut) : 25 648 696 km par année,
-  25 886 257 km réels ; personnels exclusifs : 23 750 009 / 23 838 180 km.
+- km par année (défaut strict + exclusion) : 23 101 810 km, pour 23 189 982 km
+  réels (écart = trajets sans année), soit 13,9 % de court courrier ;
+- comparaison des périmètres : tous cadres 29 011 069 km, personnels + mixtes
+  25 648 696 km, **personnels exclusifs 23 101 810 km**.
 
 ## Pièges rencontrés sur la base source
 
