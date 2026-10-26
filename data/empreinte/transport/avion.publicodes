@@ -97,7 +97,7 @@ transport . avion . vols annuels . heures court courrier . saisie:
       - est défini: usager
       - usager = "fréquemment"
   question: Combien d'heures avez-vous voyagé en avion cette année sur des vols court-courrier ?
-  par défaut: court courrier . durée moyenne passager
+  par défaut: court courrier . durée moyenne passager tous les ans
   plancher: 0
   plafond: 200
   unité: h
@@ -115,7 +115,7 @@ transport . avion . vols annuels . heures moyen et long courrier . saisie:
     toutes ces conditions:
       - est défini: usager
       - usager = "fréquemment"
-  par défaut: moyen et long courrier . durée moyenne passager
+  par défaut: moyen et long courrier . durée moyenne passager tous les ans
   plancher: 0
   plafond: 600
   question: Combien d'heures avez-vous voyagé en avion cette année sur des vols moyen ou long-courrier ?
@@ -158,7 +158,7 @@ transport . avion . vols amortis . heures court courrier . saisie:
       - est défini: usager
       - usager = "occasionnellement"
   question: Combien d'heures avez-vous voyagé en avion sur les 3 dernières années sur des vols court-courrier ?
-  par défaut: court courrier . durée moyenne passager
+  par défaut: court courrier . durée moyenne passager sur 3 ans
   plancher: 0
   plafond: 200
   unité: h
@@ -176,7 +176,7 @@ transport . avion . vols amortis . heures moyen et long courrier . saisie:
     toutes ces conditions:
       - est défini: usager
       - usager = "occasionnellement"
-  par défaut: moyen et long courrier . durée moyenne passager
+  par défaut: moyen et long courrier . durée moyenne passager sur 3 ans
   plancher: 0
   plafond: 600
   question: Combien d'heures avez-vous voyagé en avion sur les 3 dernières années sur des vols moyen ou long-courrier ?
@@ -188,15 +188,10 @@ transport . avion . fréquence trajets:
   note: |
     L'[enquête nationale des passagers aériens](https://www.ecologie.gouv.fr/politiques-publiques/enquete-nationale-passagers-aeriens-enpa) 2023, donne un chiffre de 5.6 trajets par an en moyenne.
 
-transport . avion . proportion trajets perso:
-  formule: 0.81
-  note: |
-    L'[enquête nationale des passagers aériens](https://www.ecologie.gouv.fr/politiques-publiques/enquete-nationale-passagers-aeriens-enpa) 2023, donne un chiffre de 19% de trajets professionnels.
-
 transport . avion . court courrier:
   titre: Vols court-courrier (trajet < 2 h)
   note: |
-    Les vols court-courriers sont définis ici comme des vols de moins de 2 h (environ 1000km).
+    Les vols court-courriers sont définis ici comme des vols dont la distance aller simple est inférieure à 1500 km.
     On considère que les appareils qui assurent ces vols possèdent une capacité de 101 à 220 sièges.
 
 transport . avion . court courrier . vitesse moyenne:
@@ -213,55 +208,23 @@ transport . avion . court courrier . empreinte par km:
 
 transport . avion . court courrier . durée moyenne:
   titre: Durée moyenne passée par un Français dans les vols court-courriers
-  formule: durée moyenne passager * passagers annuel français / population
+  formule: 420 km / vitesse moyenne
   unité: h
 
-transport . avion . court courrier . durée moyenne passager:
-  titre: Durée moyenne passée par un passager Français dans les vols court-courriers
-  formule: passager km moyen / vitesse moyenne
+transport . avion . court courrier . durée moyenne passager tous les ans:
+  titre: Durée moyenne annuelle passée dans les vols court courriers par un voyageur Français qui prend l'avion tous les ans
+  formule: 1846 km / vitesse moyenne
   unité: h
 
-transport . avion . court courrier . passager km moyen:
-  titre: Distance moyenne parcourue un Français sur des vols court-courriers
-  formule: proportion trajets perso * passager km total * proportions voyageurs français / passagers annuel français
-  note: |
-    On fait une grosse approximation en considérant que la proportion des kilomètres parcourus par des français est la même que la proportion des passagers français.
-  unité: km
-
-transport . avion . court courrier . passagers annuel français:
-  titre: Nombre de passagers court courrier français
-  formule: passagers annuel * proportions voyageurs français / fréquence trajets
-  note: |
-    Un français peut être compté plusieurs fois dans l'année en tant que passager.
-
-transport . avion . court courrier . proportion voyageurs:
-  formule: passagers annuel français / population
-
-transport . avion . court courrier . passagers annuel:
-  titre: Nombre de passagers court courrier
-  formule: 21100000
-  note: |
-    D'après [l'observatoire de la conccurrence 2023 par la DGAC](https://www.ecologie.gouv.fr/sites/default/files/documents/observatoire_concurrence_2023_transport_aerien.pdf), 21,1 millions de passagers ont transité par les aéroports français en 2023 pour des vols court courrier (hypothèse: métropole).
-
-transport . avion . court courrier . proportions voyageurs français:
-  titre: Proportion de voyageurs français sur les vols court courrier
-  formule: 0.91
-  note: |
-    Chiffre issu de l'[enquête nationale des passagers aériens](https://www.ecologie.gouv.fr/politiques-publiques/enquete-nationale-passagers-aeriens-enpa) 2023.
-
-transport . avion . court courrier . passager km total:
-  titre: Distance totale parcourue par les voyageurs en France sur des vols court courrier en 2023
-  formule: 384000000000 km * 0.072
-  unité: km
-  note: |
-    D'après [l'observatoire de la conccurrence 2023 par la DGAC](https://www.ecologie.gouv.fr/sites/default/files/documents/observatoire_concurrence_2023_transport_aerien.pdf),le nombre de passagers-km transportés représente 384 milliards de passagers-km.
-
-    D'après les ["Chiffres clés du transport 2025" (données de 2023)](https://www.statistiques.developpement-durable.gouv.fr/edition-numerique/chiffres-cles-transports/fr/15-transport-collectif-urbain-de-voyageurs), le trafic métropolitain représente 7,2% du trafic total en passagers-km.
+transport . avion . court courrier . durée moyenne passager sur 3 ans:
+  titre: Durée moyenne sur 3 ans passée dans les vols court courriers par un voyageur Français qui prend l'avion une fois tous les 3 ans
+  formule: 1909 km / vitesse moyenne
+  unité: h
 
 transport . avion . moyen et long courrier:
   titre: Vols moyen ou long courrier (trajet > 2 h)
   note: |
-    Les vols moyen-courriers sont définis ici comme des vols de plus de 2 h (de 1000 à plus de 5000km).
+    Les vols moyen et long-courriers sont définis ici comme des vols dont la distance aller simple est supérieure ou égale à 1500 km (jusqu'à plus de 5000 km).
     On considère que les appareils qui assurent ces vols possèdent une capacité de plus de 220 sièges.
 
 transport . avion . moyen et long courrier . vitesse moyenne:
@@ -292,47 +255,16 @@ transport . avion . moyen et long courrier . empreinte par km . long courrier:
   unité: kgCO2e/km
 
 transport . avion . moyen et long courrier . durée moyenne:
-  titre: Durée moyenne passée par un Français dans les vols moyen-courriers
-  formule: durée moyenne passager * passagers annuel français / population
+  titre: Durée moyenne passée dans les vols moyen et long-courriers par un Français (voleur ou non)
+  formule: 2622 km / vitesse moyenne
   unité: h
 
-transport . avion . moyen et long courrier . durée moyenne passager:
-  titre: Durée moyenne passée par un passager Français dans les vols moyen-courriers
-  formule: passager km moyen / vitesse moyenne
+transport . avion . moyen et long courrier . durée moyenne passager tous les ans:
+  titre: Durée moyenne annuelle passée dans les vols moyen et long-courriers par un voyageur Français qui prend l'avion tous les ans
+  formule: 13606 km / vitesse moyenne
   unité: h
 
-transport . avion . moyen et long courrier . passager km moyen:
-  titre: Distance moyenne parcourue un Français sur des vols moyen et long courrier
-  formule: proportion trajets perso * passager km total * proportion voyageurs français / passagers annuel français
-  note: |
-    On fait une grosse approximation en considérant que la proportion des kilomètres parcourus par des français est la même que la proportion des passagers français.
-
-    Par ailleurs, ce chiffre est sans doute sous-estimé car on ne prend pas en compte les trajets des français depuis les aéroports étrangers, notamment pour les vols long-courriers avec des escales ou bien les vols internes à l'étranger.
-  unité: km
-
-transport . avion . moyen et long courrier . passagers annuel français:
-  titre: Nombre de passagers moyen et long courrier français
-  formule: passagers annuel * proportion voyageurs français / fréquence trajets
-  note: |
-    Un français peut être compté plusieurs fois dans l'année en tant que passager.
-
-transport . avion . moyen et long courrier . passagers annuel:
-  titre: Nombre de passagers moyen et long courrier
-  formule: 142400000
-  note: |
-    D'après [l'observatoire de la conccurrence 2023 par la DGAC](https://www.ecologie.gouv.fr/sites/default/files/documents/observatoire_concurrence_2023_transport_aerien.pdf), 142,4 millions de passagers ont transité par les aéroports français en 2023 pour des vols moyen et long courrier (hypothèse: outremer + international).
-
-transport . avion . moyen et long courrier . proportion voyageurs français:
-  titre: Proportion de voyageurs français sur les vols moyen et long courrier
-  formule: 0.53
-  note: |
-    Chiffre issu de l'[enquête nationale des passagers aériens](https://www.ecologie.gouv.fr/politiques-publiques/enquete-nationale-passagers-aeriens-enpa) 2023.
-
-transport . avion . moyen et long courrier . passager km total:
-  titre: Distance totale parcourue par les voyageurs en France sur des vols moyen et long courrier en 2023
-  formule: 384000000000 km * (1 - 0.072)
-  unité: km
-  note: |
-    D'après [l'observatoire de la conccurrence 2023 par la DGAC](https://www.ecologie.gouv.fr/sites/default/files/documents/observatoire_concurrence_2023_transport_aerien.pdf),le nombre de passagers-km transportés représente 384 milliards de passagers-km.
-
-    D'après les ["Chiffres clés du transport 2025" (données de 2023)](https://www.statistiques.developpement-durable.gouv.fr/edition-numerique/chiffres-cles-transports/fr/15-transport-collectif-urbain-de-voyageurs), le trafic métropolitain représente 7,2% du trafic total en passagers-km.
+transport . avion . moyen et long courrier . durée moyenne passager sur 3 ans:
+  titre: Durée moyenne sur 3 ans passée dans les vols moyen et long-courriers par un voyageur Français qui prend l'avion une fois tous les 3 ans
+  formule: 10157 km / vitesse moyenne
+  unité: h
