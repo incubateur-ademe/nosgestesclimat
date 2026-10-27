@@ -57,3 +57,53 @@ bilan . sous catégories . alimentation . petit déjeuner portion sucré:
             - alimentation . petit déjeuner . type = 'végétalien'
         alors: alimentation . petit déjeuner * commun . jours par an
       - sinon: 0
+# ## Électricité du logement et mode de chauffage
+#
+# Avant 4.16.0, `logement . électricité . empreinte` se décompose selon le mode
+# de chauffage :
+#
+#   - `collectif` / `pas de chauffage` → `consommation totale hors individuel`
+#     (la consommation de chauffage n'est pas imputée au logement) ;
+#   - sinon → `consommation totale`.
+#
+# Depuis 4.16.0, la formule vaut uniformément
+# `consommation totale * empreinte au kWh` et `consommation totale hors
+# individuel` n'est plus utilisée.
+#
+# ⚠️ Piège dans la branche collective : l'intensité carbone du mélange
+# (`logement . électricité . intensité carbone équivalente`) est calculée avec
+# `consommation totale`, alors que l'empreinte est appliquée à
+# `consommation totale hors individuel` :
+#
+#     empreinte = hors individuel × mélange(consommation totale)
+#
+# Recalculer réseau et photovoltaïque séparément sur `hors individuel` ne tombe
+# donc pas juste dès que la production photovoltaïque est inférieure à la
+# consommation (écart observé : quelques kgCO2e, soit < 0,1 % du bilan).
+#
+# La règle `réseau` ci-dessous est donc calculée **par différence** sur cette
+# seule branche : `réseau = empreinte / habitants − photovoltaïque`. La somme
+# égale alors exactement `logement . électricité`, par construction. Les autres
+# branches reprennent la règle du fichier de base, inchangée.
+#
+# `photovoltaique` n'est pas surchargé : la règle de base, exprimée sur
+# `consommation totale`, correspond à la sémantique du modèle de l'époque.
+
+bilan . sous catégories . logement . électricité . réseau:
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: logement . chauffage . mode
+            - une de ces conditions:
+                - logement . chauffage . mode = 'collectif'
+                - logement . chauffage . mode = 'pas de chauffage'
+        alors: logement . électricité . empreinte / logement . habitants - bilan . sous catégories . logement . électricité . photovoltaique
+      - si: logement . électricité . photovoltaique . présent
+        alors:
+          variations:
+            - si: logement . électricité . photovoltaique . production >= logement . électricité . consommation totale
+              alors: 0
+            - si: logement . électricité . photovoltaique . production < logement . électricité . consommation totale
+              alors: (logement . électricité . consommation totale - logement . électricité . photovoltaique . production) * logement . électricité . réseau . intensité carbone / logement . habitants
+      - sinon: logement . électricité . consommation totale * logement . électricité . réseau . intensité carbone / logement . habitants

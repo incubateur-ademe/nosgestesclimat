@@ -1,0 +1,223 @@
+# Sous catégories — variante pour les modèles ANTÉRIEURS à 4.10.0.
+#
+# ⚠️ Ce fichier ne contient que les règles qui diffèrent des fichiers de base,
+# `subcategories.avant-4.16.0.yaml` et `subcategories.avant-4.10.1.yaml`. Il est
+# fusionné par-dessus : les règles absentes d'ici sont reprises telles quelles.
+#
+# ## Pourquoi cette variante
+#
+# `logement . chauffage . mode` et `logement . chauffage . principal` ont été
+# introduites en 4.10.0. Avant, le chauffage se décrit autrement :
+#
+#   - `logement . chauffage` (mosaïque) :
+#       `choix utilisateur` ? `empreinte totale / habitants`
+#                            : `empreinte par défaut / habitants`
+#   - `logement . chauffage . <énergie> . empreinte` : applicable seulement si
+#     `<énergie> . présent` ;
+#   - `empreinte totale` = somme des empreintes gaz / bouteille gaz / citerne
+#     propane / fioul / bois / réseau de chaleur.
+#
+# Les règles du fichier de base testent `mode = individuel` / `collectif`, qui
+# n'existent pas dans ces versions.
+#
+# ## Formule retenue
+#
+# On reproduit la logique du modèle de l'époque :
+#
+#   - sans choix utilisateur, le chauffage vaut `empreinte par défaut` : toute
+#     l'empreinte est donc portée par `chauffage . moyenne`, et les énergies
+#     valent 0 (`gaz . présent` vaut « oui » par défaut, il faut les neutraliser
+#     pour ne pas compter deux fois) ;
+#   - avec un choix utilisateur, chaque énergie porte sa propre empreinte et
+#     `moyenne` vaut 0. La somme des six énergies égale `empreinte totale`.
+#
+# L'électricité de chauffage n'est pas concernée : elle est déjà incluse dans
+# `logement . électricité` (cf. `subcategories.avant-4.10.1.yaml`).
+
+bilan . sous catégories . logement . chauffage . moyenne:
+  formule:
+    variations:
+      - si: logement . chauffage . choix utilisateur
+        alors: 0
+      - sinon: logement . chauffage . empreinte par défaut / logement . habitants
+
+bilan . sous catégories . logement . chauffage . gaz:
+  formule:
+    variations:
+      - si: logement . chauffage . choix utilisateur
+        alors: logement . chauffage . gaz . empreinte / logement . habitants
+      - sinon: 0
+
+bilan . sous catégories . logement . chauffage . fioul:
+  formule:
+    variations:
+      - si: logement . chauffage . choix utilisateur
+        alors: logement . chauffage . fioul . empreinte / logement . habitants
+      - sinon: 0
+
+bilan . sous catégories . logement . chauffage . bois:
+  formule:
+    variations:
+      - si: logement . chauffage . choix utilisateur
+        alors: logement . chauffage . bois . empreinte / logement . habitants
+      - sinon: 0
+
+bilan . sous catégories . logement . chauffage . réseau de chaleur:
+  formule:
+    variations:
+      - si: logement . chauffage . choix utilisateur
+        alors: logement . chauffage . réseau de chaleur . empreinte / logement . habitants
+      - sinon: 0
+
+bilan . sous catégories . logement . chauffage . citerne propane:
+  formule:
+    variations:
+      - si: logement . chauffage . choix utilisateur
+        alors: logement . chauffage . citerne propane . empreinte / logement . habitants
+      - sinon: 0
+
+bilan . sous catégories . logement . chauffage . bouteille gaz:
+  formule:
+    variations:
+      - si: logement . chauffage . choix utilisateur
+        alors: logement . chauffage . bouteille gaz . empreinte / logement . habitants
+      - sinon: 0
+
+# ## Photovoltaïque
+#
+# `subcategories.avant-4.16.0.yaml` réécrit `photovoltaique` en testant
+# `logement . chauffage . mode` (pour choisir entre `consommation totale` et
+# `consommation totale hors individuel`), règle absente avant 4.10.0.
+#
+# Le modèle de l'époque ne connaît que `consommation totale`
+# (`empreinte = consommation totale * empreinte au kWh`) : la règle du fichier de
+# base est donc la bonne, on la rétablit telle quelle pour annuler la surcharge
+# précédente. `réseau` étant calculé par différence
+# (`empreinte − photovoltaïque`), les deux règles restent cohérentes.
+
+bilan . sous catégories . logement . électricité . photovoltaique:
+  formule:
+    variations:
+      - si: logement . électricité . photovoltaique . présent
+        alors:
+          variations:
+            - si: logement . électricité . photovoltaique . production >= logement . électricité . consommation totale
+              alors: logement . électricité . consommation totale * logement . électricité . photovoltaique . intensité carbone / logement . habitants
+            - sinon: logement . électricité . photovoltaique . production * logement . électricité . photovoltaique . intensité carbone / logement . habitants
+      - sinon: 0
+
+# ## Voiture : gabarit de la voiture « moyenne »
+#
+# La branche « aucun utilisateur renseigné » des règles de sous catégories
+# reconstruit une voiture moyenne avec `transport . voiture . gabarit: 'moyenne'`.
+# Or `transport . voiture . empreinte moyenne` du modèle utilise `'berline'`
+# avant 4.10.0 (et `'moyenne'` à partir de 4.10.0) :
+#
+#   4.6.0 / 4.7.0 / 4.8.1 / 4.9.1 : gabarit 'berline'
+#   4.10.0+                       : gabarit 'moyenne'
+#
+# Sur les modèles antérieurs, la décomposition voiture était donc sous-évaluée
+# dès qu'aucune voiture n'était renseignée (jusqu'à 50 % des simulations en
+# 4.6.0). Même écart sur la branche `utilisateur = 'non régulier'`, qui pointe
+# vers `empreinte moyenne non régulier` (gabarit 'berline' à l'époque).
+#
+# Les deux règles ci-dessous reprennent celles du fichier de base à
+# l'identique, en remplaçant `'moyenne'` par `'berline'` dans ces deux branches.
+
+bilan . sous catégories . transport . voiture . usage:
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: transport . voiture . utilisateur
+            - transport . voiture . utilisateur = 'jamais'
+        alors: 0
+      - si:
+          est défini: transport . voiture . utilisateur
+        alors:
+          variations:
+            - si:
+                une de ces conditions:
+                  - transport . voiture . utilisateur = 'propriétaire'
+                  - transport . voiture . utilisateur = 'régulier non propriétaire'
+              alors: transport . voiture . usage / transport . voiture . voyageurs
+            - si: transport . voiture . utilisateur = 'non régulier'
+              alors:
+                valeur: transport . voiture . usage / transport . voiture . voyageurs
+                contexte:
+                  transport . voiture . utilisateur: "'régulier non propriétaire'"
+                  transport . voiture . gabarit: "'berline'"
+                  transport . voiture . motorisation: "'thermique'"
+                  transport . voiture . thermique . carburant: "'essence E5 ou E10'"
+                  transport . voiture . thermique . consommation aux 100:
+                    valeur: transport . voiture . thermique . consommation estimée
+                    contexte:
+                      transport . voiture . utilisateur: "'régulier non propriétaire'"
+                      transport . voiture . gabarit: "'berline'"
+                      transport . voiture . motorisation: "'thermique'"
+                      transport . voiture . thermique . carburant: "'essence E5 ou E10'"
+      - sinon:
+          valeur: transport . voiture . usage / transport . voiture . voyageurs
+          contexte:
+            transport . voiture . voyageurs: transport . voiture . voyageurs . nombre moyen
+            transport . voiture . km: transport . voiture . km annuels moyen réel
+            transport . voiture . utilisateur: "'propriétaire'"
+            transport . voiture . gabarit: "'berline'"
+            transport . voiture . motorisation: "'thermique'"
+            transport . voiture . thermique . carburant: "'essence E5 ou E10'"
+            transport . voiture . thermique . consommation aux 100:
+              valeur: transport . voiture . thermique . consommation estimée
+              contexte:
+                transport . voiture . utilisateur: "'propriétaire'"
+                transport . voiture . gabarit: "'berline'"
+                transport . voiture . motorisation: "'thermique'"
+                transport . voiture . thermique . carburant: "'essence E5 ou E10'"
+
+bilan . sous catégories . transport . voiture . construction:
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: transport . voiture . utilisateur
+            - transport . voiture . utilisateur = 'jamais'
+        alors: 0
+      - si:
+          est défini: transport . voiture . utilisateur
+        alors:
+          variations:
+            - si:
+                une de ces conditions:
+                  - transport . voiture . utilisateur = 'propriétaire'
+                  - transport . voiture . utilisateur = 'régulier non propriétaire'
+              alors: transport . voiture . construction / transport . voiture . voyageurs
+            - si: transport . voiture . utilisateur = 'non régulier'
+              alors:
+                valeur: transport . voiture . construction / transport . voiture . voyageurs
+                contexte:
+                  transport . voiture . utilisateur: "'régulier non propriétaire'"
+                  transport . voiture . gabarit: "'berline'"
+                  transport . voiture . motorisation: "'thermique'"
+                  transport . voiture . thermique . carburant: "'essence E5 ou E10'"
+                  transport . voiture . thermique . consommation aux 100:
+                    valeur: transport . voiture . thermique . consommation estimée
+                    contexte:
+                      transport . voiture . utilisateur: "'régulier non propriétaire'"
+                      transport . voiture . gabarit: "'berline'"
+                      transport . voiture . motorisation: "'thermique'"
+                      transport . voiture . thermique . carburant: "'essence E5 ou E10'"
+      - sinon:
+          valeur: transport . voiture . construction / transport . voiture . voyageurs
+          contexte:
+            transport . voiture . voyageurs: transport . voiture . voyageurs . nombre moyen
+            transport . voiture . km: transport . voiture . km annuels moyen réel
+            transport . voiture . utilisateur: "'propriétaire'"
+            transport . voiture . gabarit: "'berline'"
+            transport . voiture . motorisation: "'thermique'"
+            transport . voiture . thermique . carburant: "'essence E5 ou E10'"
+            transport . voiture . thermique . consommation aux 100:
+              valeur: transport . voiture . thermique . consommation estimée
+              contexte:
+                transport . voiture . utilisateur: "'propriétaire'"
+                transport . voiture . gabarit: "'berline'"
+                transport . voiture . motorisation: "'thermique'"
+                transport . voiture . thermique . carburant: "'essence E5 ou E10'"

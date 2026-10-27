@@ -1,19 +1,19 @@
 # Sous catégories et postes « custom »
 
-Ces scripts calculent les **sous catégories** du modèle
-([`data/ui/subcategories.publicodes`](../../data/ui/subcategories.publicodes))
-pour des simulations ou des personas, puis agrègent ces sous catégories en
-**postes** décrits dans un fichier YAML (Ravijen, page de fin…).
+Scripts d'**analyse** des sous catégories : à partir d'un CSV de sous catégories
+produit ailleurs, ils calculent les **postes** décrits dans un fichier YAML
+(Ravijen, page de fin…), convertissent pour PostHog, ou recalculent les sous
+catégories des **personas**.
 
 Le point de jonction est un **CSV de sous catégories** : une ligne par
-simulation, une colonne par règle de sous catégories. Tous les scripts le
-partagent et le format est défini une fois pour toutes dans
-[`lib/csv.mjs`](./lib/csv.mjs) et [`lib/subcategories.mjs`](./lib/subcategories.mjs).
+simulation, une colonne par règle de sous catégories. Le format est défini une
+fois pour toutes dans [`lib/csv.mjs`](./lib/csv.mjs) et
+[`lib/subcategories.mjs`](./lib/subcategories.mjs).
 
 ```
-                      ┌─ recomputeSubcategories.mjs ────────┐   simulations en base (Postgres)
-CSV de sous catégories┤                                     ├─► sous-categories-*.csv
-                      └─ recomputeSubCategoriesForPersonas.mjs┘   situations de personas (YAML)
+recomputeSubCategoriesForPersonas.mjs ── situations de personas (YAML) ─┐
+                                                                      ├─► CSV de sous catégories
+export des simulations en base (voir plus bas) ────────────────────────┘
                                     │
                                     ▼
                       customSubcategories.mjs ── data/ui/ravijen.yaml
@@ -22,6 +22,13 @@ CSV de sous catégories┤                                     ├─► sous-ca
                                     ▼
                       csvToPosthog.mjs ──────────────────────────────────► .posthog.csv
 ```
+
+> Le calcul des sous catégories **des simulations en base** n'est plus ici :
+> il est fait par le serveur, qui écrit le CSV directement dans le bucket
+> Scaleway (`ngc/export-subcategories/<période>/`). Voir
+> `apps/server/src/jobs/subcategories` du dépôt
+> [nosgestesclimat-app](https://github.com/incubateur-ademe/nosgestesclimat-app).
+> Ce dossier ne consomme que le CSV produit.
 
 ## Prérequis
 
@@ -33,43 +40,7 @@ CSV de sous catégories┤                                     ├─► sous-ca
   recompiler **puis** régénérer le CSV, sinon les résultats restent sur l'ancien
   modèle.
 
-## 1. Sous catégories des simulations en base
-
-Pour toutes les simulations stockées en Postgres.
-
-```sh
-node scripts/sous-categories/recomputeSubcategories.mjs \
-  --start-date 2026-09-01 --end-date 2026-09-30 \
-  --output sous-categories-2026-09-WIP.csv --url "$DATABASE_URL"
-```
-
-| Option                   | Défaut                | Rôle                                                                                           |
-| ------------------------ | --------------------- | ---------------------------------------------------------------------------------------------- |
-| `-o`, `--output`         | `sous-categories.csv` | CSV de sortie (résolu dans ce dossier)                                                         |
-| `-b`, `--batch`          | `50`                  | Taille des lots                                                                                |
-| `-u`, `--url`            | `…localhost:5432/ngc` | URL de connexion Postgres                                                                      |
-| `-s`, `--schema`         | `ngc`                 | Schéma Postgres                                                                                |
-| `-r`, `--rules`          | —                     | Force un fichier de règles unique pour toutes les versions (au lieu du catalogue `RULES_SETS`) |
-| `--start-date`           | —                     | Début de la période (inclus)                                                                   |
-| `--end-date`             | —                     | Fin de la période (`YYYY-MM-DD` incluse, timestamp ISO exclu)                                  |
-| `-f`, `--from`           | `auto`                | Reprise : `auto` (checkpoint), `0` / `all` (repart de zéro) ou une date                        |
-| `--recompute-incoherent` | `false`               | Ne retraite que les simulations flaguées incohérentes et remplace leurs lignes                 |
-| `-v`, `--verbose`        | —                     | Détail par simulation                                                                          |
-
-Comportements notables :
-
-- **Reprise sur incident** : le CSV est écrit au fil de l'eau et un checkpoint
-  (`<output>.checkpoint.json`) est sauvegardé après chaque lot ; relancer la
-  commande sans `--from` reprend au lot suivant.
-- Les simulations sous une version de prévisualisation (`rc`, `beta`,
-  `FR-fr-pr-…`) sont ignorées : ces versions ne sont pas publiées sur npm.
-- Les règles de sous catégories dépendent de la version du modèle ; le
-  catalogue `RULES_SETS` associe chaque plage de versions aux fichiers à
-  charger (la structure — donc les colonnes — reste la même).
-- Le script vérifie que `bilan . sous catégories` égale `bilan` et flague les
-  simulations incohérentes.
-
-## 2. Sous catégories de personas
+## 1. Sous catégories de personas
 
 Même format de sortie, mais les situations viennent d'un YAML au lieu de la
 base.
@@ -96,7 +67,7 @@ Deux formats de situations sont acceptés : une situation « nue »
 (`data/ui/personas-ui.yaml`) ou un persona complet contenant `situation`
 (`personas/personas-fr.yaml`). Le préfixe `personas . ` est retiré des noms.
 
-## 3. Postes « custom » (Ravijen, page de fin…)
+## 2. Postes « custom » (Ravijen, page de fin…)
 
 Évalue les agrégations décrites dans un fichier YAML **à partir des colonnes du
 CSV** (sans relancer Publicodes).
@@ -162,7 +133,7 @@ Sans `--output`, le fichier par défaut est **écrasé** à chaque lancement.
   absentes du fichier de postes. Une sous catégorie non rattachée laisse son
   poids hors du total des postes, et donc fausse les parts.
 
-## 4. Export PostHog
+## 3. Export PostHog
 
 Convertit un CSV `;` + virgule décimale en CSV `,` + point décimal, importable
 dans PostHog.
@@ -195,8 +166,8 @@ Une ligne par simulation, séparateur `;`, virgule décimale.
 Les CSV/YAML volumineux de ce dossier sont des **artefacts d'analyse**, pas des
 sources. Par convention :
 
-- `sous-categories-<période>-WIP.csv` / `-prod.csv` : sorties de
-  `recomputeSubcategories.mjs` ;
+- `sous-categories-<période>.csv` : sortie de l'export fait côté serveur
+  (bucket `ngc/export-subcategories/<période>/`), à rapatrier ici pour analyse ;
 - `sous-categories-personas.csv` : sortie de
   `recomputeSubCategoriesForPersonas.mjs` ;
 - `*.ravijen.{csv,yaml}`, `*.page-de-fin*.{csv,yaml}` : sorties de

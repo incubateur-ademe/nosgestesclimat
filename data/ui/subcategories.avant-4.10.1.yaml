@@ -1,0 +1,64 @@
+# Sous catégories — variante pour les modèles ANTÉRIEURS à 4.10.1.
+#
+# ⚠️ Ce fichier ne contient que les règles qui diffèrent des fichiers de base et
+# `subcategories.avant-4.16.0.yaml`. Il est fusionné par-dessus : les règles
+# absentes d'ici sont reprises telles quelles.
+#
+# ## Pourquoi cette variante
+#
+# `logement . électricité . consommation totale hors individuel` a été introduite
+# en 4.10.1. En 4.10.0, la même idée s'appelle
+# `logement . électricité . consommation totale collectif` :
+#
+#   - 4.10.0 : `collectif` → `consommation totale collectif * empreinte au kWh` ;
+#   - 4.10.1+ : `collectif` / `pas de chauffage` →
+#     `consommation totale hors individuel * empreinte au kWh`.
+#
+# La surcharge `avant-4.16.0` utilise `consommation totale hors individuel`, qui
+# n'existe pas en 4.10.0.
+#
+# ## Formule retenue
+#
+# La part « réseau » est déduite de l'empreinte électricité du modèle, moins la
+# part photovoltaïque déjà calculée par les autres fichiers :
+#
+#   réseau = empreinte électricité / habitants − photovoltaïque
+#
+# C'est exactement ce que fait le fichier de base (`réseau` + `photovoltaïque`
+# = `empreinte`), mais sans avoir à réécrire les branches `collectif` /
+# `pas de chauffage` de chaque version. L'égalité avec `bilan` est donc garantie
+# par construction, quelle que soit la formule d'électricité de l'époque.
+
+bilan . sous catégories . logement . électricité . réseau:
+  formule: logement . électricité . empreinte / logement . habitants - bilan . sous catégories . logement . électricité . photovoltaique
+
+# `photovoltaique` est aussi surchargé par `avant-4.16.0.yaml` avec
+# `consommation totale hors individuel`. En 4.10.0, l'équivalent est
+# `consommation totale collectif`, et la condition ne vise que `collectif`
+# (`pas de chauffage` n'existe pas encore dans cette branche).
+#
+# `réseau` étant calculé par différence (`empreinte − photovoltaïque`), les deux
+# règles restent cohérentes : la ventilation réseau / photovoltaïque suit la
+# consommation réellement utilisée par le modèle de l'époque.
+
+bilan . sous catégories . logement . électricité . photovoltaique:
+  formule:
+    variations:
+      - si: logement . électricité . photovoltaique . présent
+        alors:
+          variations:
+            - si:
+                toutes ces conditions:
+                  - est défini: logement . chauffage . mode
+                  - logement . chauffage . mode = 'collectif'
+              alors:
+                variations:
+                  - si: logement . électricité . photovoltaique . production >= logement . électricité . consommation totale collectif
+                    alors: logement . électricité . consommation totale collectif * logement . électricité . photovoltaique . intensité carbone / logement . habitants
+                  - sinon: logement . électricité . photovoltaique . production * logement . électricité . photovoltaique . intensité carbone / logement . habitants
+            - sinon:
+                variations:
+                  - si: logement . électricité . photovoltaique . production >= logement . électricité . consommation totale
+                    alors: logement . électricité . consommation totale * logement . électricité . photovoltaique . intensité carbone / logement . habitants
+                  - sinon: logement . électricité . photovoltaique . production * logement . électricité . photovoltaique . intensité carbone / logement . habitants
+      - sinon: 0
