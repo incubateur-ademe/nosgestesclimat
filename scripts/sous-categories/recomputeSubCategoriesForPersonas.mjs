@@ -188,8 +188,13 @@ console.log(
 )
 
 // Les règles de sous catégories font partie du modèle, mais on les recharge
-// depuis `--rules` : c'est ce fichier qui définit les colonnes du CSV, et il
-// permet de surcharger les sous catégories (ex. `subcategories.avant-4.16.0.yaml`).
+// depuis `--rules` : c'est ce fichier qui définit les colonnes du CSV.
+//
+// ⚠️ `--rules` attend un fichier **complet**. Les variantes par version du
+// modèle (modèles antérieurs à 4.16.0) ne sont plus dans ce dépôt : le calcul
+// multi-versions des simulations en base est fait par le serveur
+// (`apps/server/src/jobs/subcategories` du dépôt nosgestesclimat-app), qui porte
+// ces variantes.
 const rulesFile = getModelFromSource([rulesPath])
 const engine = new Engine({ ...allRules, ...rulesFile }, engineOptions)
 
