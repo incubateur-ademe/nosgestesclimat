@@ -85,11 +85,7 @@ logement . construction . rafraichissement . amortissement:
   formule: 10
 
 logement . construction . rénovation:
-  formule:
-    variations:
-      - si: logement . propriétaire = 'propriétaire'
-        alors: travaux de rénovation / amortissement
-      - sinon: rénovation . travaux . rénovation / rénovation . amortissement
+  formule: travaux / amortissement
   note: |
     Par défaut, et donc pour les locataires, on considère que des travaux de rénovation ont été réalisés tous les 25 ans.
 
@@ -109,41 +105,42 @@ logement . construction . travaux de rénovation:
   mosaique:
     type: selection
     options:
-      - rénovation . travaux . rénovation . présent
+      - rénovation . travaux . embelissement . présent
       - rénovation . travaux . isolation . présent
       - rénovation . travaux . chauffage . présent
       - rénovation . travaux . extension . présent
     option aucun: aucun
+
+logement . construction . rénovation . travaux:
   formule:
     somme:
-      - rénovation . travaux . rénovation
+      - rénovation . travaux . embelissement
       - rénovation . travaux . isolation
       - rénovation . travaux . chauffage
       - rénovation . travaux . extension
 
-logement . construction . rénovation . travaux:
 logement . construction . rénovation . travaux . travaux réalisés:
   titre: L'utilisateur a-t-il réalisé des travaux ?
   formule:
     une de ces conditions:
-      - rénovation . présent
+      - embelissement . présent
       - isolation . présent
   note: |
     Cette variable est utilisée pour ajuster la durée d'amortissement de la construction de base. Si des travaux de rénovation ou d'isolation ont été réalisés, on considère que la durée d'amortissement de la construction est rallongée de 25 ans.
 
-logement . construction . rénovation . travaux . rénovation:
-  titre: Rénovation
+logement . construction . rénovation . travaux . embelissement:
+  titre: Embellissement et aménagement
   description: Agencement des pièces, sols…
   icônes: 🛠
-  applicable si: rénovation . présent
+  applicable si: embelissement . présent
   formule: 235
   unité: kgCO2e/m2
   note: |
     Ce facteur d'émission est issu d'une [étude croisée entre CentraleSupélec et l'Observatoire de l'Immobilier Durable (OID)](https://www.architectes.org/actualites/quel-est-le-poids-carbone-des-logements-avec-ou-sans-renovation-92667).
 
-logement . construction . rénovation . travaux . rénovation . présent:
-  question: Avez-vous réalisé des travaux de rénovation (second d'oeuvre) ?
-  par défaut: oui
+logement . construction . rénovation . travaux . embelissement . présent:
+  question: Avez-vous réalisé des travaux d'embellissement ou d'aménagement (second d'oeuvre) ?
+  par défaut: logement . âge équivalent > rénovation . seuil
 
 logement . construction . rénovation . travaux . isolation:
   titre: Isolation
