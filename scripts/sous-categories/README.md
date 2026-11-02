@@ -75,35 +75,43 @@ CSV** (sans relancer Publicodes).
 ```sh
 # Moyennes Ravijen sur des simulations (filtres actifs par défaut)
 node scripts/sous-categories/customSubcategories.mjs \
-  --input sous-categories-2026-09-WIP.csv \
-  --categories data/ui/ravijen.yaml \
-  --min-tonnes 3 --max-tonnes 50
+  --input input/2026/sous-categories-2026.csv \
+  --categories scripts/sous-categories/input/ravijen.yaml \
+  --min-tonnes 3 --max-tonnes 50 --only-coherent --format yaml
 
 # Détail par situation, pour des personas
 node scripts/sous-categories/customSubcategories.mjs \
   --input sous-categories-personas.csv \
-  --categories data/ui/page-de-fin.yaml \
+  --categories scripts/sous-categories/input/page-de-fin.yaml \
   --no-filter --per-situation --format yaml
 ```
 
-| Option               | Défaut                 | Rôle                                                   |
-| -------------------- | ---------------------- | ------------------------------------------------------ |
-| `-i`, `--input`      | _(requis)_             | CSV de sous catégories (résolu dans ce dossier)        |
-| `-o`, `--output`     | voir ci-dessous        | Fichier de sortie (résolu dans ce dossier)             |
-| `-f`, `--format`     | `csv`                  | `csv` ou `yaml`                                        |
-| `-c`, `--categories` | `data/ui/ravijen.yaml` | Fichier YAML des postes (relatif à la racine)          |
-| `--per-situation`    | `false`                | Une ligne par situation × poste, au lieu de la moyenne |
-| `-S`, `--situation`  | —                      | Ne garder que ces situations (colonne `simulationId`)  |
-| `--min-tonnes`       | `3`                    | Bilan minimal, inclus                                  |
-| `--max-tonnes`       | `50`                   | Bilan maximal, inclus                                  |
-| `--no-filter`        | `false`                | Désactive les filtres `progression` et `bilan`         |
+> **Variante sans services sociétaux** :
+> `input/ravijen-sans-services.yaml` reprend `input/ravijen.yaml` sans les postes
+> `services sociétaux`, dont le détail est absent d'une partie des simulations
+> 2026 (janvier/février). Dans ce cas, mettre `total` à la main : le script le
+> calcule toujours sur les 5 colonnes de premier niveau, services inclus.
+
+| Option               | Défaut                 | Rôle                                                      |
+| -------------------- | ---------------------- | --------------------------------------------------------- |
+| `-i`, `--input`      | _(requis)_             | CSV de sous catégories (résolu dans ce dossier)           |
+| `-o`, `--output`     | voir ci-dessous        | Fichier de sortie (résolu dans ce dossier)                |
+| `-f`, `--format`     | `csv`                  | `csv` ou `yaml`                                           |
+| `-c`, `--categories` | `data/ui/ravijen.yaml` | Fichier YAML des postes (relatif à la racine)             |
+| `--per-situation`    | `false`                | Une ligne par situation × poste, au lieu de la moyenne    |
+| `-S`, `--situation`  | —                      | Ne garder que ces situations (colonne `simulationId`)     |
+| `--min-tonnes`       | `3`                    | Bilan minimal, inclus                                     |
+| `--max-tonnes`       | `50`                   | Bilan maximal, inclus                                     |
+| `--only-coherent`    | `false`                | Ne garder que `bilanCoherent` = `true`                    |
+| `--no-filter`        | `false`                | Désactive les filtres `progression`, `bilan` et cohérence |
 
 ### Filtres
 
 Sans `--no-filter`, seules les simulations **terminées** (`progression` = 1) dont
 le `bilan` est compris **entre `--min-tonnes` et `--max-tonnes`** sont retenues.
-`--no-filter` est indispensable pour un CSV de personas (pas de notion de
-progression).
+`--only-coherent` restreint en plus aux lignes dont `bilanCoherent` vaut `true`
+(bilan égal à la somme des sous catégories). `--no-filter` est indispensable pour
+un CSV de personas (pas de notion de progression).
 
 ### Nom de sortie par défaut
 

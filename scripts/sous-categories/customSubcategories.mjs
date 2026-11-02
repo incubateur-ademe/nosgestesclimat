@@ -1,6 +1,6 @@
 /**
  * Calcule les postes « custom » décrits dans un fichier YAML
- * (`data/ui/ravijen.yaml`, `data/ui/page-de-fin.yaml`…) à partir d'un CSV de
+ * (`scripts/sous-categories/input/ravijen.yaml`, `scripts/sous-categories/input/page-de-fin.yaml`…) à partir d'un CSV de
  * sous catégories produit par `recomputeSubcategories.mjs` ou
  * `recomputeSubCategoriesForPersonas.mjs`.
  *
@@ -23,21 +23,23 @@
  * Les colonnes `progression` et `bilan` sont optionnelles : lorsqu'elles sont
  * présentes (CSV de simulations), seules les simulations terminées
  * (`progression` = 1) dont le `bilan` est compris entre `--min-tonnes` et
- * `--max-tonnes` sont retenues. `--no-filter` désactive ces filtres (utile pour
- * un CSV de personas, où l'on veut toutes les situations).
+ * `--max-tonnes` sont retenues. `--only-coherent` ajoute un filtre sur
+ * `bilanCoherent` = `true` (bilans dont la somme des sous catégories égale le
+ * bilan). `--no-filter` désactive ces filtres (utile pour un CSV de personas,
+ * où l'on veut toutes les situations).
  *
  * ## Usage
  *
  *   # Moyenne des postes de la page de fin, sur des personas
  *   node scripts/sous-categories/customSubcategories.mjs \
  *     --input sous-categories-personas.csv \
- *     --categories data/ui/page-de-fin.yaml \
+ *     --categories scripts/sous-categories/input/page-de-fin.yaml \
  *     --no-filter
  *
  *   # Détail par situation
  *   node scripts/sous-categories/customSubcategories.mjs \
  *     --input sous-categories-personas.csv \
- *     --categories data/ui/page-de-fin.yaml \
+ *     --categories scripts/sous-categories/input/page-de-fin.yaml \
  *     --no-filter --per-situation
  *
  *   # Moyennes Ravijen sur les simulations de septembre (comportement historique)
@@ -72,13 +74,14 @@
  * Les oubliées sont listées dans le rapport.
  */
 
+import { createReadStream } from 'node:fs'
 import { readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import yargs from 'yargs'
 import c from 'ansi-colors'
 import { parse as parseYaml, stringify } from 'yaml'
 
-import { DELIMITER, csvEscape, parseCell, parseCsv } from './lib/csv.mjs'
+import { DELIMITER, csvEscape, parseCell, parseCsvStream } from './lib/csv.mjs'
 import { SUB_CATEGORIES_ROOT } from './lib/subcategories.mjs'
 
 // Le script vit dans `<repo>/scripts/sous-categories`.
@@ -118,7 +121,7 @@ const argv = yargs(process.argv.slice(2))
     alias: 'c',
     type: 'string',
     description: 'Fichier YAML décrivant les postes à calculer',
-    default: 'data/ui/ravijen.yaml'
+    default: 'scripts/sous-categories/input/ravijen.yaml'
   })
   .option('per-situation', {
     type: 'boolean',
@@ -145,7 +148,13 @@ const argv = yargs(process.argv.slice(2))
   .option('no-filter', {
     type: 'boolean',
     description:
-      'Ne filtrer ni sur `progression` ni sur le `bilan` (utile pour un CSV de personas)',
+      'Ne filtrer ni sur `progression`, ni sur le `bilan`, ni sur `bilanCoherent` (utile pour un CSV de personas)',
+    default: false
+  })
+  .option('only-coherent', {
+    type: 'boolean',
+    description:
+      'Ne garder que les simulations dont `bilanCoherent` vaut `true`',
     default: false
   })
   .demandOption('input')
@@ -155,7 +164,7 @@ const argv = yargs(process.argv.slice(2))
 const resolveInScriptDir = (file) =>
   path.isAbsolute(file) ? file : path.join(SCRIPT_DIR, file)
 
-/** `data/ui/page-de-fin.yaml` -> `page-de-fin` (pour nommer la sortie). */
+/** `scripts/sous-categories/input/page-de-fin.yaml` -> `page-de-fin` (pour nommer la sortie). */
 const slugify = (file) =>
   path
     .basename(file, path.extname(file))
@@ -253,9 +262,12 @@ function buildResolver(categoryRules, columnIndex) {
 
 /// ---------------------- Lecture du CSV ----------------------
 
-const csvText = await readFile(inputPath, 'utf8')
-const parsed = parseCsv(csvText, DELIMITER).filter((row) => row.length > 1)
-const [header, ...dataRows] = parsed
+const categoryRules = parseYaml(await readFile(categoriesPath, 'utf8'))
+
+// Le CSV peut faire plusieurs centaines de Mo : on le parcourt en flux, ligne
+// par ligne, plutôt que de charger l'intégralité du fichier en mémoire.
+const csvRows = parseCsvStream(createReadStream(inputPath), DELIMITER)
+const header = (await csvRows.next()).value ?? []
 
 const columnIndex = new Map(header.map((name, index) => [name, index]))
 
@@ -263,14 +275,14 @@ const columnIndex = new Map(header.map((name, index) => [name, index]))
 // n'être qu'un tableau de valeurs (personas).
 const progressionIndex = columnIndex.get('progression')
 const bilanIndex = columnIndex.get('bilan')
-
-const categoryRules = parseYaml(await readFile(categoriesPath, 'utf8'))
+const coherentIndex = columnIndex.get('bilanCoherent')
 
 /// --- Filtre des situations
 
 const minBilan = argv['min-tonnes'] * 1000
 const maxBilan = argv['max-tonnes'] * 1000
 const noFilter = argv['no-filter']
+const perSituation = argv['per-situation']
 const wantedSituations = new Set(argv.situation ?? [])
 const situationIndex = columnIndex.get('simulationId')
 
@@ -278,41 +290,6 @@ if (wantedSituations.size > 0 && situationIndex == null) {
   console.error(
     `${c.red('✘')} --situation nécessite une colonne « simulationId » dans ${inputPath}.`
   )
-  process.exit(1)
-}
-
-const kept = []
-let skippedProgression = 0
-let skippedBilan = 0
-let skippedSituation = 0
-
-for (const row of dataRows) {
-  if (wantedSituations.size > 0) {
-    const id = row[situationIndex]
-    if (!wantedSituations.has(id)) {
-      skippedSituation++
-      continue
-    }
-  }
-
-  if (!noFilter && progressionIndex != null) {
-    if (parseCell(row[progressionIndex]) !== 1) {
-      skippedProgression++
-      continue
-    }
-  }
-  if (!noFilter && bilanIndex != null) {
-    const bilan = parseCell(row[bilanIndex])
-    if (bilan < minBilan || bilan > maxBilan) {
-      skippedBilan++
-      continue
-    }
-  }
-  kept.push(row)
-}
-
-if (kept.length === 0) {
-  console.error(`${c.red('✘')} Aucune situation retenue, rien à calculer.`)
   process.exit(1)
 }
 
@@ -324,23 +301,12 @@ const { buildResolverFor, unresolved, usedColumns } = buildResolver(
 )
 
 const ruleNames = Object.keys(categoryRules)
-const results = []
 const withoutFormula = []
+const posteNames = []
 
 for (const name of ruleNames) {
-  const resolver = buildResolverFor(name)
-  if (resolver == null) {
-    withoutFormula.push(name)
-    continue
-  }
-  // Valeur de chaque poste pour chaque situation retenue : sert au calcul de la
-  // moyenne comme à la sortie détaillée.
-  const values = kept.map((row) => resolver(row))
-  results.push({
-    name,
-    values,
-    mean: values.reduce((total, value) => total + value, 0) / kept.length
-  })
+  if (buildResolverFor(name) == null) withoutFormula.push(name)
+  else posteNames.push(name)
 }
 
 /// ---------------------- Mise en forme ----------------------
@@ -375,7 +341,7 @@ const declaredOrder = ruleNames
   .filter((name) => name.split(' . ').length === 2)
   .map((name) => getCategory(name))
 const categoryOrder = [...declaredOrder]
-for (const { name } of results) {
+for (const name of posteNames) {
   const category = getCategory(name)
   if (!categoryOrder.includes(category)) categoryOrder.push(category)
 }
@@ -415,8 +381,95 @@ const categoryColumn = (category) =>
     : null
 
 const cellOf = (row, column) => parseCell(row[columnIndex.get(column)])
-const meanOfColumn = (column) =>
-  kept.reduce((sum, row) => sum + cellOf(row, column), 0) / kept.length
+
+const categoryColumns = new Map(
+  categoryOrder.map((category) => [category, categoryColumn(category)])
+)
+const categoriesWithoutColumn = categoryOrder.filter(
+  (category) => categoryColumns.get(category) == null
+)
+
+/// --- Parcours des situations retenues
+
+let keptCount = 0
+let skippedProgression = 0
+let skippedBilan = 0
+let skippedIncoherent = 0
+let skippedSituation = 0
+
+// En mode « par situation », les lignes retenues et la valeur de chaque poste
+// sont conservées ; en mode moyenne, seules des sommes sont accumulées, ce qui
+// garde une empreinte mémoire constante quel que soit le volume du CSV.
+const kept = perSituation ? [] : null
+const columnSums = new Map()
+const results = posteNames.map((name) => ({
+  name,
+  resolve: buildResolverFor(name),
+  values: perSituation ? [] : null,
+  sum: 0
+}))
+const accumulatedColumns = new Set([
+  ...totalColumns,
+  ...categoryOrder
+    .map((category) => categoryColumns.get(category))
+    .filter((column) => column != null)
+])
+
+for await (const row of csvRows) {
+  // Ligne finale vide (saut de ligne de fin de fichier).
+  if (row.length <= 1) continue
+
+  if (wantedSituations.size > 0) {
+    const id = row[situationIndex]
+    if (!wantedSituations.has(id)) {
+      skippedSituation++
+      continue
+    }
+  }
+  if (!noFilter && progressionIndex != null) {
+    if (parseCell(row[progressionIndex]) !== 1) {
+      skippedProgression++
+      continue
+    }
+  }
+  if (!noFilter && argv['only-coherent'] && coherentIndex != null) {
+    if (String(row[coherentIndex]).trim().toLowerCase() !== 'true') {
+      skippedIncoherent++
+      continue
+    }
+  }
+  if (!noFilter && bilanIndex != null) {
+    const bilan = parseCell(row[bilanIndex])
+    if (bilan < minBilan || bilan > maxBilan) {
+      skippedBilan++
+      continue
+    }
+  }
+
+  keptCount++
+  if (perSituation) kept.push(row)
+  for (const result of results) {
+    const value = result.resolve(row)
+    result.sum += value
+    if (perSituation) result.values.push(value)
+  }
+  for (const column of accumulatedColumns) {
+    columnSums.set(column, (columnSums.get(column) ?? 0) + cellOf(row, column))
+  }
+}
+
+if (keptCount === 0) {
+  console.error(`${c.red('✘')} Aucune situation retenue, rien à calculer.`)
+  process.exit(1)
+}
+
+for (const result of results) {
+  result.mean = result.sum / keptCount
+  delete result.sum
+  delete result.resolve
+}
+
+const meanOfColumn = (column) => (columnSums.get(column) ?? 0) / keptCount
 
 // Repli, par catégorie, si le CSV n'a pas de colonne correspondante : les
 // postes plus profonds sont exclus pour éviter le double comptage.
@@ -425,13 +478,6 @@ const aggregatedTotalOf = (category, pick) =>
   aggregated
     .filter(({ name }) => getCategory(name) === category)
     .reduce((sum, poste) => sum + pick(poste), 0)
-
-const categoryColumns = new Map(
-  categoryOrder.map((category) => [category, categoryColumn(category)])
-)
-const categoriesWithoutColumn = categoryOrder.filter(
-  (category) => categoryColumns.get(category) == null
-)
 
 const totalGeneral = totalColumns.reduce(
   (sum, column) => sum + meanOfColumn(column),
@@ -472,32 +518,34 @@ const round1 = (value) => Math.round(value * 10) / 10
 
 // Détail par situation : sert au CSV comme au YAML. Les noms sont raccourcis
 // (racine retirée) pour la lisibilité, `fullName` conserve le nom Publicodes.
-const situationReports = kept.map((row, i) => {
-  const total = totalColumns.reduce(
-    (sum, column) => sum + cellOf(row, column),
-    0
-  )
-  const postes = sorted.map(({ name, values }) => {
-    const category = getCategory(name)
-    const column = categoryColumns.get(category)
-    const categoryTotal =
-      column != null
-        ? cellOf(row, column)
-        : aggregatedTotalOf(category, ({ values: v }) => v[i])
-    return {
-      name: name.replace(`${root} . `, ''),
-      category,
-      value: values[i],
-      partTotal: shareOf(values[i], total),
-      partCategory: shareOf(values[i], categoryTotal)
-    }
-  })
-  return {
-    situation: row[situationIndex] ?? `situation ${i + 1}`,
-    total,
-    postes
-  }
-})
+const situationReports = perSituation
+  ? kept.map((row, i) => {
+      const total = totalColumns.reduce(
+        (sum, column) => sum + cellOf(row, column),
+        0
+      )
+      const postes = sorted.map(({ name, values }) => {
+        const category = getCategory(name)
+        const column = categoryColumns.get(category)
+        const categoryTotal =
+          column != null
+            ? cellOf(row, column)
+            : aggregatedTotalOf(category, ({ values: v }) => v[i])
+        return {
+          name: name.replace(`${root} . `, ''),
+          category,
+          value: values[i],
+          partTotal: shareOf(values[i], total),
+          partCategory: shareOf(values[i], categoryTotal)
+        }
+      })
+      return {
+        situation: row[situationIndex] ?? `situation ${i + 1}`,
+        total,
+        postes
+      }
+    })
+  : []
 
 /// --- Écriture du fichier
 
@@ -581,11 +629,14 @@ if (argv.format === 'yaml') {
 console.log(`✅ ${outputPath}\n`)
 console.log(`   Postes               : ${results.length} (${categoriesPath})`)
 console.log(
-  `   Situations retenues  : ${kept.length}` +
+  `   Situations retenues  : ${keptCount}` +
     (noFilter
       ? ' (filtres désactivés)'
       : `\n      ${skippedProgression} écartée(s) (progression ≠ 1), ` +
-        `${skippedBilan} écartée(s) (bilan hors ${argv['min-tonnes']}–${argv['max-tonnes']} t)`)
+        `${skippedBilan} écartée(s) (bilan hors ${argv['min-tonnes']}–${argv['max-tonnes']} t)` +
+        (argv['only-coherent']
+          ? `, ${skippedIncoherent} écartée(s) (bilan incohérent)`
+          : ''))
 )
 if (skippedSituation > 0) {
   console.log(`      ${skippedSituation} écartée(s) (hors --situation)`)

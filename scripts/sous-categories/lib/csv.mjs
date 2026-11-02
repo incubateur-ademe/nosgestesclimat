@@ -9,6 +9,7 @@
  */
 
 import { formatValue } from 'publicodes'
+import { StringDecoder } from 'node:string_decoder'
 
 export const DELIMITER = ';'
 
@@ -51,6 +52,76 @@ export function parseCsv(text, delimiter = DELIMITER) {
     rows.push(row)
   }
   return rows
+}
+
+/**
+ * Découpe un flux CSV en lignes/colonnes (RFC 4180), sans charger le fichier
+ * entier en mémoire : indispensable au-delà de quelques centaines de Mo, taille
+ * à laquelle V8 refuse les chaînes (`RangeError: Invalid string length`).
+ *
+ * Les guillemets échappés (`""`) peuvent être à cheval sur deux morceaux du
+ * flux : l'état est conservé d'un morceau à l'autre.
+ *
+ * @param {AsyncIterable<string|Buffer>} readable flux (ex. `createReadStream`)
+ */
+export async function* parseCsvStream(readable, delimiter = DELIMITER) {
+  let row = []
+  let field = ''
+  let inQuotes = false
+  let quotePending = false
+  let completed = []
+  const decoder = new StringDecoder('utf8')
+  const decode = (chunk) =>
+    typeof chunk === 'string' ? chunk : decoder.write(chunk)
+
+  const feed = (text) => {
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i]
+      if (inQuotes) {
+        if (quotePending) {
+          quotePending = false
+          if (char === '"') {
+            field += '"'
+            continue
+          }
+          inQuotes = false
+        } else if (char === '"') {
+          quotePending = true
+          continue
+        } else {
+          field += char
+          continue
+        }
+      }
+      if (char === '"') inQuotes = true
+      else if (char === delimiter) {
+        row.push(field)
+        field = ''
+      } else if (char === '\n') {
+        row.push(field)
+        completed.push(row)
+        row = []
+        field = ''
+      } else if (char !== '\r') field += char
+    }
+  }
+
+  for await (const chunk of readable) {
+    // Un morceau peut couper un caractère multi-octets : le décodeur conserve
+    // les octets incomplets pour le morceau suivant.
+    feed(decode(chunk))
+    if (completed.length > 0) {
+      yield* completed
+      completed = []
+    }
+  }
+  feed(decoder.end())
+  if (quotePending) inQuotes = false
+  if (field !== '' || row.length > 0) {
+    row.push(field)
+    completed.push(row)
+  }
+  yield* completed
 }
 
 /**

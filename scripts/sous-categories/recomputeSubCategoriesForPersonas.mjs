@@ -4,7 +4,7 @@
  *
  * C'est le pendant de `recomputeSubcategories.mjs`, mais les situations ne
  * viennent pas de la base : elles viennent d'un fichier YAML (par défaut
- * `data/ui/personas-ui.yaml`). Le CSV produit est au **même format** que celui
+ * `scripts/sous-categories/input/personas-ui.yaml`). Le CSV produit est au **même format** que celui
  * de `recomputeSubcategories.mjs` : une ligne par situation, une colonne par
  * règle de sous catégories. Il est donc directement consommable par
  * `customSubcategories.mjs` (calcul des postes de `ravijen.yaml`,
@@ -13,9 +13,9 @@
  * ## Format de fichier de situations accepté
  *
  *   1. situation « nue » : le YAML associe un nom à une situation
- *      (`data/ui/personas-ui.yaml`) ;
+ *      (`scripts/sous-categories/input/personas-ui.yaml`) ;
  *   2. persona complet : le YAML associe un nom à un objet contenant `nom`,
- *      `description`… et `situation` (`personas/personas-fr.yaml`).
+ *      `description`… et `situation` (`scripts/sous-categories/input/personas-fr.yaml`).
  *
  * Le préfixe `personas . ` est retiré des noms, s'il est présent.
  *
@@ -42,7 +42,7 @@
  * ## Usage
  *
  *   node scripts/sous-categories/recomputeSubCategoriesForPersonas.mjs \
- *     [--situations data/ui/personas-ui.yaml] \
+ *     [--situations scripts/sous-categories/input/personas-ui.yaml] \
  *     [--output sous-categories-personas.csv] \
  *     [--rules data/ui/subcategories.publicodes] \
  *     [--country FR] [--language fr] [--version nightly] \
@@ -76,7 +76,7 @@ import {
 const SCRIPT_DIR = import.meta.dirname
 const REPO_DIR = path.resolve(SCRIPT_DIR, '..', '..')
 
-const DEFAULT_SITUATIONS = 'data/ui/personas-ui.yaml'
+const DEFAULT_SITUATIONS = 'scripts/sous-categories/input/personas-ui.yaml'
 const DEFAULT_RULES = 'data/ui/subcategories.publicodes'
 
 /// ---------------------- Arguments ----------------------
