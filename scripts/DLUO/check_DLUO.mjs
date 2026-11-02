@@ -48,13 +48,6 @@ const cardProperties = {
       }
     ]
   },
-  'Sprint associé': {
-    relation: [
-      {
-        id: '1cb6523d57d7805db51ef8cbeef7162e'
-      }
-    ]
-  },
   'Personne assignée': {
     people: [
       // Clément
