@@ -1,17 +1,11 @@
 transport . voiture:
+  public: oui
   titre: voiture
   icônes: 🚘
   formule:
-    variations:
-      - si:
-          toutes ces conditions:
-            - est défini: utilisateur
-            - utilisateur = 'jamais'
-        alors: 0
-      - si:
-          est défini: utilisateur
-        alors: empreinte
-      - sinon: empreinte moyenne
+    somme:
+      - usage selon utilisateur
+      - construction selon utilisateur
   unité: kgCO2e
   description: |
     La voiture est aujourd'hui en France essentiellement thermique (essence, diesel), bien que l'électrique progresse lentement.
@@ -25,16 +19,49 @@ transport . voiture:
   note: |
     Le calcul détaillé et l'ensemble des hypothèses sont disponibles dans cette [page récapitulative](https://accelerateur-transition-ecologique-ademe.notion.site/Mod-lisation-de-l-empreinte-carbone-de-la-voiture-1f46523d57d780b3a1a8f1ceb5ff7f87).
 
-transport . voiture . empreinte:
+transport . voiture . usage selon utilisateur:
+  public: oui
   formule:
     variations:
       - si:
-          une de ces conditions:
-            - utilisateur = 'propriétaire'
-            - utilisateur = 'régulier non propriétaire'
-        alors: empreinte calculée
-      - si: utilisateur = 'non régulier'
-        alors: empreinte moyenne non régulier
+          toutes ces conditions:
+            - est défini: transport . voiture . utilisateur
+            - transport . voiture . utilisateur = 'jamais'
+        alors: 0
+      - si:
+          est défini: transport . voiture . utilisateur
+        alors:
+          variations:
+            - si:
+                une de ces conditions:
+                  - transport . voiture . utilisateur = 'propriétaire'
+                  - transport . voiture . utilisateur = 'régulier non propriétaire'
+              alors: empreinte . usage
+            - si: transport . voiture . utilisateur = 'non régulier'
+              alors: empreinte moyenne non régulier . usage
+      - sinon: empreinte moyenne . usage
+
+transport . voiture . construction selon utilisateur:
+  public: oui
+  formule:
+    variations:
+      - si:
+          toutes ces conditions:
+            - est défini: transport . voiture . utilisateur
+            - transport . voiture . utilisateur = 'jamais'
+        alors: 0
+      - si:
+          est défini: transport . voiture . utilisateur
+        alors:
+          variations:
+            - si:
+                une de ces conditions:
+                  - transport . voiture . utilisateur = 'propriétaire'
+                  - transport . voiture . utilisateur = 'régulier non propriétaire'
+              alors: empreinte . construction
+            - si: transport . voiture . utilisateur = 'non régulier'
+              alors: empreinte moyenne non régulier . construction
+      - sinon: empreinte moyenne . construction
 
 transport . voiture . utilisateur:
   question: Vous arrive t-il de vous déplacer en voiture (en tant que passager ou conducteur) ?
@@ -85,8 +112,46 @@ transport . voiture . notif non utilisateur:
   description: |
     Même en tant que passager ou passagère, les kilomètres parcourus comptent pour le calcul.
 
+transport . voiture . empreinte:
+  formule:
+    somme:
+      - usage
+      - construction
+  unité: kgCO2e
+
+transport . voiture . empreinte . usage:
+  formule: usage / voyageurs
+  unité: kgCO2e
+
+transport . voiture . empreinte . construction:
+  formule: construction / voyageurs
+  unité: kgCO2e
+
 transport . voiture . empreinte moyenne:
-  valeur: voiture . empreinte calculée
+  formule:
+    somme:
+      - empreinte moyenne . usage
+      - empreinte moyenne . construction
+
+transport . voiture . empreinte moyenne . usage:
+  valeur: voiture . empreinte . usage
+  contexte:
+    voiture . voyageurs: voyageurs . nombre moyen
+    voiture . km: km annuels moyen réel
+    voiture . utilisateur: "'propriétaire'"
+    voiture . gabarit: "'moyenne'"
+    voiture . motorisation: "'thermique'"
+    voiture . thermique . carburant: "'essence E5 ou E10'"
+    voiture . thermique . consommation aux 100:
+      valeur: voiture . thermique . consommation estimée
+      contexte:
+        voiture . utilisateur: "'propriétaire'"
+        voiture . gabarit: "'moyenne'"
+        voiture . motorisation: "'thermique'"
+        voiture . thermique . carburant: "'essence E5 ou E10'"
+
+transport . voiture . empreinte moyenne . construction:
+  valeur: voiture . empreinte . construction
   contexte:
     voiture . voyageurs: voyageurs . nombre moyen
     voiture . km: km annuels moyen réel
@@ -103,7 +168,13 @@ transport . voiture . empreinte moyenne:
         voiture . thermique . carburant: "'essence E5 ou E10'"
 
 transport . voiture . empreinte moyenne non régulier:
-  valeur: voiture . empreinte calculée
+  formule:
+    somme:
+      - empreinte moyenne non régulier . usage
+      - empreinte moyenne non régulier . construction
+
+transport . voiture . empreinte moyenne non régulier . usage:
+  valeur: voiture . empreinte . usage
   contexte:
     voiture . utilisateur: "'régulier non propriétaire'"
     voiture . gabarit: "'moyenne'"
@@ -117,9 +188,20 @@ transport . voiture . empreinte moyenne non régulier:
         voiture . motorisation: "'thermique'"
         voiture . thermique . carburant: "'essence E5 ou E10'"
 
-transport . voiture . empreinte calculée:
-  formule: (usage + construction) / voyageurs
-  unité: kgCO2e
+transport . voiture . empreinte moyenne non régulier . construction:
+  valeur: voiture . empreinte . construction
+  contexte:
+    voiture . utilisateur: "'régulier non propriétaire'"
+    voiture . gabarit: "'moyenne'"
+    voiture . motorisation: "'thermique'"
+    voiture . thermique . carburant: "'essence E5 ou E10'"
+    voiture . thermique . consommation aux 100:
+      valeur: voiture . thermique . consommation estimée
+      contexte:
+        voiture . utilisateur: "'régulier non propriétaire'"
+        voiture . gabarit: "'moyenne'"
+        voiture . motorisation: "'thermique'"
+        voiture . thermique . carburant: "'essence E5 ou E10'"
 
 transport . voiture . voyageurs:
   DLUO: 01/04/2027

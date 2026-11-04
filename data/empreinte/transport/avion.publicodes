@@ -1,4 +1,5 @@
 transport . avion:
+  public: oui
   DLUO: 01/06/2027
   icônes: ✈️
   description: |
@@ -11,39 +12,41 @@ transport . avion:
     via l'aéroport de départ, d'arrivée et la classe économique. C'est une évolution possible par la suite. A noter aussi que les escales entrainent des décollages supplémentaires, qui consomment plu
     s de carburant qu'une vitesse de croisière. C'est aussi un paramètre à prendre en compte par la suite.
   formule:
-    variations:
-      - si:
-          est défini: usager
-        alors: empreinte
-      - sinon: empreinte moyenne
+    somme:
+      - court courrier
+      - moyen et long courrier
 
-transport . avion . empreinte moyenne:
-  valeur: transport . avion . empreinte
-  contexte:
-    transport . avion . usager: "'fréquemment'"
-    transport . avion . vols annuels . heures court courrier: court courrier . durée moyenne
-    transport . avion . vols annuels . heures moyen et long courrier: moyen et long courrier . durée moyenne
-
-transport . avion . empreinte:
+transport . avion . court courrier:
+  public: oui
+  titre: Vols court-courrier (trajet < 2 h)
+  note: |
+    Les vols court-courriers sont définis ici comme des vols de moins de 2 h (environ 1000km).
+    On considère que les appareils qui assurent ces vols possèdent une capacité de 101 à 220 sièges.
   formule:
     variations:
       - si:
-          toutes ces conditions:
-            - est défini: usager
-            - usager = "fréquemment"
+          est défini: usager
         alors:
-          valeur: vols annuels
-      - si:
-          toutes ces conditions:
-            - est défini: usager
-            - usager = "occasionnellement"
-        alors:
-          valeur: vols amortis
-      - sinon: 0
-  note: |
-    Nous avons choisi de conserver les trainées de condensation dans les facteurs d'émission utilisés, car elles contribuent à l'effet de serre, même si leur quantification reste incertaine, notamment pour des raisons conservatrices.
+          somme:
+            - vols annuels . heures court courrier * empreinte par km * vitesse moyenne
+            - vols amortis . heures court courrier * empreinte par km * vitesse moyenne
+      - sinon: durée moyenne * empreinte par km * vitesse moyenne
 
-## Un refacto publicodes serait nécessaire pour factoriser les éléments communs entre court et moyen/long courrier. On introduit une complexité supplémentaire car il n'est pas possible de variabiliser l'attribut question pour le moment.
+transport . avion . moyen et long courrier:
+  public: oui
+  titre: Vols moyen ou long courrier (trajet > 2 h)
+  note: |
+    Les vols moyen-courriers sont définis ici comme des vols de plus de 2 h (de 1000 à plus de 5000km).
+    On considère que les appareils qui assurent ces vols possèdent une capacité de plus de 220 sièges.
+  formule:
+    variations:
+      - si:
+          est défini: usager
+        alors:
+          somme:
+            - vols annuels . heures moyen et long courrier * empreinte par km * vitesse moyenne
+            - vols amortis . heures moyen et long courrier * empreinte par km * vitesse moyenne
+      - sinon: moyen et long courrier . durée moyenne * empreinte par km * vitesse moyenne
 
 transport . avion . usager:
   question: À quelle fréquence avez-vous voyagé en avion au cours des 3 dernières années ?
@@ -53,6 +56,8 @@ transport . avion . usager:
     - jamais
     - occasionnellement
     - fréquemment
+
+## Un refacto publicodes serait nécessaire pour factoriser les éléments communs entre court et moyen/long courrier. On introduit une complexité supplémentaire car il n'est pas possible de variabiliser l'attribut question pour le moment.
 
 transport . avion . usager . fréquemment:
   titre: Chaque année
@@ -193,12 +198,6 @@ transport . avion . proportion trajets perso:
   note: |
     L'[enquête nationale des passagers aériens](https://www.ecologie.gouv.fr/politiques-publiques/enquete-nationale-passagers-aeriens-enpa) 2023, donne un chiffre de 19% de trajets professionnels.
 
-transport . avion . court courrier:
-  titre: Vols court-courrier (trajet < 2 h)
-  note: |
-    Les vols court-courriers sont définis ici comme des vols de moins de 2 h (environ 1000km).
-    On considère que les appareils qui assurent ces vols possèdent une capacité de 101 à 220 sièges.
-
 transport . avion . court courrier . vitesse moyenne:
   formule: 600 km / 1.3 h
   unité: km/h
@@ -257,12 +256,6 @@ transport . avion . court courrier . passager km total:
     D'après [l'observatoire de la conccurrence 2023 par la DGAC](https://www.ecologie.gouv.fr/sites/default/files/documents/observatoire_concurrence_2023_transport_aerien.pdf),le nombre de passagers-km transportés représente 384 milliards de passagers-km.
 
     D'après les ["Chiffres clés du transport 2025" (données de 2023)](https://www.statistiques.developpement-durable.gouv.fr/edition-numerique/chiffres-cles-transports/fr/15-transport-collectif-urbain-de-voyageurs), le trafic métropolitain représente 7,2% du trafic total en passagers-km.
-
-transport . avion . moyen et long courrier:
-  titre: Vols moyen ou long courrier (trajet > 2 h)
-  note: |
-    Les vols moyen-courriers sont définis ici comme des vols de plus de 2 h (de 1000 à plus de 5000km).
-    On considère que les appareils qui assurent ces vols possèdent une capacité de plus de 220 sièges.
 
 transport . avion . moyen et long courrier . vitesse moyenne:
   formule: 6000 km / 8 h
