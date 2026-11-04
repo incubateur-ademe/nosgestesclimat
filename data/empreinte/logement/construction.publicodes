@@ -1,8 +1,14 @@
 logement . construction:
+  public: oui
   DLUO: 01/03/2026
   non applicable si: métrique != "carbone"
   icônes: 🧱
-  formule: surface * empreinte amortie / habitants
+  formule:
+    somme:
+      - base
+      - rafraichissement
+      - rénovation
+      - artificialisation sols
   note: |
     Dans une première approche, Nos Gestes Climat considérait qu'un logement était amorti entièrement au bout de 50 ans, sans considérer les travaux de rafraîchissement et de rénovation. Nous avons décidé de revoir notre copie pour prendre en compte ces éléments.
 
@@ -13,16 +19,20 @@ logement . construction:
 
     Cette étude proposait également de nouveaux facteurs d'émission pour la construction des logements. Néanmoins, ces données sourcées "ADEME" ne se rapportent à aucune étude permettant de les justifier et les utiliser avec confiance. Nous avons donc choisi de suivre les chiffres issues des recommandations de la [loi RE2020](https://www.ecologie.gouv.fr/politiques-publiques/reglementation-environnementale-re2020) même si elle concerne les nouveaux bâtiments, et que par nature, sous estiment à piori les émissions liées à la construction de bâtiments plus anciens.
 
-logement . construction . empreinte amortie:
+logement . construction . empreinte par m2:
   formule:
     somme:
-      - base
-      - rafraichissement
-      - rénovation
-      - artificialisation sols
+      - base . par m2
+      - rafraichissement . par m2
+      - rénovation . par m2
+      - artificialisation sols . par m2
   unité: kgCO2e/m2
 
 logement . construction . base:
+  public: oui
+  formule: logement . surface * logement . construction . base . par m2 / logement . habitants
+
+logement . construction . base . par m2:
   formule:
     variations:
       - si: logement . âge équivalent < plafond
@@ -68,6 +78,10 @@ logement . construction . base . amortissement:
     La durée de vie d'un bâtiment est fixée à 50 ans (voir la [documentation de la base empreinte, onglet Achats de bien/ Bâtiments](https://prod-basecarbonesolo.ademe-dri.fr/documentation/UPLOAD_DOC_FR/)). Si le logement est rénové ou isolé, nous faisons l'hypothèse que cette durée est rallongée de 25 ans.
 
 logement . construction . rafraichissement:
+  public: oui
+  formule: logement . surface * logement . construction . rafraichissement . par m2 / logement . habitants
+
+logement . construction . rafraichissement . par m2:
   titre: Travaux de rafraîchissement
   icônes: 🎨
   formule: 40 kgCO2e/m2 / amortissement
@@ -85,6 +99,10 @@ logement . construction . rafraichissement . amortissement:
   formule: 10
 
 logement . construction . rénovation:
+  public: oui
+  formule: logement . surface * logement . construction . rénovation . par m2 / logement . habitants
+
+logement . construction . rénovation . par m2:
   formule: travaux / amortissement
   note: |
     Par défaut, et donc pour les locataires, on considère que des travaux de rénovation ont été réalisés tous les 25 ans.
@@ -201,6 +219,10 @@ logement . construction . rénovation . travaux . extension . taille:
   note: En moyenne, on considère que l'extension représente 20% de la surface du logement (le max étant fixé à 30%).
 
 logement . construction . artificialisation sols:
+  public: oui
+  formule: logement . surface * logement . construction . artificialisation sols . par m2 / logement . habitants
+
+logement . construction . artificialisation sols . par m2:
   titre: Artificialisation des sols des logements récents
   applicable si: logement . est une maison
   formule:
