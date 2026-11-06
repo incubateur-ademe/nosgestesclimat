@@ -165,6 +165,22 @@ const situations = {
     'transport . voiture . durée de vie en km': 250000,
     'transport . voiture . thermique . carburant': "'gazole B7 ou B10'",
     'transport . voiture . thermique . consommation aux 100': 7.4382
+  },
+  campingCarElectrique: {
+    'transport . voiture . utilisateur': "'propriétaire'",
+    'transport . voiture . motorisation': "'électrique'",
+    'transport . voiture . gabarit': "'VUL'",
+    'transport . voiture . barème construction . barème électrique . batterie . capacité': 110,
+    'transport . voiture . gabarit . VUL . poids': 4200,
+    'transport . voiture . durée de vie en km': 230000,
+    'transport . voiture . électrique . consommation aux 100': 33
+  },
+  vanElectrique: {
+    'transport . voiture . utilisateur': "'propriétaire'",
+    'transport . voiture . motorisation': "'électrique'",
+    'transport . voiture . gabarit': "'VUL'",
+    'transport . voiture . gabarit . VUL . poids': 3000,
+    'transport . voiture . durée de vie en km': 230000
   }
 }
 
