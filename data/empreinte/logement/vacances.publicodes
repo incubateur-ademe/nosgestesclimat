@@ -1,10 +1,20 @@
 logement . vacances:
+  public: oui
   DLUO: 01/09/2026
   icônes: 🏖
   titre: Nuitées week-end ou vacances
   non applicable si: métrique != "carbone"
   question: Comment êtes-vous hébergé pour vos week-ends, vos vacances ?
-  formule: empreinte totale / habitants
+  formule:
+    somme:
+      - hotel
+      - camping
+      - auberge de jeunesse
+      - locations
+      - échange
+      - famille ou amis
+      - résidence secondaire
+      - croisière
   mosaique:
     type: selection
     options:
@@ -45,19 +55,6 @@ logement . vacances:
 
     - L'empreinte des logements de vacances (hors auberge de jeunesse et croisière) est divisée par le nombre d'habitants du logement. C'est une hypothèse forte car on peut facilement imaginer que le famille / foyer ne voyage pas toujours au complet ! Néanmoins, on considère tout de qu'une famille composée de plus de 4 personnes prendra 2 chambres.
 
-logement . vacances . empreinte totale:
-  formule:
-    somme:
-      - empreinte hotel
-      - empreinte camping
-      - empreinte auberge de jeunesse * logement . habitants
-      - empreinte locations
-      - empreinte échange
-      - empreinte famille ou amis
-      - empreinte résidence secondaire
-      - empreinte croisière * logement . habitants
-  unité: kgCO2e
-
 logement . vacances . nombre de nuits hors logement:
   formule: 26.5
   unité: nuit
@@ -67,7 +64,15 @@ logement . vacances . nombre de nuits hors logement:
 
     On considère ici le nombre de nuits par personnes en voyage pour motif personnel.
 
-logement . vacances . empreinte hotel:
+logement . vacances . hotel:
+  public: oui
+  titre: Hôtel, chambre d'hôtes
+  icônes: 🏨
+  formule:
+    somme:
+      - empreinte hotel totale / habitants
+
+logement . vacances . empreinte hotel totale:
   titre: Empreinte hôtel ou chambre d'hôtes
   formule:
     variations:
@@ -124,10 +129,6 @@ logement . vacances . empreinte hotel:
     Nous considérons dans ce modèle que l'empreinte de l'hôtel est divisée par le nombre d'habitants du logement.
     C'est une hypothèse forte car on peut facilement imaginer que le famille / foyer ne voyage pas toujours au complet !
     Par ailleurs, on fait également l'hypotèse qu'une famille de plus de 4 personnes prendra 2 chambres, plus de 8, 3 chambres, ce qui explique les facteurs 2 et 3 dans les formules.
-
-logement . vacances . hotel:
-  titre: Hôtel, chambre d'hôtes
-  icônes: 🏨
 
 logement . vacances . hotel . présent:
   question: Allez-vous à l'hôtel ?
@@ -192,7 +193,15 @@ logement . vacances . hotel . moyenne nombre de nuitées . part mode d'hébergem
 
     On considère ici les hébergements hôtel, pension de famille, village de vacances ou gîte.
 
-logement . vacances . empreinte camping:
+logement . vacances . camping:
+  public: oui
+  titre: Emplacement en camping
+  icônes: ⛺️
+  formule:
+    somme:
+      - empreinte camping totale / habitants
+
+logement . vacances . empreinte camping totale:
   titre: Empreinte emplacement en camping
   formule:
     variations:
@@ -200,10 +209,6 @@ logement . vacances . empreinte camping:
         alors: camping . empreinte par nuit * camping . nombre de nuitées
       - sinon: 0
   par défaut: camping . empreinte par nuit * camping . moyenne nombre de nuitées
-
-logement . vacances . camping:
-  titre: Emplacement en camping
-  icônes: ⛺️
 
 logement . vacances . camping . présent:
   question: Allez-vous en camping ?
@@ -246,18 +251,16 @@ logement . vacances . camping . moyenne nombre de nuitées . part mode d'héberg
 
     On considère ici les hébergements camping.
 
-logement . vacances . empreinte auberge de jeunesse:
-  titre: Empreinte auberge de jeunesse
+logement . vacances . auberge de jeunesse:
+  public: oui
+  titre: Auberge de jeunesse
+  icônes: 🛏️
   formule:
     variations:
       - si: auberge de jeunesse . présent
         alors: auberge de jeunesse . empreinte par nuit * auberge de jeunesse . nombre de nuitées
       - sinon: 0
   par défaut: auberge de jeunesse . empreinte par nuit * auberge de jeunesse . moyenne nombre de nuitées
-
-logement . vacances . auberge de jeunesse:
-  titre: Auberge de jeunesse
-  icônes: 🛏️
 
 logement . vacances . auberge de jeunesse . présent:
   question: Allez-vous en auberge de jeunesse ?
@@ -303,7 +306,15 @@ logement . vacances . auberge de jeunesse . moyenne nombre de nuitées . part mo
 
     On considère ici les hébergements auberge de jeunesse.
 
-logement . vacances . empreinte locations:
+logement . vacances . locations:
+  public: oui
+  titre: Location meublée
+  icônes: 🛏️🏠
+  formule:
+    somme:
+      - empreinte locations totale / habitants
+
+logement . vacances . empreinte locations totale:
   titre: Empreinte locations meublées
   formule:
     variations:
@@ -311,10 +322,6 @@ logement . vacances . empreinte locations:
         alors: locations . empreinte par nuit * locations . nombre de nuitées
       - sinon: 0
   par défaut: locations . moyenne nombre de nuitées * locations . empreinte par nuit
-
-logement . vacances . locations:
-  titre: Location meublée
-  icônes: 🛏️🏠
 
 logement . vacances . locations . présent:
   question: Allez-vous en vacances en location meublée (type Airbnb) ?
@@ -363,7 +370,15 @@ logement . vacances . locations . moyenne nombre de nuitées . part mode d'hébe
 
     On considère ici les hébergements "location".
 
-logement . vacances . empreinte échange:
+logement . vacances . échange:
+  public: oui
+  titre: Échange de maison
+  icônes: 🔄🏘
+  formule:
+    somme:
+      - empreinte échange totale / logement . habitants
+
+logement . vacances . empreinte échange totale:
   titre: Empreinte échange de maison
   formule:
     variations:
@@ -371,10 +386,6 @@ logement . vacances . empreinte échange:
         alors: échange . empreinte par nuit * échange . nombre de nuitées
       - sinon: 0
   par défaut: échange . moyenne nombre de nuitées * échange . empreinte par nuit
-
-logement . vacances . échange:
-  titre: Échange de maison
-  icônes: 🔄🏘
 
 logement . vacances . échange . présent:
   question: Pratiquez-vous l'échange de maison ?
@@ -415,14 +426,12 @@ logement . vacances . échange . moyenne nombre de nuitées . part mode d'héber
 
     La catégorie "échange de maison" n'existant pas, il est difficile de donner une moyenne pour cette pratique. Une part des voyageurs répondraient qu'ils logent "chez des amis", d'autres utiliseraient la catégorie "autre". Nous n'utiliserons donc pour le moment que cette dernière.
 
-logement . vacances . empreinte famille ou amis:
-  titre: Empreinte famille ou amis
-  formule: 0
-  note: Nous considérons que l'empreinte de la nuit est aujourd'hui indirectement comptée dans l'empreinte des accueillants.
-
 logement . vacances . famille ou amis:
+  public: oui
   titre: Famille ou amis
   icônes: 👫
+  formule: 0
+  note: Nous considérons que l'empreinte de la nuit est aujourd'hui indirectement comptée dans l'empreinte des accueillants.
 
 logement . vacances . famille ou amis . présent:
   question: Allez-vous chez des amis ou de la famille ?
@@ -433,7 +442,15 @@ logement . vacances . famille ou amis . notif:
   description: |
     L’hébergement chez des proches n’est pas comptabilisé dans votre empreinte carbone : il l’est déjà dans celle de votre hôte.
 
-logement . vacances . empreinte résidence secondaire:
+logement . vacances . résidence secondaire:
+  public: oui
+  titre: résidence secondaire
+  icônes: 🏡
+  formule:
+    somme:
+      - empreinte résidence secondaire totale / habitants
+
+logement . vacances . empreinte résidence secondaire totale:
   titre: Empreinte résidence secondaire
   formule:
     variations:
@@ -446,10 +463,6 @@ logement . vacances . empreinte résidence secondaire:
   par défaut: résidence secondaire . empreinte moyenne
   unité: kgCO2e
 
-logement . vacances . résidence secondaire:
-  titre: résidence secondaire
-  icônes: 🏡
-
 logement . vacances . résidence secondaire . présent:
   question: Possédez-vous une résidence secondaire ?
   note: |
@@ -460,7 +473,7 @@ logement . vacances . résidence secondaire . empreinte moyenne:
   formule: empreinte moyenne construction + empreinte moyenne énergie
 
 logement . vacances . résidence secondaire . empreinte moyenne construction:
-  formule: parc français . surface moyenne * résidence secondaire . empreinte construction amortie * pourcentage population propriétaire résidence secondaire
+  formule: parc français . surface moyenne * résidence secondaire . empreinte construction par m2 * pourcentage population propriétaire résidence secondaire
 
 logement . vacances . résidence secondaire . pourcentage population propriétaire résidence secondaire:
   formule: 0.13
@@ -478,7 +491,7 @@ logement . vacances . résidence secondaire . empreinte moyenne énergie:
   unité: kgCO2e
 
 logement . vacances . résidence secondaire . construction:
-  formule: surface * empreinte construction amortie
+  formule: surface * empreinte construction par m2
   unité: kgCO2e
 
 logement . vacances . résidence secondaire . surface:
@@ -500,8 +513,8 @@ logement . vacances . résidence secondaire . surface:
     Château 🏰: 500
   unité: m2
 
-logement . vacances . résidence secondaire . empreinte construction amortie:
-  valeur: logement . construction . empreinte amortie
+logement . vacances . résidence secondaire . empreinte construction par m2:
+  valeur: logement . construction . empreinte par m2
   contexte:
     résidence secondaire . présent: oui
     logement . type moyen: oui
@@ -768,8 +781,10 @@ logement . vacances . résidence secondaire . saison . hiver:
   titre: L'hiver
   icônes: ❄️
 
-logement . vacances . empreinte croisière:
-  titre: Empreinte locations meublées
+logement . vacances . croisière:
+  public: oui
+  titre: Bateau de croisière
+  icônes: 🚢
   formule:
     variations:
       - si: croisière . présent
@@ -778,10 +793,6 @@ logement . vacances . empreinte croisière:
   par défaut: croisière . moyenne nombre de nuitées * croisière . empreinte par nuit
   note: |
     Les croisiéristes sont encore relativement peu nombreux en France, mais ce chiffre est en croissance constante. En 2022, ce sont 325 000 français⋅e⋅s qui ont choisi ce mode de vacances.
-
-logement . vacances . croisière:
-  titre: Bateau de croisière
-  icônes: 🚢
 
 logement . vacances . croisière . présent:
   question: Partez-vous en croisière pour les vacances ?
