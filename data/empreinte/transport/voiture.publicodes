@@ -4,8 +4,8 @@ transport . voiture:
   icônes: 🚘
   formule:
     somme:
-      - usage selon utilisateur
-      - construction selon utilisateur
+      - usage
+      - construction
   unité: kgCO2e
   description: |
     La voiture est aujourd'hui en France essentiellement thermique (essence, diesel), bien que l'électrique progresse lentement.
@@ -19,7 +19,7 @@ transport . voiture:
   note: |
     Le calcul détaillé et l'ensemble des hypothèses sont disponibles dans cette [page récapitulative](https://accelerateur-transition-ecologique-ademe.notion.site/Mod-lisation-de-l-empreinte-carbone-de-la-voiture-1f46523d57d780b3a1a8f1ceb5ff7f87).
 
-transport . voiture . usage selon utilisateur:
+transport . voiture . usage:
   public: oui
   formule:
     variations:
@@ -36,12 +36,12 @@ transport . voiture . usage selon utilisateur:
                 une de ces conditions:
                   - transport . voiture . utilisateur = 'propriétaire'
                   - transport . voiture . utilisateur = 'régulier non propriétaire'
-              alors: empreinte . usage
+              alors: empreinte . usage par voyageur
             - si: transport . voiture . utilisateur = 'non régulier'
-              alors: empreinte moyenne non régulier . usage
-      - sinon: empreinte moyenne . usage
+              alors: empreinte moyenne non régulier . usage par voyageur
+      - sinon: empreinte moyenne . usage par voyageur
 
-transport . voiture . construction selon utilisateur:
+transport . voiture . construction:
   public: oui
   formule:
     variations:
@@ -58,10 +58,10 @@ transport . voiture . construction selon utilisateur:
                 une de ces conditions:
                   - transport . voiture . utilisateur = 'propriétaire'
                   - transport . voiture . utilisateur = 'régulier non propriétaire'
-              alors: empreinte . construction
+              alors: empreinte . construction par voyageur
             - si: transport . voiture . utilisateur = 'non régulier'
-              alors: empreinte moyenne non régulier . construction
-      - sinon: empreinte moyenne . construction
+              alors: empreinte moyenne non régulier . construction par voyageur
+      - sinon: empreinte moyenne . construction par voyageur
 
 transport . voiture . utilisateur:
   question: Vous arrive t-il de vous déplacer en voiture (en tant que passager ou conducteur) ?
@@ -115,26 +115,26 @@ transport . voiture . notif non utilisateur:
 transport . voiture . empreinte:
   formule:
     somme:
-      - usage
-      - construction
+      - usage par voyageur
+      - construction par voyageur
   unité: kgCO2e
 
-transport . voiture . empreinte . usage:
+transport . voiture . empreinte . usage par voyageur:
   formule: usage / voyageurs
   unité: kgCO2e
 
-transport . voiture . empreinte . construction:
+transport . voiture . empreinte . construction par voyageur:
   formule: construction / voyageurs
   unité: kgCO2e
 
 transport . voiture . empreinte moyenne:
   formule:
     somme:
-      - empreinte moyenne . usage
-      - empreinte moyenne . construction
+      - empreinte moyenne . usage par voyageur
+      - empreinte moyenne . construction par voyageur
 
-transport . voiture . empreinte moyenne . usage:
-  valeur: voiture . empreinte . usage
+transport . voiture . empreinte moyenne . usage par voyageur:
+  valeur: voiture . empreinte . usage par voyageur
   contexte:
     voiture . voyageurs: voyageurs . nombre moyen
     voiture . km: km annuels moyen réel
@@ -150,8 +150,8 @@ transport . voiture . empreinte moyenne . usage:
         voiture . motorisation: "'thermique'"
         voiture . thermique . carburant: "'essence E5 ou E10'"
 
-transport . voiture . empreinte moyenne . construction:
-  valeur: voiture . empreinte . construction
+transport . voiture . empreinte moyenne . construction par voyageur:
+  valeur: voiture . empreinte . construction par voyageur
   contexte:
     voiture . voyageurs: voyageurs . nombre moyen
     voiture . km: km annuels moyen réel
@@ -170,11 +170,11 @@ transport . voiture . empreinte moyenne . construction:
 transport . voiture . empreinte moyenne non régulier:
   formule:
     somme:
-      - empreinte moyenne non régulier . usage
-      - empreinte moyenne non régulier . construction
+      - empreinte moyenne non régulier . usage par voyageur
+      - empreinte moyenne non régulier . construction par voyageur
 
-transport . voiture . empreinte moyenne non régulier . usage:
-  valeur: voiture . empreinte . usage
+transport . voiture . empreinte moyenne non régulier . usage par voyageur:
+  valeur: voiture . empreinte . usage par voyageur
   contexte:
     voiture . utilisateur: "'régulier non propriétaire'"
     voiture . gabarit: "'moyenne'"
@@ -188,8 +188,8 @@ transport . voiture . empreinte moyenne non régulier . usage:
         voiture . motorisation: "'thermique'"
         voiture . thermique . carburant: "'essence E5 ou E10'"
 
-transport . voiture . empreinte moyenne non régulier . construction:
-  valeur: voiture . empreinte . construction
+transport . voiture . empreinte moyenne non régulier . construction par voyageur:
+  valeur: voiture . empreinte . construction par voyageur
   contexte:
     voiture . utilisateur: "'régulier non propriétaire'"
     voiture . gabarit: "'moyenne'"
@@ -347,7 +347,7 @@ transport . voiture . nombre véhicules circulation . VUL:
 
     Nous considérons néanmoins les données pour l'année 2025 car la distance moyenne parcourue par véhicule n'est dispo que pour 2025.
 
-transport . voiture . usage:
+transport . voiture . empreinte . usage:
   titre: Usage de la voiture
   formule: usage au kilomètre * km
   unité: kgCO2e
@@ -1175,7 +1175,7 @@ transport . voiture . climatisation . émissions gaz fluorés transport:
 
     D'après l'excel Données par substance de gaz à effet de serre (GES), édition 2025, téléchargeable via le lien ci dessus, onglet "GF-UE_total", les émissions de gaz fluorés issu des VP et VUL (provenant des équipements de réfrigération et d'air conditionné, utilisant des halocarbures ou du SF6), sont de 1138 ktCO₂e (en 2023, puisque nous disposons du nombre de véhicules en circulation pour 2023).
 
-transport . voiture . construction:
+transport . voiture . empreinte . construction:
   DLUO: 01/09/2026
   titre: Construction de la voiture
   formule:
@@ -1183,8 +1183,8 @@ transport . voiture . construction:
       - si:
           toutes ces conditions:
             - voiture . utilisateur = 'propriétaire'
-            - km < seuil km
-        alors: construction au kilomètre * seuil km
+            - km < construction . seuil km
+        alors: construction au kilomètre * construction . seuil km
       - sinon: construction au kilomètre * km
   unité: kgCO2e
   note: |
