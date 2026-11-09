@@ -7,11 +7,15 @@
 	non-public rule would expose a hole in this decomposition: the check fails
 	the compilation.
 
-	Called from `rulesToJSON.mjs`, which owns the model loading.
+	The check runs on the rules parsed by the publicodes engine, not on the raw
+	model: only the engine resolves the `avec` sub-rules and the partial
+	references (`usage`, `transport . voiture . usage`, ...).
+
+	Called from `rulesToJSON.mjs`, which owns the engine.
 */
 
 import c from 'ansi-colors'
-import { utils } from 'publicodes'
+import { reduceAST } from 'publicodes'
 
 // Rules exempted from the check: the `empreinte branche` rules are generated
 // from the SDES data and are not part of the public decomposition, even when a
@@ -21,71 +25,67 @@ const ignoredDottedNames = [/^empreinte branche \. /]
 const isIgnored = (dottedName) =>
   ignoredDottedNames.some((pattern) => pattern.test(dottedName))
 
-const isPublic = (rule) => rule?.public === 'oui'
+const isPublic = (parsedRule) => parsedRule?.rawNode?.public === 'oui'
 
 // Returns the dotted names of the rules that a rule is decomposed into, ie the
-// elements of its `somme`. The elements are written as partial names (`usage`,
-// `transport . voiture . usage`, ...): they are resolved against the rule they
-// are written in, exactly like publicodes does when it parses the model.
+// references of its `somme`.
 //
-// The `mosaique` rules are skipped.
+// The `mosaique` rules are skipped: their options are not a decomposition of
+// the footprint.
 //
 // A decomposition made of a single element is not a decomposition: it is a
 // simple alias, and the element is not displayed as a sub-category.
-//
-// The elements that cannot be resolved are pushed to `unresolved`.
-function getDecomposition(rules, dottedName, unresolved) {
-  const rule = rules[dottedName]
-  if (rule?.mosaique) {
+function getDecomposition(parsedRules, dottedName) {
+  const parsedRule = parsedRules[dottedName]
+  if (!parsedRule || parsedRule.rawNode?.mosaique) {
     return []
   }
 
-  const somme = rule?.formule?.somme ?? rule?.somme
-
+  const somme = parsedRule.rawNode?.formule?.somme ?? parsedRule.rawNode?.somme
   if (!Array.isArray(somme) || somme.length < 2) {
     return []
   }
 
-  return somme
-    .map((element) => {
-      try {
-        return utils.disambiguateReference(rules, dottedName, element)
-      } catch {
-        if (!isIgnored(element)) {
-          unresolved.push({ parent: dottedName, element })
-        }
-        return undefined
+  const references = []
+  reduceAST(
+    (acc, node) => {
+      // Only the references written as an element of the `somme` are kept: the
+      // AST also contains the references of the `avec` sub-rules and of the
+      // mechanisms wrapping the formula.
+      if (
+        node.nodeKind === 'reference' &&
+        node.dottedName &&
+        somme.includes(node.rawNode)
+      ) {
+        acc.push(node.dottedName)
       }
-    })
-    .filter(Boolean)
+    },
+    references,
+    parsedRule.explanation?.valeur
+  )
+
+  return [...new Set(references)]
 }
 
 // Returns the list of the public rules reachable from `dottedName` whose
 // decomposition contains at least one non-public rule. `visited` is shared
 // between the branches of a same root so that a rule is only walked once.
-function findNonPublicElements(rules, dottedName, visited, unresolved) {
+function findNonPublicElements(parsedRules, dottedName, visited) {
   if (visited.has(dottedName)) {
     return []
   }
   visited.add(dottedName)
 
-  const rule = rules[dottedName]
-  if (!rule) {
-    return []
-  }
-
   const errors = []
-  for (const element of getDecomposition(rules, dottedName, unresolved)) {
-    const elementRule = rules[element]
-    if (!elementRule || isIgnored(element)) {
-      // The reference does not exist, or the rule is exempted from the check.
+  for (const element of getDecomposition(parsedRules, dottedName)) {
+    if (isIgnored(element)) {
       continue
     }
-    if (!isPublic(elementRule)) {
+    if (!isPublic(parsedRules[element])) {
       errors.push({ parent: dottedName, element })
       continue
     }
-    errors.push(...findNonPublicElements(rules, element, visited, unresolved))
+    errors.push(...findNonPublicElements(parsedRules, element, visited))
   }
 
   return errors
@@ -100,43 +100,20 @@ const dedupe = (pairs) =>
   )
 
 // Returns the `{ parent, element }` pairs of the public rules whose
-// decomposition contains a non-public rule, and the pairs that could not be
-// resolved by `disambiguateReference`.
-export function getNonPublicElements(rules) {
-  const unresolved = []
-
-  const errors = Object.keys(rules)
-    .filter((dottedName) => isPublic(rules[dottedName]))
-    .flatMap((dottedName) =>
-      findNonPublicElements(rules, dottedName, new Set(), unresolved)
-    )
-
-  return { errors: dedupe(errors), unresolved: dedupe(unresolved) }
+// decomposition contains a non-public rule.
+export function getNonPublicElements(parsedRules) {
+  return dedupe(
+    Object.keys(parsedRules)
+      .filter((dottedName) => isPublic(parsedRules[dottedName]))
+      .flatMap((dottedName) =>
+        findNonPublicElements(parsedRules, dottedName, new Set())
+      )
+  )
 }
 
 // Logs the errors and exits the process if the check fails.
-export function checkPublicRules(rules, { markdown = false } = {}) {
-  const { errors, unresolved } = getNonPublicElements(rules)
-
-  if (unresolved.length > 0) {
-    if (markdown) {
-      console.log(
-        `| Public rules decomposition | ⚠️ | <details><summary>${unresolved.length} unresolved element(s):</summary><br /><br /><ul>${unresolved
-          .map(
-            ({ parent, element }) => `<li><b>${parent}</b> > ${element}</li>`
-          )
-          .join('')}</ul></details> |`
-      )
-    } else {
-      console.warn(
-        `⚠️ ${c.yellow(unresolved.length)} element(s) of a ${c.bold('somme')} could not be resolved by ${c.bold('disambiguateReference')} and were skipped:\n`
-      )
-      unresolved.forEach(({ parent, element }) => {
-        console.warn(`  ${c.magenta(parent)} > ${c.yellow(element)}`)
-      })
-      console.warn('')
-    }
-  }
+export function checkPublicRules(parsedRules, { markdown = false } = {}) {
+  const errors = getNonPublicElements(parsedRules)
 
   if (errors.length > 0) {
     if (markdown) {
@@ -165,7 +142,7 @@ export function checkPublicRules(rules, { markdown = false } = {}) {
     console.log(`| Public rules decomposition | :heavy_check_mark: | Ø |`)
   } else {
     console.log(
-      `✅ All the elements of the public rules decompositions are public (${c.yellow(Object.keys(rules).length)} rules checked)`
+      `✅ All the elements of the public rules decompositions are public (${c.yellow(Object.keys(parsedRules).length)} rules checked)`
     )
   }
 }

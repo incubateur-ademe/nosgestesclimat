@@ -119,8 +119,6 @@ try {
   exit(-1)
 }
 
-checkPublicRules(baseRules, { markdown })
-
 try {
   const engine = new Engine(baseRules, {
     logger: {
@@ -147,6 +145,8 @@ try {
   engine.setSituation({})
   engine.evaluate({ valeur: 'bilan', contexte: { métrique: "'carbone'" } })
   engine.evaluate({ valeur: 'bilan', contexte: { métrique: "'eau'" } })
+
+  checkPublicRules(engine.baseContext.parsedRules, { markdown })
 
   if (!markdown) {
     console.log(
