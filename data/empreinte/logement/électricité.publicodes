@@ -236,26 +236,29 @@ logement . électricité . consommation via DPE par m2 . ratio énergie primaire
   valeur: 1.9
 
 logement . électricité . consommation via ressenti:
-  applicable si: chauffage . saisie précision consommation = 'aide'
   formule:
     variations:
-      - si: chauffage . précision consommation . ressenti = 'passoire thermique'
+      - si: chauffage . saisie précision consommation = 'aide'
         alors:
-          somme:
-            - consommation moyenne chauffage * chauffage . précision consommation . saut D vers G
-            - consommation moyenne ecs * chauffage . précision consommation . saut D vers G
-            - consommation moyenne cuisson
-            - consommation moyenne spécifique
-            - consommation moyenne climatisation * chauffage . précision consommation . saut D vers G
-      - si: chauffage . précision consommation . ressenti = 'confortable'
-        alors:
-          somme:
-            - consommation moyenne chauffage * chauffage . précision consommation . saut D vers A
-            - consommation moyenne ecs * chauffage . précision consommation . saut D vers A
-            - consommation moyenne cuisson
-            - consommation moyenne spécifique
-            - consommation moyenne climatisation * chauffage . précision consommation . saut D vers A
-      - sinon: consommation par défaut
+          variations:
+            - si: chauffage . précision consommation . ressenti = 'passoire thermique'
+              alors:
+                somme:
+                  - consommation moyenne chauffage * chauffage . précision consommation . saut D vers G
+                  - consommation moyenne ecs * chauffage . précision consommation . saut D vers G
+                  - consommation moyenne cuisson
+                  - consommation moyenne spécifique
+                  - consommation moyenne climatisation * chauffage . précision consommation . saut D vers G
+            - si: chauffage . précision consommation . ressenti = 'confortable'
+              alors:
+                somme:
+                  - consommation moyenne chauffage * chauffage . précision consommation . saut D vers A
+                  - consommation moyenne ecs * chauffage . précision consommation . saut D vers A
+                  - consommation moyenne cuisson
+                  - consommation moyenne spécifique
+                  - consommation moyenne climatisation * chauffage . précision consommation . saut D vers A
+            - sinon: consommation par défaut
+      - sinon: 0
   unité: kWh
 
 logement . électricité . réseau:

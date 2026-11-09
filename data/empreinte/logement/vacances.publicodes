@@ -574,11 +574,13 @@ logement . vacances . résidence secondaire . localisation . campagne:
 logement . vacances . résidence secondaire . énergie:
   formule:
     somme:
-      - électricité
-      - chauffage
+      - électricité autre
+      - chauffage et électricité
 
-logement . vacances . résidence secondaire . électricité:
-  formule: parc français . empreinte électricité autre par m2 * surface * pro-rata présence annuelle
+logement . vacances . résidence secondaire . électricité autre:
+  formule: parc français . CEREN . consommation électricité autre par m2 * logement . électricité . réseau . empreinte au kWh * surface
+  contexte:
+    logement . électricité . photovoltaique . présent: non
   unité: kgCO2e
 
 logement . vacances . résidence secondaire . pro-rata présence annuelle:
@@ -644,7 +646,7 @@ logement . vacances . résidence secondaire . durée . nuitées semaine . nombre
   plafond: 52
   unité: nuit
 
-logement . vacances . résidence secondaire . chauffage:
+logement . vacances . résidence secondaire . chauffage et électricité:
   formule: facteur saison * (parc français . chauffage . empreinte moyenne par m2 hors électricité + parc français . chauffage . empreinte électricité moyenne par m2) * surface * pro-rata présence annuelle
   unité: kgCO2e
   description: |
@@ -666,7 +668,7 @@ logement . vacances . résidence secondaire . chauffage:
 
     ![Facteurs multiplicateurs par zone climatique et par période](https://github.com/incubateur-ademe/nosgestesclimat/assets/55186402/c328fa42-bae6-4391-becf-a31cbaf32201)
 
-logement . vacances . résidence secondaire . chauffage . facteur saison:
+logement . vacances . résidence secondaire . chauffage et électricité . facteur saison:
   formule:
     variations:
       - si: localisation = 'littoral méditerranéen'
