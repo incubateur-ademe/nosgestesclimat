@@ -448,7 +448,7 @@ logement . vacances . résidence secondaire:
   icônes: 🏡
   formule:
     somme:
-      - empreinte résidence secondaire totale / habitants
+      - empreinte résidence secondaire totale
 
 logement . vacances . empreinte résidence secondaire totale:
   titre: Empreinte résidence secondaire
@@ -458,7 +458,7 @@ logement . vacances . empreinte résidence secondaire totale:
         alors:
           somme:
             - résidence secondaire . construction
-            - résidence secondaire . énergie
+            - résidence secondaire . énergie / logement . habitants
       - sinon: 0
   par défaut: résidence secondaire . empreinte moyenne
   unité: kgCO2e
@@ -470,10 +470,21 @@ logement . vacances . résidence secondaire . présent:
     et non "une partie" de l'empreinte à tous les usagers de résidences secondaires.
 
 logement . vacances . résidence secondaire . empreinte moyenne:
-  formule: empreinte moyenne construction + empreinte moyenne énergie
+  formule:
+    somme:
+      - empreinte moyenne construction
+      - empreinte moyenne énergie / logement . habitants
 
 logement . vacances . résidence secondaire . empreinte moyenne construction:
-  formule: parc français . surface moyenne * résidence secondaire . empreinte construction par m2 * pourcentage population propriétaire résidence secondaire
+  valeur: logement . construction * pourcentage population propriétaire résidence secondaire
+  contexte:
+    résidence secondaire . présent: oui
+    logement . type moyen: oui
+    logement . surface: parc français . surface moyenne
+    logement . construction . rénovation . travaux . embelissement . présent: oui
+    logement . construction . rénovation . travaux . isolation . présent: non
+    logement . construction . rénovation . travaux . chauffage . présent: non
+    logement . construction . rénovation . travaux . extension . présent: non
 
 logement . vacances . résidence secondaire . pourcentage population propriétaire résidence secondaire:
   formule: 0.13
@@ -491,7 +502,15 @@ logement . vacances . résidence secondaire . empreinte moyenne énergie:
   unité: kgCO2e
 
 logement . vacances . résidence secondaire . construction:
-  formule: surface * empreinte construction par m2
+  valeur: logement . construction
+  contexte:
+    résidence secondaire . présent: oui
+    logement . type moyen: oui
+    logement . surface: résidence secondaire . surface
+    logement . construction . rénovation . travaux . embelissement . présent: oui
+    logement . construction . rénovation . travaux . isolation . présent: non
+    logement . construction . rénovation . travaux . chauffage . présent: non
+    logement . construction . rénovation . travaux . extension . présent: non
   unité: kgCO2e
 
 logement . vacances . résidence secondaire . surface:
@@ -512,13 +531,6 @@ logement . vacances . résidence secondaire . surface:
     6 pièces: 130
     Château 🏰: 500
   unité: m2
-
-logement . vacances . résidence secondaire . empreinte construction par m2:
-  valeur: logement . construction . empreinte par m2
-  contexte:
-    résidence secondaire . présent: oui
-    logement . type moyen: oui
-  unité: kgCO2e/m2
 
 logement . vacances . résidence secondaire . localisation:
   titre: Localisation
