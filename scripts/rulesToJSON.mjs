@@ -16,6 +16,7 @@ import utils from '@incubateur-ademe/nosgestesclimat-scripts/utils'
 import { getModelFromSource } from '@publicodes/tools/compilation'
 
 import { addTranslationToBaseRules } from './i18n/addTranslationToBaseRules.js'
+import { checkPublicRules } from './checkPublicRules.mjs'
 
 import {
   supportedRegionPath,
@@ -117,6 +118,8 @@ try {
   console.error(err.message)
   exit(-1)
 }
+
+checkPublicRules(baseRules, { markdown })
 
 try {
   const engine = new Engine(baseRules, {
