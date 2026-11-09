@@ -235,14 +235,26 @@ An error occured while testing the model:
         : Math.fround(result.expected.nodeValue)
     const expectedUnit = serializeUnit(result.expected.unit)
 
+    // An undefined evaluation is a difference in itself: `undefined` means the
+    // situation does not provide everything the rule needs, and comparing it to
+    // a number as if it were `0` would hide it. Two undefined evaluations are
+    // not a difference: the rule is undefined on both sides.
+    const isUndefined = (value) => value == null || !isFinite(value)
+    const bothUndefined =
+      isUndefined(actualRounded) && isUndefined(expectedRounded)
     const diff =
-      isFinite(actualRounded) && isFinite(expectedRounded)
-        ? actualRounded - expectedRounded
-        : 0
+      isUndefined(actualRounded) || isUndefined(expectedRounded)
+        ? bothUndefined
+          ? 0
+          : null
+        : actualRounded - expectedRounded
 
     if (diff !== 0) {
       nbDiff++
-      const diffPercent = Math.abs(Math.round((diff / expectedRounded) * 100))
+      const diffPercent =
+        diff === null
+          ? null
+          : Math.abs(Math.round((diff / expectedRounded) * 100))
 
       if (markdown) {
         console.log(
@@ -291,7 +303,9 @@ An error occured while testing the model:
 }
 
 function formatValue(value) {
-  return value === null ? 'null' : Math.fround(value).toLocaleString('fr-FR')
+  if (value === null) return 'null'
+  if (value === undefined || !isFinite(value)) return 'undefined'
+  return Math.fround(value).toLocaleString('fr-FR')
 }
 
 function fmtCLIErr(
@@ -304,9 +318,13 @@ function fmtCLIErr(
   rule,
   message
 ) {
-  const color = diffPercent <= 1 ? c.yellow : c.red
+  const color = diffPercent === null || diffPercent <= 1 ? c.yellow : c.red
   const sign = diff > 0 ? '+' : diff < 0 ? '-' : ''
-  return `${c.magenta(rule)}: ${color('(' + c.bold(sign + diffPercent) + '%)')} ${message ? `\n${message}` : ''}\n  ${c.dim('actual: ') + formatValue(actual)} ${c.dim.italic(actualUnit ?? '')}\n  ${c.dim('expected: ') + formatValue(expected)} ${c.dim.italic(expectedUnit ?? '')}`
+  const delta =
+    diffPercent === null
+      ? c.bold('undefined')
+      : c.bold(sign + diffPercent) + '%'
+  return `${c.magenta(rule)}: ${color('(' + delta + ')')} ${message ? `\n${message}` : ''}\n  ${c.dim('actual: ') + formatValue(actual)} ${c.dim.italic(actualUnit ?? '')}\n  ${c.dim('expected: ') + formatValue(expected)} ${c.dim.italic(expectedUnit ?? '')}`
 }
 
 function fmtGHActionErr(
@@ -321,8 +339,10 @@ function fmtGHActionErr(
   // const color =
   //   diffPercent <= 1 ? 'sucess' : diffPercent > 5 ? 'critical' : 'important'
   // const sign = diff > 0 ? '%2B' : '-'
-  const row = `| ${name === 'bilan' ? '🟪 bilan' : name} | ${formatValue(actual)} ${actualUnit ? `_${actualUnit}_` : ''} | ${formatValue(expected)} ${expectedUnit ? `_${expectedUnit}_` : ''} | **${
-    diff > 0 ? '+' : '-'
-  }${diffPercent}%** |`
+  const delta =
+    diffPercent === null
+      ? 'undefined'
+      : `${diff > 0 ? '+' : '-'}${diffPercent}%`
+  const row = `| ${name === 'bilan' ? '🟪 bilan' : name} | ${formatValue(actual)} ${actualUnit ? `_${actualUnit}_` : ''} | ${formatValue(expected)} ${expectedUnit ? `_${expectedUnit}_` : ''} | **${delta}** |`
   return row
 }

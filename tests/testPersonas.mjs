@@ -43,6 +43,10 @@ const prodEngine = new Engine(prodRules, {
 
 const nbRules = Object.keys(localRules).length
 
+// Rounds a footprint to the kg, `null` when the evaluation is undefined.
+const roundToKg = (nodeValue) =>
+  typeof nodeValue === 'number' ? Math.round(nodeValue) : null
+
 for (const personaName in localPersonas) {
   const localSituation = {
     ...localPersonas[personaName].situation,
@@ -105,6 +109,23 @@ for (const personaName in localPersonas) {
   } catch (e) {
     printResults({ results: [{ type: 'error', message: e.message }], markdown })
     continue
+  }
+
+  // `page de fin` is the decomposition displayed on the end page: it must sum
+  // up to `bilan`, otherwise the user sees two different footprints. The
+  // comparison is rounded to the kg: the two sums do not add up their terms in
+  // the same order, so the last digits of the floats differ.
+  const bilan = localEngine.evaluate('bilan')
+  const pageDeFin = localEngine.evaluate('page de fin')
+  const roundedBilan = roundToKg(bilan.nodeValue)
+  const roundedPageDeFin = roundToKg(pageDeFin.nodeValue)
+  if (roundedBilan !== roundedPageDeFin) {
+    const message = `bilan (${roundedBilan} kg) ≠ page de fin (${roundedPageDeFin} kg)`
+    if (markdown) {
+      console.log(`\n**⚠️ ${message}**\n`)
+    } else {
+      console.warn(`${c.yellow('(warning:page de fin)')} ${message}`)
+    }
   }
 
   for (const rule in localRules) {
