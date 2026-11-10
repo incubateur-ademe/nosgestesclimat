@@ -43,10 +43,6 @@ const prodEngine = new Engine(prodRules, {
 
 const nbRules = Object.keys(localRules).length
 
-// Rounds a footprint to the kg, `null` when the evaluation is undefined.
-const roundToKg = (nodeValue) =>
-  typeof nodeValue === 'number' ? Math.round(nodeValue) : null
-
 for (const personaName in localPersonas) {
   const localSituation = {
     ...localPersonas[personaName].situation,
@@ -117,8 +113,8 @@ for (const personaName in localPersonas) {
   // the same order, so the last digits of the floats differ.
   const bilan = localEngine.evaluate('bilan')
   const pageDeFin = localEngine.evaluate('page de fin')
-  const roundedBilan = roundToKg(bilan.nodeValue)
-  const roundedPageDeFin = roundToKg(pageDeFin.nodeValue)
+  const roundedBilan = Math.round(bilan.nodeValue * 100) / 100
+  const roundedPageDeFin = Math.round(pageDeFin.nodeValue * 100) / 100
   if (roundedBilan !== roundedPageDeFin) {
     const message = `bilan (${roundedBilan} kg) ≠ page de fin (${roundedPageDeFin} kg)`
     if (markdown) {
