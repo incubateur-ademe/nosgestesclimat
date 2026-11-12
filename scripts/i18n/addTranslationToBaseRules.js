@@ -7,7 +7,6 @@
 
 const utils = require('@incubateur-ademe/nosgestesclimat-scripts/utils')
 const cli = require('@incubateur-ademe/nosgestesclimat-scripts/cli')
-const { utils: publicodesUtils } = require('publicodes')
 
 const attrSuffixesToIgnore = ['.lock', '.auto', '.previous_review']
 
@@ -46,13 +45,32 @@ const addTranslationToBaseRules = (baseRules, translatedRules) => {
     updateBaseRules(baseRuleName, baseRuleAttributes, translatedSuggestions)
   }
 
+  // An `avec` key can itself contain dots (e.g. `bouteille gaz cuisson . présent`),
+  // so we can't rely on `ruleParent`/`nameLeaf` which split on the last dot.
+  const findAvecRule = (ruleName) => {
+    const parentRuleName = Object.keys(baseRules).find(
+      (name) =>
+        ruleName.startsWith(name + ' . ') &&
+        Object.hasOwn(
+          baseRules[name]?.['avec'] || {},
+          ruleName.slice(name.length + 3)
+        )
+    )
+    if (parentRuleName === undefined) {
+      return
+    }
+    return {
+      parentRuleName,
+      leafRuleName: ruleName.slice(parentRuleName.length + 3)
+    }
+  }
+
   const updateBaseRulesWithAvec = (
     baseRuleNameAvec,
     baseRuleAttributesAvec,
     transVal
   ) => {
-    const parentRuleName = publicodesUtils.ruleParent(baseRuleNameAvec)
-    const leafRuleName = publicodesUtils.nameLeaf(baseRuleNameAvec)
+    const { parentRuleName, leafRuleName } = findAvecRule(baseRuleNameAvec)
     if (
       typeof baseRules[parentRuleName]?.['avec']?.[leafRuleName] !== 'object'
     ) {
@@ -81,12 +99,7 @@ const addTranslationToBaseRules = (baseRules, translatedRules) => {
 
   Object.entries(translatedRules).forEach(([rule, attrs]) => {
     let baseRule = baseRules[rule]
-    if (
-      baseRule === undefined &&
-      Object.keys(
-        baseRules[publicodesUtils.ruleParent(rule)]?.['avec'] || {}
-      ).includes(publicodesUtils.nameLeaf(rule))
-    ) {
+    if (baseRule === undefined && findAvecRule(rule) !== undefined) {
       Object.entries(attrs)
         .filter(([attr, _]) =>
           attrSuffixesToIgnore.every((s) => !attr.endsWith(s))
