@@ -17,10 +17,22 @@
 import c from 'ansi-colors'
 import { reduceAST } from 'publicodes'
 
-// Rules exempted from the check: the `empreinte branche` rules are generated
-// from the SDES data and are not part of the public decomposition, even when a
-// public rule sums them.
-const ignoredDottedNames = [/^empreinte branche \. /]
+const ignoredDottedNames = [
+  /^logement \. construction$/,
+  /^alimentation \. boisson$/,
+  /^alimentation \. petit déjeuner$/,
+  /^alimentation \. repas$/,
+  /^divers \. animaux domestiques$/,
+  /^divers \. loisirs$/,
+  /^divers \. numérique$/,
+  /^logement \. chauffage$/,
+  /^logement \. construction$/,
+  /^logement \. électricité$/,
+  /^services sociétaux \. services publics$/,
+  /^services sociétaux \. services marchands$/,
+  /^transport \. avion$/,
+  /^transport \. voiture$/
+]
 
 const isIgnored = (dottedName) =>
   ignoredDottedNames.some((pattern) => pattern.test(dottedName))
@@ -71,16 +83,13 @@ function getDecomposition(parsedRules, dottedName) {
 // decomposition contains at least one non-public rule. `visited` is shared
 // between the branches of a same root so that a rule is only walked once.
 function findNonPublicElements(parsedRules, dottedName, visited) {
-  if (visited.has(dottedName)) {
+  if (visited.has(dottedName) || isIgnored(dottedName)) {
     return []
   }
   visited.add(dottedName)
 
   const errors = []
   for (const element of getDecomposition(parsedRules, dottedName)) {
-    if (isIgnored(element)) {
-      continue
-    }
     if (!isPublic(parsedRules[element])) {
       errors.push({ parent: dottedName, element })
       continue
