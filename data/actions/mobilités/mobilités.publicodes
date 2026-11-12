@@ -17,7 +17,7 @@ actions . mobilités . calculs courts trajets:
       formule:
         le minimum de:
           - distance totale courts trajets
-          - utilisateur . km en voiture par an
+          - transport . voiture . km
     distance totale courts trajets:
       formule: fréquence * distance moyenne aller-retour trajet court * commun . semaines par an
     fréquence:
@@ -41,13 +41,31 @@ actions . mobilités . calculs trajets quotidiens:
       formule:
         le minimum de:
           - distance totale trajets quotidiens
-          - utilisateur . km en voiture par an
+          - transport . voiture . km
     distance totale trajets quotidiens:
       formule: fréquence * distance moyenne aller-retour trajet quotidien * commun . semaines par an
     fréquence:
       formule: 5
       note: Cette valeur est potentiellement élevée et dépend de chaque utilisateur. C'est une hypothèse forte.
       unité: trajet/semaine
+
+actions . mobilités . heures bus par semaine:
+  formule:
+    variations:
+      - si:
+          est défini: transport . transports commun . bus . heures par semaine
+        alors: transport . transports commun . bus . heures par semaine
+      - sinon: 0
+  note: on considère que la valeur par défaut est 0 ici et non la valeur représentative de la population.
+
+actions . mobilités . heures métro ou tram par semaine:
+  formule:
+    variations:
+      - si:
+          est applicable: transport . transports commun . métro ou tram . heures par semaine
+        alors: transport . transports commun . métro ou tram . heures par semaine
+      - sinon: 0
+  note: on considère que la valeur par défaut est 0 ici et non la valeur représentative de la population.
 
 actions . mobilités . petits trajets sans voiture:
   titre: Laisser la voiture au garage pour les petits trajets
@@ -61,14 +79,14 @@ actions . mobilités . petits trajets sans voiture:
     Enfin, nous ne proposons pas cette action aux personnes qui utilisent régulièrement les mobilités actives, les transports en commun. On propose également d'exclure les rouleurs qui sont plus de 3 en moyenne dans la voiture ce qui suggère que les trajets correspondent à de longs trajets en famille ou entre amis.
   applicable si:
     toutes ces conditions:
-      - utilisateur . km en voiture par an > calculs courts trajets . seuil activation courts trajets
-      - utilisateur . utilisateur de la voiture = 'propriétaire'
+      - transport . voiture . km > calculs courts trajets . seuil activation courts trajets
+      - transport . voiture . utilisateur = 'propriétaire'
   non applicable si:
     une de ces conditions:
-      - utilisateur . voyageurs en voiture >= 3
-      - utilisateur . km mobilité douce par an > (calculs courts trajets . seuil activation courts trajets / 2)
-      - utilisateur . heures bus par semaine + utilisateur . heures métro ou tram par semaine > 0.5
-  formule: (transport . voiture . construction au kilomètre + transport . voiture . usage au kilomètre) * calculs courts trajets . distance totale évitée / utilisateur . voyageurs en voiture
+      - transport . voiture . voyageurs >= 3
+      - transport . mobilité douce . vae . km + transport . mobilité douce . autres véhicules à moteur . km > (calculs courts trajets . seuil activation courts trajets / 2)
+      - heures bus par semaine + heures métro ou tram par semaine > 0.5
+  formule: (transport . voiture . construction au kilomètre + transport . voiture . usage au kilomètre) * calculs courts trajets . distance totale évitée / transport . voiture . voyageurs
 
 actions . mobilités . transport en commun:
   titre: Privilégier les transports en commun au quotidien
@@ -80,12 +98,12 @@ actions . mobilités . transport en commun:
     Enfin, nous ne proposons pas cette action aux personnes qui utilisent régulièrement les mobilités actives, les transports en commun. On propose également d'exclure les rouleurs qui sont plus de 3 en moyenne dans la voiture ce qui suggère que les trajets correspondent à de longs trajets en famille ou entre amis.
 
     On considère que les transports en commun du quotidien correspondent aux modes suivants : bus, métro ou tramway et TER.
-  applicable si: (utilisateur . km en voiture par an + utilisateur . km en deux roues par an) > calculs trajets quotidiens . seuil activation trajets quotidiens
+  applicable si: (transport . voiture . km + transport . deux roues . km) > calculs trajets quotidiens . seuil activation trajets quotidiens
   non applicable si:
     une de ces conditions:
-      - utilisateur . voyageurs en voiture >= 3
-      - utilisateur . km mobilité douce par an > calculs trajets quotidiens . seuil activation trajets quotidiens
-      - utilisateur . heures bus par semaine + utilisateur . heures métro ou tram par semaine > 0.5
+      - transport . voiture . voyageurs >= 3
+      - transport . mobilité douce . vae . km + transport . mobilité douce . autres véhicules à moteur . km > calculs trajets quotidiens . seuil activation trajets quotidiens
+      - heures bus par semaine + heures métro ou tram par semaine > 0.5
   formule: gain empreinte au km * calculs trajets quotidiens . distance totale évitée
   avec:
     gain empreinte au km:
@@ -96,7 +114,7 @@ actions . mobilités . transport en commun:
           - (-1) * impact par km transport commun
       note: On fait l'hypothèse que les trajets sont effectués seuls.
     gain empreinte au km . ratio usage voiture:
-      formule: utilisateur . km en voiture par an / (utilisateur . km en voiture par an + utilisateur . km en deux roues par an)
+      formule: transport . voiture . km / (transport . voiture . km + transport . deux roues . km)
     gain empreinte au km . ratio usage deux roues:
       formule: 1 - ratio usage voiture
     impact par km transport commun:
@@ -111,11 +129,11 @@ actions . mobilités . voiture électrique:
   titre: Opter pour une voiture électrique
   meta:
     id: 88f48ec8-6127-45e8-8732-2678e9aac8f0
-  applicable si: utilisateur . utilisateur de la voiture = 'propriétaire'
+  applicable si: transport . voiture . utilisateur = 'propriétaire'
   non applicable si:
     une de ces conditions:
-      - utilisateur . motorisation de la voiture = 'électrique'
-      - utilisateur . est mineur
+      - transport . voiture . motorisation = 'électrique'
+      - profil . est mineur
   note: |
     L'idée est de proposer cette action à des personnes qui sont propriétaires d'une voiture ou qui pratiquent l'auto-partage / covoiturage. Les personnes qui utilisent le véhicule d'un proche ne sont pas ciblées.
 
@@ -136,9 +154,9 @@ actions . mobilités . écoconduite:
   titre: Economiser du carburant grâce à l’écoconduite
   meta:
     id: 14f89d9a-36b4-4047-8b92-0f829a544512
-  applicable si: utilisateur . km en voiture par an > 0
-  non applicable si: utilisateur . est mineur
-  formule: transport . voiture . usage au kilomètre * utilisateur . km en voiture par an * réduction / transport . voiture . voyageurs
+  applicable si: transport . voiture . km > 0
+  non applicable si: profil . est mineur
+  formule: transport . voiture . usage au kilomètre * transport . voiture . km * réduction / transport . voiture . voyageurs
   avec:
     réduction:
       formule: 15%
@@ -151,13 +169,13 @@ actions . mobilités . covoiturage vacances:
     id: 102027d7-0229-48cb-9f2a-3d836d6665ff
   applicable si:
     toutes ces conditions:
-      - utilisateur . km en voiture par an > 7000
-      - utilisateur . voyageurs en voiture < 3
+      - transport . voiture . km > 7000
+      - transport . voiture . voyageurs < 3
   non applicable si:
     une de ces conditions:
-      - utilisateur . utilisateur de la voiture = 'non régulier'
-      - utilisateur . utilisateur de la voiture = 'jamais'
-      - utilisateur . est mineur
+      - transport . voiture . utilisateur = 'non régulier'
+      - transport . voiture . utilisateur = 'jamais'
+      - profil . est mineur
   formule: 0
   note: |
     Si auparavant, nous calculions un gain d'empreinte pour cette action, nous avons décidé de ne plus le faire, car les dernières études sur le covoiturage longue distance montrent que les gains d'empreinte potentiels sont entièrement compensés par l'effet rebond.
@@ -170,12 +188,12 @@ actions . mobilités . covoiturage quotidien:
     id: 4ff71cbb-c342-4e2f-a153-400598678858
   applicable si:
     toutes ces conditions:
-      - utilisateur . voyageurs en voiture < 3
-      - utilisateur . km en voiture par an > calculs trajets quotidiens . seuil activation trajets quotidiens
+      - transport . voiture . voyageurs < 3
+      - transport . voiture . km > calculs trajets quotidiens . seuil activation trajets quotidiens
   non applicable si:
     une de ces conditions:
-      - utilisateur . utilisateur de la voiture = 'non régulier'
-      - utilisateur . utilisateur de la voiture = 'jamais'
+      - transport . voiture . utilisateur = 'non régulier'
+      - transport . voiture . utilisateur = 'jamais'
   note: |
     On considère que les trajets du quotidien sont réalisés avec une personne supplémentaire dans la voiture. Contrairement aux trajets 'longs', cette actions est ciblée et peut donc s'appliquer en ajoutant spécifiquement, en considérant que ces trajets sont solistes.
   formule: (transport . voiture . usage au kilomètre + transport . voiture . construction au kilomètre) * calculs trajets quotidiens . distance totale évitée * (1 - 1 / nombre de voyageurs)
@@ -190,22 +208,22 @@ actions . mobilités . location voiture:
     id: 1fe0115d-d4fd-4bab-b04b-7bf36a47073d
   applicable si:
     toutes ces conditions:
-      - utilisateur . km en voiture par an < plafond activation autopartage
-      - utilisateur . utilisateur de la voiture = 'propriétaire'
-  non applicable si: utilisateur . est mineur
+      - transport . voiture . km < plafond activation autopartage
+      - transport . voiture . utilisateur = 'propriétaire'
+  non applicable si: profil . est mineur
   note: |
     L'idée est de proposer cette action à des personnes qui font peu de kilomètres en voiture dans l'année et qui sont propriétaires d'une voiture.
 
     D'après [l'enquête Nationale Autopartage 2025](https://librairie.ademe.fr/mobilite-et-transports/9344-enquete-nationale-autopartage-2025.html), l'adoption de l'autopartage permet à l'usager moyen de réduire ses déplacements en voiture de 750 à 2 000 km par an.
 
     On choisit la fourchette haute car nous sommes sur une estimation du potentiel de réduction maximale.
-  formule: ((transport . voiture . construction au kilomètre + transport . voiture . usage au kilomètre) / utilisateur . voyageurs en voiture) * km évités
+  formule: ((transport . voiture . construction au kilomètre + transport . voiture . usage au kilomètre) / transport . voiture . voyageurs) * km évités
   avec:
     km évités:
       formule:
         le minimum de:
           - 2000 km
-          - utilisateur . km en voiture par an
+          - transport . voiture . km
     plafond activation autopartage:
       formule: 7200
       note: Nous supposons qu'au-delà de 600 km par mois en moyenne, il est difficile de se projeter dans un usage d'autopartage (moins d'un plein par mois).
@@ -217,14 +235,14 @@ actions . mobilités . réduire vitesse autoroute:
     id: 598fbb1e-0137-42c0-8e19-903df10f39db
   non applicable si:
     une de ces conditions:
-      - utilisateur . utilisateur de la voiture = 'jamais'
-      - utilisateur . est mineur
+      - transport . voiture . utilisateur = 'jamais'
+      - profil . est mineur
   formule: transport . voiture . usage au kilomètre * km autoroute * réduction / transport . voiture . voyageurs
   note: |
     Le guide ADEME ["Comment consommer moins de carburant"](https://librairie.ademe.fr/mobilite-et-transports/5432-comment-consommer-moins-de-carburants-.html) indique que réduire sa vitesse de 10 km/h sur l'autoroute permet de réduire sa consommation de carburant de 1 à 3 litres sur un trajet de 500km.
   avec:
     km autoroute:
-      formule: utilisateur . km en voiture par an * 0.28
+      formule: transport . voiture . km * 0.28
       note: |
         D'après le document [La sécurité routière en France - bilan de l’année 2023, page 54](https://www.onisr.securite-routiere.gouv.fr/sites/default/files/2024-09/Bilan%20SR%202023%20version%20site%20internet%2012%20septembre.pdf), le réseau autoroutier accueille 28 % de la circulation automobile.
 
@@ -241,7 +259,7 @@ actions . mobilités . motiver employeur mobilité durable:
   meta:
     id: 285f6bfa-2836-4f50-93ba-a75a30466110
   note: Action non quantifiée
-  applicable si: utilisateur . est actif
+  applicable si: profil . est actif
   formule: 0
 
 actions . mobilités . vacances en train:
@@ -250,8 +268,17 @@ actions . mobilités . vacances en train:
     id: 0a161fc2-5c25-453e-93de-db38c8cbf3d9
   note: |
     Nous avons choisi de proposer cette actions aux personnes qui ne prennent pas souvent le train (< 1200 km par an =  ~2 A/R Paris - Marseille).
-  applicable si: utilisateur . km en train par an < 1200 km
+  applicable si: km en train par an < 1200 km
   formule: 0
+  avec:
+    km en train par an:
+      formule:
+        variations:
+          - si:
+              est applicable: transport . train . km
+            alors: transport . train . km
+          - sinon: 0
+      note: on considère que la valeur par défaut est 0 ici et non la valeur représentative de la population.
 
 actions . mobilités . limiter avion court courrier:
   titre: Explorer les alternatives aux vols courts-courriers
@@ -261,9 +288,9 @@ actions . mobilités . limiter avion court courrier:
     Simple: applicable si l'utilisateur prend l'avion, le gain est équivalent à l'empreinte associée à ses trajets en avion.
   applicable si:
     toutes ces conditions:
-      - utilisateur . voyageur en avion = 'occasionnellement'
-      - utilisateur . heures long courrier par an = 0
-      - utilisateur . heures court courrier par an > 0
+      - transport . avion . usager = 'occasionnellement'
+      - transport . avion . moyen et long courrier . km = 0
+      - transport . avion . court courrier . km > 0
   formule: transport . avion
 
 actions . mobilités . limiter avion long courrier:
@@ -274,8 +301,8 @@ actions . mobilités . limiter avion long courrier:
     Simple: applicable si l'utilisateur prend l'avion, le gain est équivalent à l'empreinte associée à ses trajets en avion.
   applicable si:
     toutes ces conditions:
-      - utilisateur . voyageur en avion = 'occasionnellement'
-      - utilisateur . heures long courrier par an > 0
+      - transport . avion . usager = 'occasionnellement'
+      - transport . avion . moyen et long courrier . km > 0
   formule: transport . avion
 
 actions . mobilités . limiter avion:
@@ -284,7 +311,7 @@ actions . mobilités . limiter avion:
     id: 3122683a-e542-4d91-9ea8-fc221ffe2783
   note: |
     Simple: applicable si l'utilisateur prend l'avion, le gain est équivalent à l'empreinte associée à ses trajets en avion.
-  applicable si: utilisateur . voyageur en avion = 'fréquemment'
+  applicable si: transport . avion . usager = 'fréquemment'
   formule: transport . avion
 
 actions . mobilités . nouveaux déplacements:
@@ -308,5 +335,5 @@ actions . mobilités . trajet enfant sans voiture:
   meta:
     id: 83942267-f887-4c99-9e4e-9a0fefeb31d0
   note: Action non quantifiée
-  applicable si: utilisateur . est parent potentiel de scolaires
+  applicable si: profil . est parent potentiel de scolaires
   formule: 0

@@ -9,7 +9,7 @@ actions . consommation . achat reconditionné:
     Pas de gain associé pour le moment car ce n'est pas un paramètre du modèle de calcul actuellement.
 
     Cette action est applicable pour les personnes qui possèdent beaucoup d'objets électroniques (> 10).
-  applicable si: utilisateur . nombre objets électroniques >= 5
+  applicable si: divers . numérique . appareils . nombre total >= 5
   formule: 0
 
 actions . consommation . achat malin:
@@ -27,7 +27,12 @@ actions . consommation . achat seconde main:
     id: 75257893-6e72-49dd-a090-d046456db5af
   note: |
     On a cette information seulement pour le textile, pour le moment, dans le test. Le calcul du gain étant tèrs faible et restreint au textile, on a fait le choix de ne pas l'afficher pour le moment.
-  applicable si: utilisateur . acheteur fast fashion
+  applicable si:
+    toutes ces conditions:
+      - une de ces conditions:
+          - divers . textile . volume = "renouvellement occasionnel"
+          - divers . textile . volume = "accro au shopping"
+      - divers . textile . qualité = "neuf fast fashion"
   formule: 0
   # formule: consommation - nouvelle garde robe
   # avec:
@@ -42,8 +47,8 @@ actions . consommation . faire durer ses objets:
     id: 6eb1d3fe-785c-4dfc-99b9-438d4aa24e99
   non applicable si:
     toutes ces conditions:
-      - utilisateur . soin des objets = 'maximum'
-      - utilisateur . renouvellement téléphone = 'faible'
+      - divers . ameublement . préservation = 'maximum'
+      - divers . numérique . appareils . renouvellement téléphone = 'faible'
   formule: (consommation - préservation allongée)
   avec:
     préservation allongée:
@@ -57,5 +62,5 @@ actions . consommation . penser low tech:
     Achat d'objets : comment et pourquoi penser low-tech ?
   meta:
     id: de2b3785-bd6f-44c4-a219-635ec3bd6542
-  applicable si: utilisateur . nombre objets électroniques >= 5
+  applicable si: divers . numérique . appareils . nombre total >= 5
   formule: 0

@@ -11,10 +11,10 @@ actions . logement . calcul . empreinte chauffage air:
     variations:
       - si:
           une de ces conditions:
-            - utilisateur . mode de chauffage = "individuel"
-            - utilisateur . mode de chauffage = "collectif"
+            - logement . chauffage . mode = "individuel"
+            - logement . chauffage . mode = "collectif"
         alors: empreinte chauffage air utilisateur
-      - si: utilisateur . mode de chauffage = "pas de chauffage"
+      - si: logement . chauffage . mode = "pas de chauffage"
         alors: 0
   par défaut: parc français . chauffage . empreinte moyenne chauffage air par m2 * logement . surface
   description: |
@@ -23,7 +23,7 @@ actions . logement . calcul . empreinte chauffage air:
     empreinte chauffage air utilisateur:
       formule:
         somme:
-          - utilisateur . chauffage air électrique * logement . électricité * logement . habitants * parc français . CEREN . chauffage . part chauffage air électricité
+          - chauffage air électrique * logement . électricité * logement . habitants * parc français . CEREN . chauffage . part chauffage air électricité
           - logement . chauffage . empreinte gaz * parc français . CEREN . chauffage . part chauffage air gaz
           - logement . chauffage . empreinte citerne propane * parc français . CEREN . chauffage . part chauffage air gaz
           - logement . chauffage . empreinte bois * parc français . CEREN . chauffage . part chauffage air bois
@@ -33,15 +33,20 @@ actions . logement . calcul . empreinte chauffage air:
         Dans le cas des utilisateurs ayant répondu connaître leur DPE ou avoir besoin d'aide pour estimer leurs consommations, on fait ici une légère approximation en appliquant le ratio "chauffage air" à l'empreinte globale du chauffage pour chaque type d'énergie plutôt que de repartir de l'ensemble des consommations spécifiques au chauffage de l'air. Néanmoins, on considère que l'impact sur le résultat final n'est pas significatif.
 
         Par ailleurs, nous devrions séparer électricité et PAC.
+    chauffage air électrique:
+      formule:
+        une de ces conditions:
+          - logement . chauffage . électricité . est présent chauffage
+          - logement . chauffage . PAC . est présent chauffage
 
 actions . logement . calcul . empreinte eau chaude sanitaire:
   formule:
     variations:
       - si:
           une de ces conditions:
-            - utilisateur . mode de chauffage = "individuel"
-            - utilisateur . mode de chauffage = "collectif"
-            - utilisateur . mode de chauffage = "pas de chauffage"
+            - logement . chauffage . mode = "individuel"
+            - logement . chauffage . mode = "collectif"
+            - logement . chauffage . mode = "pas de chauffage"
         alors: empreinte eau chaude sanitaire utilisateur
       - sinon: 0
   par défaut: parc français . chauffage . empreinte moyenne ecs par m2 * logement . surface
@@ -52,13 +57,18 @@ actions . logement . calcul . empreinte eau chaude sanitaire:
     empreinte eau chaude sanitaire utilisateur:
       formule:
         somme:
-          - utilisateur . chauffage ecs électrique * logement . électricité * logement . habitants * parc français . CEREN . chauffage . part ecs électricité
+          - chauffage ecs électrique * logement . électricité * logement . habitants * parc français . CEREN . chauffage . part ecs électricité
           - logement . chauffage . empreinte gaz * parc français . CEREN . chauffage . part ecs gaz
           - logement . chauffage . empreinte citerne propane * parc français . CEREN . chauffage . part ecs gaz
           - logement . chauffage . empreinte fioul * parc français . CEREN . chauffage . part ecs fioul
           - logement . chauffage . empreinte réseau de chaleur * parc français . CEREN . chauffage . part ecs réseau de chaleur
       note: |
         Dans le cas des utilisateurs ayant répondu connaître leur DPE ou avoir besoin d'aide pour estimer leurs consommations, on fait ici une légère approximation en appliquant le ratio "ecs" à l'empreinte globale du chauffage pour chaque type d'énergie plutôt que de repartir de l'ensemble des consommations spécifiques à l'ECS. Néanmoins, on considère que l'impact sur le résultat final n'est pas significatif.
+    chauffage ecs électrique:
+      formule:
+        une de ces conditions:
+          - logement . chauffage . électricité . est présent ecs
+          - logement . chauffage . PAC . est présent ecs
 
 actions . logement . installer thermostat programmable:
   titre: Installer un thermostat programmable
@@ -70,9 +80,9 @@ actions . logement . installer thermostat programmable:
     Concernant l'applicabilité, nous avons choisi de cibler les utilisateurs ayant une consommation d'énergie au m2 équivalente supérieure à 70 kWh/m2/an, uniquement pour les logements individuels.
   applicable si:
     toutes ces conditions:
-      - utilisateur . mode de chauffage = "individuel"
-      - utilisateur . consommation énergie au m2 équivalente > 70
-  formule: calcul . empreinte chauffage air * 0.15 / utilisateur . habitants
+      - logement . chauffage . mode = "individuel"
+      - logement . chauffage . consommation énergie au m2 équivalente > 70
+  formule: calcul . empreinte chauffage air * 0.15 / logement . habitants
 
 actions . logement . eviter deperditions chaleur:
   titre: Eviter les déperditions de chaleur en hiver
@@ -82,7 +92,7 @@ actions . logement . eviter deperditions chaleur:
     Selon le guide ADEME ["Comment passer un hiver tout confort ?"](https://librairie.ademe.fr/energies/7722-comment-passer-un-hiver-tout-confort--9791029726132.html) ne donne pas d'information sur les économies d'énergie associées à cette action, nous choisissons de ne pas chiffrer l'impact de cette action pour le moment.
 
     Concernant l'applicabilité, nous avons choisi de cibler les utilisateurs ayant une consommation d'énergie au m2 équivalente supérieure à 70 kWh/m2/an.
-  applicable si: utilisateur . consommation énergie au m2 équivalente > 70
+  applicable si: logement . chauffage . consommation énergie au m2 équivalente > 70
   formule: 0
 
 actions . logement . optimiser chauffe eau:
@@ -95,9 +105,9 @@ actions . logement . optimiser chauffe eau:
     Concernant l'applicabilité, nous avons choisi de cibler les utilisateurs ayant une consommation d'énergie au m2 équivalente supérieure à 70 kWh/m2/an en supposant que certains gestes reccommandés sont déjà appliqués pour les logements les plus économes.
   applicable si:
     toutes ces conditions:
-      - utilisateur . mode de chauffage = "individuel"
-      - utilisateur . consommation énergie au m2 équivalente > 70
-  formule: calcul . empreinte eau chaude sanitaire * (1 / 3) / utilisateur . habitants
+      - logement . chauffage . mode = "individuel"
+      - logement . chauffage . consommation énergie au m2 équivalente > 70
+  formule: calcul . empreinte eau chaude sanitaire * (1 / 3) / logement . habitants
 
 actions . logement . logement frais sans clim:
   titre: Garder son logement frais sans utiliser la clim’
@@ -107,22 +117,29 @@ actions . logement . logement frais sans clim:
     On ne considère que l'usage des climatiseurs pour cette action (qui correspond à l'empreinte de la consommation électrique). On ne considère pas, pour le moment, la part de l'empreinte (la plus importante) liée à l'empreinte des fluides frigorigènes.
   applicable si:
     toutes ces conditions:
-      - utilisateur . nombre climatiseurs mobiles + utilisateur . nombre climatiseurs fixes > 0
-      - utilisateur . utilisation climatiseurs = oui
+      - logement . climatisation . sans PAC air air . climatiseurs mobiles . nombre +  nombre climatiseurs fixes > 0
+      - logement . climatisation . usage = oui
   formule:
     somme:
-      - part électricité climatisation / utilisateur . habitants
+      - part électricité climatisation / logement . habitants
       # - logement . climatisation
   avec:
     part électricité climatisation:
-      applicable si: utilisateur . utilisation climatiseurs
+      applicable si: logement . climatisation . usage
       formule:
         somme:
-          - utilisateur . nombre climatiseurs mobiles * 140 kWh/climatiseur * logement . électricité . empreinte au kWh équivalente
-          - utilisateur . nombre climatiseurs fixes * 300 kWh/climatiseur * logement . électricité . empreinte au kWh équivalente
+          - logement . climatisation . sans PAC air air . climatiseurs mobiles . nombre * 140 kWh/climatiseur * logement . électricité . empreinte au kWh équivalente
+          - nombre climatiseurs fixes * 300 kWh/climatiseur * logement . électricité . empreinte au kWh équivalente
       unité: kgCO2e
       note: |
         D'après l'étude [ADEME Panel ElecDom 2020](https://librairie.ademe.fr/changement-climatique-et-energie/4473-panel-usages-electrodomestiques.html), un climatiseur fixe a une consommation moyenne d'environ 300 kWh/an et un climatiseur mobile environ 140 kWh/an.
+    nombre climatiseurs fixes:
+      formule:
+        somme:
+          - 2 * logement . climatisation . est présent PAC air air
+          - logement . climatisation . sans PAC air air . climatiseurs fixes . nombre
+      note: |
+        On fait une approximation ici car nous n'avons pas le nombre de bouches de climatisation pour les PAC air air. On considère donc qu'il y a 2 bouches de climatisation par PAC air air.
 
 actions . logement . individualisation chauffage collectif:
   titre: Demander l’individualisation des frais de chauffage de son immeuble
@@ -132,12 +149,12 @@ actions . logement . individualisation chauffage collectif:
     Action potentiellement proposée à des personnes dont l'individualisation des frais de chauffage est déjà en place.
 
     En moyenne, l’individualisation des frais de chauffage mène à une réduction de [15% de la consommation](https://librairie.ademe.fr/societe-et-politiques-publiques/647-individualisation-des-frais-de-chauffage-quels-avantages-.html). On considère que cette réduction concerne le chauffage de l'air et l'eau chaude sanitaire.
-  applicable si: utilisateur . mode de chauffage = "collectif"
-  non applicable si: utilisateur . est mineur
+  applicable si: logement . chauffage . mode = "collectif"
+  non applicable si: profil . est mineur
   formule:
     somme:
-      - calcul . empreinte chauffage air * 0.15 / utilisateur . habitants
-      - calcul . empreinte eau chaude sanitaire * 0.15 / utilisateur . habitants
+      - calcul . empreinte chauffage air * 0.15 / logement . habitants
+      - calcul . empreinte eau chaude sanitaire * 0.15 / logement . habitants
 
 actions . logement . isoler:
   titre: Isoler son logement
@@ -145,34 +162,34 @@ actions . logement . isoler:
     id: 1844d1c4-a91d-43d9-94b5-45559c6e88b2
   applicable si:
     toutes ces conditions:
-      - utilisateur . propriétaire logement principal = "propriétaire"
-      # - utilisateur . consommation énergie au m2 équivalente >= 215
+      - logement . propriétaire = "propriétaire"
+      # - logement . chauffage . consommation énergie au m2 équivalente >= 215
       - une de ces conditions:
-          - utilisateur . DPE équivalent = "D"
-          - utilisateur . DPE équivalent = "E"
-          - utilisateur . DPE équivalent = "F"
-          - utilisateur . DPE équivalent = "G"
+          - logement . chauffage . DPE équivalent = "D"
+          - logement . chauffage . DPE équivalent = "E"
+          - logement . chauffage . DPE équivalent = "F"
+          - logement . chauffage . DPE équivalent = "G"
   non applicable si:
     une de ces conditions:
-      - utilisateur . mode de chauffage = "pas de chauffage"
-      - utilisateur . a réalisé travaux chauffage
-      - utilisateur . a réalisé travaux isolation
-      - utilisateur . âge du logement = 'très récent'
-      - utilisateur . est mineur
+      - logement . chauffage . mode = "pas de chauffage"
+      - logement . construction . rénovation . travaux . chauffage . présent
+      - logement . construction . rénovation . travaux . isolation . présent
+      - logement . âge = 'très récent'
+      - profil . est mineur
   note: |
     Pour le moment, nous ne chiffrons pas l'impact de cette action car une réflexion plus poussée est menée avec le service Bâtiment de l'ADEME pour déterminer un gain carbone réaliste.
-  formule: (calcul . empreinte chauffage air * gain isolation - empreinte travaux) / utilisateur . habitants
+  formule: (calcul . empreinte chauffage air * gain isolation - empreinte travaux) / logement . habitants
   avec:
     gain isolation:
       formule:
         variations:
-          - si: utilisateur . DPE équivalent = "D"
+          - si: logement . chauffage . DPE équivalent = "D"
             alors: saut depuis D
-          - si: utilisateur . DPE équivalent = "E"
+          - si: logement . chauffage . DPE équivalent = "E"
             alors: saut depuis E
-          - si: utilisateur . DPE équivalent = "F"
+          - si: logement . chauffage . DPE équivalent = "F"
             alors: saut depuis F
-          - si: utilisateur . DPE équivalent = "G"
+          - si: logement . chauffage . DPE équivalent = "G"
             alors: saut depuis G
       note: |
         L'idée est d'estimer un gain selon la même approche que pour la quantification de l'impact du ressenti d'isolation permettant de moduler les consommations moyennes d'énergie via les saut de classe de DPE (arbitrairement on choisit de se baser sur des sauts de 2 classes, correspondant à MaPrimeRénov'). Néanmoins, nous avons identifié plusieurs limites à cette approche :
@@ -205,13 +222,13 @@ actions . logement . installer panneaux solaires thermiques:
     En moyenne, un chauffe-eau solaire individuel (CESI) permet de couvrir 60% des besoins en eau chaude sanitaire (voir [cet article de l'ADEME](https://agirpourlatransition.ademe.fr/particuliers/maison/chauffage/chauffer-leau-solei)).
   applicable si:
     toutes ces conditions:
-      - utilisateur . type de logement = "maison"
-      - utilisateur . propriétaire logement principal = "propriétaire"
+      - logement . type = "maison"
+      - logement . propriétaire = "propriétaire"
   non applicable si:
     une de ces conditions:
-      - utilisateur . chauffe eau solaire
-      - utilisateur . est mineur
-  formule: calcul . empreinte eau chaude sanitaire * logement . chauffage . chauffe eau solaire . taux réduction ecs / utilisateur . habitants
+      - logement . chauffage . chauffe eau solaire . présent
+      - profil . est mineur
+  formule: calcul . empreinte eau chaude sanitaire * logement . chauffage . chauffe eau solaire . taux réduction ecs / logement . habitants
 
 actions . logement . installer panneaux solaires photovoltaïques:
   titre: Installer des panneaux solaires photovoltaïques
@@ -219,12 +236,12 @@ actions . logement . installer panneaux solaires photovoltaïques:
     id: 17c3a837-c924-491a-a20e-f6d5086d4857
   applicable si:
     toutes ces conditions:
-      - utilisateur . propriétaire logement principal = "propriétaire"
-      - utilisateur . type de logement = "maison"
+      - logement . propriétaire = "propriétaire"
+      - logement . type = "maison"
   non applicable si:
     une de ces conditions:
-      - utilisateur . panneau photovoltaïque = "oui"
-      - utilisateur . est mineur
+      - logement . électricité . photovoltaique . présent = "oui"
+      - profil . est mineur
   formule: logement - logement avec PV
   unité: kgCO2e
   avec:
@@ -263,17 +280,17 @@ actions . logement . se chauffer énergies renouvelables:
     Les logements déjà chauffés à l'électricité et bois sont exclus de cette action.
   applicable si:
     toutes ces conditions:
-      - utilisateur . propriétaire logement principal = "propriétaire"
-      - utilisateur . type de logement = "maison"
-      - utilisateur . mode de chauffage = "individuel"
+      - logement . propriétaire = "propriétaire"
+      - logement . type = "maison"
+      - logement . chauffage . mode = "individuel"
       - une de ces conditions:
-          - utilisateur . est présent gaz
-          - utilisateur . est présent fioul
-          - utilisateur . est présent citerne propane
+          - logement . chauffage . gaz . présent
+          - logement . chauffage . fioul . présent
+          - logement . chauffage . citerne propane . présent
   non applicable si:
     une de ces conditions:
-      - utilisateur . a réalisé travaux chauffage
-      - utilisateur . est mineur
+      - logement . construction . rénovation . travaux . chauffage . présent
+      - profil . est mineur
   formule:
     le maximum de:
       - installer une PAC
@@ -293,24 +310,24 @@ actions . logement . améliorer chauffage immeuble:
     Les logements déjà chauffés à l'électricité et bois sont exclus de cette action.
   applicable si:
     toutes ces conditions:
-      - utilisateur . propriétaire logement principal = "propriétaire"
-      - utilisateur . mode de chauffage = "collectif"
+      - logement . propriétaire = "propriétaire"
+      - logement . chauffage . mode = "collectif"
       - une de ces conditions:
-          - utilisateur . est présent gaz
-          - utilisateur . est présent fioul
-          - utilisateur . est présent citerne propane
+          - logement . chauffage . gaz . présent
+          - logement . chauffage . fioul . présent
+          - logement . chauffage . citerne propane . présent
   non applicable si:
     une de ces conditions:
-      - utilisateur . a réalisé travaux chauffage
-      - utilisateur . est mineur
+      - logement . construction . rénovation . travaux . chauffage . présent
+      - profil . est mineur
   formule:
     le maximum de:
       - installer une PAC
       - installer une chaudière bois
 
 actions . logement . installer une PAC:
-  non applicable si: utilisateur . possède une PAC
-  formule: (calcul . empreinte chauffage air + calcul . empreinte eau chaude sanitaire - recalcul - empreinte travaux) / utilisateur . habitants
+  non applicable si: logement . chauffage . PAC . présent
+  formule: (calcul . empreinte chauffage air + calcul . empreinte eau chaude sanitaire - recalcul - empreinte travaux) / logement . habitants
   note: |
     Nous considérons pour l'instant que le remplacement des kWh de gaz par la même quantité de kWh électrique est une bonne approximation de premier ordre. Nous pourrons par la suite l'adapter en fonction du rendement des installations résidentielles.
 
@@ -325,12 +342,12 @@ actions . logement . installer une PAC:
       note: |
         On choisit de prendre en compte le coefficient de performance (COP), [en moyenne de 2,9](https://infos.ademe.fr/energies/2025/comment-maximiser-la-performance-de-votre-pompe-a-chaleur-air-eau/). On choisit donc d'appliquer un coefficient à la consommation d'énergie finale du logement pour estimer la consommation d'électricité de la PAC. C'est une approximation forte : rien n'indique que les consommations vont réduire de cette manière à l'installation d'une PAC (effet rebond).
     recalcul . consommation:
-      formule: utilisateur . consommation énergie au m2 équivalente * utilisateur . surface du logement
+      formule: logement . chauffage . consommation énergie au m2 équivalente * logement . surface
       note: on utilise directement la consommation d'énergie au m2 équivalente estimée car elle correspond à une estimation de la consommation finale du logement pour les usages du chauffage de l'air et de l'eau chaude sanitaire, qui sont les usages que l'on considère être couverts par la PAC.
 
 actions . logement . installer une chaudière bois:
-  non applicable si: utilisateur . possède une chaudière bois
-  formule: (calcul . empreinte chauffage air + calcul . empreinte eau chaude sanitaire - recalcul - empreinte travaux) / utilisateur . habitants
+  non applicable si: possède une chaudière bois
+  formule: (calcul . empreinte chauffage air + calcul . empreinte eau chaude sanitaire - recalcul - empreinte travaux) / logement . habitants
   avec:
     empreinte travaux:
       valeur: logement . surface * logement . construction . rénovation . travaux . chauffage / logement . construction . rénovation . amortissement
@@ -340,8 +357,13 @@ actions . logement . installer une chaudière bois:
       valeur: consommation * logement . chauffage . bois . fe chaudière granulés
       note: On considère un chauffage via granulés.
     recalcul . consommation:
-      formule: utilisateur . consommation énergie au m2 équivalente * utilisateur . surface du logement
+      formule: logement . chauffage . consommation énergie au m2 équivalente * logement . surface
       note: on utilise directement la consommation d'énergie au m2 équivalente estimée car elle correspond à une estimation de la consommation finale du logement pour les usages du chauffage de l'air et de l'eau chaude sanitaire, qui sont les usages que l'on considère être couverts par la PAC.
+    possède une chaudière bois:
+      formule:
+        une de ces conditions:
+          - logement . chauffage . bois . est présent chauffage
+          - logement . chauffage . bois . est présent ecs
 
 actions . logement . consommation heures creuses:
   titre: Utiliser ses appareils électriques au bon moment
@@ -356,14 +378,14 @@ actions . logement . offre énergies renouvelables:
   meta:
     id: 14fec429-b563-4fb7-89c3-5e030b9d57c2
   note: Action non quantifiée
-  non applicable si: utilisateur . est mineur
+  non applicable si: profil . est mineur
   formule: 0
 
 actions . logement . alternative croisiere:
   titre: Découvrez des alternatives à la croisière pour vos vacances
   meta:
     id: 82613c47-967c-4962-a741-3da34ec2fd94
-  applicable si: utilisateur . croisière
+  applicable si: logement . vacances . croisière . présent
   formule: logement . vacances . croisière . nombre de nuitées * (logement . vacances . croisière . empreinte par nuit - logement . vacances . empreinte hotel par nuit)
   note: |
     On fait l'hypothèse que les nuitées en croisière sont remplacées par des nuitées à l'hôtel.

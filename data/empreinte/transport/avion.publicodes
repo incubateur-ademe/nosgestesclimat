@@ -22,15 +22,23 @@ transport . avion . court courrier:
   note: |
     Les vols court-courriers sont définis ici comme des vols de moins de 2 h (environ 1000km).
     On considère que les appareils qui assurent ces vols possèdent une capacité de 101 à 220 sièges.
+  formule: km * empreinte par km
+
+transport . avion . court courrier . km:
+  public: oui
+  formule: heures * vitesse moyenne
+  unité: km
+
+transport . avion . court courrier . heures:
   formule:
     variations:
       - si:
           est défini: usager
         alors:
           somme:
-            - vols annuels . heures court courrier * empreinte par km * vitesse moyenne
-            - vols amortis . heures court courrier * empreinte par km * vitesse moyenne
-      - sinon: durée moyenne * empreinte par km * vitesse moyenne
+            - vols annuels . heures court courrier
+            - vols amortis . heures court courrier
+      - sinon: durée moyenne
 
 transport . avion . moyen et long courrier:
   public: oui
@@ -38,17 +46,26 @@ transport . avion . moyen et long courrier:
   note: |
     Les vols moyen-courriers sont définis ici comme des vols de plus de 2 h (de 1000 à plus de 5000km).
     On considère que les appareils qui assurent ces vols possèdent une capacité de plus de 220 sièges.
+  formule: km * empreinte par km
+
+transport . avion . moyen et long courrier . km:
+  public: oui
+  formule: heures * vitesse moyenne
+  unité: km
+
+transport . avion . moyen et long courrier . heures:
   formule:
     variations:
       - si:
           est défini: usager
         alors:
           somme:
-            - vols annuels . heures moyen et long courrier * empreinte par km * vitesse moyenne
-            - vols amortis . heures moyen et long courrier * empreinte par km * vitesse moyenne
-      - sinon: moyen et long courrier . durée moyenne * empreinte par km * vitesse moyenne
+            - vols annuels . heures moyen et long courrier
+            - vols amortis . heures moyen et long courrier
+      - sinon: durée moyenne
 
 transport . avion . usager:
+  public: oui
   question: À quelle fréquence avez-vous voyagé en avion au cours des 3 dernières années ?
   description: |
     La question ne porte que sur les vols effectués dans un cadre personnel et non professionnel.

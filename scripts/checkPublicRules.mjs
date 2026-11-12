@@ -11,11 +11,17 @@
 	model: only the engine resolves the `avec` sub-rules and the partial
 	references (`usage`, `transport . voiture . usage`, ...).
 
+	Only the decompositions reachable from `bilan` and `page de fin` are
+	checked: they are the two public decompositions of the footprint.
+
 	Called from `rulesToJSON.mjs`, which owns the engine.
 */
 
 import c from 'ansi-colors'
 import { reduceAST } from 'publicodes'
+
+// The roots of the public decompositions of the footprint.
+const rootDottedNames = ['bilan', 'page de fin']
 
 // Rules exempted from the check: the `empreinte branche` rules are generated
 // from the SDES data and are not part of the public decomposition, even when a
@@ -100,11 +106,12 @@ const dedupe = (pairs) =>
   )
 
 // Returns the `{ parent, element }` pairs of the public rules whose
-// decomposition contains a non-public rule.
+// decomposition contains a non-public rule, starting from the roots of the
+// public decompositions.
 export function getNonPublicElements(parsedRules) {
   return dedupe(
-    Object.keys(parsedRules)
-      .filter((dottedName) => isPublic(parsedRules[dottedName]))
+    rootDottedNames
+      .filter((dottedName) => dottedName in parsedRules)
       .flatMap((dottedName) =>
         findNonPublicElements(parsedRules, dottedName, new Set())
       )

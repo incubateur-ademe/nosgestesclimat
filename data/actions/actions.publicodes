@@ -2,3 +2,51 @@ actions:
   description: |
     Cet espace contient une première version d'un "modèle actions", voué à être indépendant du modèle d'empreinte pour consituer un référentiel qui pourra être utilisé dans différentes interfaces.
   formule: 0
+
+actions . profil:
+
+actions . profil . est mineur:
+  formule:
+    variations:
+      - si:
+          est défini: profil . âge
+        alors: profil . âge = 'moins de 18 ans'
+      - sinon: non
+  note: |
+    Par défaut, on considère que l'utilisateur est majeur si l'âge n'est pas renseigné, ce qui permet de laisser les actions rendues non applicables pour les mineurs applicables à tous.
+  description: |
+    oui | non
+
+actions . profil . est actif:
+  formule:
+    variations:
+      - si:
+          est défini: profil . âge
+        alors:
+          une de ces conditions:
+            - profil . âge = 'entre 18 et 24 ans'
+            - profil . âge = 'entre 25 et 34 ans'
+            - profil . âge = 'entre 35 et 44 ans'
+            - profil . âge = 'entre 45 et 54 ans'
+            - profil . âge = 'entre 55 et 64 ans'
+      - sinon: oui
+  note: |
+    Par défaut, on considère que l'utilisateur est actif si l'âge n'est pas renseigné.
+  description: |
+    oui | non
+
+actions . profil . est parent potentiel de scolaires:
+  formule:
+    variations:
+      - si:
+          est défini: profil . âge
+        alors:
+          une de ces conditions:
+            - profil . âge = 'entre 25 et 34 ans'
+            - profil . âge = 'entre 35 et 44 ans'
+            - profil . âge = 'entre 45 et 54 ans'
+      - sinon: oui
+  note: |
+    Par défaut, on considère que l'utilisateur est parent potentiel de scolaires si l'âge n'est pas renseigné.
+  description: |
+    oui | non
