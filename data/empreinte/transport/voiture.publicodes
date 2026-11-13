@@ -13,15 +13,6 @@ transport . voiture:
         alors: empreinte
       - sinon: empreinte moyenne
   unité: kgCO2e
-  description: |
-    La voiture est aujourd'hui en France essentiellement thermique (essence, diesel), bien que l'électrique progresse lentement.
-
-    Pourtant, électrique ou thermique, elle reste un moyen de déplacement très peu efficient :
-    **il s'agit en moyenne de déplacer un humain de 80kg dans une boîte en métal de 1200kg**.
-
-    Un peu comme si chaque midi, nous faisions à manger pour 10 avant de jeter 90% de la nourriture, ou que nous décidions de chauffer tout le pâté de maisons plutôt que l'intérieur de chacune des 10 maisons.
-
-    Notons finalement qu'il est important de prendre en compte à la fois l'usage (les km parcourus) et la construction de ce véhicule de plus d'une tonne de matériaux divers.
   note: |
     Le calcul détaillé et l'ensemble des hypothèses sont disponibles dans cette [page récapitulative](https://accelerateur-transition-ecologique-ademe.notion.site/Mod-lisation-de-l-empreinte-carbone-de-la-voiture-1f46523d57d780b3a1a8f1ceb5ff7f87).
 
@@ -412,33 +403,26 @@ transport . voiture . thermique . consommation estimée:
   note: |
     > Si nous avons travaillé les propositions de consommation moyenne, l'idéal au vu de l'impact de cette donnée est bien que l'utilisateur ou l'utilisatrice saisisse sa propre consommation réelle, moyennée sur son usage.
 
-    Le calcul des consommations moyennes est basé sur la base de données ADEME [Car Labelling](https://carlabelling.ademe.fr/index/). Nous avons utilisé directement les [données brutes](https://explore.data.gouv.fr/fr/datasets/607d3dfa434fd3f49e61436c/#/resources/e85bd68f-0690-4753-adb9-ce1f5eab7a58) via un script permettant d'extraire directement les consommations moyennes pour chaque gabarit et motorisation sur la base de ce mapping:
+    Le calcul des consommations moyennes est basé sur la base de données ADEME [Car Labelling](https://carlabelling.ademe.fr/index/). Nous avons utilisé directement les données brutes via un script permettant d'extraire directement les consommations moyennes pour chaque gabarit et motorisation sur la base du mapping ci-dessous ; depuis lesquelles nous avons établit les hypothèses suivantes:
 
-      - Carosserie = COMBISPACE : "VUL"
-      - Poids < 1400kg : "petite"
-      - Poids 1400-1600kg: "moyenne"
-      - Poids > 1600kg et gamme Luxe ou Supérieure: "SUV"
-      - Poids > 1600kg, autre gammes: "berline"
-
-    | **Catégorie de véhicule** | Conso si essence en L/100km (effectif) | Conso si diesel en L/100km (effectif) |
-    | --- | --- | --- |
-    | **Petite** | 5.46 L/100km (933) | 3.95 L/100km (92) |
-    | **mMoyenne** | 6.49 L/100km (394) | 4.68 L/100km (174) |
-    | **VUL** | 6.34 L/100km (60) | 4.7 L/100km (82) |
-    | **Berline** (voiture type “break”) | 7.06 L/100km (75) | 6.16 L/100km (151) |
-    | **SUV** | 10.38 L/100km (119) | 5.55 L/100km (71) |
+    | **Catégorie de véhicule** | Essence en L/100km | Diesel en L/100km | Electrique en kWh/100km | Hybride essence (HR) en L/100km | Hybride diesel (HR) en L/100km | Hybride (HR) en kWh/100km | Hybride (HNR) en L/100km |
+    | --- | --- | --- | --- | --- | --- | --- | --- |
+    | **Citadine** | 5.5 | 4 | 16 | 1,5 | 1 | 13 | 4.5 |
+    | **Compact / “moyenne”** | 6.5 | 5 | 18 | 1,5 | 1 | 16 | 5 |
+    | **VUL** | 6.5 | 5 | 21 | / | / | / | / |
+    | **Grande voiture** | 8,5 | 6 | 22 | 2 | 1,5 | 20 | 6 |
 
     Cette consommation est une consommation "constructeur". En lien avec le service Transport de l'ADEME, il a été décidé de les corriger via un facteur permettant d’approcher la consommation réelle à partir des consommation d’homologation (constructeur).
 
     D’après [EAA](https://climate-energy.eea.europa.eu/topics/transport/real-world-emissions/data) (source fournie par le service transport de l'ADEME), on a:
-      - Essence: +21%
-      - Diesel: +17%
+      - Essence: +24%
+      - Diesel: +20%
 
     Une autre limite reste tout de même: cette base rassemble des données de véhicules récents, pas forcément représentatifs des véhicules en circulation.
 
     Enfin, pour obtenir les consommations des véhicules roulant à l'essence E85, nous avons appliqué une **surconsommation de 25%** par rapport aux véhicules essence, chiffre qui semble faire consensus.
 
-    De même, pour obtenir les consommations des véhicules roulant au GPL, nous avons appliqué une **surconsommation de 15%** par rapport aux véhicules essence, sauf pour le GPL, véhicule pour lequel nous avons déjà la données.
+    De même, pour obtenir les consommations des véhicules roulant au GPL, nous avons appliqué une **surconsommation de 15%** par rapport aux véhicules essence.
   unité: l/centkm
   formule:
     variations:
@@ -475,98 +459,75 @@ transport . voiture . thermique . consommation estimée:
               alors: VUL essence * 1.25
             - si: thermique . carburant = 'GPL'
               alors: VUL essence * 1.15
-      - si: gabarit = 'berline'
+      - si: gabarit = 'grande berline'
         alors:
           variations:
             - si: thermique . carburant = 'gazole B7 ou B10'
-              alors: berline diesel
+              alors: grande berline diesel
             - si: thermique . carburant = 'essence E5 ou E10'
-              alors: berline essence
+              alors: grande berline essence
             - si: thermique . carburant = 'essence E85'
-              alors: berline essence * 1.25
+              alors: grande berline essence * 1.25
             - si: thermique . carburant = 'GPL'
-              alors: berline essence * 1.15
-      - si: gabarit = 'SUV'
-        alors:
-          variations:
-            - si: thermique . carburant = 'gazole B7 ou B10'
-              alors: SUV diesel
-            - si: thermique . carburant = 'essence E5 ou E10'
-              alors: SUV essence
-            - si: thermique . carburant = 'essence E85'
-              alors: SUV essence * 1.25
-            - si: thermique . carburant = 'GPL'
-              alors: SUV essence * 1.15
+              alors: grande berline essence * 1.15
 
 transport . voiture . thermique . consommation estimée . petite diesel:
   titre: Consommation moyenne petite voiture diesel
-  formule: 3.95 * 1.17
+  formule: 4 * 1.20
   unité: l/centkm
 
 transport . voiture . thermique . consommation estimée . petite essence:
   titre: Consommation moyenne petite voiture essence
-  formule: 5.46 * 1.21
+  formule: 5.5 * 1.24
   unité: l/centkm
 
 transport . voiture . thermique . consommation estimée . moyenne diesel:
   titre: Consommation moyenne voiture "moyenne" diesel
-  formule: 4.68 * 1.17
+  formule: 5 * 1.20
   unité: l/centkm
 
 transport . voiture . thermique . consommation estimée . moyenne essence:
   titre: Consommation moyenne voiture "moyenne" essence
-  formule: 6.49 * 1.21
+  formule: 6.5 * 1.24
   unité: l/centkm
 
 transport . voiture . thermique . consommation estimée . VUL diesel:
   titre: Consommation moyenne VUL diesel
-  formule: 4.7 * 1.17
+  formule: 5 * 1.20
   unité: l/centkm
 
 transport . voiture . thermique . consommation estimée . VUL essence:
   titre: Consommation moyenne VUL essence
-  formule: 6.34 * 1.21
+  formule: 6.5 * 1.24
   unité: l/centkm
 
-transport . voiture . thermique . consommation estimée . berline diesel:
+transport . voiture . thermique . consommation estimée . grande berline diesel:
   titre: Consommation moyenne berline diesel
-  formule: 6.16 * 1.17
+  formule: 6 * 1.20
   unité: l/centkm
 
-transport . voiture . thermique . consommation estimée . berline essence:
+transport . voiture . thermique . consommation estimée . grande berline essence:
   titre: Consommation moyenne berline essence
-  formule: 7.06 * 1.21
-  unité: l/centkm
-
-transport . voiture . thermique . consommation estimée . SUV diesel:
-  titre: Consommation moyenne SUV diesel
-  formule: 5.55 * 1.17
-  unité: l/centkm
-
-transport . voiture . thermique . consommation estimée . SUV essence:
-  titre: Consommation moyenne SUV essence
-  formule: 9.85 * 1.21
+  formule: 8.5 * 1.24
   unité: l/centkm
 
 transport . voiture . thermique . empreinte au litre:
-  description: |
-    Les empreintes sont disponibles de façon assez détaillée sur [la base carbone](https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element?recherche=diesel), ici par exemple pour le "diesel". Idem pour "essence".
-    Pour les retrouver facilement, filtrez par unité "kgCO2e/litre" et par géographie "France continentale".
-
-    À noter que pour le gazole, le FE choisi est la moyenne entre le gazole B7 et le gazole B10.
   formule:
     variations:
       - si: carburant = 'gazole B7 ou B10'
-        alors:
-          moyenne:
-            - 3.1 kgCO2e/l
-            - 3.04 kgCO2e/l
+        alors: 3.49
       - si: carburant = 'essence E5 ou E10'
-        alors: 2.7
+        alors: 3.12
       - si: carburant = 'essence E85'
-        alors: 1.11
+        alors: 1.35
       - si: carburant = 'GPL'
-        alors: 1.86
+        alors: 2.25
+  note: |
+    Les données sont issues de la Base Empreinte :
+      - Diesel - usage routier
+      - Essence - usage routier
+      - Essence E85 (85% bioéthanol) - usage routier
+      - Gaz de pétrole liquéfié (GPL) - usage routier
   unité: kgCO2e/l
 
 transport . voiture . thermique . carburant:
@@ -653,31 +614,17 @@ transport . voiture . hybride . consommation thermique estimée:
   note: |
     > Si nous avons travaillé les propositions de consommation moyenne, l'idéal au vu de l'impact de cette donnée est bien que l'utilisateur ou l'utilisatrice saisisse sa propre consommation réelle, moyennée sur son usage.
 
-    Le calcul des consommations moyennes est basé sur la base de données ADEME [Car Labelling](https://carlabelling.ademe.fr/index/). Nous avons utilisé directement les [données brutes](https://explore.data.gouv.fr/fr/datasets/607d3dfa434fd3f49e61436c/#/resources/e85bd68f-0690-4753-adb9-ce1f5eab7a58) via un script permettant d'extraire directement les consommations moyennes pour chaque gabarit et motorisation sur la base de ce mapping:
-
-      - Carosserie = COMBISPACE : "VUL"
-      - Poids < 1400kg : "petite"
-      - Poids 1400-1600kg: "moyenne"
-      - Poids > 1600kg et gamme Luxe ou Supérieure: "SUV"
-      - Poids > 1600kg, autre gammes: "berline"
-
-    | **Catégorie de véhicule** | Hybride (HR) en L/100km (effectif) | Hybride | Hybride (HNR) en L/100km (effectif) |
-    | --- | --- | --- |
-    | **Citadine** | / | 4.37 (304) |
-    | **Compact / “moyenne”** | 1 (22) | 4.69 (134) |
-    | **VUL** | / | / |
-    | **Berline** (voiture type “break”) | 1.23 (263) | 5.4 (263) |
-    | **Grande berline** | 1.52 (417) | 5.92 (417) |
+    Le calcul des consommations moyennes est basé sur la base de données ADEME [Car Labelling](https://carlabelling.ademe.fr/index/). Nous avons utilisé directement les données brutes via un script permettant d'extraire directement les consommations moyennes pour chaque gabarit et motorisation sur la base du mapping ci-dessous ; depuis lesquelles nous avons établit les hypothèses suivantes:
 
     > Une approximation est sans doute faite ici sur les choix de gabarits étant donné que le poids des véhicules hybrides et plus élevé que les véhicules thermiques ce qui peut impacter le rapprochement consommation / gabarit.
 
     Cette consommation est une consommation "constructeur". En lien avec le service Transport de l'ADEME, il a été décidé de les corriger via un facteur permettant d’approcher la consommation réelle à partir des consommation d’homologation (constructeur).
 
     D’après [EAA](https://climate-energy.eea.europa.eu/topics/transport/real-world-emissions/data) (source fournie par le service transport de l'ADEME), on a, pour les hybrides rechargeables :
-      - HR (essence): +306%
-      - HR (diesel): +348%
+      - HR (essence): +477%
+      - HR (diesel): +624%
 
-    On considère une augmentation de 325%.
+    On considère une augmentation de 550%.
 
     Enfin pour la consommation des hybrides non rechargeables, nous avons appliqué une augmentation de 20%, chiffre qui reste dans l'ordre de grandeur des surconsommations pour le thermique.
 
@@ -708,39 +655,32 @@ transport . voiture . hybride . consommation thermique estimée:
               alors: VUL HNR
             - si: motorisation = 'hybride rechargeable'
               alors: VUL HR
-      - si: gabarit = 'berline'
+      - si: gabarit = 'grande berline'
         alors:
           variations:
             - si: motorisation = 'hybride non rechargeable'
-              alors: berline HNR
+              alors: grande berline HNR
             - si: motorisation = 'hybride rechargeable'
-              alors: berline HR
-      - si: gabarit = 'SUV'
-        alors:
-          variations:
-            - si: motorisation = 'hybride non rechargeable'
-              alors: SUV HNR
-            - si: motorisation = 'hybride rechargeable'
-              alors: SUV HR
+              alors: grande berline HR
 
 transport . voiture . hybride . consommation thermique estimée . petite HNR:
   titre: Consommation moyenne petite voiture HNR
-  formule: 4.37 * 1.2
+  formule: 4.5 * 1.2
   unité: l/centkm
 
 transport . voiture . hybride . consommation thermique estimée . petite HR:
   titre: Consommation moyenne petite voiture HR
-  formule: 1 * 4.25
+  formule: 1 * 5.5
   unité: l/centkm
 
 transport . voiture . hybride . consommation thermique estimée . moyenne HNR:
   titre: Consommation moyenne voiture "moyenne" HNR
-  formule: 4.69 * 1.2
+  formule: 5 * 1.2
   unité: l/centkm
 
 transport . voiture . hybride . consommation thermique estimée . moyenne HR:
   titre: Consommation moyenne voiture "moyenne" HR
-  formule: 1 * 4.25
+  formule: 1 * 5.5
   unité: l/centkm
 
 transport . voiture . hybride . consommation thermique estimée . VUL HNR:
@@ -753,47 +693,29 @@ transport . voiture . hybride . consommation thermique estimée . VUL HR:
   formule: consommation thermique estimée . moyenne HR
   unité: l/centkm
 
-transport . voiture . hybride . consommation thermique estimée . berline HNR:
-  titre: Consommation moyenne berline HNR
-  formule: 5.4 * 1.2
+transport . voiture . hybride . consommation thermique estimée . grande berline HNR:
+  titre: Consommation moyenne grande berline HNR
+  formule: 6 * 1.2
   unité: l/centkm
 
-transport . voiture . hybride . consommation thermique estimée . berline HR:
-  titre: Consommation moyenne berline HR
-  formule: 1.27 * 4.25
+transport . voiture . hybride . consommation thermique estimée . grande berline HR:
+  titre: Consommation moyenne grande berline HR
+  formule: 1.5 * 5.5
   unité: l/centkm
-
-transport . voiture . hybride . consommation thermique estimée . SUV HNR:
-  titre: Consommation moyenne SUV HNR
-  formule: 5.88 * 1.2
-  unité: l/centkm
-
-transport . voiture . hybride . consommation thermique estimée . SUV HR:
-  titre: Consommation moyenne SUV HR
-  formule: 1.52 * 4.25
 
 transport . voiture . hybride rechargeable:
 transport . voiture . hybride rechargeable . consommation elec estimée:
   note: |
     > Si nous avons travaillé les propositions de consommation moyenne, l'idéal au vu de l'impact de cette donnée est bien que l'utilisateur ou l'utilisatrice saisisse sa propre consommation réelle, moyennée sur son usage.
 
-    Le calcul des consommations moyennes est basé sur la base de données ADEME [Car Labelling](https://carlabelling.ademe.fr/index/). Nous avons utilisé directement les [données brutes](https://explore.data.gouv.fr/fr/datasets/607d3dfa434fd3f49e61436c/#/resources/e85bd68f-0690-4753-adb9-ce1f5eab7a58) via un script permettant d'extraire directement les consommations moyennes pour chaque gabarit et motorisation sur la base de ce mapping:
+    Le calcul des consommations moyennes est basé sur la base de données ADEME [Car Labelling](https://carlabelling.ademe.fr/index/). Nous avons utilisé directement les données brutes via un script permettant d'extraire directement les consommations moyennes pour chaque gabarit et motorisation sur la base du mapping ci-dessous ; depuis lesquelles nous avons établit les hypothèses suivantes:
 
-      - Carosserie = COMBISPACE : "VUL"
-      - Poids < 1400kg : "petite"
-      - Poids 1400-1600kg: "moyenne"
-      - Poids > 1600kg et gamme Luxe ou Supérieure: "SUV"
-      - Poids > 1600kg, autre gammes: "berline"
-
-    | **Catégorie de véhicule**  | Hybride (HR) en kWh/100km (effectif) |
-    | --- | --- |
-    | **Citadine** | / |
-    | **Compact / “moyenne”** | 14.2 (22) |
-    | **VUL** | / |
-    | **Berline** (voiture type “break”) | 17 (49) |
-    | **Grande berline** | 20.4 (100) |
-
-    > Une approximation est sans doute faite ici sur les choix de gabarits étant donné que le poids des véhicules hybrides et plus élevé que les véhicules thermiques ce qui peut impacter le rapprochement consommation / gabarit.
+    | **Catégorie de véhicule** | Essence en L/100km | Diesel en L/100km | Electrique en kWh/100km | Hybride essence (HR) en L/100km | Hybride diesel (HR) en L/100km | Hybride (HR) en kWh/100km | Hybride (HNR) en L/100km |
+    | --- | --- | --- | --- | --- | --- | --- | --- |
+    | **Citadine** | 5.5 | 4 | 16 | 1,5 | 1 | 13 | 4.5 |
+    | **Compact / “moyenne”** | 6.5 | 5 | 18 | 1,5 | 1 | 16 | 5 |
+    | **VUL** | 6.5 | 5 | 21 | / | / | / | / |
+    | **Grande voiture** | 8,5 | 6 | 22 | 2 | 1,5 | 20 | 6 |
 
     Cette consommation est une consommation "constructeur". En lien avec le service Transport de l'ADEME, il a été décidé de les corriger via un facteur permettant d’approcher la consommation réelle à partir des consommation d’homologation (constructeur). Il a été décidé de conserver l’ordre de grandeur de 20% même si l'électrique est assez sensible à la température extérieure (le chauffage n'est pas "gratuit" en énergie comme avec un moteur thermique sur lequel on vient récupérer la chaleur perdue pour chauffer l'habitacle).
 
@@ -807,20 +729,18 @@ transport . voiture . hybride rechargeable . consommation elec estimée:
       alors: moyenne
     - si: gabarit = 'VUL'
       alors: VUL
-    - si: gabarit = 'berline'
-      alors: berline
-    - si: gabarit = 'SUV'
-      alors: SUV
+    - si: gabarit = 'grande berline'
+      alors: grande berline
   unité: kWh/centkm
 
 transport . voiture . hybride rechargeable . consommation elec estimée . petite:
   titre: Consommation moyenne petite voiture hybride rechargeable
-  formule: 13.2 * 1.2
+  formule: 13 * 1.2
   unité: kWh/centkm
 
 transport . voiture . hybride rechargeable . consommation elec estimée . moyenne:
   titre: Consommation moyenne voiture "moyenne" hybride rechargeable
-  formule: 15.9 * 1.2
+  formule: 16 * 1.2
   unité: kWh/centkm
 
 transport . voiture . hybride rechargeable . consommation elec estimée . VUL:
@@ -828,14 +748,9 @@ transport . voiture . hybride rechargeable . consommation elec estimée . VUL:
   formule: consommation elec estimée . moyenne
   unité: kWh/centkm
 
-transport . voiture . hybride rechargeable . consommation elec estimée . berline:
-  titre: Consommation moyenne berline hybride rechargeable
-  formule: 17.5 * 1.2
-  unité: kWh/centkm
-
-transport . voiture . hybride rechargeable . consommation elec estimée . SUV:
-  titre: Consommation moyenne SUV hybride rechargeable
-  formule: 20.4 * 1.2
+transport . voiture . hybride rechargeable . consommation elec estimée . grande berline:
+  titre: Consommation moyenne grande berline hybride rechargeable
+  formule: 20 * 1.2
   unité: kWh/centkm
 
 transport . voiture . électrique:
@@ -926,23 +841,14 @@ transport . voiture . électrique . consommation estimée:
 
     > Si nous avons travaillé les propositions de consommation moyenne, l'idéal au vu de l'impact de cette donnée est bien que l'utilisateur ou l'utilisatrice saisisse sa propre consommation réelle, moyennée sur son usage.
 
-    Le calcul des consommations moyennes est basé sur la base de données ADEME [Car Labelling](https://carlabelling.ademe.fr/index/). Nous avons utilisé directement les [données brutes](https://explore.data.gouv.fr/fr/datasets/607d3dfa434fd3f49e61436c/#/resources/e85bd68f-0690-4753-adb9-ce1f5eab7a58) via un script permettant d'extraire directement les consommations moyennes pour chaque gabarit et motorisation sur la base de ce mapping:
+    Le calcul des consommations moyennes est basé sur la base de données ADEME [Car Labelling](https://carlabelling.ademe.fr/index/). Nous avons utilisé directement les données brutes via un script permettant d'extraire directement les consommations moyennes pour chaque gabarit et motorisation sur la base du mapping ci-dessous ; depuis lesquelles nous avons établit les hypothèses suivantes:
 
-      - Carosserie = COMBISPACE : "VUL"
-      - Poids < 1400kg : "petite"
-      - Poids 1400-1600kg: "moyenne"
-      - Poids > 1600kg et gamme Luxe ou Supérieure: "SUV"
-      - Poids > 1600kg, autre gammes: "berline"
-
-    | **Catégorie de véhicule** | Conso si électrique en kWh/100km (effectif) |
-    | --- | --- |
-    | **Petite** | 14.5 kWh/100km (20) |
-    | **Moyenne** | 16 kWh/100km (42) |
-    | **VUL** | 20.6 kWh/100km (6) |
-    | **Berline** (voiture type “break”) | 19.3 kWh/100km (40) |
-    | **SUV** | 21.2 kWh/100km (26) |
-
-    > Une approximation est sans doute faite ici sur les choix de gabarits étant donné que le poids des véhicules électriques et plus élevé que les véhicules thermiques ce qui peut impacter le rapprochement consommation / gabarit.
+    | **Catégorie de véhicule** | Essence en L/100km | Diesel en L/100km | Electrique en kWh/100km | Hybride essence (HR) en L/100km | Hybride diesel (HR) en L/100km | Hybride (HR) en kWh/100km | Hybride (HNR) en L/100km |
+    | --- | --- | --- | --- | --- | --- | --- | --- |
+    | **Citadine** | 5.5 | 4 | 16 | 1,5 | 1 | 13 | 4.5 |
+    | **Compact / “moyenne”** | 6.5 | 5 | 18 | 1,5 | 1 | 16 | 5 |
+    | **VUL** | 6.5 | 5 | 21 | / | / | / | / |
+    | **Grande voiture** | 8,5 | 6 | 22 | 2 | 1,5 | 20 | 6 |
 
     Cette consommation est une consommation "constructeur". En lien avec le service Transport de l'ADEME, il a été décidé de les corriger via un facteur permettant d’approcher la consommation réelle à partir des consommation d’homologation (constructeur). Il a été décidé de conserver l’ordre de grandeur de 20% même si l'électrique est assez sensible à la température extérieure (le chauffage n'est pas "gratuit" en énergie comme avec un moteur thermique sur lequel on vient récupérer la chaleur perdue pour chauffer l'habitacle).
 
@@ -954,35 +860,28 @@ transport . voiture . électrique . consommation estimée:
       alors: moyenne
     - si: gabarit = 'VUL'
       alors: VUL
-    - si: gabarit = 'berline'
-      alors: berline
-    - si: gabarit = 'SUV'
-      alors: SUV
+    - si: gabarit = 'grande berline'
+      alors: grande berline
   unité: kWh/centkm
 
 transport . voiture . électrique . consommation estimée . petite:
   titre: Consommation moyenne petite voiture électrique
-  formule: 15.6 * 1.2
+  formule: 16 * 1.2
   unité: kWh/centkm
 
 transport . voiture . électrique . consommation estimée . moyenne:
   titre: Consommation moyenne voiture "moyenne" électrique
-  formule: 17.1 * 1.2
+  formule: 18 * 1.2
   unité: kWh/centkm
 
 transport . voiture . électrique . consommation estimée . VUL:
   titre: Consommation moyenne VUL électrique
-  formule: 20.6 * 1.2
+  formule: 21 * 1.2
   unité: kWh/centkm
 
-transport . voiture . électrique . consommation estimée . berline:
-  titre: Consommation moyenne berline électrique
-  formule: 23.9 * 1.2
-  unité: kWh/centkm
-
-transport . voiture . électrique . consommation estimée . SUV:
-  titre: Consommation moyenne SUV électrique
-  formule: 22.3 * 1.2
+transport . voiture . électrique . consommation estimée . grande berline:
+  titre: Consommation moyenne grande berline électrique
+  formule: 23 * 1.2
   unité: kWh/centkm
 
 transport . voiture . gabarit:
@@ -1002,8 +901,7 @@ transport . voiture . gabarit:
     - petite
     - moyenne
     - VUL
-    - berline
-    - SUV
+    - grande berline
 
 transport . voiture . gabarit . petite:
   titre: Petite
@@ -1014,38 +912,29 @@ transport . voiture . gabarit . moyenne:
 transport . voiture . gabarit . VUL:
   titre: Véhicule utilitaire
   description: Camionette de type Kangoo ou Partner jusqu'au Trafic et Vito
-transport . voiture . gabarit . berline:
-  titre: Berline
-  description: Une voiture longue, type 308, Tesla Model 3, Audi A3
-transport . voiture . gabarit . SUV:
-  titre: SUV
-  description: |
-    "Sport utility vehicle", type 4x4 urbain
+transport . voiture . gabarit . grande berline:
+  titre: Grande berline, SUV
+  description: Une grande voiture, type 3008, Tesla Model 3, Audi Q3
 
 transport . voiture . gabarit . petite . poids:
   formule: 1400
   unité: kg
-  note: Hypothèses alignées avec Ecoinvent, validée par le service Transport et Mobilité de l'ADEME.
+  note: Hypothèse validée par le service Transport et Mobilité de l'ADEME.
 
 transport . voiture . gabarit . moyenne . poids:
   formule: 1600
   unité: kg
-  note: Hypothèses alignées avec Ecoinvent, validée par le service Transport et Mobilité de l'ADEME.
+  note: Hypothèse validée par le service Transport et Mobilité de l'ADEME.
 
 transport . voiture . gabarit . VUL . poids:
   formule: 1600
   unité: kg
-  note: Hypothèses alignées avec Ecoinvent, validée par le service Transport et Mobilité de l'ADEME.
+  note: Hypothèse validée par le service Transport et Mobilité de l'ADEME.
 
-transport . voiture . gabarit . berline . poids:
+transport . voiture . gabarit . grande berline . poids:
   formule: 2000
   unité: kg
-  note: Hypothèses alignées avec Ecoinvent, validée par le service Transport et Mobilité de l'ADEME.
-
-transport . voiture . gabarit . SUV . poids:
-  formule: 2000
-  unité: kg
-  note: Hypothèses alignées avec Ecoinvent, validée par le service Transport et Mobilité de l'ADEME.
+  note: Hypothèse validée par le service Transport et Mobilité de l'ADEME.
 
 transport . voiture . base au kilomètre:
   applicable si:
@@ -1062,20 +951,20 @@ transport . voiture . entretien:
   formule:
     variations:
       - si: motorisation = 'thermique'
-        alors: 0.0067
+        alors: 0.0027
       - si:
           une de ces conditions:
             - motorisation = 'hybride non rechargeable'
             - motorisation = 'hybride rechargeable'
             - motorisation = 'électrique'
-        alors: 0.0066
+        alors: 0.0093
   unité: kgCO2e/km
-  description: |
-    > Ces données sont soumises à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peuvent pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
   note: |
-    La mise à jour de la Base Empreinte avec les données ecoinvent d'avril 2025 a mis à disposition la donnée "Maintenance d'une voiture particulière électrique (sans batterie)" (maintenance, passenger car, electric, without battery). Nous avons fait le choix d'utiliser son pendant thermique directement depuis ecoinvent (maintenance, passenger car).
+    Données issues de BAFU, qui concernent toute la durée de vie des véhicules.
 
-    Pour ce qui est d'un véhicule hybride, nous considérons que l'entretien est le même que pour un véhicule électrique.
+    Thermique (Maintenance, passenger car) → 657 kgCO2e, soit 0.0027 kgCO2e/km
+
+    Electrique (Maintenance, passenger car, electric, LiMn2O4, city car) → 2243 kgCO2e, soit  0.0093 kgCO2e/km.
 
 transport . voiture . climatisation:
   formule: (émissions gaz fluorés transport / nombre véhicules circulation) / transport . voiture . km annuels moyen
@@ -1143,12 +1032,10 @@ transport . voiture . barème construction:
     Mieux, mais loin d'être faible ! Aujourd'hui, il ne s'agit plus seulement de comparer des solutions techniques entre elles, il s'agit d'évaluer ses achats par rapport aux objectifs climat.
 
   note: |
-    Les données autour des émissions liées à la fabrication de véhicules sont nombreuses et variées. La première approche utilisait l'étude [FNH-Carbone4](https://github.com/betagouv/ecolab-data/files/5945898/vehicule_electrique_rapport.pdf) qui propose des facteurs d'émissions pour la construction pour 2 gabarits, en distinguant les véhicules thermiques, électriques et hybrides. Certaines données pour le véhicules paraissaient incohérentes, et nous avions besoin, d'un point de vue méthodologique, de plus de finesse dans le calcul de l'empreinte des véhicules électriques.
+    Pour le calcul de l'empreinte de la construction des véhicules, nous adoptons l'approche suivante:
 
-    C'est pouquoi, désormais, nous adoptons l'approche suivante:
-
-    - Pour les véhicules thermiques, nous utilisons les données de la Base Empreinte de l'ADEME donnant une valeur de 4,5 kgCO2e/kg pour la construction d'une voiture. Nous appliquons ce facteur à la masse de la voiture pour obtenir l'empreinte de la construction, masse étant déterminée par le gabarit du véhicule.
-    - Pour les véhicules électriques, nous calculons l'empreinte de la batterie en fonction de sa capacité, puis nous ajoutons l'empreinte de la construction d'une voiture thermique de gamme équivalente.
+    - Nous appliquons le facteur d'empreinte de production d'un véhicule thermqiue à la masse de la voiture pour obtenir l'empreinte de la construction, masse étant déterminée par le gabarit du véhicule.
+    - Pour les véhicules électriques, nous calculons l'empreinte de la batterie en fonction de sa capacité, puis nous ajoutons l'empreinte de la construction d'une voiture électrique (hors batterie) de gamme équivalente.
     - Pour les véhicules hybrides, nous utilisons les mêmes données que pour les véhicules électriques (hypothèse forte, voir note sur le barème hybride).
 transport . voiture . barème construction . barème thermique:
   formule: production
@@ -1163,19 +1050,15 @@ transport . voiture . barème construction . barème thermique . production:
         alors: empreinte par kg * gabarit . moyenne . poids
       - si: gabarit = 'VUL'
         alors: empreinte par kg * gabarit . VUL . poids
-      - si: gabarit = 'berline'
-        alors: empreinte par kg * gabarit . berline . poids
-      - si: gabarit = 'SUV'
-        alors: empreinte par kg * gabarit . SUV . poids
+      - si: gabarit = 'grande berline'
+        alors: empreinte par kg * gabarit . grande berline . poids
   unité: kgCO2e
 
 transport . voiture . barème construction . barème thermique . empreinte par kg:
-  formule: 7.29
+  formule: 5.53
   unité: kgCO2e/kg
-  description: |
-    > Cette donnée est soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peut pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
   note: |
-    La mise à jour de la Base Empreinte avec les données ecoinvent d'avril 2025 a mis à disposition la donnée "Production d'une voiture particulière électrique (sans batterie)" (passenger car production, electric, without battery). Nous avons fait le choix d'utiliser son pendant thermique directement depuis ecoinvent (passenger car production, diesel).
+    Nous utilisons ici la donnée BAFU "Passenger Car, diesel, Compact, 2021".
 
 transport . voiture . barème construction . barème électrique:
   formule: production hors batterie + batterie
@@ -1196,19 +1079,15 @@ transport . voiture . barème construction . barème électrique . production ho
         alors: empreinte par kg * gabarit . moyenne . poids
       - si: gabarit = 'VUL'
         alors: empreinte par kg * gabarit . VUL . poids
-      - si: gabarit = 'berline'
-        alors: empreinte par kg * gabarit . berline . poids
-      - si: gabarit = 'SUV'
-        alors: empreinte par kg * gabarit . SUV . poids
+      - si: gabarit = 'grande berline'
+        alors: empreinte par kg * gabarit . grande berline . poids
   unité: kgCO2e
 
 transport . voiture . barème construction . barème électrique . empreinte par kg:
-  formule: 7.63
+  formule: 6.6
   unité: kgCO2e/kg
-  description: |
-    > Cette donnée est soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peut pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
   note: |
-    Nous utilisons ici la donnée Ecoinvent "Production d'une voiture particulière électrique (sans batterie)" (passenger car production, electric, without battery) mise à disposition dans la Base Empreinte.
+    Nous utilisons ici la donnée BAFU " “Passenger Car, battery electric, NMC-622 battery” (sans batterie).
 
 transport . voiture . barème construction . barème électrique . batterie:
   formule: capacité * empreinte batterie par kWh
@@ -1220,25 +1099,25 @@ transport . voiture . barème construction . barème électrique . batterie:
     Pour réduire l'impact de la voiture électrique il faut privilégier les modèles avec une batterie de petite capacité.
 
 transport . voiture . barème construction . barème électrique . empreinte batterie par kWh:
-  formule: 142.7
+  formule: 73.75
   unité: kgCO2e/kWh
   description: |
     > Cette donnée est soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peut pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
   note: |
-    Nous utilisons ici les données Ecoinvent mise à disposition dans la Base Empreinte:
+    Nous utilisons ici les données BAFU suivantes:
       - Production d'une batterie rechargeable Li-ion, LFP
       - Production d'une batterie rechargeable Li-ion, NMC532
       - Production d'une batterie rechargeable Li-ion, NMC622
 
     Couplée avec [les données IEA "Share of battery capacity of electric vehicle sales by chemistry and region, 2021-2023"](https://www.iea.org/data-and-statistics/charts/share-of-battery-capacity-of-electric-vehicle-sales-by-chemistry-and-region-2021-2023) (source partagée par le service transport de l'ADEME), on a, en 2023:
 
-    | Type de batterie | Référence BE | FE (kgCO2e/kg) | Conversion poids - kWh (kWh/kg) | FE (kgCO2e/kWh) | Répartition 2023 |
+    | Type de batterie | Référence BAFU | FE (kgCO2e/kg) | Conversion poids - kWh (kWh/kg) | FE (kgCO2e/kWh) | Répartition 2023 |
     | --- | --- | --- | --- | --- | --- |
-    | LFP | Production d'une batterie rechargeable Li-ion, LFP | 15.1 | 0.116 | 130 | 6% |
-    | Low nickel | Production d'une batterie rechargeable Li-ion, NMC532 | 21.1 | 0.144 | 147 | 16% |
-    | High nickel | Production d'une batterie rechargeable Li-ion, NMC622 | 21.8 | 0.155 | 141 | 79% |
+    | LFP | Separator, lithium-ion battery, at plant | 5.393 | 0.116 | 46,49 | 6% |
+    | Low nickel | Battery, Li-ion, NMC111, rechargeable, prismatic | 11.43 | 0.144 | 79,38 | 16% |
+    | High nickel | Battery, Li-ion, NMC111, rechargeable, prismatic | 11.43 | 0.155 | 73,74 | 79% |
 
-    Ce qui donne, en moyenne, une empreinte batterie de **142.7 kgCO2e/kWh**.
+    Ce qui donne, en moyenne, une empreinte batterie de **73,75 kgCO2e/kWh**.
 
 transport . voiture . barème construction . barème électrique . batterie . capacité:
   applicable si:
@@ -1270,9 +1149,8 @@ transport . voiture . barème construction . barème électrique . batterie . ca
     | --- | --- |
     | **Citadine** | 291 kg → 44 kWh |
     | **Compact / “moyenne”** | 375 kg → 57 kWh |
-    | **Berline** (voiture type “break”) | 583 kg → 89 kWh |
-    | **VUL** | 583 kg →  89 kWh |
-    | **Grande berline** | 660 kg → 100 kWh |
+    | **VUL** | 375 kg → 57 kWh |
+    | **Grande berline** | 600 kg → 91 kWh |
 
   unité: kWh
   par défaut:
@@ -1284,10 +1162,8 @@ transport . voiture . barème construction . barème électrique . batterie . ca
             - gabarit = 'moyenne'
             - gabarit = 'VUL'
         alors: 57
-      - si: gabarit = 'berline'
-        alors: 89
-      - si: gabarit = 'SUV'
-        alors: 100
+      - si: gabarit = 'grande berline'
+        alors: 91
   suggestions:
     petite autonomie: 50
     autonomie moyenne: 80
@@ -1331,12 +1207,10 @@ transport . voiture . barème construction . barème hybride . moteur électriqu
   unité: kg
 
 transport . voiture . barème construction . barème hybride . moteur électrique . empreinte:
-  formule: 4.43
+  formule: 6.47
   unité: kgCO2e/kg
-  description: |
-    > Cette donnée est soumise à des [conditions d'utilisation spécifiques](https://nosgestesclimat.fr/mentions-legales-base-empreinte) et ne peut pas être réutilisée librement, l'ADEME ne disposant pas de la propriété intellectuelle de cette donnée.
   note: |
-    Nous utilisons ici la donnée Ecoinvent "Production d'un moteur électrique" (production, electric motor).
+    Nous utilisons ici la donnée BAFU "Electric motor, for electric passenger car".
 
 transport . voiture . amortissement:
   description: |
@@ -1357,12 +1231,12 @@ transport . voiture . amortissement:
 
 transport . voiture . durée de vie en km:
   DLUO: 01/09/2026
-  formule: 230000
+  formule: 240000
   unité: km
   note: |
     Nous proposons ici de nous appuyer sur la durée de vie moyenne d'une voiture qui part à la casse (~19 ans, https://www.ecologie.gouv.fr/politiques-publiques/vehicules-hors-dusage-vhu) et le nombre de kilomètres moyen parcourus par an (~12 000 km, Données sur le parc automobile français au 1er janvier 2025](https://www.statistiques.developpement-durable.gouv.fr/donnees-sur-le-parc-automobile-francais-au-1er-janvier-2025?rubrique=&dossier=1348)) pour en déduire une durée de vie en km de 230 000 km.
 
 transport . voiture . durée de vie en années:
-  formule: 19
+  formule: 20
   note: |
     La durée de vie moyenne d'une voiture qui part à la casse est de 19 ans (https://www.ecologie.gouv.fr/politiques-publiques/vehicules-hors-dusage-vhu).
