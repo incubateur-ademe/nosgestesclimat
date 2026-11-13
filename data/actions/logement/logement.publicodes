@@ -146,7 +146,12 @@ actions . logement . isoler:
   applicable si:
     toutes ces conditions:
       - utilisateur . propriétaire logement principal = "propriétaire"
-      - utilisateur . consommation énergie au m2 équivalente > 70
+      # - utilisateur . consommation énergie au m2 équivalente >= 215
+      - une de ces conditions:
+          - utilisateur . DPE équivalent = "D"
+          - utilisateur . DPE équivalent = "E"
+          - utilisateur . DPE équivalent = "F"
+          - utilisateur . DPE équivalent = "G"
   non applicable si:
     une de ces conditions:
       - utilisateur . mode de chauffage = "pas de chauffage"
@@ -154,26 +159,41 @@ actions . logement . isoler:
       - utilisateur . a réalisé travaux isolation
       - utilisateur . âge du logement = 'très récent'
       - utilisateur . est mineur
-
   note: |
     Pour le moment, nous ne chiffrons pas l'impact de cette action car une réflexion plus poussée est menée avec le service Bâtiment de l'ADEME pour déterminer un gain carbone réaliste.
-  formule: 0
-  # formule: (calcul . empreinte chauffage air * gain isolation - empreinte travaux) / utilisateur . habitants
-  # avec:
-  #   gain isolation:
-  #     formule: saut DPE D vers B
-  #     note: |
-  #       L'idée est d'estimer un gain selon la même approche que pour la quantification de l'impact du ressenti d'isolation permettant de moduler les consommations moyennes d'énergie via les saut de classe de DPE (arbitrairement on choisit de se baser sur les sauts de classe D vers B). Néanmoins, nous avons identifié plusieurs limites à cette approche :
-  #         - les sauts de classe de DPE ne sont pas uniquement liés à l'isolation du logement, mais également à d'autres facteurs comme le système de chauffage, les ponts thermiques, etc. Par conséquent, il est difficile d'isoler l'impact de l'isolation sur les consommations d'énergie à partir de ces sauts de classe.
-  #         - le fait de fixer un saut de classe de DPE arbitraire (D vers B) pour estimer le gain d'isolation est non représentatif de la diversité des situations d'isolation des logements mais permet d'avoir une estimation de l'ordre de grandeur du gain d'isolation.
+  formule: (calcul . empreinte chauffage air * gain isolation - empreinte travaux) / utilisateur . habitants
+  avec:
+    gain isolation:
+      formule:
+        variations:
+          - si: utilisateur . DPE équivalent = "D"
+            alors: saut depuis D
+          - si: utilisateur . DPE équivalent = "E"
+            alors: saut depuis E
+          - si: utilisateur . DPE équivalent = "F"
+            alors: saut depuis F
+          - si: utilisateur . DPE équivalent = "G"
+            alors: saut depuis G
+      note: |
+        L'idée est d'estimer un gain selon la même approche que pour la quantification de l'impact du ressenti d'isolation permettant de moduler les consommations moyennes d'énergie via les saut de classe de DPE (arbitrairement on choisit de se baser sur des sauts de 2 classes, correspondant à MaPrimeRénov'). Néanmoins, nous avons identifié plusieurs limites à cette approche :
+          - les sauts de classe de DPE ne sont pas uniquement liés à l'isolation du logement, mais également à d'autres facteurs comme le système de chauffage, les ponts thermiques, etc. Par conséquent, il est difficile d'isoler l'impact de l'isolation sur les consommations d'énergie à partir de ces sauts de classe.
+          - le fait de fixer un saut de 2 classes de DPE arbitraire pour estimer le gain d'isolation est non représentatif de la diversité des situations d'isolation des logements mais permet d'avoir une estimation de l'ordre de grandeur du gain d'isolation.
 
-  #       A titre informatif, une [étude du SDES](https://www.statistiques.developpement-durable.gouv.fr/effets-de-lisolation-thermique-des-logements-sur-la-consommation-reelle-denergie-residentielle?rubrique=&dossier=843982) visant à évaluer les effets de l'isolation thermique des logements sur la consommation réelle d'énergie résidentielle, en se basant sur les compteur communiquants estime que la baisse de consommation d'énergie est de 5,4% pour les logements chauffés à l'électricité et 8,9% pour les logements chauffés au gaz. Cette baisse est plus forte pour les logements les plus énergivores "avant travaux" : elle 9,2% pour les logements chauffés à l'électricité et 16,6% pour les logements chauffés au gaz. Néanmoisn, ces chiffres sont basés sur les consommations totales du logement (pas seulement sur le chaufage de l'air), alors que les travaux d'isolation ont un impact principalement sur le chauffage de l'air justement. Par ailleurs cette étude n'est pas engageante côté ministère ce qui nous pousse à faire le choix de ne pas l'utiliser.
-  #   saut DPE D vers B:
-  #     formule: 90 kWh/m2 / 215 kWh/m2
-  #   empreinte travaux:
-  #     valeur: logement . surface * logement . construction . rénovation . travaux . isolation / logement . construction . rénovation . amortissement
-  #     contexte:
-  #       logement . construction . rénovation . travaux . isolation . présent: oui
+        A titre informatif, une [étude du SDES](https://www.statistiques.developpement-durable.gouv.fr/effets-de-lisolation-thermique-des-logements-sur-la-consommation-reelle-denergie-residentielle?rubrique=&dossier=843982) visant à évaluer les effets de l'isolation thermique des logements sur la consommation réelle d'énergie résidentielle, en se basant sur les compteur communiquants estime que la baisse de consommation d'énergie est de 5,4% pour les logements chauffés à l'électricité et 8,9% pour les logements chauffés au gaz. Cette baisse est plus forte pour les logements les plus énergivores "avant travaux" : elle 9,2% pour les logements chauffés à l'électricité et 16,6% pour les logements chauffés au gaz. Néanmoisn, ces chiffres sont basés sur les consommations totales du logement (pas seulement sur le chaufage de l'air), alors que les travaux d'isolation ont un impact principalement sur le chauffage de l'air justement. Par ailleurs cette étude n'est pas engageante côté ministère ce qui nous pousse à faire le choix de ne pas l'utiliser.
+    saut depuis D:
+      formule: logement . chauffage . précision consommation . DPE . consommation équivalente DPE C / logement . chauffage . précision consommation . DPE . consommation équivalente DPE D
+      note: |
+        Pour les logements déjà classés "D", on considère que le gain d'isolation est équivalent à un saut d'une classe seulement car l'isolation seule ne permet pas de sauter 2 classes pour des logements déjà relativement bien isolés.
+    saut depuis E:
+      formule: logement . chauffage . précision consommation . DPE . consommation équivalente DPE C / logement . chauffage . précision consommation . DPE . consommation équivalente DPE E
+    saut depuis F:
+      formule: logement . chauffage . précision consommation . DPE . consommation équivalente DPE D / logement . chauffage . précision consommation . DPE . consommation équivalente DPE F
+    saut depuis G:
+      formule: logement . chauffage . précision consommation . DPE . consommation équivalente DPE E / logement . chauffage . précision consommation . DPE . consommation équivalente DPE G
+    empreinte travaux:
+      valeur: logement . surface * logement . construction . rénovation . travaux . isolation / logement . construction . rénovation . amortissement
+      contexte:
+        logement . construction . rénovation . travaux . isolation . présent: oui
 
 actions . logement . installer panneaux solaires thermiques:
   titre: Installer des panneaux solaires thermiques
