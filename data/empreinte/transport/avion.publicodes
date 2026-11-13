@@ -7,9 +7,24 @@ transport . avion:
 
     Gardons aussi en tête que le Français moyen ne prend pas ou peu l'avion. L'essentiel de l'empreinte de l'aviation est donc concentrée sur 10% ou moins des Français.
   note: |
-    Nous avons fait le choix de demander le total d'heures de vol, plutôt que de demander à l'utilisateur de renseigner chacun de ses vols
-    via l'aéroport de départ, d'arrivée et la classe économique. C'est une évolution possible par la suite. A noter aussi que les escales entrainent des décollages supplémentaires, qui consomment plu
-    s de carburant qu'une vitesse de croisière. C'est aussi un paramètre à prendre en compte par la suite.
+    Pour les valeurs par défaut, nous nous sommes basés sur l'enquête OpinionWay pour Forum Vies Mobiles, mai 2025 (1 647 répondants).
+
+    Elle remplace l'estimation précédente, fondée sur l'observatoire de la concurrence de la DGAC et l'enquête nationale des passagers aériens (ENPA) 2023.
+
+    Elle porte sur un échantillon de 1 647 répondants, adultes résidant en France, de 21 à 88 ans pour 5359 vols répartis sur 49,7% de l’échantillon. L'enquête a interrogé 1 647 personnes, dont 1 040 constituent la cible « population générale » calée sur les marges nationales (sexe, âge, diplôme, CSP, revenu, région, nationalité) au moyen d'un facteur de redressement propre à chaque répondant (de 0,59 à 1,98). Les 607 autres sont des sur-échantillons de grands voyageurs (302) et de non-voyageurs (305), recrutés volontairement en supplément pour permettre l'analyse de ces sous-populations : ils ne participent pas à l'estimation de la moyenne nationale, afin de ne pas biaiser le résultat par leur sur-représentation. C'est donc sur ces 1 040 répondants redressés que reposent les valeurs proposées.
+
+    Nous avons réalisé plusieurs hypothèses pour traiter ces données : 
+
+    - Le seuil choisi pour différencier les vols court-courrier / moyen-long courrier est 1500km
+    - Nous avons exclu les vols dont le motif était professionnel 
+    - Nous avons estimé l’aéroport de départ de certains trajets dans le cas ou ils étaient non renseignés en prenant l'aéroport de départ le plus fréquent dans les autres trajets du répondant
+    - Distance orthodromique entre aéroports de départ et d’arrivée
+    - Séparation des voyageurs annuels / moins d’une fois par an
+
+    *Quelques limites à noter:*
+    - les **escales** sont exclues par construction du questionnaire (destination finale seule), ce qui sous-estime les distances long-courriers ;
+    - les **318 vols internes au voyage** déclarés ne sont pas valorisés, faute d'aéroports renseignés (~6 % des vols) ;
+    - la distribution est très concentrée : 54,9 % des adultes n'ont pas volé sur la période et 10 % des voyageurs portent 71 % des kilomètres.
   formule:
     variations:
       - si:
@@ -181,6 +196,11 @@ transport . avion . vols amortis . heures moyen et long courrier . saisie:
   plafond: 600
   question: Combien d'heures avez-vous voyagé en avion sur les 3 dernières années sur des vols moyen ou long-courrier ?
   unité: h
+  note: |
+    ⚠️ Le champ porte sur un **cumul de 3 ans**, pas sur une année : il est ensuite divisé par
+    `vols amortis . amortissement` (3). La valeur par défaut doit donc impérativement être une
+    durée sur 3 ans (`durée moyenne passager sur 3 ans`). Utiliser une durée annuelle ici
+    sous-estimerait l'empreinte d'un facteur 3.
 
 transport . avion . fréquence trajets:
   titre: Fréquence moyenne de prise de l'avion par les passagers français
@@ -208,12 +228,12 @@ transport . avion . court courrier . empreinte par km:
 
 transport . avion . court courrier . durée moyenne:
   titre: Durée moyenne passée par un Français dans les vols court-courriers
-  formule: 420 km / vitesse moyenne
+  formule: 419 km / vitesse moyenne
   unité: h
 
 transport . avion . court courrier . durée moyenne passager tous les ans:
   titre: Durée moyenne annuelle passée dans les vols court courriers par un voyageur Français qui prend l'avion tous les ans
-  formule: 1846 km / vitesse moyenne
+  formule: 1822 km / vitesse moyenne
   unité: h
 
 transport . avion . court courrier . durée moyenne passager sur 3 ans:
@@ -256,12 +276,12 @@ transport . avion . moyen et long courrier . empreinte par km . long courrier:
 
 transport . avion . moyen et long courrier . durée moyenne:
   titre: Durée moyenne passée dans les vols moyen et long-courriers par un Français (voleur ou non)
-  formule: 2622 km / vitesse moyenne
+  formule: 2917 km / vitesse moyenne
   unité: h
 
 transport . avion . moyen et long courrier . durée moyenne passager tous les ans:
   titre: Durée moyenne annuelle passée dans les vols moyen et long-courriers par un voyageur Français qui prend l'avion tous les ans
-  formule: 13606 km / vitesse moyenne
+  formule: 16296 km / vitesse moyenne
   unité: h
 
 transport . avion . moyen et long courrier . durée moyenne passager sur 3 ans:

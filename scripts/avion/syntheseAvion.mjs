@@ -35,9 +35,9 @@ Options:
                     La ventilation annuelle reste celle du fichier complet.
   --mixed <mode>    strict | inclusif (défaut : strict) : traitement des trajets
                     à la fois professionnels et personnels
-  --exclude <ids>   identifiants supplémentaires à écarter des analyses, séparés
-                    par des virgules (en plus de la liste par défaut)
-  --no-exclude      réintégrer les répondants écartés comme valeurs extrêmes
+  --exclude <ids>   identifiants à écarter des analyses, séparés par des virgules
+                    (aucune exclusion par défaut)
+  --no-exclude      désactiver les exclusions configurées
   --sep <char>      séparateur csv (défaut : ";", adapté à Excel FR)
   --no-bom          ne pas préfixer le csv par un BOM UTF-8
 */

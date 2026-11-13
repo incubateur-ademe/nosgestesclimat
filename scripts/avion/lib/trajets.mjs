@@ -48,26 +48,15 @@ export const PURPOSE_LABELS = {
 // Cadres possibles d'un trajet, tels qu'affichés dans les csv.
 export const CADRES = ['personnel', 'professionnel', 'mixte', 'non renseigné']
 
-// Répondants écartés des analyses, avec leur justification. L'exclusion est
-// volontairement explicite et réversible (--no-exclude) : il s'agit d'un choix
-// de traitement statistique, pas d'une correction de donnée.
-//
-// 711 : 19 allers-retours Marseille–Nouméa sur 2022-2024 (6/7/6, motif
-//       « famille »), soit 216 066 km/an à lui seul et 8,2 % du total pondéré.
-//       Réponse cohérente (trois années, trois fréquences distinctes), donc
-//       conservée dans l'extraction brute ; elle est écartée des moyennes
-//       parce qu'un individu ne doit pas peser 8 % d'une moyenne nationale.
-export const EXCLUDED_RESPONDENTS = new Map([
-  [
-    '711',
-    'valeur extrême : 19 A/R Marseille–Nouméa, 216 066 km/an (8,2 % du total pondéré)'
-  ]
-])
+// Aucun répondant n'est exclu par défaut. Les valeurs extrêmes restent dans
+// les analyses : l'ID 711 correspond à une réponse cohérente, malgré son
+// volume exceptionnel de 19 A/R Marseille–Nouméa sur 2022-2024.
+export const EXCLUDED_RESPONDENTS = new Map()
 
 /**
  * Construit le prédicat d'exclusion. `exclude: false` (option --no-exclude)
- * réintègre tous les répondants ; `extra` ajoute des identifiants à la liste
- * par défaut (option --exclude).
+ * réintègre tous les répondants ; `extra` ajoute des identifiants à exclure
+ * (option --exclude).
  */
 export function createExclusionFilter({ exclude = true, extra = [] } = {}) {
   if (!exclude) return () => false
