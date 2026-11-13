@@ -5,10 +5,12 @@ type PublicodesMotorisation =
   | 'thermique (essence)'
   | 'thermique (diesel)'
   | 'électrique'
-  | 'hybride (HR)'
+  | 'hybride essence (HR)'
+  | 'hybride gazole (HR)'
+  | 'hybride (HR - elec)'
   | 'hybride (HNR)'
 
-type PublicodesSizes = 'petite' | 'moyenne' | 'VUL' | 'berline' | 'SUV'
+type PublicodesSizes = 'petite' | 'moyenne' | 'VUL' | 'grande voiture'
 
 type Energie =
   | 'ESSENCE'
@@ -59,7 +61,9 @@ const getMotorisation = (energie: Energie): PublicodesMotorisation | null => {
   if (energie === 'ELECTRIC') {
     return 'électrique'
   } else if (energie === 'ELEC+ESSENC HR') {
-    return 'hybride (HR)'
+    return 'hybride essence (HR)'
+  } else if (energie === 'ELEC+GAZOLE HR') {
+    return 'hybride gazole (HR)'
   } else if (energie?.includes('HNR')) {
     return 'hybride (HNR)'
   } else if (energie === 'GAZOLE') {
@@ -80,34 +84,32 @@ const getSize = (
   const petiteTreshold =
     motorisation === 'électrique'
       ? 1700
-      : motorisation === 'hybride (HR)'
+      : motorisation === 'hybride essence (HR)' ||
+          motorisation === 'hybride gazole (HR)'
         ? 1550
         : 1400
   const moyenneTreshold =
     motorisation === 'électrique'
       ? 2000
-      : motorisation === 'hybride (HR)'
+      : motorisation === 'hybride essence (HR)' ||
+          motorisation === 'hybride gazole (HR)'
         ? 1750
         : 1600
-  if (Carosserie === 'COMBISPACE') {
+  if (Carosserie === 'COMBISPACE' || Carosserie === 'MINIBUS') {
     return 'VUL'
   } else if (poids < petiteTreshold) {
     return 'petite'
   } else if (poids >= petiteTreshold && poids < moyenneTreshold) {
     return 'moyenne'
-  } else if (poids >= moyenneTreshold) {
-    if (
-      (Gamme === 'LUXE' || Gamme === 'SUPERIEURE') &&
-      Carosserie !== 'CABRIOLET' &&
-      Carosserie !== 'COUPE'
-    ) {
-      return 'SUV'
-    } else {
-      return 'berline'
-    }
-  } else {
-    return null
+  } else if (
+    poids >= moyenneTreshold &&
+    Carosserie !== 'CABRIOLET' &&
+    Carosserie !== 'COUPE'
+  ) {
+    return 'grande voiture'
   }
+
+  return null
 }
 
 const data: Car[] = []
@@ -154,7 +156,10 @@ fs.createReadStream('./scripts/voiture/ademe-car-labelling.csv')
         let conso = 0
         let consoElec = 0
 
-        if (motorisation === 'hybride (HR)') {
+        if (
+          motorisation === 'hybride essence (HR)' ||
+          motorisation === 'hybride gazole (HR)'
+        ) {
           conso = consoHybridMin
             ? (consoHybridMin + consoHybridMax) / 2
             : consoHybridMax
@@ -190,7 +195,10 @@ fs.createReadStream('./scripts/voiture/ademe-car-labelling.csv')
 
         acc.consoParPoids[size][motorisation] += conso
         acc.effectifParPoids[size][motorisation] += 1
-        if (motorisation === 'hybride (HR)') {
+        if (
+          motorisation === 'hybride essence (HR)' ||
+          motorisation === 'hybride gazole (HR)'
+        ) {
           acc.consoParPoids[size]['hybride (HR - elec)'] += consoElec
           acc.effectifParPoids[size]['hybride (HR - elec)'] += 1
         }
@@ -203,7 +211,8 @@ fs.createReadStream('./scripts/voiture/ademe-car-labelling.csv')
             'thermique (essence)': 0,
             'thermique (diesel)': 0,
             électrique: 0,
-            'hybride (HR)': 0,
+            'hybride essence (HR)': 0,
+            'hybride gazole (HR)': 0,
             'hybride (HR - elec)': 0,
             'hybride (HNR)': 0
           },
@@ -211,7 +220,8 @@ fs.createReadStream('./scripts/voiture/ademe-car-labelling.csv')
             'thermique (essence)': 0,
             'thermique (diesel)': 0,
             électrique: 0,
-            'hybride (HR)': 0,
+            'hybride essence (HR)': 0,
+            'hybride gazole (HR)': 0,
             'hybride (HR - elec)': 0,
             'hybride (HNR)': 0
           },
@@ -219,23 +229,17 @@ fs.createReadStream('./scripts/voiture/ademe-car-labelling.csv')
             'thermique (essence)': 0,
             'thermique (diesel)': 0,
             électrique: 0,
-            'hybride (HR)': 0,
+            'hybride essence (HR)': 0,
+            'hybride gazole (HR)': 0,
             'hybride (HR - elec)': 0,
             'hybride (HNR)': 0
           },
-          berline: {
+          'grande voiture': {
             'thermique (essence)': 0,
             'thermique (diesel)': 0,
             électrique: 0,
-            'hybride (HR)': 0,
-            'hybride (HR - elec)': 0,
-            'hybride (HNR)': 0
-          },
-          SUV: {
-            'thermique (essence)': 0,
-            'thermique (diesel)': 0,
-            électrique: 0,
-            'hybride (HR)': 0,
+            'hybride essence (HR)': 0,
+            'hybride gazole (HR)': 0,
             'hybride (HR - elec)': 0,
             'hybride (HNR)': 0
           }
@@ -245,7 +249,8 @@ fs.createReadStream('./scripts/voiture/ademe-car-labelling.csv')
             'thermique (essence)': 0,
             'thermique (diesel)': 0,
             électrique: 0,
-            'hybride (HR)': 0,
+            'hybride essence (HR)': 0,
+            'hybride gazole (HR)': 0,
             'hybride (HR - elec)': 0,
             'hybride (HNR)': 0
           },
@@ -253,7 +258,8 @@ fs.createReadStream('./scripts/voiture/ademe-car-labelling.csv')
             'thermique (essence)': 0,
             'thermique (diesel)': 0,
             électrique: 0,
-            'hybride (HR)': 0,
+            'hybride essence (HR)': 0,
+            'hybride gazole (HR)': 0,
             'hybride (HR - elec)': 0,
             'hybride (HNR)': 0
           },
@@ -261,23 +267,17 @@ fs.createReadStream('./scripts/voiture/ademe-car-labelling.csv')
             'thermique (essence)': 0,
             'thermique (diesel)': 0,
             électrique: 0,
-            'hybride (HR)': 0,
+            'hybride essence (HR)': 0,
+            'hybride gazole (HR)': 0,
             'hybride (HR - elec)': 0,
             'hybride (HNR)': 0
           },
-          berline: {
+          'grande voiture': {
             'thermique (essence)': 0,
             'thermique (diesel)': 0,
             électrique: 0,
-            'hybride (HR)': 0,
-            'hybride (HR - elec)': 0,
-            'hybride (HNR)': 0
-          },
-          SUV: {
-            'thermique (essence)': 0,
-            'thermique (diesel)': 0,
-            électrique: 0,
-            'hybride (HR)': 0,
+            'hybride essence (HR)': 0,
+            'hybride gazole (HR)': 0,
             'hybride (HR - elec)': 0,
             'hybride (HNR)': 0
           }
@@ -290,7 +290,10 @@ fs.createReadStream('./scripts/voiture/ademe-car-labelling.csv')
     Object.entries(results.consoParPoids).forEach(([gabarit, conso]) => {
       console.log()
       Object.entries(conso).forEach(([motorisation, conso]) => {
-        const nb = results.effectifParPoids[gabarit][motorisation]
+        const nb =
+          results.effectifParPoids[gabarit as PublicodesSizes][
+            motorisation as PublicodesMotorisation
+          ]
         console.log(
           `| ${gabarit} | ${motorisation} | ${(Math.round((100 * conso) / nb) / 100).toLocaleString('fr-FR')} | ${nb} |`
         )

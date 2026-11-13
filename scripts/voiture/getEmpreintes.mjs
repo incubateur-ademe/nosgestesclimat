@@ -33,13 +33,7 @@ const situations = {
   },
   berlineThermiqueEssence: {
     'transport . voiture . utilisateur': "'propriétaire'",
-    'transport . voiture . gabarit': "'berline'",
-    'transport . voiture . motorisation': "'thermique'",
-    'transport . voiture . thermique . carburant': "'essence E5 ou E10'"
-  },
-  SUVThermiqueEssence: {
-    'transport . voiture . utilisateur': "'propriétaire'",
-    'transport . voiture . gabarit': "'SUV'",
+    'transport . voiture . gabarit': "'grande berline'",
     'transport . voiture . motorisation': "'thermique'",
     'transport . voiture . thermique . carburant': "'essence E5 ou E10'"
   },
@@ -63,13 +57,7 @@ const situations = {
   },
   berlineThermiqueDiesel: {
     'transport . voiture . utilisateur': "'propriétaire'",
-    'transport . voiture . gabarit': "'berline'",
-    'transport . voiture . motorisation': "'thermique'",
-    'transport . voiture . thermique . carburant': "'gazole B7 ou B10'"
-  },
-  SUVThermiqueDiesel: {
-    'transport . voiture . utilisateur': "'propriétaire'",
-    'transport . voiture . gabarit': "'SUV'",
+    'transport . voiture . gabarit': "'grande berline'",
     'transport . voiture . motorisation': "'thermique'",
     'transport . voiture . thermique . carburant': "'gazole B7 ou B10'"
   },
@@ -90,12 +78,7 @@ const situations = {
   },
   berlineElectrique: {
     'transport . voiture . utilisateur': "'propriétaire'",
-    'transport . voiture . gabarit': "'berline'",
-    'transport . voiture . motorisation': "'électrique'"
-  },
-  SUVElectrique: {
-    'transport . voiture . utilisateur': "'propriétaire'",
-    'transport . voiture . gabarit': "'SUV'",
+    'transport . voiture . gabarit': "'grande berline'",
     'transport . voiture . motorisation': "'électrique'"
   },
   petiteHNR: {
@@ -115,12 +98,7 @@ const situations = {
   },
   berlineHNR: {
     'transport . voiture . utilisateur': "'propriétaire'",
-    'transport . voiture . gabarit': "'berline'",
-    'transport . voiture . motorisation': "'hybride non rechargeable'"
-  },
-  SUVHNR: {
-    'transport . voiture . utilisateur': "'propriétaire'",
-    'transport . voiture . gabarit': "'SUV'",
+    'transport . voiture . gabarit': "'grande berline'",
     'transport . voiture . motorisation': "'hybride non rechargeable'"
   },
   petiteHR: {
@@ -140,12 +118,7 @@ const situations = {
   },
   berlineHR: {
     'transport . voiture . utilisateur': "'propriétaire'",
-    'transport . voiture . gabarit': "'berline'",
-    'transport . voiture . motorisation': "'hybride rechargeable'"
-  },
-  SUVHR: {
-    'transport . voiture . utilisateur': "'propriétaire'",
-    'transport . voiture . gabarit': "'SUV'",
+    'transport . voiture . gabarit': "'grande berline'",
     'transport . voiture . motorisation': "'hybride rechargeable'"
   },
   campingCar: {
