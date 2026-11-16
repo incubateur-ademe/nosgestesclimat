@@ -62,10 +62,16 @@ actions . mobilités . heures métro ou tram par semaine:
   formule:
     variations:
       - si:
-          est applicable: transport . transports commun . métro ou tram . heures par semaine
+          est défini: transport . transports commun . métro ou tram . heures par semaine
         alors: transport . transports commun . métro ou tram . heures par semaine
       - sinon: 0
   note: on considère que la valeur par défaut est 0 ici et non la valeur représentative de la population.
+
+actions . mobilités . km mobilité douce par an:
+  formule:
+    somme:
+      - transport . mobilité douce . vae . km
+      - transport . mobilité douce . autres véhicules à moteur . km
 
 actions . mobilités . petits trajets sans voiture:
   titre: Laisser la voiture au garage pour les petits trajets
@@ -84,7 +90,7 @@ actions . mobilités . petits trajets sans voiture:
   non applicable si:
     une de ces conditions:
       - transport . voiture . voyageurs >= 3
-      - transport . mobilité douce . vae . km + transport . mobilité douce . autres véhicules à moteur . km > (calculs courts trajets . seuil activation courts trajets / 2)
+      - km mobilité douce par an > (calculs courts trajets . seuil activation courts trajets / 2)
       - heures bus par semaine + heures métro ou tram par semaine > 0.5
   formule: (transport . voiture . construction au kilomètre + transport . voiture . usage au kilomètre) * calculs courts trajets . distance totale évitée / transport . voiture . voyageurs
 
@@ -102,7 +108,7 @@ actions . mobilités . transport en commun:
   non applicable si:
     une de ces conditions:
       - transport . voiture . voyageurs >= 3
-      - transport . mobilité douce . vae . km + transport . mobilité douce . autres véhicules à moteur . km > calculs trajets quotidiens . seuil activation trajets quotidiens
+      - km mobilité douce par an > calculs trajets quotidiens . seuil activation trajets quotidiens
       - heures bus par semaine + heures métro ou tram par semaine > 0.5
   formule: gain empreinte au km * calculs trajets quotidiens . distance totale évitée
   avec:
