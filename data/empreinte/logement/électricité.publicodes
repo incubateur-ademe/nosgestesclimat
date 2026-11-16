@@ -1,10 +1,11 @@
 logement . électricité:
+  public: oui
   DLUO: 01/09/2026
   icônes: ⚡
-  formule: empreinte / habitants
-
-logement . électricité . empreinte:
-  formule: consommation totale * empreinte au kWh
+  formule:
+    somme:
+      - réseau
+      - photovoltaique
   description: |
     L'empreinte de l'électricité du logement est la somme des empreintes de l'électricité du réseau et de l'électricité produite par les panneaux photovoltaïques.
 
@@ -17,7 +18,7 @@ logement . électricité . empreinte:
 
     Mais cela ne nous paraissait pas très juste, ni très incitatif à l'installation de panneaux photovoltaïque, alors que cette dernière contribue effectivement à l'amélioration de l'intensité carbone en France et est donc à valoriser.
 
-logement . électricité . empreinte au kWh:
+logement . électricité . empreinte au kWh équivalente:
   formule:
     variations:
       - si: métrique = "carbone"
@@ -26,19 +27,13 @@ logement . électricité . empreinte au kWh:
         alors: empreinte eau mix électrique
 
 logement . électricité . intensité carbone équivalente:
+  titre: Intensité carbone pondérée selon la consommation via réseau et photovoltaïque
   formule:
-    variations:
-      - si: photovoltaique . présent
-        alors:
-          variations:
-            - si: photovoltaique . production >= consommation totale
-              alors: photovoltaique . intensité carbone
-            - si: photovoltaique . production < consommation totale
-              alors:
-                somme:
-                  - (photovoltaique . production / consommation totale) * photovoltaique . intensité carbone
-                  - ((consommation totale - photovoltaique . production) / consommation totale) * réseau . intensité carbone
-      - sinon: réseau . intensité carbone
+    produit:
+      - somme:
+          - réseau . consommation réelle * réseau . empreinte au kWh
+          - photovoltaique . consommation réelle équivalente * photovoltaique . intensité carbone
+      - 1 / logement . électricité . consommation totale
 
 logement . électricité . consommation totale:
   formule:
@@ -241,34 +236,46 @@ logement . électricité . consommation via DPE par m2 . ratio énergie primaire
   valeur: 1.9
 
 logement . électricité . consommation via ressenti:
-  applicable si: chauffage . saisie précision consommation = 'aide'
   formule:
     variations:
-      - si: chauffage . précision consommation . ressenti = 'passoire thermique'
+      - si: chauffage . saisie précision consommation = 'aide'
         alors:
-          somme:
-            - consommation moyenne chauffage * chauffage . précision consommation . saut D vers G
-            - consommation moyenne ecs * chauffage . précision consommation . saut D vers G
-            - consommation moyenne cuisson
-            - consommation moyenne spécifique
-            - consommation moyenne climatisation * chauffage . précision consommation . saut D vers G
-      - si: chauffage . précision consommation . ressenti = 'confortable'
-        alors:
-          somme:
-            - consommation moyenne chauffage * chauffage . précision consommation . saut D vers A
-            - consommation moyenne ecs * chauffage . précision consommation . saut D vers A
-            - consommation moyenne cuisson
-            - consommation moyenne spécifique
-            - consommation moyenne climatisation * chauffage . précision consommation . saut D vers A
-      - sinon: consommation par défaut
+          variations:
+            - si: chauffage . précision consommation . ressenti = 'passoire thermique'
+              alors:
+                somme:
+                  - consommation moyenne chauffage * chauffage . précision consommation . saut D vers G
+                  - consommation moyenne ecs * chauffage . précision consommation . saut D vers G
+                  - consommation moyenne cuisson
+                  - consommation moyenne spécifique
+                  - consommation moyenne climatisation * chauffage . précision consommation . saut D vers G
+            - si: chauffage . précision consommation . ressenti = 'confortable'
+              alors:
+                somme:
+                  - consommation moyenne chauffage * chauffage . précision consommation . saut D vers A
+                  - consommation moyenne ecs * chauffage . précision consommation . saut D vers A
+                  - consommation moyenne cuisson
+                  - consommation moyenne spécifique
+                  - consommation moyenne climatisation * chauffage . précision consommation . saut D vers A
+            - sinon: consommation par défaut
+      - sinon: 0
   unité: kWh
 
 logement . électricité . réseau:
   titre: Électricité du réseau
   icônes: ⚡
+  formule: consommation réelle * réseau . empreinte au kWh / logement . habitants
 
-logement . électricité . réseau . consommation:
-  par défaut: réseau . consommation moyenne réelle
+logement . électricité . réseau . consommation réelle:
+  formule:
+    variations:
+      - si: photovoltaique . présent
+        alors:
+          variations:
+            - si: photovoltaique . production >= consommation totale
+              alors: 0
+            - sinon: consommation totale - photovoltaique . production
+      - sinon: consommation totale
 
 logement . électricité . réseau . consommation moyenne réelle:
   titre: Consommation moyenne réelle d'électricité du réseau
@@ -276,6 +283,7 @@ logement . électricité . réseau . consommation moyenne réelle:
     somme:
       - électricité . consommation par défaut
       - (-1) * photovoltaique . autoconsommation
+  plancher: 0
   note: Il est question ici de l'électricité consommée depuis le réseau, ie, hors autoconsommation photovoltaïque.
   unité: kWh
 
@@ -319,6 +327,14 @@ logement . électricité . réseau . consommation estimée via le coût . facteu
 
     Chiffre issu de [Eurostat, household, second half 2024](https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Electricity_price_statistics), plus précisément, de [cette carte](https://ec.europa.eu/eurostat/statistics-explained/index.php?title=File:Electricity-prices-households-s2-2024.png).
 
+logement . électricité . réseau . empreinte au kWh:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: intensité carbone
+      - si: métrique = "eau"
+        alors: empreinte eau mix électrique
+
 logement . électricité . réseau . intensité carbone:
   DLUO: 01/01/2027
   formule: commun . mix électrique . empreinte carbone
@@ -341,6 +357,16 @@ logement . électricité . photovoltaique:
   DLUO: 01/04/2027
   titre: Panneaux photovoltaïques
   icônes: 🌞
+  formule: consommation réelle équivalente * photovoltaique . intensité carbone / logement . habitants
+
+logement . électricité . photovoltaique . consommation réelle équivalente:
+  formule:
+    variations:
+      - si: photovoltaique . présent
+        alors: photovoltaique . production
+      - sinon: 0
+  plafond: consommation totale
+  unité: kWh
 
 logement . électricité . photovoltaique . présent:
   applicable si: est une maison
@@ -394,6 +420,16 @@ logement . électricité . photovoltaique . part autoconsommation:
     le quart de ma production: 25
     la moitié de ma production: 50
     je consomme 100% de ce que je produis: 100
+
+logement . électricité . photovoltaique . empreinte au kWh:
+  formule:
+    variations:
+      - si: métrique = "carbone"
+        alors: photovoltaique . intensité carbone
+      - si: métrique = "eau"
+        alors: empreinte eau mix électrique
+  note: |
+    Nous ne disposons pas de la donnée de l'empreinte eau des panneaux photovoltaïques. Nous utilisons donc l'empreinte eau du mix électrique français.
 
 logement . électricité . photovoltaique . intensité carbone:
   formule: 0.0439

@@ -16,6 +16,7 @@ import utils from '@incubateur-ademe/nosgestesclimat-scripts/utils'
 import { getModelFromSource } from '@publicodes/tools/compilation'
 
 import { addTranslationToBaseRules } from './i18n/addTranslationToBaseRules.js'
+import { checkPublicRules } from './checkPublicRules.mjs'
 
 import {
   supportedRegionPath,
@@ -144,6 +145,8 @@ try {
   engine.setSituation({})
   engine.evaluate({ valeur: 'bilan', contexte: { métrique: "'carbone'" } })
   engine.evaluate({ valeur: 'bilan', contexte: { métrique: "'eau'" } })
+
+  checkPublicRules(engine.baseContext.parsedRules, { markdown })
 
   if (!markdown) {
     console.log(

@@ -107,6 +107,23 @@ for (const personaName in localPersonas) {
     continue
   }
 
+  // `page de fin` is the decomposition displayed on the end page: it must sum
+  // up to `bilan`, otherwise the user sees two different footprints. The
+  // comparison is rounded to the kg: the two sums do not add up their terms in
+  // the same order, so the last digits of the floats differ.
+  const bilan = localEngine.evaluate('bilan')
+  const pageDeFin = localEngine.evaluate('page de fin')
+  const roundedBilan = Math.round(bilan.nodeValue * 100) / 100
+  const roundedPageDeFin = Math.round(pageDeFin.nodeValue * 100) / 100
+  if (roundedBilan !== roundedPageDeFin) {
+    const message = `bilan (${roundedBilan} kg) ≠ page de fin (${roundedPageDeFin} kg)`
+    if (markdown) {
+      console.log(`\n**⚠️ ${message}**\n`)
+    } else {
+      console.warn(`${c.yellow('(warning:page de fin)')} ${message}`)
+    }
+  }
+
   for (const rule in localRules) {
     if (!(rule in prodRules)) {
       continue
