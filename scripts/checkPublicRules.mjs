@@ -21,7 +21,8 @@ import c from 'ansi-colors'
 import { reduceAST } from 'publicodes'
 
 // The roots of the public decompositions of the footprint.
-const rootDottedNames = ['bilan', 'page de fin']
+// const rootDottedNames = ['bilan', 'page de fin']
+const rootDottedNames = ['bilan']
 
 const ignoredDottedNames = [
   /^logement \. construction$/,

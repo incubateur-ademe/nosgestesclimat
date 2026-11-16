@@ -181,52 +181,6 @@ export function getNonPublicActionConditions(parsedRules) {
   )
 }
 
-// Returns the list of the actions whose applicability conditions rely on a rule
-// marked as `ciblé: non`, i.e. a rule that is not a targeting question.
-export function getNonTargetedActionConditions(parsedRules) {
-  const conditions = Object.keys(parsedRules)
-    .filter((dottedName) => dottedName.startsWith(`${rootActionDottedName} . `))
-    .flatMap((dottedName) =>
-      getConditions(parsedRules[dottedName]).flatMap(
-        ({ attribute, references }) => {
-          const nonTargeted = references.filter(
-            (reference) => parsedRules[reference]?.rawNode?.['ciblé'] === 'non'
-          )
-          return nonTargeted.length > 0
-            ? [{ action: dottedName, attribute, references: nonTargeted }]
-            : []
-        }
-      )
-    )
-
-  return conditions.filter(
-    (condition, index, all) =>
-      all.findIndex(
-        (other) =>
-          other.action === condition.action &&
-          other.attribute === condition.attribute &&
-          other.references.join() === condition.references.join()
-      ) === index
-  )
-}
-
-// Logs the actions whose conditions rely on a non-targeting rule.
-function logNonTargetedActionConditions(parsedRules) {
-  const conditions = getNonTargetedActionConditions(parsedRules)
-
-  if (conditions.length === 0) {
-    return
-  }
-
-  console.log(
-    `\nℹ️ ${c.yellow(conditions.length)} applicability condition(s) of the actions rely on a rule marked ${c.bold('ciblé: non')}:\n`
-  )
-  conditions.forEach(({ action, attribute, references }) => {
-    console.log(
-      `  ${c.magenta(action)} > ${c.cyan(attribute)} > ${references.map((reference) => c.yellow(reference)).join(', ')}`
-    )
-  })
-}
 // Logs the errors and exits the process if the check fails.
 export function checkActionsPublicRules(
   parsedRules,
@@ -267,6 +221,5 @@ export function checkActionsPublicRules(
     console.log(
       `✅ All the applicability conditions of the actions rely on public rules`
     )
-    logNonTargetedActionConditions(parsedRules)
   }
 }
