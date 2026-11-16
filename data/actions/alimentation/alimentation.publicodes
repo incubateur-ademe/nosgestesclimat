@@ -15,18 +15,18 @@ actions . alimentation . calcul . nouveau régime gros mangeur viande:
     alimentation . repas . déjeuner et dîner . viande blanche . nombre: 4
     alimentation . repas . déjeuner et dîner . végétarien . nombre: nouveau nombre plats végétariens
   avec:
-    ancien nombre repas avec viande: utilisateur . nombre de plats viande rouge hebdo + utilisateur . nombre de plats viande blanche hebdo
+    ancien nombre repas avec viande: alimentation . repas . déjeuner et dîner . viande rouge . nombre + alimentation . repas . déjeuner et dîner . viande blanche . nombre
     nouveau nombre plats végétariens:
       formule:
         somme:
-          - utilisateur . nombre de plats végétariens hebdo
+          - alimentation . repas . déjeuner et dîner . végétarien . nombre
           - ancien nombre repas avec viande - 4
 
 actions . alimentation . réduire viande rouge:
   titre: Préserver sa santé en limitant sa consommation de viande
   meta:
     id: ef60db60-7d8d-46f0-96b9-9a0101120dac
-  applicable si: utilisateur . nombre de plats viande rouge hebdo >= 4
+  applicable si: alimentation . repas . déjeuner et dîner . viande rouge . nombre >= 4
   formule: alimentation - calcul . nouveau régime gros mangeur viande
   note: |
     On fait l'hypothèse que les repas avec de la viande rouge sont remplacés par des repas viandes blanches dans la limite de 4, les autres sont remplacés par des repas végétariens.
@@ -37,8 +37,8 @@ actions . alimentation . réduire viande:
     id: 62ad3f76-e4d1-4fcc-acdf-0c69a89b03f3
   applicable si:
     toutes ces conditions:
-      - utilisateur . nombre de plats viande rouge hebdo < 4
-      - utilisateur . nombre de plats viande rouge hebdo + utilisateur . nombre de plats viande blanche hebdo > 4
+      - alimentation . repas . déjeuner et dîner . viande rouge . nombre < 4
+      - alimentation . repas . déjeuner et dîner . viande rouge . nombre + alimentation . repas . déjeuner et dîner . viande blanche . nombre > 4
   formule: alimentation - calcul . nouveau régime gros mangeur viande
 
 actions . alimentation . privilégier viandes bas carbone:
@@ -47,9 +47,9 @@ actions . alimentation . privilégier viandes bas carbone:
     id: 3c63dd61-46c0-4c0a-8b08-c8a972b155a2
   applicable si:
     toutes ces conditions:
-      - utilisateur . nombre de plats viande rouge hebdo + utilisateur . nombre de plats viande blanche hebdo <= 4
-      - utilisateur . nombre de plats viande rouge hebdo >= 2
-      - utilisateur . nombre de plats viande rouge hebdo < 4
+      - alimentation . repas . déjeuner et dîner . viande rouge . nombre + alimentation . repas . déjeuner et dîner . viande blanche . nombre <= 4
+      - alimentation . repas . déjeuner et dîner . viande rouge . nombre >= 2
+      - alimentation . repas . déjeuner et dîner . viande rouge . nombre < 4
   formule: alimentation - nouveau régime
   note: |
     On fait l'hypothèse que les repas avec de la viande rouge sont remplacés par des repas viandes blanches.
@@ -58,7 +58,7 @@ actions . alimentation . privilégier viandes bas carbone:
       valeur: alimentation
       contexte:
         alimentation . repas . déjeuner et dîner . viande rouge . nombre: 0
-        alimentation . repas . déjeuner et dîner . viande blanche . nombre: utilisateur . nombre de plats viande rouge hebdo + utilisateur . nombre de plats viande blanche hebdo
+        alimentation . repas . déjeuner et dîner . viande blanche . nombre: alimentation . repas . déjeuner et dîner . viande rouge . nombre + alimentation . repas . déjeuner et dîner . viande blanche . nombre
 
 actions . alimentation . réduire produits de la mer:
   titre: Avoir une consommation responsable de produits de la mer
@@ -68,8 +68,8 @@ actions . alimentation . réduire produits de la mer:
     On fait l'hypothèse que les repas avec du poisson sont plafonnés à 2 repas de poissons gras, les autres sont remplacés par des repas végétariens pour obtenir un gain carbone réaliste.
   applicable si:
     une de ces conditions:
-      - utilisateur . nombre de plats poisson blanc hebdo + utilisateur . nombre de plats poisson gras hebdo > 2
-      - utilisateur . nombre de plats poisson blanc hebdo > 0
+      - alimentation . repas . déjeuner et dîner . poisson blanc . nombre + alimentation . repas . déjeuner et dîner . poisson gras . nombre > 2
+      - alimentation . repas . déjeuner et dîner . poisson blanc . nombre > 0
   formule: alimentation - nouveau régime
   avec:
     nouveau régime:
@@ -79,14 +79,14 @@ actions . alimentation . réduire produits de la mer:
         alimentation . repas . déjeuner et dîner . poisson gras . nombre: nouveau nombre poisson gras
         alimentation . repas . déjeuner et dîner . végétarien . nombre: nouveau nombre plats végétariens
       avec:
-        ancien nombre repas avec poisson: utilisateur . nombre de plats poisson blanc hebdo + utilisateur . nombre de plats poisson gras hebdo
+        ancien nombre repas avec poisson: alimentation . repas . déjeuner et dîner . poisson blanc . nombre + alimentation . repas . déjeuner et dîner . poisson gras . nombre
         nouveau nombre poisson gras:
           valeur: ancien nombre repas avec poisson
           plafond: 2
         nouveau nombre plats végétariens:
           formule:
             somme:
-              - utilisateur . nombre de plats végétariens hebdo
+              - alimentation . repas . déjeuner et dîner . végétarien . nombre
               - ancien nombre repas avec poisson - nouveau nombre poisson gras
 
 actions . alimentation . cuisiner plus de légumineuses:
@@ -99,10 +99,10 @@ actions . alimentation . cuisiner plus de légumineuses:
     La condition est néanmoins légèrement moins axée sur la consommation de viande en se basant sur la consommation de plats végétariens et végétaliens.
   applicable si:
     toutes ces conditions:
-      - (utilisateur . nombre de plats végétaliens hebdo + utilisateur . nombre de plats végétariens hebdo) < 7
+      - (alimentation . repas . déjeuner et dîner . végétalien . nombre + alimentation . repas . déjeuner et dîner . végétarien . nombre) < 7
       - une de ces conditions:
-          - utilisateur . nombre de plats viande rouge hebdo > 0
-          - utilisateur . nombre de plats viande blanche hebdo > 0
+          - alimentation . repas . déjeuner et dîner . viande rouge . nombre > 0
+          - alimentation . repas . déjeuner et dîner . viande blanche . nombre > 0
   formule: 0
 
 actions . alimentation . choisir restaurant engagé:
@@ -116,14 +116,14 @@ actions . alimentation . proposer idées pour la cantine:
   titre: Proposer des idées pour la cantine scolaire de vos enfants
   meta:
     id: 0a337de3-ca74-4d7d-bb67-0938887fb6e9
-  applicable si: utilisateur . est parent potentiel de scolaires
+  applicable si: profil . est parent potentiel de scolaires
   formule: 0
 
 actions . alimentation . interpeler comité restauration entreprise:
   titre: Interpeler le comité de restauration de son entreprise
   meta:
     id: cf49172e-9f9f-417e-be9d-ac5a29af34f3
-  applicable si: utilisateur . est actif
+  applicable si: profil . est actif
   formule: 0
 
 actions . alimentation . manger local et de saison:
@@ -132,10 +132,10 @@ actions . alimentation . manger local et de saison:
     id: 413f99ad-f198-4f6b-acd8-53f644b9d11e
   applicable si:
     une de ces conditions:
-      - utilisateur . consommation de saison = "jamais"
-      - utilisateur . consommation de saison = "parfois"
-      - utilisateur . consommation locale = "jamais"
-      - utilisateur . consommation locale = "parfois"
+      - alimentation . de saison . consommation = "jamais"
+      - alimentation . de saison . consommation = "parfois"
+      - alimentation . local . consommation = "jamais"
+      - alimentation . local . consommation = "parfois"
   formule: 0
 
 actions . alimentation . privilégier achat vrac:
@@ -144,14 +144,14 @@ actions . alimentation . privilégier achat vrac:
     id: afa26f9d-71bf-4280-a26a-75e4e86fe829
   note: |
     Pas de calcul d'empreinte associé au vrac pour le moment.
-  non applicable si: utilisateur . achat vrac = oui
+  non applicable si: alimentation . déchets . gestes . acheter en vrac . présent = oui
   formule: 0
 
 actions . alimentation . réduire boissons sucrées:
   titre: Réduire sa consommation de boissons sucrées
   meta:
     id: 4425f8fb-a40c-41ed-9f38-294d71d598ab
-  applicable si: utilisateur . consommation boissons sucrées hebdo > 0
+  applicable si: alimentation . boisson . sucrées . litres > 0
   formule: alimentation - nouveau régime
   avec:
     nouveau régime:
@@ -163,7 +163,7 @@ actions . alimentation . réduire consommation café:
   titre: Réduire sa consommation de café
   meta:
     id: 1d8c7bd0-abad-4890-ba4b-77276e1e61e4
-  applicable si: utilisateur . consommation café quotidienne >= 2
+  applicable si: alimentation . boisson . chaude . café . nombre >= 2
   formule: alimentation - nouveau régime
   avec:
     nouveau régime:
@@ -186,6 +186,6 @@ actions . alimentation . valoriser ses déchets:
     id: d53531cc-b965-4129-b337-1122f0c0f7db
   non applicable si:
     une de ces conditions:
-      - utilisateur . compostage biodéchets = oui
-      - utilisateur . taille poubelle = "zéro déchet"
+      - alimentation . déchets . gestes . compostage biodéchets . présent = oui
+      - alimentation . déchets . quantité jetée = "zéro déchet"
   formule: alimentation . déchets . gestes . bonus compostage biodéchets

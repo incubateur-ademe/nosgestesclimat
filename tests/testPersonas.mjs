@@ -124,6 +124,11 @@ for (const personaName in localPersonas) {
     }
   }
 
+  // `bilan` is evaluated before the loop: evaluating it after the ~2600 other
+  // rules makes its value depend on the state left by those evaluations, and
+  // it can come out as `undefined`.
+  const prodBilan = prodEngine.evaluate('bilan')
+
   for (const rule in localRules) {
     if (!(rule in prodRules)) {
       continue
@@ -135,7 +140,7 @@ for (const personaName in localPersonas) {
       console.error({ type: 'error', rule, message: e.message })
       continue
     }
-    const prod = prodEngine.evaluate(rule)
+    const prod = rule === 'bilan' ? prodBilan : prodEngine.evaluate(rule)
     results.push({ type: 'result', rule, actual: local, expected: prod })
   }
 
