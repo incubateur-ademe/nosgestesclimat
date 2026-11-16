@@ -1,28 +1,21 @@
 logement . chauffage:
+  public: oui
   DLUO: 01/09/2026
   non applicable si: métrique != "carbone"
   titre: Énergie logement
   formule:
-    variations:
-      - si:
-          toutes ces conditions:
-            - est défini: chauffage . mode
-            - chauffage . mode = "individuel"
-            - est défini: chauffage . principal
-        alors: empreinte totale / habitants
-      - si:
-          toutes ces conditions:
-            - est défini: chauffage . mode
-            - chauffage . mode = "collectif"
-        alors: empreinte totale collectif / habitants
-      - si:
-          toutes ces conditions:
-            - est défini: chauffage . mode
-            - chauffage . mode = "pas de chauffage"
-        alors: 0
-      - sinon: empreinte par défaut / habitants
+    somme:
+      - gaz
+      - fioul
+      - bois
+      - réseau de chaleur
+      - citerne propane
+      - bouteille gaz
+  note: |
+    Le chauffage électrique, les pompes à chaleur, la climatisation et le photovoltaïque sont déjà comptés dans la consommation électrique. Le chauffe-eau solaire réduit la consommation moyenne du gaz, de l'électricité, du fioul et du bois.
 
 logement . chauffage . mode:
+  public: oui
   question: Intéressons-nous à l'énergie de votre logement. Comment est-il chauffé ?
   une possibilité:
     - individuel
@@ -280,22 +273,14 @@ logement . chauffage . empreinte totale collectif:
 logement . chauffage . empreinte totale:
   formule:
     somme:
-      - gaz . empreinte
-      - bouteille gaz . empreinte
-      - citerne propane . empreinte
-      - fioul . empreinte
-      - bois . empreinte
-      - réseau de chaleur . empreinte
+      - empreinte gaz
+      - empreinte fioul
+      - empreinte bois
+      - empreinte réseau de chaleur
+      - empreinte citerne propane
+      - empreinte bouteille gaz
       # chauffage électrique, PAC, climatisation, PV déjà compté dans la conso électrique
       # chauffe eau solaire réduit la conso moyenne du gaz, élec, fioul, bois
-  unité: kgCO2e
-
-logement . chauffage . empreinte par défaut:
-  icônes: 🌡️
-  formule:
-    somme:
-      - parc français . chauffage . empreinte moyenne par m2 hors électricité * logement . surface
-      - (-1) * chauffe eau solaire . présent * chauffe eau solaire . taux réduction ecs * parc français . chauffage . empreinte moyenne ecs par m2 hors électricité * logement . surface
   unité: kgCO2e
 
 logement . chauffage . saisie précision consommation:
@@ -375,20 +360,41 @@ logement . chauffage . précision consommation . DPE . consommation via DPE par 
   formule:
     variations:
       - si: saisie DPE = 'A'
-        alors: 55
+        alors: consommation équivalente DPE A
       - si: saisie DPE = 'B'
-        alors: 90
+        alors: consommation équivalente DPE B
       - si: saisie DPE = 'C'
-        alors: 145
+        alors: consommation équivalente DPE C
       - si: saisie DPE = 'D'
-        alors: 215
+        alors: consommation équivalente DPE D
       - si: saisie DPE = 'E'
-        alors: 290
+        alors: consommation équivalente DPE E
       - si: saisie DPE = 'F'
-        alors: 375
+        alors: consommation équivalente DPE F
       - si: saisie DPE = 'G'
-        alors: 500
+        alors: consommation équivalente DPE G
   unité: kWh/m2
+
+logement . chauffage . précision consommation . DPE . consommation équivalente DPE A:
+  valeur: 55 kWh/m2
+
+logement . chauffage . précision consommation . DPE . consommation équivalente DPE B:
+  valeur: 90 kWh/m2
+
+logement . chauffage . précision consommation . DPE . consommation équivalente DPE C:
+  valeur: 145 kWh/m2
+
+logement . chauffage . précision consommation . DPE . consommation équivalente DPE D:
+  valeur: 215 kWh/m2
+
+logement . chauffage . précision consommation . DPE . consommation équivalente DPE E:
+  valeur: 290 kWh/m2
+
+logement . chauffage . précision consommation . DPE . consommation équivalente DPE F:
+  valeur: 375 kWh/m2
+
+logement . chauffage . précision consommation . DPE . consommation équivalente DPE G:
+  valeur: 500 kWh/m2
 
 logement . chauffage . précision consommation . ressenti:
   applicable si: saisie précision consommation = 'aide'
@@ -418,22 +424,24 @@ logement . chauffage . précision consommation . ressenti . non concerné:
   titre: Il ne fait pas froid, même en hiver
 
 logement . chauffage . précision consommation . saut D vers A:
-  formule: 55 kWh/m2 / 215 kWh/m2
+  formule: DPE . consommation équivalente DPE A / DPE . consommation équivalente DPE D
 
 logement . chauffage . précision consommation . saut D vers G:
-  formule: 500 kWh/m2 / 215 kWh/m2
+  formule: DPE . consommation équivalente DPE G / DPE . consommation équivalente DPE D
 
 logement . chauffage . PAC:
   titre: Pompe à chaleur
   icônes: 🌡️
 
 logement . chauffage . PAC . présent:
+  public: oui
   formule:
     une de ces conditions:
       - est présent chauffage
       - est présent ecs
 
 logement . chauffage . PAC . est présent chauffage:
+  public: oui
   formule:
     une de ces conditions:
       - toutes ces conditions:
@@ -448,6 +456,7 @@ logement . chauffage . PAC . est présent chauffage:
               - chauffage . collectif = "PAC air eau"
 
 logement . chauffage . PAC . est présent ecs:
+  public: oui
   formule:
     une de ces conditions:
       - toutes ces conditions:
@@ -476,12 +485,14 @@ logement . chauffage . électricité . présent:
       - est présent appoint
 
 logement . chauffage . électricité . est présent chauffage:
+  public: oui
   formule:
     toutes ces conditions:
       - est défini: chauffage . principal
       - chauffage . principal = "électricité"
 
 logement . chauffage . électricité . est présent ecs:
+  public: oui
   formule:
     une de ces conditions:
       - toutes ces conditions:
@@ -507,18 +518,28 @@ logement . chauffage . électricité . est présent appoint:
 logement . chauffage . gaz:
   titre: Gaz naturel
   icônes: 🔥
+  valeur: empreinte énergie selon mode
+  contexte:
+    empreinte énergie: empreinte gaz
+    empreinte énergie moyenne française: empreinte moyenne française
   unité: kgCO2e
 
-logement . chauffage . gaz . empreinte:
+logement . chauffage . gaz . empreinte moyenne française:
+  titre: Empreinte moyenne de la consommation de gaz
+  formule: parc français . CEREN . surface . part gaz * parc français . chauffage . empreinte gaz par m2 * logement . surface
+  unité: kgCO2e
+
+logement . chauffage . empreinte gaz:
   titre: Empreinte de la consommation de gaz
   applicable si:
     toutes ces conditions:
       - est défini: gaz . présent
       - gaz . présent
-  formule: consommation * gaz . intensité carbone gaz utilisateur
+  formule: gaz . consommation * gaz . intensité carbone gaz utilisateur
   unité: kgCO2e
 
 logement . chauffage . gaz . présent:
+  public: oui
   formule:
     une de ces conditions:
       - est présent chauffage
@@ -802,16 +823,19 @@ logement . chauffage . biogaz . part:
 logement . chauffage . bouteille gaz:
   icônes: 🛢️
   titre: Bouteille de gaz
+  formule:
+    somme:
+      - empreinte bouteille gaz / habitants
   unité: kgCO2e
 
-logement . chauffage . bouteille gaz . empreinte:
+logement . chauffage . empreinte bouteille gaz:
   titre: Empreinte de la consommation de bouteilles de gaz
   applicable si: bouteille gaz . présent
   formule:
     variations:
       - si: saisie précision consommation = 'conso exactes'
-        alors: empreinte bouteille * consommation
-      - sinon: empreinte bouteille * consommation moyenne réelle
+        alors: bouteille gaz . empreinte bouteille * bouteille gaz . consommation
+      - sinon: bouteille gaz . empreinte bouteille * bouteille gaz . consommation moyenne réelle
   unité: kgCO2e
 
 logement . chauffage . bouteille gaz . présent:
@@ -908,18 +932,28 @@ logement . chauffage . empreinte propane:
 logement . chauffage . citerne propane:
   icônes: 🚛
   titre: Gaz propane en citerne
+  valeur: empreinte énergie selon mode
+  contexte:
+    empreinte énergie: empreinte citerne propane
+    empreinte énergie moyenne française: empreinte moyenne française
   unité: kgCO2e
 
-logement . chauffage . citerne propane . empreinte:
+logement . chauffage . citerne propane . empreinte moyenne française:
+  titre: Empreinte moyenne de la consommation de gaz propane en citerne
+  formule: parc français . CEREN . surface . part GPL * parc français . chauffage . empreinte GPL par m2 * logement . surface
+  unité: kgCO2e
+
+logement . chauffage . empreinte citerne propane:
   titre: Empreinte de la consommation de gaz propane en citerne
   applicable si:
     toutes ces conditions:
       - est défini: citerne propane . présent
       - citerne propane . présent
-  formule: empreinte propane * consommation
+  formule: empreinte propane * citerne propane . consommation
   unité: kgCO2e
 
 logement . chauffage . citerne propane . présent:
+  public: oui
   formule:
     une de ces conditions:
       - est présent chauffage
@@ -1093,17 +1127,27 @@ logement . chauffage . fioul:
   icônes: 🛢
   titre: Fioul domestique
   unité: kgCO2e
+  valeur: empreinte énergie selon mode
+  contexte:
+    empreinte énergie: empreinte fioul
+    empreinte énergie moyenne française: empreinte moyenne française
 
-logement . chauffage . fioul . empreinte:
+logement . chauffage . fioul . empreinte moyenne française:
+  titre: Empreinte moyenne de la consommation de fioul
+  formule: parc français . CEREN . surface . part fioul * parc français . chauffage . empreinte fioul par m2 * logement . surface
+  unité: kgCO2e
+
+logement . chauffage . empreinte fioul:
   titre: Empreinte de la consommation de fioul domestique
   applicable si:
     toutes ces conditions:
       - est défini: fioul . présent
       - fioul . présent
-  formule: consommation * intensité carbone fioul litre
+  formule: fioul . consommation * intensité carbone fioul litre
   unité: kgCO2e
 
 logement . chauffage . fioul . présent:
+  public: oui
   formule:
     une de ces conditions:
       - est présent chauffage
@@ -1255,9 +1299,21 @@ logement . chauffage . intensité carbone fioul litre:
 logement . chauffage . bois:
   titre: Bois ou granulés
   icônes: 🪵
+  valeur: empreinte énergie selon mode
+  contexte:
+    empreinte énergie: empreinte bois
+    empreinte énergie moyenne française: empreinte moyenne française
   unité: kgCO2e
 
-logement . chauffage . bois . empreinte:
+logement . chauffage . bois . empreinte moyenne française:
+  titre: Empreinte moyenne de la consommation de bois
+  formule:
+    somme:
+      - parc français . CEREN . surface . part bois * logement . surface * parc français . chauffage . empreinte buches par m2 / 2
+      - parc français . CEREN . surface . part bois * logement . surface * parc français . chauffage . empreinte granulés par m2 / 2
+  unité: kgCO2e
+
+logement . chauffage . empreinte bois:
   titre: Empreinte de la consommation de bois
   applicable si:
     toutes ces conditions:
@@ -1267,12 +1323,12 @@ logement . chauffage . bois . empreinte:
     variations:
       - si:
           une de ces conditions:
-            - type . bûches
-            - type . granulés
+            - bois . type . bûches
+            - bois . type . granulés
         alors:
           somme:
-            - type . bûches . consommation * bois . fe bûches réel
-            - type . granulés . consommation * bois . fe granulés réel
+            - bois . type . bûches . consommation * bois . fe bûches réel
+            - bois . type . granulés . consommation * bois . fe granulés réel
       - sinon: bois . empreinte moyenne
   unité: kgCO2e
 
@@ -1299,9 +1355,11 @@ logement . chauffage . bois . présent:
       - est présent ecs
 
 logement . chauffage . bois . est présent chauffage:
-  une de ces conditions:
-    - chauffage . principal = "bois"
-    - chauffage . collectif = "bois"
+  public: oui
+  formule:
+    une de ces conditions:
+      - chauffage . principal = "bois"
+      - chauffage . collectif = "bois"
 
 logement . chauffage . bois . est présent appoint:
   formule:
@@ -1310,6 +1368,7 @@ logement . chauffage . bois . est présent appoint:
       - appoint . bois . présent
 
 logement . chauffage . bois . est présent ecs:
+  public: oui
   formule:
     une de ces conditions:
       - chauffage . principal . ecs = "bois"
@@ -1762,15 +1821,24 @@ logement . chauffage . bois . fe chaudière granulés:
 logement . chauffage . réseau de chaleur:
   icônes: 🏭
   titre: Réseau de chaleur
+  valeur: empreinte énergie selon mode
+  contexte:
+    empreinte énergie: empreinte réseau de chaleur
+    empreinte énergie moyenne française: empreinte moyenne française
   unité: kgCO2e
 
-logement . chauffage . réseau de chaleur . empreinte:
+logement . chauffage . réseau de chaleur . empreinte moyenne française:
+  titre: Empreinte moyenne de la consommation via réseau de chaleur
+  formule: parc français . CEREN . surface . part réseau de chaleur * parc français . chauffage . empreinte réseau de chaleur par m2 * logement . surface
+  unité: kgCO2e
+
+logement . chauffage . empreinte réseau de chaleur:
   titre: Empreinte de la consommation de gaz via réseau de chaleur
   applicable si:
     toutes ces conditions:
       - est défini: réseau de chaleur . présent
       - réseau de chaleur . présent
-  formule: consommation * intensité carbone
+  formule: réseau de chaleur . consommation * réseau de chaleur . intensité carbone
   unité: kgCO2e
 
 logement . chauffage . réseau de chaleur . présent:
@@ -1927,6 +1995,7 @@ logement . chauffage . chauffe eau solaire:
   titre: Chauffe-eau solaire
 
 logement . chauffage . chauffe eau solaire . présent:
+  public: oui
   formule:
     une de ces conditions:
       - toutes ces conditions:
@@ -1945,3 +2014,150 @@ logement . chauffage . chauffe eau solaire . taux réduction ecs:
     En moyenne, un chauffe-eau solaire individuel (CESI) permet de couvrir 60% des besoins en eau chaude sanitaire (voir [cet article de l'ADEME](https://agirpourlatransition.ademe.fr/particuliers/maison/chauffage/chauffer-leau-solei)). On évite donc une part des consommations d'énergie liées à l'eau chaude sanitaire. Cette valeur est utilisée uniquement dans le cas où l'utilisateur⋅ice ne connaît pas précisément ses consommations d'énergie, et pour les énergies permettant de chauffer l'eau chaude sanitaire à savoir l'électricité, le gaz, le fioul et le réseau de chaleur.
   formule: 60%
   unité: '%'
+
+logement . chauffage . empreinte énergie:
+  note: variable de calcul pour "empreinte énergie selon mode"
+logement . chauffage . empreinte énergie moyenne française:
+  note: variable de calcul pour "empreinte énergie selon mode"
+logement . chauffage . empreinte énergie selon mode:
+  formule:
+    somme:
+      - variations:
+          - si:
+              toutes ces conditions:
+                - est défini: chauffage . mode
+                - chauffage . mode = "individuel"
+                - est défini: chauffage . principal
+            alors: empreinte énergie / habitants
+          - si:
+              toutes ces conditions:
+                - est défini: chauffage . mode
+                - chauffage . mode = "collectif"
+            alors:
+              valeur: empreinte énergie / habitants
+              contexte:
+                logement . chauffage . saisie précision consommation: "'aide'"
+                logement . chauffage . précision consommation . ressenti: "'moyen'"
+          - si:
+              toutes ces conditions:
+                - est défini: chauffage . mode
+                - chauffage . mode = "pas de chauffage"
+            alors: 0
+          - sinon: empreinte énergie moyenne française / habitants
+
+logement . chauffage . consommation énergie au m2 équivalente:
+  public: oui
+  formule:
+    variations:
+      - si:
+          est défini: logement . chauffage . mode
+        alors:
+          produit:
+            - consommation totale
+            - 1 / logement . surface
+      - sinon: consommation par défaut au m2
+  unité: kWh/m2
+  avec:
+    DPE équivalent:
+      formule:
+        variations:
+          - si: consommation énergie au m2 équivalente <= 70
+            alors: "'A'"
+          - si: consommation énergie au m2 équivalente <= 110
+            alors: "'B'"
+          - si: consommation énergie au m2 équivalente <= 180
+            alors: "'C'"
+          - si: consommation énergie au m2 équivalente <= 250
+            alors: "'D'"
+          - si: consommation énergie au m2 équivalente <= 330
+            alors: "'E'"
+          - si: consommation énergie au m2 équivalente <= 420
+            alors: "'F'"
+          - sinon: "'G'"
+    consommation par défaut au m2:
+      formule:
+        somme:
+          - consommation totale . part DPE électricité * parc français . CEREN . surface . part électricité * parc français . CEREN . chauffage . consommation électricité par m2 / logement . électricité . consommation via DPE par m2 . ratio énergie primaire finale
+          - consommation totale . part DPE gaz * parc français . CEREN . surface . part gaz * parc français . CEREN . chauffage . consommation gaz par m2
+          - consommation totale . part DPE fioul * parc français . CEREN . surface . part fioul * parc français . CEREN . chauffage . consommation fioul par m2
+          - consommation totale . part DPE bois * parc français . CEREN . surface . part bois * parc français . CEREN . chauffage . consommation bois par m2
+          - consommation totale . part DPE réseau de chaleur * parc français . CEREN . surface . part réseau de chaleur * parc français . CEREN . chauffage . consommation réseau de chaleur par m2
+          - consommation totale . part DPE GPL * parc français . CEREN . surface . part GPL * parc français . CEREN . chauffage . consommation GPL par m2
+    consommation totale:
+      formule:
+        somme:
+          - électricité
+          - gaz
+          - fioul
+          - bois
+          - réseau de chaleur
+          - citerne propane
+      avec:
+        électricité:
+          applicable si: logement . chauffage . électricité . présent
+          formule:
+            produit:
+              - logement . électricité . consommation totale / logement . électricité . consommation via DPE par m2 . ratio énergie primaire finale
+              - part DPE électricité
+        part DPE électricité:
+          formule:
+            somme:
+              - parc français . CEREN . chauffage . part chauffage air électricité
+              - parc français . CEREN . chauffage . part ecs électricité
+              - (-1) * logement . chauffage . chauffe eau solaire . présent * logement . chauffage . chauffe eau solaire . taux réduction ecs * parc français . CEREN . chauffage . part ecs électricité
+              - parc français . CEREN . part climatisation électricité
+        gaz:
+          formule:
+            produit:
+              - logement . chauffage . gaz . consommation
+              - part DPE gaz
+        part DPE gaz:
+          formule:
+            somme:
+              - parc français . CEREN . chauffage . part chauffage air gaz
+              - parc français . CEREN . chauffage . part ecs gaz
+        fioul:
+          formule:
+            produit:
+              - logement . chauffage . fioul . consommation / logement . chauffage . fioul kWh au litre
+              - part DPE fioul
+        part DPE fioul:
+          formule:
+            somme:
+              - parc français . CEREN . chauffage . part chauffage air fioul
+              - parc français . CEREN . chauffage . part ecs fioul
+        bois:
+          formule:
+            produit:
+              - logement . chauffage . bois . type . bûches . consommation + logement . chauffage . bois . type . granulés . consommation
+              - part DPE bois
+        part DPE bois:
+          formule:
+            somme:
+              - parc français . CEREN . chauffage . part chauffage air bois
+              - parc français . CEREN . chauffage . part ecs bois
+        réseau de chaleur:
+          formule:
+            produit:
+              - logement . chauffage . réseau de chaleur . consommation
+              - part DPE réseau de chaleur
+        part DPE réseau de chaleur:
+          formule:
+            somme:
+              - parc français . CEREN . chauffage . part chauffage air réseau de chaleur
+              - parc français . CEREN . chauffage . part ecs réseau de chaleur
+        citerne propane:
+          formule:
+            produit:
+              - logement . chauffage . citerne propane . consommation * logement . chauffage . citerne propane . énergie par kg
+              - part DPE citerne propane
+        part DPE citerne propane: part DPE gaz
+        part DPE GPL:
+          formule:
+            somme:
+              - parc français . CEREN . chauffage . part chauffage air GPL
+              - parc français . CEREN . chauffage . part ecs GPL
+
+logement . chauffage . DPE équivalent:
+  public: oui
+  valeur: logement . chauffage . consommation énergie au m2 équivalente . DPE équivalent
