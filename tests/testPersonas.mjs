@@ -107,6 +107,28 @@ for (const personaName in localPersonas) {
     continue
   }
 
+  // `page de fin` is the decomposition displayed on the end page: it must sum
+  // up to `bilan`, otherwise the user sees two different footprints. The
+  // comparison is rounded to the kg: the two sums do not add up their terms in
+  // the same order, so the last digits of the floats differ.
+  const bilan = localEngine.evaluate('bilan')
+  const pageDeFin = localEngine.evaluate('page de fin')
+  const roundedBilan = Math.round(bilan.nodeValue * 100) / 100
+  const roundedPageDeFin = Math.round(pageDeFin.nodeValue * 100) / 100
+  if (roundedBilan !== roundedPageDeFin) {
+    const message = `bilan (${roundedBilan} kg) ≠ page de fin (${roundedPageDeFin} kg)`
+    if (markdown) {
+      console.log(`\n**⚠️ ${message}**\n`)
+    } else {
+      console.warn(`${c.yellow('(warning:page de fin)')} ${message}`)
+    }
+  }
+
+  // `bilan` is evaluated before the loop: evaluating it after the ~2600 other
+  // rules makes its value depend on the state left by those evaluations, and
+  // it can come out as `undefined`.
+  const prodBilan = prodEngine.evaluate('bilan')
+
   for (const rule in localRules) {
     if (!(rule in prodRules)) {
       continue
@@ -118,7 +140,7 @@ for (const personaName in localPersonas) {
       console.error({ type: 'error', rule, message: e.message })
       continue
     }
-    const prod = prodEngine.evaluate(rule)
+    const prod = rule === 'bilan' ? prodBilan : prodEngine.evaluate(rule)
     results.push({ type: 'result', rule, actual: local, expected: prod })
   }
 
