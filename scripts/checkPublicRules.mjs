@@ -26,6 +26,7 @@ const rootDottedNames = ['bilan']
 
 const ignoredDottedNames = [
   /^logement \. construction$/,
+  /^alimentation \. déjeuner et dîner$/,
   /^alimentation \. boisson$/,
   /^alimentation \. petit déjeuner$/,
   /^alimentation \. repas$/,
