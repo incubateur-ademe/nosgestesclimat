@@ -91,22 +91,25 @@ logement . construction . rénovation:
   formule: logement . surface * logement . construction . rénovation . par m2 / logement . habitants
 
 logement . construction . rénovation . par m2:
-  formule: travaux / amortissement
+  formule:
+    variations:
+      - si: logement . propriétaire = 'propriétaire'
+        alors: travaux / amortissement
+      - sinon:
+          valeur: travaux / amortissement
+          contexte:
+            rénovation . travaux . embelissement . présent: oui
+            rénovation . travaux . isolation . présent: non
+            rénovation . travaux . chauffage . présent: non
+            rénovation . travaux . extension . présent: non
   note: |
     Par défaut, et donc pour les locataires, on considère que des travaux de rénovation ont été réalisés tous les 25 ans.
-
-logement . construction . rénovation . seuil:
-  titre: Âge seuil pour la rénovation
-  formule: 10
 
 logement . construction . rénovation . amortissement:
   formule: 50
 
 logement . construction . travaux de rénovation:
-  applicable si:
-    toutes ces conditions:
-      - logement . propriétaire = 'propriétaire'
-      - logement . âge équivalent > rénovation . seuil
+  applicable si: logement . propriétaire = 'propriétaire'
   question: Des travaux de rénovation ont-ils été réalisés dans votre logement (hors rafraîchissement) sur les 25 dernières années ?
   mosaique:
     type: selection
@@ -146,7 +149,7 @@ logement . construction . rénovation . travaux . embelissement:
 
 logement . construction . rénovation . travaux . embelissement . présent:
   question: Avez-vous réalisé des travaux d'embellissement ou d'aménagement (second d'oeuvre) ?
-  par défaut: logement . âge équivalent > rénovation . seuil
+  par défaut: logement . âge équivalent > 10 ans
 
 logement . construction . rénovation . travaux . isolation:
   titre: Isolation
@@ -185,7 +188,7 @@ logement . construction . rénovation . travaux . extension:
   applicable si: extension . présent
   formule:
     variations:
-      - si: logement . âge équivalent > logement . construction . base . plafond
+      - si: logement . âge équivalent >= logement . construction . base . plafond
         alors: ratio * logement . construction . base . maison
       - sinon: 0
   note: |
@@ -201,6 +204,7 @@ logement . construction . rénovation . travaux . extension . ratio:
   plafond: 0.3
 
 logement . construction . rénovation . travaux . extension . taille:
+  applicable si: extension . présent
   question: Quelle est la taille de l'extension réalisée (en m²) ?
   par défaut: 0.2 * logement . surface
   plancher: 1
