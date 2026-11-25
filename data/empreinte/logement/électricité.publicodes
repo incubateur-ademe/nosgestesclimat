@@ -32,7 +32,7 @@ logement . électricité . intensité carbone équivalente:
     produit:
       - somme:
           - réseau . consommation réelle * réseau . empreinte au kWh
-          - photovoltaique . consommation réelle équivalente * photovoltaique . intensité carbone
+          - photovoltaique . consommation réelle équivalente * photovoltaique . empreinte au kWh
       - 1 / logement . électricité . consommation totale
 
 logement . électricité . consommation totale:
@@ -357,13 +357,15 @@ logement . électricité . photovoltaique:
   DLUO: 01/04/2027
   titre: Panneaux photovoltaïques
   icônes: 🌞
-  formule: consommation réelle équivalente * photovoltaique . intensité carbone / logement . habitants
+  formule: consommation réelle équivalente * photovoltaique . empreinte au kWh / logement . habitants
 
 logement . électricité . photovoltaique . consommation réelle équivalente:
   formule:
     variations:
       - si: photovoltaique . présent
-        alors: photovoltaique . production
+        alors:
+          somme:
+            - photovoltaique . production
       - sinon: 0
   plafond: consommation totale
   unité: kWh
