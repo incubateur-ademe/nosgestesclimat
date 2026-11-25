@@ -18,9 +18,6 @@ Modèle de calcul de l'empreinte climat personnelle.
 
 ## Utilisation
 
-> [!WARNING]
-> Le modèle Nos Gestes Climat est open source. Néanmoins, certaines données sont soumises à des conditions d'utilisation spécifiques. Par essence, le modèle publicodes ne cache aucun facteur d'émission mais les données issues d'ecoinvent ne peuvent pas être réutilisées librement, l'ADEME ne disposant pas de la proppriété intellectuelle de cette donnée (voir [mentions légales](https://nosgestesclimat.fr/mentions-legales-base-empreinte)). Ces conditions sont rappelées au niveau des règles concernées.
-
 Vous pouvez parcourir le modèle grâce à sa [documentation en
 ligne](https://nosgestesclimat.fr/documentation) ou bien utiliser le paquet npm
 `@incubateur-ademe/nosgestesclimat` :
