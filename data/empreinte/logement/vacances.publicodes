@@ -45,7 +45,7 @@ logement . vacances:
 
     ### Quelles données utilisons nous ?
 
-    Une étude ADEME sur le secteur du tourisme en France sortie fin 2024, [Bilan des émissions de gaz à effet de serre du secteur du tourisme en France](https://librairie.ademe.fr/changement-climatique/7637-bilan-des-emissions-de-gaz-a-effet-de-serre-du-secteur-du-tourisme-en-france-en-2022.html), fournit divers chiffres relatifs aux nuitées des logements touristiques. Néanmoins, nous manquons d'hypothèses d'arrière plan et ne sommes pas en mesure de "vérifier" leur contenu pour éviter le double comptage par exemple. Malheureusement, le service en charge de l'étude n'a pas pu nous fournir de données plus précises. Nous avons donc retravaillé certains mode d'hébergement à partir de données plus transparentes lorsque c'était possible.
+    Une étude ADEME sur le secteur du tourisme en France sortie fin 2024, [Bilan des émissions de gaz à effet de serre du secteur du tourisme en France](https://librairie.ademe.fr/changement-climatique/7637-bilan-des-emissions-de-gaz-a-effet-de-serre-du-secteur-du-tourisme-en-france-en-2022.html), fournit divers chiffres relatifs aux nuitées des logements touristiques mais nous manquons d'hypothèses d'arrière plan et ne sommes pas en mesure de "vérifier" leur contenu pour éviter le double comptage par exemple. Malheureusement, le service en charge de l'étude n'a pas pu nous fournir de données plus précises. Néanmoins, nous avons choisi de conserver une consistance entre les données en utilisant majoritairement les données de cette étude (hormis le camping qui n'est pas inclus dans ce rapport).
 
     ### Nos hypothèses en bref
 
@@ -56,13 +56,11 @@ logement . vacances:
     - L'empreinte des logements de vacances (hors auberge de jeunesse et croisière) est divisée par le nombre d'habitants du logement. C'est une hypothèse forte car on peut facilement imaginer que le famille / foyer ne voyage pas toujours au complet ! Néanmoins, on considère tout de qu'une famille composée de plus de 4 personnes prendra 2 chambres.
 
 logement . vacances . nombre de nuits hors logement:
-  formule: 26.5
+  formule: 19.16
   unité: nuit
   description: Variable utilisée pour le calcul de la moyenne pour chaque hébergement (hors croisière).
   note: |
-    Excel "Voyages et caractéristiques sociodémographiques des individus - EMP 2019" de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345).
-
-    On considère ici le nombre de nuits par personnes en voyage pour motif personnel.
+    D'après [cette enquête INSEE de suivi de la demande touristique](https://www.insee.fr/fr/statistiques/6436639#tableau-figure1), les Français voyagent 1102,6 millions de nuitées par an. Soit 19,16 nuitées par Français de plus de 15 ans.
 
 logement . vacances . hotel:
   titre: Hôtel, chambre d'hôtes
@@ -133,34 +131,21 @@ logement . vacances . hotel . présent:
   question: Allez-vous à l'hôtel ?
 
 logement . vacances . empreinte hotel par nuit:
-  formule: 6.93
+  formule: 4.3
   unité: kgCO2e/nuit
   note: |
-    ## Notre hypothèse sur le facteur d'émission utilisé
+    Ces données sont issues du [Bilan des émissions de gaz à effet de serre du secteur du tourisme en France](https://librairie.ademe.fr/changement-climatique/7637-bilan-des-emissions-de-gaz-a-effet-de-serre-du-secteur-du-tourisme-en-france-en-2022.html).
 
-      D'après [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345),
-      les français voyagent à 86% en France. On assume donc ici que **les nuitées se passent en France**.
+    Cependant, ce chiffre semble faible comparativement à d'autres travaux sur le sujet (voir ci-dessous). Il est donc possible que ce chiffre soit sous-estimé mais dans un souci de cohérence avec le reste des données, nous avons choisi de conserver ce chiffre en attendant d'autres discussions interne ADEME.
 
-    ## Notre source de données
+    Le rapport final de pré-déploiement de l'affichage environnemental des hôtels, [publication ADEME de mars 2020](https://librairie.ademe.fr/consommer-autrement/4096-projet-de-pre-deploiement-de-l-affichage-environnemental-des-hotels.html) désormais disparue, donnait une moyenne de 9,91 kg éqCO2 / nuitée.
+    En retranchant la partie petit-déjeuner pour éviter le double comptage (comptant pour 30% de l'empreinte), on trouvait une empreinte par nuitée de 9,91 * (1 - 30%) = 6,93 kg éqCO2.
 
-      Le rapport final de pré-déploiement de l'affichage environnemental des hôtels, [publication ADEME de mars 2020](https://librairie.ademe.fr/consommer-autrement/4096-projet-de-pre-deploiement-de-l-affichage-environnemental-des-hotels.html), donne une moyenne de 9,91 kg éqCO2 / nuitée.
-      En retranchant la partie petit-déjeuner (comptant pour 30% de l'empreinte), car sinon nous aurions une double comptabilité de ces derniers, on se retrouve avec une empreinte par nuitée de 9,91 * (1 - 30%) = 6,93 kg éqCO2.
+    De son côté, le [Hotel Carbon Measurement Initiative (HCMI)](https://sustainablehospitalityalliance.org/resource/hotel-carbon-measurement-initiative/) qui alimente le [Cornell Hotel Sustainability Benchmarking Index](https://greenview.sg/services/chsb-index/) présente des [données](https://ecommons.cornell.edu/handle/1813/109990) pertinentes pour notre usage.
+    Cela pourra être un bon point de départ pour le jour où nous souhaiterons différencier les nuitées d'hôtel selon le pays fréquenté.
+    À noter que le HCMI donne une moyenne pour la France de 7,7 kg éqCO2 / nuitée, ce qui est très proche de la donnée que nous avons choisie, elle calculée à partir du référentiel ADEME.
 
-      Le rapport permet également de scinder les empreintes selon la classe de l'hôtel. Pour démarrer, nous avons assumé de partir sur la moyenne des empreintes toutes classes confondues, mais cela pourra être implémenté par la suite. Cela donnerait :
-
-      - Hôtels sans classement : 4,73 kg éqCO2 / nuitée
-      - Hôtels 2* : 8,53 kg éqCO2 / nuitée
-      - Hôtels 3* : 8,47 kg éqCO2 / nuitée
-      - Hôtels 4* : 11,43 kg éqCO2 / nuitée
-      - Hôtels 5* : 17,11 kg éqCO2 / nuitée
-
-      Depuis plusieurs années, [Betterfly Tourism](https://www.betterfly-tourism.com/affichage-environnemental-hotels/) implémente en partenariat avec l'ADEME l'affichage environnemental auprès des hôtels. Il sera donc possible de réévaluer l'empreinte avec des données plus récentes issues de leur base de données consolidée.
-
-      De son côté, le [Hotel Carbon Measurement Initiative (HCMI)](https://sustainablehospitalityalliance.org/resource/hotel-carbon-measurement-initiative/) qui alimente le [Cornell Hotel Sustainability Benchmarking Index](https://greenview.sg/services/chsb-index/) présente des [données](https://ecommons.cornell.edu/handle/1813/109990) pertinentes pour notre usage.
-      Cela pourra être un bon point de départ pour le jour où nous souhaiterons différencier les nuitées d'hôtel selon le pays fréquenté.
-      À noter que le HCMI donne une moyenne pour la France de 7,7 kg éqCO2 / nuitée, ce qui est très proche de la donnée que nous avons choisie, elle calculée à partir du référentiel ADEME.
-
-      > Point publicodes : Cette règle étant utilisée dans d'autres espaces nom que `logement . vacances . hotel` c'est important ici de ne pas l'inclure dans cet espace non qui rendrait l'empreinte de la nuitée non applicable si la règle hotel est elle aussi non applicable.
+    > Point publicodes : Cette règle étant utilisée dans d'autres espaces nom que `logement . vacances . hotel` c'est important ici de ne pas l'inclure dans cet espace non qui rendrait l'empreinte de la nuitée non applicable si la règle hotel est elle aussi non applicable.
 
 logement . vacances . hotel . nombre de nuitées:
   applicable si:
@@ -173,8 +158,9 @@ logement . vacances . hotel . nombre de nuitées:
   plafond: 365
   par défaut: moyenne nombre de nuitées
   note: |
-    En combinant plusieurs données de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345),
-    on peut retrouver une valeur moyenne en nuitées / pers / an dans les hébergements hôtel, pension de famille, village de vacances ou gîte.
+    D'après [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345), les français voyagent à 86% en France. On assume donc ici que **les nuitées se passent en France**.
+
+    En combinant plusieurs données de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345), on peut retrouver une valeur moyenne en nuitées / pers / an dans les hébergements hôtel, pension de famille, village de vacances ou gîte.
   suggestions:
     un week-end: 2
     une semaine: 7
@@ -230,8 +216,7 @@ logement . vacances . camping . nombre de nuitées:
   plafond: 365
   par défaut: moyenne nombre de nuitées
   note: |
-    En combinant plusieurs données de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345),
-    on peut retrouver une valeur moyenne en nuitées / pers / an dans les hébergements camping.
+    En combinant plusieurs données de [l'enquête mobilité des français de 2019](https://www.statistiques.developpement-durable.gouv.fr/resultats-detailles-de-lenquete-mobilite-des-personnes-de-2019?rubrique=60&dossier=1345), on peut retrouver une valeur moyenne en nuitées / pers / an dans les hébergements camping.
   suggestions:
     un week-end: 2
     une semaine: 7
@@ -808,7 +793,8 @@ logement . vacances . croisière . empreinte par nuit:
   formule: 103
   unité: kgCO2e/nuit
   note: |
-    Une étude sortie en septembre 2024 sur [l’impact du tourisme en France en 2022](https://librairie.ademe.fr/changement-climatique/7637-bilan-des-emissions-de-gaz-a-effet-de-serre-du-secteur-du-tourisme-en-france-en-2022.html) donne un facteur d’émission pour l’empreinte d’une croisière de 103 kgCO2e/nuitée (page 59).
+    Ces données sont issues du [Bilan des émissions de gaz à effet de serre du secteur du tourisme en France](https://librairie.ademe.fr/changement-climatique/7637-bilan-des-emissions-de-gaz-a-effet-de-serre-du-secteur-du-tourisme-en-france-en-2022.html) (page 59).
+
 
     Il semble que les calculs se basent sur l'étude 2023 ["Return of the cruise"](https://www.transportenvironment.org/articles/return-of-the-cruise) permettant de déduire de l'ensemble des trajets de 176 navires de croisière, l'empreinte liées à la combustion des carburants. Le détail n'est pas transparent mais l'étude indique que l'empreinte par nuitée couvre l'exploitation, la restauration (hors alimentation à bord), les loisirs, l'énergie.
 
