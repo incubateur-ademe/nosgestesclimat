@@ -299,12 +299,16 @@ logement . chauffage . saisie précision consommation:
   question: Connaissez-vous précisément vos consommations ou factures d'énergie ?
   une possibilité:
     - conso exactes
+    - conso via factures
     - DPE
     - aide
   par défaut: "'aide'"
 
 logement . chauffage . saisie précision consommation . conso exactes:
-  titre: Je connais mes factures ou consommations
+  titre: Je connais mes consommations annuelles
+
+logement . chauffage . saisie précision consommation . conso via factures:
+  titre: Je connais le montant de mes factures
 
 logement . chauffage . saisie précision consommation . DPE:
   titre: Non, mais je connais mon DPE
@@ -572,6 +576,8 @@ logement . chauffage . gaz . consommation:
     variations:
       - si: saisie précision consommation = 'conso exactes'
         alors: consommation précise
+      - si: saisie précision consommation = 'conso via factures'
+        alors: consommation via factures * commun . mois par an / coût du kWh
       - si:
           toutes ces conditions:
             - saisie précision consommation = 'DPE'
@@ -627,7 +633,6 @@ logement . chauffage . gaz . consommation précise:
       - saisie précision consommation = 'conso exactes'
       - gaz . présent
   question: Quelle est la consommation annuelle de gaz de votre foyer ?
-  aide: logement . chauffage . gaz . consommation estimée via le coût . saisie
   par défaut: consommation moyenne réelle
   plancher: 0
   plafond: 150000
@@ -636,6 +641,37 @@ logement . chauffage . gaz . consommation précise:
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures de gaz et d'électricité ou sur votre compte en ligne sur le site de votre fournisseur.
 
     > Il se peut que votre copropriété ne vous communique pas la consommation en kWh de votre logement, quand la chaudière est centralisée. Cela dit, elle doit vous fournir le montant en €, que vous pourrez saisir ci-dessous pour estimer vos kWh.
+
+logement . chauffage . gaz . consommation via factures:
+  applicable si:
+    toutes ces conditions:
+      - saisie précision consommation = 'conso via factures'
+      - gaz . présent
+  question: Quelle est la consommation annuelle de gaz de votre foyer ?
+  plancher: 0
+  plafond: 9999
+  unité: €/mois
+  par défaut: consommation moyenne réelle / commun . mois par an * coût du kWh
+
+logement . chauffage . gaz . coût du kWh:
+  DLUO: 01/11/2027
+  titre: Coût du kWh de gaz
+  unité: €/kWh
+  formule: 0.20626
+  description: |
+    C'est le facteur qui nous permet de passer du prix payé par le ménage à la consommation en kWh.
+
+    Il n'existe pas de prix unique du kWh de gaz, car le prix dépend du fournisseur, de l'offre choisie, de la zone géographique, etc.
+
+    Nous avons donc décidé de nous appuyer sur le [prix repère du gaz](https://www.cre.fr/consommateurs/prix-reperes-et-references/prix-repere-de-vente-de-gaz-naturel-a-destination-des-clients-residentiels.html), tarif de référence publié mensuellement par la Commission de Régulation de l'Énergie en France, pour l'abonnement et le coût du kWh. Mis à jour en juin 2026 (prix TTC).
+
+    Attention, le marché du gaz est largement libéralisé, ainsi le prix repère, qui est la base de notre calcul, n'est pas exclusif.
+
+    La grille mise à disposition par la CRE met bien en avant une différence de tarif entre les clients utilisant le gaz comme énergie principale de chauffage ou bien uniquement pour la cuisson et l'eau chaude sanitaire.
+
+    Un chiffre moyen est également proposé, "selon les hypothèses actuelles de consommation, tous consommateurs confondus". C'est ce chiffre que nous avons choisi d'utiliser au sein du simulateur dans un souci de simplicité.
+  note: |
+    A priori, il n'existe pas d'API pour ce chiffre, nous mettons donc à jour cette valeur manuellement via sa Date Limite d'Utilisation Optimale.
 
 logement . chauffage . gaz . consommation via DPE:
   applicable si: saisie précision consommation = 'DPE'
@@ -683,38 +719,6 @@ logement . chauffage . gaz . consommation via ressenti:
             - consommation moyenne cuisson
       - sinon: consommation moyenne réelle
   unité: kWh
-
-logement . chauffage . gaz . consommation estimée via le coût:
-  titre: Consommation estimée via le coût
-  formule: saisie * commun . mois par an / facteur
-  arrondi: oui
-  unité: kWh
-  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
-
-logement . chauffage . gaz . consommation estimée via le coût . saisie:
-  question: Pas de facture ? Entrez vos dépenses approximatives par mois
-  plancher: 0
-  unité: €/mois
-
-logement . chauffage . gaz . consommation estimée via le coût . facteur:
-  DLUO: 01/11/2027
-  titre: Coût du kWh de gaz
-  unité: €/kWh
-  formule: 0.20626
-  description: |
-    C'est le facteur qui nous permet de passer du prix payé par le ménage à la consommation en kWh.
-
-    Il n'existe pas de prix unique du kWh de gaz, car le prix dépend du fournisseur, de l'offre choisie, de la zone géographique, etc.
-
-    Nous avons donc décidé de nous appuyer sur le [prix repère du gaz](https://www.cre.fr/consommateurs/prix-reperes-et-references/prix-repere-de-vente-de-gaz-naturel-a-destination-des-clients-residentiels.html), tarif de référence publié mensuellement par la Commission de Régulation de l'Énergie en France, pour l'abonnement et le coût du kWh. Mis à jour en juin 2026 (prix TTC).
-
-    Attention, le marché du gaz est largement libéralisé, ainsi le prix repère, qui est la base de notre calcul, n'est pas exclusif.
-
-    La grille mise à disposition par la CRE met bien en avant une différence de tarif entre les clients utilisant le gaz comme énergie principale de chauffage ou bien uniquement pour la cuisson et l'eau chaude sanitaire.
-
-    Un chiffre moyen est également proposé, "selon les hypothèses actuelles de consommation, tous consommateurs confondus". C'est ce chiffre que nous avons choisi d'utiliser au sein du simulateur dans un souci de simplicité.
-  note: |
-    A priori, il n'existe pas d'API pour ce chiffre, nous mettons donc à jour cette valeur manuellement via sa Date Limite d'Utilisation Optimale.
 
 logement . chauffage . gaz . biogaz:
   applicable si:
@@ -833,7 +837,10 @@ logement . chauffage . empreinte bouteille gaz:
   applicable si: bouteille gaz . présent
   formule:
     variations:
-      - si: saisie précision consommation = 'conso exactes'
+      - si:
+          une de ces conditions:
+            - saisie précision consommation = 'conso exactes'
+            - saisie précision consommation = 'conso via factures'
         alors: bouteille gaz . empreinte bouteille * bouteille gaz . consommation
       - sinon: bouteille gaz . empreinte bouteille * bouteille gaz . consommation moyenne réelle
   unité: kgCO2e
@@ -846,9 +853,11 @@ logement . chauffage . bouteille gaz . présent:
 
 logement . chauffage . bouteille gaz . consommation:
   non applicable si: bouteille gaz . présent = non
-  applicable si: saisie précision consommation = 'conso exactes'
+  applicable si:
+    une de ces conditions:
+      - saisie précision consommation = 'conso exactes'
+      - saisie précision consommation = 'conso via factures'
   question: Quelle est votre consommation annuelle en bouteilles de gaz (13 kg) ?
-  aide: logement . chauffage . bouteille gaz . consommation estimée via le poids . saisie
   plancher: 0
   plafond: 50
   par défaut: consommation moyenne réelle
@@ -876,24 +885,6 @@ logement . chauffage . bouteille gaz . consommation moyenne réelle:
 
     On fait également l'hypothèse que cette consommation n'est pas sensible au DPE ou au ressenti de chauffage.
   formule: parc français . CEREN . chauffage . consommation moyenne gaz cuisson / énergie par bouteille
-
-logement . chauffage . bouteille gaz . consommation estimée via le poids:
-  titre: Consommation estimée via le poids
-  formule: saisie / facteur
-  arrondi: 1 décimale
-  unité: bouteille
-  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
-
-logement . chauffage . bouteille gaz . consommation estimée via le poids . saisie:
-  question: Vous utilisez un format de bonbonne différent ? Entrez votre consommation annuelle en kg.
-  plancher: 0
-  unité: kg
-
-logement . chauffage . bouteille gaz . consommation estimée via le poids . facteur:
-  formule: capacité
-  unité: kg/bouteille
-  note: |
-    Cette aide permet de simplifier la conversion des kg de gaz consommés en bouteille de gaz au format 13kg.
 
 logement . chauffage . bouteille gaz . énergie par bouteille:
   titre: Energie bouteille de gaz (13 kg)
@@ -974,6 +965,8 @@ logement . chauffage . citerne propane . consommation:
     variations:
       - si: saisie précision consommation = 'conso exactes'
         alors: consommation précise
+      - si: saisie précision consommation = 'conso via factures'
+        alors: consommation via factures * commun . mois par an / coût du kWh
       - si:
           toutes ces conditions:
             - saisie précision consommation = 'DPE'
@@ -1030,7 +1023,6 @@ logement . chauffage . citerne propane . consommation précise:
       - saisie précision consommation = 'conso exactes'
       - citerne propane . présent
   question: Quelle est la consommation annuelle de gaz propane en citerne de votre foyer ?
-  aide: logement . chauffage . citerne propane . consommation estimée via le coût . saisie
   plancher: 0
   plafond: 10000
   par défaut: consommation par défaut
@@ -1039,6 +1031,30 @@ logement . chauffage . citerne propane . consommation précise:
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
   note: |
     Certains logements ne peuvent être raccordés au réseau de gaz et disposent d'une citerne propane, à l'image d'une citerne fioul.
+
+logement . chauffage . citerne propane . consommation via factures:
+  applicable si:
+    toutes ces conditions:
+      - saisie précision consommation = 'conso via factures'
+      - citerne propane . présent
+  question: Quelle est la consommation annuelle de gaz propane en citerne de votre foyer ?
+  plancher: 0
+  plafond: 9999
+  unité: €/mois
+  par défaut: consommation moyenne réelle / commun . mois par an * coût du kWh
+
+logement . chauffage . citerne propane . coût du kWh:
+  DLUO: 01/11/2027
+  titre: Coût du kg de propane
+  formule: 2.438
+  unité: €/kg
+  description: |
+    C'est le facteur qui nous permet de passer du prix payé par le ménage à la consommation en kg.
+
+    Selon les informations agrégées par le site [Selectra](https://lepropane.com/citernes/prix/cours),
+    le prix du propane en citerne est en moyenne de 2438€ par tonne (mais très variable selon le fournisseur).
+  note: |
+    A priori, il n'existe pas d'API pour ce chiffre, nous mettons donc à jour cette valeur manuellement via sa Date Limite d'Utilisation Optimale.
 
 logement . chauffage . citerne propane . consommation précise . consommation par défaut:
   formule: gaz . consommation moyenne réelle / énergie par kg
@@ -1088,25 +1104,6 @@ logement . chauffage . citerne propane . consommation via ressenti:
             - consommation moyenne cuisson / énergie par kg
       - sinon: consommation moyenne réelle
   unité: kg
-
-logement . chauffage . citerne propane . consommation estimée via le coût:
-  titre: Consommation estimée via le coût
-  formule: saisie * commun . mois par an / facteur
-  arrondi: oui
-  unité: kg
-  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
-
-logement . chauffage . citerne propane . consommation estimée via le coût . saisie:
-  question: Pas de facture ? Entrez vos dépenses approximatives par mois
-  plancher: 0
-  unité: €/mois
-
-logement . chauffage . citerne propane . consommation estimée via le coût . facteur:
-  formule: 2.438
-  unité: €/kg
-  note: |
-    Selon les informations agrégées par le site [Selectra](https://lepropane.com/citernes/prix/cours),
-    le prix du propane en citerne est en moyenne de 2438€ par tonne (mais très variable selon le fournisseur).
 
 logement . chauffage . citerne propane . énergie par kg:
   formule: 46 MJ/kg * 1.111 / 3.6 MJ/kWh
@@ -1175,6 +1172,8 @@ logement . chauffage . fioul . consommation:
     variations:
       - si: saisie précision consommation = 'conso exactes'
         alors: consommation précise
+      - si: saisie précision consommation = 'conso via factures'
+        alors: consommation via factures * commun . mois par an / coût du kWh
       - si:
           toutes ces conditions:
             - saisie précision consommation = 'DPE'
@@ -1217,12 +1216,35 @@ logement . chauffage . fioul . consommation précise:
       - fioul . présent
   par défaut: consommation moyenne réelle
   question: Quelle est la consommation annuelle de fioul domestique de votre foyer ?
-  aide: logement . chauffage . fioul . consommation estimée via le coût . saisie
   plancher: 0
   plafond: 15000
   unité: l
   description: |
     Astuce : Vous trouverez vos consommations annuelles d'énergie sur votre facture de fioul ou sur votre compte en ligne sur le site de votre fournisseur.
+
+logement . chauffage . fioul . consommation via factures:
+  applicable si:
+    toutes ces conditions:
+      - saisie précision consommation = 'conso via factures'
+      - fioul . présent
+  question: Quelle est la consommation annuelle de fioul domestique de votre foyer ?
+  plancher: 0
+  plafond: 9999
+  unité: €/mois
+  par défaut: consommation moyenne réelle / commun . mois par an * coût du kWh
+
+logement . chauffage . fioul . coût du kWh:
+  DLUO: 01/11/2027
+  titre: Coût du litre de fioul
+  unité: €/l
+  formule: 1.688
+  description: |
+    C'est le facteur qui nous permet de passer du prix payé par le ménage à la consommation en litres.
+
+    Source : Prix moyens mensuels de vente au détail en métropole - Fioul domestique : 1.000 litres (livré à domicile), disponible [sur le site de l'INSEE](https://www.insee.fr/fr/statistiques/serie/000442573).
+    Donnée calculée : moyenne des 6 derniers mois. Actualisé en novembre 2026.
+  note: |
+    A priori, il n'existe pas d'API pour ce chiffre, nous mettons donc à jour cette valeur manuellement via sa Date Limite d'Utilisation Optimale.
 
 logement . chauffage . fioul . consommation via DPE:
   applicable si: saisie précision consommation = 'DPE'
@@ -1261,27 +1283,6 @@ logement . chauffage . fioul . consommation via ressenti:
             - consommation moyenne ecs * précision consommation . saut D vers A
       - sinon: consommation moyenne réelle
   unité: l
-
-logement . chauffage . fioul . consommation estimée via le coût:
-  titre: Consommation estimée via le coût
-  formule: saisie * commun . mois par an / facteur
-  arrondi: oui
-  unité: l
-  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
-
-logement . chauffage . fioul . consommation estimée via le coût . saisie:
-  question: Pas de facture ? Entrez vos dépenses approximatives par mois
-  plancher: 0
-  unité: €/mois
-
-logement . chauffage . fioul . consommation estimée via le coût . facteur:
-  formule: 1.688
-  unité: €/l
-  note: |
-    Cette formule nous permet de passer des €/mois aux litres/an.
-
-    Source : Prix moyens mensuels de vente au détail en métropole - Fioul domestique : 1.000 litres (livré à domicile), disponible [sur le site de l'INSEE](https://www.insee.fr/fr/statistiques/serie/000442573).
-    Donnée calculée : moyenne des 6 derniers mois. Actualisé en novembre 2026.
 
 logement . chauffage . fioul kWh au litre:
   formule: 0.1014
@@ -1462,6 +1463,8 @@ logement . chauffage . bois . type . granulés . consommation:
     variations:
       - si: saisie précision consommation = 'conso exactes'
         alors: consommation précise
+      - si: saisie précision consommation = 'conso via factures'
+        alors: consommation via factures * commun . mois par an / coût du kg * intensité énergétique
       - si:
           toutes ces conditions:
             - saisie précision consommation = 'DPE'
@@ -1511,11 +1514,26 @@ logement . chauffage . bois . type . granulés . consommation précise en kg:
       - type . granulés
       - saisie précision consommation = 'conso exactes'
   question: Quelle est la consommation annuelle de granulés / pellets de votre foyer ?
-  aide: logement . chauffage . bois . type . granulés . consommation estimée via le coût . saisie
   par défaut: consommation moyenne réelle / intensité énergétique
   unité: kg
   plancher: 0
   plafond: 50000
+
+logement . chauffage . bois . type . granulés . consommation via factures:
+  applicable si:
+    toutes ces conditions:
+      - type . granulés
+      - saisie précision consommation = 'conso via factures'
+  question: Quelle est la consommation annuelle de granulés / pellets de votre foyer ?
+  plancher: 0
+  plafond: 9999
+  unité: €/mois
+  par défaut: consommation moyenne réelle / intensité énergétique / commun . mois par an * coût du kg
+
+logement . chauffage . bois . type . granulés . coût du kg:
+  titre: Coût du kg de granulés
+  formule: prix tonne / 1000 kg/tonne
+  unité: €/kg
 
 logement . chauffage . bois . type . granulés . consommation via DPE:
   applicable si: saisie précision consommation = 'DPE'
@@ -1560,25 +1578,9 @@ logement . chauffage . bois . type . granulés . consommation via ressenti:
       - sinon: consommation moyenne réelle
   unité: kWh
 
-logement . chauffage . bois . type . granulés . consommation estimée via le coût:
-  titre: Consommation estimée via le coût
-  formule: saisie / facteur
-  arrondi: oui
-  unité: kg
-  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
-
-logement . chauffage . bois . type . granulés . consommation estimée via le coût . saisie:
-  question: Pas de facture ? Entrez vos dépenses annuelles approximatives
-  plancher: 0
-  unité: €
-
-logement . chauffage . bois . type . granulés . consommation estimée via le coût . facteur:
-  formule: granulés . prix tonne / 1000 kg/tonne
-  unité: €/kg
-  note: |
-    Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois.
-
 logement . chauffage . bois . type . granulés . prix tonne:
+  DLUO: 01/11/2027
+  titre: Prix de la tonne de granulés
   formule: 411
   unité: €/tonne
   note: |
@@ -1595,6 +1597,8 @@ logement . chauffage . bois . type . bûches . consommation:
     variations:
       - si: saisie précision consommation = 'conso exactes'
         alors: consommation précise
+      - si: saisie précision consommation = 'conso via factures'
+        alors: consommation via factures * commun . mois par an / coût du stère * intensité énergétique
       - si:
           toutes ces conditions:
             - saisie précision consommation = 'DPE'
@@ -1645,12 +1649,27 @@ logement . chauffage . bois . type . bûches . consommation précise en stère:
       - saisie précision consommation = 'conso exactes'
   par défaut: consommation moyenne réelle / intensité énergétique
   question: Quelle est la consommation annuelle de bûches de votre foyer ?
-  aide: logement . chauffage . bois . type . bûches . consommation estimée via le coût . saisie
   plancher: 0
   plafond: 150
   description: |
     La consommation de bois de chauffage se compte traditionnellement en stères, ce qui correspond approximativement à un mètre cube de bûches.
   unité: stère
+
+logement . chauffage . bois . type . bûches . consommation via factures:
+  applicable si:
+    toutes ces conditions:
+      - type . bûches
+      - saisie précision consommation = 'conso via factures'
+  question: Quelle est la consommation annuelle de bûches de votre foyer ?
+  plancher: 0
+  plafond: 9999
+  unité: €/mois
+  par défaut: consommation moyenne réelle / intensité énergétique / commun . mois par an * coût du stère
+
+logement . chauffage . bois . type . bûches . coût du stère:
+  titre: Coût du stère de bûches
+  formule: prix stère
+  unité: €/stère
 
 logement . chauffage . bois . type . bûches . consommation via DPE:
   applicable si: saisie précision consommation = 'DPE'
@@ -1691,24 +1710,8 @@ logement . chauffage . bois . type . bûches . consommation via ressenti:
       - sinon: consommation moyenne réelle
   unité: kWh
 
-logement . chauffage . bois . type . bûches . consommation estimée via le coût:
-  titre: Consommation estimée via le coût
-  formule: saisie / facteur
-  arrondi: oui
-  unité: stère
-  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
-
-logement . chauffage . bois . type . bûches . consommation estimée via le coût . saisie:
-  question: Pas de facture ? Entrez vos dépenses annuelles approximatives
-  plancher: 0
-  unité: €
-
-logement . chauffage . bois . type . bûches . consommation estimée via le coût . facteur:
-  formule: prix stère
-  unité: €/stère
-  note: Cette formule nous permet de passer des €/mois au nombre de stères par an.
-
 logement . chauffage . bois . type . bûches . prix stère:
+  DLUO: 01/11/2027
   formule: 92
   unité: €/stère
   note: |
@@ -1841,6 +1844,8 @@ logement . chauffage . réseau de chaleur . consommation:
     variations:
       - si: saisie précision consommation = 'conso exactes'
         alors: consommation précise
+      - si: saisie précision consommation = 'conso via factures'
+        alors: consommation via factures * commun . mois par an / coût du kWh
       - si:
           toutes ces conditions:
             - saisie précision consommation = 'DPE'
@@ -1883,7 +1888,6 @@ logement . chauffage . réseau de chaleur . consommation précise:
       - réseau de chaleur . présent
   par défaut: consommation moyenne réelle
   question: Quelle est votre consommation annuelle d'énergie via le réseau de chaleur raccordé à votre foyer ?
-  aide: logement . chauffage . réseau de chaleur . consommation estimée via le coût . saisie
   plancher: 0
   plafond: 150000
   unité: kWh
@@ -1891,6 +1895,34 @@ logement . chauffage . réseau de chaleur . consommation précise:
     Vous trouverez vos consommations annuelles d'énergie sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
 
     > Il se peut que votre copropriété ne vous communique pas la consommation en kWh de votre logement, quand la chaudière est centralisée. Cela dit, elle doit vous fournir le montant en €, que vous pourrez saisir ci-dessous pour estimer vos kWh.
+
+logement . chauffage . réseau de chaleur . consommation via factures:
+  applicable si:
+    toutes ces conditions:
+      - saisie précision consommation = 'conso via factures'
+      - réseau de chaleur . présent
+  question: Quelle est votre consommation annuelle d'énergie via le réseau de chaleur raccordé à votre foyer ?
+  plancher: 0
+  plafond: 9999
+  unité: €/mois
+  par défaut: consommation moyenne réelle / commun . mois par an * coût du kWh
+
+logement . chauffage . réseau de chaleur . coût du kWh:
+  DLUO: 01/02/2027
+  titre: Coût du kWh de chaleur
+  formule: 0.1047
+  unité: €/kWh
+  description: |
+    C'est le facteur qui nous permet de passer du prix payé par le ménage à la consommation en kWh.
+
+    Nous utilisions auparavant un chiffre tiré de l'[Enquête des réseaux de chaleur et de froid](https://amorce.asso.fr/actualite/les-reseaux-de-chaleur-la-bonne-solution-de-chauffage-pour-le-pouvoir-d-achat-et-le-climat)
+    basé sur les données 2021 qui donne un chiffre de 80€HT/MWh.
+
+    Mais la volatiilité de ce prix nous invite en 2026 à revoir notre copie. Nous utilisons dorénavant [le prix moyen déclaré par AMORCE : 104,7€ / MWh](https://amorce.asso.fr/actualite/reseaux-de-chaleur-un-atout-economique-pour-les-territoires).
+
+    C'est une valeur moyenne dont l'écart-type est relativement important : on peut lire dans l'enquête d'AMORCE que "les prix de vente moyens des réseaux de chaleur affichent une très grande disparité, 89% de la chaleur livrée est vendue à un prix compris entre -30 et +30% de la moyenne nationale".
+  note: |
+    A priori, il n'existe pas d'API pour ce chiffre, nous mettons donc à jour cette valeur manuellement via sa Date Limite d'Utilisation Optimale.
 
 logement . chauffage . réseau de chaleur . consommation via DPE:
   applicable si: saisie précision consommation = 'DPE'
@@ -1929,31 +1961,6 @@ logement . chauffage . réseau de chaleur . consommation via ressenti:
             - consommation moyenne ecs * précision consommation . saut D vers A
       - sinon: consommation moyenne réelle
   unité: kWh
-
-logement . chauffage . réseau de chaleur . consommation estimée via le coût:
-  titre: Consommation estimée via le coût
-  formule: saisie * commun . mois par an / facteur
-  arrondi: oui
-  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
-
-logement . chauffage . réseau de chaleur . consommation estimée via le coût . saisie:
-  question: Pas de facture ? Entrez vos dépenses approximatives par mois
-  plancher: 0
-  unité: €/mois
-
-logement . chauffage . réseau de chaleur . consommation estimée via le coût . facteur:
-  DLUO: 01/02/2027
-  formule: 0.1047
-  unité: €/kWh
-  note: |
-    Cette formule nous permet de passer des €/mois aux kWh/an : le kWh coût x centimes par mois sur 12 mois.
-
-    Nous utilisions auparavant un chiffre tiré de l'[Enquête des réseaux de chaleur et de froid](https://amorce.asso.fr/actualite/les-reseaux-de-chaleur-la-bonne-solution-de-chauffage-pour-le-pouvoir-d-achat-et-le-climat)
-    basé sur les données 2021 qui donne un chiffre de 80€HT/MWh.
-
-    Mais la volatiilité de ce prix nous invite en 2026 à revoir notre copie. Nous utilisons dorénavant [le prix moyen déclaré par AMORCE : 104,7€ / MWh](https://amorce.asso.fr/actualite/reseaux-de-chaleur-un-atout-economique-pour-les-territoires).
-
-    C'est une valeur moyenne dont l'écart-type est relativement important : on peut lire dans l'enquête d'AMORCE que "les prix de vente moyens des réseaux de chaleur affichent une très grande disparité, 89% de la chaleur livrée est vendue à un prix compris entre -30 et +30% de la moyenne nationale".
 
 logement . chauffage . réseau de chaleur . intensité carbone:
   titre: Empreinte carbone réseau de chaleur

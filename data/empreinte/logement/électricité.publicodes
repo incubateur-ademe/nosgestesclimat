@@ -56,6 +56,11 @@ logement . électricité . consommation totale individuel:
           somme:
             - photovoltaique . autoconsommation
             - réseau . consommation précise
+      - si: chauffage . saisie précision consommation = 'conso via factures'
+        alors:
+          somme:
+            - photovoltaique . autoconsommation
+            - réseau . consommation via factures * commun . mois par an / réseau . coût du kWh
       - si:
           toutes ces conditions:
             - chauffage . saisie précision consommation = 'DPE'
@@ -69,11 +74,16 @@ logement . électricité . consommation totale individuel:
 logement . électricité . consommation totale hors individuel:
   formule:
     variations:
-      - si: électricité . saisie précision consommation = oui
+      - si: électricité . saisie précision consommation = 'conso exactes'
         alors:
           somme:
             - photovoltaique . autoconsommation
             - réseau . consommation précise
+      - si: électricité . saisie précision consommation = 'conso via factures'
+        alors:
+          somme:
+            - photovoltaique . autoconsommation
+            - réseau . consommation via factures * commun . mois par an / réseau . coût du kWh
       - sinon: consommation par défaut
   unité: kWh
 
@@ -85,7 +95,20 @@ logement . électricité . saisie précision consommation:
           - chauffage . mode = "collectif"
           - chauffage . mode = "pas de chauffage"
   question: Connaissez-vous votre consommation d'électricité ?
-  par défaut: non
+  une possibilité:
+    - conso exactes
+    - conso via factures
+    - par défaut
+  par défaut: "'par défaut'"
+
+logement . électricité . saisie précision consommation . conso exactes:
+  titre: Je connais mes consommations annuelles
+
+logement . électricité . saisie précision consommation . conso via factures:
+  titre: Je connais le montant de mes factures
+
+logement . électricité . saisie précision consommation . par défaut:
+  titre: Non, je ne la connais pas
 
 logement . électricité . consommation par défaut:
   titre: Consommation par défaut électricité
@@ -291,33 +314,37 @@ logement . électricité . réseau . consommation précise:
   applicable si:
     une de ces conditions:
       - chauffage . saisie précision consommation = 'conso exactes'
-      - électricité . saisie précision consommation = oui
+      - électricité . saisie précision consommation = 'conso exactes'
   non applicable si:
     toutes ces conditions:
       - climatisation . est présent PAC air air
       - est non défini: climatisation . avec PAC air air . mode réversible
   par défaut: électricité . consommation moyenne réelle
   question: Quelle est la consommation annuelle d'électricité (réseau) de votre foyer ?
-  aide: logement . électricité . réseau . consommation estimée via le coût . saisie
   plancher: 0
   plafond: 99999
   unité: kWh
   description: |
     Astuce : vous trouverez la consommation annuelle d'électricité sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
 
-logement . électricité . réseau . consommation estimée via le coût:
-  titre: Consommation estimée via le coût
-  formule: saisie * commun . mois par an / facteur
-  arrondi: oui
-  unité: kWh
-  note: Cette règle est utilisée dans le cadre de l'aide à la saisie pour la question mentionnée dans l'attribut `aide`. L'attribution de la valeur finale est géré côté site.
-
-logement . électricité . réseau . consommation estimée via le coût . saisie:
-  question: Pas de facture ? Entrez vos dépenses approximatives par mois
+logement . électricité . réseau . consommation via factures:
+  applicable si:
+    une de ces conditions:
+      - chauffage . saisie précision consommation = 'conso via factures'
+      - électricité . saisie précision consommation = 'conso via factures'
+  non applicable si:
+    toutes ces conditions:
+      - climatisation . est présent PAC air air
+      - est non défini: climatisation . avec PAC air air . mode réversible
+  par défaut: électricité . consommation moyenne réelle / commun . mois par an * coût du kWh
+  question: Quelle est la consommation annuelle d'électricité (réseau) de votre foyer ?
   plancher: 0
+  plafond: 99999
   unité: €/mois
+  description: |
+    Astuce : vous trouverez la consommation annuelle d'électricité sur vos factures ou sur votre compte en ligne sur le site de votre fournisseur.
 
-logement . électricité . réseau . consommation estimée via le coût . facteur:
+logement . électricité . réseau . coût du kWh:
   formule: 0.233
   unité: €/kWh
   note: |

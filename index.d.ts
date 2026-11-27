@@ -81,7 +81,6 @@ export type NGCRule =
       type?: string
       action?: { dépasse: string[] }
       icônes?: string
-      aide?: string
       inactif?: string
       plancher?: string | number
       plafond?: string | number
